@@ -95,11 +95,25 @@ describe("restored USACO project workflows", () => {
 					"Open, save and run",
 					"confirm the import",
 					"Existing saved attempts",
-					"no answer file",
 					"Protected mocks"
 				])
 					expect(item.content, pack.folder).toContain(contract);
 				expect(item.content.length).toBeGreaterThan(2200);
+				const stdio =
+					pack.folder === "UB62-Cow-College" ||
+					pack.folder === "UB63-Feeding-the-Cows";
+				expect(item.content).toContain(
+					stdio ? "prints no answer" : "no answer file"
+				);
+				if (stdio) {
+					expect(item.content).toContain("Input panel");
+					expect(item.content).toContain(
+						"python3 main.py < sample.in"
+					);
+					expect(item.content).not.toContain("rm -f");
+					expect(item.content).not.toContain("cat sample.out");
+					expect(item.learningPath).not.toBe("core");
+				}
 				expect(item.content).toContain(
 					pack.mode === "cpp" ? "-std=c++20" : "python3 main.py"
 				);
@@ -163,7 +177,7 @@ describe("restored USACO project workflows", () => {
 				...module.curriculum,
 				...module.supplementalProjects
 			])
-			.find((item) => item.projectLink?.includes("UG5-Marathon"))!;
+			.find(item => item.projectLink?.includes("UG5-Marathon"))!;
 		expect(item.solutionLink).toBe(
 			"https://github.com/instruction-material/USACO-Gold/tree/main/UG5-Marathon/solution"
 		);

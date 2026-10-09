@@ -8,6 +8,18 @@ export const usacoRestoredResources = [
 		mode: "python"
 	},
 	{
+		course: "usaco-bronze",
+		repository: "USACO-Bronze",
+		folder: "UB62-Cow-College",
+		mode: "python"
+	},
+	{
+		course: "usaco-bronze",
+		repository: "USACO-Bronze",
+		folder: "UB63-Feeding-the-Cows",
+		mode: "python"
+	},
+	{
 		course: "usaco-silver",
 		repository: "USACO-Silver",
 		folder: "US18-Counting-Haybales",

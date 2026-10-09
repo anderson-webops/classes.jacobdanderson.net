@@ -321,6 +321,90 @@ export const usacoFixtures = [
 			"main.cpp": "a53ac654ece7221279ffd38a602b996a975687fc4d4566ae9d6159e4bf15ccd4"
 		},
 		reference: true
+	},
+	{
+		repository: "instruction-material/USACO-Bronze",
+		revision: "63fa0937cc47d521b611198bc8b96532fe885e03",
+		courseId: "usaco-bronze",
+		folder: "UB62-Cow-College/starter",
+		anchor: "usaco-bronze-optional-bronze-problem-bank-and-language-mirrors",
+		itemId: "usaco-bronze-optional-bronze-problem-bank-and-language-mirrors-supplemental-problem-cow-college",
+		mode: "python",
+		stdio: true,
+		input: "sample.in",
+		expected: "12 4\n",
+		hashes: {
+			"README.md":
+				"dd6ce0303d3381716a416d38997982c812a2f1f3bed7ec53e8300cd4c82e9183",
+			"main.py":
+				"77f9dc9df3ffbf2d6cc5d981215e75cbaaa523d065228b50e440521b8adc26b0",
+			"sample.in":
+				"d7886c7f45c1200d4ea93ee595adb78aacfa1d24857bebeddf7cd3ee699447eb"
+		},
+		reference: false
+	},
+	{
+		repository: "instruction-material/USACO-Bronze",
+		revision: "63fa0937cc47d521b611198bc8b96532fe885e03",
+		courseId: "usaco-bronze",
+		folder: "UB62-Cow-College/solution",
+		anchor: "usaco-bronze-optional-bronze-problem-bank-and-language-mirrors",
+		itemId: "usaco-bronze-optional-bronze-problem-bank-and-language-mirrors-supplemental-problem-cow-college",
+		mode: "python",
+		stdio: true,
+		input: "sample.in",
+		expected: "12 4\n",
+		hashes: {
+			"README.md":
+				"6eafbfc82619fa38b34240bc0c2fac162ffa6c23601ac01ccab019f67add012c",
+			"main.py":
+				"0aa9e236da493fd70932e6a073880aedc35a70563b4d8d84dc9535e19e6c127e",
+			"sample.in":
+				"d7886c7f45c1200d4ea93ee595adb78aacfa1d24857bebeddf7cd3ee699447eb"
+		},
+		reference: true
+	},
+	{
+		repository: "instruction-material/USACO-Bronze",
+		revision: "63fa0937cc47d521b611198bc8b96532fe885e03",
+		courseId: "usaco-bronze",
+		folder: "UB63-Feeding-the-Cows/starter",
+		anchor: "usaco-bronze-unit-5-mock-contests-postmortems-and-silver-readiness",
+		itemId: "usaco-bronze-unit-5-mock-contests-postmortems-and-silver-readiness-supplemental-problem-feeding-the-cows",
+		mode: "python",
+		stdio: true,
+		input: "sample.in",
+		expected: [5, 3, 2, 2, 2, 2],
+		hashes: {
+			"README.md":
+				"2e1adaa80e4e9ca8cbcd80db4790df992180aaab8adb3b40f608f53680dd092b",
+			"main.py":
+				"3342683ca5936552f58a25a69dd24c93ddae88ea10822c096d8667a994147cac",
+			"sample.in":
+				"53de8785dec3f77a8ce51b635722b59c7ad18de269a9a3bae3357d1925a8a021"
+		},
+		reference: false
+	},
+	{
+		repository: "instruction-material/USACO-Bronze",
+		revision: "63fa0937cc47d521b611198bc8b96532fe885e03",
+		courseId: "usaco-bronze",
+		folder: "UB63-Feeding-the-Cows/solution",
+		anchor: "usaco-bronze-unit-5-mock-contests-postmortems-and-silver-readiness",
+		itemId: "usaco-bronze-unit-5-mock-contests-postmortems-and-silver-readiness-supplemental-problem-feeding-the-cows",
+		mode: "python",
+		stdio: true,
+		input: "sample.in",
+		expected: [5, 3, 2, 2, 2, 2],
+		hashes: {
+			"README.md":
+				"1e3280f850b0a8ad45f054ac314edb9c1d47126bfc1ac0af888b62de96c1c05a",
+			"main.py":
+				"6326122402bff44bdd06932d369331fcc95a0ff7eb7874d5501f2325df12ec03",
+			"sample.in":
+				"53de8785dec3f77a8ce51b635722b59c7ad18de269a9a3bae3357d1925a8a021"
+		},
+		reference: true
 	}
 ];
 
@@ -389,5 +473,15 @@ export const usacoExistingProjectIds = [
 		course: "usaco-gold",
 		id: "usaco-gold-optional-historical-and-applied-gold-studios-supplemental-bookshelf",
 		url: "https://github.com/instruction-material/USACO-Gold/tree/main/UG8-Bookshelf/starter"
+	},
+	{
+		course: "usaco-bronze",
+		id: "usaco-bronze-optional-bronze-problem-bank-and-language-mirrors-supplemental-problem-cow-college",
+		url: "https://github.com/instruction-material/USACO-Bronze/tree/main/UB62-Cow-College/starter"
+	},
+	{
+		course: "usaco-bronze",
+		id: "usaco-bronze-unit-5-mock-contests-postmortems-and-silver-readiness-supplemental-problem-feeding-the-cows",
+		url: "https://github.com/instruction-material/USACO-Bronze/tree/main/UB63-Feeding-the-Cows/starter"
 	}
 ];

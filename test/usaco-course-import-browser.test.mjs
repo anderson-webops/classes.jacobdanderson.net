@@ -19,6 +19,8 @@ const root = fileURLToPath(new URL("../front-end/", import.meta.url));
 const taskId = process.env.CLASSES_FAMILY_TASK_ID ?? "usaco-course-import-browser-ci";
 const changes = {
 	"UB1-Square-Pasture": ["0 0 1 1\n2 0 3 1\n", "9"],
+	"UB62-Cow-College": ["2\n1 2\n", "2 1\n"],
+	"UB63-Feeding-the-Cows": ["1\n2 1\nGH\n", [2]],
 	"US18-Counting-Haybales": ["3 3\n0 5 10\n0 0\n6 9\n0 10\n", "1\n0\n3\n"],
 	"US21-Priority-Queues": ["3\n9 z\n9 a\n-1 urgent\n", "urgent\nz\na\n"],
 	"US22-Prefix-Sums": ["3 3\n1 -2 4\n0 0\n0 3\n1 2\n", "0\n3\n-2\n"],
@@ -32,9 +34,15 @@ function record(event, fields = {}) {
 	console.log(JSON.stringify({ event, parentTaskId: taskId, cwd: root, parentPid: process.pid, time: new Date().toISOString(), ...fields }));
 }
 
-async function runNative(command, args, directory, environment = {}) {
+async function runNative(command, args, directory, environment = {}, input) {
 	return new Promise((resolve, reject) => {
-		const child = spawn(command, args, { cwd: directory, detached: true, env: { ...process.env, ...environment }, stdio: ["ignore", "pipe", "pipe"] });
+		const child = spawn(command, args, {
+			cwd: directory,
+			detached: true,
+			env: { ...process.env, ...environment },
+			stdio: [input === undefined ? "ignore" : "pipe", "pipe", "pipe"]
+		});
+		if (input !== undefined) child.stdin.end(input);
 		record("start", { command: [command, ...args], cwd: directory, pid: child.pid, timeoutMs: 30000 });
 		let stdout = "";
 		let stderr = "";
@@ -57,6 +65,47 @@ async function runNative(command, args, directory, environment = {}) {
 			resolve({ code, stdout, stderr });
 		});
 	});
+}
+
+function verifyStdioAnswer(fixture, input, output, expected) {
+	if (!fixture.folder.startsWith("UB63-Feeding-the-Cows/")) {
+		assert.equal(output, expected);
+		return;
+	}
+	const tokens = input.trim().split(/\s+/);
+	const caseCount = Number(tokens.shift());
+	assert.equal(caseCount, expected.length);
+	const lines = output.replaceAll("\r\n", "\n").trimEnd().split("\n");
+	assert.equal(lines.length, 2 * caseCount);
+	for (let i = 0; i < caseCount; i++) {
+		const n = Number(tokens.shift());
+		const k = Number(tokens.shift());
+		const cows = tokens.shift();
+		const layout = lines[2 * i + 1];
+		assert.match(lines[2 * i], /^\d+$/);
+		assert.equal(
+			Number(lines[2 * i]),
+			expected[i],
+			"The count must be optimal"
+		);
+		assert.equal(layout.length, n);
+		assert.match(layout, /^[.GH]+$/);
+		assert.equal(
+			[...layout].filter(breed => breed !== ".").length,
+			expected[i]
+		);
+		for (let position = 0; position < n; position++) {
+			assert.ok(
+				[...layout].some(
+					(patch, index) =>
+						patch === cows[position]
+						&& Math.abs(index - position) <= k
+				),
+				"Every cow needs a matching patch within K"
+			);
+		}
+	}
+	assert.equal(tokens.length, 0);
 }
 
 async function sourceFiles(fixture) {
@@ -95,6 +144,43 @@ async function exportedFiles(page) {
 async function verifyNativeExport(fixture, files, directory) {
 	await mkdir(directory);
 	for (const [name, content] of Object.entries(files)) await writeFile(join(directory, name), content);
+	if (fixture.stdio) {
+		const input = files[fixture.input];
+		const result = await runNative(
+			"python3",
+			["main.py"],
+			directory,
+			{},
+			input
+		);
+		if (fixture.reference) {
+			assert.equal(result.code, 0, result.stderr);
+			assert.equal(result.stderr, "");
+			verifyStdioAnswer(fixture, input, result.stdout, fixture.expected);
+			const [changedInput, expected]
+				= changes[fixture.folder.split("/")[0]];
+			const changed = await runNative(
+				"python3",
+				["main.py"],
+				directory,
+				{},
+				changedInput
+			);
+			assert.equal(changed.code, 0, changed.stderr);
+			assert.equal(changed.stderr, "");
+			verifyStdioAnswer(fixture, changedInput, changed.stdout, expected);
+		}
+		else {
+			assert.equal(result.code, 1);
+			assert.match(result.stderr, /NotImplementedError/);
+			assert.equal(
+				result.stdout,
+				"",
+				"An unfinished learner must not print an answer"
+			);
+		}
+		return;
+	}
 	const source = fixture.mode === "python" ? "main.py" : "main.cpp";
 	for (const sanitized of fixture.mode === "cpp" ? [false, true] : [false]) {
 		if (fixture.mode === "cpp") {
@@ -128,171 +214,302 @@ async function verifyNativeExport(fixture, files, directory) {
 	}
 }
 
-nodeTest("pinned USACO packs preserve unfinished helpers and native file contracts", { timeout: 180000 }, async () => {
-	const temporary = await mkdtemp(join(tmpdir(), "usaco-pinned-native-"));
-	const verified = new Set();
-	try {
-		for (const fixture of usacoFixtures) {
-			const key = `${fixture.repository}/${fixture.folder}`;
-			if (verified.has(key)) continue;
-			await verifyNativeExport(fixture, await sourceFiles(fixture), join(temporary, String(verified.size)));
-			verified.add(key);
+nodeTest(
+	"pinned USACO packs preserve unfinished helpers and native input/output contracts",
+	{ timeout: 180000 },
+	async () => {
+		const temporary = await mkdtemp(join(tmpdir(), "usaco-pinned-native-"));
+		const verified = new Set();
+		try {
+			const feeding = usacoFixtures.find(
+				fixture => fixture.folder === "UB63-Feeding-the-Cows/solution"
+			);
+			verifyStdioAnswer(feeding, "1\n2 1\nGH\n", "2\nGH\n", [2]);
+			verifyStdioAnswer(feeding, "1\n2 1\nGH\n", "2\nHG\n", [2]);
+			assert.throws(() =>
+				verifyStdioAnswer(feeding, "1\n2 1\nGH\n", "2\nGG\n", [2])
+			);
+			assert.throws(() =>
+				verifyStdioAnswer(feeding, "1\n2 1\nGH\n", "1\nG.\n", [2])
+			);
+			for (const fixture of usacoFixtures) {
+				const key = `${fixture.repository}/${fixture.folder}`;
+				if (verified.has(key)) continue;
+				await verifyNativeExport(fixture, await sourceFiles(fixture), join(temporary, String(verified.size)));
+				verified.add(key);
+			}
+			assert.equal(verified.size, 20);
+			record("verified-usaco-pinned-native-contracts", {
+				roles: verified.size,
+				packs: 10,
+				samplesAndChangedInputs: true,
+				ordinaryAndSanitizedCpp: true,
+				nativeStdio: true,
+				anyOptimalFeedingLayout: true
+			});
 		}
-		assert.equal(verified.size, 16);
-		record("verified-usaco-pinned-native-contracts", { roles: verified.size, packs: 8, samplesAndChangedInputs: true, ordinaryAndSanitizedCpp: true });
+		finally {
+			await rm(temporary, { recursive: true, force: true });
+			record("cleanup", { command: "usaco-pinned-native", pid: process.pid });
+		}
 	}
-	finally {
-		await rm(temporary, { recursive: true, force: true });
-		record("cleanup", { command: "usaco-pinned-native", pid: process.pid });
-	}
-});
+);
 
-nodeTest("restored USACO roles confirm, preserve edits and export correct native file I/O", { timeout: 600000 }, async () => {
-	let browser;
-	let server;
-	let page;
-	let temporary;
-	let exitCode = 0;
-	const previousDirectory = process.cwd();
-	try {
-		process.chdir(root);
-		record("start", { command: "usaco-course-import-browser", pid: process.pid, timeoutMs: 600000 });
-		assert.ok(existsSync(join(root, "dist/index.html")), "Build this exact front end before the browser check");
-		temporary = await mkdtemp(join(tmpdir(), "usaco-course-workflow-"));
-		server = await preview({ root, preview: { host: "127.0.0.1", port: 0, strictPort: true } });
-		const origin = `http://127.0.0.1:${server.httpServer.address().port}`;
-		const executablePath = [process.env.PUPPETEER_EXECUTABLE_PATH, await puppeteer.executablePath(), "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", "/usr/bin/google-chrome", "/usr/bin/chromium"].find(value => value && existsSync(value));
-		assert.ok(executablePath, "Chrome is required");
-		browser = await puppeteer.launch({ executablePath, headless: true, args: ["--no-sandbox"] });
-		page = await browser.newPage();
-		let fixture;
-		let files;
-		let catalog = true;
-		let sourceRequests = 0;
-		let remoteWrites = 0;
-		await page.setRequestInterception(true);
-		page.on("request", (request) => {
-			const url = new URL(request.url());
-			const respond = (body, contentType = "application/json") => request.respond({ status: 200, contentType, headers: { "access-control-allow-origin": "*" }, body });
-			if (url.hostname === "api.github.com") {
-				sourceRequests++;
-				assert.equal(url.pathname, `/repos/${fixture.repository}/contents/${fixture.folder}`);
-				assert.equal(url.searchParams.get("ref"), "main");
-				const paths = [...Object.keys(files), "ignored.out"];
-				void respond(JSON.stringify(paths.map(name => ({ type: "file", name, path: `${fixture.folder}/${name}`, size: name === "ignored.out" ? 1 : Buffer.byteLength(files[name]), html_url: `https://github.com/${fixture.repository}/blob/main/${fixture.folder}/${name}`, download_url: `https://raw.githubusercontent.com/${fixture.repository}/main/${fixture.folder}/${name}` }))));
+nodeTest(
+	"restored USACO roles confirm, preserve edits and export correct native I/O",
+	{ timeout: 600000 },
+	async () => {
+		let browser;
+		let server;
+		let page;
+		let temporary;
+		let exitCode = 0;
+		const previousDirectory = process.cwd();
+		try {
+			process.chdir(root);
+			record("start", { command: "usaco-course-import-browser", pid: process.pid, timeoutMs: 600000 });
+			assert.ok(existsSync(join(root, "dist/index.html")), "Build this exact front end before the browser check");
+			temporary = await mkdtemp(join(tmpdir(), "usaco-course-workflow-"));
+			server = await preview({ root, preview: { host: "127.0.0.1", port: 0, strictPort: true } });
+			const origin = `http://127.0.0.1:${server.httpServer.address().port}`;
+			const executablePath = [process.env.PUPPETEER_EXECUTABLE_PATH, await puppeteer.executablePath(), "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", "/usr/bin/google-chrome", "/usr/bin/chromium"].find(value => value && existsSync(value));
+			assert.ok(executablePath, "Chrome is required");
+			browser = await puppeteer.launch({ executablePath, headless: true, args: ["--no-sandbox"] });
+			page = await browser.newPage();
+			let fixture;
+			let files;
+			let catalog = true;
+			let sourceRequests = 0;
+			let remoteWrites = 0;
+			await page.setRequestInterception(true);
+			page.on("request", (request) => {
+				const url = new URL(request.url());
+				const respond = (body, contentType = "application/json") => request.respond({ status: 200, contentType, headers: { "access-control-allow-origin": "*" }, body });
+				if (url.hostname === "api.github.com") {
+					sourceRequests++;
+					assert.equal(url.pathname, `/repos/${fixture.repository}/contents/${fixture.folder}`);
+					assert.equal(url.searchParams.get("ref"), "main");
+					const paths = [...Object.keys(files), "ignored.out"];
+					void respond(JSON.stringify(paths.map(name => ({ type: "file", name, path: `${fixture.folder}/${name}`, size: name === "ignored.out" ? 1 : Buffer.byteLength(files[name]), html_url: `https://github.com/${fixture.repository}/blob/main/${fixture.folder}/${name}`, download_url: `https://raw.githubusercontent.com/${fixture.repository}/main/${fixture.folder}/${name}` }))));
+				}
+				else if (url.hostname === "raw.githubusercontent.com") {
+					sourceRequests++;
+					const name = url.pathname.split("/").at(-1);
+					assert.equal(url.pathname, `/${fixture.repository}/main/${fixture.folder}/${name}`);
+					assert.ok(Object.hasOwn(files, name), "Only the selected role's allowed files can be fetched");
+					void respond(files[name], "text/plain");
+				}
+				else if (
+					request.method() === "GET"
+					&& url.href.startsWith(
+						"https://cdn.jsdelivr.net/pyodide/v314.0.0/full/"
+					)
+				) {
+					void request.continue();
+				}
+				else if (url.origin !== origin || url.pathname.startsWith("/api/")) {
+					if (!["GET", "OPTIONS"].includes(request.method())) remoteWrites++;
+					let body = {};
+					if (catalog && url.pathname === "/api/accounts/me") body = fixture.reference ? { tutorID: "usaco-tutor" } : { userID: "usaco-learner" };
+					if (catalog && fixture.reference && url.pathname === "/api/tutors/loggedin") body = { currentTutor: { _id: "usaco-tutor", name: "Reference fixture", email: "reference@example.invalid", age: 30, state: "GA", coursePermissions: [fixture.courseId], usersOfTutorLength: 0 } };
+					if (catalog && url.pathname === "/api/users/loggedin") body = { currentUser: { _id: "usaco-learner", name: "Learner fixture", email: "learner@example.invalid", age: 14, state: "GA", courseAccess: [fixture.courseId], courseProgress: [] } };
+					if (catalog && fixture.reference && url.pathname === "/api/users/oftutor/usaco-tutor") body = [{ _id: "usaco-learner", name: "Learner fixture", email: "learner@example.invalid", age: 14, state: "GA", courseAccess: [fixture.courseId], courseProgress: [] }];
+					void respond(JSON.stringify(body));
+				}
+				else {
+					void request.continue();
+				}
+			});
+			for (const [index, current] of usacoFixtures.entries()) {
+				fixture = current;
+				files = await sourceFiles(fixture);
+				const sourceUrl = `https://github.com/${fixture.repository}/tree/main/${fixture.folder}`;
+				const selector = `a[href='${sourceUrl}']`;
+				const before = sourceRequests;
+				catalog = true;
+				await page.setViewport({ width: index % 2 ? 1280 : 390, height: 900 });
+				await page.goto(`${origin}/courses#${fixture.anchor}`, { waitUntil: "domcontentloaded" });
+				await page.waitForSelector(".lesson-view-toggle button");
+				for (const position of [1, 2, 3]) {
+					await page.click(`.lesson-view-toggle button:nth-child(${position})`);
+					await page.waitForSelector(`.lesson-view-toggle button:nth-child(${position})[aria-pressed='true']`);
+					if (await page.$(selector)) break;
+				}
+				await page.waitForSelector(selector);
+				await page.waitForFunction(selector => ["Contract and reasoning", "Guided implementation", "Check and explain", "Open, save and run"].every(label => [...document.querySelector(selector)?.closest(".lesson-item")?.querySelectorAll(".item-content-markdown h2") ?? []].some(heading => heading.textContent === label)), { timeout: 15000 }, selector);
+				const card = await page.$eval(selector, link => ({ text: link.closest(".lesson-item").textContent, links: [...link.closest(".lesson-item").querySelectorAll("a")].map(action => ({ text: action.textContent, href: action.getAttribute("href"), import: action.classList.contains("is-ide-starter") })) }));
+				assert.match(card.text, /Contract and reasoning/);
+				if (!fixture.reference) assert.ok(card.links.every(link => !link.href.includes("/solution")), "Learner view withholds reference resources");
+				const href = card.links.find(link => link.import && new URL(link.href, origin).searchParams.get("starterUrl") === sourceUrl)?.href;
+				assert.ok(href, `${fixture.folder} needs its own confirmed action`);
+				const params = new URL(href, origin).searchParams;
+				assert.equal(params.get("mode"), fixture.mode);
+				assert.equal(params.get("projectKey"), `${fixture.courseId}:${fixture.itemId}:${fixture.reference ? "reference" : "starter"}`);
+				assert.equal(sourceRequests, before);
+				if (process.env.COURSE_IMPORT_SCREENSHOT_DIR) {
+					const directory = join(previousDirectory, process.env.COURSE_IMPORT_SCREENSHOT_DIR);
+					await mkdir(directory, { recursive: true });
+					const link = await page.$(selector);
+					const element = await link.evaluateHandle(element => element.closest(".lesson-item"));
+					await element.asElement().screenshot({ path: join(directory, `course-import-usaco-${fixture.courseId}-${fixture.folder.replaceAll("/", "-")}-lesson.png`) });
+				}
+				catalog = false;
+				await page.goto(new URL(href, origin).href, { waitUntil: "domcontentloaded" });
+				await page.waitForSelector("[data-testid='ide-route-import-confirm']");
+				assert.equal(sourceRequests, before, "Source is not fetched before consent");
+				const previous = await page.evaluate(() => JSON.parse(localStorage.getItem("classes-python-ide-projects:anonymous") ?? "[]"));
+				await confirmProjectImport(page);
+				const key = params.get("projectKey");
+				await page.waitForFunction((key, files) => JSON.parse(localStorage.getItem("classes-python-ide-projects:anonymous") ?? "[]").some(project => project.courseProjectKey === key && project.files.length === Object.keys(files).length && Object.entries(files).every(([name, content]) => project.files.some(file => file.name === name && file.content === content))), {}, key, files);
+				assert.equal(sourceRequests, before + 1 + Object.keys(files).length);
+				await openProjectSidebar(page);
+				assert.deepEqual(await exportedFiles(page), files);
+				const source = fixture.mode === "python" ? "main.py" : "main.cpp";
+				const edited = `${files[source]}\n${fixture.mode === "python" ? "#" : "//"} Saved USACO browser attempt\n`;
+				await page.select("select[aria-label='Active project file']", source);
+				await page.click(".cm-content");
+				const modifier = await page.evaluate(() => /Mac/.test(navigator.platform) ? "Meta" : "Control");
+				await page.keyboard.down(modifier);
+				await page.keyboard.press("a");
+				await page.keyboard.up(modifier);
+				await page.keyboard.sendCharacter(edited);
+				await page.keyboard.down(modifier);
+				await page.keyboard.press("s");
+				await page.keyboard.up(modifier);
+				await page.waitForFunction((key, edited, source) => JSON.parse(localStorage.getItem("classes-python-ide-projects:anonymous") ?? "[]").some(project => project.courseProjectKey === key && project.files.some(file => file.name === source && file.content === edited)), {}, key, edited, source);
+				if (fixture.mode === "cpp") {
+					await page.click("button.run-control");
+					await page.waitForFunction(() => document.querySelector(".output-panel")?.textContent.includes("-std=c++20"));
+					assert.match(await page.$eval(".output-panel", element => element.textContent), /does not compile or execute/);
+				}
+				if (fixture.stdio) {
+					const inputs = [
+						files[fixture.input],
+						...(fixture.reference
+							? [changes[fixture.folder.split("/")[0]][0]]
+							: [])
+					];
+					for (const [inputIndex, input] of inputs.entries()) {
+						await page.$eval(
+							".stdin-panel textarea",
+							(element, input) => {
+								element.value = input;
+								element.dispatchEvent(
+									new Event("input", { bubbles: true })
+								);
+							},
+							input
+						);
+						await page.waitForSelector(
+							"button.run-control:not([disabled])"
+						);
+						await page.click("button.run-control");
+						await page.waitForFunction(
+							() =>
+								/Run complete|Run failed/.test(
+									document.querySelector(
+										"[data-testid='ide-run-status']"
+									)?.textContent ?? ""
+								),
+							{ timeout: 120000 }
+						);
+						const status = await page.$eval(
+							"[data-testid='ide-run-status']",
+							element => element.textContent.trim()
+						);
+						const stderr = await page.$$eval(
+							".output-line--stderr",
+							elements =>
+								elements
+									.map(element => element.textContent)
+									.join("\n")
+						);
+						const stdout = await page.$$eval(
+							".output-line--stdout",
+							elements =>
+								elements
+									.map(element => element.textContent)
+									.join("\n") + (elements.length ? "\n" : "")
+						);
+						if (fixture.reference) {
+							assert.equal(status, "Run complete", stderr);
+							assert.equal(stderr, "");
+							verifyStdioAnswer(
+								fixture,
+								input,
+								stdout,
+								inputIndex
+									? changes[fixture.folder.split("/")[0]][1]
+									: fixture.expected
+							);
+						}
+						else {
+							assert.equal(status, "Run failed");
+							assert.match(stderr, /NotImplementedError/);
+							assert.equal(stdout, "");
+						}
+					}
+				}
+				const expectedFiles = { ...files, [source]: edited };
+				const exported = await exportedFiles(page);
+				assert.deepEqual(exported, expectedFiles);
+				await verifyNativeExport(fixture, exported, join(temporary, String(index)));
+				await page.goto(new URL(href, origin).href, { waitUntil: "domcontentloaded" });
+				await page.waitForSelector(".code-ide-workspace");
+				assert.equal(await page.$("[data-testid='ide-route-import-confirm']"), null);
+				const saved = await page.evaluate(key => JSON.parse(localStorage.getItem("classes-python-ide-projects:anonymous") ?? "[]").find(project => project.courseProjectKey === key), key);
+				assert.deepEqual(Object.fromEntries(saved.files.map(file => [file.name, file.content])), expectedFiles);
+				const all = await page.evaluate(() => JSON.parse(localStorage.getItem("classes-python-ide-projects:anonymous") ?? "[]"));
+				for (const project of previous) assert.deepEqual(all.find(item => item._id === project._id), project, "Other saved attempts are unchanged");
+				assert.equal(sourceRequests, before + 1 + Object.keys(files).length, "Reopening never redownloads or overwrites edits");
+				if (process.env.COURSE_IMPORT_SCREENSHOT_DIR) {
+					await page.screenshot({ path: join(previousDirectory, process.env.COURSE_IMPORT_SCREENSHOT_DIR, `course-import-usaco-${fixture.courseId}-${fixture.folder.replaceAll("/", "-")}-workspace.png`) });
+				}
+				record("verified-usaco-role", {
+					course: fixture.courseId,
+					folder: fixture.folder,
+					revision: fixture.revision,
+					mode: fixture.mode,
+					savedKey: key,
+					fileCount: Object.keys(files).length,
+					preservedOtherAttempts: previous.length,
+					ordinaryAndSanitized: fixture.mode === "cpp",
+					unfinishedLearner: !fixture.reference,
+					nativeFileIo: !fixture.stdio,
+					nativeStdio: Boolean(fixture.stdio),
+					browserStdio: Boolean(fixture.stdio)
+				});
 			}
-			else if (url.hostname === "raw.githubusercontent.com") {
-				sourceRequests++;
-				const name = url.pathname.split("/").at(-1);
-				assert.equal(url.pathname, `/${fixture.repository}/main/${fixture.folder}/${name}`);
-				assert.ok(Object.hasOwn(files, name), "Only the selected role's allowed files can be fetched");
-				void respond(files[name], "text/plain");
-			}
-			else if (url.origin !== origin || url.pathname.startsWith("/api/")) {
-				if (!["GET", "OPTIONS"].includes(request.method())) remoteWrites++;
-				let body = {};
-				if (catalog && url.pathname === "/api/accounts/me") body = fixture.reference ? { tutorID: "usaco-tutor" } : { userID: "usaco-learner" };
-				if (catalog && fixture.reference && url.pathname === "/api/tutors/loggedin") body = { currentTutor: { _id: "usaco-tutor", name: "Reference fixture", email: "reference@example.invalid", age: 30, state: "GA", coursePermissions: [fixture.courseId], usersOfTutorLength: 0 } };
-				if (catalog && url.pathname === "/api/users/loggedin") body = { currentUser: { _id: "usaco-learner", name: "Learner fixture", email: "learner@example.invalid", age: 14, state: "GA", courseAccess: [fixture.courseId], courseProgress: [] } };
-				if (catalog && fixture.reference && url.pathname === "/api/users/oftutor/usaco-tutor") body = [{ _id: "usaco-learner", name: "Learner fixture", email: "learner@example.invalid", age: 14, state: "GA", courseAccess: [fixture.courseId], courseProgress: [] }];
-				void respond(JSON.stringify(body));
-			}
-			else {
-				void request.continue();
-			}
-		});
-		for (const [index, current] of usacoFixtures.entries()) {
-			fixture = current;
-			files = await sourceFiles(fixture);
-			const sourceUrl = `https://github.com/${fixture.repository}/tree/main/${fixture.folder}`;
-			const selector = `a[href='${sourceUrl}']`;
-			const before = sourceRequests;
-			catalog = true;
-			await page.setViewport({ width: index % 2 ? 1280 : 390, height: 900 });
-			await page.goto(`${origin}/courses#${fixture.anchor}`, { waitUntil: "domcontentloaded" });
-			await page.waitForSelector(".lesson-view-toggle button");
-			for (const position of [1, 2, 3]) {
-				await page.click(`.lesson-view-toggle button:nth-child(${position})`);
-				await page.waitForSelector(`.lesson-view-toggle button:nth-child(${position})[aria-pressed='true']`);
-				if (await page.$(selector)) break;
-			}
-			await page.waitForSelector(selector);
-			await page.waitForFunction(selector => ["Contract and reasoning", "Guided implementation", "Check and explain", "Open, save and run"].every(label => [...document.querySelector(selector)?.closest(".lesson-item")?.querySelectorAll(".item-content-markdown h2") ?? []].some(heading => heading.textContent === label)), { timeout: 15000 }, selector);
-			const card = await page.$eval(selector, link => ({ text: link.closest(".lesson-item").textContent, links: [...link.closest(".lesson-item").querySelectorAll("a")].map(action => ({ text: action.textContent, href: action.getAttribute("href"), import: action.classList.contains("is-ide-starter") })) }));
-			assert.match(card.text, /Contract and reasoning/);
-			if (!fixture.reference) assert.ok(card.links.every(link => !link.href.includes("/solution")), "Learner view withholds reference resources");
-			const href = card.links.find(link => link.import && new URL(link.href, origin).searchParams.get("starterUrl") === sourceUrl)?.href;
-			assert.ok(href, `${fixture.folder} needs its own confirmed action`);
-			const params = new URL(href, origin).searchParams;
-			assert.equal(params.get("mode"), fixture.mode);
-			assert.equal(params.get("projectKey"), `${fixture.courseId}:${fixture.itemId}:${fixture.reference ? "reference" : "starter"}`);
-			assert.equal(sourceRequests, before);
-			if (process.env.COURSE_IMPORT_SCREENSHOT_DIR) {
-				const directory = join(previousDirectory, process.env.COURSE_IMPORT_SCREENSHOT_DIR);
-				await mkdir(directory, { recursive: true });
-				const link = await page.$(selector);
-				const element = await link.evaluateHandle(element => element.closest(".lesson-item"));
-				await element.asElement().screenshot({ path: join(directory, `course-import-usaco-${fixture.courseId}-${fixture.folder.replaceAll("/", "-")}-lesson.png`) });
-			}
-			catalog = false;
-			await page.goto(new URL(href, origin).href, { waitUntil: "domcontentloaded" });
-			await page.waitForSelector("[data-testid='ide-route-import-confirm']");
-			assert.equal(sourceRequests, before, "Source is not fetched before consent");
-			const previous = await page.evaluate(() => JSON.parse(localStorage.getItem("classes-python-ide-projects:anonymous") ?? "[]"));
-			await confirmProjectImport(page);
-			const key = params.get("projectKey");
-			await page.waitForFunction((key, files) => JSON.parse(localStorage.getItem("classes-python-ide-projects:anonymous") ?? "[]").some(project => project.courseProjectKey === key && project.files.length === Object.keys(files).length && Object.entries(files).every(([name, content]) => project.files.some(file => file.name === name && file.content === content))), {}, key, files);
-			assert.equal(sourceRequests, before + 1 + Object.keys(files).length);
-			await openProjectSidebar(page);
-			assert.deepEqual(await exportedFiles(page), files);
-			const source = fixture.mode === "python" ? "main.py" : "main.cpp";
-			const edited = `${files[source]}\n${fixture.mode === "python" ? "#" : "//"} Saved USACO browser attempt\n`;
-			await page.select("select[aria-label='Active project file']", source);
-			await page.click(".cm-content");
-			const modifier = await page.evaluate(() => /Mac/.test(navigator.platform) ? "Meta" : "Control");
-			await page.keyboard.down(modifier);
-			await page.keyboard.press("a");
-			await page.keyboard.up(modifier);
-			await page.keyboard.sendCharacter(edited);
-			await page.keyboard.down(modifier);
-			await page.keyboard.press("s");
-			await page.keyboard.up(modifier);
-			await page.waitForFunction((key, edited, source) => JSON.parse(localStorage.getItem("classes-python-ide-projects:anonymous") ?? "[]").some(project => project.courseProjectKey === key && project.files.some(file => file.name === source && file.content === edited)), {}, key, edited, source);
-			if (fixture.mode === "cpp") {
-				await page.click("button.run-control");
-				await page.waitForFunction(() => document.querySelector(".output-panel")?.textContent.includes("-std=c++20"));
-				assert.match(await page.$eval(".output-panel", element => element.textContent), /does not compile or execute/);
-			}
-			const expectedFiles = { ...files, [source]: edited };
-			const exported = await exportedFiles(page);
-			assert.deepEqual(exported, expectedFiles);
-			await verifyNativeExport(fixture, exported, join(temporary, String(index)));
-			await page.goto(new URL(href, origin).href, { waitUntil: "domcontentloaded" });
-			await page.waitForSelector(".code-ide-workspace");
-			assert.equal(await page.$("[data-testid='ide-route-import-confirm']"), null);
-			const saved = await page.evaluate(key => JSON.parse(localStorage.getItem("classes-python-ide-projects:anonymous") ?? "[]").find(project => project.courseProjectKey === key), key);
-			assert.deepEqual(Object.fromEntries(saved.files.map(file => [file.name, file.content])), expectedFiles);
-			const all = await page.evaluate(() => JSON.parse(localStorage.getItem("classes-python-ide-projects:anonymous") ?? "[]"));
-			for (const project of previous) assert.deepEqual(all.find(item => item._id === project._id), project, "Other saved attempts are unchanged");
-			assert.equal(sourceRequests, before + 1 + Object.keys(files).length, "Reopening never redownloads or overwrites edits");
-			if (process.env.COURSE_IMPORT_SCREENSHOT_DIR) {
-				await page.screenshot({ path: join(previousDirectory, process.env.COURSE_IMPORT_SCREENSHOT_DIR, `course-import-usaco-${fixture.courseId}-${fixture.folder.replaceAll("/", "-")}-workspace.png`) });
-			}
-			record("verified-usaco-role", { course: fixture.courseId, folder: fixture.folder, revision: fixture.revision, mode: fixture.mode, savedKey: key, fileCount: Object.keys(files).length, preservedOtherAttempts: previous.length, ordinaryAndSanitized: fixture.mode === "cpp", unfinishedLearner: !fixture.reference, nativeFileIo: true });
+			assert.equal(remoteWrites, 0);
+			record("verified-usaco-workflows", {
+				imports: usacoFixtures.length,
+				packs: 10,
+				roleSeparation: true,
+				consentBeforeSource: true,
+				savedAndExported: true,
+				nativeStdio: true,
+				browserStdio: true,
+				remoteWrites
+			});
 		}
-		assert.equal(remoteWrites, 0);
-		record("verified-usaco-workflows", { imports: usacoFixtures.length, packs: 8, roleSeparation: true, consentBeforeSource: true, savedAndExported: true, remoteWrites });
+		catch (error) {
+			exitCode = 1;
+			if (page && !page.isClosed()) {
+				record("failed-usaco-browser-state", await page.evaluate(() => ({
+					runStatus: document.querySelector("[data-testid='ide-run-status']")?.textContent,
+					consoleOutput: document.querySelector(".output-panel")?.textContent,
+					frames: [...document.querySelectorAll("iframe")].map(frame => ({ src: frame.getAttribute("src"), title: frame.title }))
+				})));
+			}
+			throw error;
+		}
+		finally {
+			if (page) await page.close();
+			if (browser) await browser.close();
+			if (server) await server.close();
+			if (temporary) await rm(temporary, { recursive: true, force: true });
+			process.chdir(previousDirectory);
+			record("cleanup", { pid: process.pid, exitCode });
+		}
 	}
-	catch (error) {
-		exitCode = 1;
-		throw error;
-	}
-	finally {
-		if (page) await page.close();
-		if (browser) await browser.close();
-		if (server) await server.close();
-		if (temporary) await rm(temporary, { recursive: true, force: true });
-		process.chdir(previousDirectory);
-		record("cleanup", { pid: process.pid, exitCode });
-	}
-});
+);
