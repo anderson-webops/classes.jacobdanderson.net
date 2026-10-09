@@ -82,7 +82,7 @@ export async function checkScratchConditionalCourse(page, origin, setRole) {
 			assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
 			if (process.env.SCRATCH_SCREENSHOT_DIR) {
 				const card = await page.evaluateHandle(() => [...document.querySelectorAll(".lesson-item")].find(item => item.querySelector("h5")?.textContent.includes("Speed Click: Debugging Pitfalls")));
-				await card.asElement().screenshot({ path: join(process.env.SCRATCH_SCREENSHOT_DIR, `scratch-speed-click-${role}-${width}.png`) });
+				await card.asElement().screenshot({ path: join(process.env.SCRATCH_SCREENSHOT_DIR, `scratch-conditionals-speed-click-${role}-${width}.png`) });
 				await card.dispose();
 			}
 			console.log(JSON.stringify({ event: "verified-scratch-speed-click-guidance", role, width, preRoundAndExpiredClicksRejected: true, resetAndCountdownSeparated: true }));
@@ -105,7 +105,7 @@ export async function checkScratchConditionalCourse(page, origin, setRole) {
 			assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
 			if (process.env.SCRATCH_SCREENSHOT_DIR) {
 				const card = await page.evaluateHandle(() => [...document.querySelectorAll(".lesson-item")].find(item => item.querySelector("h5")?.textContent.includes("Open-Ended Variant: Pen with Event Listeners")));
-				await card.asElement().screenshot({ path: join(process.env.SCRATCH_SCREENSHOT_DIR, `scratch-independent-link-${role}-${width}.png`) });
+				await card.asElement().screenshot({ path: join(process.env.SCRATCH_SCREENSHOT_DIR, `scratch-conditionals-independent-link-${role}-${width}.png`) });
 				await card.dispose();
 			}
 			console.log(JSON.stringify({ event: "verified-scratch-independent-link", role, width, sameOriginBlankStarter: true, downloadAndReopenInstructions: true }));
