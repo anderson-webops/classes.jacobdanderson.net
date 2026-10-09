@@ -2111,6 +2111,10 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 				assert.ok(freshHref, "Full project brief offers the separate current learner import");
 				const freshKey = new URL(freshHref, origin).searchParams.get("projectKey");
 				assert.notEqual(freshKey, key);
+				if (Object.hasOwn(ownershipPacks, folder)) {
+					const unit = folder.split("-")[0].toLowerCase();
+					assert.equal(freshKey, `${courseId}:${unit}-node-ownership:current-pack-v1`);
+				}
 				courseFixture = false;
 				await page.goto(new URL(freshHref, origin).href, { waitUntil: "domcontentloaded" });
 				await page.waitForSelector("[data-testid='ide-route-import-confirm']");

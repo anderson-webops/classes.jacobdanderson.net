@@ -7,9 +7,8 @@ export function cppBuildInstructions(
 ) {
 	const key = courseProjectKey ?? "";
 	const standard =
-		/^(?:(?:c|cpp)-level-1|cpp-level-[23]|data-structures-and-algorithms-in-cpp)(?:[:-]|$)/.test(
-			key
-		)
+		/^(?:(?:c|cpp)-level-1|cpp-level-[23])(?:[:-]|$)/.test(key) ||
+		/^data-structures-and-algorithms-in-cpp(?::|$)/.test(key)
 			? 20
 			: 17;
 	const sources = files

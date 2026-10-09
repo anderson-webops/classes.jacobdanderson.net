@@ -1524,6 +1524,24 @@ function dataStructuresCppSupplementalPath(title: string) {
 		: ("choice" as const);
 }
 
+const DATA_STRUCTURES_CPP_CURRENT_OWNERSHIP_PACKS: Record<
+	string,
+	{ key: string; anchor: string }
+> = {
+	"DSCPP6 Templates and Linked Structures": {
+		key: "dscpp6-node-ownership",
+		anchor: "dscpp6-templates-and-linked-structures"
+	},
+	"DSCPP7 Binary Search Trees": {
+		key: "dscpp7-node-ownership",
+		anchor: "dscpp7-binary-search-trees"
+	},
+	"DSCPP8 AVL Trees and Rebalancing": {
+		key: "dscpp8-node-ownership",
+		anchor: "dscpp8-avl-trees-and-rebalancing"
+	}
+};
+
 function decorateDataStructuresCppModule(
 	module: RawCourse["modules"][number]
 ): RawCourse["modules"][number] {
@@ -1541,6 +1559,30 @@ function decorateDataStructuresCppModule(
 				: item.content,
 		learningPath: "core" as const
 	}));
+	const currentOwnershipPack =
+		DATA_STRUCTURES_CPP_CURRENT_OWNERSHIP_PACKS[module.title];
+	if (currentOwnershipPack) {
+		const project = curriculum.find(
+			item => item.title === `${module.title}: Core Project`
+		)!;
+		project.ideImport = true;
+		const courseId = "data-structures-and-algorithms-in-cpp";
+		const params = new URLSearchParams({
+			course: courseId,
+			mode: "cpp",
+			projectKey: `${courseId}:${currentOwnershipPack.key}:current-pack-v1`,
+			starterUrl: project.projectLink!,
+			starterTitle: `Core Project: ${module.title.replace(/^DSCPP\d+ /, "")}`,
+			starterLabel: "Learner starter",
+			lesson: `${courseId}-${currentOwnershipPack.anchor}`
+		});
+		project.content +=
+			"\n\n## Keep existing work and compare current source\n\n" +
+			"The normal Start in IDE action continues the usual saved project. " +
+			"Save and export an earlier attempt before comparing it with the corrected ownership starter. " +
+			`[Open current starter separately](/ide?${params}) asks before importing and preserves the earlier project. ` +
+			"Extract the exported ZIP and use the native C++20 compiler to build and run it.";
+	}
 
 	if (module.title === "DSCPP0 Setup and Positioning") {
 		curriculum.push({

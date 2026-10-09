@@ -74,7 +74,12 @@ build directions. The root source toolchain specifies C++20; the task-manager
 reference also requires it for erase_if and ranges::sort. It checks actual imports,
 saves, exports and reopening with ordinary/sanitized native ownership checks.
 Three additional untouched/saved learner cases preserve existing attempts.
-All fourteen local export-checker native groups, fifteen focused catalog tests
+The three ownership starters offer an explicit current-pack action with separate
+workspace identities and import confirmation. Course-wide C++20 assertions now
+cover other DSA units while excluding similar unrelated course names. The prior
+hosted run caught the missing action and stale C++17 expectation; it failed and
+is not accepted.
+All fourteen local export-checker native groups, nineteen focused catalog tests
 and full workspace source lint pass. Full hosted browser and visual acceptance
 remain pending. Dependencies and both lockfiles are unchanged.
 
