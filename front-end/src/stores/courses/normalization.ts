@@ -1408,6 +1408,7 @@ function normalizeModuleLessonShape(course: RawCourse, courseId: string) {
 			(courseId === "data-structures-and-algorithms-in-cpp" &&
 				[
 					"DSCPP0 Setup and Positioning",
+					"DSCPP1 Interfaces, Records, and a Task Manager CLI",
 					"DSCPP2 Graphs and Shortest Paths"
 				].includes(module.title)) ||
 			(courseId === "scratch-level-1" &&
@@ -3462,6 +3463,19 @@ function needsContentSupport(context: CourseTextContext) {
 	const content = context.item.content;
 	if (!content.trim()) return true;
 	if (hasCompleteScratchSupportPrompt(context)) return false;
+	if (
+		context.courseId === "data-structures-and-algorithms-in-cpp" &&
+		context.module.title ===
+			"DSCPP1 Interfaces, Records, and a Task Manager CLI" &&
+		[
+			"Learn",
+			"Predict and practice",
+			"Verify and debug",
+			"Extend and review"
+		].every(stage => content.includes(`\n\n## ${stage}\n\n`))
+	) {
+		return false;
+	}
 	if (isInformationalResourceItem(context.item))
 		return isBriefContent(content);
 	if (structuredSupportPattern.test(content) && !isBriefContent(content))

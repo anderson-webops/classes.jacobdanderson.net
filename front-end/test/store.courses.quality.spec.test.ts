@@ -4118,7 +4118,7 @@ describe("course text quality normalization", () => {
 		expect(corpus).not.toMatch(/\bImplementation Lab\b/i);
 		expect(corpus).not.toMatch(/\bshould\b/i);
 		expect(corpus).toContain(
-			"Sequence mutation becomes concrete through task filtering and removal"
+			"Storage order and view order serve different purposes"
 		);
 		expect(corpus).toContain(
 			"Shortest-path work is a repeated relaxation problem"
