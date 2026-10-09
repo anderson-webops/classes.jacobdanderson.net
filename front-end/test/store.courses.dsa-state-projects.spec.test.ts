@@ -30,6 +30,17 @@ const units = [
 			"recursive-maze-transfer-practice",
 			"recursive-maze-extension-practice"
 		]
+	},
+	{
+		anchor: "dscpp5-quicksort-and-partitioning",
+		folder: "DSCPP5-Quicksort-Toolkit",
+		current: "dscpp5-quicksort-contract",
+		continuation: "Continue saved quicksort project",
+		worksheets: [
+			"project-quicksort-toolkit",
+			"quicksort-partition-transfer-practice",
+			"quicksort-partition-extension-practice"
+		]
 	}
 ];
 

@@ -15,11 +15,12 @@ export async function verifyStateProjectTeaching(page, options) {
 	} = options;
 	const requestsBefore = sourceRequestCount();
 	const markov = folder.startsWith("DSCPP3-");
-	const unit = markov ? "DSCPP3" : "DSCPP4";
-	const anchor = markov ? "dscpp3-stl-containers-and-state-based-text-generation" : "dscpp4-recursion-and-backtracking-in-3d-mazes";
-	const titles = markov ? ["Vectors, Sets, Maps, and Deques as Different Stories", "Tokenization and Cleanup", "State Windows and Markov-Style Generation", "Verification Review: STL Containers and State Based Text Generation"] : ["Recursive Search as Controlled Exploration", "Visited State and Cycle Prevention", "Path Construction and Rollback", "Verification Review: Recursion and Backtracking in 3D Mazes"];
-	const worksheets = markov ? ["Project: Markov Text Generator", "Container Text Generation Transfer Practice", "Container Text Generation Extension Practice"] : ["Project: Recursive Maze Pathfinder", "Recursive Maze Transfer Practice", "Recursive Maze Extension Practice"];
-	const continuationLabel = markov ? "Continue saved text-generator project" : "Continue saved maze project";
+	const quicksort = folder.startsWith("DSCPP5-");
+	const unit = markov ? "DSCPP3" : quicksort ? "DSCPP5" : "DSCPP4";
+	const anchor = quicksort ? "dscpp5-quicksort-and-partitioning" : markov ? "dscpp3-stl-containers-and-state-based-text-generation" : "dscpp4-recursion-and-backtracking-in-3d-mazes";
+	const titles = quicksort ? ["Why Partition-Based Sorting Works", "Median of Three and Practical Pivot Choice", "Recursive Boundaries and Base Cases", "Verification Review: Quicksort and Partitioning"] : markov ? ["Vectors, Sets, Maps, and Deques as Different Stories", "Tokenization and Cleanup", "State Windows and Markov-Style Generation", "Verification Review: STL Containers and State Based Text Generation"] : ["Recursive Search as Controlled Exploration", "Visited State and Cycle Prevention", "Path Construction and Rollback", "Verification Review: Recursion and Backtracking in 3D Mazes"];
+	const worksheets = quicksort ? ["Project: Quicksort Toolkit", "Quicksort Partition Transfer Practice", "Quicksort Partition Extension Practice"] : markov ? ["Project: Markov Text Generator", "Container Text Generation Transfer Practice", "Container Text Generation Extension Practice"] : ["Project: Recursive Maze Pathfinder", "Recursive Maze Transfer Practice", "Recursive Maze Extension Practice"];
+	const continuationLabel = quicksort ? "Continue saved quicksort project" : markov ? "Continue saved text-generator project" : "Continue saved maze project";
 	const primaryKey = `data-structures-and-algorithms-in-cpp:data-structures-and-algorithms-in-cpp-${anchor}-curriculum-core-project-${anchor.replace(/^dscpp\d+-/, "")}:starter`;
 	if (screenshotDirectory)
 		await mkdir(screenshotDirectory, { recursive: true });

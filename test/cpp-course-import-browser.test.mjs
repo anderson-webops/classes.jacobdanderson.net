@@ -3,7 +3,7 @@ import { Buffer } from "node:buffer";
 import { spawn } from "node:child_process";
 import { createHash } from "node:crypto";
 import { existsSync } from "node:fs";
-import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 // This workflow is run by node --test in CI, outside Vitest.
@@ -2000,7 +2000,7 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 			await compileExport(directory, Object.keys(exported), mode, standard, isNativeContractPack(folder));
 			if (Object.hasOwn(statePacks, folder)) {
 				await verifyStateProjectExport(directory, folder, runNative);
-				record("verified-native-state-project-export", { folder, fileCount: Object.keys(exported).length, ordinaryAndSanitized: true, originalDemonstration: true, learnerTasksPreserved: !referenceFixture, windowModels: folder.startsWith("DSCPP3") && referenceFixture ? 320 : null, malformedReloads: folder.startsWith("DSCPP4") ? 17 : null, mazeLayouts: folder.startsWith("DSCPP4") ? 37 : null });
+				record("verified-native-state-project-export", { folder, fileCount: Object.keys(exported).length, ordinaryAndSanitized: true, originalDemonstration: true, learnerTasksPreserved: !referenceFixture, windowModels: folder.startsWith("DSCPP3") && referenceFixture ? 320 : null, malformedReloads: folder.startsWith("DSCPP4") ? 17 : null, mazeLayouts: folder.startsWith("DSCPP4") ? 37 : null, sortCases: folder.startsWith("DSCPP5") && referenceFixture ? 3816 : null, partitionCases: folder.startsWith("DSCPP5") && referenceFixture ? 516 : null, pivotCases: folder.startsWith("DSCPP5") && referenceFixture ? 516 : null });
 			}
 			if (Object.hasOwn(recordPacks, folder)) {
 				await verifyTaskRecordExport(directory, folder, runNative);
@@ -2076,7 +2076,7 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 				const valueTemplate = folder === "CPPI5-Fraction-Toolkit/starter";
 				const worksheet = stateProject ? `a[href='https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/blob/main/${folder.split("/")[0]}/README.md']` : taskRecord ? "a[href='https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/blob/main/DSCPP1-Task-Manager-CLI/README.md']" : rover ? "a[href='https://github.com/instruction-material/CPP-Level-3/blob/main/CPPI6-Enum-vs-Polymorphic-State-Review/WORKSHEET.md']" : valueTemplate ? "a[href='https://github.com/instruction-material/CPP-Level-3/blob/main/CPPI5-Template-Error-Reading-Drill/WORKSHEET.md']" : fileProcessor ? "a[href='https://github.com/instruction-material/CPP-Level-3/blob/main/CPPI4-Ownership-Rewrite-Reflection/starter/NOTES.md']" : inventory ? "a[href='https://github.com/instruction-material/CPP-Level-3/blob/main/CPPI3-Container-Tradeoff-Audit/starter/WORKSHEET.md']" : "a[href='https://github.com/instruction-material/CPP-Level-3/blob/main/CPPI2-Recursion-Trace-Drill/starter/WORKSHEET.md']";
 				await revealCourseSource(page, worksheet);
-				const continueLabel = stateProject ? folder.startsWith("DSCPP3") ? "Continue saved text-generator project" : "Continue saved maze project" : taskRecord ? "Continue saved task-manager project" : rover ? "Continue saved rover capstone" : valueTemplate ? "Continue saved Fraction Toolkit" : fileProcessor ? "Continue saved file processor" : inventory ? "Continue saved inventory" : "Continue saved maze";
+				const continueLabel = stateProject ? folder.startsWith("DSCPP5") ? "Continue saved quicksort project" : folder.startsWith("DSCPP3") ? "Continue saved text-generator project" : "Continue saved maze project" : taskRecord ? "Continue saved task-manager project" : rover ? "Continue saved rover capstone" : valueTemplate ? "Continue saved Fraction Toolkit" : fileProcessor ? "Continue saved file processor" : inventory ? "Continue saved inventory" : "Continue saved maze";
 				await page.waitForFunction((selector, label) => [...document.querySelector(selector)?.closest(".lesson-item").querySelectorAll(".item-content-markdown a") ?? []].some(action => action.textContent.trim() === label), {}, worksheet, continueLabel);
 				const continuation = await page.$eval(worksheet, (link, label) => [...link.closest(".lesson-item").querySelectorAll(".item-content-markdown a")].find(action => action.textContent.trim() === label)?.getAttribute("href"), continueLabel);
 				assert.ok(continuation);
@@ -2115,7 +2115,13 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 				}
 			}
 			if (Object.hasOwn(preservedPacks, folder)) {
-				const legacySource = "// Earlier saved learner attempt\nint main() { return 0; }\n";
+				let legacySource = "// Earlier saved learner attempt\nint main() { return 0; }\n";
+				if (folder.startsWith("DSCPP5")) {
+					const previousStarter = (await readFile(new URL("./fixtures/dsa-quicksort-original-starter.cpp", import.meta.url), "utf8")).replaceAll("\r\n", "\n");
+					assert.equal(createHash("sha256").update(previousStarter).digest("hex"), "32ddd0d1aa8fb3f87709eb5c7bf3446265a75093483a6fff4bcdfb5c49d7fdcc");
+					assert.ok(previousStarter.includes("std::sort(values.begin(), values.end())"));
+					legacySource = "// Earlier saved learner attempt\n" + previousStarter;
+				}
 				await page.click(".cm-content");
 				await page.keyboard.down(modifier);
 				await page.keyboard.press("a");
@@ -2138,7 +2144,7 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 				assert.ok(freshHref, "Full project brief offers the separate current learner import");
 				const freshKey = new URL(freshHref, origin).searchParams.get("projectKey");
 				assert.notEqual(freshKey, key);
-				if (Object.hasOwn(statePacks, folder)) assert.equal(freshKey, `${courseId}:${folder.startsWith("DSCPP3") ? "dscpp3-markov-contract" : "dscpp4-maze-contract"}:current-pack-v1`);
+				if (Object.hasOwn(statePacks, folder)) assert.equal(freshKey, `${courseId}:${folder.startsWith("DSCPP5") ? "dscpp5-quicksort-contract" : folder.startsWith("DSCPP3") ? "dscpp3-markov-contract" : "dscpp4-maze-contract"}:current-pack-v1`);
 				if (Object.hasOwn(recordPacks, folder)) assert.equal(freshKey, `${courseId}:dscpp1-task-record:current-pack-v1`);
 				if (Object.hasOwn(ownershipPacks, folder)) {
 					const unit = folder.split("-")[0].toLowerCase();

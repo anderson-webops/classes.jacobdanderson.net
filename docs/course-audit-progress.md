@@ -1,3 +1,42 @@
+# Current course-audit checkpoint, 2026-10-09
+
+The full 77-course audit remains unfinished. A fresh inventory of canonical
+`0115067d53d7588d82bc62b5b86d442710c058e2` loads all 77 normalized entries and
+finds all 392 directly linked local `/course-assets/` resources. No complete
+normalized course is byte-identical to another. These are local availability
+and exact-content checks; external availability, delivery-purpose overlap,
+full reading quality and production are separate requirements.
+
+The accepted quicksort source correction is merged through
+[DSA source PR #7](https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/pull/7)
+at `b67e677002158eca271def7b1295bc95090bae4f`. The starter previously used
+`std::sort`, bypassing its assigned algorithm. It now exposes three unfinished
+pivot, partition and recursion tasks and visibly retains the unsorted example.
+The guide correctly describes vector-owned storage, inclusive ranges, a worked
+partition, tiny-range behavior and duplicate-case complexity limits. Both optional
+worksheets continue the core; four unrelated historical role files remain intact.
+The complete reference and original demonstration are unchanged.
+
+Exact review and independent merged main pass all seven native workflows.
+Both GCC and Clang check ordinary and address/undefined-sanitized roles, including
+3,816 independent sort fixtures and 516 pivot/partition fixtures per reference
+mode. The untouched starter remains incomplete. These bounded valid-index checks
+do not grade a completed learner submission or certify other DSA algorithms.
+The review branch is removed and retained in a verified recovery bundle.
+
+Matching website lessons are prepared: four authored reading cards, the required
+core import, read-only optional worksheets and separate confirmed current-source
+import identity. Existing project, worksheet and concept-progress identities are
+preserved. All 281 focused cases, full source lint and both typechecks pass.
+The local export verifier checks both quicksort roles in four ordinary/sanitizer
+groups using the exact source oracle; this is not actual browser-ZIP acceptance.
+The browser regression preserves the real earlier library-sort starter while
+opening a separate current task pack. Hosted browser acceptance, integration,
+downstream replay and release publication remain pending. Dependencies and
+lockfiles are unchanged.
+
+## Earlier dated checkpoints
+
 # Current course-audit checkpoint, 2026-10-08
 
 
