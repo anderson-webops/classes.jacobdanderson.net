@@ -1285,6 +1285,9 @@ const requestedTemplate = computed<PythonIdeProjectTemplate>(() => {
 	if (rawTemplate === "course" && requestedCourseStarter.value)
 		return "course";
 	if (rawTemplate === "demo") return "demo";
+	if (rawTemplate === "event-reference") return "event-reference";
+	if (rawTemplate === "melody-reference") return "melody-reference";
+	if (rawTemplate === "record-reference") return "record-reference";
 	if (rawTemplate === "firework-festival") return "firework-festival";
 	if (rawTemplate === "flower-garden") return "flower-garden";
 	if (rawTemplate === "maze-explorer") return "maze-explorer";
@@ -1442,6 +1445,11 @@ function appendOutput(kind: OutputLine["kind"], text: string) {
 	];
 }
 
+function runtimeWavDownloadName(title: string) {
+	const name = title.replace(/^PySynth:\s*/i, "").replace(/[^\w.-]/g, "_");
+	return /\.wav$/i.test(name) ? name : `${name || "python-audio"}.wav`;
+}
+
 function appendArtifact(artifact: RuntimeArtifact) {
 	if (runtimeArtifacts.value.length >= maxRuntimeArtifacts) {
 		appendOutput(
@@ -1488,6 +1496,13 @@ function appendArtifact(artifact: RuntimeArtifact) {
 	}
 
 	runtimeArtifacts.value.push(view);
+	if (props.runtimeOnly && artifact.mimeType === "audio/wav") {
+		emit("runtimeMessage", {
+			type: "audio",
+			title: artifact.title,
+			data: artifact.data
+		});
+	}
 }
 
 function formatPythonRuntimeError(error: unknown) {
@@ -6780,6 +6795,8 @@ async function runCurrentProject() {
 					account === storageUserID.value &&
 					!shouldStopPythonIdeRun(runID, project._id),
 				onOutput: appendOutput,
+				onAudio: (title, data) =>
+					appendArtifact({ title, data, mimeType: "audio/wav" }),
 				onStage: stage => {
 					diagnosticStage.value = stage;
 				},
@@ -8548,9 +8565,22 @@ defineExpose({ stop: stopCurrentProject, runIsolated, releaseIsolatedPointer });
 							</div>
 						</div>
 
-						<div v-show="hasRuntimeVisuals" class="result-visuals">
+						<div
+							v-show="hasRuntimeVisuals"
+							class="result-visuals"
+							:class="{
+								'result-visuals--audio':
+									selectedProject?.mode === 'python' &&
+									runtimeArtifacts.some(
+										artifact => artifact.audioUrl
+									)
+							}"
+						>
 							<div
-								v-show="sandboxPresent"
+								v-show="
+									sandboxPresent &&
+									selectedProject?.mode !== 'python'
+								"
 								ref="sandboxHost"
 								class="python-sandbox-host"
 								aria-label="Isolated Python output host"
@@ -8685,6 +8715,19 @@ defineExpose({ stop: stopCurrentProject, runIsolated, releaseIsolatedPointer });
 										:title="artifact.title"
 									/>
 									<pre v-else>{{ artifact.text }}</pre>
+									<a
+										v-if="
+											artifact.audioUrl &&
+											artifact.mimeType === 'audio/wav'
+										"
+										:href="artifact.audioUrl"
+										:download="
+											runtimeWavDownloadName(
+												artifact.title
+											)
+										"
+										>Download WAV</a
+									>
 								</figure>
 							</div>
 						</div>
@@ -10577,6 +10620,13 @@ html.dark .editor-shortcuts ul {
 	font-weight: 700;
 }
 
+.artifact-card > a {
+	color: #174ea6;
+	font-weight: 600;
+	text-decoration: underline;
+	text-underline-offset: 0.15em;
+}
+
 .artifact-card img,
 .artifact-card audio,
 .artifact-card iframe {
@@ -10830,7 +10880,7 @@ html.dark .editor-shortcuts ul {
 	.ide-grid.mobile-view-console .code-panel {
 		display: none;
 	}
-	.ide-grid.mobile-view-console .result-visuals {
+	.ide-grid.mobile-view-console .result-visuals:not(.result-visuals--audio) {
 		display: none;
 	}
 	.ide-grid.mobile-view-canvas .input-output-grid {

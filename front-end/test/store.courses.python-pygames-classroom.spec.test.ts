@@ -65,6 +65,13 @@ function isClassroomProject(
 	item: RawCourseModuleItem
 ) {
 	if (module.kind === "appendix") return false;
+	// Worked references import separately and are not Normal/Hard assignments.
+	if (item.projectLink?.startsWith("/ide?")) {
+		const params = new URL(item.projectLink, "https://classes.local")
+			.searchParams;
+		if (params.get("projectKey")?.startsWith("course-reference:"))
+			return false;
+	}
 
 	return (
 		!!item.projectLink ||

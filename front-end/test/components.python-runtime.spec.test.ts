@@ -51,6 +51,38 @@ describe("runtime-only Python surface", () => {
 			});
 			await flushPromises();
 			expect(wrapper.findAll("textarea, input, button")).toHaveLength(0);
+			const runtime = wrapper.vm.$.setupState as {
+				appendArtifact: (artifact: {
+					title: string;
+					mimeType: string;
+					data: string;
+				}) => void;
+			};
+			runtime.appendArtifact({
+				title: "PySynth: demo.wav",
+				mimeType: "audio/wav",
+				data: "bounded WAV fixture"
+			});
+			runtime.appendArtifact({
+				title: "Local report",
+				mimeType: "text/plain",
+				data: "report"
+			});
+			expect(wrapper.emitted("runtimeMessage")).toContainEqual([
+				{
+					type: "audio",
+					title: "PySynth: demo.wav",
+					data: "bounded WAV fixture"
+				}
+			]);
+			expect(
+				wrapper
+					.emitted("runtimeMessage")
+					?.filter(
+						([message]) =>
+							(message as { type: string }).type === "audio"
+					)
+			).toHaveLength(1);
 			document.dispatchEvent(new Event("visibilitychange"));
 			window.dispatchEvent(new Event("pagehide"));
 			wrapper.unmount();

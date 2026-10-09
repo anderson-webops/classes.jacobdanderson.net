@@ -4,6 +4,7 @@ import {
 	sandboxFrameDocument,
 	sandboxPointerRelease,
 	sandboxRun,
+	sandboxWavData,
 	startPythonSandbox,
 	unchangedRunFiles
 } from "../src/modules/pythonSandbox";
@@ -38,7 +39,8 @@ function setup(
 		onFiles: vi.fn(),
 		onActivity: vi.fn(),
 		onStage: vi.fn(),
-		onPythonVersion: vi.fn()
+		onPythonVersion: vi.fn(),
+		onAudio: vi.fn()
 	};
 	const handle = startPythonSandbox(host, { ...request, mode }, callbacks);
 	cleanups.push(handle.destroy);
@@ -58,6 +60,31 @@ function setup(
 		);
 	};
 	return { handle, frame, receive, callbacks, host };
+}
+
+function wavData(payloadSize = 2) {
+	const header = new Uint8Array(44);
+	const view = new DataView(header.buffer);
+	for (const [offset, text] of [
+		[0, "RIFF"],
+		[8, "WAVE"],
+		[12, "fmt "],
+		[36, "data"]
+	] as const)
+		header.set(
+			[...text].map(char => char.charCodeAt(0)),
+			offset
+		);
+	view.setUint32(4, 36 + payloadSize, true);
+	view.setUint32(16, 16, true);
+	view.setUint16(20, 1, true);
+	view.setUint16(22, 1, true);
+	view.setUint32(24, 44100, true);
+	view.setUint32(28, 88200, true);
+	view.setUint16(32, 2, true);
+	view.setUint16(34, 16, true);
+	view.setUint32(40, payloadSize, true);
+	return btoa(String.fromCharCode(...header) + "a".repeat(payloadSize));
 }
 
 describe("isolated Python contract", () => {
@@ -93,6 +120,76 @@ describe("isolated Python contract", () => {
 			);
 		}
 	);
+	it("returns only bounded RIFF/WAVE bytes through the active audio channel", async () => {
+		const { receive, callbacks, handle } = setup();
+		const data = wavData();
+		const audio = {
+			type: "audio",
+			title: "PySynth: course_melody.wav",
+			data
+		};
+		expect(sandboxWavData(data)).toBe(data);
+		for (const invalid of [
+			null,
+			"data:audio/wav;base64," + data,
+			btoa("<html>fake audio</html>"),
+			"A".repeat(1_500_004),
+			data.slice(0, -4)
+		])
+			expect(sandboxWavData(invalid)).toBeNull();
+		receive(audio);
+		expect(callbacks.onAudio).not.toHaveBeenCalled();
+		receive({ type: "ready" });
+		for (const invalid of [
+			{ ...audio, title: "" },
+			{ ...audio, title: "a".repeat(121) },
+			{ ...audio, data: "bad" },
+			{ ...audio, html: "ignored" },
+			{ ...audio, channel: "other" }
+		])
+			receive(invalid);
+		receive(audio, window.location.origin);
+		receive(audio, "null", window);
+		expect(callbacks.onAudio).not.toHaveBeenCalled();
+		receive(audio);
+		expect(callbacks.onAudio).toHaveBeenCalledExactlyOnceWith(
+			audio.title,
+			data
+		);
+		callbacks.isCurrent.mockReturnValue(false);
+		receive(audio);
+		callbacks.isCurrent.mockReturnValue(true);
+		handle.destroy();
+		await handle.done;
+		receive(audio);
+		expect(callbacks.onAudio).toHaveBeenCalledTimes(1);
+		expect(callbacks.onFiles).not.toHaveBeenCalled();
+		expect(callbacks.onOutput).not.toHaveBeenCalled();
+	});
+	it("bounds the number and total size of WAV results for a run", () => {
+		const count = setup();
+		count.receive({ type: "ready" });
+		for (let i = 0; i < 13; i++)
+			count.receive({
+				type: "audio",
+				title: "result.wav",
+				data: wavData()
+			});
+		expect(count.callbacks.onAudio).toHaveBeenCalledTimes(12);
+		const bytes = setup();
+		bytes.receive({ type: "ready" });
+		bytes.receive({
+			type: "audio",
+			title: "first.wav",
+			data: wavData(1_100_000)
+		});
+		bytes.receive({
+			type: "audio",
+			title: "second.wav",
+			data: wavData(50_000)
+		});
+		expect(bytes.callbacks.onAudio).toHaveBeenCalledTimes(1);
+	});
 	it("forwards pointer releases only to the active drawing frame", () => {
 		const { frame, handle, receive, callbacks } = setup("turtle");
 		const post = vi.spyOn(frame.contentWindow!, "postMessage");

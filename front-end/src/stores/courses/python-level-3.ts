@@ -4,6 +4,10 @@ import type {
 	RawCourseModule,
 	RawCourseModuleItem
 } from "./types";
+import {
+	gitCourseGuideLink,
+	mergeSortFrameGuide
+} from "./classroomReferenceGuides";
 import { isCoreProjectTitle } from "./projectGrouping";
 import { isKnownPendingStaticMedia, staticMediaUrl } from "./staticMedia";
 
@@ -148,8 +152,9 @@ export const pythonLevel3Course: RawCourse = withSourceProjectMedia({
 			curriculum: [
 				{
 					title: "Introductions & Setup",
-					content:
-						"This opening section establishes the coding environment, course navigation, editor workflow, instructions, and console. The review can move in sequence or jump directly to the areas that need the most reinforcement."
+					content: `This opening section establishes the coding environment, course navigation, editor workflow, instructions, and console. The review can move in sequence or jump directly to the areas that need the most reinforcement.${
+						gitCourseGuideLink
+					}`
 				},
 				{
 					title: "Variables, Strings, and Input",
@@ -1184,7 +1189,14 @@ export const pythonLevel3Course: RawCourse = withSourceProjectMedia({
 						"A recursion tree shows why merge sort runs in `O(n log n)` time: indexed merging does `O(n)` total work at each level, and tree height is `O(log n)`. Repeated `pop(0)` would add Python list-shifting costs and invalidate this analysis. Slices and output lists require linear peak auxiliary storage, plus logarithmic recursion depth."
 				}
 			],
-			supplementalProjects: []
+			supplementalProjects: [
+				{
+					id: "merge-sort-frame-reference",
+					title: "Merge Sort Call and Return Trace",
+					learningPath: "choice",
+					content: mergeSortFrameGuide
+				}
+			]
 		},
 		{
 			title: "AM11 Quicksort",

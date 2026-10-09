@@ -9,6 +9,8 @@ import AccountCodeIdeWorkspace from "@/components/AccountCodeIdeWorkspace.vue";
 import CodeIdeWorkspace from "@/components/CodeIdeWorkspace.vue";
 import { loadLocalPythonProjects } from "@/modules/pythonIde";
 import { useAppStore } from "@/stores/app";
+import { classroomReferenceItem } from "@/stores/courses/classroomReferenceGuides";
+import { courseReferenceExamples } from "@/modules/courseReferenceExamples";
 
 const requests = vi.hoisted(() => ({
 	get: vi.fn(),
@@ -144,6 +146,74 @@ afterEach(async () => {
 });
 
 describe("Code IDE route import consent", () => {
+	it("renders bounded WAV handoffs as safe downloads and clears them with the run", async () => {
+		const { wrapper } = await openWorkspace("/ide");
+		await wrapper.find("button.run-control").trigger("click");
+		await settle();
+		const frame = wrapper.find("iframe[title='Isolated Python output']")
+			.element as HTMLIFrameElement;
+		const channel = /data-channel="([^"]+)"/.exec(frame.srcdoc)![1];
+		const send = (message: Record<string, unknown>) =>
+			window.dispatchEvent(
+				new MessageEvent("message", {
+					origin: "null",
+					source: frame.contentWindow,
+					data: { channel, ...message }
+				})
+			);
+		const data =
+			"UklGRiYAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQIAAABhYQ==";
+		send({ type: "ready" });
+		send({ type: "audio", title: "unsafe-name.html", data });
+		send({ type: "done" });
+		await settle();
+		const download = wrapper.find("a[download='unsafe-name.html.wav']");
+		expect(download.text()).toBe("Download WAV");
+		expect(download.attributes("href")).toBe(
+			`data:audio/wav;base64,${data}`
+		);
+		expect(frame.getAttribute("sandbox")).toBe("allow-scripts");
+		const clear = wrapper
+			.findAll("button")
+			.find(button => button.text() === "Clear output")!;
+		await clear.trigger("click");
+		await settle();
+		expect(wrapper.find("a[download]").exists()).toBe(false);
+		expect(
+			wrapper.find("iframe[title='Isolated Python output']").exists()
+		).toBe(false);
+	});
+
+	for (const kind of ["events", "melody", "records"] as const) {
+		it(`imports the ${kind} reference only after confirmation and preserves prior work`, async () => {
+			const item = classroomReferenceItem(kind);
+			const { wrapper } = await openWorkspace(item.projectLink!);
+			expect(requests.post).not.toHaveBeenCalled();
+			expect(workspaceState(wrapper).selectedProjectID).toBe(
+				existingProject._id
+			);
+			await wrapper
+				.find("[data-testid='ide-route-import-confirm']")
+				.trigger("click");
+			await settle();
+			expect(requests.post).toHaveBeenCalledTimes(1);
+			const imported = requests.post.mock.calls[0][1];
+			const params = new URL(item.projectLink!, "https://classes.local")
+				.searchParams;
+			const template = params.get(
+				"template"
+			) as keyof typeof courseReferenceExamples;
+			expect(imported.files).toEqual(courseReferenceExamples[template]);
+			expect(imported.courseProjectKey).toBe(params.get("projectKey"));
+			expect(preview.list).not.toHaveBeenCalled();
+			expect(
+				workspaceState(wrapper).projects.find(
+					project => project._id === existingProject._id
+				)?.files
+			).toEqual(existingProject.files);
+		});
+	}
+
 	it("explains a failed import even when an empty account has no console", async () => {
 		requests.get.mockImplementation(async () => ({
 			data: { nextOffset: null, projects: [], reviews: [] }

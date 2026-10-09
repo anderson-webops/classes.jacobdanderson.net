@@ -9,6 +9,7 @@ import {
 	PYODIDE_MODULE_SRC
 } from "@/modules/pythonIdeRuntimeHints";
 import { pythonIdeImportedTopLevelModules } from "@/modules/pythonImportScanner";
+import { pysynthShim } from "@/modules/pythonPysynthShim";
 import { pythonStandardLibraryModules } from "@/modules/pythonStandardLibraryModules";
 
 const PROJECT_ROOT = "/home/pyodide/classes_project";
@@ -65,7 +66,8 @@ type PlainPythonWorkerMessage =
 	| { type: "stage"; id: number; stage: IdeStage; pythonVersion?: string }
 	| PlainPythonDoneMessage
 	| PlainPythonErrorMessage
-	| PlainPythonOutputMessage;
+	| PlainPythonOutputMessage
+	| { type: "audio"; id: number; title: string; data: string };
 
 let pyodidePromise: Promise<PyodideAPI> | null = null;
 let activeRunID: number | null = null;
@@ -200,6 +202,7 @@ function plainPythonPackageScanModules(
 			moduleName =>
 				!localModules.has(moduleName) &&
 				!standardLibraryModules.has(moduleName) &&
+				!["pysynth", "_classes_artifacts"].includes(moduleName) &&
 				!loadedPlainPythonImportModules.has(moduleName)
 		)
 		.sort();
@@ -351,7 +354,37 @@ async function runPlainPythonProject(request: PlainPythonRunRequest) {
 		...request.files,
 		...[...lastProjectFileNames].map(name => ({ name }))
 	]);
+	const scope = globalThis as typeof globalThis & {
+		__classesPythonIdeWorkerArtifacts?: {
+			emit: (title: string, mimeType: string, data: string) => void;
+		};
+	};
+	scope.__classesPythonIdeWorkerArtifacts = {
+		emit(title, mimeType, data) {
+			if (
+				isActiveRun(request.id) &&
+				mimeType === "audio/wav" &&
+				typeof title === "string" &&
+				title.length <= 120 &&
+				typeof data === "string" &&
+				data.length <= 1_500_000
+			) {
+				postWorkerMessage({
+					type: "audio",
+					id: request.id,
+					title,
+					data
+				});
+			}
+		}
+	};
 	syncProjectFiles(pyodide, request.files);
+	pyodide.FS.writeFile(`${PROJECT_ROOT}/pysynth.py`, pysynthShim);
+	pyodide.FS.writeFile(
+		`${PROJECT_ROOT}/_classes_artifacts.py`,
+		"from js import __classesPythonIdeWorkerArtifacts as _bridge\ndef emit(title, mime_type, data):\n    _bridge.emit(str(title), str(mime_type), str(data))\n"
+	);
+	projectModulesToClear.push("pysynth", "_classes_artifacts");
 	if (!isActiveRun(request.id)) return;
 	postWorkerMessage({
 		type: "stage",

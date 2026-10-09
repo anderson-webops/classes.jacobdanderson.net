@@ -1,4 +1,8 @@
 import type { RawCourse, RawCourseModuleItem } from "./types";
+import {
+	classroomReferenceItem,
+	gitCourseGuideLink
+} from "./classroomReferenceGuides";
 import { isCoreProjectTitle } from "./projectGrouping";
 import { buildProjectGuidance } from "./projectGuidance";
 import { pendingStaticMediaNotice, staticMediaUrl } from "./staticMedia";
@@ -76,8 +80,9 @@ const javaLevel3SourceCourse: RawCourse = {
 				},
 				{
 					title: "Readiness Evidence",
-					content:
-						"Before moving into the review modules, the evidence set includes one runnable console program, one custom class with constructors and methods, and one collection trace. Each artifact is explained through state, method calls, and evidence from output or tests."
+					content: `Before moving into the review modules, the evidence set includes one runnable console program, one custom class with constructors and methods, and one collection trace. Each artifact is explained through state, method calls, and evidence from output or tests.${
+						gitCourseGuideLink
+					}`
 				}
 			],
 			supplementalProjects: [
@@ -421,6 +426,7 @@ const javaLevel3SourceCourse: RawCourse = {
 				}
 			],
 			supplementalProjects: [
+				classroomReferenceItem("records"),
 				{
 					title: "Review: Objects and Classes: Extension Challenge",
 					content: buildSupportSectionGuidance({

@@ -4,6 +4,7 @@ import type {
 	RawCourseModule,
 	RawCourseModuleItem
 } from "./types";
+import { classroomReferenceItem } from "./classroomReferenceGuides";
 import { isCoreProjectTitle } from "./projectGrouping";
 import { staticMediaFilename } from "./staticMedia";
 
@@ -1361,6 +1362,7 @@ export const pythonLevel2Course: RawCourse = {
 				}
 			],
 			supplementalProjects: [
+				classroomReferenceItem("melody"),
 				{
 					title: "PS6 Supplemental Project 1: Tower of Terror",
 					content: projectBrief({

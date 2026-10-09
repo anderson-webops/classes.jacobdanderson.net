@@ -13,7 +13,7 @@ beforeAll(() => {
 	bundle = join(directory, "runtime.cjs");
 	const root = resolve(__dirname, "..");
 	const result = spawnSync(process.execPath, ["-e", `require(process.argv[1]).buildSync(JSON.parse(process.argv[2]))`, require.resolve("esbuild"), JSON.stringify({
-		entryPoints: [resolve(root, "src/modules/javaIdeRuntime.ts")], bundle: true, platform: "node", format: "cjs", outfile: bundle, alias: { "@": resolve(root, "src") }, logLevel: "silent"
+		entryPoints: [resolve(root, "src/modules/javaIdeRuntime.ts")], bundle: true, platform: "node", format: "cjs", outfile: bundle, alias: { "@": resolve(root, "src") }, loader: { ".java": "text", ".py": "text" }, logLevel: "silent"
 	})], { timeout: 15000, encoding: "utf8", maxBuffer: 64000 });
 	expect(result.status, result.stderr).toBe(0);
 });

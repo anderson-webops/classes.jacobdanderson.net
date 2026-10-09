@@ -115,7 +115,7 @@ describe("Java Level 3 learner flow", () => {
 		);
 
 		expect(curriculumCount).toBe(142);
-		expect(optionCount).toBe(93);
+		expect(optionCount).toBe(94);
 		for (const title of JUNI_CORE_PROJECTS) {
 			expect(curriculumTitles, title).toContain(title);
 			expect(optionTitles, title).not.toContain(title);

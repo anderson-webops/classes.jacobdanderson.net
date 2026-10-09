@@ -149,6 +149,37 @@ export interface SandboxCallbacks {
 	onActivity: (active: boolean) => void;
 	onStage?: (stage: IdeStage) => void;
 	onPythonVersion?: (version: string) => void;
+	onAudio?: (title: string, data: string) => void;
+}
+
+export function sandboxWavData(value: unknown): string | null {
+	if (
+		typeof value !== "string" ||
+		value.length < 60 ||
+		value.length > 1_500_000 ||
+		value.length % 4 !== 0 ||
+		!/^[A-Z0-9+/]*={0,2}$/i.test(value)
+	) {
+		return null;
+	}
+	try {
+		const bytes = atob(value);
+		if (
+			bytes.length < 44 ||
+			bytes.slice(0, 4) !== "RIFF" ||
+			bytes.slice(8, 12) !== "WAVE"
+		) {
+			return null;
+		}
+		const size =
+			bytes.charCodeAt(4) +
+			bytes.charCodeAt(5) * 256 +
+			bytes.charCodeAt(6) * 65536 +
+			bytes.charCodeAt(7) * 16777216;
+		return size + 8 === bytes.length ? value : null;
+	} catch {
+		return null;
+	}
 }
 
 export function startPythonSandbox(
@@ -178,6 +209,8 @@ export function startPythonSandbox(
 	let finished = false;
 	let filesReceived = false;
 	let outputBytes = 0;
+	let audioBytes = 0;
+	let audioCount = 0;
 	let messages = 0;
 	let windowStart = Date.now();
 	let resolveDone: () => void;
@@ -298,6 +331,23 @@ export function startPythonSandbox(
 			outputBytes += message.text.length;
 			if (outputBytes <= 1_000_000)
 				callbacks.onOutput(message.kind, message.text);
+		} else if (
+			started &&
+			message.type === "audio" &&
+			keys === "channel,data,title,type" &&
+			typeof message.title === "string" &&
+			message.title.trim().length > 0 &&
+			message.title.length <= 120 &&
+			typeof message.data === "string" &&
+			audioCount < 12 &&
+			audioBytes + message.data.length <= 1_500_000
+		) {
+			const data = sandboxWavData(message.data);
+			if (data) {
+				audioBytes += data.length;
+				audioCount++;
+				callbacks.onAudio?.(message.title, data);
+			}
 		} else if (
 			started &&
 			message.type === "files" &&

@@ -8839,6 +8839,13 @@ function isClassroomProject(
 	item: RawCourseModuleItem
 ) {
 	if (module.kind === "appendix") return false;
+	if (
+		item.id === "pgzero-events-reference" ||
+		item.id === "pysynth-song-reference" ||
+		item.id === "java-record-reference"
+	) {
+		return false;
+	}
 
 	return (
 		!!item.projectLink ||

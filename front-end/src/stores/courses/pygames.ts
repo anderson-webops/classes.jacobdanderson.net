@@ -4,6 +4,10 @@ import type {
 	RawCourseModule,
 	RawCourseModuleItem
 } from "./types";
+import {
+	classroomReferenceItem,
+	gitCourseGuideLink
+} from "./classroomReferenceGuides";
 import { buildImplementationLabGuidance } from "./implementationLabGuidance";
 import { isCoreProjectTitle } from "./projectGrouping";
 import { buildProjectGuidance } from "./projectGuidance";
@@ -53,8 +57,9 @@ export const pyGamesCourse: RawCourse = hideBroadPyGamesRootPairs({
 				},
 				{
 					title: "Asset Folder Layout",
-					content:
-						"Standardize the project layout early with `images`, `sounds`, `music`, and per-project files. Asset management is part of game engineering, not a side issue to debug only after the game logic is written."
+					content: `Standardize the project layout early with \`images\`, \`sounds\`, \`music\`, and per-project files. Asset management is part of game engineering, not a side issue to debug only after the game logic is written.${
+						gitCourseGuideLink
+					}`
 				},
 				{
 					title: "Early Debugging Habits",
@@ -79,6 +84,7 @@ export const pyGamesCourse: RawCourse = hideBroadPyGamesRootPairs({
 				}
 			],
 			supplementalProjects: [
+				classroomReferenceItem("events"),
 				{
 					title: "PyG0 Setup, Editors, and Asset Workflow: Extension Challenge",
 					content: buildSupportSectionGuidance({
@@ -631,12 +637,13 @@ export const pyGamesCourse: RawCourse = hideBroadPyGamesRootPairs({
 **Implementation steps:**
 - In \`draw()\`, set the background with \`screen.fill((50, 100, 50))\`, draw the stroke count, and draw the hole, flag, and ball.
 - In \`update()\`, multiply the ball's speeds by friction, update its position, and bounce it off the walls.
-- In \`on_mouse_down(pos)\`, allow a hit only when the ball is nearly stopped, such as \`abs(ball.xspeed) < 0.5\` and \`abs(ball.yspeed) < 0.5\`.
+- In \`on_mouse_down(pos, button)\`, first ignore buttons other than \`mouse.LEFT\` and ignore clicks outside play mode. Allow a hit only when both speed components are nearly stopped: \`abs(ball.xspeed) < 0.5\` and \`abs(ball.yspeed) < 0.5\`.
 - Convert the click position into velocity, for example \`ball.xspeed = (mouseX - ball.x) / 10\` and \`ball.yspeed = (mouseY - ball.y) / 10\`.
 - Increment \`strokes\` each time a valid hit is made.
-- Detect when the ball reaches the hole and handle a win state, reset, or next level.
+- Accept a goal only in play mode when both speed components are below the chosen stopped threshold and the ball is inside a small, documented capture distance from the hole center. A fast pass over the hole is not a goal. Set a goal state before awarding or scheduling the next round so repeated frames cannot count it twice.
+- Initialize the ball and hole at distinct valid positions. Keep their full extents on screen using left/right/top/bottom and actual anchors. Move the hole and its flag together only when setting up a new round; clear velocity and reset strokes at that boundary.
 
-**Completion checks:** The ball cannot be hit repeatedly while still moving, friction gradually slows the ball, wall bounces keep it on screen, and the stroke count changes only after a valid shot.`,
+**Completion checks:** Test left and right clicks, a still-moving ball, a fast fly-through, a slow arrival, repeated frames after a goal and a restart. Friction slows the ball; wall bounces keep its full extent on screen; only a valid left-click changes strokes.\n\n**Optional extensions:** Award \`max(0, strokes - 1)\` penalty points once per completed hole, preserving the round transition guard. Drag-based power and interior walls are separate extensions after the click version works. A timer is optional. The [Events and Safe Placement Reference](/course-assets/references/pgzero-events-and-placement.md) supports input and reset checks.`,
 					projectLink:
 						"https://github.com/instruction-material/PyGames/tree/main",
 					solutionLink:
@@ -987,7 +994,7 @@ export const pyGamesCourse: RawCourse = hideBroadPyGamesRootPairs({
 - When the alien reaches the right edge, call \`time.sleep(1)\` before resetting the alien to the left.
 - Observe that the pause freezes the whole game, including input and animation.
 
-**Design note:** \`time.sleep()\` is acceptable for a tiny transition or demonstration, but it is usually not the best choice for live gameplay because it blocks the event loop. Later projects use clock scheduling when the game needs to keep updating while a delay is in progress.`
+**Design note:** This is a blocking demonstration only. \`time.sleep()\` stops input and animation along with the program. For an actual game transition, use a state guard and clock scheduling as described next.`
 				},
 				{
 					title: "Clock Scheduling in Pygame Zero",
@@ -1008,7 +1015,7 @@ export const pyGamesCourse: RawCourse = hideBroadPyGamesRootPairs({
 				{
 					title: "PyG7 Project 1: Alien Catch",
 					content:
-						"Build a game that uses multiple screens and timing to challenge the player's reactions. The finished Alien Catch game makes its screen flow and speed changes easy to explain. Implement a start screen where the user presses Enter to begin (keyboard.RETURN or keyboard.kp_enter depending on the key). In play mode, have an alien move horizontally across the screen while the player presses space to stop the alien. If the alien stops on top of a target square, the player gains a point and the alien's speed increases; otherwise, the player loses a life. Before each new run, use time.sleep or a clock-based delay to pause for one second so the player can prepare. Track lives with a global variable and, when lives reach zero, switch gameState to an end screen where the player can press Enter/Return to play again or Escape to quit using quit().",
+						"Build a game that uses multiple screens and timing to challenge the player's reactions. The finished Alien Catch game makes its screen flow and speed changes easy to explain. Implement a start screen where the user presses Enter to begin (keyboard.RETURN or keyboard.kp_enter depending on the key). In play mode, have an alien move horizontally across the screen while the player presses space to stop the alien. If the alien stops on top of a target square, the player gains a point and the alien's speed increases; otherwise, the player loses a life. Before each new run, enter a prepare state and call clock.schedule_unique(begin_run, 1.0) with the callback function, not begin_run(). Keep drawing and input responsive during the delay; do not use time.sleep for this transition. The callback starts play only from prepare state. On restart or game over, call clock.unschedule(begin_run) so an old callback cannot start an obsolete run. Track lives with a global variable and, when lives reach zero, switch gameState to an end screen where the player can press Enter/Return to play again or Escape to quit using quit().",
 					projectLink:
 						"https://github.com/instruction-material/PyGames/tree/main",
 					solutionLink:
@@ -1057,6 +1064,7 @@ export const pyGamesCourse: RawCourse = hideBroadPyGamesRootPairs({
 - For each level, display purple tiles that show numbers in order.
 - After the player clicks the tile labeled "1", hide the numbers on the other tiles and start a timer.
 - Track the next expected number with a variable.
+- Place distinct tiles using their actual extents and valid x/y ranges. Use a shuffled finite grid or cap random-placement attempts and report an impossible layout; an unbounded retry loop can freeze an overcrowded level. When checking other Actors, exclude the same object with \`other is not tile\`. The [finite placement reference](/course-assets/references/pgzero-events-and-placement.md) supplies a reusable helper.
 - When the player clicks the correct tile, play a chime and keep that tile's number visible.
 - Keep each tile's assigned number separate from its current image or label visibility. Hiding a number must not remove or renumber the tile. Use that clicked tile's identity, for example after \`tile.collidepoint(pos)\`, when comparing with the next expected number.
 - Trace a three-tile round: show 1/2/3; click 1; hide only the unchosen numbers; click 2; reveal 2; click 3; reveal 3 and complete the round. Compare before advancing the expected number, and check for round completion before indexing another tile. Python list indexes start at 0 even when the displayed numbers start at 1.
