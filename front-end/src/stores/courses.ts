@@ -271,6 +271,7 @@ function displayCourseContent(content: string) {
 
 	if (
 		MARKDOWN_LIST_BLOCK_RE.test(normalized) ||
+		/\[[^\]\n]+\]\(\/ide\?[^)\n]+\)/.test(normalized) ||
 		FENCED_CODE_BLOCK_RE.test(normalized) ||
 		MARKDOWN_HEADING_RE.test(normalized) ||
 		MARKDOWN_TABLE_RE.test(normalized)
@@ -316,6 +317,7 @@ function canonicalizeResourceUrl(url?: string) {
 				"DSCPP2-Graph-Navigation/README.md",
 				"DSCPP3-Markov-Text-Generator/README.md",
 				"DSCPP4-Recursive-Maze-Pathfinder/README.md",
+				"DSCPP5-Quicksort-Toolkit/README.md",
 				"DSA-08-dscpp0-setup-and-positioning/README.md",
 				"DSA-01-dscpp0-setup-and-positioning-supplemental-2/README.md",
 				"DSA-02-dscpp0-setup-and-positioning-supplemental-3/README.md"

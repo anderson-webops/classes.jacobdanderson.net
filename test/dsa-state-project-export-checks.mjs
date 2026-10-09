@@ -4,13 +4,18 @@ import { join } from "node:path";
 
 export async function verifyStateProjectExport(directory, folder, runNative) {
 	const markov = folder.startsWith("DSCPP3-");
+	const quicksort = folder.startsWith("DSCPP5-");
 	const reference = folder.endsWith("/solution");
-	const kind = markov ? "markov" : "maze";
+	const kind = markov ? "markov" : quicksort ? "quicksort" : "maze";
 	const source = await readFile(join(directory, "main.cpp"), "utf8");
 	assert.equal((source.match(/int main\(\)/g) ?? []).length, 1);
 	if (!reference) {
 		assert.match(source, /TODO:/);
 		if (markov) assert.doesNotMatch(source, /buildModel\(/);
+		else if (quicksort) {
+			assert.equal((source.match(/TODO:/g) ?? []).length, 3);
+			assert.doesNotMatch(source, /std::sort/);
+		}
 		else assert.match(source, /solveMaze\(\)\s*\{\s*\/\/ TODO:[^\n]*\n\s*return \{\};/);
 	}
 	const oracle = await readFile(new URL(`./fixtures/dsa-${kind}-regressions.cpp`, import.meta.url), "utf8");
@@ -34,6 +39,9 @@ export async function verifyStateProjectExport(directory, folder, runNative) {
 			else if (markov) {
 				assert.equal(demo.stdout, "Token count: 11\nUnique count: 9\nStarter preview: structures matter trees matter lists matter\nTODO: replace the preview with a state-based text generator.\n");
 			}
+			else if (quicksort) {
+				assert.equal(demo.stdout, reference ? "Sorted values: 1, 2, 4, 7, 8, 9\n" : "Starter values (quicksort pending): 7, 2, 9, 4, 1, 8\n");
+			}
 			else if (reference) {
 				assert.equal(demo.stdout, "Path size: 61\nEnd coordinate: (4, 4, 4)\n");
 			}
@@ -41,8 +49,8 @@ export async function verifyStateProjectExport(directory, folder, runNative) {
 				const layers = Array.from({ length: 5 }, (_, z) => `Layer ${z}\n${"1 1 1 1 1 \n".repeat(5)}`).join("");
 				assert.equal(demo.stdout, `${layers}Starter path length: 0\n`);
 			}
-			assert.deepEqual(await runNative("clang++", [...flags, `-D${markov ? "MARKOV" : "MAZE"}_REFERENCE=${reference ? 1 : 0}`, checker, "-o", checks], directory), { code: 0, stdout: "", stderr: "" });
-			assert.deepEqual(await runNative(join(directory, checks), [], directory), { code: 0, stdout: markov ? reference ? "Token cleanup, 320 window models and input guards passed\n" : "Token cleanup and unfinished preview passed\n" : "17 malformed reloads, stream failure and 37 layouts passed\n", stderr: "" });
+			assert.deepEqual(await runNative("clang++", [...flags, `-D${markov ? "MARKOV" : quicksort ? "QUICKSORT" : "MAZE"}_REFERENCE=${reference ? 1 : 0}`, checker, "-o", checks], directory), { code: 0, stdout: "", stderr: "" });
+			assert.deepEqual(await runNative(join(directory, checks), [], directory), { code: 0, stdout: quicksort ? reference ? '{"role":"solution","sortCases":3816,"partitionCases":516,"pivotCases":516}\n' : '{"role":"starter","unfinishedCases":4}\n' : markov ? reference ? "Token cleanup, 320 window models and input guards passed\n" : "Token cleanup and unfinished preview passed\n" : "17 malformed reloads, stream failure and 37 layouts passed\n", stderr: "" });
 		}
 	}
 	finally {

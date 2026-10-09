@@ -2,6 +2,7 @@ import type { RawCourse } from "./types";
 import { dsaGraphLessons } from "./dsaGraphLessons";
 import { dsaMarkovLessons } from "./dsaMarkovLessons";
 import { dsaMazeLessons } from "./dsaMazeLessons";
+import { dsaQuicksortLessons } from "./dsaQuicksortLessons";
 import { dsaSetupLessons } from "./dsaSetupLessons";
 import { dsaTaskRecordLessons } from "./dsaTaskRecordLessons";
 import { buildImplementationLabGuidance } from "./implementationLabGuidance";
@@ -311,35 +312,29 @@ const dataStructuresAndAlgorithmsInCppSourceCourse: RawCourse = {
 			curriculum: [
 				{
 					title: "Why Partition-Based Sorting Works",
-					content:
-						"Explain quicksort through the partitioning story first: choose a pivot, move smaller elements left, larger elements right, and recurse on the remaining subranges. A strong explanation narrates the array state after each partition."
+					id: "data-structures-and-algorithms-in-cpp-dscpp5-quicksort-and-partitioning-curriculum-quicksort-and-partitioning-core-concepts",
+					content: dsaQuicksortLessons.partition,
+					ideImport: false
 				},
 				{
 					title: "Median of Three and Practical Pivot Choice",
-					content:
-						"Median-of-three is a practical improvement rather than a ritual. The lesson is about reducing bad pivot choices on partially sorted data, not about memorizing a special case in isolation. The source quicksort lab is useful because it separates dynamic buffer ownership, pivot selection, partitioning, and recursive sorting into testable responsibilities."
+					content: dsaQuicksortLessons.pivot,
+					ideImport: false
 				},
 				{
 					title: "Recursive Boundaries and Base Cases",
-					content:
-						"Include proof of where the recursion stops and why the subranges shrink. Quicksort bugs often come from boundary confusion rather than from misunderstanding the big idea."
+					content: dsaQuicksortLessons.recursion,
+					ideImport: false
 				},
 				{
 					title: "Quicksort and Partitioning: Verification and Reflection",
-					content: buildSupportSectionGuidance({
-						courseFamily: "C++ data structures and algorithms",
-						moduleTitle: "Quicksort and Partitioning",
-						section: "verification"
-					})
+					content: dsaQuicksortLessons.verification,
+					ideImport: false
 				},
 				{
 					title: "DSCPP5 Quicksort and Partitioning: Core Project",
-					content: buildProjectGuidance({
-						courseFamily: "C++",
-						moduleTitle: "DSCPP5 Quicksort and Partitioning",
-						projectKind: "core",
-						hasReference: true
-					}),
+					content: dsaQuicksortLessons.project,
+					ideImport: true,
 					projectLink:
 						"https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/tree/main/DSCPP5-Quicksort-Toolkit/starter",
 					solutionLink:
@@ -349,38 +344,24 @@ const dataStructuresAndAlgorithmsInCppSourceCourse: RawCourse = {
 			supplementalProjects: [
 				{
 					title: "Project: Quicksort Toolkit",
-					content:
-						"Build the buffer management, median-of-three selection, partition logic, and recursive quicksort flow needed to sort an integer sequence cleanly. The project mirrors the source quicksort lab but uses a cleaner starter and review layout.",
+					content: dsaQuicksortLessons.checkpoint,
+					ideImport: false,
 					projectLink:
-						"https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/tree/main/DSCPP5-Quicksort-Toolkit/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/tree/main/DSCPP5-Quicksort-Toolkit/solution"
+						"https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/blob/main/DSCPP5-Quicksort-Toolkit/README.md"
 				},
 				{
 					title: "Quicksort Partition Transfer Practice",
-					content: buildProjectGuidance({
-						courseFamily: "C++",
-						moduleTitle: "DSCPP5 Quicksort and Partitioning",
-						projectKind: "extension",
-						hasReference: true
-					}),
+					content: dsaQuicksortLessons.transfer,
+					ideImport: false,
 					projectLink:
-						"https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/tree/main/DSA-11-dscpp5-quicksort-and-partitioning-supplemental-2/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/tree/main/DSA-11-dscpp5-quicksort-and-partitioning-supplemental-2/solution"
+						"https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/blob/main/DSCPP5-Quicksort-Toolkit/README.md"
 				},
 				{
 					title: "Quicksort Partition Extension Practice",
-					content: buildProjectGuidance({
-						courseFamily: "C++",
-						moduleTitle: "DSCPP5 Quicksort and Partitioning",
-						projectKind: "extension",
-						hasReference: true
-					}),
+					content: dsaQuicksortLessons.extension,
+					ideImport: false,
 					projectLink:
-						"https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/tree/main/DSA-12-dscpp5-quicksort-and-partitioning-supplemental-3/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/tree/main/DSA-12-dscpp5-quicksort-and-partitioning-supplemental-3/solution"
+						"https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/blob/main/DSCPP5-Quicksort-Toolkit/README.md"
 				}
 			]
 		},
@@ -1535,6 +1516,11 @@ function decorateDataStructuresCppModule(
 			key: "dscpp4-maze-contract",
 			anchor: "dscpp4-recursion-and-backtracking-in-3d-mazes",
 			label: "maze"
+		},
+		"DSCPP5 Quicksort and Partitioning": {
+			key: "dscpp5-quicksort-contract",
+			anchor: "dscpp5-quicksort-and-partitioning",
+			label: "quicksort"
 		}
 	}[module.title];
 	if (statePractice) {

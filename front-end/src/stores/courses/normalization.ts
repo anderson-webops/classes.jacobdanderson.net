@@ -1411,7 +1411,8 @@ function normalizeModuleLessonShape(course: RawCourse, courseId: string) {
 					"DSCPP1 Interfaces, Records, and a Task Manager CLI",
 					"DSCPP2 Graphs and Shortest Paths",
 					"DSCPP3 STL Containers and State-Based Text Generation",
-					"DSCPP4 Recursion and Backtracking in 3D Mazes"
+					"DSCPP4 Recursion and Backtracking in 3D Mazes",
+					"DSCPP5 Quicksort and Partitioning"
 				].includes(module.title)) ||
 			(courseId === "scratch-level-1" &&
 				["GS6 Variables", "GS7 Basic Conditionals"].includes(
@@ -3472,7 +3473,8 @@ function needsContentSupport(context: CourseTextContext) {
 		[
 			"DSCPP1 Interfaces, Records, and a Task Manager CLI",
 			"DSCPP3 STL Containers and State-Based Text Generation",
-			"DSCPP4 Recursion and Backtracking in 3D Mazes"
+			"DSCPP4 Recursion and Backtracking in 3D Mazes",
+			"DSCPP5 Quicksort and Partitioning"
 		].includes(context.module.title) &&
 		[
 			"Learn",

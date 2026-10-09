@@ -1,3 +1,67 @@
+# Current course-audit checkpoint, 2026-10-09
+
+The full 77-course audit remains unfinished. A fresh inventory of canonical
+`0115067d53d7588d82bc62b5b86d442710c058e2` loads all 77 normalized entries and
+finds all 392 directly linked local `/course-assets/` resources. No complete
+normalized course is byte-identical to another. These are local availability
+and exact-content checks; external availability, delivery-purpose overlap,
+full reading quality and production are separate requirements.
+
+The accepted quicksort source correction is merged through
+[DSA source PR #7](https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/pull/7)
+at `b67e677002158eca271def7b1295bc95090bae4f`. The starter previously used
+`std::sort`, bypassing its assigned algorithm. It now exposes three unfinished
+pivot, partition and recursion tasks and visibly retains the unsorted example.
+The guide correctly describes vector-owned storage, inclusive ranges, a worked
+partition, tiny-range behavior and duplicate-case complexity limits. Both optional
+worksheets continue the core; four unrelated historical role files remain intact.
+The complete reference and original demonstration are unchanged.
+
+Exact review and independent merged main pass all seven native workflows.
+Both GCC and Clang check ordinary and address/undefined-sanitized roles, including
+3,816 independent sort fixtures and 516 pivot/partition fixtures per reference
+mode. The untouched starter remains incomplete. These bounded valid-index checks
+do not grade a completed learner submission or certify other DSA algorithms.
+The review branch is removed and retained in a verified recovery bundle.
+
+Matching website lessons are prepared: four authored reading cards, the required
+core import, read-only optional worksheets and separate confirmed current-source
+import identity. Existing project, worksheet and concept-progress identities are
+preserved. All 281 focused cases, full source lint and both typechecks pass.
+The local export verifier checks both quicksort roles in four ordinary/sanitizer
+groups using the exact source oracle; this is not actual browser-ZIP acceptance.
+The browser regression preserves the real earlier library-sort starter while
+opening a separate current task pack. Hosted browser acceptance, integration,
+downstream replay and release publication remain pending. Dependencies and
+lockfiles are unchanged.
+
+Visual review found that the shared inline-list formatter treated the numeric
+sentence ending in `index 2. Predict` as a second list marker, hiding the pivot
+index in the otherwise correct source worksheet. Preserve authored block-list
+lines while retaining compact inline-list formatting. Fifteen focused component
+and quicksort cases pass, and the actual browser gate now checks all four transfer
+items and both pivot indices. The prior full hosted suite passed, but these new
+renderer changes require fresh hosted and visual acceptance.
+
+A static routing audit loads all 77 entries and identifies 16 courses with core
+GitHub resources but no configured course IDE mode. The course-level gate prevents
+their import action before resource inference. A mapped mode alone does not prove
+successful import or execution. The initial complete USACO source-tree audit
+found 146 of 165 starter directories containing only a README, plus five missing
+reference folders that are advertised by the Silver/Gold catalog. These broader
+workflow and source findings remain unfinished.
+
+The Square Pasture learner pack is now supplied through
+[USACO Bronze source PR #1](https://github.com/instruction-material/USACO-Bronze/pull/1),
+merged at `9def4c6337b899af9367f6ade93e570a007303be`. Provided file handling, three
+unfinished geometry tasks, sample input and a complete guide replace its migration
+placeholder. Every original reference and fixture is preserved. Local, exact
+review and independent main pass 200 actual file-I/O fixtures against an independent
+bounded square-placement oracle; the untouched starter produces no answer file.
+Site routing and actual consent/import/export acceptance are still pending.
+
+## Earlier dated checkpoints
+
 # Current course-audit checkpoint, 2026-10-08
 
 

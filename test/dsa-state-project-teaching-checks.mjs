@@ -15,11 +15,58 @@ export async function verifyStateProjectTeaching(page, options) {
 	} = options;
 	const requestsBefore = sourceRequestCount();
 	const markov = folder.startsWith("DSCPP3-");
-	const unit = markov ? "DSCPP3" : "DSCPP4";
-	const anchor = markov ? "dscpp3-stl-containers-and-state-based-text-generation" : "dscpp4-recursion-and-backtracking-in-3d-mazes";
-	const titles = markov ? ["Vectors, Sets, Maps, and Deques as Different Stories", "Tokenization and Cleanup", "State Windows and Markov-Style Generation", "Verification Review: STL Containers and State Based Text Generation"] : ["Recursive Search as Controlled Exploration", "Visited State and Cycle Prevention", "Path Construction and Rollback", "Verification Review: Recursion and Backtracking in 3D Mazes"];
-	const worksheets = markov ? ["Project: Markov Text Generator", "Container Text Generation Transfer Practice", "Container Text Generation Extension Practice"] : ["Project: Recursive Maze Pathfinder", "Recursive Maze Transfer Practice", "Recursive Maze Extension Practice"];
-	const continuationLabel = markov ? "Continue saved text-generator project" : "Continue saved maze project";
+	const quicksort = folder.startsWith("DSCPP5-");
+	const unit = markov ? "DSCPP3" : quicksort ? "DSCPP5" : "DSCPP4";
+	const anchor = quicksort
+		? "dscpp5-quicksort-and-partitioning"
+		: markov
+			? "dscpp3-stl-containers-and-state-based-text-generation"
+			: "dscpp4-recursion-and-backtracking-in-3d-mazes";
+	const titles = quicksort
+		? [
+				"Why Partition-Based Sorting Works",
+				"Median of Three and Practical Pivot Choice",
+				"Recursive Boundaries and Base Cases",
+				"Verification Review: Quicksort and Partitioning"
+			]
+		: markov
+			? [
+					"Vectors, Sets, Maps, and Deques as Different Stories",
+					"Tokenization and Cleanup",
+					"State Windows and Markov-Style Generation",
+					"Verification Review: STL Containers and State Based Text Generation"
+				]
+			: [
+					"Recursive Search as Controlled Exploration",
+					"Visited State and Cycle Prevention",
+					"Path Construction and Rollback",
+					"Verification Review: Recursion and Backtracking in 3D Mazes"
+				];
+	const worksheets = quicksort
+		? [
+				"Project: Quicksort Toolkit",
+				"Quicksort Partition Transfer Practice",
+				"Quicksort Partition Extension Practice"
+			]
+		: markov
+			? [
+					"Project: Markov Text Generator",
+					"Container Text Generation Transfer Practice",
+					"Container Text Generation Extension Practice"
+				]
+			: [
+					"Project: Recursive Maze Pathfinder",
+					"Recursive Maze Transfer Practice",
+					"Recursive Maze Extension Practice"
+				];
+	const continuationLabel = quicksort
+		? "Continue saved quicksort project"
+		: markov
+			? "Continue saved text-generator project"
+			: "Continue saved maze project";
+	const projectHeading = quicksort
+		? "Submit and continue"
+		: "Complete and run the required project";
 	const primaryKey = `data-structures-and-algorithms-in-cpp:data-structures-and-algorithms-in-cpp-${anchor}-curriculum-core-project-${anchor.replace(/^dscpp\d+-/, "")}:starter`;
 	if (screenshotDirectory)
 		await mkdir(screenshotDirectory, { recursive: true });
@@ -27,14 +74,12 @@ export async function verifyStateProjectTeaching(page, options) {
 		await page.setViewport({ width, height: 900 });
 		const capture = async (card, index) => {
 			if (screenshotDirectory) {
-				await card
-					.asElement()
-					.screenshot({
-						path: join(
-							screenshotDirectory,
-							`course-import-cpp-${unit}-lesson-${index}-${referenceFixture ? "staff" : "learner"}-${width}.png`
-						)
-					});
+				await card.asElement().screenshot({
+					path: join(
+						screenshotDirectory,
+						`course-import-cpp-${unit}-lesson-${index}-${referenceFixture ? "staff" : "learner"}-${width}.png`
+					)
+				});
 			}
 		};
 		await page.click(".lesson-view-toggle button:nth-child(3)");
@@ -64,12 +109,11 @@ export async function verifyStateProjectTeaching(page, options) {
 						[...document.querySelectorAll(".lesson-item")]
 							.find(
 								item =>
-									item.querySelector("h5")?.textContent
-									=== title
+									item.querySelector("h5")?.textContent ===
+									title
 							)
 							?.querySelector(".item-content-markdown")
-							?.textContent
-							.includes("Concept focus"),
+							?.textContent.includes("Concept focus"),
 					{},
 					title
 				);
@@ -99,21 +143,20 @@ export async function verifyStateProjectTeaching(page, options) {
 					0
 				);
 				await capture(card, index);
-			}
-			finally {
+			} finally {
 				await card.dispose();
 			}
 		}
 		await revealCourseSource(page, selector);
 		await page.waitForFunction(
-			selector =>
+			(selector, heading) =>
 				document
 					.querySelector(selector)
 					?.closest(".lesson-item")
-					?.textContent
-					.includes("Complete and run the required project"),
+					?.textContent.includes(heading),
 			{},
-			selector
+			selector,
+			projectHeading
 		);
 		const project = await page.evaluateHandle(
 			selector =>
@@ -123,8 +166,12 @@ export async function verifyStateProjectTeaching(page, options) {
 		try {
 			const text = await project.evaluate(item => item.textContent);
 			assert.ok(
-				text.includes("role-only IDE ZIP")
-				&& text.includes("C++20")
+				text.includes("role-only IDE ZIP"),
+				`${unit}: role-only export instructions`
+			);
+			assert.ok(
+				text.includes("C++20"),
+				`${unit}: native language standard`
 			);
 			assert.equal(
 				!!(await page.$(
@@ -133,8 +180,7 @@ export async function verifyStateProjectTeaching(page, options) {
 				referenceFixture
 			);
 			await capture(project, 4);
-		}
-		finally {
+		} finally {
 			await project.dispose();
 		}
 		await page.click(".lesson-view-toggle button:nth-child(2)");
@@ -164,13 +210,10 @@ export async function verifyStateProjectTeaching(page, options) {
 						[...document.querySelectorAll(".lesson-item")]
 							.find(
 								item =>
-									item.querySelector("h5")?.textContent
-									=== title
+									item.querySelector("h5")?.textContent ===
+									title
 							)
-							?.textContent
-							.includes(
-								continuationLabel
-							),
+							?.textContent.includes(continuationLabel),
 					{},
 					title,
 					continuationLabel
@@ -184,22 +227,34 @@ export async function verifyStateProjectTeaching(page, options) {
 					),
 					0
 				);
-				const href = await card.evaluate((item, continuationLabel) =>
-					[...item.querySelectorAll(".item-content-markdown a")]
-						.find(
-							a =>
-								a.textContent
-								=== continuationLabel
-						)
-						?.getAttribute("href"), continuationLabel);
+				const href = await card.evaluate(
+					(item, continuationLabel) =>
+						[...item.querySelectorAll(".item-content-markdown a")]
+							.find(a => a.textContent === continuationLabel)
+							?.getAttribute("href"),
+					continuationLabel
+				);
 				assert.ok(href);
 				assert.equal(
 					new URL(href, origin).searchParams.get("projectKey"),
 					primaryKey
 				);
+				if (quicksort && index === 1) {
+					const items = await card.evaluate(item =>
+						[
+							...item.querySelectorAll(
+								".item-content-markdown ol > li"
+							)
+						].map(entry => entry.textContent.replace(/\s+/g, " "))
+					);
+					assert.equal(items.length, 4);
+					assert.ok(
+						items[0].includes("at index 2. Predict the pivot's")
+					);
+					assert.ok(items[1].includes("index 3."));
+				}
 				await capture(card, index + 5);
-			}
-			finally {
+			} finally {
 				await card.dispose();
 			}
 		}

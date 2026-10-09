@@ -54,7 +54,7 @@ export function normalizeInlineCourseMarkdown(content: string) {
 				normalized.match(/(?:^|[:.;!?]\s+)[-*]\s+\S/gm) ?? []
 			).length;
 
-			if (orderedMarkerCount >= 2) {
+			if (orderedMarkerCount >= 2 && !/^\s*\d+[.)]\s+\S/.test(line)) {
 				normalized = normalized.replace(
 					/(?!^)\s+(\d+\.)\s+(?=\S)/g,
 					"\n$1 "
