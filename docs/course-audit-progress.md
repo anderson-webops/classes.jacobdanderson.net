@@ -40,22 +40,60 @@ untouched starter builds and intentionally fails the two nonempty success tests;
 its two marked tasks remain unfinished. This acceptance covers those units,
 not all of the remaining DSA coursework.
 
-The site candidate connects the accepted three-file packs, four full Learn
-sections and the complete core brief. Its normal saved-project key and existing
-progress identities remain. A separate current-pack action asks before importing
-into different work. Optional reading cards preserve their file links and saved
-project continuation; reading imports no unrelated numeric-transform program.
-Actual browser import, marked-header editing, save/export/reopen, native builds,
-CMake/CTest, older saved attempts and learner/instructor visibility are covered
-by the extended acceptance check. Hosted site review and visual acceptance are
-required before integration, downstream synchronization and release alignment.
-Dependencies and both lockfiles are unchanged.
+The setup site change is merged through
+[PR #160](https://github.com/anderson-webops/classes.jacobdanderson.net/pull/160)
+at `9cc409a3965c5ac639cb4fd0ebf26fe68ecda826`. The reviewed combined tree passes
+all nine jobs, 35 Cypress scenarios, 75 C++/Java imports, 27 saved-attempt cases,
+17 untouched exports and actual exported setup native/CMake checks. Its 72
+setup, graph and Scratch screens were accepted by direct inspection or an
+identical-byte comparison with previously accepted screens. The normal saved
+primary and progress identities remain. A separate current-pack action asks
+before importing; optional reading preserves saved-project continuation.
+
+Independent canonical-main CI hit its 20-minute job limit at the end of Cypress.
+Although the log contains all 35 passing scenarios, that cancelled job is not
+accepted. The ownership follow-up raises the bounded browser job to 30 minutes
+and its expanded import test to 15 minutes. No correctness assertion is removed.
+Downstream review and independent current-main acceptance remain separate gates.
+No new setup release or production activation is claimed.
+
+The linked-list, BST, AVL and benchmark ownership correction is merged through
+[DSA source PR #3](https://github.com/instruction-material/Data-Structures-and-Algorithms-in-CPP/pull/3)
+at `c6645c2bd977b793c45d440f75e5ac177d6ffe93`. Nine node-owning types across
+seven learner/reference files now explicitly reject copying, while retaining
+construction, algorithm bodies, demonstrations and unfinished learner tasks.
+Their existing destructors also prevent implicit moves. Every added source
+line is marked. Exact review and independent source main each pass 28 ownership
+role/mode groups with GCC and Clang, plus all eight setup and eight graph groups.
+These are bounded ownership/lifetime checks, not full acceptance of every unit.
+
+The website imports from published source main. The follow-up records the exact
+accepted source revision and hashes independently in seven browser fixtures,
+adds a small ownership-policy note to four units and matching course-wide C++20
+build directions. The root source toolchain specifies C++20; the task-manager
+reference also requires it for erase_if and ranges::sort. It checks actual imports,
+saves, exports and reopening with ordinary/sanitized native ownership checks.
+Three additional untouched/saved learner cases preserve existing attempts.
+The three ownership starters offer an explicit current-pack action with separate
+workspace identities and import confirmation. Course-wide C++20 assertions now
+cover other DSA units while excluding similar unrelated course names. The prior
+hosted run caught the missing action and stale C++17 expectation; it failed and
+is not accepted. The next run passed all unit checks and six ownership exports,
+then caught the benchmark reference missing its IDE action. Explicit import
+actions now cover all four ownership units; that failed run is not accepted.
+All fourteen local export-checker native groups, nineteen focused catalog tests
+and full workspace source lint pass. Full hosted browser and visual acceptance
+remain pending. Dependencies and both lockfiles are unchanged.
+
+All thirteen currently retrievable Zoom transcripts have full semantic-review
+receipts. The October 8 Julio and Viaan sessions match the implemented Scratch
+focus, conditionals, repeated key handling and project guidance. Fifty-one older
+unavailable transcript assets are not counted as reviewed.
 
 Branch consolidation is complete, with removed tips retained in verified recovery
-bundles. Other DSA placeholder and correctness findings, remaining advanced
-course source validation and transcript reviews are still open. Historical Zoom
-assets that cannot be retrieved are not counted as reviewed. No source milestone
-here certifies the full catalog or a live deployment.
+bundles. Other DSA placeholder and correctness findings and remaining advanced
+course source validation remain open. No source milestone here certifies the full
+catalog or a live deployment.
 
 ## Earlier dated milestones
 

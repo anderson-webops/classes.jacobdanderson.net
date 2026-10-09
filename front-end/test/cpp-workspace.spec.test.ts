@@ -174,6 +174,9 @@ describe("C++ source workspace", () => {
 			"data-structures-and-algorithms-in-cpp:data-structures-and-algorithms-in-cpp-dscpp2-graphs-and-shortest-paths-curriculum-core-project-graphs-and-shortest-paths:starter",
 			"data-structures-and-algorithms-in-cpp:data-structures-and-algorithms-in-cpp-dscpp2-graphs-and-shortest-paths-curriculum-core-project-graphs-and-shortest-paths:solution",
 			"data-structures-and-algorithms-in-cpp:dscpp2-graph:current-pack-v1",
+			"data-structures-and-algorithms-in-cpp:dscpp2-graph-other:starter",
+			"data-structures-and-algorithms-in-cpp:dscpp3-markov:starter",
+			"data-structures-and-algorithms-in-cpp",
 			"c-level-1"
 		]) {
 			expect(cppBuildInstructions(files, key).join("\n")).toContain(
@@ -193,8 +196,8 @@ describe("C++ source workspace", () => {
 			"cpp-level-2x-project",
 			"cpp-level-30:project:starter",
 			"cpp-level-3x-project",
-			"data-structures-and-algorithms-in-cpp:dscpp2-graph-other:starter",
-			"data-structures-and-algorithms-in-cpp:dscpp3-markov:starter"
+			"data-structures-and-algorithms-in-cpp-other:project:starter",
+			"data-structures-and-algorithms-in-cppx:project:starter"
 		]) {
 			expect(cppBuildInstructions(files, key).join("\n")).toContain(
 				"-std=c++17"
