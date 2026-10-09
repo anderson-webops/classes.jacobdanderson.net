@@ -217,6 +217,7 @@ nodeTest("restored USACO roles confirm, preserve edits and export correct native
 				if (await page.$(selector)) break;
 			}
 			await page.waitForSelector(selector);
+			await page.waitForFunction(selector => ["Contract and reasoning", "Guided implementation", "Check and explain", "Open, save and run"].every(label => [...document.querySelector(selector)?.closest(".lesson-item")?.querySelectorAll(".item-content-markdown h2") ?? []].some(heading => heading.textContent === label)), { timeout: 15000 }, selector);
 			const card = await page.$eval(selector, link => ({ text: link.closest(".lesson-item").textContent, links: [...link.closest(".lesson-item").querySelectorAll("a")].map(action => ({ text: action.textContent, href: action.getAttribute("href"), import: action.classList.contains("is-ide-starter") })) }));
 			assert.match(card.text, /Contract and reasoning/);
 			if (!fixture.reference) assert.ok(card.links.every(link => !link.href.includes("/solution")), "Learner view withholds reference resources");
