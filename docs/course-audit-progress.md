@@ -54,6 +54,13 @@ and execute the complete melody in the real browser runtime. It must verify
 the two-second result, silent rest, final note and exact bytes produced by the
 actual Download WAV action. Those checks, screenshot acceptance, integration,
 downstream replay and release alignment remain pending at this source checkpoint.
+The first hosted full-suite run passed build, lint, typecheck, accessibility,
+static-media, standalone backend install and native Nginx checks, plus CodeQL.
+It found a standalone Java test bundler without text loaders for the new raw
+reference files and a neutral-copy rule matching the Scratch phrase then ask.
+The correction adds the appropriate text loaders and describes the actual ask
+and wait block without that ambiguous wording. Fresh regression and hosted
+acceptance are required; the superseded heavy browser run was cancelled.
 Existing core projects, progress identities and source starter/solution paths
 are preserved. Broader source-pack/algorithm acceptance and production workflow
 acceptance remain separate unfinished requirements.
