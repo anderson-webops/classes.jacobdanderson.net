@@ -179,7 +179,7 @@ function projectBrief(
 			? "Required implementation checkpoint: complete and explain this pack before continuing."
 			: item.learningPath === "challenge"
 				? "Choose this optional challenge after the matching unit; it is not a prerequisite for completing the required spine."
-				: "Use this optional practice for a diagnosed gap or an independent retry. If the same pack was already completed in the required unit, preserve that attempt and change the test cases rather than repeat identical work.";
+				: "This optional practice targets a diagnosed gap or an independent retry. If the same pack was already completed in the required unit, preserve that attempt and change the test cases rather than repeat identical work.";
 	return [
 		`## ${brief.title}`,
 		`**Learning sequence:** ${placement}`,
