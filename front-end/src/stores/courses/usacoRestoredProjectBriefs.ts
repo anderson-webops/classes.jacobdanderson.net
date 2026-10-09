@@ -182,7 +182,7 @@ function projectBrief(
 				: "Use this optional practice for a diagnosed gap or an independent retry. If the same pack was already completed in the required unit, preserve that attempt and change the test cases rather than repeat identical work.";
 	return [
 		`## ${brief.title}`,
-		`**Project goal:** ${placement}`,
+		`**Learning sequence:** ${placement}`,
 		"## Contract and reasoning",
 		brief.contract,
 		brief.model,

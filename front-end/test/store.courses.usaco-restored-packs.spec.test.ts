@@ -1,5 +1,6 @@
 import { createPinia, setActivePinia } from "pinia";
 import { beforeEach, describe, expect, it } from "vitest";
+import { lessonContentSections } from "@/modules/courseLessonPresentation";
 import { cppBuildInstructions } from "@/modules/cppBuildInstructions";
 import {
 	pythonIdeModeForCourseId,
@@ -101,6 +102,17 @@ describe("restored USACO project workflows", () => {
 				expect(item.content.length).toBeGreaterThan(2200);
 				expect(item.content).not.toContain("**Studio focus:**");
 				expect(item.content).not.toContain("**Build steps:**");
+				const visibleProjectContent = lessonContentSections(item.content)
+					.filter(section => section.kind !== "learn")
+					.map(section => section.content)
+					.join("\n\n");
+				for (const heading of [
+					"Contract and reasoning",
+					"Guided implementation",
+					"Check and explain",
+					"Open, save and run"
+				])
+					expect(visibleProjectContent, pack.folder).toContain(`## ${heading}`);
 				const stdio
 					= pack.folder === "UB62-Cow-College"
 						|| pack.folder === "UB63-Feeding-the-Cows";
