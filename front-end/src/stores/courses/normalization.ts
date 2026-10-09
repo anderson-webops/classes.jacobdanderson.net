@@ -15,6 +15,7 @@ import {
 	staticMediaUrl,
 	staticMediaUrlsFromText
 } from "./staticMedia";
+import { applyRestoredUsacoProjects } from "./usacoRestoredProjectBriefs";
 
 const INSTRUCTION_MATERIAL_BASE = "https://github.com/instruction-material";
 const CLASSROOM_BASE_COURSE_IDS: Record<string, string> = {
@@ -9540,6 +9541,7 @@ export function normalizeRawCourse(id: string, rawCourse: RawCourse) {
 	applyResearchBackedExpansions(id, course);
 	applyCourseImplementationArtifacts(id, course);
 	normalizeUsacoProjectGuidance(course, id);
+	applyRestoredUsacoProjects(id, course);
 	normalizeImplementationLabLanguage(course);
 	normalizeContextualItemTitles(course);
 	formatDenseProcedureInstructions(course);

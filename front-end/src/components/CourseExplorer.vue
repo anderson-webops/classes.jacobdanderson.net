@@ -1549,7 +1549,6 @@ function codePreviewResources(item: CourseModuleItem): CodePreviewResource[] {
 function ideStarterHref(item: CourseModuleItem, resource: ResourceLink) {
 	if (
 		!selectedCourse.value ||
-		!ideCourseMode.value ||
 		(resource.kind !== "project" && resource.kind !== "solution") ||
 		resource.host !== "github.com" ||
 		(!item.ideImport &&

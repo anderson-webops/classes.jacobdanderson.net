@@ -1120,6 +1120,9 @@ function metadataStandards(courseId: string) {
 function sourcePolicyFor(courseId: string) {
 	const url = repoUrl(courseId);
 	if (url) {
+		if (courseId.startsWith("usaco-")) {
+			return `Source-backed course. Canonical source repository: ${url}. Confirmed IDE imports cover Square Pasture, Counting Haybales, Priority Queues, Prefix Sums, Fibonacci, Teamwork, Marathon Gold and Bookshelf Gold in their respective courses. Other legacy folders may contain a migration README without learner code or only historical fixtures; a repository link alone does not establish a runnable project. Check each pack's language, input contract and source before use.`;
+		}
 		if (courseId === "linux-systems") {
 			return `Source-backed course. Canonical source repository: ${url}. LS1–LS6 are the primary multi-file operational labs; the numbered LS-* folders are lightweight shell checkpoints or studio practice. Existing starter/solution URLs remain traceable, while local evidence cases prevent a generic checkpoint from being treated as a production deployment.`;
 		}

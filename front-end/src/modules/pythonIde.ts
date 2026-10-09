@@ -9,6 +9,7 @@ import {
 
 import { courseReferenceExamples } from "@/modules/courseReferenceExamples";
 import { cppStarterCode, cppWorkspaceReadme } from "@/modules/cppIdeSource";
+import { restoredUsacoResource } from "@/modules/usacoProjectResources";
 
 const WHITESPACE_RE = /\s+/g;
 const FILE_EXTENSION_RE = /\.[\dA-Z]+$/i;
@@ -332,6 +333,16 @@ export function isKnownCourseWorksheetResource(url: string) {
 export function pythonIdeModeForCourseResource(courseId: string, url: string) {
 	const resource = parseGitHubResource(url);
 	if (!resource || isKnownCourseWorksheetResource(url)) return null;
+	if (courseId.startsWith("usaco-")) {
+		return (
+			restoredUsacoResource(
+				courseId,
+				resource.owner,
+				resource.repo,
+				resource.path
+			)?.mode ?? null
+		);
+	}
 	if (
 		/\.(?:cc|cpp|cxx)$/i.test(resource.path) ||
 		(courseId === "python-to-java-and-cpp-bridge" &&

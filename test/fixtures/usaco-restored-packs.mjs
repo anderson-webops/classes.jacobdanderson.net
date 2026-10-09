@@ -1,0 +1,393 @@
+// Verified source revisions and Git blob digests, not checkout line endings.
+export const usacoFixtures = [
+	{
+		repository: "instruction-material/USACO-Bronze",
+		revision: "9def4c6337b899af9367f6ade93e570a007303be",
+		courseId: "usaco-bronze",
+		folder: "UB1-Square-Pasture/starter",
+		anchor: "usaco-bronze-unit-1-simulation-and-careful-translation",
+		itemId: "usaco-bronze-unit-1-simulation-and-careful-translation-curriculum-core-project-simulation-and-careful-translation",
+		mode: "python",
+		input: "square.in",
+		output: "square.out",
+		expected: "49",
+		hashes: {
+			"README.md": "201e4a5b9cf183342bd92bbc3b3ea3de45faacf7fddcee661cf6a48f0de9646e",
+			"main.py": "7e46d4eb9e7c0106011c6a5e66ba6d2dacf8e00d05a1ec78097d808ddf42398d",
+			"square.in": "8d37df3f6b09e70186f7b70c893c358336fbed185a322489e479c70314b9bea0"
+		},
+		reference: false
+	},
+	{
+		repository: "instruction-material/USACO-Bronze",
+		revision: "9def4c6337b899af9367f6ade93e570a007303be",
+		courseId: "usaco-bronze",
+		folder: "UB1-Square-Pasture/solution",
+		anchor: "usaco-bronze-unit-1-simulation-and-careful-translation",
+		itemId: "usaco-bronze-unit-1-simulation-and-careful-translation-curriculum-core-project-simulation-and-careful-translation",
+		mode: "python",
+		input: "square.in",
+		output: "square.out",
+		expected: "49",
+		hashes: {
+			"main.py": "565bf977e8d413f81f611343abe36aed0c6bf1d1b05a4840ac98b4492401b6b5",
+			"square.in": "7ec8346fbb803e4753941b2e07c496b1e3306d007f2bbc20e0507b3b4fa48e04"
+		},
+		reference: true
+	},
+	{
+		repository: "instruction-material/USACO-Bronze",
+		revision: "9def4c6337b899af9367f6ade93e570a007303be",
+		courseId: "usaco-bronze-on-demand",
+		folder: "UB1-Square-Pasture/starter",
+		anchor: "usaco-bronze-on-demand-stage-1-simulation-and-exact-translation",
+		itemId: "usaco-bronze-on-demand-stage-1-simulation-and-exact-translation-curriculum-concepts-square-pasture",
+		mode: "python",
+		input: "square.in",
+		output: "square.out",
+		expected: "49",
+		hashes: {
+			"README.md": "201e4a5b9cf183342bd92bbc3b3ea3de45faacf7fddcee661cf6a48f0de9646e",
+			"main.py": "7e46d4eb9e7c0106011c6a5e66ba6d2dacf8e00d05a1ec78097d808ddf42398d",
+			"square.in": "8d37df3f6b09e70186f7b70c893c358336fbed185a322489e479c70314b9bea0"
+		},
+		reference: false
+	},
+	{
+		repository: "instruction-material/USACO-Bronze",
+		revision: "9def4c6337b899af9367f6ade93e570a007303be",
+		courseId: "usaco-bronze-on-demand",
+		folder: "UB1-Square-Pasture/solution",
+		anchor: "usaco-bronze-on-demand-stage-1-simulation-and-exact-translation",
+		itemId: "usaco-bronze-on-demand-stage-1-simulation-and-exact-translation-curriculum-concepts-square-pasture",
+		mode: "python",
+		input: "square.in",
+		output: "square.out",
+		expected: "49",
+		hashes: {
+			"main.py": "565bf977e8d413f81f611343abe36aed0c6bf1d1b05a4840ac98b4492401b6b5",
+			"square.in": "7ec8346fbb803e4753941b2e07c496b1e3306d007f2bbc20e0507b3b4fa48e04"
+		},
+		reference: true
+	},
+	{
+		repository: "instruction-material/USACO-Silver",
+		revision: "01fbf669fc650050f0a8635a30150c503c95663b",
+		courseId: "usaco-silver",
+		folder: "US18-Counting-Haybales/starter",
+		anchor: "usaco-silver-unit-4-prefix-and-difference-sums-ranges-and-sliding-windows",
+		itemId: "usaco-silver-unit-4-prefix-and-difference-sums-ranges-and-sliding-windows-curriculum-core-project-prefix-sums-ranges-and-counting",
+		mode: "cpp",
+		input: "haybales.in",
+		output: "haybales.out",
+		expected: "2\n2\n3\n4\n1\n0\n",
+		hashes: {
+			"README.md": "aab0b7d136a116d28c0b1fcd1f48c0fbabf20e86e8dabf427d266778e759a847",
+			"haybales.in": "5c2c38d9a5a20848acc74c47cd7e7d54c8bbfda12f797d6bf9cad3ebef8701ea",
+			"main.cpp": "bb1e3cf0e1fccb7faa150e2c4c7056c83008ce438076b1d9ff40fd8a52d20252"
+		},
+		reference: false
+	},
+	{
+		repository: "instruction-material/USACO-Silver",
+		revision: "01fbf669fc650050f0a8635a30150c503c95663b",
+		courseId: "usaco-silver",
+		folder: "US18-Counting-Haybales/solution",
+		anchor: "usaco-silver-unit-4-prefix-and-difference-sums-ranges-and-sliding-windows",
+		itemId: "usaco-silver-unit-4-prefix-and-difference-sums-ranges-and-sliding-windows-curriculum-core-project-prefix-sums-ranges-and-counting",
+		mode: "cpp",
+		input: "haybales.in",
+		output: "haybales.out",
+		expected: "2\n2\n3\n4\n1\n0\n",
+		hashes: {
+			"README.md": "b9ab7da8f8151682075b70ab69943f93b38655fbf48ba0c8e7dc62fb412465ef",
+			"haybales.in": "5c2c38d9a5a20848acc74c47cd7e7d54c8bbfda12f797d6bf9cad3ebef8701ea",
+			"main.cpp": "af6410486551936474e0b95d84d45da1570746c360c61efef18575a3858ac7d9"
+		},
+		reference: true
+	},
+	{
+		repository: "instruction-material/USACO-Silver",
+		revision: "01fbf669fc650050f0a8635a30150c503c95663b",
+		courseId: "usaco-silver",
+		folder: "US21-Priority-Queues/starter",
+		anchor: "usaco-silver-optional-historical-and-applied-silver-studios",
+		itemId: "usaco-silver-optional-historical-and-applied-silver-studios-supplemental-core-project-priority-queues",
+		mode: "cpp",
+		input: "priority.in",
+		output: "priority.out",
+		expected: "urgent\nalpha\ngamma\nbeta\nbeta\n",
+		hashes: {
+			"README.md": "c8e4b1e0d23e2f269d5d6d41529422daf217f7dcaac3f58f81dbef4a34a857a8",
+			"main.cpp": "d72c5a69deb0a1aaccee1708923f54c614867b6f927d47d8bef53c30905e5a98",
+			"priority.in": "4d197d100ffc9b6c56cc0de9cf853888261e4b1ac4dfcd251a88c0facdef58c2"
+		},
+		reference: false
+	},
+	{
+		repository: "instruction-material/USACO-Silver",
+		revision: "01fbf669fc650050f0a8635a30150c503c95663b",
+		courseId: "usaco-silver",
+		folder: "US21-Priority-Queues/solution",
+		anchor: "usaco-silver-optional-historical-and-applied-silver-studios",
+		itemId: "usaco-silver-optional-historical-and-applied-silver-studios-supplemental-core-project-priority-queues",
+		mode: "cpp",
+		input: "priority.in",
+		output: "priority.out",
+		expected: "urgent\nalpha\ngamma\nbeta\nbeta\n",
+		hashes: {
+			"README.md": "b9ab7da8f8151682075b70ab69943f93b38655fbf48ba0c8e7dc62fb412465ef",
+			"main.cpp": "b3dc8566dae2cf071810396b91535567fa60aab6d3538dd97122277f86b89219",
+			"priority.in": "4d197d100ffc9b6c56cc0de9cf853888261e4b1ac4dfcd251a88c0facdef58c2"
+		},
+		reference: true
+	},
+	{
+		repository: "instruction-material/USACO-Silver",
+		revision: "01fbf669fc650050f0a8635a30150c503c95663b",
+		courseId: "usaco-silver",
+		folder: "US22-Prefix-Sums/starter",
+		anchor: "usaco-silver-unit-4-prefix-and-difference-sums-ranges-and-sliding-windows",
+		itemId: "usaco-silver-unit-4-prefix-and-difference-sums-ranges-and-sliding-windows-supplemental-problem-prefix-sums",
+		mode: "cpp",
+		input: "prefix.in",
+		output: "prefix.out",
+		expected: "0\n-2\n12\n7\n0\n",
+		hashes: {
+			"README.md": "09472f87142b1965dfc89355125383c25bac2590af932ed5a837a68798ae5c94",
+			"main.cpp": "418ba804d32e581c155be8f22a28e28b2ee319081b95df0fd442ab358ed0e53f",
+			"prefix.in": "ae577b1098ae24cc7af300b9260415c2cbfa2b4c45932e1b45cdd4a59df34b97"
+		},
+		reference: false
+	},
+	{
+		repository: "instruction-material/USACO-Silver",
+		revision: "01fbf669fc650050f0a8635a30150c503c95663b",
+		courseId: "usaco-silver",
+		folder: "US22-Prefix-Sums/solution",
+		anchor: "usaco-silver-unit-4-prefix-and-difference-sums-ranges-and-sliding-windows",
+		itemId: "usaco-silver-unit-4-prefix-and-difference-sums-ranges-and-sliding-windows-supplemental-problem-prefix-sums",
+		mode: "cpp",
+		input: "prefix.in",
+		output: "prefix.out",
+		expected: "0\n-2\n12\n7\n0\n",
+		hashes: {
+			"README.md": "b9ab7da8f8151682075b70ab69943f93b38655fbf48ba0c8e7dc62fb412465ef",
+			"main.cpp": "0e80be3d29db178e24a9cf2a5c85ad1b7ee8a3b64aa47b8a3f8980baf8d56160",
+			"prefix.in": "ae577b1098ae24cc7af300b9260415c2cbfa2b4c45932e1b45cdd4a59df34b97"
+		},
+		reference: true
+	},
+	{
+		repository: "instruction-material/USACO-Gold",
+		revision: "9bb94bef1a6eb2290d888aa99f6b330d270e11fd",
+		courseId: "usaco-gold",
+		folder: "UG1-Dynamic-Programming-with-Fibonacci/starter",
+		anchor: "usaco-gold-unit-1-dynamic-programming-knapsack-and-state-design",
+		itemId: "usaco-gold-unit-1-dynamic-programming-knapsack-and-state-design-curriculum-core-project-dynamic-programming-foundations",
+		mode: "cpp",
+		input: "fibonacci.in",
+		output: "fibonacci.out",
+		expected: "55\n",
+		hashes: {
+			"README.md": "bc5879df13466867e677d44ca3dd707fbf74304730b63ebaac8a35f899e8064c",
+			"fibonacci.in": "917df3320d778ddbaa5c5c7742bc4046bf803c36ed2b050f30844ed206783469",
+			"main.cpp": "47f050aff8742496103f0dfbe94eba31f725ac3ee91b872b0df7bb7843112d96"
+		},
+		reference: false
+	},
+	{
+		repository: "instruction-material/USACO-Gold",
+		revision: "9bb94bef1a6eb2290d888aa99f6b330d270e11fd",
+		courseId: "usaco-gold",
+		folder: "UG1-Dynamic-Programming-with-Fibonacci/solution",
+		anchor: "usaco-gold-unit-1-dynamic-programming-knapsack-and-state-design",
+		itemId: "usaco-gold-unit-1-dynamic-programming-knapsack-and-state-design-curriculum-core-project-dynamic-programming-foundations",
+		mode: "cpp",
+		input: "fibonacci.in",
+		output: "fibonacci.out",
+		expected: "55\n",
+		hashes: {
+			"README.md": "261a8589d48e218acf685b9257e27855ed450d701c241271ab36e71a7f1ab022",
+			"fibonacci.in": "917df3320d778ddbaa5c5c7742bc4046bf803c36ed2b050f30844ed206783469",
+			"main.cpp": "feba02a2557115dacae59c6332724a133b62ad1062f0322949cf05ee6ed3623f"
+		},
+		reference: true
+	},
+	{
+		repository: "instruction-material/USACO-Gold",
+		revision: "9bb94bef1a6eb2290d888aa99f6b330d270e11fd",
+		courseId: "usaco-gold",
+		folder: "UG3-Teamwork/starter",
+		anchor: "usaco-gold-unit-1-dynamic-programming-knapsack-and-state-design",
+		itemId: "usaco-gold-unit-1-dynamic-programming-knapsack-and-state-design-supplemental-problem-teamwork",
+		mode: "cpp",
+		input: "teamwork.in",
+		output: "teamwork.out",
+		expected: "84\n",
+		hashes: {
+			"README.md": "66864e851844389e18bb07686be075182e11214de68d9c058aeef43b138b974c",
+			"main.cpp": "1b8cb7af806d2febd570a6616c1427f308eac8658dff802a69fcd9d56423ecc8",
+			"teamwork.in": "bf427f6445cf9acc5cfeaab56411f24bc60996ec14862a98d84705d5912435bd"
+		},
+		reference: false
+	},
+	{
+		repository: "instruction-material/USACO-Gold",
+		revision: "9bb94bef1a6eb2290d888aa99f6b330d270e11fd",
+		courseId: "usaco-gold",
+		folder: "UG3-Teamwork/solution",
+		anchor: "usaco-gold-unit-1-dynamic-programming-knapsack-and-state-design",
+		itemId: "usaco-gold-unit-1-dynamic-programming-knapsack-and-state-design-supplemental-problem-teamwork",
+		mode: "cpp",
+		input: "teamwork.in",
+		output: "teamwork.out",
+		expected: "84\n",
+		hashes: {
+			"README.md": "251134191df8e193ea1019d4b9764894966b79bd4345ab32244de99c28eb05f8",
+			"main.cpp": "bfccfcd1d99eb2cc38e38d34bd0928bcc3222c12820e193c9688916a8609f31b",
+			"teamwork.in": "6546efe6bfee0f6b309e113b1e642e21a5ca637833a82d5a299df830349abb0b"
+		},
+		reference: true
+	},
+	{
+		repository: "instruction-material/USACO-Gold",
+		revision: "9bb94bef1a6eb2290d888aa99f6b330d270e11fd",
+		courseId: "usaco-gold",
+		folder: "UG5-Marathon/starter",
+		anchor: "usaco-gold-unit-4-fenwick-and-segment-trees-ordering-and-range-structure",
+		itemId: "usaco-gold-optional-historical-and-applied-gold-studios-supplemental-marathon",
+		mode: "cpp",
+		input: "marathon.in",
+		output: "marathon.out",
+		expected: "11\n8\n8\n",
+		hashes: {
+			"README.md": "40477f1b88764b52610548de6532db738cfb3936f2d66b9f352331ed1aae6314",
+			"main.cpp": "159aaddb793c19c5637cdd35a3b5e3a513ab9be648c56559389c89e43651ce22",
+			"marathon.in": "7f086d158a7a9e850527ea7e8cd8aaca7d4437574bfa4170c8313752d9be20ac"
+		},
+		reference: false
+	},
+	{
+		repository: "instruction-material/USACO-Gold",
+		revision: "9bb94bef1a6eb2290d888aa99f6b330d270e11fd",
+		courseId: "usaco-gold",
+		folder: "UG5-Marathon/solution",
+		anchor: "usaco-gold-unit-4-fenwick-and-segment-trees-ordering-and-range-structure",
+		itemId: "usaco-gold-optional-historical-and-applied-gold-studios-supplemental-marathon",
+		mode: "cpp",
+		input: "marathon.in",
+		output: "marathon.out",
+		expected: "11\n8\n8\n",
+		hashes: {
+			"README.md": "261a8589d48e218acf685b9257e27855ed450d701c241271ab36e71a7f1ab022",
+			"main.cpp": "c6965e6db59f7c168246b7b56ddae22536c518528c5248a9af17bb97d0fc3eb3",
+			"marathon.in": "7f086d158a7a9e850527ea7e8cd8aaca7d4437574bfa4170c8313752d9be20ac"
+		},
+		reference: true
+	},
+	{
+		repository: "instruction-material/USACO-Gold",
+		revision: "9bb94bef1a6eb2290d888aa99f6b330d270e11fd",
+		courseId: "usaco-gold",
+		folder: "UG8-Bookshelf/starter",
+		anchor: "usaco-gold-optional-historical-and-applied-gold-studios",
+		itemId: "usaco-gold-optional-historical-and-applied-gold-studios-supplemental-bookshelf",
+		mode: "cpp",
+		input: "bookshelf.in",
+		output: "bookshelf.out",
+		expected: "21\n",
+		hashes: {
+			"README.md": "66864e851844389e18bb07686be075182e11214de68d9c058aeef43b138b974c",
+			"bookshelf.in": "616e2d1a21d50691ee0d9e76e19275d04ebdd941ea1bfaf1faaa7d548820d6c7",
+			"main.cpp": "c1e2e4f372e8f1d1ed3de418adb04f0fff47c2abfd4333b3d188b8cd76b407f5"
+		},
+		reference: false
+	},
+	{
+		repository: "instruction-material/USACO-Gold",
+		revision: "9bb94bef1a6eb2290d888aa99f6b330d270e11fd",
+		courseId: "usaco-gold",
+		folder: "UG8-Bookshelf/solution",
+		anchor: "usaco-gold-optional-historical-and-applied-gold-studios",
+		itemId: "usaco-gold-optional-historical-and-applied-gold-studios-supplemental-bookshelf",
+		mode: "cpp",
+		input: "bookshelf.in",
+		output: "bookshelf.out",
+		expected: "21\n",
+		hashes: {
+			"README.md": "251134191df8e193ea1019d4b9764894966b79bd4345ab32244de99c28eb05f8",
+			"bookshelf.in": "616e2d1a21d50691ee0d9e76e19275d04ebdd941ea1bfaf1faaa7d548820d6c7",
+			"main.cpp": "a53ac654ece7221279ffd38a602b996a975687fc4d4566ae9d6159e4bf15ccd4"
+		},
+		reference: true
+	}
+];
+
+export const usacoExistingProjectIds = [
+	{
+		course: "usaco-bronze",
+		id: "usaco-bronze-unit-1-simulation-and-careful-translation-curriculum-core-project-simulation-and-careful-translation",
+		url: "https://github.com/instruction-material/USACO-Bronze/tree/main/UB1-Square-Pasture/starter"
+	},
+	{
+		course: "usaco-bronze",
+		id: "usaco-bronze-unit-1-simulation-and-careful-translation-supplemental-problem-square-pasture",
+		url: "https://github.com/instruction-material/USACO-Bronze/tree/main/UB1-Square-Pasture/starter"
+	},
+	{
+		course: "usaco-bronze-on-demand",
+		id: "usaco-bronze-on-demand-stage-1-simulation-and-exact-translation-curriculum-concepts-square-pasture",
+		url: "https://github.com/instruction-material/USACO-Bronze/tree/main/UB1-Square-Pasture/starter"
+	},
+	{
+		course: "usaco-silver",
+		id: "usaco-silver-unit-4-prefix-and-difference-sums-ranges-and-sliding-windows-curriculum-core-project-prefix-sums-ranges-and-counting",
+		url: "https://github.com/instruction-material/USACO-Silver/tree/main/US18-Counting-Haybales/starter"
+	},
+	{
+		course: "usaco-silver",
+		id: "usaco-silver-unit-4-prefix-and-difference-sums-ranges-and-sliding-windows-supplemental-problem-counting-haybales",
+		url: "https://github.com/instruction-material/USACO-Silver/tree/main/US18-Counting-Haybales/starter"
+	},
+	{
+		course: "usaco-silver",
+		id: "usaco-silver-unit-4-prefix-and-difference-sums-ranges-and-sliding-windows-supplemental-problem-prefix-sums",
+		url: "https://github.com/instruction-material/USACO-Silver/tree/main/US22-Prefix-Sums/starter"
+	},
+	{
+		course: "usaco-silver",
+		id: "usaco-silver-optional-historical-and-applied-silver-studios-supplemental-core-project-priority-queues",
+		url: "https://github.com/instruction-material/USACO-Silver/tree/main/US21-Priority-Queues/starter"
+	},
+	{
+		course: "usaco-silver",
+		id: "usaco-silver-optional-historical-and-applied-silver-studios-supplemental-extension-challenge-priority-queues",
+		url: "https://github.com/instruction-material/USACO-Silver/tree/main/US21-Priority-Queues/starter"
+	},
+	{
+		course: "usaco-gold",
+		id: "usaco-gold-unit-1-dynamic-programming-knapsack-and-state-design-curriculum-core-project-dynamic-programming-foundations",
+		url: "https://github.com/instruction-material/USACO-Gold/tree/main/UG1-Dynamic-Programming-with-Fibonacci/starter"
+	},
+	{
+		course: "usaco-gold",
+		id: "usaco-gold-unit-1-dynamic-programming-knapsack-and-state-design-supplemental-problem-dynamic-programming-with-fibonacci",
+		url: "https://github.com/instruction-material/USACO-Gold/tree/main/UG1-Dynamic-Programming-with-Fibonacci/starter"
+	},
+	{
+		course: "usaco-gold",
+		id: "usaco-gold-unit-1-dynamic-programming-knapsack-and-state-design-supplemental-problem-teamwork",
+		url: "https://github.com/instruction-material/USACO-Gold/tree/main/UG3-Teamwork/starter"
+	},
+	{
+		course: "usaco-gold",
+		id: "usaco-gold-optional-historical-and-applied-gold-studios-supplemental-marathon",
+		url: "https://github.com/instruction-material/USACO-Gold/tree/main/UG5-Marathon/starter"
+	},
+	{
+		course: "usaco-gold",
+		id: "usaco-gold-optional-historical-and-applied-gold-studios-supplemental-bookshelf",
+		url: "https://github.com/instruction-material/USACO-Gold/tree/main/UG8-Bookshelf/starter"
+	}
+];
