@@ -76,6 +76,39 @@ export async function checkScratchConditionalCourse(page, origin, setRole) {
 				await card.asElement().screenshot({ path: join(process.env.SCRATCH_SCREENSHOT_DIR, `scratch-conditionals-hammer-${role}-${width}.png`) });
 			}
 			console.log(JSON.stringify({ event: "verified-scratch-hammer-guidance", role, width, falseBranchAndReleaseGate: true, sharedTimerAndOrderedReset: true }));
+			const speed = await readLesson(page, "Speed Click: Debugging Pitfalls", "Keep scoring inactive during the published Ready/Set/Go sequence");
+			for (const required of ["Time Left > 0", "not (Time Left = 0)", "Round Running", "initialization outside the countdown loop", "a deliberately set -1", "restart twice"])
+				assert.ok(speed.includes(required), required);
+			assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
+			if (process.env.SCRATCH_SCREENSHOT_DIR) {
+				const card = await page.evaluateHandle(() => [...document.querySelectorAll(".lesson-item")].find(item => item.querySelector("h5")?.textContent.includes("Speed Click: Debugging Pitfalls")));
+				await card.asElement().screenshot({ path: join(process.env.SCRATCH_SCREENSHOT_DIR, `scratch-conditionals-speed-click-${role}-${width}.png`) });
+				await card.dispose();
+			}
+			console.log(JSON.stringify({ event: "verified-scratch-speed-click-guidance", role, width, preRoundAndExpiredClicksRejected: true, resetAndCountdownSeparated: true }));
+			await page.goto("about:blank");
+			await page.goto(`${origin}/courses#scratch-level-1-gs3-pen-with-event-listeners`, { waitUntil: "networkidle2" });
+			await page.waitForSelector(".lesson-view-toggle button");
+			await page.click(".lesson-view-toggle button:nth-child(2)");
+			const independent = await readLesson(page, "Open-Ended Variant: Pen with Event Listeners", "open an empty Scratch project");
+			assert.match(independent, /Download the working \.sb3 file/);
+			assert.match(independent, /Open \.sb3/);
+			const independentLink = await page.$$eval(".lesson-item", (items) => {
+				const card = items.find(item => item.querySelector("h5")?.textContent.includes("Open-Ended Variant: Pen with Event Listeners"));
+				return [...card.querySelectorAll("a[href]")].find(link => link.textContent.includes("open an empty Scratch project"))?.href;
+			});
+			const independentUrl = new URL(independentLink);
+			assert.equal(independentUrl.origin, new URL(origin).origin);
+			assert.equal(independentUrl.pathname, "/ide");
+			assert.equal(independentUrl.searchParams.get("mode"), "scratch");
+			assert.equal(independentUrl.searchParams.get("starter"), "blank");
+			assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
+			if (process.env.SCRATCH_SCREENSHOT_DIR) {
+				const card = await page.evaluateHandle(() => [...document.querySelectorAll(".lesson-item")].find(item => item.querySelector("h5")?.textContent.includes("Open-Ended Variant: Pen with Event Listeners")));
+				await card.asElement().screenshot({ path: join(process.env.SCRATCH_SCREENSHOT_DIR, `scratch-conditionals-independent-link-${role}-${width}.png`) });
+				await card.dispose();
+			}
+			console.log(JSON.stringify({ event: "verified-scratch-independent-link", role, width, sameOriginBlankStarter: true, downloadAndReopenInstructions: true }));
 			await page.goto("about:blank");
 			await page.goto(`${origin}/courses#scratch-level-1-classroom`, { waitUntil: "networkidle2" });
 			await page.waitForSelector(".outline-button[aria-label*='Conditions and decisions']");

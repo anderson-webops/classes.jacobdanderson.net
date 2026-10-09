@@ -146,7 +146,7 @@ export const pyGamesCourse: RawCourse = hideBroadPyGamesRootPairs({
 				{
 					title: "Global Variables & Bouncing",
 					content:
-						"Global variables are defined outside a function. Create a global speed variable, e.g. xspeed = 5, and use it in update() with alien.x += xspeed. When modifying a global inside a function, declare it with global xspeed at the top of update(). Instead of wrapping, make the alien bounce off a wall by flipping the sign of xspeed when the alien hits an edge, e.g. when alien.right >= WIDTH, set xspeed = -xspeed."
+						"Global variables are defined outside a function. Create `xspeed = 5` at module level and use it in `update()` with `alien.x += xspeed`. Declare `global xspeed` before rebinding it in the function, for example `xspeed = -xspeed` to bounce. Reading `xspeed` or changing `alien.x` does not rebind either global name. Python `for` and `if` blocks do not create a separate local scope: a loop variable remains in its enclosing function or module after a nonempty loop. An empty loop may never assign that name. Keep temporary counters local to the function and initialize values before reading them."
 				},
 				{
 					title: "PyG1 Project 1: Rainbow Fill",
@@ -1058,14 +1058,16 @@ export const pyGamesCourse: RawCourse = hideBroadPyGamesRootPairs({
 - After the player clicks the tile labeled "1", hide the numbers on the other tiles and start a timer.
 - Track the next expected number with a variable.
 - When the player clicks the correct tile, play a chime and keep that tile's number visible.
-- Store and increment the current level, then scale the number of tiles as levels increase.
+- Keep each tile's assigned number separate from its current image or label visibility. Hiding a number must not remove or renumber the tile. Use that clicked tile's identity, for example after \`tile.collidepoint(pos)\`, when comparing with the next expected number.
+- Trace a three-tile round: show 1/2/3; click 1; hide only the unchosen numbers; click 2; reveal 2; click 3; reveal 3 and complete the round. Compare before advancing the expected number, and check for round completion before indexing another tile. Python list indexes start at 0 even when the displayed numbers start at 1.
+- Store and increment the current level only after the round is complete, then scale the number of tiles as levels increase.
 
 **Ending behavior:**
 - When time runs out, reduce lives by one.
 - When lives reach zero, show a game-over screen with options to play again or quit using space and Escape.
 - When all 15 levels are completed, show a winning end screen with a short congratulatory message and restart options.
 
-**Completion checks:** Difficulty affects the challenge, level state changes predictably, incorrect timing reduces lives, correct clicks preserve visible numbers, and both win and loss screens can restart cleanly.`,
+**Completion checks:** Difficulty affects the challenge, level state changes predictably, incorrect timing reduces lives, correct clicks preserve visible numbers, and both win and loss screens can restart cleanly. Check the first and final correct clicks, an incorrect tile, timeout, and a click on an inactive screen. Restart must reset the expected number, labels, timer, lives and level rather than keep state from the prior game.`,
 					projectLink:
 						"https://github.com/instruction-material/PyGames/tree/main",
 					solutionLink:
