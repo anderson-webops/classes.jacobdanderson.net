@@ -46,7 +46,7 @@ for args in [(-1, 600, 400, 40, 40), (1, 600, 0, 40, 40), (True, 600, 400, 40, 4
 
 # Extract the shipped compatibility module's template literal. Its sole JS
 # escapes are doubled backslashes; this runs that source, not a second synth.
-runtime = (root / "src/modules/pythonIdeRuntime.ts").read_text()
+runtime = (root / "src/modules/pythonPysynthShim.ts").read_text()
 shim = re.search(r"const pysynthShim = `([\s\S]*?)`;", runtime).group(1)
 assert "${" not in shim
 shim = shim.replace("\\\\", "\\")

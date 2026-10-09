@@ -37,30 +37,41 @@ reviewed local checkpoints, forks and sharing. Java records remain optional and
 require native JDK 17+ compilation after export. The browser Java preview is not
 a full JDK. Generated WAV results now have a visible Download WAV action.
 
-All 383 focused course, import-consent, quality and implementation-artifact
-cases pass. The actual examples independently pass finite-layout boundaries and
-pair checks, WAV duration/rest/all-note pitch checks, event state/callback reset
-checks and warning-clean native Java compilation with exact expected output.
-Source lint and typecheck pass; manifests and both lockfiles retain their
-accepted bytes. Workflow syntax passes. The guarded local workflow-security
-scanner refused version drift (expected 1.29.0, installed 1.30.1); it was not
-bypassed or reconfigured. Hosted CodeQL and exact combined-tree acceptance
-remain required. Build and browser gates run remotely because local storage is
-below the repository's heavy-task threshold.
+All 427 distinct focused course, import-consent, quality, reference and sandbox
+cases pass, including 49 fresh audio/consent regressions. The actual examples
+independently pass finite-layout boundaries and pair checks, WAV duration/rest/
+all-note pitch checks, event state/callback reset checks and warning-clean native
+Java compilation with exact expected output. Full source lint and typecheck pass;
+manifests and both lockfiles retain their accepted bytes. Workflow syntax passes.
+The guarded local workflow-security scanner refused version drift (expected
+1.29.0, installed 1.30.1); it was not bypassed or reconfigured.
 
-The hosted browser gate must confirm and export all three untouched references
-at 390px, reopen the saved projects at 1280px, retain six workspace screenshots,
-and execute the complete melody in the real browser runtime. It must verify
-the two-second result, silent rest, final note and exact bytes produced by the
-actual Download WAV action. Those checks, screenshot acceptance, integration,
-downstream replay and release alignment remain pending at this source checkpoint.
+The hosted checks exposed three music defects: plain Python workers lacked the
+existing PySynth shim, generated audio remained in the hidden isolated frame,
+and the mobile Console hid audio controls. The correction shares the unchanged
+shim with the worker and forwards only bounded WAV results through the pinned
+frame, account and run channel. The opaque sandbox and text-only source-file
+policy remain intact. The parent displays the audio and a readable Download WAV
+link, always using a WAV filename; mobile Console retains those controls.
+
+The local real-browser check confirms and exactly exports all three untouched
+references at 390px and reopens their saved projects at 1280px. It runs the
+complete melody through the real Python worker, verifies its two-second result,
+silent rest and final note, and compares bytes from the actual WAV download.
+Six workspace screenshots and both visible melody-output views are retained.
+The two output views were directly inspected after fixing link contrast and the
+empty hidden-frame area. This local development check does not establish hosted
+production-build acceptance. Fresh hosted checks, all selected screenshot
+acceptance, integration, downstream replay and release alignment remain pending.
+
 The first hosted full-suite run passed build, lint, typecheck, accessibility,
 static-media, standalone backend install and native Nginx checks, plus CodeQL.
-It found a standalone Java test bundler without text loaders for the new raw
-reference files and a neutral-copy rule matching the Scratch phrase then ask.
-The correction adds the appropriate text loaders and describes the actual ask
-and wait block without that ambiguous wording. Fresh regression and hosted
-acceptance are required; the superseded heavy browser run was cancelled.
+Its standalone Java test bundler lacked text loaders for the raw references, and
+a neutral-copy rule matched the Scratch phrase then ask. Those issues were
+corrected without changing execution limits or the published source examples.
+The subsequent hosted run passed unit and build checks plus CodeQL, but its
+music browser check failed. That failure and the reproduced causes remain in
+private receipts; the new audio correction requires fresh exact-tree acceptance.
 Existing core projects, progress identities and source starter/solution paths
 are preserved. Broader source-pack/algorithm acceptance and production workflow
 acceptance remain separate unfinished requirements.
