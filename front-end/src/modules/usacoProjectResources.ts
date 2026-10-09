@@ -22,6 +22,12 @@ export const usacoRestoredResources = [
 	{
 		course: "usaco-silver",
 		repository: "USACO-Silver",
+		folder: "US9-Number-Triangles",
+		mode: "cpp"
+	},
+	{
+		course: "usaco-silver",
+		repository: "USACO-Silver",
 		folder: "US18-Counting-Haybales",
 		mode: "cpp"
 	},
@@ -53,6 +59,12 @@ export const usacoRestoredResources = [
 		course: "usaco-gold",
 		repository: "USACO-Gold",
 		folder: "UG5-Marathon",
+		mode: "cpp"
+	},
+	{
+		course: "usaco-gold",
+		repository: "USACO-Gold",
+		folder: "UG7-Treasure-Chest",
 		mode: "cpp"
 	},
 	{

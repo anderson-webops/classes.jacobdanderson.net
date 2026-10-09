@@ -18,6 +18,8 @@ import { confirmProjectImport, downloadProjectZip, openProjectSidebar } from "./
 const root = fileURLToPath(new URL("../front-end/", import.meta.url));
 const taskId = process.env.CLASSES_FAMILY_TASK_ID ?? "usaco-course-import-browser-ci";
 const changes = {
+	"US9-Number-Triangles": ["3\n1\n100 99\n0 0 100\n", "200\n"],
+	"UG7-Treasure-Chest": ["4\n8\n15\n3\n7\n", "22\n"],
 	"UB1-Square-Pasture": ["0 0 1 1\n2 0 3 1\n", "9"],
 	"UB62-Cow-College": ["2\n1 2\n", "2 1\n"],
 	"UB63-Feeding-the-Cows": ["1\n2 1\nGH\n", [2]],
@@ -208,7 +210,7 @@ async function verifyNativeExport(fixture, files, directory) {
 		}
 		else {
 			assert.equal(result.code, fixture.mode === "cpp" ? 2 : 1, "An untouched learner must report its unfinished helper");
-			assert.match(result.stderr, /TODO|NotImplementedError|unfinished|Complete .+ before running the starter/i);
+			assert.match(result.stderr, /TODO|NotImplementedError|unfinished|Complete .+ before (?:running the starter|checking \w+\.out)/i);
 			assert.equal(existsSync(join(directory, fixture.output)), false);
 		}
 	}
@@ -238,10 +240,10 @@ nodeTest(
 				await verifyNativeExport(fixture, await sourceFiles(fixture), join(temporary, String(verified.size)));
 				verified.add(key);
 			}
-			assert.equal(verified.size, 20);
+			assert.equal(verified.size, 24);
 			record("verified-usaco-pinned-native-contracts", {
 				roles: verified.size,
-				packs: 10,
+				packs: 12,
 				samplesAndChangedInputs: true,
 				ordinaryAndSanitizedCpp: true,
 				nativeStdio: true,
@@ -517,7 +519,7 @@ nodeTest(
 			assert.equal(remoteWrites, 0);
 			record("verified-usaco-workflows", {
 				imports: usacoFixtures.length,
-				packs: 10,
+				packs: 12,
 				roleSeparation: true,
 				consentBeforeSource: true,
 				savedAndExported: true,

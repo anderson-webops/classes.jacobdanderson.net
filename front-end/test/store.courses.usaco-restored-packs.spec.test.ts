@@ -1,13 +1,13 @@
 import { createPinia, setActivePinia } from "pinia";
 import { beforeEach, describe, expect, it } from "vitest";
-import { useAppStore } from "@/stores/app";
-import { useCoursesStore } from "@/stores/courses";
 import { cppBuildInstructions } from "@/modules/cppBuildInstructions";
 import {
 	pythonIdeModeForCourseId,
 	pythonIdeModeForCourseResource
 } from "@/modules/pythonIde";
 import { usacoRestoredResources } from "@/modules/usacoProjectResources";
+import { useAppStore } from "@/stores/app";
+import { useCoursesStore } from "@/stores/courses";
 import { marathonSavedItemId } from "@/stores/courses/usacoRestoredProjectBriefs";
 import { usacoExistingProjectIds } from "../../test/fixtures/usaco-restored-packs.mjs";
 
@@ -20,11 +20,11 @@ describe("restored USACO project workflows", () => {
 				previous.course
 			))!;
 			const item = course.modules
-				.flatMap((module) => [
+				.flatMap(module => [
 					...module.curriculum,
 					...module.supplementalProjects
 				])
-				.find((item) => item.id === previous.id);
+				.find(item => item.id === previous.id);
 			expect(item?.projectLink, previous.id).toBe(previous.url);
 		}
 	});
@@ -39,7 +39,7 @@ describe("restored USACO project workflows", () => {
 				expect(
 					pythonIdeModeForCourseResource(
 						pack.course,
-						url + "/README.md"
+						`${url}/README.md`
 					)
 				).toBeNull();
 				expect(
@@ -52,8 +52,8 @@ describe("restored USACO project workflows", () => {
 		}
 		for (const [id, repo, folder] of [
 			["usaco-bronze", "USACO-Bronze", "UB1-Square-Pasture-Java"],
-			["usaco-silver", "USACO-Silver", "US9-Number-Triangles"],
-			["usaco-gold", "USACO-Gold", "UG7-Treasure-Chest"]
+			["usaco-silver", "USACO-Silver", "US8-Arithmetic-Progressions"],
+			["usaco-gold", "USACO-Gold", "UG6-248"]
 		]) {
 			expect(
 				pythonIdeModeForCourseResource(
@@ -76,11 +76,11 @@ describe("restored USACO project workflows", () => {
 				pack.course
 			))!;
 			const matches = course.modules
-				.flatMap((module) => [
+				.flatMap(module => [
 					...module.curriculum,
 					...module.supplementalProjects
 				])
-				.filter((item) =>
+				.filter(item =>
 					item.projectLink?.endsWith(`/${pack.folder}/starter`)
 				);
 			expect(matches.length, pack.folder).toBeGreaterThan(0);
@@ -99,9 +99,9 @@ describe("restored USACO project workflows", () => {
 				])
 					expect(item.content, pack.folder).toContain(contract);
 				expect(item.content.length).toBeGreaterThan(2200);
-				const stdio =
-					pack.folder === "UB62-Cow-College" ||
-					pack.folder === "UB63-Feeding-the-Cows";
+				const stdio
+					= pack.folder === "UB62-Cow-College"
+						|| pack.folder === "UB63-Feeding-the-Cows";
 				expect(item.content).toContain(
 					stdio ? "prints no answer" : "no answer file"
 				);
@@ -123,10 +123,10 @@ describe("restored USACO project workflows", () => {
 
 	it("keeps Marathon optional in the range unit and preserves its old identity", async () => {
 		const course = (await useCoursesStore().loadCourseById("usaco-gold"))!;
-		const range = course.modules.find((module) =>
+		const range = course.modules.find(module =>
 			module.title.includes("Unit 4:")
 		)!;
-		const marathon = range.supplementalProjects.find((item) =>
+		const marathon = range.supplementalProjects.find(item =>
 			item.projectLink?.includes("UG5-Marathon")
 		)!;
 		expect(marathon.id).toBe(marathonSavedItemId);
@@ -134,23 +134,49 @@ describe("restored USACO project workflows", () => {
 		expect(marathon.aliases).toContain(`${range.id}-supplemental-marathon`);
 		expect(
 			course.modules
-				.flatMap((module) => [
+				.flatMap(module => [
 					...module.curriculum,
 					...module.supplementalProjects
 				])
-				.filter((item) => item.projectLink?.includes("UG5-Marathon"))
+				.filter(item => item.projectLink?.includes("UG5-Marathon"))
 		).toHaveLength(1);
 		expect(marathon.content).toContain("endpoints cannot be skipped");
 	});
 
+	it("keeps the two DP bridges optional with their existing saved identities", async () => {
+		for (const [courseId, folder, placement] of [
+			["usaco-silver", "US9-Number-Triangles", "choice"],
+			["usaco-gold", "UG7-Treasure-Chest", "challenge"]
+		]) {
+			const course = (await useCoursesStore().loadCourseById(courseId!))!;
+			const matches = course.modules.flatMap(module =>
+				module.supplementalProjects.filter(item =>
+					item.projectLink?.includes(`/${folder}/starter`)
+				)
+			);
+			expect(matches).toHaveLength(1);
+			expect(matches[0]?.learningPath).toBe(placement);
+			expect(matches[0]?.ideImport).toBe(true);
+			expect(matches[0]?.content).not.toContain("Required implementation checkpoint");
+			if (courseId === "usaco-gold") {
+				expect(matches[0]?.content).toContain("December 2010 Silver");
+				expect(matches[0]?.content).toContain("1229981");
+			}
+			else {
+				expect(matches[0]?.content).toContain("O(R²)");
+			}
+		}
+	});
+
 	it("provides C++20 native instructions only for the relevant projects", () => {
-		for (const id of ["usaco-silver", "usaco-gold"])
+		for (const id of ["usaco-silver", "usaco-gold"]) {
 			expect(
 				cppBuildInstructions(
 					[{ name: "main.cpp", content: "" }],
 					`${id}:item:starter`
 				).join("\n")
 			).toContain("-std=c++20");
+		}
 		expect(
 			cppBuildInstructions(
 				[{ name: "main.cpp", content: "" }],
@@ -173,7 +199,7 @@ describe("restored USACO project workflows", () => {
 		});
 		const course = (await useCoursesStore().loadCourseById("usaco-gold"))!;
 		const item = course.modules
-			.flatMap((module) => [
+			.flatMap(module => [
 				...module.curriculum,
 				...module.supplementalProjects
 			])

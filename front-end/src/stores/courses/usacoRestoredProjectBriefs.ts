@@ -57,6 +57,18 @@ const briefs: Record<
 		checks: "Check one cow, K=0 (N patches matching the cows), one breed with K=N-1 (one patch), both breeds with K=N-1 (two different patch positions), alternating breeds near the right edge, and the two-cow GH case with K=1. Swapping G and H preserves the minimum count while swapping patch breeds. The reported count must equal the non-dot count. Enumerate tiny dot/G/H layouts independently to find the minimum valid count, then accept any layout reaching that optimum. Explain why an uncovered cow needs a patch and why updating G coverage cannot update H coverage.",
 		cost: "O(N) work and O(N) output storage per case. Validate optimal count, breed, position occupancy and inclusive distance separately."
 	},
+	"US9-Number-Triangles": {
+		title: "Number Triangles: overlapping path subproblems",
+		input: "numtri.in",
+		output: "numtri.out",
+		contract:
+			"This optional classical training problem bridges Silver reasoning and Gold dynamic programming. Before starting, trace nested arrays and explain why a greedy local choice can fail. Input gives R from 1 through 1,000, followed by R rows; row r contains r values from 0 through 100. Start at the top and move to either of the two adjacent cells in each next row, visiting exactly one cell per row. Write the largest path sum to numtri.out. The program reads numtri.in from its working directory. [Original USACO training statement reproduced in the archive](https://jvonk.github.io/usaco/2018/10/04/numtri.html).",
+		model: "Define a state as the greatest total from one cell down to the last row. The last-row states equal their cell values. A higher state adds its own value to the larger total of its two legal children. Evaluate lower rows before higher ones. Explain why every legal path has exactly one of those first steps and why choosing the larger immediate cell can lose a better later path. With rows [1], [100,99], [0,0,100], the locally larger choice gives 101, while the optimum is 200. A rolling row retains only already-computed child totals; left-to-right updates keep the next child available until it is used.",
+		tasks: "Complete maximumPathSum in main.cpp while retaining the supplied parser and file driver. First draw legal edges and enumerate every path of a three-row triangle. In an instructor walkthrough, trace the bottom row, one higher row and the final answer together. For independent work, record the same state trace before coding. Explain the base row, the update order and where the final answer is stored. The unfinished helper stops before the driver opens the answer file.",
+		sample: "The supplied five-row training input begins with 7 and has maximum total 30. Record one complete legal path achieving that total; a collection of each row's largest value is not necessarily a legal path.",
+		checks: "Check one zero, one 100, tied choices, all-zero rows, an optimum on each outer edge and the greedy trap above. Enumerate every legal left/right path for small triangles as an independent oracle. For 1,000 rows each filled with 100, the result is 100,000. Missing, truncated, out-of-range and extra input must be refused before producing an answer. Reordering cells changes their adjacency and is not a valid simplification.",
+		cost: "O(R²) time and O(R) additional DP storage. The supplied driver retains the complete triangle, so total input-plus-working storage is O(R²). Reading one row at a time is an optional later extension with a different driver; do not claim the supplied program uses O(R) total space."
+	},
 	"US18-Counting-Haybales": {
 		title: "Counting Haybales: inclusive coordinate queries",
 		input: "haybales.in",
@@ -128,6 +140,18 @@ const briefs: Record<
 		sample: "The supplied official sample outputs 11, 8, 8 on separate lines.",
 		checks: "Check one checkpoint, adjacent endpoints, repeated points, collinear routes, first/last-point updates and repeated updates. For small routes enumerate each allowable skipped point and directly total distances.",
 		cost: "The supplied repeated-assignment initialization is O(N log N); updates and queries are O(log N), with O(N+Q) driver storage. Bottom-up O(N) building is an optional extension."
+	},
+	"UG7-Treasure-Chest": {
+		title: "Treasure Chest: optimal play on an interval",
+		input: "treasure.in",
+		output: "treasure.out",
+		contract:
+			"This optional Gold interval-DP challenge uses the original December 2010 Silver problem. Teaching placement reflects its state-design practice; it does not change the historical contest division. Start after tracing prefix DP and identifying dependencies between smaller intervals. Input gives N from 1 through 5,000, then N coin values from 1 through 5,000 in their original order. Two players alternate taking one coin from either end of the remaining line. Both maximize their own final total. Write the greatest total the first player can guarantee to treasure.out, reading treasure.in from the working directory. [Original USACO statement reproduced in the archive](https://ac.nowcoder.com/acm/problem/24756).",
+		model: "An interval state records the score advantage of whoever moves next over the other player. A single coin gives an advantage equal to its value. Taking the left coin gives its value minus the opponent's advantage on the shorter remaining interval; the right choice works the same way. Keep the greater candidate. Evaluate shorter intervals first. Recover the first player's total from the sum of all coins and the full interval's advantage: the two totals add to the sum and differ by that advantage. The requested output is the first total, not the advantage. A rolling array updated left to right preserves both needed shorter intervals until they are read.",
+		tasks: "Complete maximumFirstPlayerTotal in main.cpp; retain the supplied input validation and file driver. Draw the complete choice tree of a short line, labeling whose turn it is and each player's earned total. In a shared walkthrough, fill states of length one, two and three before discussing the rolling array. For independent work, write the same dependency trace before implementing. Explain why taking the larger exposed coin can lose and why the opponent's response must be accounted for. The unfinished helper stops before opening the output file.",
+		sample: "The new practice input is four coins: 30, 25, 10 and 35. The first player can guarantee 60. The preserved repository treasure.out value 1229981 belongs to an unavailable historical input and is not this practice answer. Output files are excluded from the IDE import; generate a fresh answer after completing the helper.",
+		checks: "Check a single coin, equal coins, odd and even lengths, reversed lines, and [8,15,3,7], where taking 7 first guarantees 22. For small cases, enumerate alternating complete game trees and compare both players' absolute totals as an independent oracle. Reversing the line preserves the optimal first-player total. A line of 5,000 coins each worth 5,000 yields 12,500,000. Refuse missing, extra, truncated and out-of-range input without replacing an earlier result.",
+		cost: "O(N²) time and O(N) total storage. A full table with 25,000,000 signed 64-bit entries needs about 200 MB for entries alone; the rolling interval state avoids that table. Use 64-bit totals and explain the update order before attempting further storage changes."
 	},
 	"UG8-Bookshelf": {
 		title: "Bookshelf Gold: constrained contiguous partitions",

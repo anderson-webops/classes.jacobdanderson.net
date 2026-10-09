@@ -405,6 +405,78 @@ export const usacoFixtures = [
 				"53de8785dec3f77a8ce51b635722b59c7ad18de269a9a3bae3357d1925a8a021"
 		},
 		reference: true
+	},
+	{
+		repository: "instruction-material/USACO-Silver",
+		revision: "dc00f0e6aa18cafe2903fc55a8d8ac29d73fb599",
+		courseId: "usaco-silver",
+		folder: "US9-Number-Triangles/starter",
+		anchor: "usaco-silver-optional-historical-and-applied-silver-studios",
+		itemId: "usaco-silver-optional-historical-and-applied-silver-studios-supplemental-number-triangles",
+		mode: "cpp",
+		input: "numtri.in",
+		output: "numtri.out",
+		expected: "30\n",
+		hashes: {
+			"README.md": "74e61af0f32633450c37e4fca6ebdb52888c60beefa347101a04c3e8f7974db5",
+			"main.cpp": "9ca2b3005f835badc2637967e4d8d5c839da6989024eebe6ec777dbe73711fd2",
+			"numtri.in": "a55d905d9873c4516fa9c3b4582e9128aa6473ab29ba0222bf4fce88289ea262"
+		},
+		reference: false
+	},
+	{
+		repository: "instruction-material/USACO-Silver",
+		revision: "dc00f0e6aa18cafe2903fc55a8d8ac29d73fb599",
+		courseId: "usaco-silver",
+		folder: "US9-Number-Triangles/solution",
+		anchor: "usaco-silver-optional-historical-and-applied-silver-studios",
+		itemId: "usaco-silver-optional-historical-and-applied-silver-studios-supplemental-number-triangles",
+		mode: "cpp",
+		input: "numtri.in",
+		output: "numtri.out",
+		expected: "30\n",
+		hashes: {
+			"README.md": "ca20a1ce73a2420d8c538b6b476e17e04f55feb09db2c06a1beb0e094bb091e1",
+			"main.cpp": "8579ff1c3dc01b1d29ade3da3e27097f25baa29645177a4125447d4d3aea3761",
+			"numtri.in": "a55d905d9873c4516fa9c3b4582e9128aa6473ab29ba0222bf4fce88289ea262"
+		},
+		reference: true
+	},
+	{
+		repository: "instruction-material/USACO-Gold",
+		revision: "376a0cfec50603edb788a3fce3d1746862204da8",
+		courseId: "usaco-gold",
+		folder: "UG7-Treasure-Chest/starter",
+		anchor: "usaco-gold-optional-historical-and-applied-gold-studios",
+		itemId: "usaco-gold-optional-historical-and-applied-gold-studios-supplemental-treasure-chest",
+		mode: "cpp",
+		input: "treasure.in",
+		output: "treasure.out",
+		expected: "60\n",
+		hashes: {
+			"README.md": "c42ee0dedb046ba62f4c2b19b222936ddd95a4cee9f09d1a9f316e5aee6bc49a",
+			"main.cpp": "bbb363b659e7e11d48a39d5ea8c6d56f1322d2ff84321948b44cfeddbf7fd1f4",
+			"treasure.in": "fc3c0a94c0119d0443920d2ad3efc0a89434a5fecf20d8d7213f109c1cf88d20"
+		},
+		reference: false
+	},
+	{
+		repository: "instruction-material/USACO-Gold",
+		revision: "376a0cfec50603edb788a3fce3d1746862204da8",
+		courseId: "usaco-gold",
+		folder: "UG7-Treasure-Chest/solution",
+		anchor: "usaco-gold-optional-historical-and-applied-gold-studios",
+		itemId: "usaco-gold-optional-historical-and-applied-gold-studios-supplemental-treasure-chest",
+		mode: "cpp",
+		input: "treasure.in",
+		output: "treasure.out",
+		expected: "60\n",
+		hashes: {
+			"README.md": "b678cddcf2f3807519102ffb06a935e2a96207a0444f9980e7ee746c2e2ae10b",
+			"main.cpp": "ea741128d1d3a7e77b1217cced6f4658cbaff5f931e113953c9820346fbfb064",
+			"treasure.in": "fc3c0a94c0119d0443920d2ad3efc0a89434a5fecf20d8d7213f109c1cf88d20"
+		},
+		reference: true
 	}
 ];
 
@@ -483,5 +555,15 @@ export const usacoExistingProjectIds = [
 		course: "usaco-bronze",
 		id: "usaco-bronze-unit-5-mock-contests-postmortems-and-silver-readiness-supplemental-problem-feeding-the-cows",
 		url: "https://github.com/instruction-material/USACO-Bronze/tree/main/UB63-Feeding-the-Cows/starter"
+	},
+	{
+		course: "usaco-silver",
+		id: "usaco-silver-optional-historical-and-applied-silver-studios-supplemental-number-triangles",
+		url: "https://github.com/instruction-material/USACO-Silver/tree/main/US9-Number-Triangles/starter"
+	},
+	{
+		course: "usaco-gold",
+		id: "usaco-gold-optional-historical-and-applied-gold-studios-supplemental-treasure-chest",
+		url: "https://github.com/instruction-material/USACO-Gold/tree/main/UG7-Treasure-Chest/starter"
 	}
 ];
