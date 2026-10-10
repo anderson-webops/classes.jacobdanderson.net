@@ -2,6 +2,7 @@ import { createPinia, setActivePinia } from "pinia";
 import { beforeEach, describe, expect, it } from "vitest";
 import { lessonContentSections } from "@/modules/courseLessonPresentation";
 import { cppBuildInstructions } from "@/modules/cppBuildInstructions";
+import { javaNativeBuildInstructions } from "@/modules/javaNativeBuildInstructions";
 import {
 	pythonIdeModeForCourseId,
 	pythonIdeModeForCourseResource
@@ -102,7 +103,9 @@ describe("restored USACO project workflows", () => {
 				expect(item.content.length).toBeGreaterThan(2200);
 				expect(item.content).not.toContain("**Studio focus:**");
 				expect(item.content).not.toContain("**Build steps:**");
-				const visibleProjectContent = lessonContentSections(item.content)
+				const visibleProjectContent = lessonContentSections(
+					item.content
+				)
 					.filter(section => section.kind !== "learn")
 					.map(section => section.content)
 					.join("\n\n");
@@ -111,8 +114,11 @@ describe("restored USACO project workflows", () => {
 					"Guided implementation",
 					"Check and explain",
 					"Open, save and run"
-				])
-					expect(visibleProjectContent, pack.folder).toContain(`## ${heading}`);
+				]) {
+					expect(visibleProjectContent, pack.folder).toContain(
+						`## ${heading}`
+					);
+				}
 				const stdio
 					= pack.folder === "UB62-Cow-College"
 						|| pack.folder === "UB63-Feeding-the-Cows";
@@ -129,9 +135,64 @@ describe("restored USACO project workflows", () => {
 					expect(item.learningPath).not.toBe("core");
 				}
 				expect(item.content).toContain(
-					pack.mode === "cpp" ? "-std=c++20" : "python3 main.py"
+					pack.mode === "cpp"
+						? "-std=c++20"
+						: pack.mode === "java"
+							? "javac -encoding UTF-8 Main.java"
+							: "python3 main.py"
 				);
 			}
+		}
+	});
+
+	it("preserves the required Dijkstra checkpoint and its separate optional retry", async () => {
+		const course = (await useCoursesStore().loadCourseById("usaco-gold"))!;
+		const unit = course.modules.find(module =>
+			module.title.includes("Unit 2:")
+		)!;
+		const core = unit.curriculum.find(item =>
+			item.projectLink?.endsWith("/UG9-Dijkstras-Algorithm/starter")
+		)!;
+		const retry = unit.supplementalProjects.find(item =>
+			item.projectLink?.endsWith("/UG9-Dijkstras-Algorithm/starter")
+		)!;
+		expect(core.learningPath).toBe("core");
+		expect(retry.learningPath).toBe("choice");
+		expect(core.id).not.toBe(retry.id);
+		for (const item of [core, retry]) {
+			expect(item.ideImport).toBe(true);
+			expect(item.content).toContain("Bellman-Ford");
+			expect(item.content).toContain("3,000,000,000");
+			expect(item.content).toContain("Unreachable: i");
+			expect(item.content).toContain("not historical contest limits");
+			expect(item.content).toContain("changed-case retry");
+			expect(item.content).toContain(
+				"does not execute this file-I/O/priority-queue program"
+			);
+			expect(item.content).not.toContain("c++ -std=");
+			expect(item.solutionLink).toBeUndefined();
+			for (const role of ["starter", "reference"]) {
+				expect(
+					javaNativeBuildInstructions(
+						`usaco-gold:${item.id}:${role}`
+					)?.join("\n")
+				).toContain("JDK 17 or newer");
+			}
+		}
+		expect(core.content).toContain("Required implementation checkpoint");
+		expect(retry.content).not.toContain(
+			"Required implementation checkpoint"
+		);
+	});
+
+	it("retains teaching previews outside the native Dijkstra project identities", () => {
+		for (const key of [
+			undefined,
+			"java-level-1:item:starter",
+			"usaco-gold:other:reference",
+			"usaco-gold-unit-2-shortest-paths:starter"
+		]) {
+			expect(javaNativeBuildInstructions(key)).toBeNull();
 		}
 	});
 
@@ -171,7 +232,9 @@ describe("restored USACO project workflows", () => {
 			expect(matches).toHaveLength(1);
 			expect(matches[0]?.learningPath).toBe(placement);
 			expect(matches[0]?.ideImport).toBe(true);
-			expect(matches[0]?.content).not.toContain("Required implementation checkpoint");
+			expect(matches[0]?.content).not.toContain(
+				"Required implementation checkpoint"
+			);
 			if (courseId === "usaco-gold") {
 				expect(matches[0]?.content).toContain("December 2010 Silver");
 				expect(matches[0]?.content).toContain("1229981");

@@ -477,10 +477,100 @@ export const usacoFixtures = [
 			"treasure.in": "fc3c0a94c0119d0443920d2ad3efc0a89434a5fecf20d8d7213f109c1cf88d20"
 		},
 		reference: true
+	},
+	{
+		repository: "instruction-material/USACO-Gold",
+		revision: "a69cbe28027286da1a60113c899c98e60b4f3d20",
+		courseId: "usaco-gold",
+		folder: "UG9-Dijkstras-Algorithm/starter",
+		anchor: "usaco-gold-unit-2-shortest-paths-dags-and-weighted-graphs",
+		itemId: "usaco-gold-unit-2-shortest-paths-dags-and-weighted-graphs-curriculum-core-project-shortest-paths-and-weighted-graphs",
+		mode: "java",
+		lessonView: 1,
+		identityLabel: "required",
+		input: "dijkstra.in",
+		output: "dijkstra.out",
+		expected: "0 2 1 Distance: 7\n0 2 Distance: 3\n0 2 1 3 Distance: 9\n0 2 1 3 4 Distance: 9\n",
+		hashes: {
+			"Main.java": "aa611a102c10904d3491a4b8866d957654ec5edc5c43ac70da526eab8d7cbf7f",
+			"README.md": "358267a6a2044b08fb5b6f26736ad4b1cde3a62fe4a33506a1d36f2c140dc62d",
+			"dijkstra.in": "0ef97f844842d5a41ea58b90724e6782cb4b5c1fd6fc0a73476eb3dedeac849e"
+		},
+		reference: false
+	},
+	{
+		repository: "instruction-material/USACO-Gold",
+		revision: "a69cbe28027286da1a60113c899c98e60b4f3d20",
+		courseId: "usaco-gold",
+		folder: "UG9-Dijkstras-Algorithm/solution",
+		anchor: "usaco-gold-unit-2-shortest-paths-dags-and-weighted-graphs",
+		itemId: "usaco-gold-unit-2-shortest-paths-dags-and-weighted-graphs-curriculum-core-project-shortest-paths-and-weighted-graphs",
+		mode: "java",
+		lessonView: 1,
+		identityLabel: "required",
+		input: "dijkstra.in",
+		output: "dijkstra.out",
+		expected: "0 2 1 Distance: 7\n0 2 Distance: 3\n0 2 1 3 Distance: 9\n0 2 1 3 4 Distance: 9\n",
+		hashes: {
+			"Main.java": "f706367dfbb0f2c9f3d0c79231880af9062057fdf959eb179e90ec13182a2de6",
+			"README.md": "d3bb0d5f97db3d89a0d402f4954cfcf285977443cbb255f15753a61e8059cc2d",
+			"dijkstra.in": "0ef97f844842d5a41ea58b90724e6782cb4b5c1fd6fc0a73476eb3dedeac849e"
+		},
+		reference: true
+	},
+	{
+		repository: "instruction-material/USACO-Gold",
+		revision: "a69cbe28027286da1a60113c899c98e60b4f3d20",
+		courseId: "usaco-gold",
+		folder: "UG9-Dijkstras-Algorithm/starter",
+		anchor: "usaco-gold-unit-2-shortest-paths-dags-and-weighted-graphs",
+		itemId: "usaco-gold-unit-2-shortest-paths-dags-and-weighted-graphs-supplemental-problem-dijkstra-s-algorithm",
+		mode: "java",
+		lessonView: 2,
+		identityLabel: "retry",
+		input: "dijkstra.in",
+		output: "dijkstra.out",
+		expected: "0 2 1 Distance: 7\n0 2 Distance: 3\n0 2 1 3 Distance: 9\n0 2 1 3 4 Distance: 9\n",
+		hashes: {
+			"Main.java": "aa611a102c10904d3491a4b8866d957654ec5edc5c43ac70da526eab8d7cbf7f",
+			"README.md": "358267a6a2044b08fb5b6f26736ad4b1cde3a62fe4a33506a1d36f2c140dc62d",
+			"dijkstra.in": "0ef97f844842d5a41ea58b90724e6782cb4b5c1fd6fc0a73476eb3dedeac849e"
+		},
+		reference: false
+	},
+	{
+		repository: "instruction-material/USACO-Gold",
+		revision: "a69cbe28027286da1a60113c899c98e60b4f3d20",
+		courseId: "usaco-gold",
+		folder: "UG9-Dijkstras-Algorithm/solution",
+		anchor: "usaco-gold-unit-2-shortest-paths-dags-and-weighted-graphs",
+		itemId: "usaco-gold-unit-2-shortest-paths-dags-and-weighted-graphs-supplemental-problem-dijkstra-s-algorithm",
+		mode: "java",
+		lessonView: 2,
+		identityLabel: "retry",
+		input: "dijkstra.in",
+		output: "dijkstra.out",
+		expected: "0 2 1 Distance: 7\n0 2 Distance: 3\n0 2 1 3 Distance: 9\n0 2 1 3 4 Distance: 9\n",
+		hashes: {
+			"Main.java": "f706367dfbb0f2c9f3d0c79231880af9062057fdf959eb179e90ec13182a2de6",
+			"README.md": "d3bb0d5f97db3d89a0d402f4954cfcf285977443cbb255f15753a61e8059cc2d",
+			"dijkstra.in": "0ef97f844842d5a41ea58b90724e6782cb4b5c1fd6fc0a73476eb3dedeac849e"
+		},
+		reference: true
 	}
 ];
 
 export const usacoExistingProjectIds = [
+	{
+		course: "usaco-gold",
+		id: "usaco-gold-unit-2-shortest-paths-dags-and-weighted-graphs-curriculum-core-project-shortest-paths-and-weighted-graphs",
+		url: "https://github.com/instruction-material/USACO-Gold/tree/main/UG9-Dijkstras-Algorithm/starter"
+	},
+	{
+		course: "usaco-gold",
+		id: "usaco-gold-unit-2-shortest-paths-dags-and-weighted-graphs-supplemental-problem-dijkstra-s-algorithm",
+		url: "https://github.com/instruction-material/USACO-Gold/tree/main/UG9-Dijkstras-Algorithm/starter"
+	},
 	{
 		course: "usaco-bronze",
 		id: "usaco-bronze-unit-1-simulation-and-careful-translation-curriculum-core-project-simulation-and-careful-translation",

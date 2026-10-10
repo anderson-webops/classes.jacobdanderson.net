@@ -164,13 +164,25 @@ const briefs: Record<
 		sample: "The supplied official sample costs 21; a greedy packing choice costs 25. The preserved historical bookshelf.out value 248427 belongs to an unavailable older input and is not the expected result for this sample.",
 		checks: "Check one book, every book requiring its own shelf, equal heights, increasing/decreasing heights, exact-width shelves and widths beyond 32-bit total range. Compare small cases with exhaustive contiguous partitions or independent quadratic DP.",
 		cost: "O(N log N) time and O(N) storage are required for the full Gold limit. Use 64-bit width sums and DP costs."
+	},
+	"UG9-Dijkstras-Algorithm": {
+		title: "Dijkstra: nonnegative weighted paths",
+		input: "dijkstra.in",
+		output: "dijkstra.out",
+		contract:
+			"This required Gold Unit 2 project is a course-authored algorithm demonstration using the Juni example's undirected edges and source vertex 0. It is not an official contest problem. Prerequisites are adjacency lists, arrays, priority queues and graph paths. Input starts with N M, then exactly M lines P Q W. Vertices are zero-based; each edge works in both directions. This maintained practice pack uses 1 <= N <= 2,000, 0 <= M <= 200,000 and 0 <= W <= 1,000,000,000. Those bounds are authored practice limits, not historical contest limits. Parallel edges, self-loops, isolated vertices and zero weights are allowed. Negative weights, malformed or extra records and missing files are refused. Write one line per destination 1 through N-1: its vertex path followed by Distance: value, or Unreachable: i. For N=1, the answer is empty. Equal-cost paths can differ; verify endpoints, edges and total weight.",
+		model: "distance[v] is the cheapest discovered source-to-v cost, and previous[v] is the preceding vertex on that path. Initialize all estimates to infinity and predecessors to -1, except source 0 at distance 0. Put only finite discovered states in a minimum priority queue. A current minimum can become final because going through an unprocessed vertex cannot make it cheaper with nonnegative edges; zero weights preserve this argument. Discard a removed entry when its saved distance differs from the current estimate. Relax an edge only for a strict improvement, saving the predecessor and queueing the improved distance together. Never add a weight to infinity or update on equal cost. Keep every parallel edge; a later heavier edge must not erase a cheaper one. Use long for distances: a simple path can cost 1,999 billion under this contract.",
+		tasks: "Complete the four marked tasks in shortestPaths in Main.java: initialize state, remove the cheapest queued entry, discard stale entries and relax neighbors. Keep the supplied parser and protected path-output driver. The untouched helper throws an unfinished-task error before opening the answer file. Before coding independently, predict the next popped vertex, queue, distance array and predecessor changes. With an instructor, compare those predictions before each relaxation. The optional copy is a changed-case retry of this required project; preserve the first attempt rather than submit identical work twice.",
+		sample: "The supplied edges are 0-1:10, 0-2:3, 2-1:4, 1-3:2, 2-3:9 and 3-4:0. After source 0, pop vertex 2 at 3; it improves vertex 1 to 7 and discovers vertex 3 at 12. Vertex 1 improves vertex 3 to 9, and vertex 3 reaches vertex 4 at 9. The old entries at 10 and 12 are later discarded. The output lines are 0 2 1 Distance: 7; 0 2 Distance: 3; 0 2 1 3 Distance: 9; and 0 2 1 3 4 Distance: 9.",
+		checks: "Check one vertex, no edges, disconnected components, a cheaper parallel edge followed by a heavier one, tied shortest paths, zero-weight cycles and stale entries. A three-edge billion-weight chain has distance 3,000,000,000, beyond a signed 32-bit integer. On small nonnegative graphs, compute distances independently with Bellman-Ford, then verify that each predecessor route starts at 0, reaches its destination, contains no cycle and uses real edges whose sum equals the reported distance. Remove all edges from source 0 and explain why other vertices remain unreachable. A failed run preserves an earlier output file, so inspect a result only after a successful run.",
+		cost: "Lazy queue operations for this multigraph take O((N+M) log(N+M)) time and O(N+M) memory. Let P be the total length of all printed paths: preparing output adds O(P) time and O(P) memory, and a chain can make P quadratic in N. The archived matrix implementation is not the active reference."
 	}
 };
 
 function projectBrief(
 	courseId: string,
 	folder: string,
-	mode: "python" | "cpp",
+	mode: "python" | "cpp" | "java",
 	item: RawCourseModuleItem
 ) {
 	const brief = briefs[folder]!;
@@ -201,7 +213,7 @@ function projectBrief(
 				]
 			: []),
 		"## Open, save and run",
-		`Choose Open in IDE beside the starter resource, then confirm the import. The ${mode === "python" ? "Python" : "C++20"} pack includes main.${mode === "python" ? "py" : "cpp"} and ${brief.input}${folder === "UB1-Square-Pasture" ? "; the starter also includes README.md" : ", plus README.md"}. Existing saved attempts reopen with their edits. The starter and reference use separate project identities; reference resources are available in the authorized instructor view after an attempt.`,
+		`Choose Open in IDE beside the starter resource, then confirm the import. The ${mode === "python" ? "Python" : mode === "java" ? "Java" : "C++20"} pack includes ${mode === "java" ? "Main.java" : `main.${mode === "python" ? "py" : "cpp"}`} and ${brief.input}${folder === "UB1-Square-Pasture" ? "; the starter also includes README.md" : ", plus README.md"}. Existing saved attempts reopen with their edits. The starter and reference use separate project identities; reference resources are available in the authorized instructor view after an attempt.`,
 		...(brief.stdio
 			? [
 					"In the site IDE, open sample.in and copy all its lines into the Input panel. Select main.py and choose Run. The untouched starter stops with NotImplementedError and prints no answer; complete its helper before expecting results. The completed program prints its answer in Console output. The input fixture is not opened automatically by this program.",
@@ -215,15 +227,19 @@ function projectBrief(
 					`rm -f ${brief.output}`,
 					...(mode === "python"
 						? ["python3 main.py"]
-						: [
-								"c++ -std=c++20 -Wall -Wextra -Wpedantic main.cpp -o project",
-								"./project"
-							]),
+						: mode === "java"
+							? ["javac -encoding UTF-8 Main.java", "java Main"]
+							: [
+									"c++ -std=c++20 -Wall -Wextra -Wpedantic main.cpp -o project",
+									"./project"
+								]),
 					`cat ${brief.output}`,
 					"```",
-					mode === "cpp"
-						? "The browser edits and exports C++ source; it does not compile or execute C++. Follow the native commands above with a C++20 compiler. Delete only the stale answer file before running so an old answer cannot be mistaken for a new result."
-						: "Python can also run in the site IDE. Inspect the generated output file after completing the helper; the native commands provide the same file-I/O check after export."
+					mode === "java"
+						? "Use a native JDK 17 or newer. The site IDE edits, saves and exports this Java project; its teaching preview does not execute this file-I/O/priority-queue program. Choosing Run displays the native commands. The Input panel does not replace dijkstra.in. Read the native result in dijkstra.out after a successful run."
+						: mode === "cpp"
+							? "The browser edits and exports C++ source; it does not compile or execute C++. Follow the native commands above with a C++20 compiler. Delete only the stale answer file before running so an old answer cannot be mistaken for a new result."
+							: "Python can also run in the site IDE. Inspect the generated output file after completing the helper; the native commands provide the same file-I/O check after export."
 				]),
 		"Source checks validate the supplied packs; they do not grade a completed learner submission. Protected mocks and active contests begin from an empty file without these practice starters or references."
 	]

@@ -72,6 +72,12 @@ export const usacoRestoredResources = [
 		repository: "USACO-Gold",
 		folder: "UG8-Bookshelf",
 		mode: "cpp"
+	},
+	{
+		course: "usaco-gold",
+		repository: "USACO-Gold",
+		folder: "UG9-Dijkstras-Algorithm",
+		mode: "java"
 	}
 ] as const;
 

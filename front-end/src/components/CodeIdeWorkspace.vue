@@ -45,6 +45,7 @@ import {
 	sanitizeIdeError
 } from "@/modules/ideDiagnostics";
 import { startJavaPreview } from "@/modules/javaIdeWorker";
+import { javaNativeBuildInstructions } from "@/modules/javaNativeBuildInstructions";
 import { createKarelWorldPlaybackController } from "@/modules/karelWorldPlayback";
 import {
 	addPythonIdeClassroomSections,
@@ -6694,6 +6695,16 @@ async function runCurrentProject() {
 	if (shouldStopPythonIdeRun(runID, project._id)) return;
 
 	clearOutput();
+	const nativeJava =
+		project.mode === "java"
+			? javaNativeBuildInstructions(project.courseProjectKey)
+			: null;
+	if (nativeJava) {
+		for (const line of nativeJava) appendOutput("system", line);
+		runMessage.value = "Native build instructions";
+		diagnosticStage.value = "completed";
+		return;
+	}
 	if (project.mode === "cpp") {
 		for (const line of cppBuildInstructions(
 			project.files,

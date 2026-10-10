@@ -18,6 +18,7 @@ import { confirmProjectImport, downloadProjectZip, openProjectSidebar } from "./
 const root = fileURLToPath(new URL("../front-end/", import.meta.url));
 const taskId = process.env.CLASSES_FAMILY_TASK_ID ?? "usaco-course-import-browser-ci";
 const changes = {
+	"UG9-Dijkstras-Algorithm": ["5 5\n0 1 999999999\n0 1 1000000000\n1 2 1000000000\n2 3 1000000000\n3 3 0\n", "0 1 Distance: 999999999\n0 1 2 Distance: 1999999999\n0 1 2 3 Distance: 2999999999\nUnreachable: 4\n"],
 	"US9-Number-Triangles": ["3\n1\n100 99\n0 0 100\n", "200\n"],
 	"UG7-Treasure-Chest": ["4\n8\n15\n3\n7\n", "22\n"],
 	"UB1-Square-Pasture": ["0 0 1 1\n2 0 3 1\n", "9"],
@@ -146,6 +147,49 @@ async function exportedFiles(page) {
 async function verifyNativeExport(fixture, files, directory) {
 	await mkdir(directory);
 	for (const [name, content] of Object.entries(files)) await writeFile(join(directory, name), content);
+	if (fixture.mode === "java") {
+		assert.match(files["README.md"], /1 <= N <= 2000/);
+		assert.match(files["README.md"], /javac -encoding UTF-8 Main.java/);
+		assert.doesNotMatch(files["README.md"], /\.\.\/README\.md/);
+		const javaHome = process.env.JAVA_HOME_21_X64 ?? process.env.JAVA_HOME;
+		const javac = process.env.JAVAC ?? (javaHome ? join(javaHome, "bin/javac") : "javac");
+		const java = process.env.JAVA ?? (javaHome ? join(javaHome, "bin/java") : "java");
+		const compile = await runNative(javac, ["--release", "17", "-encoding", "UTF-8", "-Xlint:all", "-Werror", "Main.java"], directory);
+		assert.equal(compile.code, 0, compile.stderr);
+		const output = join(directory, fixture.output);
+		const args = ["-ea", "-Xmx256m", "Main"];
+		const result = await runNative(java, args, directory);
+		assert.equal(result.stdout, "");
+		if (fixture.reference) {
+			assert.equal(result.code, 0, result.stderr);
+			assert.equal(result.stderr, "");
+			assert.equal(await readFile(output, "utf8"), fixture.expected);
+			const [input, expected] = changes[fixture.folder.split("/")[0]];
+			await writeFile(join(directory, fixture.input), input);
+			const changed = await runNative(java, args, directory);
+			assert.equal(changed.code, 0, changed.stderr);
+			assert.equal(changed.stderr, "");
+			assert.equal(changed.stdout, "");
+			assert.equal(await readFile(output, "utf8"), expected);
+			await writeFile(join(directory, fixture.input), "2 1\n0 1 -1\n");
+			const refused = await runNative(java, args, directory);
+			assert.equal(refused.code, 2);
+			assert.match(refused.stderr, /Cannot solve dijkstra.in/);
+			assert.equal(refused.stdout, "");
+			assert.equal(await readFile(output, "utf8"), expected);
+		}
+		else {
+			assert.equal(result.code, 2);
+			assert.match(result.stderr, /Complete shortestPaths/);
+			assert.equal(existsSync(output), false);
+			await writeFile(output, "Earlier saved answer\n");
+			const refused = await runNative(java, args, directory);
+			assert.equal(refused.code, 2);
+			assert.equal(refused.stdout, "");
+			assert.equal(await readFile(output, "utf8"), "Earlier saved answer\n");
+		}
+		return;
+	}
 	if (fixture.stdio) {
 		const input = files[fixture.input];
 		const result = await runNative(
@@ -240,10 +284,11 @@ nodeTest(
 				await verifyNativeExport(fixture, await sourceFiles(fixture), join(temporary, String(verified.size)));
 				verified.add(key);
 			}
-			assert.equal(verified.size, 24);
+			assert.equal(verified.size, 26);
 			record("verified-usaco-pinned-native-contracts", {
 				roles: verified.size,
-				packs: 12,
+				packs: 13,
+				nativeJava: true,
 				samplesAndChangedInputs: true,
 				ordinaryAndSanitizedCpp: true,
 				nativeStdio: true,
@@ -331,12 +376,13 @@ nodeTest(
 				files = await sourceFiles(fixture);
 				const sourceUrl = `https://github.com/${fixture.repository}/tree/main/${fixture.folder}`;
 				const selector = `a[href='${sourceUrl}']`;
+				const screenshotKey = `${fixture.courseId}-${fixture.folder.replaceAll("/", "-")}${fixture.identityLabel ? `-${fixture.identityLabel}` : ""}`;
 				const before = sourceRequests;
 				catalog = true;
 				await page.setViewport({ width: index % 2 ? 1280 : 390, height: 900 });
 				await page.goto(`${origin}/courses#${fixture.anchor}`, { waitUntil: "domcontentloaded" });
 				await page.waitForSelector(".lesson-view-toggle button");
-				for (const position of [1, 2, 3]) {
+				for (const position of fixture.lessonView ? [fixture.lessonView] : [1, 2, 3]) {
 					await page.click(`.lesson-view-toggle button:nth-child(${position})`);
 					await page.waitForSelector(`.lesson-view-toggle button:nth-child(${position})[aria-pressed='true']`);
 					if (await page.$(selector)) break;
@@ -345,6 +391,11 @@ nodeTest(
 				await page.waitForFunction(selector => ["Contract and reasoning", "Guided implementation", "Check and explain", "Open, save and run"].every(label => [...document.querySelector(selector)?.closest(".lesson-item")?.querySelectorAll(".item-content-markdown h2") ?? []].some(heading => heading.textContent === label)), { timeout: 15000 }, selector);
 				const card = await page.$eval(selector, link => ({ text: link.closest(".lesson-item").textContent, links: [...link.closest(".lesson-item").querySelectorAll("a")].map(action => ({ text: action.textContent, href: action.getAttribute("href"), import: action.classList.contains("is-ide-starter") })) }));
 				assert.match(card.text, /Contract and reasoning/);
+				if (fixture.mode === "java") {
+					assert.match(card.text, /JDK 17 or newer/);
+					assert.match(card.text, /does not execute this file-I\/O\/priority-queue program/);
+					assert.match(card.text, fixture.lessonView === 1 ? /Required implementation checkpoint/ : /optional practice/);
+				}
 				if (!fixture.reference) assert.ok(card.links.every(link => !link.href.includes("/solution")), "Learner view withholds reference resources");
 				const href = card.links.find(link => link.import && new URL(link.href, origin).searchParams.get("starterUrl") === sourceUrl)?.href;
 				assert.ok(href, `${fixture.folder} needs its own confirmed action`);
@@ -357,7 +408,7 @@ nodeTest(
 					await mkdir(directory, { recursive: true });
 					const link = await page.$(selector);
 					const element = await link.evaluateHandle(element => element.closest(".lesson-item"));
-					await element.asElement().screenshot({ path: join(directory, `course-import-usaco-${fixture.courseId}-${fixture.folder.replaceAll("/", "-")}-lesson.png`) });
+					await element.asElement().screenshot({ path: join(directory, `course-import-usaco-${screenshotKey}-lesson.png`) });
 				}
 				catalog = false;
 				await page.goto(new URL(href, origin).href, { waitUntil: "domcontentloaded" });
@@ -370,7 +421,7 @@ nodeTest(
 				assert.equal(sourceRequests, before + 1 + Object.keys(files).length);
 				await openProjectSidebar(page);
 				assert.deepEqual(await exportedFiles(page), files);
-				const source = fixture.mode === "python" ? "main.py" : "main.cpp";
+				const source = fixture.mode === "python" ? "main.py" : fixture.mode === "java" ? "Main.java" : "main.cpp";
 				const edited = `${files[source]}\n${fixture.mode === "python" ? "#" : "//"} Saved USACO browser attempt\n`;
 				await page.select("select[aria-label='Active project file']", source);
 				await page.click(".cm-content");
@@ -387,6 +438,14 @@ nodeTest(
 					await page.click("button.run-control");
 					await page.waitForFunction(() => document.querySelector(".output-panel")?.textContent.includes("-std=c++20"));
 					assert.match(await page.$eval(".output-panel", element => element.textContent), /does not compile or execute/);
+				}
+				if (fixture.mode === "java") {
+					await page.click("button.run-control");
+					await page.waitForFunction(() => document.querySelector("[data-testid='ide-run-status']")?.textContent.trim() === "Native build instructions");
+					const output = await page.$eval(".output-panel", element => element.textContent);
+					assert.match(output, /javac -encoding UTF-8 Main.java/);
+					assert.match(output, /does not execute its file I\/O or priority queue/);
+					assert.equal(await page.$(".output-line--stdout"), null);
 				}
 				if (fixture.stdio) {
 					const inputs = [
@@ -499,10 +558,11 @@ nodeTest(
 				for (const project of previous) assert.deepEqual(all.find(item => item._id === project._id), project, "Other saved attempts are unchanged");
 				assert.equal(sourceRequests, before + 1 + Object.keys(files).length, "Reopening never redownloads or overwrites edits");
 				if (process.env.COURSE_IMPORT_SCREENSHOT_DIR) {
-					await page.screenshot({ path: join(previousDirectory, process.env.COURSE_IMPORT_SCREENSHOT_DIR, `course-import-usaco-${fixture.courseId}-${fixture.folder.replaceAll("/", "-")}-workspace.png`) });
+					await page.screenshot({ path: join(previousDirectory, process.env.COURSE_IMPORT_SCREENSHOT_DIR, `course-import-usaco-${screenshotKey}-workspace.png`) });
 				}
 				record("verified-usaco-role", {
 					course: fixture.courseId,
+					itemId: fixture.itemId,
 					folder: fixture.folder,
 					revision: fixture.revision,
 					mode: fixture.mode,
@@ -513,13 +573,16 @@ nodeTest(
 					unfinishedLearner: !fixture.reference,
 					nativeFileIo: !fixture.stdio,
 					nativeStdio: Boolean(fixture.stdio),
-					browserStdio: Boolean(fixture.stdio)
+					browserStdio: Boolean(fixture.stdio),
+					nativeJava: fixture.mode === "java",
+					browserNativeInstructions: fixture.mode === "java"
 				});
 			}
 			assert.equal(remoteWrites, 0);
 			record("verified-usaco-workflows", {
 				imports: usacoFixtures.length,
-				packs: 12,
+				packs: 13,
+				nativeJava: true,
 				roleSeparation: true,
 				consentBeforeSource: true,
 				savedAndExported: true,
