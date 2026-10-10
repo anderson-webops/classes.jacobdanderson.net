@@ -180,11 +180,12 @@ async function verifyNativeExport(fixture, files, directory) {
 		}
 		else {
 			assert.equal(result.code, 2);
-			assert.match(result.stderr, /Complete shortestPaths/);
+			assert.equal(result.stderr, "Cannot solve dijkstra.in: Complete the four Dijkstra tasks before producing an answer\n");
 			assert.equal(existsSync(output), false);
 			await writeFile(output, "Earlier saved answer\n");
 			const refused = await runNative(java, args, directory);
 			assert.equal(refused.code, 2);
+			assert.equal(refused.stderr, result.stderr);
 			assert.equal(refused.stdout, "");
 			assert.equal(await readFile(output, "utf8"), "Earlier saved answer\n");
 		}
