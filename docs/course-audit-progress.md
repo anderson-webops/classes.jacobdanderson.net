@@ -18,14 +18,14 @@ has independently accepted exported Linux evidence; remaining broad site checks
 are still required before merge. Downstream review 93 is merged.
 
 The systemd source repair is merged at
-`0e868cb5c899bf264a69a71d0c335debbbc66947`. Its nine immutable files include a
+`220d50bec31f6290f613cf6cbc3ebf68e3251c57`. Its nine immutable files include a
 named learner heartbeat task, reference application, identical user-unit
 contracts, environment examples and neutral evidence records. Three actual
 Linux user-manager profiles and 223 observed records establish journal output,
 manual and automatic restarts, persistent enablement separately from running,
 invalid-environment failure, recovery and owned unit/process/activation cleanup.
-The untouched learner exits 78 without a restart loop; invalid settings exit 2
-before producing a heartbeat. A direct app run or parsed unit does not prove
+The untouched starter program exits 78 without a restart loop; invalid settings
+exit 2 before producing a heartbeat. A direct app run or parsed unit does not prove
 manager operation. Original source and recovery bundles are retained.
 
 The eighth-pack site candidate preserves the existing service lesson and
@@ -40,6 +40,10 @@ files. Phone learner and desktop reference screenshots were inspected. Hosted
 export validation must still run the pinned verifier on an actual Linux user
 manager and match all nine source hashes; broad site checks remain required.
 Both lockfiles and manifests are unchanged, and root lock provenance passes.
+The first site export gate passes three actual user-manager profiles and 223
+observations. Its full unit gate caught an ambiguous program-state sentence; the
+accepted source wording is corrected above, with commands and code unchanged.
+Exact-head site checks must pass again at the corrected reading revision.
 
 Remaining generic Linux packs, including the separate optional service transfer
 and extension exercises, other course families, archived external resources and

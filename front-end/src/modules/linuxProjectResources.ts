@@ -87,7 +87,7 @@ export const linuxVerifiedPacks = [
 	},
 	{
 		pack: "LS5-Systemd-Toy-Service",
-		revision: "0e868cb5c899bf264a69a71d0c335debbbc66947",
+		revision: "220d50bec31f6290f613cf6cbc3ebf68e3251c57",
 		roleFiles: [
 			"heartbeat_app.py",
 			"linux-heartbeat.service",
