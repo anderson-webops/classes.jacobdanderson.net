@@ -294,7 +294,7 @@ jobs:
             - name: Prepare the disposable Linux user manager and journal
               run: |
                   sudo apt-get update
-                  sudo apt-get install --no-install-recommends --yes dbus-user-session
+                  sudo apt-get install --no-install-recommends --yes dbus-user-session logrotate
                   native_lab_uid=$(id -u)
                   native_lab_user=$(id -un)
                   native_lab_runtime=/run/user/$native_lab_uid
@@ -381,18 +381,15 @@ jobs:
                   CSE_CC=clang python3 test/c17-studio-readings.py --archives output/c17-exports
                   CSE_CC=gcc python3 test/c17-studio-readings.py --archives output/c17-exports
 
-
             - name: Verify C17 unit readings and exported native contracts
               run: |
                   CSE_CC=clang python3 test/c17-unit-readings.py --archives output/c17-exports
                   CSE_CC=gcc python3 test/c17-unit-readings.py --archives output/c17-exports
 
-
             - name: Verify saved project role labels and deletion context
               env:
                   COURSE_IMPORT_SCREENSHOT_DIR: output/playwright
               run: node --test test/ide-saved-project-labels-browser.test.mjs
-
 
             - name: Verify Scratch classroom import, execution and downloads
               env:
@@ -502,7 +499,6 @@ jobs:
                   COURSE_IMPORT_SCREENSHOT_DIR: output/playwright
               run: JAVAC="$JAVA_HOME_21_X64/bin/javac" JAVA="$JAVA_HOME_21_X64/bin/java" node --test test/usaco-course-import-browser.test.mjs
 
-
             - name: Retain USACO project workflow screenshots
               uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
               with:
@@ -510,7 +506,6 @@ jobs:
                   path: output/playwright/course-import-usaco-*.png
                   if-no-files-found: error
                   retention-days: 7
-
 
     build:
         runs-on: ubuntu-24.04
