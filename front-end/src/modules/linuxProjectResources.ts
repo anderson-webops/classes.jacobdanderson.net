@@ -129,7 +129,7 @@ export const linuxVerifiedPacks = [
 	},
 	{
 		pack: "LS-09-unit-7-logging-and-observability",
-		revision: "2c309976deb3030d011f41144991ddc87ee7c0fd",
+		revision: "bbb586068e7cdfb6260153f33a01b7d1d0260941",
 		roleFiles: [
 			"task.sh",
 			"incident_app.sh",
@@ -144,7 +144,7 @@ export const linuxVerifiedPacks = [
 	},
 	{
 		pack: "LS-15-unit-7-logging-and-observability-supplemental-2",
-		revision: "2c309976deb3030d011f41144991ddc87ee7c0fd",
+		revision: "bbb586068e7cdfb6260153f33a01b7d1d0260941",
 		roleFiles: ["task.sh", "sample.log", "application-notes.md"],
 		coreItemId:
 			"linux-systems-unit-7-logging-and-observability-supplemental-log-investigation-transfer-practice",
@@ -152,7 +152,7 @@ export const linuxVerifiedPacks = [
 	},
 	{
 		pack: "LS-16-unit-7-logging-and-observability-supplemental-3",
-		revision: "2c309976deb3030d011f41144991ddc87ee7c0fd",
+		revision: "bbb586068e7cdfb6260153f33a01b7d1d0260941",
 		roleFiles: ["logrotate.conf", "task.sh", "retention-notes.md"],
 		coreItemId:
 			"linux-systems-unit-7-logging-and-observability-supplemental-log-investigation-extension-practice",

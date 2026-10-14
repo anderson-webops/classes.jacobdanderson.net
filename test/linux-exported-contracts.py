@@ -175,6 +175,8 @@ with tempfile.TemporaryDirectory(prefix="linux-site-exports-") as directory:
     for kind in ("journal", "application", "retention"):
         group = [profile for profile in logging_native["profiles"] if profile["kind"] == kind]
         assert len(group) == 3 and {profile["role"] for profile in group} == {"starter", "solution", "independent-completion"}
+    scope_rows = [row for row in logging_native["observations"] if row.get("kind") == "unit-scope-analysis"]
+    assert len(scope_rows) == 2 and all(row["managerRows"] > 0 and row["fieldCollisions"] > 0 and row["expectedEvents"] == row["reportedEvents"] for row in scope_rows)
     logging_cleanup = [row for row in logging_native["observations"] if row.get("kind") == "cleanup"]
     assert len(logging_cleanup) == 6 and all(all(value for value in row.values() if isinstance(value, bool)) for row in logging_cleanup)
     default = work / "default-workspace"

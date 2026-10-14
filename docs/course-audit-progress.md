@@ -2250,14 +2250,14 @@ Native source acceptance covers both compilers, three controlled profiles at bot
   observes two compressed archives with real logrotate. The notebook continues the
   core attempt. Existing lesson and progress identities remain unchanged.
 - Pinned the three packs and the copied native verifier to accepted source
-  `2c309976deb3030d011f41144991ddc87ee7c0fd`, reachable from source main
-  `4ed83ec0abb1625a7874d13a2ed4e00e4de5a742`. All 25 source files are anonymously
+  `bbb586068e7cdfb6260153f33a01b7d1d0260941`, reachable from source main
+  `19dba7c998fc3b35f03d52487398a4bab7c522b3`. All 25 source files are anonymously
   fetchable with exact hashes. Readings include complete setup, predictions,
   changed cases, language explanations, evidence records and cleanup.
 - Corrected recovery chronology in both analyzers. A newer relevant failure
   reopens the case; an earlier successful retry no longer hides it. The journal
   retains both first and latest diagnostics. Source acceptance covers nine native
-  profiles and 146 observations, including actual reopened journal cases,
+  profiles and 148 observations, including actual reopened journal cases,
   UID/PID/boot/priority, invocation recovery, compressed contents and six cleanups.
 - Expanded the catalog integration from ten to thirteen verified packs, preserving
   all prior pins and adding only the named Linux evidence-note paths. The
@@ -2272,3 +2272,11 @@ Native source acceptance covers both compilers, three controlled profiles at bot
   exports remains required before merge. The
   broader 77-course/Juni/Zoom audit and 39 remaining generic Linux references
   remain open; this section does not establish public activation.
+
+- Retained native evidence exposed manager entries whose own unit was init.scope
+  while USER_UNIT named the investigated service. Both unit fields now participate
+  in selection before boot/time filtering. The redacted fixture exercises that
+  conflict, and two real completed roles each include six manager entries in their
+  ten-record report. The repinned integration passes fresh course, API, lint, type, build and
+  lockfile checks. Responsive import/save/export acceptance is retained with the
+  exact source hashes; hosted export acceptance remains required before merge.
