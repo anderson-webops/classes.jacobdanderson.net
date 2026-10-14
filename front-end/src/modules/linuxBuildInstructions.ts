@@ -23,6 +23,13 @@ export function linuxBuildInstructions(files: PythonIdeFile[], url?: string) {
 		];
 	}
 	const commands: Record<string, string[]> = {
+		"LS5-Systemd-Toy-Service": [
+			"HEARTBEAT_INTERVAL=0.1 HEARTBEAT_MESSAGE=sample HEARTBEAT_LIMIT=2 python3 heartbeat_app.py",
+			"The untouched learner exits 78 until render_heartbeat is complete; invalid settings exit 2 before a heartbeat.",
+			"Read ../README.md for the real user-manager prerequisite and unique owned installation. The service requires its installed heartbeat.env; its template uses the actual user home and identity.",
+			"Observe actual service state, MainPID/UID and journal rows, enablement separately from running, manual and unexpected-failure restarts, invalid settings, recovery and complete cleanup.",
+			"Complete service-notes.md with observed evidence. A direct app run or parsed unit does not establish manager operation."
+		],
 		"LS4-Apache-Virtual-Host-Compare": [
 			"Read ../README.md for the owned-prefix setup and explicit Apache environment values before starting either server.",
 			'apache2 -f "$lab_root/apache.conf" -t',

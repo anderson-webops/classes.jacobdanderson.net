@@ -84,6 +84,20 @@ export const linuxVerifiedPacks = [
 		coreItemId:
 			"linux-systems-unit-11-web-servers-curriculum-project-configure-an-apache-virtual-host-and-compare-it-to-nginx",
 		notebookItemId: null
+	},
+	{
+		pack: "LS5-Systemd-Toy-Service",
+		revision: "0e868cb5c899bf264a69a71d0c335debbbc66947",
+		roleFiles: [
+			"heartbeat_app.py",
+			"linux-heartbeat.service",
+			"heartbeat.env.example",
+			"service-notes.md"
+		],
+		coreItemId:
+			"linux-systems-unit-6-services-and-systemd-curriculum-project-create-a-systemd-service-for-a-toy-app",
+		notebookItemId:
+			"linux-systems-unit-6-services-and-systemd-supplemental-troubleshooting-notebook-services-and-systemd"
 	}
 ] as const;
 

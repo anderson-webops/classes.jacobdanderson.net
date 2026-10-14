@@ -22,6 +22,11 @@ const fixtures = JSON.parse(
 	)
 );
 const definitions = {
+	"LS5-Systemd-Toy-Service": [
+		"unit-6-services-and-systemd",
+		"project-create-a-systemd-service-for-a-toy-app",
+		"services-and-systemd"
+	],
 	"LS4-Apache-Virtual-Host-Compare": [
 		"unit-11-web-servers",
 		"project-configure-an-apache-virtual-host-and-compare-it-to-nginx",
@@ -456,6 +461,12 @@ test(
 									fullPage: false
 								});
 							}
+							if (fixture.pack === "LS5-Systemd-Toy-Service") {
+								await page.screenshot({
+									path: join(output, `linux-systemd-${role}-${width}-${theme}.png`),
+									fullPage: false
+								});
+							}
 						}
 					}
 				}
@@ -572,8 +583,8 @@ test(
 				);
 			}
 			await writeFile(join(output, "default-linux.zip"), defaultArchive);
-			assert.equal(proof.length, 56);
-			assert.equal(courseButtons.length, 13);
+			assert.equal(proof.length, 64);
+			assert.equal(courseButtons.length, 15);
 			await writeFile(
 				join(output, "browser-proof.json"),
 				JSON.stringify({ profiles: proof, courseButtons }, null, 2)

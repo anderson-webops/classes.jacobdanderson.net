@@ -1,45 +1,51 @@
 # Current course-audit checkpoint, 2026-10-14
 
-The full 77-course audit remains active. A fresh normalized-catalog check loads
-all 77 entries and finds all 392 directly linked local resources. That result
-covers catalog loading and local presence; external availability, complete
-reading, purposeful course distinctions and the full Zoom reconciliation still
-require their own evidence.
+The full 77-course audit remains active. The normalized catalog loads all 77
+entries and finds all 392 directly linked local resources. Catalog loading and
+local presence do not establish external availability, complete reading,
+purposeful course distinctions or full Juni/Zoom reconciliation.
 
-Six Linux packs now have accepted source and confirmed IDE import, save, review
-and exact-export workflows. Canonical review 209 is merged at
-`bc7a9b2cd50e2b359257ed590840466548dabc32`. Its exact-head acceptance includes
-48 responsive role profiles, 12 actual course actions, six notebook reuses,
-13 ZIPs, the preceding 14 native profiles/108 commands and three real proxy
-profiles/75 observations. All 42 immutable source files match the accepted
-revisions. Full units/API, 35 Cypress workflows and the complete 200-import,
-58-pack, 116-native-role USACO gate passed. The matching downstream review 93
-preserves all 97 overlay paths and has independent local and hosted Linux
-acceptance; its final broad workflow gate remains required before merge.
+Seven Linux packs have accepted source and site workflows. Canonical review 210
+is merged at `9bcb4e96d10a895fb05097511f75e4fabd027a7b`, with the exact tested
+tree preserved. Acceptance covers 56 desktop/phone light/dark role profiles,
+13 actual course actions, six notebook reuses and 15 exact ZIP exports. All
+53 immutable source files match the accepted revisions. Native export validation
+includes 14 foundational profiles/108 commands, three proxy profiles/75
+observations and three Apache comparison profiles/99 observations. Full units,
+35 Cypress workflows and the 200-import, 58-pack, 116-native-role USACO gate
+passed. The matching downstream review 94 preserves all 97 overlay paths and
+has independently accepted exported Linux evidence; remaining broad site checks
+are still required before merge. Downstream review 93 is merged.
 
-The Apache comparison source repair is merged at
-`883dce18a4c434b853423e280aa93c45e0ebdede`. Its complete reading, owned Apache and
-Nginx configurations, two host/page mappings and named learner DocumentRoot task
-pass three actual Linux profiles and 99 observations. Acceptance covers exact
-UTF-8 bodies, HEAD, loopback sockets/PIDs, missing and unknown-host cases,
-rejected configuration while existing servers continue, graceful root changes,
-restoration and cleanup. All 11 source hashes match the accepted artifact.
-The original files and the initial socket-check failure are retained.
+The systemd source repair is merged at
+`0e868cb5c899bf264a69a71d0c335debbbc66947`. Its nine immutable files include a
+named learner heartbeat task, reference application, identical user-unit
+contracts, environment examples and neutral evidence records. Three actual
+Linux user-manager profiles and 223 observed records establish journal output,
+manual and automatic restarts, persistent enablement separately from running,
+invalid-environment failure, recovery and owned unit/process/activation cleanup.
+The untouched learner exits 78 without a restart loop; invalid settings exit 2
+before producing a heartbeat. A direct app run or parsed unit does not prove
+manager operation. Original source and recovery bundles are retained.
 
-The Apache site candidate preserves the existing core lesson and all earlier
-lesson/progress identities. It imports the selected role's complete files and
-reading at that immutable revision, with the comparison record permitted only
-in Linux mode. The existing web-server notebook continues to reuse the separate
-reverse-proxy attempt. Source correctness is accepted. Local site acceptance passes 17 import/reading
-checks, 89 API save/review checks, lint, typecheck, build and all 56 responsive
-browser profiles, with 13 actual course actions and 15 exact ZIPs. Hosted
-exported-Linux acceptance remains required. Both lockfiles are unchanged.
+The eighth-pack site candidate preserves the existing service lesson and
+notebook progress identities, imports only the selected role plus the complete
+reading after consent, and reuses the core attempt when reopening the notebook.
+The API accepts the service evidence record and named environment example only
+in Linux mode. Local focused acceptance passes 19 reading/import/export checks
+and 93 API save/review checks. Local lint, typecheck and build pass. Browser acceptance passes 64
+role/theme/viewport profiles, 15 actual course actions, seven notebook reuses and
+17 exact ZIPs; all 70 role-file comparisons match 62 unique immutable source
+files. Phone learner and desktop reference screenshots were inspected. Hosted
+export validation must still run the pinned verifier on an actual Linux user
+manager and match all nine source hashes; broad site checks remain required.
+Both lockfiles and manifests are unchanged, and root lock provenance passes.
 
-Remaining generic Linux packs, the systemd service exercise, other course
-families, archived external resources and the full Juni/Zoom reconciliation
-remain within the audit. Tagged native release provenance and public activation
-remain separate milestones. The current work does not establish full audit
-completion.
+Remaining generic Linux packs, including the separate optional service transfer
+and extension exercises, other course families, archived external resources and
+full Juni/Zoom reconciliation remain within scope. Tagged native provenance and
+public activation remain separate milestones. This checkpoint does not establish
+full audit completion.
 
 ## Earlier source checkpoint, 2026-10-13
 

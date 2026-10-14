@@ -37,6 +37,12 @@ apache_identity = json.loads((fixture_dir / "linux-apache-source-verifier.json")
 apache_verifier = (fixture_dir / "linux-apache-source-verifier.py").read_bytes()
 assert hashlib.sha256(apache_verifier).hexdigest() == apache_identity["sha256"]
 assert apache_packs[0]["revision"] == apache_identity["revision"]
+systemd_packs = [pack for pack in packs if pack["pack"] == "LS5-Systemd-Toy-Service"]
+assert len(systemd_packs) == 1
+systemd_identity = json.loads((fixture_dir / "linux-systemd-source-verifier.json").read_text())
+systemd_verifier = (fixture_dir / "linux-systemd-source-verifier.py").read_bytes()
+assert hashlib.sha256(systemd_verifier).hexdigest() == systemd_identity["sha256"]
+assert systemd_packs[0]["revision"] == systemd_identity["revision"]
 args.proof = args.proof.resolve()
 args.proof.parent.mkdir(parents=True, exist_ok=True)
 archives = []
@@ -92,7 +98,7 @@ with tempfile.TemporaryDirectory(prefix="linux-site-exports-") as directory:
             archives.append({"pack": pack["pack"], "role": role,
                              "sha256": hashlib.sha256(archive_path.read_bytes()).hexdigest(),
                              "files": sorted(expected)})
-    assert len(archives) == 14
+    assert len(archives) == 16
     (work / "test").mkdir()
     native_proof = args.proof.with_name(args.proof.stem + "-native.json")
     native = run_pinned_contract(work, "verify_owned_labs.py", verifier, native_proof, 300)
@@ -114,6 +120,21 @@ with tempfile.TemporaryDirectory(prefix="linux-site-exports-") as directory:
     assert apache_native["sourceHashes"] == {name: file["sha256"] for name, file in apache_packs[0]["files"].items()}
     assert all(profile["actualLinuxSockets"] and profile["rejectedSyntaxLeavesServing"] and profile["ownedListenersRemoved"] for profile in apache_native["profiles"])
     assert sum(profile["changedAndRestored"] for profile in apache_native["profiles"]) == 2
+    systemd_proof = args.proof.with_name(args.proof.stem + "-systemd-native.json")
+    systemd_native = run_pinned_contract(work, "verify_systemd_service.py", systemd_verifier, systemd_proof, 180)
+    assert systemd_native["accepted"] and not systemd_native["appOnly"]
+    assert systemd_native["sourceUnchanged"] and systemd_native["managerVersion"]
+    assert len(systemd_native["profiles"]) == 3
+    assert systemd_native["sourceHashes"] == {name: file["sha256"] for name, file in systemd_packs[0]["files"].items()}
+    assert all(profile["actualManager"] for profile in systemd_native["profiles"])
+    learner = next(profile for profile in systemd_native["profiles"] if profile["role"] == "starter")
+    assert learner["namedUnfinishedStatus"] == 78 and learner["restartLoopPrevented"]
+    completed = [profile for profile in systemd_native["profiles"] if profile["role"] != "starter"]
+    assert len(completed) == 2
+    assert all(all(profile[key] for key in ("actualJournal", "manualRestart", "automaticRestart", "persistentEnable", "enabledAndStopped", "invalidEnvironmentFailure", "recovered")) for profile in completed)
+    cleanup = [row for row in systemd_native["observations"] if row.get("kind") == "cleanup"]
+    assert len(cleanup) == 3
+    assert all(all(row[key] for key in ("unitRemoved", "processStopped", "activationRemoved", "installRemoved")) for row in cleanup)
     default = work / "default-workspace"
     default.mkdir()
     default_archive = args.archives / "default-linux.zip"
@@ -161,6 +182,8 @@ with tempfile.TemporaryDirectory(prefix="linux-site-exports-") as directory:
                                      "proxyNativeProof": str(proxy_proof),
                                      "apacheSourceIdentity": apache_identity,
                                      "apacheNativeProof": str(apache_proof),
+                                     "systemdSourceIdentity": systemd_identity,
+                                     "systemdNativeProof": str(systemd_proof),
                                      "defaultWorkspace": {"fileHashes": default_hashes,
                                                           "stdout": output.decode(),
                                                           "status": default_child.returncode},
