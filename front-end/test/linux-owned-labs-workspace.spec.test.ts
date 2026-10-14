@@ -243,6 +243,11 @@ it("retains literal Linux names and rejects unsafe paths and unverified imports"
 	expect(isValidPythonFileName("Makefile.sh", "cpp")).toBe(false);
 	for (const name of [
 		"starter/service-notes.md",
+		"starter/service-transfer-notes.md",
+		"solution/service-extension-notes.md",
+		"starter/transfer.env.example",
+		"solution/base.env.example",
+		"starter/override.env.example",
 		"solution/service-notes.md",
 		"starter/heartbeat.env.example",
 		"solution/heartbeat.env.example"

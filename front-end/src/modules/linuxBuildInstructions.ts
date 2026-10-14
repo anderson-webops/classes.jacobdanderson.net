@@ -23,6 +23,16 @@ export function linuxBuildInstructions(files: PythonIdeFile[], url?: string) {
 		];
 	}
 	const commands: Record<string, string[]> = {
+		"LS-13-unit-6-services-and-systemd-supplemental-2": [
+			"Read ../README.md for the guarded owned user-unit installation and supplied HTTP app.",
+			"Complete the named WorkingDirectory and ExecStart app-argument tasks in linux-service-transfer.service. Observe 200/CHDIR and Python exit 2 separately before correcting both paths.",
+			"Observe real user-manager state, app PID/UID, an owned 127.0.0.1 socket and GET/HEAD readiness; record restarts, directory-fault recovery, enablement versus running and cleanup."
+		],
+		"LS-14-unit-6-services-and-systemd-supplemental-3": [
+			"Read ../README.md for the guarded owned base-unit and drop-in installation.",
+			"Complete the EnvironmentFile reset and replacement in 20-lab-settings.conf; Environment assignments alone do not override file values.",
+			"Observe actual process environment and fresh journal rows, file edits before and after restart, invalid settings, recovery, unchanged base unit and drop-in removal restoring base settings."
+		],
 		"LS5-Systemd-Toy-Service": [
 			"HEARTBEAT_INTERVAL=0.1 HEARTBEAT_MESSAGE=sample HEARTBEAT_LIMIT=2 python3 heartbeat_app.py",
 			"The untouched learner exits 78 until render_heartbeat is complete; invalid settings exit 2 before a heartbeat.",

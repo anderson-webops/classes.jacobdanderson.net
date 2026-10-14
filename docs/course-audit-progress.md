@@ -1,54 +1,54 @@
 # Current course-audit checkpoint, 2026-10-14
 
 The full 77-course audit remains active. The normalized catalog loads all 77
-entries and finds all 392 directly linked local resources. Catalog loading and
-local presence do not establish external availability, complete reading,
-purposeful course distinctions or full Juni/Zoom reconciliation.
+entries and finds all 392 directly linked local resources. That evidence covers
+loading and local presence, not complete semantic, external, Juni or Zoom review.
 
-Seven Linux packs have accepted source and site workflows. Canonical review 210
-is merged at `9bcb4e96d10a895fb05097511f75e4fabd027a7b`, with the exact tested
-tree preserved. Acceptance covers 56 desktop/phone light/dark role profiles,
-13 actual course actions, six notebook reuses and 15 exact ZIP exports. All
-53 immutable source files match the accepted revisions. Native export validation
-includes 14 foundational profiles/108 commands, three proxy profiles/75
-observations and three Apache comparison profiles/99 observations. Full units,
-35 Cypress workflows and the 200-import, 58-pack, 116-native-role USACO gate
-passed. The matching downstream review 94 preserves all 97 overlay paths and
-has independently accepted exported Linux evidence; remaining broad site checks
-are still required before merge. Downstream review 93 is merged.
+The accepted seven-pack Apache site integration is merged in canonical review
+210 at 9bcb4e96d10a895fb05097511f75e4fabd027a7b and downstream review 94 at
+585496577814f998f4b7badf6bf8a4ccf6c3f87f. Required checks include full units,
+35 Cypress workflows and the complete 200-import, 58-pack, 116-native-role USACO
+workflow. The exact tested trees and all 97 downstream overlay paths are
+preserved. Both merged branches are retired with recovery bundles.
 
-The systemd source repair is merged at
-`220d50bec31f6290f613cf6cbc3ebf68e3251c57`. Its nine immutable files include a
-named learner heartbeat task, reference application, identical user-unit
-contracts, environment examples and neutral evidence records. Three actual
-Linux user-manager profiles and 223 observed records establish journal output,
-manual and automatic restarts, persistent enablement separately from running,
-invalid-environment failure, recovery and owned unit/process/activation cleanup.
-The untouched starter program exits 78 without a restart loop; invalid settings
-exit 2 before producing a heartbeat. A direct app run or parsed unit does not prove
-manager operation. Original source and recovery bundles are retained.
+Systemd source review 6 is merged at
+80d1edc95b7152c55e2c000adda086c9cbadf545. The core reading is complete and uses
+neutral confirmation wording, with setup guarded against an existing lab.
+The two formerly identical log-counting placeholders now have different optional
+tasks: transfer a supplied working HTTP app into a user unit by correcting its
+working directory and app argument, and select an environment file through a
+reset/replacement drop-in without changing the base fragment. Original source
+is preserved. The source branch is retired with its tested tree unchanged.
 
-The eighth-pack site candidate preserves the existing service lesson and
-notebook progress identities, imports only the selected role plus the complete
-reading after consent, and reuses the core attempt when reopening the notebook.
-The API accepts the service evidence record and named environment example only
-in Linux mode. Local focused acceptance passes 19 reading/import/export checks
-and 93 API save/review checks. Local lint, typecheck and build pass. Browser acceptance passes 64
-role/theme/viewport profiles, 15 actual course actions, seven notebook reuses and
-17 exact ZIPs; all 70 role-file comparisons match 62 unique immutable source
-files. Phone learner and desktop reference screenshots were inspected. Hosted
-export validation must still run the pinned verifier on an actual Linux user
-manager and match all nine source hashes; broad site checks remain required.
-Both lockfiles and manifests are unchanged, and root lock provenance passes.
-The first site export gate passes three actual user-manager profiles and 223
-observations. Its full unit gate caught an ambiguous program-state sentence; the
-accepted source wording is corrected above, with commands and code unchanged.
-Exact-head site checks must pass again at the corrected reading revision.
+Source acceptance includes all earlier Linux gates, three core service manager
+profiles/223 observations and six supplemental manager profiles/359 observations.
+All 22 supplemental hashes match the accepted source. Actual evidence covers
+named startup/configuration failures, owned HTTP sockets and readiness, journal
+and UID/PID correlation, restarts, enabled/stopped state, environment precedence,
+fresh output before and after restart, invalid-setting recovery, drop-in rollback
+and six complete owned-lab cleanups. App-only checks remain separate evidence.
 
-Remaining generic Linux packs, including the separate optional service transfer
-and extension exercises, other course families, archived external resources and
-full Juni/Zoom reconciliation remain within scope. Tagged native provenance and
-public activation remain separate milestones. This checkpoint does not establish
+Canonical review 211 is being updated to ten accepted packs at their immutable
+revisions. It preserves every published lesson/progress identifier, keeps both
+extra service tasks optional, and reuses the core attempt only for the matching
+troubleshooting notebook. Each task opens its relevant app, unit or drop-in after
+consent; save, review and export retain complete reading and selected-role files.
+The new environment examples and evidence records are permitted only in Linux
+mode. Local site acceptance passes 297 front-end checks (including all course-quality
+checks), 101 API checks, lint, typecheck and build, plus 80 role/theme/viewport
+browser profiles, 17 actual course actions, seven notebook reuses and 21 ZIPs.
+All 94 role-file comparisons match 84 unique source files. The unit and drop-in
+open directly for the named tasks. Phone and desktop screenshots are inspected. Exported native validation must run
+three core and six supplemental profiles on an actual Linux user manager.
+
+The earlier eight-pack site gate passed actual core manager operation, but broad
+copy/quality checks caught wording in its source reading. The accepted revision
+above addresses both issues. Full course-quality and exact-head hosted gates
+remain required for the ten-pack candidate. Both manifests and lockfiles are
+unchanged; no new native release or public activation is claimed.
+
+Remaining Linux and other course-family findings, external resources and full
+Juni/Zoom reconciliation stay within scope. This checkpoint does not establish
 full audit completion.
 
 ## Earlier source checkpoint, 2026-10-13
