@@ -1,4 +1,4 @@
-import { githubRawUrl, parseGitHubResource } from "@/modules/codePreview";
+import { githubRawUrl, parseGitHubResource } from "./codePreview";
 
 export const linuxSourceRevision = "23771d6b5caee2190963b8e730c271544963045d";
 export const linuxVerifiedPacks = [
