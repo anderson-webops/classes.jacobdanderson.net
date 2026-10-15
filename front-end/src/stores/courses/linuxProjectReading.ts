@@ -246,6 +246,12 @@ export function applyLinuxProjectReading(module: RawCourse["modules"][number]) {
 			"continuationItemId" in selected.definition &&
 			item.title.endsWith(": Extension Challenge");
 		const projectTitle = projectTitles[selected.pack];
+		const projectGuide = linuxProjectGuides[selected.pack]!.replace(
+			/\bTODO\b/g,
+			"`TODO`"
+		)
+			.replace("Instructor walkthrough", "Walkthrough")
+			.replaceAll("an instructor walkthrough", "a guided walkthrough");
 		return {
 			...item,
 			...(!notebook && !continuation && projectTitle
@@ -262,17 +268,11 @@ export function applyLinuxProjectReading(module: RawCourse["modules"][number]) {
 				: continuation
 					? [
 							"**Continue the existing deployment attempt:** This optional challenge reopens the matching core project for the selected role. Keep its separate lesson progress record while editing the same saved files. Retain the first evidence before running the reversed release order and one rejected candidate; explain why a response with status 200 can still require rollback. The integrity and concurrent-publisher projects below investigate separate questions.",
-							linuxProjectGuides[selected.pack]!.replace(
-								/\bTODO\b/g,
-								"`TODO`"
-							)
+							projectGuide
 						].join("\n\n")
 					: [
 							"**Project workflow:** Open one selected role after confirming the IDE import. Save and download the ZIP, preserve every role path and fixture, then execute the commands in an owned Linux lab. Earlier work remains available as a separate project.",
-							linuxProjectGuides[selected.pack]!.replace(
-								/\bTODO\b/g,
-								"`TODO`"
-							).replace("Instructor walkthrough", "Walkthrough"),
+							projectGuide,
 							networkCommandCheckpoints[selected.pack]
 						]
 							.filter(Boolean)

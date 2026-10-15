@@ -109,6 +109,7 @@ it("preserves core and notebook identities, complete reading, reference privacy 
 				.files["README.md"]!.content.trim()
 				.replace(/\bTODO\b/g, "`TODO`")
 				.replace("Instructor walkthrough", "Walkthrough")
+				.replaceAll("an instructor walkthrough", "a guided walkthrough")
 				// Keep the complete reading after these explicit editorial changes.
 				// The import/export checks below still require original source bytes.
 				.replaceAll("With an instructor, inspect", "Inspect")
