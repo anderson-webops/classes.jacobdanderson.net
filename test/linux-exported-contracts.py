@@ -501,6 +501,21 @@ with tempfile.TemporaryDirectory(prefix="linux-site-exports-") as directory:
     assert observability["actualOwnedTimers"] == observability["actualScheduledGateObservations"] == 72
     assert observability["actualWorkerEvents"] == 144 and observability["actualPolicyDecisions"] == 81 and observability["actualOperatorRetests"] == 9
     assert observability["error"] is None and not observability["learnerWorksheetCompletionInferred"]
+    assert observability["atomicGateCopies"] == 6 and observability["atomicGateCases"] == 18
+    gate_cases = observability["atomicGatePublication"]
+    assert len(gate_cases) == 18
+    assert {(case["pack"], case["role"], case["case"]) for case in gate_cases} == {
+        (pack["pack"], role, case) for pack in observability_packs
+        for role in ("starter", "solution") for case in (
+            "complete-private-publication", "existing-staging-refused", "publication-failure-cleanup")
+    }
+    for case in gate_cases:
+        if case["case"] == "complete-private-publication":
+            assert case["evidence"] == {"destinationWasAbsent": True, "completeBeforePublication": True, "mode": "0o600"}
+        elif case["case"] == "existing-staging-refused":
+            assert case["sentinelUnchanged"]
+        else:
+            assert case["privateTemporaryRemoved"]
     assert observability["sourceHashes"] == {pack["pack"] + "/" + name: file["sha256"] for pack in observability_packs for name, file in pack["files"].items()}
     assert len(observability["profiles"]) == 9 and all(profile["passed"] and profile["inputsUnchanged"] and profile["outsideSentinelPreserved"] and profile["ownedResourcesRemoved"] for profile in observability["profiles"])
     backup_studio_records = args.proof.parent / "backup-studio-records"
