@@ -360,7 +360,7 @@ export const networkSetupPacks = [
 ] as const;
 
 export const networkTransportSourceRevision =
-	"1b2a27334e14fef20cefa9f03a7c3e385543c941";
+	"9a09397d00989a74f0af53b6fb27fa1f26627e50";
 export const networkTransportPacks = [
 	{
 		pack: "NS-03-unit-1-the-network-stack-in-plain-english-supplemental-2",
