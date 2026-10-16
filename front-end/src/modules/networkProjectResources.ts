@@ -216,6 +216,51 @@ export const networkIPv6Packs = [
 	}
 ] as const;
 
+export const networkApplicationSourceRevision =
+	"7ac775db856b23ae5f1f575742dfb07eb257eb90";
+export const networkApplicationPacks = [
+	{
+		pack: "NS-09-unit-11-common-application-protocols",
+		revision: networkApplicationSourceRevision,
+		roleFiles: [
+			"main.py",
+			"application_lab.py",
+			"network-notes.md",
+			"application-cases.md"
+		],
+		coreItemId:
+			"network-systems-unit-11-common-application-protocols-curriculum-core-project-common-application-protocols",
+		notebookItemId:
+			"network-systems-unit-11-common-application-protocols-supplemental-operations-notebook-common-application-protocols"
+	},
+	{
+		pack: "NS-23-unit-11-common-application-protocols-supplemental-2",
+		revision: networkApplicationSourceRevision,
+		roleFiles: [
+			"main.py",
+			"application_lab.py",
+			"network-notes.md",
+			"application-cases.md"
+		],
+		coreItemId:
+			"network-systems-unit-11-common-application-protocols-supplemental-application-protocol-transfer-practice",
+		notebookItemId: undefined
+	},
+	{
+		pack: "NS-24-unit-11-common-application-protocols-supplemental-3",
+		revision: networkApplicationSourceRevision,
+		roleFiles: [
+			"main.py",
+			"application_lab.py",
+			"network-notes.md",
+			"application-cases.md"
+		],
+		coreItemId:
+			"network-systems-unit-11-common-application-protocols-supplemental-application-protocol-extension-practice",
+		notebookItemId: undefined
+	}
+] as const;
+
 export const networkVerifiedPacks = [
 	...networkFoundationPacks,
 	...networkNamingPacks,
@@ -225,7 +270,8 @@ export const networkVerifiedPacks = [
 	...networkReachabilityPacks,
 	...networkListenerPacks,
 	...networkResolutionPacks,
-	...networkIPv6Packs
+	...networkIPv6Packs,
+	...networkApplicationPacks
 ] as const;
 
 export function networkCourseResource(url: string) {

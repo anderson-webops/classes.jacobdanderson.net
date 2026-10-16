@@ -18,6 +18,11 @@ export function networkBuildInstructions(files: PythonIdeFile[], url: string) {
 		"NS-17-unit-8-ipv6-in-practice-supplemental-2",
 		"NS-18-unit-8-ipv6-in-practice-supplemental-3"
 	].includes(definition.pack);
+	const applications = [
+		"NS-09-unit-11-common-application-protocols",
+		"NS-23-unit-11-common-application-protocols-supplemental-2",
+		"NS-24-unit-11-common-application-protocols-supplemental-3"
+	].includes(definition.pack);
 	const namingCases: Record<string, string> = {
 		"NS-06-unit-2-addresses-and-naming":
 			"Repeat with python3 main.py --lookup 127.0.0.1, then with --network 192.0.2.65/26. Compare system name lookup, the actual IPv4 endpoint and the separate prefix calculation.",
@@ -50,6 +55,22 @@ export function networkBuildInstructions(files: PythonIdeFile[], url: string) {
 		return [
 			...lines,
 			"The selected lab is incomplete. Restore all required role files and README.md before following the guide."
+		];
+	}
+	if (applications) {
+		return [
+			...lines,
+			`Read README.md, then cd ${role}. Keep main.py, application_lab.py, network-notes.md and application-cases.md together. Run python3 main.py in the external Linux terminal with an ordinary account, Python3.10 or newer, curl and ss.`,
+			'Repeat with python3 main.py --changed --message "Changed application observation". Retain exact request/response bytes, numeric endpoint and peer, owner PID/UID, the unique response token, curl corroboration and the held-port refusal. Use each run\'s own identity.',
+			definition.pack ===
+			"NS-23-unit-11-common-application-protocols-supplemental-2"
+				? "Keep the initial representation beside the matching-validator 304, compare the stale-validator 200, and retain the redirect and explicitly requested destination as separate exchanges. No browser cache or freshness clock is measured."
+				: definition.pack ===
+					  "NS-24-unit-11-common-application-protocols-supplemental-3"
+					? "Compare 503/Retry-After, 404 and 405/Allow, preserve the four binary octets, and distinguish the changed Host field from the unchanged numeric destination. No automatic recovery or retry is demonstrated."
+					: "Compare GET and HEAD content, missing-resource 404, unsupported-method 405/Allow and planned 503/Retry-After with the held-port transport refusal. The notebook card reopens the same saved attempt.",
+			"Label application-cases.md as constructed reasoning material. The actual program measures HTTP/1.1 over owned loopback TCP; it does not query DNS, establish TLS or SSH, send SMTP mail, or change system configuration. Verify the owned worker was reaped and its final listener is absent.",
+			"Python programming is optional. Complete only analyze(evidence) when choosing supplemental code practice. Actual observations and the complete notebook explanation remain the task; the reference stays separate."
 		];
 	}
 	if (ipv6) {

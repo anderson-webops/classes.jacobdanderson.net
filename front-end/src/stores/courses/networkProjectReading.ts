@@ -3,6 +3,10 @@ import namingReading2 from "../../assets/course-guides/network-addresses-familie
 import namingReading1 from "../../assets/course-guides/network-addresses-transfer.md?raw";
 import namingReading0 from "../../assets/course-guides/network-addresses.md?raw";
 
+import applicationReading2 from "../../assets/course-guides/network-application-boundaries.md?raw";
+import applicationReading1 from "../../assets/course-guides/network-application-conditions.md?raw";
+import applicationReading0 from "../../assets/course-guides/network-application-responses.md?raw";
+
 import firewallReading from "../../assets/course-guides/network-firewall-policy.md?raw";
 import captureReading from "../../assets/course-guides/network-http-capture.md?raw";
 import ipv6Reading0 from "../../assets/course-guides/network-ipv6-diagnostics.md?raw";
@@ -20,6 +24,11 @@ import {
 } from "../../modules/networkProjectResources";
 
 const readings: Record<string, string> = {
+	"NS-09-unit-11-common-application-protocols": applicationReading0,
+	"NS-23-unit-11-common-application-protocols-supplemental-2":
+		applicationReading1,
+	"NS-24-unit-11-common-application-protocols-supplemental-3":
+		applicationReading2,
 	"NS-04-ns0-setup-and-tooling": setupReading,
 	"NS-05-unit-1-the-network-stack-in-plain-english": transportReading,
 	"NS-06-unit-2-addresses-and-naming": namingReading0,
@@ -55,6 +64,8 @@ export function withNetworkProjectReadings(
 		const resolution =
 			selected.pack === "NS4-IPv4-vs-IPv6-Resolution-Comparison";
 		const ipv6Core = selected.pack === "NS-08-unit-8-ipv6-in-practice";
+		const applicationCore =
+			selected.pack === "NS-09-unit-11-common-application-protocols";
 		const exposure = topology && module.title.startsWith("Unit 12:");
 		const reading = readings[selected.pack]
 			.replace(
@@ -69,6 +80,11 @@ export function withNetworkProjectReadings(
 				"Review and save the selected role",
 				"Save the selected role"
 			)
+			.replace(
+				"addresses should agree in opposite directions.",
+				"addresses agree in opposite directions."
+			)
+			.replace("facts should change", "facts change")
 			.replace("should retain", "retains")
 			.replace(
 				"Flow membership should follow",
@@ -92,6 +108,21 @@ export function withNetworkProjectReadings(
 				"For a guided walkthrough"
 			)
 			.trim();
+		const applicationNotebook = `## Keep an application-boundary notebook
+
+Opening this notebook reopens the matching core project and preserves the same saved application attempt. Record the issuing host, ordinary UID, namespace, tool versions and purpose. Keep all five imported files together. Predict the five method/path outcomes and the held-port refusal before opening the results. The reference remains a separate saved role.
+
+### Match the actual request, response and owner
+
+For GET /state, HEAD /state, GET /missing, POST /state and GET /unavailable, retain the request line and fields, numeric local/peer endpoints, response status and fields, exact content bytes, run token and owned PID. Reverse the client/server endpoint view to reconcile both ends. Compare HEAD metadata with its actual zero transferred content. Explain the missing resource, Allow field and Retry-After suggestion without treating an HTTP error status as a failed TCP connection. Retain the separate held-port refusal and both curl observations. Repeat with --changed and a different printable --message; keep the two runs' identities distinct.
+
+### Separate protocol boundaries and supplied reasoning
+
+Read application-cases.md as constructed DNS, TLS and SSH material. Identify the earliest unsupported boundary and the next authorized check for each case. Return to the concept reading for SMTP envelope, acceptance and delivery distinctions. This program sends no mail and measures no DNS lookup, TLS negotiation, SSH login or browser cache. Preserve the issuing context of earlier DNS/NSS evidence before using it in a comparison.
+
+### Review the explanation and close the owned experiment
+
+Keep unexpected results and raw errors. Name an observation that would disprove each explanation and a limit that still remains after it. Confirm the owned child was stopped and reaped and that its PID is absent from the final listener query. A Retry-After suggestion does not prove recovery. Python programming is optional; the actual observations and notebook are the core task. For independent work, predict before reading each response. In a guided walkthrough, pause at connection, method, representation, peer identity and application decision. The transfer validator/redirect task and extension content/policy task have separate optional goals.`;
 		const ipv6Notebook = `## Keep an independent IPv6 path notebook
 
 Opening this notebook reopens the matching core project and preserves the same saved IPv6 attempt. Keep the issuing host, ordinary account, tool versions and network namespace beside each report. Predict the explicit IPv4 and IPv6 outcomes before running either binding mode. All five imported files belong to this attempt; the reference remains separate.
@@ -194,23 +225,25 @@ Keep each prediction beside actual command output, the measured HTTP result and 
 			preserveInstructions: true,
 
 			content:
-				notebook && ipv6Core
-					? ipv6Notebook
-					: notebook && listeners
-						? listenerNotebook
-						: notebook && resolution
-							? resolutionNotebook
-							: notebook && reachability
-								? reachabilityNotebook
-								: notebook && firewall
-									? firewallNotebook
-									: notebook && capture
-										? captureNotebook
-										: notebook && topology
-											? topologyContinuation
-											: notebook
-												? `${item.content}\n\nContinue the existing core project. Opening this notebook reopens the matching core project rather than creating a second assignment. Keep predictions, actual command output, endpoint and process identities, changed-case comparisons and cleanup in network-notes.md. Follow the complete guide on the core project card and in README.md. Python programming is optional supplemental practice; command observations and the notebook are the core deliverable.`
-												: `${exposure ? "Continue the saved Unit7 attempt for the Unit12 Secure Exposure pass. Complete the fourth shell case and run --exposure-policy; the three earlier routing/NAT cases remain prerequisites.\n\n" : ""}${reading}\n\nSource guide: [Network Systems project](${projectLink}). Edit, save, review and export the selected role in the site IDE, then follow README.md in an external Linux terminal. The reference is separate from the learner attempt.`
+				notebook && applicationCore
+					? applicationNotebook
+					: notebook && ipv6Core
+						? ipv6Notebook
+						: notebook && listeners
+							? listenerNotebook
+							: notebook && resolution
+								? resolutionNotebook
+								: notebook && reachability
+									? reachabilityNotebook
+									: notebook && firewall
+										? firewallNotebook
+										: notebook && capture
+											? captureNotebook
+											: notebook && topology
+												? topologyContinuation
+												: notebook
+													? `${item.content}\n\nContinue the existing core project. Opening this notebook reopens the matching core project rather than creating a second assignment. Keep predictions, actual command output, endpoint and process identities, changed-case comparisons and cleanup in network-notes.md. Follow the complete guide on the core project card and in README.md. Python programming is optional supplemental practice; command observations and the notebook are the core deliverable.`
+													: `${exposure ? "Continue the saved Unit7 attempt for the Unit12 Secure Exposure pass. Complete the fourth shell case and run --exposure-policy; the three earlier routing/NAT cases remain prerequisites.\n\n" : ""}${reading}\n\nSource guide: [Network Systems project](${projectLink}). Edit, save, review and export the selected role in the site IDE, then follow README.md in an external Linux terminal. The reference is separate from the learner attempt.`
 		};
 	};
 	return {
