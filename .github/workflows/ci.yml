@@ -136,6 +136,7 @@ jobs:
                   test "$(npm --version)" = "12.0.1"
 
             - name: Install deps
+              id: unit_dependencies
               run: npm ci
 
             - name: Unit tests
@@ -152,6 +153,7 @@ jobs:
               run: node --test test/course-source-readiness.test.mjs
 
             - name: Backend tests
+              if: ${{ !cancelled() && steps.unit_dependencies.outcome == 'success' }}
               env:
                   VITEST_WATCH: "false"
               run: npm run -w back-end test
