@@ -29,6 +29,34 @@ import {
 import { useAppStore } from "@/stores/app";
 import { useCoursesStore } from "@/stores/courses";
 
+it("accepts Network case worksheets within the native path policy", () => {
+	for (const role of ["starter", "solution"]) {
+		for (const name of [
+			"ipv6-practice-case.md",
+			"application-cases.md",
+			"edge-cases.md"
+		]) {
+			expect(isValidPythonFileName(`${role}/${name}`, "linux")).toBe(
+				true
+			);
+			expect(isValidPythonFileName(name, "linux")).toBe(true);
+			for (const path of [
+				`other/${name}`,
+				`${role}/nested/${name}`,
+				`${role}/../${name}`,
+				`/${role}/${name}`,
+				`${role}//${name}`,
+				`images/${name}`
+			]) {
+				expect(isValidPythonFileName(path, "linux"), path).toBe(false);
+			}
+		}
+		expect(isValidPythonFileName(`${role}/other-case.md`, "linux")).toBe(
+			false
+		);
+	}
+});
+
 type Fixture = {
 	pack: string;
 	moduleId: string;

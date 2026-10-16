@@ -11,6 +11,7 @@ export function isLinuxProjectTextPath(value: string) {
 		)
 		|| /\.(?:sh|log|conf|service|timer|html)$/i.test(value)
 		|| /^(?:starter|solution)\/count\.awk$/.test(value) || /^(?:starter|solution)\/(?:alpha|beta|resource|release-[ab]-(?:health|index))\.txt$/.test(value) || value.split("/").at(-1) === "crontab.example"
+		|| /^(?:starter|solution)\/(?:ipv6-practice-case|application-cases|edge-cases)\.md$/.test(value)
 		|| /^(?:starter|solution)\/(?:permissions|compare-notes|service-notes|service-transfer-notes|service-extension-notes|incident-notes|application-notes|retention-notes|edit-notes|environment-notes|replacement-notes|process-notes|pipeline-notes|adoption-notes|package-notes|manual-notes|dependency-notes|network-notes|listener-notes|resolver-notes|restore-notes|integrity-notes|backup-retention-notes|search-notes|path-notes|filesystem-notes|unlink-notes|umask-notes|lookup-notes|launch-notes|calendar-notes|timer-notes|host-notes|validator-notes|deployment-notes|artifact-notes|locking-notes|operations-notes|recovery-notes|observability-notes|backup-notes)\.md$/.test(
 			value
 		)
