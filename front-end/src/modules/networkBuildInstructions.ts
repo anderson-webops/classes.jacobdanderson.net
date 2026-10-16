@@ -13,6 +13,11 @@ export function networkBuildInstructions(files: PythonIdeFile[], url: string) {
 	const listeners = definition.pack === "NS1-Listening-Services-Map";
 	const resolution =
 		definition.pack === "NS4-IPv4-vs-IPv6-Resolution-Comparison";
+	const ipv6 = [
+		"NS-08-unit-8-ipv6-in-practice",
+		"NS-17-unit-8-ipv6-in-practice-supplemental-2",
+		"NS-18-unit-8-ipv6-in-practice-supplemental-3"
+	].includes(definition.pack);
 	const namingCases: Record<string, string> = {
 		"NS-06-unit-2-addresses-and-naming":
 			"Repeat with python3 main.py --lookup 127.0.0.1, then with --network 192.0.2.65/26. Compare system name lookup, the actual IPv4 endpoint and the separate prefix calculation.",
@@ -45,6 +50,21 @@ export function networkBuildInstructions(files: PythonIdeFile[], url: string) {
 		return [
 			...lines,
 			"The selected lab is incomplete. Restore all required role files and README.md before following the guide."
+		];
+	}
+	if (ipv6) {
+		return [
+			...lines,
+			`Read README.md, then cd ${role}. Keep main.py, ipv6_lab.py, network-notes.md and ipv6-practice-case.md together. Run python3 main.py in the external Linux terminal with an ordinary account.`,
+			"Compare python3 main.py --binding v6-only with python3 main.py --binding paired using fresh report names. Retain actual IPv6 route/address/neighbor snapshots, the owned PID and UID, separate family listeners, controlled IPv4 refusal, per-run HTTP response token and worker cleanup.",
+			definition.pack === "NS-17-unit-8-ipv6-in-practice-supplemental-2"
+				? "Calculate the /126 table first. Repeat with --prefix 2001:db8::1/127 --candidates 2001:db8::,2001:db8::1,2001:db8::2, then --prefix 2001:db8::1/128. Prefix membership and offsets are calculations, not address assignment or reachability."
+				: definition.pack ===
+					  "NS-18-unit-8-ipv6-in-practice-supplemental-3"
+					? "Explain why IPV6_V6ONLY=1 remains true while the second IPv4 socket provides IPv4 service. These are two loopback sockets, not one wildcard or mapped-address experiment. Compare the supplied neighbor and family-policy cases separately."
+					: "Complete the core notebook and all three supplied cases after the two binding comparisons. Reuse the earlier actual DNS/NSS evidence and retain the issuing host, namespace and scope of every claim. The notebook card reopens this same saved attempt.",
+			"Label ipv6-practice-case.md as constructed reasoning evidence. The loopback program does not measure active Neighbor Discovery, Router Advertisements, DHCPv6, DNS family selection, Internet IPv6 or firewall policy.",
+			"Python programming is optional. Complete only analyze(evidence) when choosing supplemental code practice; actual networking observations and the complete explanation remain the task. The reference stays separate from the saved attempt."
 		];
 	}
 	if (listeners) {

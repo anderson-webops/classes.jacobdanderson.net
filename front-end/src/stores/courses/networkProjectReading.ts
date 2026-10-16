@@ -5,6 +5,9 @@ import namingReading0 from "../../assets/course-guides/network-addresses.md?raw"
 
 import firewallReading from "../../assets/course-guides/network-firewall-policy.md?raw";
 import captureReading from "../../assets/course-guides/network-http-capture.md?raw";
+import ipv6Reading0 from "../../assets/course-guides/network-ipv6-diagnostics.md?raw";
+import ipv6Reading2 from "../../assets/course-guides/network-ipv6-family-extension.md?raw";
+import ipv6Reading1 from "../../assets/course-guides/network-ipv6-prefix-transfer.md?raw";
 import listenerReading from "../../assets/course-guides/network-listening-services.md?raw";
 import reachabilityReading from "../../assets/course-guides/network-reachability.md?raw";
 import resolutionReading from "../../assets/course-guides/network-resolution-comparison.md?raw";
@@ -27,7 +30,10 @@ const readings: Record<string, string> = {
 	"NS3-UFW-Web-Server-Policy": firewallReading,
 	"NS2-Local-vs-Remote-Reachability-Diagnosis": reachabilityReading,
 	"NS1-Listening-Services-Map": listenerReading,
-	"NS4-IPv4-vs-IPv6-Resolution-Comparison": resolutionReading
+	"NS4-IPv4-vs-IPv6-Resolution-Comparison": resolutionReading,
+	"NS-08-unit-8-ipv6-in-practice": ipv6Reading0,
+	"NS-17-unit-8-ipv6-in-practice-supplemental-2": ipv6Reading1,
+	"NS-18-unit-8-ipv6-in-practice-supplemental-3": ipv6Reading2
 };
 
 export function withNetworkProjectReadings(
@@ -48,6 +54,7 @@ export function withNetworkProjectReadings(
 		const listeners = selected.pack === "NS1-Listening-Services-Map";
 		const resolution =
 			selected.pack === "NS4-IPv4-vs-IPv6-Resolution-Comparison";
+		const ipv6Core = selected.pack === "NS-08-unit-8-ipv6-in-practice";
 		const exposure = topology && module.title.startsWith("Unit 12:");
 		const reading = readings[selected.pack]
 			.replace(
@@ -85,6 +92,21 @@ export function withNetworkProjectReadings(
 				"For a guided walkthrough"
 			)
 			.trim();
+		const ipv6Notebook = `## Keep an independent IPv6 path notebook
+
+Opening this notebook reopens the matching core project and preserves the same saved IPv6 attempt. Keep the issuing host, ordinary account, tool versions and network namespace beside each report. Predict the explicit IPv4 and IPv6 outcomes before running either binding mode. All five imported files belong to this attempt; the reference remains separate.
+
+### Match actual scope, route and owner evidence
+
+Connect the observed ::1 address, the selected IPv6 lo route and the owned listener to the actual child PID and UID. Keep the current neighbor snapshot without calling it a measured Neighbor Discovery exchange. Match each explicit family curl command, bound address, numeric port, response token, request and peer record. In v6-only mode the exclusively held IPv4 control does not listen. In paired mode a second socket supplies IPv4 service while IPV6_V6ONLY remains one. This is not a single wildcard or mapped-address test. Verify child reaping and the final PID-based socket comparison.
+
+### Keep arithmetic, lookup and supplied cases distinct
+
+Explain the /128 membership table separately from interface assignment and application reachability. Reuse the earlier DNS/NSS observations with their selected server and scope. Read all three cases in ipv6-practice-case.md and label those constructed records explicitly. Locate the first unsupported on-link boundary in Case A; distinguish family policy counters from an HTTP response in Case B; identify the missing link-local interface and separate Router Advertisement, address and router information in Case C. None is a change made by the loopback program.
+
+### Review the diagnosis and its limits
+
+Keep unexpected results and the next authorized observation that could disprove each explanation. IPv4 success cannot replace missing IPv6 evidence. Confirm cleanup without changing interfaces, routes, system name service or policy. Python programming is optional; the notebook and actual networking interpretation are the core work. For independent review, predict each boundary before reading its result. In a guided walkthrough, pause at scope, lookup, route, neighbor where relevant, owner, policy and application response. Follow the complete core guide and imported README.md; the optional prefix and paired-service projects have distinct follow-up goals.`;
 		const listenerNotebook = `## Preserve a listener ownership notebook
 
 Opening this notebook reopens the matching core project and preserves its saved listener attempt. Record the issuing machine, account, time and network namespace. Predict the owned example's transport, bind address, port and visible process before collecting evidence. Keep the selected port and the broader account view as separate reports so that a filter cannot hide the context needed for a classification.
@@ -172,21 +194,23 @@ Keep each prediction beside actual command output, the measured HTTP result and 
 			preserveInstructions: true,
 
 			content:
-				notebook && listeners
-					? listenerNotebook
-					: notebook && resolution
-						? resolutionNotebook
-						: notebook && reachability
-							? reachabilityNotebook
-							: notebook && firewall
-								? firewallNotebook
-								: notebook && capture
-									? captureNotebook
-									: notebook && topology
-										? topologyContinuation
-										: notebook
-											? `${item.content}\n\nContinue the existing core project. Opening this notebook reopens the matching core project rather than creating a second assignment. Keep predictions, actual command output, endpoint and process identities, changed-case comparisons and cleanup in network-notes.md. Follow the complete guide on the core project card and in README.md. Python programming is optional supplemental practice; command observations and the notebook are the core deliverable.`
-											: `${exposure ? "Continue the saved Unit7 attempt for the Unit12 Secure Exposure pass. Complete the fourth shell case and run --exposure-policy; the three earlier routing/NAT cases remain prerequisites.\n\n" : ""}${reading}\n\nSource guide: [Network Systems project](${projectLink}). Edit, save, review and export the selected role in the site IDE, then follow README.md in an external Linux terminal. The reference is separate from the learner attempt.`
+				notebook && ipv6Core
+					? ipv6Notebook
+					: notebook && listeners
+						? listenerNotebook
+						: notebook && resolution
+							? resolutionNotebook
+							: notebook && reachability
+								? reachabilityNotebook
+								: notebook && firewall
+									? firewallNotebook
+									: notebook && capture
+										? captureNotebook
+										: notebook && topology
+											? topologyContinuation
+											: notebook
+												? `${item.content}\n\nContinue the existing core project. Opening this notebook reopens the matching core project rather than creating a second assignment. Keep predictions, actual command output, endpoint and process identities, changed-case comparisons and cleanup in network-notes.md. Follow the complete guide on the core project card and in README.md. Python programming is optional supplemental practice; command observations and the notebook are the core deliverable.`
+												: `${exposure ? "Continue the saved Unit7 attempt for the Unit12 Secure Exposure pass. Complete the fourth shell case and run --exposure-policy; the three earlier routing/NAT cases remain prerequisites.\n\n" : ""}${reading}\n\nSource guide: [Network Systems project](${projectLink}). Edit, save, review and export the selected role in the site IDE, then follow README.md in an external Linux terminal. The reference is separate from the learner attempt.`
 		};
 	};
 	return {

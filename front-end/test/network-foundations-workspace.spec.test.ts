@@ -112,6 +112,15 @@ const fixtures: Fixture[] = [
 			),
 			"utf8"
 		)
+	),
+	...JSON.parse(
+		readFileSync(
+			resolve(
+				process.cwd(),
+				"../test/fixtures/network-ipv6-contracts.json"
+			),
+			"utf8"
+		)
 	)
 ];
 const identities = JSON.parse(
