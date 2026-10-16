@@ -213,6 +213,151 @@ async function retainArchive(page, project, output, name) {
 	await writeFile(join(output, filename), bytes);
 	return { name: filename, sha256: digest(bytes) };
 }
+async function boundedRuntimeDiagnostic(action) {
+	let timer;
+	try {
+		return await Promise.race([
+			action(),
+			new Promise(resolve => {
+				timer = setTimeout(
+					() =>
+						resolve({
+							diagnosticError: "Five-second diagnostic deadline"
+						}),
+					5000
+				);
+			})
+		]);
+	} catch (error) {
+		return { diagnosticError: error.message };
+	} finally {
+		clearTimeout(timer);
+	}
+}
+
+async function retainRuntimeFailure(
+	page,
+	frame,
+	output,
+	identity,
+	phase,
+	error,
+	profiles,
+	runtimeProfiles
+) {
+	const label =
+		`runtime-failure-${identity.classroom ? "classroom" : "original"}-${identity.name}`.replace(
+			/[^a-z0-9.-]/gi,
+			"_"
+		);
+	const controls = await boundedRuntimeDiagnostic(() =>
+		page.evaluate(() => {
+			const button = document.querySelector("button.run-control");
+			const box = button?.getBoundingClientRect();
+			const style = button ? getComputedStyle(button) : null;
+			return {
+				url: location.href,
+				visibility: document.visibilityState,
+				activeElement: document.activeElement?.tagName,
+				runControl: button
+					? {
+							text: button.textContent.trim(),
+							disabled: button.disabled,
+							ariaLabel: button.getAttribute("aria-label"),
+							ariaBusy: button.getAttribute("aria-busy"),
+							rect: box
+								? {
+										x: box.x,
+										y: box.y,
+										width: box.width,
+										height: box.height
+									}
+								: null,
+							style: style
+								? {
+										display: style.display,
+										visibility: style.visibility,
+										pointerEvents: style.pointerEvents
+									}
+								: null,
+							centerElements: box
+								? document
+										.elementsFromPoint(
+											box.x + box.width / 2,
+											box.y + box.height / 2
+										)
+										.slice(0, 6)
+										.map(e => ({
+											tag: e.tagName,
+											className: String(e.className)
+										}))
+								: []
+						}
+					: null,
+				output: document
+					.querySelector(".output-panel")
+					?.textContent.slice(-8000),
+				frames: [...document.querySelectorAll("iframe")].map(e => ({
+					src: e.getAttribute("src"),
+					title: e.title
+				}))
+			};
+		})
+	);
+	const gameFrame = frame
+		? await boundedRuntimeDiagnostic(() =>
+				frame.evaluate(() => {
+					const canvas = document.querySelector(
+						"canvas.turtle-canvas--game"
+					);
+					return {
+						url: location.href,
+						readyState: document.readyState,
+						canvas: canvas
+							? { width: canvas.width, height: canvas.height }
+							: null
+					};
+				})
+			)
+		: null;
+	const image = `${label}.png`;
+	const screenshot = await boundedRuntimeDiagnostic(async () => {
+		await page.screenshot({
+			path: join(output, image),
+			fullPage: true,
+			timeout: 5000
+		});
+		return image;
+	});
+	const evidence = {
+		identity,
+		phase,
+		error: { name: error.name, message: error.message, stack: error.stack },
+		controls,
+		gameFrame,
+		screenshot,
+		completedCourseProfiles: profiles,
+		completedRuntimeProfiles: runtimeProfiles,
+		fullCoverageStillRequired: { courseProfiles: 12, runtimeProfiles: 86 }
+	};
+	const filename = `${label}.json`;
+	await writeFile(
+		join(output, filename),
+		JSON.stringify(evidence, null, 2) + "\n"
+	);
+	console.log(
+		JSON.stringify({
+			event: "runtime-failure-evidence",
+			...identity,
+			phase,
+			evidence: filename,
+			screenshot,
+			completedRuntimeProfiles: runtimeProfiles.length
+		})
+	);
+	return filename;
+}
+
 async function courseAction(page, origin, activity) {
 	await page.goto(`${origin}/courses#${activity.module}`, {
 		waitUntil: "domcontentloaded"
@@ -663,6 +808,20 @@ nodeTest(
 						starterUrl: sourceUrl(name)
 					});
 					if (classroom) params.set("classroom", "1");
+					let runtimePhase = "open-runtime";
+					const checkpoint = phase => {
+						runtimePhase = phase;
+						console.log(
+							JSON.stringify({
+								event: "runtime-phase",
+								taskId,
+								name,
+								classroom,
+								phase,
+								time: new Date().toISOString()
+							})
+						);
+					};
 					try {
 						await page.goto(`${origin}/ide?${params}`, {
 							waitUntil: "domcontentloaded"
@@ -683,9 +842,11 @@ nodeTest(
 							output,
 							`runtime-${classroom ? "classroom" : "original"}-${name}`
 						);
+						checkpoint("request-run");
 						await page.locator("button.run-control").click();
 						const frame = await pythonFrame(page);
 						try {
+							checkpoint("await-rendered-canvas");
 							await frame.waitForFunction(
 								() => {
 									const c = document.querySelector(
@@ -713,6 +874,7 @@ nodeTest(
 								},
 								{ timeout: 90000 }
 							);
+							checkpoint("dispatch-game-input");
 							const canvas = await frame.$(
 								"canvas.turtle-canvas--game"
 							);
@@ -747,6 +909,7 @@ nodeTest(
 								),
 								"Stop"
 							);
+							checkpoint("retain-rendered-canvas");
 							await (
 								await frame.$("canvas.turtle-canvas--game")
 							).screenshot({
@@ -755,7 +918,9 @@ nodeTest(
 									`runtime-${classroom ? "classroom" : "original"}-${name}.png`
 								)
 							});
+							checkpoint("request-stop");
 							await page.locator("button.run-control").click();
+							checkpoint("await-run-control");
 							await page.waitForFunction(
 								() =>
 									document
@@ -775,8 +940,24 @@ nodeTest(
 								sourceFiles: saved.files
 							});
 						} catch (error) {
+							const evidence = await retainRuntimeFailure(
+								page,
+								frame,
+								output,
+								{
+									name,
+									classroom,
+									source: sourceUrl(name),
+									key
+								},
+								runtimePhase,
+								error,
+								profiles,
+								runtimeProfiles
+							);
 							throw new Error(
-								`${name} classroom=${classroom}: ${error.message}\n${await page.$eval(".output-panel", e => e.textContent).catch(() => "")}`
+								`${name} classroom=${classroom} phase=${runtimePhase}: ${error.message}; retained ${evidence}`,
+								{ cause: error }
 							);
 						}
 						assert.equal(state.remoteWrites, 0);
