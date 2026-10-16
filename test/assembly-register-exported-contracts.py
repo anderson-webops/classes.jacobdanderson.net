@@ -104,10 +104,14 @@ with tempfile.TemporaryDirectory(prefix="assembly-register-export-") as temporar
             for local in list(directory.iterdir()) + [directory / "build/app", directory / "build/contracts", directory / "build/CMakeFiles/app.dir/routine.S.o"]:
                 if local.is_file(): (retained / local.name).write_bytes(local.read_bytes())
             for variant in ("default", "changed"):
-                stdout, stderr = run([str(directory / "build/app"), *(["--changed"] if variant == "changed" else [])], directory, expected=0 if role == "starter" else 78)
+                # The wrong unsigned-word extension agrees with the model when
+                # the changed word is 0x7f80. Its negative default and unchanged
+                # boundary contracts still reject this reference regression.
+                succeeds = role == "starter" or (fixture["mode"] == "extension" and variant == "changed")
+                stdout, stderr = run([str(directory / "build/app"), *(["--changed"] if variant == "changed" else [])], directory, expected=0 if succeeds else 78)
                 (retained / (variant + ".stdout.txt")).write_bytes(stdout)
                 (retained / (variant + ".stderr.txt")).write_bytes(stderr)
-                if role == "starter": assert stdout.startswith(b"initial=")
+                if succeeds: assert stdout.startswith(b"initial=")
                 else: assert stdout == b""
             edited_profiles.append({"mode": fixture["mode"], "role": role, "browserWidths": 2, "browserThemes": 2, "completedLearner": role == "starter", "referenceRegressionRefused": role == "solution", "retainedDirectory": str(retained.relative_to(args.proof.parent))})
     path = root / verifier["path"]
