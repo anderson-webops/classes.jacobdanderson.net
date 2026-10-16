@@ -121,6 +121,15 @@ const fixtures: Fixture[] = [
 			),
 			"utf8"
 		)
+	),
+	...JSON.parse(
+		readFileSync(
+			resolve(
+				process.cwd(),
+				"../test/fixtures/network-application-contracts.json"
+			),
+			"utf8"
+		)
 	)
 ];
 const identities = JSON.parse(
@@ -281,6 +290,11 @@ it("preserves every published lesson while preserving core notebooks and distinc
 				"Review and save the selected role",
 				"Save the selected role"
 			)
+			.replace(
+				"addresses should agree in opposite directions.",
+				"addresses agree in opposite directions."
+			)
+			.replace("facts should change", "facts change")
 			.replace("should retain", "retains")
 			.replace(
 				"Flow membership should follow",
