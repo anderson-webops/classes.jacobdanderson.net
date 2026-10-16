@@ -178,9 +178,9 @@ export const networkIPv6Packs = [
 		pack: "NS-08-unit-8-ipv6-in-practice",
 		revision: networkIPv6SourceRevision,
 		roleFiles: [
+			"network-notes.md",
 			"main.py",
 			"ipv6_lab.py",
-			"network-notes.md",
 			"ipv6-practice-case.md"
 		],
 		coreItemId:
@@ -192,9 +192,9 @@ export const networkIPv6Packs = [
 		pack: "NS-17-unit-8-ipv6-in-practice-supplemental-2",
 		revision: networkIPv6SourceRevision,
 		roleFiles: [
+			"network-notes.md",
 			"main.py",
 			"ipv6_lab.py",
-			"network-notes.md",
 			"ipv6-practice-case.md"
 		],
 		coreItemId:
@@ -205,9 +205,9 @@ export const networkIPv6Packs = [
 		pack: "NS-18-unit-8-ipv6-in-practice-supplemental-3",
 		revision: networkIPv6SourceRevision,
 		roleFiles: [
+			"network-notes.md",
 			"main.py",
 			"ipv6_lab.py",
-			"network-notes.md",
 			"ipv6-practice-case.md"
 		],
 		coreItemId:
@@ -223,9 +223,9 @@ export const networkApplicationPacks = [
 		pack: "NS-09-unit-11-common-application-protocols",
 		revision: networkApplicationSourceRevision,
 		roleFiles: [
+			"network-notes.md",
 			"main.py",
 			"application_lab.py",
-			"network-notes.md",
 			"application-cases.md"
 		],
 		coreItemId:
@@ -237,9 +237,9 @@ export const networkApplicationPacks = [
 		pack: "NS-23-unit-11-common-application-protocols-supplemental-2",
 		revision: networkApplicationSourceRevision,
 		roleFiles: [
+			"network-notes.md",
 			"main.py",
 			"application_lab.py",
-			"network-notes.md",
 			"application-cases.md"
 		],
 		coreItemId:
@@ -250,9 +250,9 @@ export const networkApplicationPacks = [
 		pack: "NS-24-unit-11-common-application-protocols-supplemental-3",
 		revision: networkApplicationSourceRevision,
 		roleFiles: [
+			"network-notes.md",
 			"main.py",
 			"application_lab.py",
-			"network-notes.md",
 			"application-cases.md"
 		],
 		coreItemId:
@@ -268,9 +268,9 @@ export const networkLinkRoutingPacks = [
 		pack: "NS-07-unit-3-switches-routers-nat-and-the-internet-edge",
 		revision: networkLinkRoutingSourceRevision,
 		roleFiles: [
+			"network-notes.md",
 			"main.py",
 			"link_routing_lab.py",
-			"network-notes.md",
 			"edge-cases.md"
 		],
 		coreItemId:
@@ -282,9 +282,9 @@ export const networkLinkRoutingPacks = [
 		pack: "NS-07-unit-3-switches-routers-nat-and-the-internet-edge-supplemental-2",
 		revision: networkLinkRoutingSourceRevision,
 		roleFiles: [
+			"network-notes.md",
 			"main.py",
 			"link_routing_lab.py",
-			"network-notes.md",
 			"edge-cases.md"
 		],
 		coreItemId:
@@ -295,9 +295,9 @@ export const networkLinkRoutingPacks = [
 		pack: "NS-08-unit-3-switches-routers-nat-and-the-internet-edge-supplemental-3",
 		revision: networkLinkRoutingSourceRevision,
 		roleFiles: [
+			"network-notes.md",
 			"main.py",
 			"link_routing_lab.py",
-			"network-notes.md",
 			"edge-cases.md"
 		],
 		coreItemId:

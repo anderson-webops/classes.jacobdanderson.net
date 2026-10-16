@@ -351,6 +351,13 @@ describe("Python project routes", () => {
 				"starter/reports/app\t1.log",
 				"images/task.sh",
 				"starter/notes.md",
+				"other/edge-cases.md",
+				"starter/nested/edge-cases.md",
+				"starter/../edge-cases.md",
+				"/starter/edge-cases.md",
+				"starter//edge-cases.md",
+				"images/edge-cases.md",
+				"solution/other-case.md",
 				"starter/reports/app 1.py",
 				"pgzero.py"
 			]) {
