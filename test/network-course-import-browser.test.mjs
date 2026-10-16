@@ -20,7 +20,8 @@ const fixtures = (
 	await Promise.all(
 		[
 			"./fixtures/network-foundations-contracts.json",
-			"./fixtures/network-naming-contracts.json"
+			"./fixtures/network-naming-contracts.json",
+			"./fixtures/network-topology-contracts.json"
 		].map(async path =>
 			JSON.parse(await readFile(new URL(path, import.meta.url), "utf8"))
 		)
@@ -97,12 +98,19 @@ async function exportedBytes(page) {
 	);
 }
 
-async function courseAction(page, origin, fixture, itemID, role) {
-	await page.goto(`${origin}/courses#${fixture.moduleId}`, {
+async function courseAction(
+	page,
+	origin,
+	fixture,
+	itemID,
+	role,
+	moduleId = fixture.moduleId
+) {
+	await page.goto(`${origin}/courses#${moduleId}`, {
 		waitUntil: "domcontentloaded"
 	});
 	await page.waitForSelector(".lesson-view-toggle button");
-	const card = `#${fixture.moduleId}-${itemID}`;
+	const card = `#${moduleId}-${itemID}`;
 	for (const position of [1, 2, 3]) {
 		await page
 			.locator(`.lesson-view-toggle button:nth-child(${position})`)
@@ -204,6 +212,23 @@ nodeTest(
 							...earlierTemplate,
 							courseProjectKey: `network-systems:${fixture.coreItemId}:${role === "starter" ? "starter" : "reference"}`
 						};
+						const earlierProjects = [
+							earlier,
+							...(fixture.continuationItems ?? []).map(
+								(continuation, index) => ({
+									...earlier,
+									_id: `earlier-exposure-work-${index}`,
+									title: `Earlier exposure work ${index}`,
+									courseProjectKey: `network-systems:${continuation.itemId}:${role === "starter" ? "starter" : "reference"}`,
+									files: [
+										{
+											name: "main.py",
+											content: `# preserved exposure attempt ${index}\n`
+										}
+									]
+								})
+							)
+						];
 						context = await browser.createBrowserContext();
 						const page = await context.newPage();
 						let catalog = true;
@@ -236,7 +261,7 @@ nodeTest(
 									if (localStorage.getItem(key) === null)
 										localStorage.setItem(
 											key,
-											JSON.stringify([legacy])
+											JSON.stringify(legacy)
 										);
 									const create = URL.createObjectURL;
 									URL.createObjectURL = blob => {
@@ -259,7 +284,7 @@ nodeTest(
 										};
 								},
 								storageKey,
-								earlier
+								earlierProjects
 							);
 							await page.setRequestInterception(true);
 							page.on("request", request => {
@@ -431,10 +456,13 @@ nodeTest(
 							await page.click(
 								"button.run-control:not([disabled])"
 							);
-							await page.waitForFunction(() =>
-								document
-									.querySelector(".output-panel")
-									?.textContent.includes("python3 main.py")
+							await page.waitForFunction(
+								command =>
+									document
+										.querySelector(".output-panel")
+										?.textContent.includes(command),
+								{},
+								fixture.instructionCommand ?? "python3 main.py"
 							);
 							const instructions = await page.$eval(
 								".output-panel",
@@ -448,6 +476,15 @@ nodeTest(
 							assert.ok(
 								!/bash main\.sh|Hello, Linux/.test(instructions)
 							);
+							if (fixture.continuationItems) {
+								assert.ok(
+									instructions.includes("--exposure-policy")
+								);
+								assert.ok(instructions.includes("root access"));
+								assert.ok(
+									!instructions.includes("ordinary account")
+								);
+							}
 							if (width < 900)
 								await page
 									.locator(
@@ -557,25 +594,95 @@ nodeTest(
 								null
 							);
 							assert.equal(requests.length, beforeReuse);
-							const projects = await savedProjects(page);
+							let projects = await savedProjects(page);
 							const reused = projects.find(
 								project => project.courseProjectKey === key
 							);
 							assert.equal(reused._id, edited._id);
 							assert.deepEqual(reused.files, edited.files);
-							const previous = projects.find(
-								project => project._id === earlier._id
-							);
-							assert.ok(previous);
-							assert.deepEqual(
-								Object.fromEntries(
-									Object.keys(earlier).map(key => [
-										key,
-										previous[key]
-									])
-								),
-								earlier
-							);
+							const capstoneContinuations = [];
+							for (const continuation of fixture.continuationItems ??
+								[]) {
+								catalog = true;
+								const action = await courseAction(
+									page,
+									origin,
+									fixture,
+									continuation.itemId,
+									role,
+									continuation.moduleId
+								);
+								assert.equal(
+									new URL(
+										action.href,
+										origin
+									).searchParams.get("projectKey"),
+									key
+								);
+								catalog = false;
+								const beforeContinuation = requests.length;
+								await page
+									.locator(
+										`a[href=${JSON.stringify(action.href)}]`
+									)
+									.click();
+								await page.waitForSelector(".cm-content");
+								assert.equal(
+									await page.$(
+										"[data-testid='ide-route-import-confirm']"
+									),
+									null
+								);
+								assert.equal(
+									requests.length,
+									beforeContinuation
+								);
+								const continuationProject = (
+									await savedProjects(page)
+								).find(
+									project => project.courseProjectKey === key
+								);
+								assert.equal(
+									continuationProject._id,
+									edited._id
+								);
+								assert.deepEqual(
+									continuationProject.files,
+									edited.files
+								);
+								capstoneContinuations.push({
+									...continuation,
+									savedProjectID: continuationProject._id,
+									key: new URL(
+										action.href,
+										origin
+									).searchParams.get("projectKey"),
+									fileHashes: continuationProject.files.map(
+										file => ({
+											name: file.name,
+											sha256: digest(file.content)
+										})
+									),
+									additionalSourceRequests:
+										requests.length - beforeContinuation
+								});
+							}
+							projects = await savedProjects(page);
+							for (const legacy of earlierProjects) {
+								const previous = projects.find(
+									project => project._id === legacy._id
+								);
+								assert.ok(previous);
+								assert.deepEqual(
+									Object.fromEntries(
+										Object.keys(legacy).map(key => [
+											key,
+											previous[key]
+										])
+									),
+									legacy
+								);
+							}
 							assert.equal(
 								projects.filter(
 									project => project.courseProjectKey === key
@@ -621,6 +728,10 @@ nodeTest(
 									fixture.notebookItemId
 								),
 								reopenedSameAttempt: true,
+								capstoneActionsReused:
+									capstoneContinuations.length,
+								capstoneContinuations,
+								legacyProjectsPreserved: earlierProjects.length,
 								previousWorkPreserved: true,
 								nativeInstructions: true,
 								remoteWrites

@@ -67,9 +67,33 @@ export const networkNamingPacks = [
 	}
 ] as const;
 
+export const networkTopologySourceRevision =
+	"8ede2290a77f4974d8efebe5df6bdd2d38de0733";
+export const networkTopologyPacks = [
+	{
+		pack: "NS6-Router-NAT-Topology-Lab",
+		revision: networkTopologySourceRevision,
+		roleFiles: [
+			"network-notes.md",
+			"create_nat_lab.sh",
+			"lab-rules.sh",
+			"lab_runtime.py"
+		],
+		coreItemId:
+			"network-systems-unit-7-linux-interface-and-route-management-curriculum-project-simulate-a-router-and-nat-lab-in-a-disposable-linux-topology",
+		notebookItemId:
+			"network-systems-unit-7-linux-interface-and-route-management-supplemental-operations-notebook-linux-interface-and-route-management",
+		continuationItemIds: [
+			"network-systems-unit-12-secure-exposure-of-services-curriculum-project-pass-validate-the-nat-and-exposure-topology-from-outside",
+			"network-systems-unit-12-secure-exposure-of-services-supplemental-operations-notebook-secure-exposure-of-services"
+		]
+	}
+] as const;
+
 export const networkVerifiedPacks = [
 	...networkFoundationPacks,
-	...networkNamingPacks
+	...networkNamingPacks,
+	...networkTopologyPacks
 ] as const;
 
 export function networkCourseResource(url: string) {
@@ -127,7 +151,9 @@ export function networkCourseProjectKey(
 		courseID === "network-systems" ? networkCourseResource(url) : null;
 	if (!selected) return `${courseID}:${itemID}:${role}`;
 	const shared =
-		itemID === selected.definition.notebookItemId
+		itemID === selected.definition.notebookItemId ||
+		("continuationItemIds" in selected.definition &&
+			selected.definition.continuationItemIds.includes(itemID))
 			? selected.definition.coreItemId
 			: itemID;
 	return `${courseID}:${shared}:${role}:native-network`;
