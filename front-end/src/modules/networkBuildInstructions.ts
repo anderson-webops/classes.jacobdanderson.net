@@ -5,6 +5,7 @@ export function networkBuildInstructions(files: PythonIdeFile[], url: string) {
 	const selected = networkCourseResource(url);
 	if (!selected) return null;
 	const { role, definition } = selected;
+	const capstone = definition.pack === "NS-03-network-systems-lab-17";
 	const topology = definition.pack === "NS6-Router-NAT-Topology-Lab";
 	const capture = definition.pack === "NS5-Tcpdump-HTTP-Capture";
 	const firewall = definition.pack === "NS3-UFW-Web-Server-Policy";
@@ -37,7 +38,7 @@ export function networkBuildInstructions(files: PythonIdeFile[], url: string) {
 			"Repeat with python3 main.py --lookup 127.0.0.1. Compare resolver families, actual listener ownership and the IPv6 probe. The IPv6 documentation-prefix table is a separate calculation, not proof of DNS or internet reachability."
 	};
 	const lines =
-		topology || capture || firewall || linkRouting
+		topology || capture || firewall || linkRouting || capstone
 			? [
 					`Save and download the ZIP. Extract it in an owned disposable Linux VM with root access and the tools listed in README.md. This kernel lab requires ${capture ? "an owned network namespace" : "network and mount namespaces"}.`,
 					"The browser edits and saves the source and notebook. Run the selected real network experiment in that external VM; the browser cannot perform these Linux kernel operations."
@@ -60,6 +61,19 @@ export function networkBuildInstructions(files: PythonIdeFile[], url: string) {
 		return [
 			...lines,
 			"The selected lab is incomplete. Restore all required role files and README.md before following the guide."
+		];
+	}
+
+	if (capstone) {
+		return [
+			...lines,
+			`Read README.md, then cd ${
+				role
+			}. Keep main.py, capstone_lab.py, case.json, network-notes.md and edge-cases.md together. Run sudo python3 main.py --output ./first-observation in that disposable Linux VM. Python3.10+, iproute2, iptables, util-linux, curl, dig, tcpdump and dnsmasq are required.`,
+			"The starter contains two deliberate case.json faults. Preserve the first failed attempt, correct only the IPv4 route and use --output ./route-corrected, then correct the loopback upstream port and use --output ./both-corrected. Every output folder must be new.",
+			"Repeat with sudo python3 main.py --alternate --output ./alternate-observation. Match actual A/AAAA answers to both family destinations, route and listener evidence, HTTP status and response token, denied controls and the bounded capture.pcap. Preserve both independent first-failing-layer diagnoses.",
+			"Check allWorkersReaped, the empty remaining namespace list and the actual parent before/after comparison in receipt.json. Keep raw evidence and limits in network-notes.md and edge-cases.md. The Guided Example reopens the matching core project; the reference and optional challenge have separate saved attempts.",
+			"Python programming is optional. The required task is case configuration, predictions, real Linux observations and a complete operations runbook. Keep the supplied fixture unchanged."
 		];
 	}
 	if (linkRouting) {

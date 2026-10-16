@@ -2380,3 +2380,35 @@ real core/worksheet profiles, 31 general ZIPs, sixteen exact/edited core ZIPs
 and 28 native compiler proofs. The broader all-77-course/Juni/Zoom audit and
 36 optional Assembly generic contexts remain open. Server access and
 deployment remain deferred.
+
+## Routed Network operations capstone site workflow
+
+The required Lab 17 capstone now uses immutable source
+`6aea0988ea51499a3225faf694ed3c3b48f9377a`, accepted in Network Systems
+review 15. The source investigation replaces the unrelated port-list program
+with a disposable dual-stack client/router/server fixture, explicit fictional
+DNS, loopback backend, client-facing proxy, least-exposure policy, bounded
+packet capture and two independent configuration faults. Source acceptance
+includes reference and independently completed default/alternate profiles,
+route-only correction, controlled regressions, actual interruption and cleanup.
+
+The site retains every published capstone identity. Its complete neutral guide
+supports the existing eight-to-twelve-session pacing, independent predictions
+and a guided review of the same evidence. The existing Guided Example opens
+the same saved core attempt. The reference and optional challenge remain
+separate. Each selected role imports five source/configuration/evidence files
+and the shared guide after consent. Only the precise role-local case.json
+filename is added to both native text-path policies.
+
+Root lint and type checks pass, alongside 295 targeted front-end checks and
+184 project-route API checks. These cover exact imports, notebook and configuration saves,
+reopening, role metadata, selected JSON, ZIP bytes and both API owner types.
+Hosted validation additionally runs the unchanged pinned native verifier
+against the actual browser-exported roles and retains packet, process and
+cleanup evidence. Current-head hosted acceptance remains pending. A successful
+fixture run does not complete the runbook or establish public activation.
+
+The full 77-course/Juni/Zoom audit remains active. The other 29 known generic
+Network source pairs and 36 optional Assembly contexts still require review;
+the capstone's separate optional transfer/extension kits are included in that
+remaining Network work. Native-server access and deployment remain deferred.

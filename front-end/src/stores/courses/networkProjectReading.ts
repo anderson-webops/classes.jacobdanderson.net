@@ -2,21 +2,22 @@ import type { RawCourse } from "./types";
 import namingReading2 from "../../assets/course-guides/network-addresses-families.md?raw";
 import namingReading1 from "../../assets/course-guides/network-addresses-transfer.md?raw";
 import namingReading0 from "../../assets/course-guides/network-addresses.md?raw";
-
 import applicationReading2 from "../../assets/course-guides/network-application-boundaries.md?raw";
+
 import applicationReading1 from "../../assets/course-guides/network-application-conditions.md?raw";
 import applicationReading0 from "../../assets/course-guides/network-application-responses.md?raw";
-
 import firewallReading from "../../assets/course-guides/network-firewall-policy.md?raw";
+
 import captureReading from "../../assets/course-guides/network-http-capture.md?raw";
 import ipv6Reading0 from "../../assets/course-guides/network-ipv6-diagnostics.md?raw";
-
 import ipv6Reading2 from "../../assets/course-guides/network-ipv6-family-extension.md?raw";
+
 import ipv6Reading1 from "../../assets/course-guides/network-ipv6-prefix-transfer.md?raw";
 import linkRoutingReading2 from "../../assets/course-guides/network-link-routing-mapping.md?raw";
 import linkRoutingReading0 from "../../assets/course-guides/network-link-routing-observations.md?raw";
 import linkRoutingReading1 from "../../assets/course-guides/network-link-routing-paths.md?raw";
 import listenerReading from "../../assets/course-guides/network-listening-services.md?raw";
+import capstoneReading from "../../assets/course-guides/network-operations-capstone.md?raw";
 import reachabilityReading from "../../assets/course-guides/network-reachability.md?raw";
 import resolutionReading from "../../assets/course-guides/network-resolution-comparison.md?raw";
 import topologyReading from "../../assets/course-guides/network-routing-exposure.md?raw";
@@ -28,6 +29,7 @@ import {
 } from "../../modules/networkProjectResources";
 
 const readings: Record<string, string> = {
+	"NS-03-network-systems-lab-17": capstoneReading,
 	"NS-07-unit-3-switches-routers-nat-and-the-internet-edge":
 		linkRoutingReading0,
 	"NS-07-unit-3-switches-routers-nat-and-the-internet-edge-supplemental-2":
