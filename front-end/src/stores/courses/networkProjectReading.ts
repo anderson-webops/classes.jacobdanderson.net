@@ -81,7 +81,7 @@ Opening this notebook reopens the matching core project and keeps the same saved
 
 ### Predict the policy boundary
 
-Record why an allowed request through 10.10.0.1:18080 should reach the mapped service while a fresh direct request to 10.20.0.2:8080 should be blocked. Separate the original destination, translated destination and return traffic. Explain why established replies need their own allowance and why a listening socket alone proves neither policy outcome.
+Predict success for an allowed request through 10.10.0.1:18080 and denial for a fresh direct request to 10.20.0.2:8080. Separate the original destination, translated destination and return traffic. Explain why established replies need their own allowance and why a listening socket alone proves neither policy outcome.
 
 ### Observe, compare and review
 
