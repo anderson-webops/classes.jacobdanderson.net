@@ -56,8 +56,29 @@ export function withNetworkProjectReadings(
 				"For a guided walkthrough"
 			)
 			.trim();
-		const topologyContinuation =
-			"Continue the existing Unit7 router project. Opening this notebook reopens the matching core project and keeps the same saved Unit7 attempt. Unit7 requires the three routing/SNAT/DNAT shell cases. Unit12 adds the fourth filter case and --exposure-policy, using actual policy/rule counters, fresh mapped/direct requests and restoration as evidence. Keep both reports, predictions and cleanup in network-notes.md. Python programming is optional; the prewritten apparatus stays unchanged. Follow the complete guide on the core card and in README.md. This is an isolated IPv4 lab, with no claim of public Internet reachability.";
+		const topologyContinuation = exposure
+			? `## Secure exposure: continue the existing router attempt
+
+Opening this notebook reopens the matching core project and keeps the same saved Unit7 attempt. The routing, forwarding and translation cases remain prerequisites. The additional Unit12 task is the fourth shell case: a stateful forwarding policy, selected with --exposure-policy in the disposable Linux VM.
+
+### Predict the policy boundary
+
+Record why an allowed request through 10.10.0.1:18080 should reach the mapped service while a fresh direct request to 10.20.0.2:8080 should be blocked. Separate the original destination, translated destination and return traffic. Explain why established replies need their own allowance and why a listening socket alone proves neither policy outcome.
+
+### Observe, compare and review
+
+Keep the earlier routing report, the edited filter case, both fresh request outcomes and actual forwarding-rule counters in network-notes.md. Compare the blocked direct request with a successful direct request after the owned policy is restored. Check that routes, translation rules and the server remain available during that comparison. Record interruption cleanup as a separate outcome. The prewritten Python apparatus stays unchanged; programming it is optional. Review the predictions against the retained evidence independently or in a guided walkthrough before completing this capstone pass. Follow the full core-card guide and imported README.md for commands and expected stages.`
+			: `## Routing and translation: keep an operations notebook
+
+Opening this notebook reopens the matching core project and keeps the same saved Unit7 attempt. Use the three routing/SNAT/DNAT shell cases in the owned disposable IPv4 topology. The notebook records observations from that project; it is not another implementation assignment.
+
+### Predict and trace
+
+Before running each stage, draw the client, router and service interfaces. Record the client's next hop, the forwarding decision and the service's return route. Predict the source address seen by the server before and after source translation. For destination translation, distinguish the address requested by the client from the actual listening endpoint.
+
+### Observe, explain and review
+
+Keep each prediction beside actual command output, the measured HTTP result and the supporting route or rule in network-notes.md. Compare forwarding-off with routed traffic, then compare the routed, translated and mapping-removed stages. A successful request is evidence for that particular path; it does not establish public Internet reachability. Record cleanup and explain any mismatch before revising the prediction. Review the completed trace independently or use it to pace a guided walkthrough. Python programming is optional; the prewritten apparatus stays unchanged. Follow the full core-card guide and imported README.md for execution. Unit12 later continues this saved attempt with the fourth filter case and --exposure-policy.`;
 		return {
 			...item,
 			projectLink,
