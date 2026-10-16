@@ -25,6 +25,9 @@ import setupArgumentsReading from "../../assets/course-guides/network-setup-argu
 import setupContextReading from "../../assets/course-guides/network-setup-context.md?raw";
 import setupReading from "../../assets/course-guides/network-setup.md?raw";
 
+import transportTcpReading from "../../assets/course-guides/network-transport-tcp.md?raw";
+import transportUdpReading from "../../assets/course-guides/network-transport-udp.md?raw";
+
 import transportReading from "../../assets/course-guides/network-transport.md?raw";
 import {
 	networkCourseResource,
@@ -32,6 +35,11 @@ import {
 } from "../../modules/networkProjectResources";
 
 const readings: Record<string, string> = {
+	"NS-03-unit-1-the-network-stack-in-plain-english-supplemental-2":
+		transportTcpReading,
+	"NS-04-unit-1-the-network-stack-in-plain-english-supplemental-3":
+		transportUdpReading,
+
 	"NS-01-ns0-setup-and-tooling-supplemental-2": setupContextReading,
 	"NS-02-ns0-setup-and-tooling-supplemental-3": setupArgumentsReading,
 	"NS-03-network-systems-lab-17": capstoneReading,

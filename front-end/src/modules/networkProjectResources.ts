@@ -359,6 +359,39 @@ export const networkSetupPacks = [
 	}
 ] as const;
 
+export const networkTransportSourceRevision =
+	"1b2a27334e14fef20cefa9f03a7c3e385543c941";
+export const networkTransportPacks = [
+	{
+		pack: "NS-03-unit-1-the-network-stack-in-plain-english-supplemental-2",
+		revision: networkTransportSourceRevision,
+		roleFiles: [
+			"network-notes.md",
+			"main.py",
+			"transport_lab.py",
+			"case.json",
+			"edge-cases.md"
+		],
+		coreItemId:
+			"network-systems-unit-1-the-network-stack-in-plain-english-supplemental-network-stack-transfer-practice",
+		notebookItemId: undefined
+	},
+	{
+		pack: "NS-04-unit-1-the-network-stack-in-plain-english-supplemental-3",
+		revision: networkTransportSourceRevision,
+		roleFiles: [
+			"network-notes.md",
+			"main.py",
+			"transport_lab.py",
+			"case.json",
+			"edge-cases.md"
+		],
+		coreItemId:
+			"network-systems-unit-1-the-network-stack-in-plain-english-supplemental-network-stack-extension-practice",
+		notebookItemId: undefined
+	}
+] as const;
+
 export const networkVerifiedPacks = [
 	...networkFoundationPacks,
 	...networkNamingPacks,
@@ -372,7 +405,8 @@ export const networkVerifiedPacks = [
 	...networkApplicationPacks,
 	...networkLinkRoutingPacks,
 	...networkCapstonePacks,
-	...networkSetupPacks
+	...networkSetupPacks,
+	...networkTransportPacks
 ] as const;
 
 export function networkCourseResource(url: string) {

@@ -10,6 +10,13 @@ export function networkBuildInstructions(files: PythonIdeFile[], url: string) {
 	const setupArguments =
 		definition.pack === "NS-02-ns0-setup-and-tooling-supplemental-3";
 	const setup = setupContext || setupArguments;
+	const transportTcp =
+		definition.pack ===
+		"NS-03-unit-1-the-network-stack-in-plain-english-supplemental-2";
+	const transportUdp =
+		definition.pack ===
+		"NS-04-unit-1-the-network-stack-in-plain-english-supplemental-3";
+	const transport = transportTcp || transportUdp;
 	const capstone = definition.pack === "NS-03-network-systems-lab-17";
 	const topology = definition.pack === "NS6-Router-NAT-Topology-Lab";
 	const capture = definition.pack === "NS5-Tcpdump-HTTP-Capture";
@@ -73,6 +80,18 @@ export function networkBuildInstructions(files: PythonIdeFile[], url: string) {
 		];
 	}
 
+	if (transport) {
+		return [
+			...lines,
+			`Read README.md, then cd ${role}. Keep main.py, transport_lab.py, case.json, network-notes.md and edge-cases.md together. Run python3 main.py --report first-observation.json using an ordinary non-root Linux account and a fresh report filename.`,
+			transportTcp
+				? "Predict how a one-byte first read relates to a four-byte length prefix. Compare firstReadHex, all readCalls, wireHex, applicationInputHex, EOF and decoded records. Change only the case.json framing setting after retaining the first observation; length counts UTF-8 bytes rather than visible characters. Socket reads and send calls do not establish packet boundaries."
+				: "Draw the owned UDP queue before and after the diagnostic receive. Match its requested flags, returned truncation flag and prefix to subsequent consumer reads. Change only probe_behavior after retaining the consuming baseline. A truncated peek can leave the complete datagram available; the earlier consuming diagnostic accounts for the missing consumer record.",
+			"Use python3 main.py --report corrected-observation.json after the case edit, then predict and run python3 main.py --alternate --report alternate-observation.json. Retain separate reports and the actual endpoint, PID, thread and raw byte observations for each trial.",
+			"Check allSocketsClosed, allThreadsJoined, sourceUnchanged and parentUnchanged. Optional strace evidence observes application/kernel calls in this owned IPv4 loopback trial; it is not a packet capture or evidence of remote reachability.",
+			"Python programming is optional. These optional activities have distinct questions after the required Unit 1 transport project. The case configuration, actual observations and complete notebook explanation are their deliverables. Keep earlier work and separate learner/reference attempts."
+		];
+	}
 	if (setup) {
 		return [
 			...lines,
