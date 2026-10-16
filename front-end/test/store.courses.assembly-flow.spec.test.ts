@@ -17,8 +17,10 @@ const EXPECTED_PRIMARY_SEQUENCE = [
 	"Unit 12: Security and Reliability Visibility"
 ];
 
-const REQUIRED_TRACE_ID =
-	"assembly-unit-1-machine-model-and-toolchain-supplemental-register-trace-worksheet-machine-model-and-toolchain";
+const REQUIRED_TRACE_IDS = [
+	"assembly-unit-1-machine-model-and-toolchain-supplemental-register-trace-worksheet-machine-model-and-toolchain",
+	"assembly-unit-3-arithmetic-and-logic-supplemental-register-trace-worksheet-arithmetic-and-logic"
+];
 
 function requireModule(title: string) {
 	const module = assemblyCourse.modules.find(
@@ -52,7 +54,7 @@ describe("Assembly learner flow", () => {
 				module.title
 			).toBe(true);
 			for (const item of module.supplementalProjects) {
-				if (item.id === REQUIRED_TRACE_ID) {
+				if (REQUIRED_TRACE_IDS.includes(item.id ?? "")) {
 					const core = module.curriculum.find(candidate =>
 						candidate.title.startsWith("Core Project:")
 					)!;
@@ -76,7 +78,7 @@ describe("Assembly learner flow", () => {
 				.flatMap(module => module.supplementalProjects)
 				.filter(item => item.learningPath === "core")
 				.map(item => item.id)
-		).toEqual([REQUIRED_TRACE_ID]);
+		).toEqual(REQUIRED_TRACE_IDS);
 	});
 
 	it("moves architecture comparisons and repeat studios out of the required path", () => {
@@ -98,8 +100,8 @@ describe("Assembly learner flow", () => {
 			.map(item => `${item.title}\n${item.content}`)
 			.join("\n");
 
-		// Four short Unit 1 concept cards become one complete concept reading.
-		expect(curriculumCount).toBe(59);
+		// Units 1 and 3 each consolidate four short cards into one complete reading.
+		expect(curriculumCount).toBe(56);
 		expect(optionCount).toBe(68);
 		expect(archive.supplementalProjects).toHaveLength(29);
 		expect(archiveText).toContain("ASM13 Expansion Ideas and Next Steps");

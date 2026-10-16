@@ -1,4 +1,9 @@
 import type { RawCourse } from "./types";
+import {
+	assemblyArithmeticConceptReading,
+	assemblyArithmeticProjectReading,
+	assemblyArithmeticTraceReading
+} from "./assemblyArithmeticProjectReading";
 import { assemblyArrayProjectReading } from "./assemblyArrayProjectReading";
 import { assemblyCalculatorProjectReading } from "./assemblyCalculatorProjectReading";
 import { assemblyCompilerProjectReading } from "./assemblyCompilerProjectReading";
@@ -226,48 +231,35 @@ const assemblySourceCourse: RawCourse = {
 			title: "Unit 3: Arithmetic and Logic",
 			curriculum: [
 				{
-					title: "add, sub, imul, and idiv",
-					content:
-						"Arithmetic instructions change explicit machine state rather than acting like magical one-line operators. `add` and `sub` mostly write the named destination, while multiplication and signed division introduce implicit register use, setup requirements, and result locations that must be traced before the answer is trusted."
+					title: "Arithmetic and Logic Core Concepts",
+					id: "assembly-unit-3-arithmetic-and-logic-curriculum-arithmetic-and-logic-core-concepts",
+					preserveInstructions: true,
+					content: assemblyArithmeticConceptReading
 				},
 				{
-					title: "and, or, xor, test, and Condition Checks",
-					content:
-						"Use the logic instructions to connect bit operations to control flow. `test` and `xor` are especially practical because they show up constantly in zero checks, mask checks, and quick register clearing patterns."
-				},
-				{
-					title: "Flags, Condition Codes, and Arithmetic Visibility",
-					content:
-						"The zero flag, sign flag, carry flag, and overflow flag are observable state produced by arithmetic and logic instructions. A complete explanation names not only the numeric result, but also which flags changed, why they changed, and how a later conditional branch could use that state."
-				},
-				{
-					title: "C-to-Assembly Compare: Arithmetic Helper",
-					content:
-						"Compare one arithmetic C function with the instruction sequence the compiler produced. Inspect the generated assembly, then explain why the compiler chose that sequence instead of a more literal source-level translation."
-				},
-				{
-					title: "Unit 3: Arithmetic and Logic: Core Project",
-					content: buildProjectGuidance({
-						courseFamily: "assembly",
-						moduleTitle: "Unit 3: Arithmetic and Logic",
-						projectKind: "core",
-						hasReference: true
-					}),
+					title: "Core Project: Arithmetic and Logic",
+					id: "assembly-unit-3-arithmetic-and-logic-curriculum-core-project-arithmetic-and-logic",
+					preserveInstructions: true,
+					ideImport: true,
+					content: assemblyArithmeticProjectReading,
 					projectLink:
-						"https://github.com/instruction-material/Assembly/tree/main/ASM-06-unit-3-arithmetic-and-logic/starter",
+						"https://github.com/instruction-material/Assembly/tree/0e6243fe594793b931117133c8dc070983af1617/ASM-06-unit-3-arithmetic-and-logic/starter",
 					solutionLink:
-						"https://github.com/instruction-material/Assembly/tree/main/ASM-06-unit-3-arithmetic-and-logic/solution"
+						"https://github.com/instruction-material/Assembly/tree/0e6243fe594793b931117133c8dc070983af1617/ASM-06-unit-3-arithmetic-and-logic/solution"
 				}
 			],
 			supplementalProjects: [
 				{
 					title: "Register-Trace Worksheet: Arithmetic and Logic",
-					content:
-						"Use a focused trace worksheet for arithmetic and logic that records the key registers, flag changes, memory addresses, and one plain-language explanation of why the control flow moved the way it did. Focus especially on flag changes, implicit register use, and the difference between value changes and status changes so the worksheet narrates instruction flow rather than only skimming mnemonics. A complete entry records the instruction address, the value before the instruction, the value after the instruction, and the evidence that explains the next branch, call, or return.",
+					id: "assembly-unit-3-arithmetic-and-logic-supplemental-register-trace-worksheet-arithmetic-and-logic",
+					preserveInstructions: true,
+					learningPath: "core",
+					ideImport: true,
+					content: assemblyArithmeticTraceReading,
 					projectLink:
-						"https://github.com/instruction-material/Assembly/tree/main/ASM-06-unit-3-arithmetic-and-logic/starter",
+						"https://github.com/instruction-material/Assembly/tree/0e6243fe594793b931117133c8dc070983af1617/ASM-06-unit-3-arithmetic-and-logic/starter",
 					solutionLink:
-						"https://github.com/instruction-material/Assembly/tree/main/ASM-06-unit-3-arithmetic-and-logic/solution"
+						"https://github.com/instruction-material/Assembly/tree/0e6243fe594793b931117133c8dc070983af1617/ASM-06-unit-3-arithmetic-and-logic/solution"
 				},
 				{
 					title: "Flag Logic Transfer Practice",

@@ -135,6 +135,51 @@ describe("Python project routes", () => {
 		}
 	);
 
+	it.each(["starter", "solution"] as const)(
+		"stores the exact arithmetic %s role and trace for both owner types",
+		async role => {
+			const fixture = JSON.parse(
+				readFileSync(
+					resolve(
+						process.cwd(),
+						"../test/fixtures/assembly-arithmetic-contracts.json"
+					),
+					"utf8"
+				)
+			);
+			const files = Object.entries(
+				fixture.files as Record<string, { content: string }>
+			)
+				.filter(
+					([path]) =>
+						path.startsWith(`${fixture.pack}/${role}/`) ||
+						path === `${fixture.pack}/README.md`
+				)
+				.map(([path, file]) => ({
+					name: path.slice(fixture.pack.length + 1),
+					content: file.content,
+					encoding: "text"
+				}));
+			expect(files).toHaveLength(11);
+			for (const owner of ["user", "course-code"] as const) {
+				await withPythonProjectRoute(async baseUrl => {
+					const activeFileName = `${role}/trace.md`;
+					const response = await postJson(baseUrl, {
+						mode: "assembly",
+						files,
+						activeFileName
+					});
+					expect(response.status).toBe(201);
+					const body = await response.json();
+					expect(body.project.mode).toBe("assembly");
+					expect(body.project.files).toEqual(files);
+					expect(body.project.activeFileName).toBe(activeFileName);
+				}, owner);
+			}
+			expect(modelMocks.pythonProjectCreate).toHaveBeenCalledTimes(2);
+		}
+	);
+
 	it.each([
 		"c",
 		"assembly",

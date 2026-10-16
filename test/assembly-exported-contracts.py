@@ -12,13 +12,13 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 parser = argparse.ArgumentParser()
-parser.add_argument("--project", choices=["opening", "calculator", "array", "string", "helper", "parser", "reverse", "stack", "compiler", "debug", "performance", "hardening", "records"], default="opening")
+parser.add_argument("--project", choices=["opening", "calculator", "array", "string", "helper", "parser", "reverse", "stack", "compiler", "debug", "performance", "hardening", "records", "arithmetic"], default="opening")
 parser.add_argument("--archives", type=Path, required=True)
 parser.add_argument("--cc", choices=["clang", "gcc"], required=True)
 parser.add_argument("--skip-debugger", action="store_true")
 parser.add_argument("--proof", type=Path, required=True)
 args = parser.parse_args()
-assert not (args.project in {"hardening", "records"} and args.skip_debugger), "Hardening and record acceptance require actual GDB traces"
+assert not (args.project in {"hardening", "records", "arithmetic"} and args.skip_debugger), "Hardening, record and arithmetic acceptance require actual GDB traces"
 fixture = json.loads((ROOT / ("test/fixtures/assembly-" + args.project + "-contracts.json")).read_text())
 args.proof.parent.mkdir(parents=True, exist_ok=True)
 
@@ -88,7 +88,12 @@ with tempfile.TemporaryDirectory(prefix="assembly-site-export-") as work:
     receipt["siteExportedFiles"] = hashes
     receipt["sourceRevision"] = fixture["revision"]
     args.proof.write_text(json.dumps(receipt, indent=2) + "\n")
-if args.project == "records":
+if args.project == "arithmetic":
+    assert len(receipt["actualDebuggerTraces"]) == 2
+    assert len(receipt["actualFaultDebuggerTraces"]) == 4
+    assert receipt["onlyRoutineDiffVerified"] and receipt["undefinedDivisionFlagsNotAsserted"]
+    summary = {"compiler": args.cc, "acceptedProfiles": len(receipt["acceptedProfiles"]), "nativeCases": sum(p["contractCases"] for p in receipt["acceptedProfiles"]), "independentCases": sum(p["independentCases"] for p in receipt["acceptedProfiles"]), "debugger": "accepted", "faultDebuggerTraces": len(receipt["actualFaultDebuggerTraces"]), "exactSiteExportedFiles": len(hashes)}
+elif args.project == "records":
     assert len(receipt["debuggerTraces"]) == 2
     assert len(receipt["artifactFlows"]) == 6
     summary = {"compiler": args.cc, "acceptedProfiles": len(receipt["acceptedProfiles"]), "nativeCases": sum(p["contractCases"] for p in receipt["acceptedProfiles"]), "debugger": "accepted", "artifactFlows": len(receipt["artifactFlows"]), "exactSiteExportedFiles": len(hashes)}

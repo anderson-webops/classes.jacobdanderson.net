@@ -50,7 +50,31 @@ export const assemblyHardeningTracePack =
 export const assemblyRecordRevision =
 	"2ded92a0103d3e518e08cc152a69428d748aafb7";
 export const assemblyRecordPack = "ASM-05-unit-1-machine-model-and-toolchain";
+export const assemblyArithmeticRevision =
+	"0e6243fe594793b931117133c8dc070983af1617";
+export const assemblyArithmeticPack = "ASM-06-unit-3-arithmetic-and-logic";
 export const assemblyVerifiedPacks = [
+	{
+		pack: assemblyArithmeticPack,
+		revision: assemblyArithmeticRevision,
+		coreItemId:
+			"assembly-unit-3-arithmetic-and-logic-curriculum-core-project-arithmetic-and-logic",
+		continuationItemIds: [
+			"assembly-unit-3-arithmetic-and-logic-supplemental-register-trace-worksheet-arithmetic-and-logic"
+		],
+		roleFiles: [
+			"routine.S",
+			"main.c",
+			"arithmetic.h",
+			"model.c",
+			"tests.c",
+			"abi_checks.S",
+			"fault.c",
+			"fault.S",
+			"CMakeLists.txt",
+			"trace.md"
+		]
+	},
 	{
 		pack: assemblyRecordPack,
 		revision: assemblyRecordRevision,

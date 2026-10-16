@@ -30,7 +30,8 @@ const fixtures = await Promise.all(
 		"assembly-debug-contracts.json",
 		"assembly-performance-contracts.json",
 		"assembly-hardening-contracts.json",
-		"assembly-records-contracts.json"
+		"assembly-records-contracts.json",
+		"assembly-arithmetic-contracts.json"
 	].map(async name =>
 		JSON.parse(
 			await readFile(
@@ -44,6 +45,7 @@ const hardening = fixtures.find(row => row.pack === "ASM-25-unit-12-security-and
 fixtures.push({ ...hardening, pack: "ASM-26-unit-12-security-and-reliability-visibility-supplemental-3", sourcePack: hardening.pack });
 let fixture = fixtures[0];
 const workflowDefinitions = {
+	"ASM-06-unit-3-arithmetic-and-logic": { primary: "routine.S", title: "Core Project: Arithmetic and Logic", lesson: "assembly-unit-3-arithmetic-and-logic-assembly-unit-3-arithmetic-and-logic-curriculum-core-project-arithmetic-and-logic", referenceToken: "591,123", starterToken: "ARITH_MUL" },
 	"ASM-05-unit-1-machine-model-and-toolchain": { primary: "routine.S", title: "Core Project: Machine Model and Toolchain", lesson: "assembly-unit-1-machine-model-and-toolchain-assembly-unit-1-machine-model-and-toolchain-curriculum-core-project-machine-model-and-toolchain", referenceToken: "196,609", starterToken: "RECORD_DECODE" },
 	"ASM-04-asm0-setup-and-tooling": {
 		primary: "routine.S",
@@ -102,8 +104,8 @@ const workflowDefinitions = {
 
 assert.equal(
 	fixtures.length,
-	14,
-	"All fourteen verified assignment workspaces require browser coverage"
+	15,
+	"All fifteen verified assignment workspaces require browser coverage"
 );
 assert.deepEqual(
 	fixtures.map(row => row.pack).sort(),
