@@ -53,7 +53,7 @@ export const assemblyRecordPack = "ASM-05-unit-1-machine-model-and-toolchain";
 export const assemblyArithmeticRevision =
 	"0e6243fe594793b931117133c8dc070983af1617";
 export const assemblyArithmeticPack = "ASM-06-unit-3-arithmetic-and-logic";
-export const assemblySetupRevision = "cc76e8c0977ae1b1e97eaa9f321f857a3e4e684f";
+export const assemblySetupRevision = "c6d1886bc119fc83073bdee57a460ae8eb447d9f";
 export const assemblySetupPacks = [
 	{
 		pack: "ASM-01-asm0-setup-and-tooling-supplemental-2",

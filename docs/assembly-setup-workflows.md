@@ -6,7 +6,7 @@ real failed link; preprocessing follows an unresolved macro through the selected
 build language and relocation. The required setup project stays unchanged.
 
 Full guides and all six role files come from accepted source
-`cc76e8c0977ae1b1e97eaa9f321f857a3e4e684f`. These optional packs explicitly use
+`c6d1886bc119fc83073bdee57a460ae8eb447d9f`. These optional packs explicitly use
 GNU AT&T source syntax and Intel disassembly notation. The browser edits and
 exports the files. Native Linux x86-64 tools perform compilation and execution.
 

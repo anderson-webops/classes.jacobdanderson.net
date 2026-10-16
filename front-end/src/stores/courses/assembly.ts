@@ -81,9 +81,9 @@ const assemblySourceCourse: RawCourse = {
 					ideImport: true,
 					content: setupSymbolsReading,
 					projectLink:
-						"https://github.com/instruction-material/Assembly/tree/cc76e8c0977ae1b1e97eaa9f321f857a3e4e684f/ASM-01-asm0-setup-and-tooling-supplemental-2/starter",
+						"https://github.com/instruction-material/Assembly/tree/c6d1886bc119fc83073bdee57a460ae8eb447d9f/ASM-01-asm0-setup-and-tooling-supplemental-2/starter",
 					solutionLink:
-						"https://github.com/instruction-material/Assembly/tree/cc76e8c0977ae1b1e97eaa9f321f857a3e4e684f/ASM-01-asm0-setup-and-tooling-supplemental-2/solution"
+						"https://github.com/instruction-material/Assembly/tree/c6d1886bc119fc83073bdee57a460ae8eb447d9f/ASM-01-asm0-setup-and-tooling-supplemental-2/solution"
 				},
 				{
 					title: "Assembly Preprocessing Extension Investigation",
@@ -92,9 +92,9 @@ const assemblySourceCourse: RawCourse = {
 					ideImport: true,
 					content: setupPreprocessReading,
 					projectLink:
-						"https://github.com/instruction-material/Assembly/tree/cc76e8c0977ae1b1e97eaa9f321f857a3e4e684f/ASM-02-asm0-setup-and-tooling-supplemental-3/starter",
+						"https://github.com/instruction-material/Assembly/tree/c6d1886bc119fc83073bdee57a460ae8eb447d9f/ASM-02-asm0-setup-and-tooling-supplemental-3/starter",
 					solutionLink:
-						"https://github.com/instruction-material/Assembly/tree/cc76e8c0977ae1b1e97eaa9f321f857a3e4e684f/ASM-02-asm0-setup-and-tooling-supplemental-3/solution"
+						"https://github.com/instruction-material/Assembly/tree/c6d1886bc119fc83073bdee57a460ae8eb447d9f/ASM-02-asm0-setup-and-tooling-supplemental-3/solution"
 				}
 			]
 		},

@@ -9736,7 +9736,12 @@ describe("course text quality normalization", () => {
 		expect(corpus).toContain(
 			"Instruction-level debugging treats a single machine instruction as the smallest meaningful step."
 		);
-		expect(corpus).toContain("Assembly Setup Transfer Practice");
+		expect(corpus).toContain("Symbol Binding Transfer Investigation");
+		expect(corpus).toContain(
+			"Assembly Preprocessing Extension Investigation"
+		);
+		expect(corpus).toContain(".globl lab_answer");
+		expect(corpus).toContain("LAB_ASM_LANGUAGE");
 		expect(corpus).toContain("Register Flow Transfer Practice");
 		expect(corpus).toContain("Assembly Lab 15: Stack Trace Studio");
 		expect(corpus).toContain("Assembly Lab 16: ABI Integration Studio");
