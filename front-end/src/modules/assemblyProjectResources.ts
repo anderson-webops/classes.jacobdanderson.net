@@ -47,7 +47,28 @@ export const assemblyHardeningPack =
 	"ASM-25-unit-12-security-and-reliability-visibility-supplemental-2";
 export const assemblyHardeningTracePack =
 	"ASM-26-unit-12-security-and-reliability-visibility-supplemental-3";
+export const assemblyRecordRevision =
+	"2ded92a0103d3e518e08cc152a69428d748aafb7";
+export const assemblyRecordPack = "ASM-05-unit-1-machine-model-and-toolchain";
 export const assemblyVerifiedPacks = [
+	{
+		pack: assemblyRecordPack,
+		revision: assemblyRecordRevision,
+		coreItemId:
+			"assembly-unit-1-machine-model-and-toolchain-curriculum-core-project-machine-model-and-toolchain",
+		continuationItemIds: [
+			"assembly-unit-1-machine-model-and-toolchain-supplemental-register-trace-worksheet-machine-model-and-toolchain"
+		],
+		roleFiles: [
+			"routine.S",
+			"main.c",
+			"record.h",
+			"abi_checks.S",
+			"tests.c",
+			"CMakeLists.txt",
+			"trace.md"
+		]
+	},
 	{
 		pack: assemblyOpeningPack,
 		revision: assemblySourceRevision,
@@ -241,7 +262,16 @@ export function assemblyCourseProjectKey(
 	role: "starter" | "reference",
 	url: string
 ) {
-	const base = `${courseID}:${itemID}:${role}`;
+	const selected = assemblyCourseResource(url);
+	const definition = selected?.definition;
+	const savedItemID =
+		courseID === "assembly" &&
+		definition &&
+		"continuationItemIds" in definition &&
+		(definition.continuationItemIds as readonly string[]).includes(itemID)
+			? definition.coreItemId
+			: itemID;
+	const base = `${courseID}:${savedItemID}:${role}`;
 	return courseID === "assembly" && assemblyCourseResource(url)
 		? `${base}:native-assembly`
 		: base;

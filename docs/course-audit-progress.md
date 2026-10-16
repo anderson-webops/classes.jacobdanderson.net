@@ -2315,3 +2315,38 @@ Native source acceptance covers both compilers, three controlled profiles at bot
   actual site exports remains required before merge. The broader 77-course/Juni/Zoom audit and 36
   remaining generic Linux references are still open; this is not public
   activation.
+
+## Assembly Unit 1 record and toolchain integration
+
+The Unit 1 source pin is `2ded92a0103d3e518e08cc152a69428d748aafb7`
+(Assembly review 15, merged with its exact tested tree retained). Both compiler
+jobs passed. Independent acceptance authenticated 25 source/support files,
+1,572,872 contract cases, four GDB traces, 12 object/link/load artifact trails,
+48 source compilation records and two deliberately rejected missing-definition
+links. The prior C/assembly behavior contracts and six-register ABI checks remain
+intact. The merged source branch has a verified recovery bundle and is retired.
+
+The course now supplies a full concept reading and project guide covering byte
+layout, sign/zero extension, symbols, relocation, linking, loading and explicit
+O0/O2 caller comparisons. Unit 9 optimizer analysis and Unit 11 measurement retain
+their distinct purposes. Existing progress identities are preserved. The required
+trace worksheet resumes the core project's saved code and evidence, while
+transfer and extension practice remain optional. Learner and reference roles
+retain separate attempts and visibility.
+
+Consent-based import selects seven role files and the shared complete README,
+all authenticated against the immutable Git source. The IDE supplies the native
+Linux x86-64 build, object inspection and debugger commands. Focused tests cover
+exact bytes, code/trace save and reopen, ZIP exports, prior-work preservation and
+both API owner types. A dedicated browser gate exercises the real core and
+worksheet course buttons for both roles at phone and desktop widths, alongside
+the existing Assembly matrix. Hosted browser and native execution of actual site
+exports remain pending for this integration. Runtime success does not complete
+the trace explanation.
+
+The broader audit remains open across all 77 courses, including Juni fidelity,
+classroom/individual purpose and the Zoom requirements. Assembly still has 37
+generic source contexts: Unit 3 Arithmetic and Logic is the remaining required
+core context, with 36 optional contexts also requiring review. This source change
+does not establish public activation. Native-server access and deployment remain
+deferred at the user's request.

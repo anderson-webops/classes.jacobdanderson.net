@@ -11,6 +11,11 @@ import { assemblyHelperProjectReading } from "./assemblyHelperProjectReading";
 import { assemblyOpeningProjectReading } from "./assemblyOpeningProjectReading";
 import { assemblyParserProjectReading } from "./assemblyParserProjectReading";
 import { assemblyPerformanceProjectReading } from "./assemblyPerformanceProjectReading";
+import {
+	assemblyRecordConceptReading,
+	assemblyRecordProjectReading,
+	assemblyRecordTraceReading
+} from "./assemblyRecordProjectReading";
 import { assemblyReverseProjectReading } from "./assemblyReverseProjectReading";
 import { assemblyStackProjectReading } from "./assemblyStackProjectReading";
 import { assemblyStringProjectReading } from "./assemblyStringProjectReading";
@@ -94,48 +99,35 @@ const assemblySourceCourse: RawCourse = {
 			title: "Unit 1: Machine Model and Toolchain",
 			curriculum: [
 				{
-					title: "Assembler, Linker, Object Files, and Executables",
-					content:
-						"The assembly pipeline is an artifact flow: source becomes object code, object files become a linked executable, and each stage leaves evidence that can be inspected. Symbols, relocation entries, and disassembly output belong in that flow before large hand-written assembly routines are introduced."
+					title: "Machine Model and Toolchain Core Concepts",
+					id: "assembly-unit-1-machine-model-and-toolchain-curriculum-machine-model-and-toolchain-core-concepts",
+					preserveInstructions: true,
+					content: assemblyRecordConceptReading
 				},
 				{
-					title: "Intel versus AT&T Syntax",
-					content:
-						"Explain operand ordering, immediate prefixes, register naming, and memory syntax differences between Intel and AT&T notation. The course writes Intel syntax, but the expected outcome is recognizing the same instruction in both forms so compiler output does not become unreadable."
-				},
-				{
-					title: "Disassembly Workflow and Read-Before-Write Discipline",
-					content:
-						"Start from reading before writing. Disassemble tiny programs, identify function boundaries, spot prologues and epilogues, and only then begin writing their own routines so assembly feels observable rather than mystical."
-				},
-				{
-					title: "C-to-Assembly Compare: Hello Function",
-					content:
-						"Start with a short C helper and its generated assembly before rewriting anything. Compile it with and without optimization, then identify the arguments, return value, and where the function begins and ends in the disassembly."
-				},
-				{
-					title: "Unit 1: Machine Model and Toolchain: Core Project",
-					content: buildProjectGuidance({
-						courseFamily: "assembly",
-						moduleTitle: "Unit 1: Machine Model and Toolchain",
-						projectKind: "core",
-						hasReference: true
-					}),
+					title: "Core Project: Machine Model and Toolchain",
+					id: "assembly-unit-1-machine-model-and-toolchain-curriculum-core-project-machine-model-and-toolchain",
+					preserveInstructions: true,
+					ideImport: true,
+					content: assemblyRecordProjectReading,
 					projectLink:
-						"https://github.com/instruction-material/Assembly/tree/main/ASM-05-unit-1-machine-model-and-toolchain/starter",
+						"https://github.com/instruction-material/Assembly/tree/2ded92a0103d3e518e08cc152a69428d748aafb7/ASM-05-unit-1-machine-model-and-toolchain/starter",
 					solutionLink:
-						"https://github.com/instruction-material/Assembly/tree/main/ASM-05-unit-1-machine-model-and-toolchain/solution"
+						"https://github.com/instruction-material/Assembly/tree/2ded92a0103d3e518e08cc152a69428d748aafb7/ASM-05-unit-1-machine-model-and-toolchain/solution"
 				}
 			],
 			supplementalProjects: [
 				{
 					title: "Register-Trace Worksheet: Machine Model and Toolchain",
-					content:
-						"Use a focused trace worksheet for machine model and toolchain that records the key registers, flag changes, memory addresses, and one plain-language explanation of why the control flow moved the way it did. Focus especially on source-to-object boundaries, symbol names, and how the disassembler reveals structure so the worksheet narrates instruction flow rather than only skimming mnemonics. A complete entry records the instruction address, the value before the instruction, the value after the instruction, and the evidence that explains the next branch, call, or return.",
+					id: "assembly-unit-1-machine-model-and-toolchain-supplemental-register-trace-worksheet-machine-model-and-toolchain",
+					preserveInstructions: true,
+					learningPath: "core",
+					ideImport: true,
+					content: assemblyRecordTraceReading,
 					projectLink:
-						"https://github.com/instruction-material/Assembly/tree/main/ASM-05-unit-1-machine-model-and-toolchain/starter",
+						"https://github.com/instruction-material/Assembly/tree/2ded92a0103d3e518e08cc152a69428d748aafb7/ASM-05-unit-1-machine-model-and-toolchain/starter",
 					solutionLink:
-						"https://github.com/instruction-material/Assembly/tree/main/ASM-05-unit-1-machine-model-and-toolchain/solution"
+						"https://github.com/instruction-material/Assembly/tree/2ded92a0103d3e518e08cc152a69428d748aafb7/ASM-05-unit-1-machine-model-and-toolchain/solution"
 				},
 				{
 					title: "Toolchain Trace Transfer Practice",
@@ -1450,7 +1442,8 @@ function decorateAssemblyModule(
 		curriculum,
 		supplementalProjects: module.supplementalProjects.map(item => ({
 			...item,
-			learningPath: assemblySupplementalPath(item.title)
+			learningPath:
+				item.learningPath ?? assemblySupplementalPath(item.title)
 		}))
 	};
 }
