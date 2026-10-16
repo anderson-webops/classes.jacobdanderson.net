@@ -245,13 +245,36 @@ const legacy = {
 	updatedAt: "2026-10-01T12:00:00.000Z"
 };
 const digest = value => createHash("sha256").update(value).digest("hex");
+const timeoutMs = 1_800_000;
 
 test(
 	"Linux confirmed imports, exact role exports, saved edits and shared notebook attempts",
-	// All 416 profiles need time for storage checks and browser cleanup.
-	{ timeout: 1_200_000 },
-	async () => {
+	// All 416 profiles retain their shared store and quota checks.
+	{ timeout: timeoutMs },
+	async t => {
 		let server, browser, context, page;
+		let cleanupPromise;
+		let outcome = "failed";
+		const taskId = process.env.CLASSES_FAMILY_TASK_ID
+			?? "linux-owned-labs-browser-ci";
+		const startedAt = new Date().toISOString();
+		const cleanup = () => {
+			cleanupPromise ??= (async () => {
+				await page?.close().catch(() => {});
+				await context?.close().catch(() => {});
+				await browser?.close();
+				await server?.close();
+			})();
+			return cleanupPromise;
+		};
+		t.signal.addEventListener("abort", () => {
+			void cleanup().catch(error => console.error(error));
+		}, { once: true });
+		console.log(JSON.stringify({
+			event: "start", taskId, cwd: process.cwd(),
+			command: process.argv, pid: process.pid, parentPid: process.ppid,
+			startedAt, timeoutMs
+		}));
 		const output
 			= process.env.LINUX_BROWSER_EXPORT_PROOF_DIR
 				?? "output/linux-exports";
@@ -785,6 +808,11 @@ test(
 								lessonReturn: true,
 								consentBeforeFetch: true
 							});
+							console.log(JSON.stringify({
+								event: "profile-complete", taskId,
+								pack: fixture.pack, role, width, theme,
+								completed: proof.length, expected: fixtures.length * 8
+							}));
 							if (
 								fixture.pack
 								=== "LS4-Apache-Virtual-Host-Compare"
@@ -986,10 +1014,12 @@ test(
 			assert.equal(storageEvidence.mirrorWriteFailure, "QuotaExceededError");
 			assert.ok(storageEvidence.mirrorProjectCount < storageEvidence.primaryProjectCount);
 			assert.ok(storageEvidence.failedMirrorUnchanged && storageEvidence.primaryUnchanged && storageEvidence.priorAttemptUnchanged);
+			t.signal.throwIfAborted();
 			await writeFile(
 				join(output, "browser-proof.json"),
 				JSON.stringify({ profiles: proof, courseButtons, storageEvidence }, null, 2)
 			);
+			outcome = "passed";
 		}
 		catch (error) {
 			await writeFile(
@@ -1000,7 +1030,7 @@ test(
 					2
 				)
 			);
-			if (page) {
+			if (page && !page.isClosed()) {
 				await page.screenshot({ path: join(output, "failure.png") });
 				await writeFile(
 					join(output, "failure-state.json"),
@@ -1034,11 +1064,15 @@ test(
 			throw error;
 		}
 		finally {
-			await page?.close();
-			await context?.close();
-			await browser?.close();
-			if (server)
-				await new Promise(resolve => server.httpServer.close(resolve));
+			await cleanup();
+			console.log(JSON.stringify({
+				event: "end", taskId, cwd: process.cwd(),
+				command: process.argv, pid: process.pid, parentPid: process.ppid,
+				startedAt, endedAt: new Date().toISOString(), timeoutMs,
+				exitCode: outcome === "passed" && !t.signal.aborted ? 0 : 1,
+				childProcessGroupCleanup:
+					"pages, contexts, browser and owned preview server closed"
+			}));
 		}
 	}
 );
