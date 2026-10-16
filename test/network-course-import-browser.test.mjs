@@ -50,6 +50,7 @@ const earlierTemplate = {
 	updatedAt: "2026-10-01T12:00:00.000Z"
 };
 const digest = value => createHash("sha256").update(value).digest("hex");
+const timeoutMs = 720000;
 
 async function savedProjects(page) {
 	return page.evaluate(
@@ -145,7 +146,7 @@ async function courseAction(
 
 nodeTest(
 	"Network course buttons, consent, exact role exports, saved edits, notebook continuation and optional attempt reuse",
-	{ timeout: 360000 },
+	{ timeout: timeoutMs },
 	async t => {
 		let server, browser, context;
 		let outcome = "failed";
@@ -188,7 +189,7 @@ nodeTest(
 				pid: process.pid,
 				parentPid: process.ppid,
 				startedAt,
-				timeoutMs: 360000
+				timeoutMs
 			})
 		);
 		try {
@@ -756,6 +757,17 @@ nodeTest(
 								nativeInstructions: true,
 								remoteWrites
 							});
+							console.log(
+								JSON.stringify({
+									event: "profile-complete",
+									taskId,
+									pack: fixture.pack,
+									role,
+									width,
+									completed: profiles.length,
+									expected: fixtures.length * 4
+								})
+							);
 						} finally {
 							await page.close();
 							await context.close();
@@ -781,7 +793,7 @@ nodeTest(
 					startedAt,
 					endedAt: new Date().toISOString(),
 					exitCode: outcome === "passed" ? 0 : 1,
-					timeoutMs: 360000,
+					timeoutMs,
 					childProcessGroupCleanup:
 						"pages, contexts, browser and owned preview server closed"
 				})

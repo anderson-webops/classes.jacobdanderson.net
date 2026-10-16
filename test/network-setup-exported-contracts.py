@@ -19,7 +19,7 @@ def main():
     verifier_source = json.loads((root / "test/fixtures/network-setup-source-verifier.json").read_text())
     assert {fixture["revision"] for fixture in fixtures} == {verifier_source["revision"]}
     assert hashlib.sha256(verifier_source["content"].encode()).hexdigest() == verifier_source["sha256"]
-    proof = output / "native/network-setup-native.json"
+    proof = output / "setup-native/network-setup-native.json"
     proof.parent.mkdir(parents=True, exist_ok=True)
     comparisons, exports = 0, {}
     with tempfile.TemporaryDirectory(prefix="network-setup-site-export-") as temporary:
