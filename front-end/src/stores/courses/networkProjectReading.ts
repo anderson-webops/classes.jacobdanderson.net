@@ -21,7 +21,10 @@ import capstoneReading from "../../assets/course-guides/network-operations-capst
 import reachabilityReading from "../../assets/course-guides/network-reachability.md?raw";
 import resolutionReading from "../../assets/course-guides/network-resolution-comparison.md?raw";
 import topologyReading from "../../assets/course-guides/network-routing-exposure.md?raw";
+import setupArgumentsReading from "../../assets/course-guides/network-setup-arguments.md?raw";
+import setupContextReading from "../../assets/course-guides/network-setup-context.md?raw";
 import setupReading from "../../assets/course-guides/network-setup.md?raw";
+
 import transportReading from "../../assets/course-guides/network-transport.md?raw";
 import {
 	networkCourseResource,
@@ -29,6 +32,8 @@ import {
 } from "../../modules/networkProjectResources";
 
 const readings: Record<string, string> = {
+	"NS-01-ns0-setup-and-tooling-supplemental-2": setupContextReading,
+	"NS-02-ns0-setup-and-tooling-supplemental-3": setupArgumentsReading,
 	"NS-03-network-systems-lab-17": capstoneReading,
 	"NS-07-unit-3-switches-routers-nat-and-the-internet-edge":
 		linkRoutingReading0,

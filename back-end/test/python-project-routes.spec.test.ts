@@ -316,7 +316,8 @@ describe("Python project routes", () => {
 			"network-ipv6-contracts.json",
 			"network-application-contracts.json",
 			"network-link-routing-contracts.json",
-			"network-capstone-contracts.json"
+			"network-capstone-contracts.json",
+			"network-setup-contracts.json"
 		]
 			.flatMap(name =>
 				JSON.parse(
