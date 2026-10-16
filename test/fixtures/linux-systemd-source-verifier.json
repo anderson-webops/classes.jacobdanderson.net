@@ -1,5 +1,5 @@
 {
-  "revision": "80d1edc95b7152c55e2c000adda086c9cbadf545",
+  "revision": "65111c661e48a0289296cdeda2af7b362c7156e7",
   "path": "test/verify_systemd_service.py",
-  "sha256": "5a6b78229d84dd05e9f078508095cf79fd75ea78c3ff87c6a3531aff60922147"
+  "sha256": "d7cdbeabfe0845fe1032e6ae539031cb7e44d3ac49a47a7f7be7caeb30feebb7"
 }

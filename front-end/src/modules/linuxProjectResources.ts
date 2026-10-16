@@ -87,7 +87,7 @@ export const linuxVerifiedPacks = [
 	},
 	{
 		pack: "LS5-Systemd-Toy-Service",
-		revision: "80d1edc95b7152c55e2c000adda086c9cbadf545",
+		revision: "65111c661e48a0289296cdeda2af7b362c7156e7",
 		roleFiles: [
 			"heartbeat_app.py",
 			"linux-heartbeat.service",
@@ -101,7 +101,7 @@ export const linuxVerifiedPacks = [
 	},
 	{
 		pack: "LS-13-unit-6-services-and-systemd-supplemental-2",
-		revision: "80d1edc95b7152c55e2c000adda086c9cbadf545",
+		revision: "65111c661e48a0289296cdeda2af7b362c7156e7",
 		roleFiles: [
 			"linux-service-transfer.service",
 			"transfer_app.py",
@@ -114,7 +114,7 @@ export const linuxVerifiedPacks = [
 	},
 	{
 		pack: "LS-14-unit-6-services-and-systemd-supplemental-3",
-		revision: "80d1edc95b7152c55e2c000adda086c9cbadf545",
+		revision: "65111c661e48a0289296cdeda2af7b362c7156e7",
 		roleFiles: [
 			"20-lab-settings.conf",
 			"heartbeat_app.py",
