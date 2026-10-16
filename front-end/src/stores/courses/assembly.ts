@@ -224,6 +224,7 @@ const assemblySourceCourse: RawCourse = {
 				{
 					title: "Signed and Unsigned Widening Investigation",
 					id: "assembly-unit-2-registers-and-data-movement-supplemental-register-flow-extension-practice",
+					learningPath: "challenge",
 					preserveInstructions: true,
 					ideImport: true,
 					content: assemblyWideningReading,
