@@ -8,6 +8,11 @@ export function networkBuildInstructions(files: PythonIdeFile[], url: string) {
 	const topology = definition.pack === "NS6-Router-NAT-Topology-Lab";
 	const capture = definition.pack === "NS5-Tcpdump-HTTP-Capture";
 	const firewall = definition.pack === "NS3-UFW-Web-Server-Policy";
+	const reachability =
+		definition.pack === "NS2-Local-vs-Remote-Reachability-Diagnosis";
+	const listeners = definition.pack === "NS1-Listening-Services-Map";
+	const resolution =
+		definition.pack === "NS4-IPv4-vs-IPv6-Resolution-Comparison";
 	const namingCases: Record<string, string> = {
 		"NS-06-unit-2-addresses-and-naming":
 			"Repeat with python3 main.py --lookup 127.0.0.1, then with --network 192.0.2.65/26. Compare system name lookup, the actual IPv4 endpoint and the separate prefix calculation.",
@@ -22,10 +27,15 @@ export function networkBuildInstructions(files: PythonIdeFile[], url: string) {
 					`Save and download the ZIP. Extract it in an owned disposable Linux VM with root access and the tools listed in README.md. This kernel lab requires ${capture ? "an owned network namespace" : "network and mount namespaces"}.`,
 					"The browser edits and saves the source and notebook. Run the selected real network experiment in that external VM; the browser cannot perform these Linux kernel operations."
 				]
-			: [
-					"Save and download the ZIP. Extract it in an owned Linux lab or WSL environment with an ordinary account, Python3.10+ and the tools listed in README.md.",
-					"The browser edits and saves the source and notebook. Run the real socket experiments in that external Linux terminal; browser Python does not provide these Linux observations."
-				];
+			: reachability || listeners || resolution
+				? [
+						"Save and download the ZIP. Extract it in an owned Linux lab or WSL environment with an ordinary account and the tools listed in README.md.",
+						"The browser edits and saves the source and notebook. Run the bounded Linux observations in that external environment; the browser does not execute the system commands."
+					]
+				: [
+						"Save and download the ZIP. Extract it in an owned Linux lab or WSL environment with an ordinary account, Python3.10+ and the tools listed in README.md.",
+						"The browser edits and saves the source and notebook. Run the real socket experiments in that external Linux terminal; browser Python does not provide these Linux observations."
+					];
 	if (
 		!files.some(file => file.name === "README.md") ||
 		definition.roleFiles.some(
@@ -35,6 +45,33 @@ export function networkBuildInstructions(files: PythonIdeFile[], url: string) {
 		return [
 			...lines,
 			"The selected lab is incomplete. Restore all required role files and README.md before following the guide."
+		];
+	}
+	if (listeners) {
+		return [
+			...lines,
+			`Read README.md, then cd ${role}. Run bash inventory_services.sh 8080 for an owned example on that port; repeat without an argument for the account's broader view. The script prints to standard output and never opens a report file.`,
+			"Compare the actual TCP LISTEN and UDP UNCONN rows, bind addresses, selected namespace and visible process ownership. Stop only the owned examples and repeat. An empty lsof selection can return status 1; retain raw stderr and the other observations before interpreting it.",
+			"Bash programming is optional. Complete only the inventory-sections block when choosing the extension; equivalent manual observations, evidence-backed service classifications and the notebook meet the core goal. The reference remains separate from the saved learner attempt.",
+			"A port number or missing owner text is not an application identity. A passive local inventory does not prove another machine can reach a service. The operations notebook reopens the same saved attempt."
+		];
+	}
+	if (resolution) {
+		return [
+			...lines,
+			`Read README.md, then cd ${role}. Run bash compare_resolution.sh example.com for the configured resolver, or use an authorized DNS server and port. The optional owned fixture in README.md uses a high port without changing system name-service files.`,
+			"For the optional fixture, compare dual.course.test, v4.course.test, alias.course.test, missing.course.test and localhost with server 127.0.0.1 and the selected high port. Retain DNS header status, typed answers, TTL, responding server and command status separately.",
+			"Bash programming is optional. Complete only the system-lookup block when choosing the extension; equivalent getent/NSS observations and their explanation meet the core goal. An explicit dig server does not redirect getent or change system configuration.",
+			"Compare NODATA, NXDOMAIN, alias data and transport failure after stopping only the owned resolver. An absent AAAA answer does not establish an IPv4-only service, application readiness or a chosen client family. The notebook reopens this saved attempt; the reference stays separate."
+		];
+	}
+	if (reachability) {
+		return [
+			...lines,
+			`Read README.md, then cd ${role}. Run bash diagnose_reachability.sh 127.0.0.1 8080 http for an owned service at that endpoint; replace the host, port and scheme with the actual authorized target.`,
+			"Record the exact command, raw output and status for the listener, loopback HTTP, destination HTTP and raw TCP observations. Compare a changed port and a stopped/restored owned service. IPv6 literals are entered without brackets; both HTTP observations use the selected http or https scheme.",
+			"Bash programming is optional. Complete only the route-evidence block when choosing that extension; equivalent manual command observations and the notebook meet the core goal. The reference is separate from the saved learner attempt.",
+			"Record the issuing machine and label an actual comparison from another owned machine separately. Without that comparison, leave remote reachability unmeasured. The script does not inspect privileged firewall policy or alter configuration. The operations notebook reopens this same saved attempt."
 		];
 	}
 	if (firewall) {

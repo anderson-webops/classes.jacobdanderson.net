@@ -318,7 +318,7 @@ const networkSystemsSourceCourse: RawCourse = {
 				{
 					title: "What a Port Actually Identifies",
 					content:
-						"A port is one part of a socket endpoint, not a complete service identity by itself. A process, protocol, local address, and port together define what is actually listening or connected, which is why port-only explanations are often incomplete."
+						"A local network endpoint includes a transport, address and port; the observed PID connects that socket to a local owner. A TCP connection also has a peer address and port. The same numeric port can be used by TCP and UDP because they are different transports. Preserve the namespace and bind address when comparing rows: loopback, wildcard and a specific interface address describe different local scopes. A familiar port number is a clue rather than an application identity, and a local listener is not proof that a request from another machine succeeds."
 				},
 				{
 					title: "Ephemeral Ports and Client-Side Source Ports",
@@ -328,7 +328,7 @@ const networkSystemsSourceCourse: RawCourse = {
 				{
 					title: "Using ss, netstat, and lsof to Map Services",
 					content:
-						"`ss`, `netstat`, and `lsof -i` map listening sockets and established connections back to processes. Build the habit of proving which process owns a network endpoint before changing firewall rules, killing services, or assuming a port belongs to a particular application."
+						"Use `ss -ltnp` for TCP listeners and `ss -lunp` for UDP sockets, retaining the actual bind address, port and any visible PID. UDP UNCONN is not TCP LISTEN and does not by itself describe a broken service. `lsof -nP` supplies a process/file-descriptor view that can complement the socket table. Permissions and namespaces can limit or change the visible rows; missing owner text does not establish an unowned socket. An empty lsof selection can return status 1, so keep raw stderr and the other observations before interpreting a nonzero status."
 				},
 				{
 					title: "Project: Map All Listening Services on a Linux Host",
@@ -384,22 +384,22 @@ const networkSystemsSourceCourse: RawCourse = {
 				{
 					title: "Recursive and Authoritative Resolution",
 					content:
-						"Recursive resolvers and authoritative servers play different roles: one follows or caches the answer path, and the other is responsible for the zone data. This distinction matters when a hostname resolves differently from different locations or after a DNS change has only partially propagated."
+						"An authoritative DNS server supplies data for its zone. A recursive resolver follows the lookup process or answers from its cache. Different selected resolvers can return different views, and cached records can remain until their permitted lifetime expires after an authoritative update. Record the actual responding server, question type, response status and time before comparing results. Repeating the same question against another authorized resolver tests a view difference; using two client tools with the same configured resolver does not automatically create two independent views."
 				},
 				{
 					title: "Caching and Resolver State",
 					content:
-						"DNS caching explains why changes can appear inconsistent during deployment or troubleshooting. Cached success, cached failure, TTL behavior, and local override files all shape what a resolver returns before the request ever reaches an authoritative server."
+						"DNS cache state and local name-service policy are separate observations. Positive and negative DNS answers can be cached, and a record TTL describes a cache lifetime rather than an IP hop limit. A received NOERROR response with no answer of the requested type differs from NXDOMAIN, and both differ from a missing response. Local hosts data and the Linux Name Service Switch can affect an application lookup without appearing in a direct dig query. Keep the selected DNS server and the actual system lookup path explicit instead of attributing every difference to propagation."
 				},
 				{
 					title: "dig, nslookup, host, and Resolver Configuration",
 					content:
-						"`dig`, `nslookup`, `host`, `/etc/hosts`, and resolver config files make name resolution visible. The key checks are which tool is showing recursive answers, which tool is showing raw records, and what local overrides might still be in play."
+						"`dig`, `nslookup` and `host` are DNS clients; their outputs need to be tied to the question and responding server. A system lookup such as `getent ahosts` follows the Linux name-service configuration and can include hosts data and address-family policy. An explicit dig server or port does not redirect getent or edit system files. Compare the full DNS header, typed answers and server with the separate NSS output and statuses. A CNAME is an alias, an A or AAAA value is address data, and neither the presence nor order of these records proves a later application connection."
 				},
 				{
 					title: "Project: Compare IPv4 and IPv6 Resolution for the Same Hostname",
 					content:
-						"The resolution-comparison lab inspects A and AAAA answers, compares resolver outputs, and explains which address family a client is likely to try first. Dual-stack behavior becomes concrete when the same hostname produces different address families with different paths and failure modes.",
+						"Compare full A and AAAA responses with the separate system NSS lookup. Predict typed record sets and distinguish NODATA, NXDOMAIN, aliases and DNS transport failures in the optional owned resolver. Keep DNS facts separate from application behavior: a missing AAAA answer does not establish an IPv4-only service, and the lookup alone does not measure a client's selected family or connection success.",
 					projectLink:
 						"https://github.com/instruction-material/Network-Systems/tree/main/NS4-IPv4-vs-IPv6-Resolution-Comparison/starter",
 					solutionLink:
@@ -450,17 +450,17 @@ const networkSystemsSourceCourse: RawCourse = {
 				{
 					title: "ping, traceroute, tracepath, and mtr",
 					content:
-						"The core path tools answer different questions: `ping` checks basic reachability, `traceroute` estimates hop path, `tracepath` can expose path MTU clues, and `mtr` watches repeated latency and loss patterns. Choose the tool based on the evidence needed instead of treating them as interchangeable."
+						"The path tools answer different questions. An ICMP echo reply from `ping` establishes that this particular request and reply succeeded; it does not prove that a TCP service or application is ready. `traceroute` estimates a path from hop-limit responses, `tracepath` can expose path MTU clues, and `mtr` repeats observations over time. An intermediate router can limit diagnostic replies while continuing to forward application traffic, so an isolated missing hop or apparent per-hop loss is not enough to locate an application failure. Record the source machine, protocol, destination and time before comparing results."
 				},
 				{
 					title: "curl, nc, and telnet for Service Checks",
 					content:
-						"`curl`, `nc`, and `telnet` are quick tools for checking whether a TCP service answers, whether the right banner or headers appear, and whether the failure looks like refusal, timeout, or reset. The important habit is to match the tool to the protocol and the question."
+						"`nc` can test whether a TCP connection is established, while `curl` can exchange HTTP headers or content and report TLS or application errors. A successful TCP connection does not prove that the expected application answered. Use the actual service scheme and a finite connection and total deadline; a plain HTTP service does not become HTTPS by changing the URL. Distinguish direct endpoint observations from proxy behavior and read the HTTP status as well as the command status. `telnet` is useful only for an authorized plain-text protocol experiment; it does not validate TLS or a useful application response."
 				},
 				{
 					title: "Timeout versus Refusal versus Reset",
 					content:
-						"Repeat the failure signatures until they become quick to classify: timeout usually means a packet is not getting through or not coming back, refusal usually means the host is reachable but nothing is listening, and reset usually means a TCP conversation was actively torn down. Verification still matters, and the classification becomes an evidence-backed diagnostic habit."
+						"Treat timeout, refusal and reset as observations that narrow a question rather than identify a unique cause. A timeout can reflect filtering, loss, an absent return path or an application that accepted TCP but did not answer. A refusal is compatible with an absent listener or an active reject. A reset means the conversation was actively closed, without proving which application or policy caused it. Compare listener binding, addresses, routes and any separately authorized policy evidence before proposing a change. Keep the issuing machine explicit: a local destination probe does not measure a second machine's path."
 				},
 				{
 					title: "Project: Diagnose Why a Service Is Reachable Locally but Not from Another Machine",

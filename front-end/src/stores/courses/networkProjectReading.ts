@@ -5,6 +5,9 @@ import namingReading0 from "../../assets/course-guides/network-addresses.md?raw"
 
 import firewallReading from "../../assets/course-guides/network-firewall-policy.md?raw";
 import captureReading from "../../assets/course-guides/network-http-capture.md?raw";
+import listenerReading from "../../assets/course-guides/network-listening-services.md?raw";
+import reachabilityReading from "../../assets/course-guides/network-reachability.md?raw";
+import resolutionReading from "../../assets/course-guides/network-resolution-comparison.md?raw";
 import topologyReading from "../../assets/course-guides/network-routing-exposure.md?raw";
 import setupReading from "../../assets/course-guides/network-setup.md?raw";
 import transportReading from "../../assets/course-guides/network-transport.md?raw";
@@ -21,7 +24,10 @@ const readings: Record<string, string> = {
 	"NS-06-unit-2-addresses-and-naming-supplemental-3": namingReading2,
 	"NS6-Router-NAT-Topology-Lab": topologyReading,
 	"NS5-Tcpdump-HTTP-Capture": captureReading,
-	"NS3-UFW-Web-Server-Policy": firewallReading
+	"NS3-UFW-Web-Server-Policy": firewallReading,
+	"NS2-Local-vs-Remote-Reachability-Diagnosis": reachabilityReading,
+	"NS1-Listening-Services-Map": listenerReading,
+	"NS4-IPv4-vs-IPv6-Resolution-Comparison": resolutionReading
 };
 
 export function withNetworkProjectReadings(
@@ -37,11 +43,24 @@ export function withNetworkProjectReadings(
 		const topology = selected.pack === "NS6-Router-NAT-Topology-Lab";
 		const capture = selected.pack === "NS5-Tcpdump-HTTP-Capture";
 		const firewall = selected.pack === "NS3-UFW-Web-Server-Policy";
+		const reachability =
+			selected.pack === "NS2-Local-vs-Remote-Reachability-Diagnosis";
+		const listeners = selected.pack === "NS1-Listening-Services-Map";
+		const resolution =
+			selected.pack === "NS4-IPv4-vs-IPv6-Resolution-Comparison";
 		const exposure = topology && module.title.startsWith("Unit 12:");
 		const reading = readings[selected.pack]
 			.replace(
 				/This replaces the unrelated port-list exercise previously (?:present )?in this folder\./,
 				""
+			)
+			.replace(
+				"Start with an already authorized owned service.",
+				"Select an already authorized owned service."
+			)
+			.replace(
+				"Review and save the selected role",
+				"Save the selected role"
 			)
 			.replace("should retain", "retains")
 			.replace(
@@ -66,6 +85,39 @@ export function withNetworkProjectReadings(
 				"For a guided walkthrough"
 			)
 			.trim();
+		const listenerNotebook = `## Preserve a listener ownership notebook
+
+Opening this notebook reopens the matching core project and preserves its saved listener attempt. Record the issuing machine, account, time and network namespace. Predict the owned example's transport, bind address, port and visible process before collecting evidence. Keep the selected port and the broader account view as separate reports so that a filter cannot hide the context needed for a classification.
+
+### Reconcile sockets with visible owners
+
+Match the actual TCP LISTEN row to its owned process. Compare UDP UNCONN separately; UDP can use the same numeric port without being the same transport endpoint. Record PID and file-descriptor observations where this account can see them. Missing owner text can reflect limited visibility. A familiar port number alone does not identify an application, and a wildcard bind alone does not establish an external path or policy allowance.
+
+### Compare the empty view and classify the evidence
+
+Stop only the owned examples and repeat the filtered commands. Preserve lsof's nonzero empty-selection status, its raw stderr and the successful socket query beside the continuing review section. Distinguish an empty view from an error or permission gap. Classify each relevant live row as expected, internal-only or review-needed using the actual owner, bind scope and stated host role. Keep unknown identities explicit. Bash programming is optional: the named collection block is an extension, while equivalent manual observations and the explanation meet the core goal. For independent work, diagram the additional authorized request needed to test another machine's path. During a guided walkthrough, pause at the first TCP row, the UDP comparison, the empty selection and the proposed classification. Confirm cleanup or required restoration and follow the full core guide and imported README.md.`;
+		const resolutionNotebook = `## Preserve a DNS and system lookup notebook
+
+Opening this notebook reopens the matching core project and preserves its saved resolution attempt. Record the issuing machine, question name, A or AAAA type, selected DNS server, port and time. Predict the typed answer set before each query. Keep the system NSS lookup as a separately labeled observation; an explicit dig server does not change the resolver or hosts data used by getent.
+
+### Compare response status and typed records
+
+Keep full DNS output and command status. Read the header status separately from the shell exit code. Distinguish A and AAAA address values from a CNAME alias target, and retain the TTL and actual responding server. Compare the dual-address, A-only, alias and missing-name cases in the optional owned fixture. NOERROR with no AAAA answer is NODATA; NXDOMAIN is a negative name answer in that resolver's view. Neither is the same as receiving no DNS response.
+
+### Contrast lookup paths and remove the owned resolver
+
+Compare the controlled localhost DNS view with the actual system NSS result, including any unavailable lookup or family-filtering behavior. Stop only the owned resolver and preserve the transport failures alongside the continuing system lookup and interpretation. Confirm the process stopped and no hosts, resolver or NSS configuration was edited. Bash programming is optional: the named lookup block is an extension, while equivalent command observations and the notebook meet the core goal. An absent AAAA answer does not prove an IPv4-only service, and a returned IPv6 address does not prove an IPv6 application connection. For independent review, state the further authorized application test needed. In a guided walkthrough, pause after prediction, a negative DNS answer, the localhost contrast and the cleanup comparison. Follow the complete core reading and imported README.md.`;
+		const reachabilityNotebook = `## Preserve a reachability evidence notebook
+
+Opening this notebook reopens the matching core project and preserves its saved diagnostic attempt. Run the selected role in an owned Linux environment. Keep the issuing machine, account, expected service owner, bind address, scheme and port beside each report. A destination request from this machine does not measure another machine's path; record that missing comparison explicitly when a second owned machine is unavailable.
+
+### Predict and collect observations
+
+Predict the listening socket, loopback HTTP, destination HTTP and raw TCP outcomes before running the bounded commands. Keep exact arguments, raw errors and statuses. Separate a successful TCP connection from returned HTTP headers, an application status and a useful page. The three route observations describe local configuration; they do not prove packet delivery. A missing process name can reflect permission rather than an absent process.
+
+### Compare a changed case and restore the service
+
+Compare a changed port, the stopped owned service and its restored state. Preserve the selected HTTP or HTTPS scheme and bracketed IPv6 URL in the actual command record. A timeout can reflect filtering, loss, an absent return path or an application deadline. A refusal can arise from a missing listener or an active reject. Keep any separately authorized firewall observation and its permission limits; the script does not inspect privileged policy. Bash programming is optional: the named route block is an extension, while equivalent command observations and the explanation meet the core goal. For independent review, state the smallest further test that could disprove the explanation. In a guided walkthrough, pause at prediction, first failure, route comparison and recovery. Follow the complete core guide and imported README.md for commands and interpretation.`;
 		const firewallNotebook = `## Preserve a policy and rollback evidence notebook
 
 Opening this notebook reopens the matching core project and keeps its saved policy attempt. Complete only the management and web cases in policy-rules.sh. The supplied apparatus performs the real UFW experiment in private network and mount namespaces inside an owned disposable Linux VM with root and console access. Keep the selected profile and exact rule choices beside each report.
@@ -120,15 +172,21 @@ Keep each prediction beside actual command output, the measured HTTP result and 
 			preserveInstructions: true,
 
 			content:
-				notebook && firewall
-					? firewallNotebook
-					: notebook && capture
-						? captureNotebook
-						: notebook && topology
-							? topologyContinuation
-							: notebook
-								? `${item.content}\n\nContinue the existing core project. Opening this notebook reopens the matching core project rather than creating a second assignment. Keep predictions, actual command output, endpoint and process identities, changed-case comparisons and cleanup in network-notes.md. Follow the complete guide on the core project card and in README.md. Python programming is optional supplemental practice; command observations and the notebook are the core deliverable.`
-								: `${exposure ? "Continue the saved Unit7 attempt for the Unit12 Secure Exposure pass. Complete the fourth shell case and run --exposure-policy; the three earlier routing/NAT cases remain prerequisites.\n\n" : ""}${reading}\n\nSource guide: [Network Systems project](${projectLink}). Edit, save, review and export the selected role in the site IDE, then follow README.md in an external Linux terminal. The reference is separate from the learner attempt.`
+				notebook && listeners
+					? listenerNotebook
+					: notebook && resolution
+						? resolutionNotebook
+						: notebook && reachability
+							? reachabilityNotebook
+							: notebook && firewall
+								? firewallNotebook
+								: notebook && capture
+									? captureNotebook
+									: notebook && topology
+										? topologyContinuation
+										: notebook
+											? `${item.content}\n\nContinue the existing core project. Opening this notebook reopens the matching core project rather than creating a second assignment. Keep predictions, actual command output, endpoint and process identities, changed-case comparisons and cleanup in network-notes.md. Follow the complete guide on the core project card and in README.md. Python programming is optional supplemental practice; command observations and the notebook are the core deliverable.`
+											: `${exposure ? "Continue the saved Unit7 attempt for the Unit12 Secure Exposure pass. Complete the fourth shell case and run --exposure-policy; the three earlier routing/NAT cases remain prerequisites.\n\n" : ""}${reading}\n\nSource guide: [Network Systems project](${projectLink}). Edit, save, review and export the selected role in the site IDE, then follow README.md in an external Linux terminal. The reference is separate from the learner attempt.`
 		};
 	};
 	return {

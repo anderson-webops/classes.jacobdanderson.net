@@ -34,6 +34,7 @@ type Fixture = {
 	moduleId: string;
 	learningPath?: string;
 	instructionCommand?: string;
+	optionalProgrammingNote?: string;
 	requiresRoot?: boolean;
 	continuationItems?: { moduleId: string; itemId: string }[];
 	revision: string;
@@ -81,6 +82,33 @@ const fixtures: Fixture[] = [
 			resolve(
 				process.cwd(),
 				"../test/fixtures/network-firewall-contracts.json"
+			),
+			"utf8"
+		)
+	),
+	...JSON.parse(
+		readFileSync(
+			resolve(
+				process.cwd(),
+				"../test/fixtures/network-reachability-contracts.json"
+			),
+			"utf8"
+		)
+	),
+	...JSON.parse(
+		readFileSync(
+			resolve(
+				process.cwd(),
+				"../test/fixtures/network-listener-contracts.json"
+			),
+			"utf8"
+		)
+	),
+	...JSON.parse(
+		readFileSync(
+			resolve(
+				process.cwd(),
+				"../test/fixtures/network-resolution-contracts.json"
 			),
 			"utf8"
 		)
@@ -236,6 +264,14 @@ it("preserves every published lesson while preserving core notebooks and distinc
 				/This replaces the unrelated port-list exercise previously (?:present )?in this folder\./,
 				""
 			)
+			.replace(
+				"Start with an already authorized owned service.",
+				"Select an already authorized owned service."
+			)
+			.replace(
+				"Review and save the selected role",
+				"Save the selected role"
+			)
 			.replace("should retain", "retains")
 			.replace(
 				"Flow membership should follow",
@@ -272,7 +308,9 @@ it("preserves every published lesson while preserving core notebooks and distinc
 		expect(notebook.projectLink).toBe(core.projectLink);
 		expect(notebook.solutionLink).toBe(core.solutionLink);
 		expect(notebook.content).toContain("reopens the matching core project");
-		expect(notebook.content).toContain("Python programming is optional");
+		expect(notebook.content).toContain(
+			source.optionalProgrammingNote ?? "Python programming is optional"
+		);
 		expect(core.content).not.toMatch(/\bshould\b|port-list exercise/);
 		for (const role of ["starter", "reference"] as const) {
 			const url =
@@ -371,7 +409,9 @@ it.each(
 			expect(instructions).toContain("root access");
 			expect(instructions).not.toContain("ordinary account");
 		}
-		expect(instructions).toContain("Python programming is optional");
+		expect(instructions).toContain(
+			fixture.optionalProgrammingNote ?? "Python programming is optional"
+		);
 		expect(instructions).not.toMatch(/bash main\.sh|Hello, Linux|Nginx/);
 		expect(
 			linuxBuildInstructions(
