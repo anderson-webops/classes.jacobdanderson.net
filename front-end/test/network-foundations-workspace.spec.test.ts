@@ -75,6 +75,15 @@ const fixtures: Fixture[] = [
 			),
 			"utf8"
 		)
+	),
+	...JSON.parse(
+		readFileSync(
+			resolve(
+				process.cwd(),
+				"../test/fixtures/network-firewall-contracts.json"
+			),
+			"utf8"
+		)
 	)
 ];
 const identities = JSON.parse(
@@ -428,4 +437,24 @@ it("rejects mutable revisions, unverified projects, other repositories and role 
 		).rejects.toThrow(/no verified site import/);
 	}
 	expect(fetcher).not.toHaveBeenCalled();
+});
+
+it("keeps UFW application profiles inert and confined to their selected role", () => {
+	for (const name of [
+		"starter/web-stack.profile",
+		"solution/web-stack.profile"
+	]) {
+		expect(isValidPythonFileName(name, "linux")).toBe(true);
+		expect(isValidPythonFileName(name, "python")).toBe(false);
+		expect(isValidPythonFileName(name, "cpp")).toBe(false);
+		expect(isPythonIdeRunnableFile(name, "linux")).toBe(false);
+	}
+	for (const name of [
+		".profile",
+		"starter/.profile",
+		"web-stack.profile",
+		"other/web-stack.profile",
+		"starter/../web-stack.profile"
+	])
+		expect(isValidPythonFileName(name, "linux")).toBe(false);
 });

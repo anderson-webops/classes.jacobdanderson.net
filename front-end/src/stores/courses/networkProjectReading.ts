@@ -3,6 +3,7 @@ import namingReading2 from "../../assets/course-guides/network-addresses-familie
 import namingReading1 from "../../assets/course-guides/network-addresses-transfer.md?raw";
 import namingReading0 from "../../assets/course-guides/network-addresses.md?raw";
 
+import firewallReading from "../../assets/course-guides/network-firewall-policy.md?raw";
 import captureReading from "../../assets/course-guides/network-http-capture.md?raw";
 import topologyReading from "../../assets/course-guides/network-routing-exposure.md?raw";
 import setupReading from "../../assets/course-guides/network-setup.md?raw";
@@ -19,7 +20,8 @@ const readings: Record<string, string> = {
 	"NS-05-unit-2-addresses-and-naming-supplemental-2": namingReading1,
 	"NS-06-unit-2-addresses-and-naming-supplemental-3": namingReading2,
 	"NS6-Router-NAT-Topology-Lab": topologyReading,
-	"NS5-Tcpdump-HTTP-Capture": captureReading
+	"NS5-Tcpdump-HTTP-Capture": captureReading,
+	"NS3-UFW-Web-Server-Policy": firewallReading
 };
 
 export function withNetworkProjectReadings(
@@ -34,6 +36,7 @@ export function withNetworkProjectReadings(
 		const notebook = item.title.startsWith("Operations Notebook:");
 		const topology = selected.pack === "NS6-Router-NAT-Topology-Lab";
 		const capture = selected.pack === "NS5-Tcpdump-HTTP-Capture";
+		const firewall = selected.pack === "NS3-UFW-Web-Server-Policy";
 		const exposure = topology && module.title.startsWith("Unit 12:");
 		const reading = readings[selected.pack]
 			.replace(
@@ -63,6 +66,17 @@ export function withNetworkProjectReadings(
 				"For a guided walkthrough"
 			)
 			.trim();
+		const firewallNotebook = `## Preserve a policy and rollback evidence notebook
+
+Opening this notebook reopens the matching core project and keeps its saved policy attempt. Complete only the management and web cases in policy-rules.sh. The supplied apparatus performs the real UFW experiment in private network and mount namespaces inside an owned disposable Linux VM with root and console access. Keep the selected profile and exact rule choices beside each report.
+
+### Predict the policy boundary
+
+Sketch the client and service endpoints. Predict the fresh management-marker, web and unrequested-service outcomes before activation, while the policy is active and after restoration. Explain why a nondefault management port differs from an assumed OpenSSH profile. The marker is not an SSH daemon. Record the prior inactive state and the retained rule; the project preserves both as evidence for rollback.
+
+### Observe, restore and review
+
+Reconcile actual response tokens, peer and destination tuples, service PID, numbered UFW output and kernel counters. Confirm that the blocked listener remains running. Compare the changed management port and reverse-order runs. Distinguish a logging-rule counter from a retained journal message, and a successful old connection from a fresh allowed connection. Verify the exact private configuration and kernel restoration, all three restored responses, worker reaping, namespace removal and the measured outer host comparison. Python programming is optional; firewall_runtime.py stays unchanged. Review each prediction independently or pause a guided walkthrough at topology, rules, fresh requests and recovery. Follow the full core-card guide and imported README.md for commands and interpretation.`;
 		const captureNotebook = `## Preserve an HTTP packet evidence notebook
 
 Opening this notebook reopens the matching core project and preserves its saved capture attempt. Complete the two count/filter choices in capture-options.sh in that project. Use a disposable Linux VM with root access and the tools named in the imported README.md; the site IDE edits and saves the files while the VM performs the real packet capture.
@@ -106,13 +120,15 @@ Keep each prediction beside actual command output, the measured HTTP result and 
 			preserveInstructions: true,
 
 			content:
-				notebook && capture
-					? captureNotebook
-					: notebook && topology
-						? topologyContinuation
-						: notebook
-							? `${item.content}\n\nContinue the existing core project. Opening this notebook reopens the matching core project rather than creating a second assignment. Keep predictions, actual command output, endpoint and process identities, changed-case comparisons and cleanup in network-notes.md. Follow the complete guide on the core project card and in README.md. Python programming is optional supplemental practice; command observations and the notebook are the core deliverable.`
-							: `${exposure ? "Continue the saved Unit7 attempt for the Unit12 Secure Exposure pass. Complete the fourth shell case and run --exposure-policy; the three earlier routing/NAT cases remain prerequisites.\n\n" : ""}${reading}\n\nSource guide: [Network Systems project](${projectLink}). Edit, save, review and export the selected role in the site IDE, then follow README.md in an external Linux terminal. The reference is separate from the learner attempt.`
+				notebook && firewall
+					? firewallNotebook
+					: notebook && capture
+						? captureNotebook
+						: notebook && topology
+							? topologyContinuation
+							: notebook
+								? `${item.content}\n\nContinue the existing core project. Opening this notebook reopens the matching core project rather than creating a second assignment. Keep predictions, actual command output, endpoint and process identities, changed-case comparisons and cleanup in network-notes.md. Follow the complete guide on the core project card and in README.md. Python programming is optional supplemental practice; command observations and the notebook are the core deliverable.`
+								: `${exposure ? "Continue the saved Unit7 attempt for the Unit12 Secure Exposure pass. Complete the fourth shell case and run --exposure-policy; the three earlier routing/NAT cases remain prerequisites.\n\n" : ""}${reading}\n\nSource guide: [Network Systems project](${projectLink}). Edit, save, review and export the selected role in the site IDE, then follow README.md in an external Linux terminal. The reference is separate from the learner attempt.`
 		};
 	};
 	return {

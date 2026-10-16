@@ -3,7 +3,8 @@ export const linuxFileSegmentPattern = /^[\w-](?:[\w .-]*[\w.-])?$/;
 
 export function isLinuxProjectTextPath(value: string) {
 	return (
-		/^(?:starter|solution)\/(?:config|candidate|release-manifest|data)\.json$/.test(value)
+		/^(?:starter|solution)\/web-stack\.profile$/.test(value)
+		|| /^(?:starter|solution)\/(?:config|candidate|release-manifest|data)\.json$/.test(value)
 		|| /^(?:starter|solution)\/settings\.env$/.test(value)
 		|| /^(?:starter|solution)\/(?:heartbeat|transfer|base|override)\.env\.example$/.test(
 			value
