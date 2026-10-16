@@ -23,6 +23,11 @@ export function networkBuildInstructions(files: PythonIdeFile[], url: string) {
 		"NS-23-unit-11-common-application-protocols-supplemental-2",
 		"NS-24-unit-11-common-application-protocols-supplemental-3"
 	].includes(definition.pack);
+	const linkRouting = [
+		"NS-07-unit-3-switches-routers-nat-and-the-internet-edge",
+		"NS-07-unit-3-switches-routers-nat-and-the-internet-edge-supplemental-2",
+		"NS-08-unit-3-switches-routers-nat-and-the-internet-edge-supplemental-3"
+	].includes(definition.pack);
 	const namingCases: Record<string, string> = {
 		"NS-06-unit-2-addresses-and-naming":
 			"Repeat with python3 main.py --lookup 127.0.0.1, then with --network 192.0.2.65/26. Compare system name lookup, the actual IPv4 endpoint and the separate prefix calculation.",
@@ -32,7 +37,7 @@ export function networkBuildInstructions(files: PythonIdeFile[], url: string) {
 			"Repeat with python3 main.py --lookup 127.0.0.1. Compare resolver families, actual listener ownership and the IPv6 probe. The IPv6 documentation-prefix table is a separate calculation, not proof of DNS or internet reachability."
 	};
 	const lines =
-		topology || capture || firewall
+		topology || capture || firewall || linkRouting
 			? [
 					`Save and download the ZIP. Extract it in an owned disposable Linux VM with root access and the tools listed in README.md. This kernel lab requires ${capture ? "an owned network namespace" : "network and mount namespaces"}.`,
 					"The browser edits and saves the source and notebook. Run the selected real network experiment in that external VM; the browser cannot perform these Linux kernel operations."
@@ -55,6 +60,22 @@ export function networkBuildInstructions(files: PythonIdeFile[], url: string) {
 		return [
 			...lines,
 			"The selected lab is incomplete. Restore all required role files and README.md before following the guide."
+		];
+	}
+	if (linkRouting) {
+		return [
+			...lines,
+			`Read README.md, then cd ${role}. Keep main.py, link_routing_lab.py, network-notes.md and edge-cases.md together. Run sudo python3 main.py in the disposable Linux VM. Python3.10+, iproute2, iptables, util-linux, sysctl and curl are required.`,
+			"Repeat with sudo python3 main.py --alternate --service-port 8087 --mapped-port 18087. Predict the private prefixes, gateways and translated endpoints before reading each run. Match its own token, owned PID/UID, numeric client/server endpoints, raw HTTP and kernel state.",
+			definition.pack ===
+			"NS-07-unit-3-switches-routers-nat-and-the-internet-edge-supplemental-2"
+				? "Compare the client gateway removal and restoration, then the missing server return route and its restoration. Preserve both route lookups and new requests. This task adds no NAT; the mapped-port option has no mapping role here."
+				: definition.pack ===
+					  "NS-08-unit-3-switches-routers-nat-and-the-internet-edge-supplemental-3"
+					? "Compare routed, source-translated and destination-mapped endpoint views. After mapping removal test a fresh connection, then retain the successful direct request. Existing connection state is not tested by those new requests."
+					: "Compare the bridge with IP forwarding disabled, its port-down failure and restoration, then routing with forwarding off/on and source translation. Match actual learned MAC addresses to bridge FDB ports. The notebook reopens the same saved Unit 3 attempt; the mapped-port option is unused by this core task.",
+			"Label edge-cases.md as constructed reasoning material. Confirm the owned worker was stopped and reaped, its listener is absent, private namespaces and links were removed, and hostUnchanged is true. This experiment measures private IPv4 mechanisms, not public Internet access, IPv6 or restrictive filtering policy.",
+			"Python programming is optional. The required work is prediction, actual observation and a complete notebook explanation. Unit 7 later edits NS6 forwarding/NAT commands; Unit 12 continues that later saved attempt for exposure policy. Keep the reference separate."
 		];
 	}
 	if (applications) {

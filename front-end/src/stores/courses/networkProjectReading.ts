@@ -10,8 +10,12 @@ import applicationReading0 from "../../assets/course-guides/network-application-
 import firewallReading from "../../assets/course-guides/network-firewall-policy.md?raw";
 import captureReading from "../../assets/course-guides/network-http-capture.md?raw";
 import ipv6Reading0 from "../../assets/course-guides/network-ipv6-diagnostics.md?raw";
+
 import ipv6Reading2 from "../../assets/course-guides/network-ipv6-family-extension.md?raw";
 import ipv6Reading1 from "../../assets/course-guides/network-ipv6-prefix-transfer.md?raw";
+import linkRoutingReading2 from "../../assets/course-guides/network-link-routing-mapping.md?raw";
+import linkRoutingReading0 from "../../assets/course-guides/network-link-routing-observations.md?raw";
+import linkRoutingReading1 from "../../assets/course-guides/network-link-routing-paths.md?raw";
 import listenerReading from "../../assets/course-guides/network-listening-services.md?raw";
 import reachabilityReading from "../../assets/course-guides/network-reachability.md?raw";
 import resolutionReading from "../../assets/course-guides/network-resolution-comparison.md?raw";
@@ -24,6 +28,12 @@ import {
 } from "../../modules/networkProjectResources";
 
 const readings: Record<string, string> = {
+	"NS-07-unit-3-switches-routers-nat-and-the-internet-edge":
+		linkRoutingReading0,
+	"NS-07-unit-3-switches-routers-nat-and-the-internet-edge-supplemental-2":
+		linkRoutingReading1,
+	"NS-08-unit-3-switches-routers-nat-and-the-internet-edge-supplemental-3":
+		linkRoutingReading2,
 	"NS-09-unit-11-common-application-protocols": applicationReading0,
 	"NS-23-unit-11-common-application-protocols-supplemental-2":
 		applicationReading1,
@@ -66,6 +76,9 @@ export function withNetworkProjectReadings(
 		const ipv6Core = selected.pack === "NS-08-unit-8-ipv6-in-practice";
 		const applicationCore =
 			selected.pack === "NS-09-unit-11-common-application-protocols";
+		const linkRoutingCore =
+			selected.pack ===
+			"NS-07-unit-3-switches-routers-nat-and-the-internet-edge";
 		const exposure = topology && module.title.startsWith("Unit 12:");
 		const reading = readings[selected.pack]
 			.replace(
@@ -123,6 +136,21 @@ Read application-cases.md as constructed DNS, TLS and SSH material. Identify the
 ### Review the explanation and close the owned experiment
 
 Keep unexpected results and raw errors. Name an observation that would disprove each explanation and a limit that still remains after it. Confirm the owned child was stopped and reaped and that its PID is absent from the final listener query. A Retry-After suggestion does not prove recovery. Python programming is optional; the actual observations and notebook are the core task. For independent work, predict before reading each response. In a guided walkthrough, pause at connection, method, representation, peer identity and application decision. The transfer validator/redirect task and extension content/policy task have separate optional goals.`;
+		const linkRoutingNotebook = `## Keep a bridge, routing and translation notebook
+
+Opening this notebook reopens the matching core project and preserves the same saved Unit 3 attempt. Keep the separate reference role apart from that attempt. Record the disposable Linux VM, hostname, UID, namespace identities, tool versions, exact command and purpose. Keep main.py, link_routing_lab.py, network-notes.md, edge-cases.md and README.md together after exporting. Use root access only in that owned VM. Read the full guide and concept explanation before predicting the stages.
+
+### Explain the bridge before the router
+
+Draw the first bridged topology with its two /24 endpoints, MAC addresses and bridge ports. Predict all six default core stages before reading their outcomes. Match actual learned MAC addresses to FDB ports, retain the disabled IP forwarding setting and explain why the first bridged request succeeds. Keep the deliberate server-facing port-down failure and the restored successful request with actual link state. Explain what those controlled results establish and what a timeout alone leaves uncertain.
+
+Draw the second topology with its two links, middle-interface addresses and endpoint gateways. Record outbound and return route lookups, neighbor observations, the forwarding-off failure and the forwarding-on success. Explain why the latter needs routing but no NAT. Then compare the server's original client peer with its source-translated peer. Match the client and server endpoint views to raw HTTP bytes, current run token, owned listener PID and UID, and actual NAT rule. Keep translation separate from a restrictive filtering policy.
+
+### Change the case and close the observation
+
+Repeat with sudo python3 main.py --alternate --service-port 8087 --mapped-port 18087. Predict the new prefixes, gateways and service endpoint first. The mapped port is used by the optional DNAT exercise; supplying it does not add mapping to the core experiment. Preserve each run's own identities and any contrary outcome. Read the supplied Internet-edge cases as constructed reasoning. State the next authorized observation for an upstream translation or policy uncertainty without claiming that this apparatus measured the public Internet, IPv6 or an ISP.
+
+Check worker termination and reaping, absence of the owned listener, removal of private links and namespaces, and the unchanged outer host snapshot. Keep raw errors and name one observation that would disprove each explanation. Python programming is optional; complete analyze(evidence) only for extra summary practice. For independent work, predict each boundary before inspecting the report. In a paced walkthrough, pause at the bridge, gateway, forwarding and translation transitions. The optional gateway/return-route and destination-mapping projects have their own saved attempts. Unit 7 later edits NS6 commands; Unit 12 continues that later attempt with exposure policy.`;
 		const ipv6Notebook = `## Keep an independent IPv6 path notebook
 
 Opening this notebook reopens the matching core project and preserves the same saved IPv6 attempt. Keep the issuing host, ordinary account, tool versions and network namespace beside each report. Predict the explicit IPv4 and IPv6 outcomes before running either binding mode. All five imported files belong to this attempt; the reference remains separate.
@@ -225,25 +253,27 @@ Keep each prediction beside actual command output, the measured HTTP result and 
 			preserveInstructions: true,
 
 			content:
-				notebook && applicationCore
-					? applicationNotebook
-					: notebook && ipv6Core
-						? ipv6Notebook
-						: notebook && listeners
-							? listenerNotebook
-							: notebook && resolution
-								? resolutionNotebook
-								: notebook && reachability
-									? reachabilityNotebook
-									: notebook && firewall
-										? firewallNotebook
-										: notebook && capture
-											? captureNotebook
-											: notebook && topology
-												? topologyContinuation
-												: notebook
-													? `${item.content}\n\nContinue the existing core project. Opening this notebook reopens the matching core project rather than creating a second assignment. Keep predictions, actual command output, endpoint and process identities, changed-case comparisons and cleanup in network-notes.md. Follow the complete guide on the core project card and in README.md. Python programming is optional supplemental practice; command observations and the notebook are the core deliverable.`
-													: `${exposure ? "Continue the saved Unit7 attempt for the Unit12 Secure Exposure pass. Complete the fourth shell case and run --exposure-policy; the three earlier routing/NAT cases remain prerequisites.\n\n" : ""}${reading}\n\nSource guide: [Network Systems project](${projectLink}). Edit, save, review and export the selected role in the site IDE, then follow README.md in an external Linux terminal. The reference is separate from the learner attempt.`
+				notebook && linkRoutingCore
+					? linkRoutingNotebook
+					: notebook && applicationCore
+						? applicationNotebook
+						: notebook && ipv6Core
+							? ipv6Notebook
+							: notebook && listeners
+								? listenerNotebook
+								: notebook && resolution
+									? resolutionNotebook
+									: notebook && reachability
+										? reachabilityNotebook
+										: notebook && firewall
+											? firewallNotebook
+											: notebook && capture
+												? captureNotebook
+												: notebook && topology
+													? topologyContinuation
+													: notebook
+														? `${item.content}\n\nContinue the existing core project. Opening this notebook reopens the matching core project rather than creating a second assignment. Keep predictions, actual command output, endpoint and process identities, changed-case comparisons and cleanup in network-notes.md. Follow the complete guide on the core project card and in README.md. Python programming is optional supplemental practice; command observations and the notebook are the core deliverable.`
+														: `${exposure ? "Continue the saved Unit7 attempt for the Unit12 Secure Exposure pass. Complete the fourth shell case and run --exposure-policy; the three earlier routing/NAT cases remain prerequisites.\n\n" : ""}${reading}\n\nSource guide: [Network Systems project](${projectLink}). Edit, save, review and export the selected role in the site IDE, then follow README.md in an external Linux terminal. The reference is separate from the learner attempt.`
 		};
 	};
 	return {
