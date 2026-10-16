@@ -4505,9 +4505,18 @@ describe("course text quality normalization", () => {
 			"IPv6 Extension Practice"
 		]);
 		expect(new Set(projectItems.map(item => item.content)).size).toBe(3);
-		expect(projectItems[0].content).toContain("First version");
-		expect(projectItems[1].content).toContain("Transfer Practice");
-		expect(projectItems[2].content).toContain("Extension Practice");
+		expect(projectItems[0].content).toContain("Trace IPv6 Independently");
+		expect(projectItems[0].content).toContain("controlled IPv4 refusal");
+		expect(projectItems[0].content).toContain("No Python edit is required");
+		expect(projectItems[1].content).toContain("Optional Transfer");
+		expect(projectItems[1].content).toContain("/126, /127 and /128");
+		expect(projectItems[1].content).toContain(
+			"No example address is assigned"
+		);
+		expect(projectItems[2].content).toContain("Optional Extension");
+		expect(projectItems[2].content).toContain("IPV6_V6ONLY=1");
+		expect(projectItems[2].content).toContain("second IPv4");
+		expect(projectItems[2].content).toContain("does not test a wildcard");
 	});
 
 	it("keeps AI, data, and machine learning applied labs from regressing to generated filler", () => {

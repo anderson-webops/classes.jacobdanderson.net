@@ -8963,7 +8963,9 @@ defineExpose({ stop: stopCurrentProject, runIsolated, releaseIsolatedPointer });
 								>
 									{{
 										usesNativeSourceWorkspace
-											? "Select Build instructions for this project's native compiler command."
+											? selectedProject?.mode === "linux"
+												? "Select Linux instructions for this lab's execution and verification steps."
+												: "Select Build instructions for this project's native compiler command."
 											: selectedNativeJavaInstructions
 												? "Select Run for this project's native Java build and input/output instructions."
 												: "Output will appear here after a run."
