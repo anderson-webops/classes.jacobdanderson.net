@@ -148,7 +148,39 @@ export const assemblyRegisterPacks = [
 	}
 ] as const;
 
+export const assemblyLogicPacks = [
+	{
+		pack: "ASM-07-unit-3-arithmetic-and-logic-supplemental-2",
+		revision: "b56c6b50ed43b6c27d1da8117fe507a32f96032d",
+		roleFiles: [
+			"routine.S",
+			"main.c",
+			"lab.h",
+			"model.c",
+			"tests.c",
+			"abi_checks.S",
+			"CMakeLists.txt",
+			"trace.md"
+		]
+	},
+	{
+		pack: "ASM-08-unit-3-arithmetic-and-logic-supplemental-3",
+		revision: "b56c6b50ed43b6c27d1da8117fe507a32f96032d",
+		roleFiles: [
+			"routine.S",
+			"main.c",
+			"lab.h",
+			"model.c",
+			"tests.c",
+			"abi_checks.S",
+			"CMakeLists.txt",
+			"trace.md"
+		]
+	}
+] as const;
+
 export const assemblyVerifiedPacks = [
+	...assemblyLogicPacks,
 	...assemblyRegisterPacks,
 	...assemblySyscallPacks,
 	...assemblySetupPacks,

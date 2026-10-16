@@ -9,6 +9,7 @@ import {
 	assemblyHardeningPack,
 	assemblyHardeningTracePack,
 	assemblyHelperPack,
+	assemblyLogicPacks,
 	assemblyParserPack,
 	assemblyPerformancePack,
 	assemblyRecordPack,
@@ -30,6 +31,50 @@ export function assemblyBuildInstructions(
 		"Assembly compilation, tests and debugging require Linux x86-64, the System V AMD64 ABI, GNU/Clang assembly with the syntax specified in README.md, and a native Clang or GCC toolchain.",
 		"The workspace edits and saves source. Use an x86-64 Linux VM or lab on macOS, or an x86-64 WSL distribution on Windows."
 	];
+	if (
+		selected &&
+		assemblyLogicPacks.some(pack => pack.pack === selected.pack)
+	) {
+		if (
+			!selected.definition.roleFiles.every(name =>
+				files.some(file => file.name === `${selected.role}/${name}`)
+			) ||
+			!files.some(file => file.name === "README.md")
+		) {
+			return [
+				...lines,
+				"This comparison or shift investigation is incomplete. Preserve the saved attempt, then restore all eight selected role files and README.md."
+			];
+		}
+		const compare = selected.pack === assemblyLogicPacks[0].pack;
+		return [
+			...lines,
+			"Use GNU Intel source syntax and ordinary-user Linux x86-64 with CMake 3.20+, Clang or GCC, GDB and binutils.",
+			`From the extracted project folder: cd ${selected.role}`,
+			"cmake -S . -B build-Debug -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER=clang -DCMAKE_ASM_COMPILER=clang",
+			"cmake --build build-Debug --verbose --parallel 1",
+			"./build-Debug/app",
+			"ctest --test-dir build-Debug --output-on-failure",
+			"./build-Debug/app --changed",
+			"cmake -S . -B build-Release -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=clang -DCMAKE_ASM_COMPILER=clang",
+			"cmake --build build-Release --verbose --parallel 1",
+			"ctest --test-dir build-Release --output-on-failure",
+			"./build-Release/app --changed",
+			"Repeat both build profiles with GCC using separate build directories; explicit comparisons keep all checks active in Release.",
+			compare
+				? "Complete COMPARE_SIGNED in routine.S. CMP produces flags; MOV EAX,0 preserves them before SETcc. Compare all six unsigned, signed and equality decisions with the unchanged model, including opposite-sign boundary inputs."
+				: "Complete SHIFT_SIGNED in routine.S. Compare SHL, SHR and SAR using the low six count bits. The 64-bit count wraps at 64; distinguish zero fill from sign fill and record the separate effective-count result.",
+			"The contract takes the initial register in RDI, incoming bits in RSI and a valid owned output buffer in RDX. Store each full 64-bit result in its assigned slot. Preserve RBX, RBP, R12–R15 and the caller's stack state.",
+			"objdump -d -M intel --disassemble=lab_operation build-Debug/app",
+			"readelf -Ws build-Debug/CMakeFiles/app.dir/routine.S.o",
+			"gdb ./build-Debug/app",
+			"In GDB set disassembly-flavor intel, break lab_stage0 and the later stage labels, run, use info registers rdi rsi rdx rax rcx rip eflags, x/i $pc and si. Record RAX before/after each instruction and x/gx at the output slot after its store. For comparisons record CF/ZF/SF/OF from the producing CMP; for shifts record RCX & 63 and avoid claims about undefined flags.",
+			"Keep main.c, lab.h, model.c, tests.c and abi_checks.S unchanged. Complete only the named routine task and trace.md. Read ../README.md for every default/changed row, comparison and shift models, controlled regression and required evidence. Passing 10269 independent operand pairs does not complete the worksheet.",
+			selected.role === "starter"
+				? "The untouched program builds but exits 78 and its contracts fail. Retain that observation, make the minimal repair and export the saved routine.S and trace.md together."
+				: "The separate reference passes the unchanged contracts and both demonstrations. Record the current register and output values beside the prediction."
+		];
+	}
 	if (
 		selected &&
 		assemblyRegisterPacks.some(pack => pack.pack === selected.pack)

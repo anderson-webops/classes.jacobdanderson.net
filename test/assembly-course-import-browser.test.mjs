@@ -54,6 +54,7 @@ fixtures.push(
 );
 fixtures.push(...JSON.parse(await readFile(new URL("./fixtures/assembly-syscall-contracts.json", import.meta.url), "utf8")));
 fixtures.push(...JSON.parse(await readFile(new URL("./fixtures/assembly-register-contracts.json", import.meta.url), "utf8")));
+fixtures.push(...JSON.parse(await readFile(new URL("./fixtures/assembly-logic-contracts.json", import.meta.url), "utf8")));
 const hardening = fixtures.find(
 	row =>
 		row.pack
@@ -66,6 +67,28 @@ fixtures.push({
 });
 let fixture = fixtures[0];
 const workflowDefinitions = {
+
+    "ASM-07-unit-3-arithmetic-and-logic-supplemental-2": {
+        "primary": "routine.S",
+        "taskFile": "routine.S",
+        "title": "Signed and Unsigned Comparison Investigation",
+        "lesson": "assembly-unit-3-arithmetic-and-logic-assembly-unit-3-arithmetic-and-logic-supplemental-flag-logic-transfer-practice",
+        "moduleId": "assembly-unit-3-arithmetic-and-logic",
+        "logicMode": "compare",
+        "starterToken": "COMPARE_SIGNED",
+        "referenceToken": "separate reference passes"
+    },
+    "ASM-08-unit-3-arithmetic-and-logic-supplemental-3": {
+        "primary": "routine.S",
+        "taskFile": "routine.S",
+        "title": "Variable Shift Count Investigation",
+        "lesson": "assembly-unit-3-arithmetic-and-logic-assembly-unit-3-arithmetic-and-logic-supplemental-flag-logic-extension-practice",
+        "moduleId": "assembly-unit-3-arithmetic-and-logic",
+        "logicMode": "shift",
+        "starterToken": "SHIFT_SIGNED",
+        "referenceToken": "separate reference passes"
+    }
+,
 
     "ASM-05-unit-2-registers-and-data-movement-supplemental-2": {
         "primary": "routine.S",
@@ -235,7 +258,7 @@ const workflowDefinitions = {
 
 assert.equal(
 	fixtures.length,
-	21,
+	23,
 	"All twenty-one verified assignment workspaces require browser coverage"
 );
 assert.deepEqual(
@@ -338,7 +361,7 @@ async function verifyHardeningCourseButton(
 		key
 	);
 	assert.equal(saved.activeFileName, `starter/${definition.primary}`);
-	const expectedCount = definition.registerMode ? 9 : definition.syscallMode ? 8 : definition.setupMode ? 7 : 10;
+	const expectedCount = (definition.logicMode || definition.registerMode) ? 9 : definition.syscallMode ? 8 : definition.setupMode ? 7 : 10;
 	assert.equal(saved.files.length, expectedCount);
 	assert.equal(sourceRequests(), expectedCount);
 	return {
@@ -479,7 +502,7 @@ test(
 								width === 1280
 								&& theme === "light"
 								&& role === "starter"
-								&& (definition.registerMode || definition.setupMode || definition.syscallMode
+								&& (definition.logicMode || definition.registerMode || definition.setupMode || definition.syscallMode
 									|| (fixture.pack.startsWith("ASM-2")
 										&& ["analysis.md", "trace.md"].includes(
 											primary
@@ -715,7 +738,13 @@ test(
 								file => file.name === name
 							).content;
 							const edit
-								= definition.registerMode
+								= definition.logicMode
+                                    ? role === "starter"
+                                        ? fixture.files[`${fixture.pack}/solution/routine.S`].content
+                                        : definition.logicMode === "compare"
+                                            ? original.replace("    mov eax, 0\n.globl lab_stage2", "    xor eax, eax\n.globl lab_stage2")
+                                            : original.replace("    mov rcx, rsi\n.globl lab_stage0", "    mov ecx, esi\n    and ecx, 31\n.globl lab_stage0")
+                                    : definition.registerMode
                                     ? role === "starter"
                                         ? fixture.files[`${fixture.pack}/solution/routine.S`].content
                                         : definition.registerMode === "partial"
@@ -830,7 +859,7 @@ test(
 									file.content
 								);
 							}
-							if (definition.registerMode || definition.setupMode || definition.syscallMode) {
+							if (definition.logicMode || definition.registerMode || definition.setupMode || definition.syscallMode) {
 								await writeFile(
 									join(
 										exports,
@@ -884,7 +913,7 @@ test(
 					}
 				}
 			}
-			assert.equal(courseButtons.length, 8);
+			assert.equal(courseButtons.length, 10);
 			await writeFile(
 				join(captures, "assembly-course-buttons-proof.json"),
 				JSON.stringify(courseButtons, null, 2)

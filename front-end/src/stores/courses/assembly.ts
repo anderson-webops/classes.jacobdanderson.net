@@ -15,6 +15,10 @@ import {
 	assemblyHardeningTraceReading
 } from "./assemblyHardeningProjectReading";
 import { assemblyHelperProjectReading } from "./assemblyHelperProjectReading";
+import {
+	assemblyComparisonReading,
+	assemblyShiftReading
+} from "./assemblyLogicProjectReading";
 import { assemblyOpeningProjectReading } from "./assemblyOpeningProjectReading";
 import { assemblyParserProjectReading } from "./assemblyParserProjectReading";
 import { assemblyPerformanceProjectReading } from "./assemblyPerformanceProjectReading";
@@ -265,30 +269,26 @@ const assemblySourceCourse: RawCourse = {
 						"https://github.com/instruction-material/Assembly/tree/0e6243fe594793b931117133c8dc070983af1617/ASM-06-unit-3-arithmetic-and-logic/solution"
 				},
 				{
-					title: "Flag Logic Transfer Practice",
-					content: buildProjectGuidance({
-						courseFamily: "assembly",
-						moduleTitle: "Unit 3: Arithmetic and Logic",
-						projectKind: "extension",
-						hasReference: true
-					}),
+					title: "Signed and Unsigned Comparison Investigation",
+					id: "assembly-unit-3-arithmetic-and-logic-supplemental-flag-logic-transfer-practice",
+					preserveInstructions: true,
+					ideImport: true,
+					content: assemblyComparisonReading,
 					projectLink:
-						"https://github.com/instruction-material/Assembly/tree/main/ASM-07-unit-3-arithmetic-and-logic-supplemental-2/starter",
+						"https://github.com/instruction-material/Assembly/tree/b56c6b50ed43b6c27d1da8117fe507a32f96032d/ASM-07-unit-3-arithmetic-and-logic-supplemental-2/starter",
 					solutionLink:
-						"https://github.com/instruction-material/Assembly/tree/main/ASM-07-unit-3-arithmetic-and-logic-supplemental-2/solution"
+						"https://github.com/instruction-material/Assembly/tree/b56c6b50ed43b6c27d1da8117fe507a32f96032d/ASM-07-unit-3-arithmetic-and-logic-supplemental-2/solution"
 				},
 				{
-					title: "Flag Logic Extension Practice",
-					content: buildProjectGuidance({
-						courseFamily: "assembly",
-						moduleTitle: "Unit 3: Arithmetic and Logic",
-						projectKind: "extension",
-						hasReference: true
-					}),
+					title: "Variable Shift Count Investigation",
+					id: "assembly-unit-3-arithmetic-and-logic-supplemental-flag-logic-extension-practice",
+					preserveInstructions: true,
+					ideImport: true,
+					content: assemblyShiftReading,
 					projectLink:
-						"https://github.com/instruction-material/Assembly/tree/main/ASM-08-unit-3-arithmetic-and-logic-supplemental-3/starter",
+						"https://github.com/instruction-material/Assembly/tree/b56c6b50ed43b6c27d1da8117fe507a32f96032d/ASM-08-unit-3-arithmetic-and-logic-supplemental-3/starter",
 					solutionLink:
-						"https://github.com/instruction-material/Assembly/tree/main/ASM-08-unit-3-arithmetic-and-logic-supplemental-3/solution"
+						"https://github.com/instruction-material/Assembly/tree/b56c6b50ed43b6c27d1da8117fe507a32f96032d/ASM-08-unit-3-arithmetic-and-logic-supplemental-3/solution"
 				}
 			]
 		},

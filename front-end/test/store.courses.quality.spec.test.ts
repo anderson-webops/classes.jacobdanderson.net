@@ -9746,6 +9746,12 @@ describe("course text quality normalization", () => {
 		expect(corpus).toContain("Signed and Unsigned Widening Investigation");
 		expect(corpus).toContain("WIDTH_SEED");
 		expect(corpus).toContain("SIGN_BYTE");
+		expect(corpus).toContain(
+			"Signed and Unsigned Comparison Investigation"
+		);
+		expect(corpus).toContain("Variable Shift Count Investigation");
+		expect(corpus).toContain("COMPARE_SIGNED");
+		expect(corpus).toContain("SHIFT_SIGNED");
 		expect(corpus).toContain("Assembly Lab 15: Stack Trace Studio");
 		expect(corpus).toContain("Assembly Lab 16: ABI Integration Studio");
 		expect(corpus).toContain("Assembly Lab 17: Reverse Trace Studio");
