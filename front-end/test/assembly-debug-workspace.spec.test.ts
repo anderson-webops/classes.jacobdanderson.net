@@ -83,7 +83,7 @@ describe.each([
 		});
 		const course = (await useCoursesStore().loadCourseById("assembly"))!;
 		const items = course.modules.flatMap(module => module.curriculum);
-		expect(items).toHaveLength(49);
+		expect(items).toHaveLength(50);
 		const project = items.find(
 			item => item.projectLink === `${root}/starter`
 		)!;

@@ -65,7 +65,7 @@ it("keeps Unit 3 identities and a complete required trace continuation with sepa
 	});
 	const course = (await useCoursesStore().loadCourseById("assembly"))!;
 	expect(course.modules.flatMap(module => module.curriculum)).toHaveLength(
-		49
+		50
 	);
 	const module = course.modules.find(
 		module => module.id === "assembly-unit-3-arithmetic-and-logic"

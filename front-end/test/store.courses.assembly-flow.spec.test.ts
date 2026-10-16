@@ -19,7 +19,8 @@ const EXPECTED_PRIMARY_SEQUENCE = [
 
 const REQUIRED_TRACE_IDS = [
 	"assembly-unit-1-machine-model-and-toolchain-supplemental-register-trace-worksheet-machine-model-and-toolchain",
-	"assembly-unit-3-arithmetic-and-logic-supplemental-register-trace-worksheet-arithmetic-and-logic"
+	"assembly-unit-3-arithmetic-and-logic-supplemental-register-trace-worksheet-arithmetic-and-logic",
+    "assembly-unit-8-system-calls-and-runtime-interaction-supplemental-system-call-transfer-practice"
 ];
 
 function requireModule(title: string) {
@@ -101,8 +102,8 @@ describe("Assembly learner flow", () => {
 			.join("\n");
 
 		// Units 1 and 3 each consolidate four short cards into one complete reading.
-		expect(curriculumCount).toBe(56);
-		expect(optionCount).toBe(68);
+		expect(curriculumCount).toBe(55);
+		expect(optionCount).toBe(67);
 		expect(archive.supplementalProjects).toHaveLength(29);
 		expect(archiveText).toContain("ASM13 Expansion Ideas and Next Steps");
 		expect(archiveText).toContain("Assembly Lab 15: Stack Trace Studio");

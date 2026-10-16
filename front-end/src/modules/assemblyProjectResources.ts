@@ -81,7 +81,44 @@ export const assemblySetupPacks = [
 	}
 ] as const;
 
+export const assemblySyscallPacks = [
+	{
+		pack: "ASM-17-unit-8-system-calls-and-runtime-interaction-supplemental-2",
+		revision: "adb2b8410a45cd7be151b186d107b6170510711f",
+		coreItemId:
+			"assembly-unit-8-system-calls-and-runtime-interaction-curriculum-system-calls-and-runtime-interaction-core-concepts",
+		continuationItemIds: [
+			"assembly-unit-8-system-calls-and-runtime-interaction-supplemental-system-call-transfer-practice"
+		],
+		roleFiles: [
+			"routine.S",
+			"main.c",
+			"lab.h",
+			"tests.c",
+			"abi_checks.S",
+			"CMakeLists.txt",
+			"trace.md"
+		]
+	},
+	{
+		pack: "ASM-18-unit-8-system-calls-and-runtime-interaction-supplemental-3",
+		revision: "adb2b8410a45cd7be151b186d107b6170510711f",
+		coreItemId:
+			"assembly-unit-8-system-calls-and-runtime-interaction-supplemental-system-call-extension-practice",
+		roleFiles: [
+			"routine.S",
+			"main.c",
+			"lab.h",
+			"tests.c",
+			"abi_checks.S",
+			"CMakeLists.txt",
+			"trace.md"
+		]
+	}
+] as const;
+
 export const assemblyVerifiedPacks = [
+	...assemblySyscallPacks,
 	...assemblySetupPacks,
 	{
 		pack: assemblyArithmeticPack,

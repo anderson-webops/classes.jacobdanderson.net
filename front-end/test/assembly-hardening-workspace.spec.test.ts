@@ -72,7 +72,7 @@ it("preserves two optional identities and the reverse-engineering core with comp
 		saveEdit: "Save"
 	});
 	const course = (await useCoursesStore().loadCourseById("assembly"))!;
-	expect(course.modules.flatMap(m => m.curriculum)).toHaveLength(49);
+	expect(course.modules.flatMap(m => m.curriculum)).toHaveLength(50);
 	const module = course.modules.find(m =>
 		m.title.includes("Security and Reliability Visibility")
 	)!;

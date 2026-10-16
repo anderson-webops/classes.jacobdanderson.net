@@ -53,7 +53,7 @@ it("keeps the calculator's progress identity, complete guide and separate refere
 	});
 	const course = (await useCoursesStore().loadCourseById("assembly"))!;
 	const items = course.modules.flatMap(module => module.curriculum);
-	expect(items).toHaveLength(49);
+	expect(items).toHaveLength(50);
 	const project = items.find(item => item.projectLink === `${root}/starter`)!;
 	expect(project.id).toBe(
 		"assembly-unit-2-registers-and-data-movement-curriculum-project-integer-calculator-in-assembly"

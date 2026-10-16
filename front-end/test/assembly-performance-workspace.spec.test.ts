@@ -59,7 +59,7 @@ it("preserves the core progress identity, complete guide and distinct optional t
 	});
 	const course = (await useCoursesStore().loadCourseById("assembly"))!;
 	const items = course.modules.flatMap(m => m.curriculum);
-	expect(items).toHaveLength(49);
+	expect(items).toHaveLength(50);
 	const project = items.find(i => i.projectLink === root + "/starter")!;
 	expect(project.id).toBe(itemId);
 	expect(project.ideImport).toBe(true);

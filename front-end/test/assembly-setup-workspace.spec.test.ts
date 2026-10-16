@@ -58,7 +58,7 @@ it("retains required setup and separate optional identities, complete readings a
 	});
 	const course = (await useCoursesStore().loadCourseById("assembly"))!;
 	expect(course.modules.flatMap(module => module.curriculum)).toHaveLength(
-		49
+		50
 	);
 	const module = course.modules.find(
 		module => module.id === "assembly-asm0-setup-and-tooling"

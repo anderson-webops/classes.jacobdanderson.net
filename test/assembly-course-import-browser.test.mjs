@@ -52,10 +52,11 @@ fixtures.push(
 		)
 	)
 );
+fixtures.push(...JSON.parse(await readFile(new URL("./fixtures/assembly-syscall-contracts.json", import.meta.url), "utf8")));
 const hardening = fixtures.find(
 	row =>
-		row.pack ===
-		"ASM-25-unit-12-security-and-reliability-visibility-supplemental-2"
+		row.pack
+		=== "ASM-25-unit-12-security-and-reliability-visibility-supplemental-2"
 );
 fixtures.push({
 	...hardening,
@@ -64,6 +65,27 @@ fixtures.push({
 });
 let fixture = fixtures[0];
 const workflowDefinitions = {
+
+	"ASM-17-unit-8-system-calls-and-runtime-interaction-supplemental-2": {
+		primary: "routine.S",
+		taskFile: "routine.S",
+		title: "Core Project: Linux Syscalls and Partial Writes",
+		lesson: "assembly-unit-8-system-calls-and-runtime-interaction-assembly-unit-8-system-calls-and-runtime-interaction-curriculum-system-calls-and-runtime-interaction-core-concepts",
+		moduleId: "assembly-unit-8-system-calls-and-runtime-interaction",
+		syscallMode: "write",
+		starterToken: "SYSCALL_WRITE",
+		referenceToken: "separate reference passes"
+	},
+	"ASM-18-unit-8-system-calls-and-runtime-interaction-supplemental-3": {
+		primary: "routine.S",
+		taskFile: "routine.S",
+		title: "Project: File Creation Across Two ABIs",
+		lesson: "assembly-unit-8-system-calls-and-runtime-interaction-assembly-unit-8-system-calls-and-runtime-interaction-supplemental-system-call-extension-practice",
+		moduleId: "assembly-unit-8-system-calls-and-runtime-interaction",
+		syscallMode: "openat",
+		starterToken: "SYSCALL_ARG4",
+		referenceToken: "separate reference passes"
+	},
 	"ASM-01-asm0-setup-and-tooling-supplemental-2": {
 		primary: "routine.S",
 		taskFile: "routine.S",
@@ -222,9 +244,9 @@ async function verifyHardeningCourseButton(
 	sourceRequests,
 	setCatalog
 ) {
-	const moduleId =
-		definition.moduleId ??
-		"assembly-unit-12-security-and-reliability-visibility";
+	const moduleId
+		= definition.moduleId
+			?? "assembly-unit-12-security-and-reliability-visibility";
 	const sourceUrl = `https://github.com/instruction-material/Assembly/tree/${fixture.revision}/${fixture.pack}/starter`;
 	setCatalog(true);
 	await page.goto(`${origin}/courses#${moduleId}`, {
@@ -244,11 +266,11 @@ async function verifyHardeningCourseButton(
 			`#${definition.lesson}`,
 			(card, expected) =>
 				[...card.querySelectorAll("a")]
-					.find(link => {
+					.find((link) => {
 						const url = new URL(link.href);
 						return (
-							url.pathname === "/ide" &&
-							url.searchParams.get("starterUrl") === expected
+							url.pathname === "/ide"
+							&& url.searchParams.get("starterUrl") === expected
 						);
 					})
 					?.getAttribute("href"),
@@ -293,7 +315,7 @@ async function verifyHardeningCourseButton(
 		key
 	);
 	assert.equal(saved.activeFileName, `starter/${definition.primary}`);
-	const expectedCount = definition.setupMode ? 7 : 10;
+	const expectedCount = definition.syscallMode ? 8 : definition.setupMode ? 7 : 10;
 	assert.equal(saved.files.length, expectedCount);
 	assert.equal(sourceRequests(), expectedCount);
 	return {
@@ -312,11 +334,11 @@ test(
 	{ timeout: 360_000 },
 	async () => {
 		let server, browser, context, page;
-		const captures =
-			process.env.COURSE_IMPORT_SCREENSHOT_DIR ?? "output/playwright";
-		const exports =
-			process.env.ASSEMBLY_BROWSER_EXPORT_PROOF_DIR ??
-			"output/assembly-exports";
+		const captures
+			= process.env.COURSE_IMPORT_SCREENSHOT_DIR ?? "output/playwright";
+		const exports
+			= process.env.ASSEMBLY_BROWSER_EXPORT_PROOF_DIR
+				?? "output/assembly-exports";
 		const proof = [];
 		const courseButtons = [];
 		await mkdir(captures, { recursive: true });
@@ -352,15 +374,15 @@ test(
 					const click = HTMLAnchorElement.prototype.click;
 					HTMLAnchorElement.prototype.click = function () {
 						if (
-							this.download.endsWith(".zip") &&
-							this.href.startsWith("blob:")
+							this.download.endsWith(".zip")
+							&& this.href.startsWith("blob:")
 						) {
 							return;
 						}
 						return click.call(this);
 					};
 					const create = URL.createObjectURL;
-					URL.createObjectURL = blob => {
+					URL.createObjectURL = (blob) => {
 						if (blob.type === "application/zip")
 							window.__assemblyArchive = blob;
 						return create(blob);
@@ -372,7 +394,7 @@ test(
 			await page.setRequestInterception(true);
 			let requests = [];
 			let catalog = false;
-			page.on("request", request => {
+			page.on("request", (request) => {
 				const url = new URL(request.url());
 				if (url.hostname === "raw.githubusercontent.com") {
 					requests.push(url.pathname);
@@ -386,14 +408,15 @@ test(
 						headers: { "access-control-allow-origin": "*" },
 						body: file?.content ?? "Unknown source"
 					});
-				} else if (
-					url.origin !== origin ||
-					url.pathname.startsWith("/api/")
+				}
+				else if (
+					url.origin !== origin
+					|| url.pathname.startsWith("/api/")
 				) {
 					let body = {};
 					if (catalog && url.pathname === "/api/accounts/me")
 						body = { userID: "assembly-learner" };
-					if (catalog && url.pathname === "/api/users/loggedin")
+					if (catalog && url.pathname === "/api/users/loggedin") {
 						body = {
 							currentUser: {
 								_id: "assembly-learner",
@@ -405,12 +428,14 @@ test(
 								courseProgress: []
 							}
 						};
+					}
 					void request.respond({
 						status: 200,
 						contentType: "application/json",
 						body: JSON.stringify(body)
 					});
-				} else {
+				}
+				else {
 					void request.continue();
 				}
 			});
@@ -428,12 +453,12 @@ test(
 					for (const theme of ["light", "dark"]) {
 						for (const role of ["starter", "solution"]) {
 							if (
-								width === 1280 &&
-								theme === "light" &&
-								role === "starter" &&
-								(definition.setupMode ||
-									(fixture.pack.startsWith("ASM-2") &&
-										["analysis.md", "trace.md"].includes(
+								width === 1280
+								&& theme === "light"
+								&& role === "starter"
+								&& (definition.setupMode || definition.syscallMode
+									|| (fixture.pack.startsWith("ASM-2")
+										&& ["analysis.md", "trace.md"].includes(
 											primary
 										)))
 							) {
@@ -454,8 +479,8 @@ test(
 								fixture.files
 							).filter(
 								path =>
-									path.startsWith(`${sourcePack}/${role}/`) ||
-									path === `${sourcePack}/README.md`
+									path.startsWith(`${sourcePack}/${role}/`)
+									|| path === `${sourcePack}/README.md`
 							);
 							await page.setViewport({ width, height: 900 });
 							await page.emulateMediaFeatures([
@@ -559,8 +584,7 @@ test(
 							);
 							assert.equal(
 								await page.$eval("button.run-control", b =>
-									b.textContent.trim()
-								),
+									b.textContent.trim()),
 								"Build instructions"
 							);
 							await page.click("button.run-control");
@@ -582,8 +606,8 @@ test(
 									) =>
 										p.textContent.includes(
 											"Linux x86-64"
-										) &&
-										p.textContent.includes(
+										)
+										&& p.textContent.includes(
 											role === "starter"
 												? starterToken
 												: referenceToken
@@ -616,8 +640,8 @@ test(
 								expectedFiles.length
 							);
 							for (const file of saved.files) {
-								const source =
-									fixture.files[`${sourcePack}/${file.name}`];
+								const source
+									= fixture.files[`${sourcePack}/${file.name}`];
 								const path = Object.keys(entries).find(path =>
 									path.endsWith(`/${file.name}`)
 								);
@@ -667,26 +691,32 @@ test(
 							const original = saved.files.find(
 								file => file.name === name
 							).content;
-							const edit =
-								definition.setupMode === "symbols"
-									? original.replace(
-											role === "starter"
-												? "# TODO: export lab_answer to the separately compiled C caller"
-												: ".globl lab_answer",
-											role === "starter"
-												? ".globl lab_answer"
-												: "# saved local-symbol regression"
-										)
-									: definition.setupMode === "preprocess"
+							const edit
+								= definition.syscallMode
+									? role === "starter"
+										? fixture.files[`${fixture.pack}/solution/routine.S`].content
+										: definition.syscallMode === "write"
+											? original.replace("mov eax, 1\n", "mov eax, 0\n")
+											: original.replace("mov r10, rcx\n", "xor r10d, r10d\n")
+									: definition.setupMode === "symbols"
 										? original.replace(
 												role === "starter"
-													? 'set(LAB_ASM_LANGUAGE "assembler"'
-													: 'set(LAB_ASM_LANGUAGE "assembler-with-cpp"',
+													? "# TODO: export lab_answer to the separately compiled C caller"
+													: ".globl lab_answer",
 												role === "starter"
-													? 'set(LAB_ASM_LANGUAGE "assembler-with-cpp"'
-													: 'set(LAB_ASM_LANGUAGE "assembler"'
+													? ".globl lab_answer"
+													: "# saved local-symbol regression"
 											)
-										: `${original}${taskFile ? "\nSaved worksheet observation: record the actual compiler and trace.\n" : "\n/* Saved Assembly attempt. */\n"}`;
+										: definition.setupMode === "preprocess"
+											? original.replace(
+													role === "starter"
+														? "set(LAB_ASM_LANGUAGE \"assembler\""
+														: "set(LAB_ASM_LANGUAGE \"assembler-with-cpp\"",
+													role === "starter"
+														? "set(LAB_ASM_LANGUAGE \"assembler-with-cpp\""
+														: "set(LAB_ASM_LANGUAGE \"assembler\""
+												)
+											: `${original}${taskFile ? "\nSaved worksheet observation: record the actual compiler and trace.\n" : "\n/* Saved Assembly attempt. */\n"}`;
 							assert.notEqual(edit, original);
 							await page.click(".cm-content");
 							const modifier = await page.evaluate(() =>
@@ -705,7 +735,8 @@ test(
 								(s, k, n, c) =>
 									JSON.parse(localStorage.getItem(s))
 										.find(p => p.courseProjectKey === k)
-										?.files.some(
+										?.files
+										.some(
 											f => f.name === n && f.content === c
 										),
 								{},
@@ -770,7 +801,7 @@ test(
 									file.content
 								);
 							}
-							if (definition.setupMode)
+							if (definition.setupMode || definition.syscallMode) {
 								await writeFile(
 									join(
 										exports,
@@ -778,21 +809,21 @@ test(
 									),
 									Buffer.from(edited, "base64")
 								);
+							}
 							const returnHref = await page.$$eval("a", links =>
 								links
 									.find(
 										link =>
-											link.textContent.trim() ===
-											"Return to lesson"
+											link.textContent.trim()
+											=== "Return to lesson"
 									)
-									?.getAttribute("href")
-							);
+									?.getAttribute("href"));
 							assert.equal(returnHref, `/courses#${lesson}`);
 							assert.ok(
 								await page.evaluate(
 									() =>
-										document.documentElement.scrollWidth <=
-										innerWidth + 1
+										document.documentElement.scrollWidth
+										<= innerWidth + 1
 								)
 							);
 							const capture = `course-import-assembly-${fixture.pack}-${role}-${width}-${theme}.png`;
@@ -838,7 +869,8 @@ test(
 				join(captures, "assembly-workflow-proof.json"),
 				`${JSON.stringify(proof, null, 2)}\n`
 			);
-		} catch (error) {
+		}
+		catch (error) {
 			await writeFile(
 				join(captures, "assembly-workflow-partial.json"),
 				JSON.stringify(proof, null, 2)
@@ -849,7 +881,7 @@ test(
 					viewport: innerWidth,
 					documentWidth: document.documentElement.scrollWidth,
 					overflow: [...document.querySelectorAll("body *")]
-						.map(node => {
+						.map((node) => {
 							const box = node.getBoundingClientRect();
 							const style = getComputedStyle(node);
 							return {
@@ -904,7 +936,8 @@ test(
 				);
 			}
 			throw error;
-		} finally {
+		}
+		finally {
 			await page?.close();
 			await context?.close();
 			await browser?.close();

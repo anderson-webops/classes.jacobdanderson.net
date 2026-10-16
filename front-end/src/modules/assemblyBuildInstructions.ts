@@ -15,7 +15,8 @@ import {
 	assemblyReversePack,
 	assemblySetupPacks,
 	assemblyStackPack,
-	assemblyStringPack
+	assemblyStringPack,
+	assemblySyscallPacks
 } from "@/modules/assemblyProjectResources";
 
 export function assemblyBuildInstructions(
@@ -28,6 +29,53 @@ export function assemblyBuildInstructions(
 		"Assembly compilation, tests and debugging require Linux x86-64, the System V AMD64 ABI, GNU/Clang assembly with the syntax specified in README.md, and a native Clang or GCC toolchain.",
 		"The workspace edits and saves source. Use an x86-64 Linux VM or lab on macOS, or an x86-64 WSL distribution on Windows."
 	];
+	if (
+		selected &&
+		assemblySyscallPacks.some(pack => pack.pack === selected.pack)
+	) {
+		if (
+			!selected.definition.roleFiles.every(name =>
+				files.some(file => file.name === `${selected.role}/${name}`)
+			) ||
+			!files.some(file => file.name === "README.md")
+		) {
+			return [
+				...lines,
+				"This syscall project is incomplete. Preserve the saved attempt, then restore all seven selected role files and README.md."
+			];
+		}
+		const write = selected.pack === assemblySyscallPacks[0].pack;
+		return [
+			...lines,
+			"Use GNU Intel source syntax and an ordinary-user Linux x86-64 environment with CMake 3.20+, Clang or GCC, GDB and strace.",
+			`From the extracted project folder: cd ${selected.role}`,
+			"cmake -S . -B build-Debug -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER=clang -DCMAKE_ASM_COMPILER=clang",
+			"cmake --build build-Debug --verbose --parallel 1",
+			"./build-Debug/app",
+			"ctest --test-dir build-Debug --output-on-failure",
+			"./build-Debug/app --changed",
+			"cmake -S . -B build-Release -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=clang -DCMAKE_ASM_COMPILER=clang",
+			"cmake --build build-Release --verbose --parallel 1",
+			"ctest --test-dir build-Release --output-on-failure",
+			"./build-Release/app --changed",
+			"Repeat both profiles with GCC using separate build directories. The checks stay active in Release.",
+			write
+				? "Complete SYSCALL_WRITE in routine.S. RDI/RSI/RDX already contain the three arguments; RAX selects write=1. Observe raw EBADF without changing errno, libc conversion, measured pipe capacity C, a positive short write, EAGAIN and the remaining byte-exact transfer."
+				: "Complete SYSCALL_ARG4 in routine.S. Transfer argument four from RCX to R10 before openat=257. A returned descriptor alone is insufficient: verify actual requested 0600/0400 file modes, raw EEXIST/ENOENT, libc conversion and cleanup.",
+			write
+				? "strace -f -yy -s 131072 -e trace=write,read,pipe2,fcntl,close ./build-Debug/app"
+				: "strace -f -yy -e trace=openat,fstat,newfstatat,close,unlinkat,mkdir,rmdir,umask ./build-Debug/app",
+			"gdb ./build-Debug/app",
+			write
+				? "In GDB set disassembly-flavor intel, break lab_write_boundary, run, record RAX/RDI/RSI/RDX/RCX/R11, then si and record the actual raw return."
+				: "In GDB set disassembly-flavor intel, break lab_openat_boundary, run, record RAX/RDI/RSI/RDX/RCX/R10/R11, then si and record the actual raw return.",
+			"RCX/R11 are clobbered by the syscall boundary. Preserve RBX, RBP, R12–R15 and the caller's stack state. Keep main.c, lab.h, tests.c and abi_checks.S unchanged; complete only the named routine task and trace.md.",
+			"Read ../README.md for the exact normal/changed rows, kernel-versus-libc error convention, owned-fixture cleanup, controlled regressions and evidence table. Passing tests does not complete trace.md.",
+			selected.role === "starter"
+				? "The untouched program builds but exits 78 and its contracts fail. Save that observation before completing routine.S; reopening the worksheet retains this same saved attempt."
+				: "The separate reference passes the unchanged contracts and the default/changed demonstrations. Record current compiler versions and actual kernel observations beside its reasoning."
+		];
+	}
 	if (
 		selected &&
 		assemblySetupPacks.some(pack => pack.pack === selected.pack)

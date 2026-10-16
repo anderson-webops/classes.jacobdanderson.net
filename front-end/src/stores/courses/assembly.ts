@@ -26,6 +26,11 @@ import {
 import { assemblyReverseProjectReading } from "./assemblyReverseProjectReading";
 import { assemblyStackProjectReading } from "./assemblyStackProjectReading";
 import { assemblyStringProjectReading } from "./assemblyStringProjectReading";
+import {
+	assemblySyscallOpenatReading,
+	assemblySyscallWriteReading,
+	assemblySyscallWriteTraceReading
+} from "./assemblySyscallProjectReading";
 import { buildImplementationLabGuidance } from "./implementationLabGuidance";
 import { buildProjectGuidance } from "./projectGuidance";
 
@@ -558,19 +563,20 @@ const assemblySourceCourse: RawCourse = {
 			title: "Unit 8: System Calls and Runtime Interaction",
 			curriculum: [
 				{
-					title: "Minimal Linux Syscall Examples",
-					content:
-						"Direct syscalls expose the lowest visible interface between user-space code and the kernel, even when the classroom build sometimes uses a libc-backed harness for portability. The central pattern is putting the syscall number and arguments in the required registers, executing the boundary-crossing instruction, and interpreting the return value as success or failure."
-				},
-				{
-					title: "libc versus Direct Syscalls",
-					content:
-						"Compare libc calls and direct syscalls so runtime interaction is visible at different layers. The key lesson is not choosing one forever, but understanding what extra behavior a runtime library adds beyond the raw kernel boundary."
-				},
-				{
-					title: "argc, argv, and Process Startup State",
-					content:
-						"Use command-line arguments as a beginner-friendly runtime surface that still reveals process state, string parsing, and error handling. This provides a concrete input path without requiring a large UI or framework."
+					title: "Core Project: Linux Syscalls and Partial Writes",
+					id: "assembly-unit-8-system-calls-and-runtime-interaction-curriculum-system-calls-and-runtime-interaction-core-concepts",
+					aliases: [
+						"assembly-unit-8-system-calls-and-runtime-interaction-curriculum-minimal-linux-syscall-examples",
+						"assembly-unit-8-system-calls-and-runtime-interaction-curriculum-libc-versus-direct-syscalls",
+						"assembly-unit-8-system-calls-and-runtime-interaction-curriculum-argc-argv-and-process-startup-state"
+					],
+					preserveInstructions: true,
+					ideImport: true,
+					content: assemblySyscallWriteReading,
+					projectLink:
+						"https://github.com/instruction-material/Assembly/tree/adb2b8410a45cd7be151b186d107b6170510711f/ASM-17-unit-8-system-calls-and-runtime-interaction-supplemental-2/starter",
+					solutionLink:
+						"https://github.com/instruction-material/Assembly/tree/adb2b8410a45cd7be151b186d107b6170510711f/ASM-17-unit-8-system-calls-and-runtime-interaction-supplemental-2/solution"
 				},
 				{
 					title: "Project: Tiny Command-Line Parser",
@@ -581,6 +587,17 @@ const assemblySourceCourse: RawCourse = {
 						"https://github.com/instruction-material/Assembly/tree/b87661c22a4bc08245cac18a0d6b8d672723eec8/ASM5-Tiny-Command-Line-Parser/starter",
 					solutionLink:
 						"https://github.com/instruction-material/Assembly/tree/b87661c22a4bc08245cac18a0d6b8d672723eec8/ASM5-Tiny-Command-Line-Parser/solution"
+				},
+				{
+					title: "Project: File Creation Across Two ABIs",
+					id: "assembly-unit-8-system-calls-and-runtime-interaction-supplemental-system-call-extension-practice",
+					preserveInstructions: true,
+					ideImport: true,
+					content: assemblySyscallOpenatReading,
+					projectLink:
+						"https://github.com/instruction-material/Assembly/tree/adb2b8410a45cd7be151b186d107b6170510711f/ASM-18-unit-8-system-calls-and-runtime-interaction-supplemental-3/starter",
+					solutionLink:
+						"https://github.com/instruction-material/Assembly/tree/adb2b8410a45cd7be151b186d107b6170510711f/ASM-18-unit-8-system-calls-and-runtime-interaction-supplemental-3/solution"
 				}
 			],
 			supplementalProjects: [
@@ -592,32 +609,16 @@ const assemblySourceCourse: RawCourse = {
 						"https://github.com/instruction-material/Assembly/blob/b87661c22a4bc08245cac18a0d6b8d672723eec8/ASM5-Tiny-Command-Line-Parser/README.md"
 				},
 				{
-					title: "System Call Transfer Practice",
-					content: buildProjectGuidance({
-						courseFamily: "assembly",
-						moduleTitle:
-							"Unit 8: System Calls and Runtime Interaction",
-						projectKind: "extension",
-						hasReference: true
-					}),
+					title: "Write Boundary Worksheet",
+					id: "assembly-unit-8-system-calls-and-runtime-interaction-supplemental-system-call-transfer-practice",
+					preserveInstructions: true,
+					learningPath: "core",
+					ideImport: true,
+					content: assemblySyscallWriteTraceReading,
 					projectLink:
-						"https://github.com/instruction-material/Assembly/tree/main/ASM-17-unit-8-system-calls-and-runtime-interaction-supplemental-2/starter",
+						"https://github.com/instruction-material/Assembly/tree/adb2b8410a45cd7be151b186d107b6170510711f/ASM-17-unit-8-system-calls-and-runtime-interaction-supplemental-2/starter",
 					solutionLink:
-						"https://github.com/instruction-material/Assembly/tree/main/ASM-17-unit-8-system-calls-and-runtime-interaction-supplemental-2/solution"
-				},
-				{
-					title: "System Call Extension Practice",
-					content: buildProjectGuidance({
-						courseFamily: "assembly",
-						moduleTitle:
-							"Unit 8: System Calls and Runtime Interaction",
-						projectKind: "extension",
-						hasReference: true
-					}),
-					projectLink:
-						"https://github.com/instruction-material/Assembly/tree/main/ASM-18-unit-8-system-calls-and-runtime-interaction-supplemental-3/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Assembly/tree/main/ASM-18-unit-8-system-calls-and-runtime-interaction-supplemental-3/solution"
+						"https://github.com/instruction-material/Assembly/tree/adb2b8410a45cd7be151b186d107b6170510711f/ASM-17-unit-8-system-calls-and-runtime-interaction-supplemental-2/solution"
 				}
 			]
 		},
@@ -1317,7 +1318,7 @@ const ASSEMBLY_MODULE_FLOW: Record<string, AssemblyModuleFlow> = {
 			"Derive effective addresses from a labeled layout before executing them. Test empty and bounded arrays/strings, exact capacity, missing terminator, and source/destination overlap policy; every memory walk carries an explicit length or trusted bound."
 	},
 	"Unit 8: System Calls and Runtime Interaction": {
-		estimatedTime: "3–4 sessions · 45–60 minutes each",
+		estimatedTime: "4–6 sessions · 45–60 minutes each",
 		keyBlocks: [
 			"Linux syscall ABI",
 			"libc boundary",
