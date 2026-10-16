@@ -117,7 +117,39 @@ export const assemblySyscallPacks = [
 	}
 ] as const;
 
+export const assemblyRegisterPacks = [
+	{
+		pack: "ASM-05-unit-2-registers-and-data-movement-supplemental-2",
+		revision: "3e07b75a56e27321180080ef347957d65521f22e",
+		roleFiles: [
+			"routine.S",
+			"main.c",
+			"lab.h",
+			"model.c",
+			"tests.c",
+			"abi_checks.S",
+			"CMakeLists.txt",
+			"trace.md"
+		]
+	},
+	{
+		pack: "ASM-06-unit-2-registers-and-data-movement-supplemental-3",
+		revision: "3e07b75a56e27321180080ef347957d65521f22e",
+		roleFiles: [
+			"routine.S",
+			"main.c",
+			"lab.h",
+			"model.c",
+			"tests.c",
+			"abi_checks.S",
+			"CMakeLists.txt",
+			"trace.md"
+		]
+	}
+] as const;
+
 export const assemblyVerifiedPacks = [
+	...assemblyRegisterPacks,
 	...assemblySyscallPacks,
 	...assemblySetupPacks,
 	{

@@ -23,6 +23,10 @@ import {
 	assemblyRecordProjectReading,
 	assemblyRecordTraceReading
 } from "./assemblyRecordProjectReading";
+import {
+	assemblyPartialRegisterReading,
+	assemblyWideningReading
+} from "./assemblyRegisterProjectReading";
 import { assemblyReverseProjectReading } from "./assemblyReverseProjectReading";
 import { assemblyStackProjectReading } from "./assemblyStackProjectReading";
 import { assemblyStringProjectReading } from "./assemblyStringProjectReading";
@@ -203,30 +207,26 @@ const assemblySourceCourse: RawCourse = {
 						"https://github.com/instruction-material/Assembly/blob/37756ab58d42d47a3ae1449950125f444691273f/ASM1-Integer-Calculator/README.md"
 				},
 				{
-					title: "Register Flow Transfer Practice",
-					content: buildProjectGuidance({
-						courseFamily: "assembly",
-						moduleTitle: "Unit 2: Registers and Data Movement",
-						projectKind: "extension",
-						hasReference: true
-					}),
+					title: "Partial-Register Write Investigation",
+					id: "assembly-unit-2-registers-and-data-movement-supplemental-register-flow-transfer-practice",
+					preserveInstructions: true,
+					ideImport: true,
+					content: assemblyPartialRegisterReading,
 					projectLink:
-						"https://github.com/instruction-material/Assembly/tree/main/ASM-05-unit-2-registers-and-data-movement-supplemental-2/starter",
+						"https://github.com/instruction-material/Assembly/tree/3e07b75a56e27321180080ef347957d65521f22e/ASM-05-unit-2-registers-and-data-movement-supplemental-2/starter",
 					solutionLink:
-						"https://github.com/instruction-material/Assembly/tree/main/ASM-05-unit-2-registers-and-data-movement-supplemental-2/solution"
+						"https://github.com/instruction-material/Assembly/tree/3e07b75a56e27321180080ef347957d65521f22e/ASM-05-unit-2-registers-and-data-movement-supplemental-2/solution"
 				},
 				{
-					title: "Register Flow Extension Practice",
-					content: buildProjectGuidance({
-						courseFamily: "assembly",
-						moduleTitle: "Unit 2: Registers and Data Movement",
-						projectKind: "extension",
-						hasReference: true
-					}),
+					title: "Signed and Unsigned Widening Investigation",
+					id: "assembly-unit-2-registers-and-data-movement-supplemental-register-flow-extension-practice",
+					preserveInstructions: true,
+					ideImport: true,
+					content: assemblyWideningReading,
 					projectLink:
-						"https://github.com/instruction-material/Assembly/tree/main/ASM-06-unit-2-registers-and-data-movement-supplemental-3/starter",
+						"https://github.com/instruction-material/Assembly/tree/3e07b75a56e27321180080ef347957d65521f22e/ASM-06-unit-2-registers-and-data-movement-supplemental-3/starter",
 					solutionLink:
-						"https://github.com/instruction-material/Assembly/tree/main/ASM-06-unit-2-registers-and-data-movement-supplemental-3/solution"
+						"https://github.com/instruction-material/Assembly/tree/3e07b75a56e27321180080ef347957d65521f22e/ASM-06-unit-2-registers-and-data-movement-supplemental-3/solution"
 				}
 			]
 		},

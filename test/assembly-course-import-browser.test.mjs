@@ -53,6 +53,7 @@ fixtures.push(
 	)
 );
 fixtures.push(...JSON.parse(await readFile(new URL("./fixtures/assembly-syscall-contracts.json", import.meta.url), "utf8")));
+fixtures.push(...JSON.parse(await readFile(new URL("./fixtures/assembly-register-contracts.json", import.meta.url), "utf8")));
 const hardening = fixtures.find(
 	row =>
 		row.pack
@@ -65,6 +66,28 @@ fixtures.push({
 });
 let fixture = fixtures[0];
 const workflowDefinitions = {
+
+    "ASM-05-unit-2-registers-and-data-movement-supplemental-2": {
+        "primary": "routine.S",
+        "taskFile": "routine.S",
+        "title": "Partial-Register Write Investigation",
+        "lesson": "assembly-unit-2-registers-and-data-movement-assembly-unit-2-registers-and-data-movement-supplemental-register-flow-transfer-practice",
+        "moduleId": "assembly-unit-2-registers-and-data-movement",
+        "registerMode": "partial",
+        "starterToken": "WIDTH_SEED",
+        "referenceToken": "separate reference passes"
+    },
+    "ASM-06-unit-2-registers-and-data-movement-supplemental-3": {
+        "primary": "routine.S",
+        "taskFile": "routine.S",
+        "title": "Signed and Unsigned Widening Investigation",
+        "lesson": "assembly-unit-2-registers-and-data-movement-assembly-unit-2-registers-and-data-movement-supplemental-register-flow-extension-practice",
+        "moduleId": "assembly-unit-2-registers-and-data-movement",
+        "registerMode": "extension",
+        "starterToken": "SIGN_BYTE",
+        "referenceToken": "separate reference passes"
+    }
+,
 
 	"ASM-17-unit-8-system-calls-and-runtime-interaction-supplemental-2": {
 		primary: "routine.S",
@@ -212,8 +235,8 @@ const workflowDefinitions = {
 
 assert.equal(
 	fixtures.length,
-	19,
-	"All nineteen verified assignment workspaces require browser coverage"
+	21,
+	"All twenty-one verified assignment workspaces require browser coverage"
 );
 assert.deepEqual(
 	fixtures.map(row => row.pack).sort(),
@@ -315,7 +338,7 @@ async function verifyHardeningCourseButton(
 		key
 	);
 	assert.equal(saved.activeFileName, `starter/${definition.primary}`);
-	const expectedCount = definition.syscallMode ? 8 : definition.setupMode ? 7 : 10;
+	const expectedCount = definition.registerMode ? 9 : definition.syscallMode ? 8 : definition.setupMode ? 7 : 10;
 	assert.equal(saved.files.length, expectedCount);
 	assert.equal(sourceRequests(), expectedCount);
 	return {
@@ -456,7 +479,7 @@ test(
 								width === 1280
 								&& theme === "light"
 								&& role === "starter"
-								&& (definition.setupMode || definition.syscallMode
+								&& (definition.registerMode || definition.setupMode || definition.syscallMode
 									|| (fixture.pack.startsWith("ASM-2")
 										&& ["analysis.md", "trace.md"].includes(
 											primary
@@ -692,7 +715,13 @@ test(
 								file => file.name === name
 							).content;
 							const edit
-								= definition.syscallMode
+								= definition.registerMode
+                                    ? role === "starter"
+                                        ? fixture.files[`${fixture.pack}/solution/routine.S`].content
+                                        : definition.registerMode === "partial"
+                                            ? original.replace("    mov eax, esi\n", "    mov ax, si\n")
+                                            : original.replace("    movzx eax, si\n", "    movsx rax, si\n")
+                                    : definition.syscallMode
 									? role === "starter"
 										? fixture.files[`${fixture.pack}/solution/routine.S`].content
 										: definition.syscallMode === "write"
@@ -801,7 +830,7 @@ test(
 									file.content
 								);
 							}
-							if (definition.setupMode || definition.syscallMode) {
+							if (definition.registerMode || definition.setupMode || definition.syscallMode) {
 								await writeFile(
 									join(
 										exports,
@@ -855,7 +884,7 @@ test(
 					}
 				}
 			}
-			assert.equal(courseButtons.length, 6);
+			assert.equal(courseButtons.length, 8);
 			await writeFile(
 				join(captures, "assembly-course-buttons-proof.json"),
 				JSON.stringify(courseButtons, null, 2)

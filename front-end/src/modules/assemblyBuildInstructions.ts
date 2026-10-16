@@ -12,6 +12,7 @@ import {
 	assemblyParserPack,
 	assemblyPerformancePack,
 	assemblyRecordPack,
+	assemblyRegisterPacks,
 	assemblyReversePack,
 	assemblySetupPacks,
 	assemblyStackPack,
@@ -29,6 +30,50 @@ export function assemblyBuildInstructions(
 		"Assembly compilation, tests and debugging require Linux x86-64, the System V AMD64 ABI, GNU/Clang assembly with the syntax specified in README.md, and a native Clang or GCC toolchain.",
 		"The workspace edits and saves source. Use an x86-64 Linux VM or lab on macOS, or an x86-64 WSL distribution on Windows."
 	];
+	if (
+		selected &&
+		assemblyRegisterPacks.some(pack => pack.pack === selected.pack)
+	) {
+		if (
+			!selected.definition.roleFiles.every(name =>
+				files.some(file => file.name === `${selected.role}/${name}`)
+			) ||
+			!files.some(file => file.name === "README.md")
+		) {
+			return [
+				...lines,
+				"This register investigation is incomplete. Preserve the saved attempt, then restore all eight selected role files and README.md."
+			];
+		}
+		const partial = selected.pack === assemblyRegisterPacks[0].pack;
+		return [
+			...lines,
+			"Use GNU Intel source syntax and ordinary-user Linux x86-64 with CMake 3.20+, Clang or GCC, GDB and binutils.",
+			`From the extracted project folder: cd ${selected.role}`,
+			"cmake -S . -B build-Debug -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER=clang -DCMAKE_ASM_COMPILER=clang",
+			"cmake --build build-Debug --verbose --parallel 1",
+			"./build-Debug/app",
+			"ctest --test-dir build-Debug --output-on-failure",
+			"./build-Debug/app --changed",
+			"cmake -S . -B build-Release -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=clang -DCMAKE_ASM_COMPILER=clang",
+			"cmake --build build-Release --verbose --parallel 1",
+			"ctest --test-dir build-Release --output-on-failure",
+			"./build-Release/app --changed",
+			"Repeat both build profiles with GCC using separate build directories; explicit comparisons keep all checks active in Release.",
+			partial
+				? "Complete WIDTH_SEED in routine.S. Begin each AL/AX/EAX/RAX write from the full initial register. Byte and word writes retain upper bits; a dword write clears the upper 32 bits. Compare all four snapshots with the unchanged model."
+				: "Complete SIGN_BYTE in routine.S. Compare MOVSX, MOVZX and MOVSXD at byte, word and dword widths. A 32-bit destination clears upper bits; a signed 32-to-64 conversion uses MOVSXD. Compare all six snapshots with the unchanged model.",
+			"The contract takes the initial register in RDI, incoming bits in RSI and a valid owned output buffer in RDX. Store each full 64-bit result in its assigned slot. Preserve RBX, RBP, R12–R15 and the caller's stack state.",
+			"objdump -d -M intel --disassemble=lab_operation build-Debug/app",
+			"readelf -Ws build-Debug/CMakeFiles/app.dir/routine.S.o",
+			"gdb ./build-Debug/app",
+			"In GDB set disassembly-flavor intel, break lab_operation, run and step the seed load. Use break lab_stage0 and the later stage labels, info registers rdi rsi rdx rax rip, x/i $pc and si. Record RAX before/after the width instruction and x/gx at the owned output slot after its store.",
+			"Keep main.c, lab.h, model.c, tests.c and abi_checks.S unchanged. Complete only the named routine task and trace.md. Read ../README.md for every default/changed row, unsigned-mask model, controlled regression and required evidence. Passing 10269 independent width cases does not complete the worksheet.",
+			selected.role === "starter"
+				? "The untouched program builds but exits 78 and its contracts fail. Retain that observation, make the minimal repair and export the saved routine.S and trace.md together."
+				: "The separate reference passes the unchanged contracts and both demonstrations. Record the current register and output values beside the prediction."
+		];
+	}
 	if (
 		selected &&
 		assemblySyscallPacks.some(pack => pack.pack === selected.pack)
