@@ -33,6 +33,8 @@ type Fixture = {
 	pack: string;
 	moduleId: string;
 	learningPath?: string;
+	instructionCommand?: string;
+	continuationItems?: { moduleId: string; itemId: string }[];
 	revision: string;
 	files: Record<string, { content: string; sha256: string }>;
 };
@@ -51,6 +53,15 @@ const fixtures: Fixture[] = [
 			resolve(
 				process.cwd(),
 				"../test/fixtures/network-naming-contracts.json"
+			),
+			"utf8"
+		)
+	),
+	...JSON.parse(
+		readFileSync(
+			resolve(
+				process.cwd(),
+				"../test/fixtures/network-topology-contracts.json"
 			),
 			"utf8"
 		)
@@ -76,19 +87,26 @@ afterEach(() => {
 });
 
 it.each(
-	networkVerifiedPacks.flatMap(definition =>
-		["learner", "instructor"].map(role => ({ definition, role }))
-	)
+	networkVerifiedPacks.flatMap(definition => {
+		const fixture = fixtures.find(row => row.pack === definition.pack)!;
+		const cards = [
+			{ moduleId: fixture.moduleId, itemId: definition.coreItemId },
+			...(fixture.continuationItems ?? [])
+		];
+		return cards.flatMap(card =>
+			["learner", "instructor"].map(role => ({
+				definition,
+				role,
+				...card
+			}))
+		);
+	})
 )(
-	"opens the actual $definition.pack project with separate $role controls",
-	async ({ definition, role }) => {
+	"opens the actual $itemId project with separate $role controls",
+	async ({ definition, role, moduleId, itemId }) => {
 		const pinia = createPinia();
 		setActivePinia(pinia);
-		window.history.replaceState(
-			{},
-			"",
-			`/courses#${fixtures.find(fixture => fixture.pack === definition.pack)!.moduleId}`
-		);
+		window.history.replaceState({}, "", `/courses#${moduleId}`);
 		const learner = {
 			_id: "network-learner",
 			name: "Learner",
@@ -126,7 +144,8 @@ it.each(
 			const fixture = fixtures.find(row => row.pack === definition.pack)!;
 			if (
 				fixture.learningPath === "choice" ||
-				fixture.learningPath === "challenge"
+				fixture.learningPath === "challenge" ||
+				itemId.includes("-supplemental-")
 			) {
 				await wrapper
 					.findAll(".lesson-view-toggle button")
@@ -136,9 +155,7 @@ it.each(
 			}
 			const core = wrapper
 				.findAll(".lesson-item")
-				.find(card =>
-					card.attributes("id")?.endsWith(definition.coreItemId)
-				)!;
+				.find(card => card.attributes("id")?.endsWith(itemId))!;
 			expect(core).toBeDefined();
 			const links = core.findAll("a.is-ide-starter");
 			expect(links).toHaveLength(role === "learner" ? 1 : 2);
@@ -209,6 +226,15 @@ it("preserves every published lesson while preserving core notebooks and distinc
 				"Independent and instructor use",
 				"Independent and guided use"
 			)
+			.replace(
+				"before comparing the evidence with an instructor.",
+				"before comparing the evidence during a guided review."
+			)
+			.replace("Keep your edited rules", "Keep the edited rules")
+			.replace(
+				"For an instructor walkthrough",
+				"For a guided walkthrough"
+			)
 			.trim();
 		expect(core.content).toContain(reading);
 		expect(core.learningPath).toBe(source.learningPath ?? "core");
@@ -231,6 +257,19 @@ it("preserves every published lesson while preserving core notebooks and distinc
 			expect(
 				networkCourseProjectKey(course.id, notebook.id, role, url)
 			).toBe(networkCourseProjectKey(course.id, core.id, role, url));
+			if ("continuationItemIds" in definition) {
+				for (const id of definition.continuationItemIds) {
+					const continuation = items.find(item => item.id === id)!;
+					expect(continuation.content).toContain("Unit7");
+					expect(continuation.content).toContain("--exposure-policy");
+					expect(continuation.projectLink).toBe(core.projectLink);
+					expect(
+						networkCourseProjectKey(course.id, id, role, url)
+					).toBe(
+						networkCourseProjectKey(course.id, core.id, role, url)
+					);
+				}
+			}
 		}
 	}
 });
@@ -264,15 +303,9 @@ it.each(
 			"linux"
 		);
 		const files = await loadPythonIdeStarterFilesFromGitHub(url, "linux");
-		const expected = [
-			"README.md",
-			`${role}/network-notes.md`,
-			`${role}/main.py`,
-			`${role}/network_lab.py`,
-			...(fixture.files[`${role}/naming_lab.py`]
-				? [`${role}/naming_lab.py`]
-				: [])
-		].sort();
+		const expected = Object.keys(fixture.files)
+			.filter(name => name === "README.md" || name.startsWith(`${role}/`))
+			.sort();
 		expect(files.map(file => file.name).sort()).toEqual(expected);
 		expect(requests.sort()).toEqual(expected);
 		for (const file of files) {
@@ -303,12 +336,21 @@ it.each(
 		);
 		const instructions = linuxBuildInstructions(files, url).join("\n");
 		expect(instructions).toContain(`cd ${role}`);
-		expect(instructions).toContain("python3 main.py");
+		expect(instructions).toContain(
+			fixture.instructionCommand ?? "python3 main.py"
+		);
+		if (fixture.continuationItems) {
+			expect(instructions).toContain("--exposure-policy");
+			expect(instructions).toContain("root access");
+			expect(instructions).not.toContain("ordinary account");
+		}
 		expect(instructions).toContain("Python programming is optional");
 		expect(instructions).not.toMatch(/bash main\.sh|Hello, Linux|Nginx/);
 		expect(
 			linuxBuildInstructions(
-				files.filter(file => file.name !== `${role}/network_lab.py`),
+				files.filter(
+					file => file.name !== `${role}/${definition.roleFiles[1]}`
+				),
 				url
 			).join("\n")
 		).toContain("incomplete");
