@@ -214,22 +214,29 @@ describe("Python project routes", () => {
 	);
 
 	it.each(
-		JSON.parse(
-			readFileSync(
-				resolve(
-					process.cwd(),
-					"../test/fixtures/network-foundations-contracts.json"
-				),
-				"utf8"
+		[
+			"network-foundations-contracts.json",
+			"network-naming-contracts.json",
+			"network-topology-contracts.json",
+			"network-capture-contracts.json",
+			"network-firewall-contracts.json"
+		]
+			.flatMap(name =>
+				JSON.parse(
+					readFileSync(
+						resolve(process.cwd(), "../test/fixtures/" + name),
+						"utf8"
+					)
+				)
 			)
-		).flatMap(
-			(fixture: {
-				pack: string;
-				revision: string;
-				coreItemId: string;
-				files: Record<string, { content: string }>;
-			}) => ["starter", "solution"].map(role => ({ fixture, role }))
-		)
+			.flatMap(
+				(fixture: {
+					pack: string;
+					revision: string;
+					coreItemId: string;
+					files: Record<string, { content: string }>;
+				}) => ["starter", "solution"].map(role => ({ fixture, role }))
+			)
 	)(
 		"preserves exact Network $fixture.pack/$role files, notebook selection and role metadata through API saves",
 		async ({ fixture, role }) => {
@@ -325,6 +332,10 @@ describe("Python project routes", () => {
 				content: "#!/usr/bin/env bash\n"
 			};
 			for (const name of [
+				".profile",
+				"starter/.profile",
+				"web-stack.profile",
+				"other/web-stack.profile",
 				"../task.sh",
 				"starter/../task.sh",
 				"/task.sh",

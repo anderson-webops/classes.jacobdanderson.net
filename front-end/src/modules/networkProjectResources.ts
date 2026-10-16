@@ -109,11 +109,32 @@ export const networkCapturePacks = [
 	}
 ] as const;
 
+export const networkFirewallSourceRevision =
+	"2d46f8b581906d3ada0275c481a85282115a2d7a";
+export const networkFirewallPacks = [
+	{
+		pack: "NS3-UFW-Web-Server-Policy",
+		revision: networkFirewallSourceRevision,
+		roleFiles: [
+			"network-notes.md",
+			"apply_web_policy.sh",
+			"policy-rules.sh",
+			"web-stack.profile",
+			"firewall_runtime.py"
+		],
+		coreItemId:
+			"network-systems-unit-9-firewalls-and-host-policy-curriculum-project-build-and-verify-a-ufw-policy-for-a-web-server",
+		notebookItemId:
+			"network-systems-unit-9-firewalls-and-host-policy-supplemental-operations-notebook-firewalls-and-host-policy"
+	}
+] as const;
+
 export const networkVerifiedPacks = [
 	...networkFoundationPacks,
 	...networkNamingPacks,
 	...networkTopologyPacks,
-	...networkCapturePacks
+	...networkCapturePacks,
+	...networkFirewallPacks
 ] as const;
 
 export function networkCourseResource(url: string) {

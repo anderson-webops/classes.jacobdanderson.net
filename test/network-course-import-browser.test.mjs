@@ -22,7 +22,8 @@ const fixtures = (
 			"./fixtures/network-foundations-contracts.json",
 			"./fixtures/network-naming-contracts.json",
 			"./fixtures/network-topology-contracts.json",
-			"./fixtures/network-capture-contracts.json"
+			"./fixtures/network-capture-contracts.json",
+			"./fixtures/network-firewall-contracts.json"
 		].map(async path =>
 			JSON.parse(await readFile(new URL(path, import.meta.url), "utf8"))
 		)

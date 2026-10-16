@@ -7,6 +7,7 @@ export function networkBuildInstructions(files: PythonIdeFile[], url: string) {
 	const { role, definition } = selected;
 	const topology = definition.pack === "NS6-Router-NAT-Topology-Lab";
 	const capture = definition.pack === "NS5-Tcpdump-HTTP-Capture";
+	const firewall = definition.pack === "NS3-UFW-Web-Server-Policy";
 	const namingCases: Record<string, string> = {
 		"NS-06-unit-2-addresses-and-naming":
 			"Repeat with python3 main.py --lookup 127.0.0.1, then with --network 192.0.2.65/26. Compare system name lookup, the actual IPv4 endpoint and the separate prefix calculation.",
@@ -16,7 +17,7 @@ export function networkBuildInstructions(files: PythonIdeFile[], url: string) {
 			"Repeat with python3 main.py --lookup 127.0.0.1. Compare resolver families, actual listener ownership and the IPv6 probe. The IPv6 documentation-prefix table is a separate calculation, not proof of DNS or internet reachability."
 	};
 	const lines =
-		topology || capture
+		topology || capture || firewall
 			? [
 					`Save and download the ZIP. Extract it in an owned disposable Linux VM with root access and the tools listed in README.md. This kernel lab requires ${capture ? "an owned network namespace" : "network and mount namespaces"}.`,
 					"The browser edits and saves the source and notebook. Run the selected real network experiment in that external VM; the browser cannot perform these Linux kernel operations."
@@ -34,6 +35,15 @@ export function networkBuildInstructions(files: PythonIdeFile[], url: string) {
 		return [
 			...lines,
 			"The selected lab is incomplete. Restore all required role files and README.md before following the guide."
+		];
+	}
+	if (firewall) {
+		return [
+			...lines,
+			`Read README.md, then cd ${role}. Complete only the two cases in policy-rules.sh. Run sudo bash apply_web_policy.sh --output policy-observations.json with a new filename. Use an owned disposable VM with console access.`,
+			"Compare with sudo bash apply_web_policy.sh --management-port 22022 --output changed-port.json, then repeat with --reverse and another new output. The apparatus owns private UFW configuration and its client/services; the management marker is not an SSH daemon.",
+			"Keep predictions, actual fresh management/web/denied requests, numbered rules, kernel counters and prior-state restoration in network-notes.md. Confirm the blocked listener stays live and all three services return after rollback. The notebook reopens this saved attempt; the reference remains separate.",
+			"Python programming is optional. Keep firewall_runtime.py unchanged; the two UFW choices, actual command observations and notebook explanation are required."
 		];
 	}
 	if (capture) {
