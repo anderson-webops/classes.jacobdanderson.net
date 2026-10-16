@@ -150,10 +150,13 @@ export function networkCourseProjectKey(
 	const selected =
 		courseID === "network-systems" ? networkCourseResource(url) : null;
 	if (!selected) return `${courseID}:${itemID}:${role}`;
+	const continuationIDs: readonly string[] =
+		"continuationItemIds" in selected.definition
+			? selected.definition.continuationItemIds
+			: [];
 	const shared =
 		itemID === selected.definition.notebookItemId ||
-		("continuationItemIds" in selected.definition &&
-			selected.definition.continuationItemIds.includes(itemID))
+		continuationIDs.includes(itemID)
 			? selected.definition.coreItemId
 			: itemID;
 	return `${courseID}:${shared}:${role}:native-network`;
