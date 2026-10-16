@@ -306,6 +306,26 @@ export const networkLinkRoutingPacks = [
 	}
 ] as const;
 
+export const networkCapstoneSourceRevision =
+	"6aea0988ea51499a3225faf694ed3c3b48f9377a";
+export const networkCapstonePacks = [
+	{
+		pack: "NS-03-network-systems-lab-17",
+		revision: networkCapstoneSourceRevision,
+		roleFiles: [
+			"network-notes.md",
+			"main.py",
+			"capstone_lab.py",
+			"case.json",
+			"edge-cases.md"
+		],
+		coreItemId:
+			"network-systems-network-systems-lab-17-operations-capstone-studio-curriculum-core-project-operations-capstone-studio",
+		notebookItemId:
+			"network-systems-network-systems-lab-17-operations-capstone-studio-curriculum-operations-capstone-studio-guided-example"
+	}
+] as const;
+
 export const networkVerifiedPacks = [
 	...networkFoundationPacks,
 	...networkNamingPacks,
@@ -317,7 +337,8 @@ export const networkVerifiedPacks = [
 	...networkResolutionPacks,
 	...networkIPv6Packs,
 	...networkApplicationPacks,
-	...networkLinkRoutingPacks
+	...networkLinkRoutingPacks,
+	...networkCapstonePacks
 ] as const;
 
 export function networkCourseResource(url: string) {

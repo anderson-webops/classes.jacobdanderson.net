@@ -315,7 +315,8 @@ describe("Python project routes", () => {
 			"network-resolution-contracts.json",
 			"network-ipv6-contracts.json",
 			"network-application-contracts.json",
-			"network-link-routing-contracts.json"
+			"network-link-routing-contracts.json",
+			"network-capstone-contracts.json"
 		]
 			.flatMap(name =>
 				JSON.parse(
@@ -397,6 +398,54 @@ describe("Python project routes", () => {
 				);
 			}
 			expect(modelMocks.pythonProjectCreate).toHaveBeenCalledTimes(2);
+		}
+	);
+
+	it.each(["user", "course-code"] as const)(
+		"saves an edited capstone JSON case and selected file for the %s owner",
+		async owner => {
+			const fixture = JSON.parse(
+				readFileSync(
+					resolve(
+						process.cwd(),
+						"../test/fixtures/network-capstone-contracts.json"
+					),
+					"utf8"
+				)
+			)[0];
+			const corrected =
+				JSON.stringify(
+					{
+						ipv4_service_route: "198.18.32.0/30",
+						proxy_upstream_port: 9000
+					},
+					null,
+					2
+				) + "\n";
+			const files = Object.entries(
+				fixture.files as Record<string, { content: string }>
+			)
+				.filter(
+					([name]) =>
+						name === "README.md" || name.startsWith("starter/")
+				)
+				.map(([name, file]) => ({
+					name,
+					content:
+						name === "starter/case.json" ? corrected : file.content,
+					encoding: "text"
+				}));
+			await withPythonProjectRoute(async baseUrl => {
+				const response = await postJson(baseUrl, {
+					mode: "linux",
+					files,
+					activeFileName: "starter/case.json"
+				});
+				expect(response.status).toBe(201);
+				const body = await response.json();
+				expect(body.project.activeFileName).toBe("starter/case.json");
+				expect(body.project.files).toEqual(files);
+			}, owner);
 		}
 	);
 
