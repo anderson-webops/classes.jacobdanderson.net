@@ -10,6 +10,7 @@ import {
 	assemblyHelperPack,
 	assemblyParserPack,
 	assemblyPerformancePack,
+	assemblyRecordPack,
 	assemblyReversePack,
 	assemblyStackPack,
 	assemblyStringPack
@@ -25,6 +26,46 @@ export function assemblyBuildInstructions(
 		"Assembly compilation, tests and debugging require Linux x86-64, the System V AMD64 ABI, GNU/Clang Intel syntax, and a native Clang or GCC toolchain.",
 		"The workspace edits and saves source. Use an x86-64 Linux VM or lab on macOS, or an x86-64 WSL distribution on Windows."
 	];
+	if (
+		selected?.pack === assemblyRecordPack &&
+		[
+			"routine.S",
+			"main.c",
+			"record.h",
+			"abi_checks.S",
+			"tests.c",
+			"CMakeLists.txt",
+			"trace.md"
+		].every(name =>
+			files.some(file => file.name === `${selected.role}/${name}`)
+		) &&
+		files.some(file => file.name === "README.md")
+	) {
+		return [
+			...lines,
+			`From the extracted project folder: cd ${selected.role}`,
+			'cmake -S . -B build-O0 -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER=clang -DCMAKE_ASM_COMPILER=clang -DCMAKE_C_FLAGS_DEBUG="-O0 -g" -DCMAKE_ASM_FLAGS_DEBUG="-O0 -g" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON',
+			"cmake --build build-O0 --verbose --parallel 1",
+			"ctest --test-dir build-O0 --output-on-failure",
+			"./build-O0/assembly_demo",
+			"./build-O0/assembly_demo --changed",
+			"readelf -hW -sW build-O0/CMakeFiles/record_decode.dir/routine.S.o",
+			"readelf -Wr -sW build-O0/CMakeFiles/assembly_demo.dir/main.c.o",
+			"objdump -dr -M intel build-O0/CMakeFiles/assembly_demo.dir/main.c.o",
+			"readelf -hW -lW build-O0/assembly_demo",
+			"objdump -d -M intel --disassemble=decode_record build-O0/assembly_demo",
+			"gdb ./build-O0/assembly_demo",
+			'cmake -S . -B build-O2 -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=clang -DCMAKE_ASM_COMPILER=clang -DCMAKE_C_FLAGS_RELEASE="-O2 -g -DNDEBUG" -DCMAKE_ASM_FLAGS_RELEASE="-O2 -g -DNDEBUG" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON',
+			"cmake --build build-O2 --verbose --parallel 1",
+			"ctest --test-dir build-O2 --output-on-failure",
+			"./build-O2/assembly_demo --changed",
+			"Compare actual caller disassembly and compile_commands.json across O0/O2. Record symbols, relocation, executable interpreter and the real GDB address/load-width trace in trace.md.",
+			"Read ../README.md for the full memory/ABI contract, predicted byte rows, GCC comparison, object/link/load trail and debugger commands. Passing tests does not complete trace.md; this comparison makes no timing claim.",
+			selected.role === "starter"
+				? "Complete RECORD_DECODE in routine.S and the required trace.md in this same saved attempt. The untouched program links but exits 78; retain that first result and keep the C driver, tests and ABI checker unchanged."
+				: "The reference decodes the records and passes 196,609 contract cases per completed profile. Keep actual compiler/artifact identities and debugger observations beside the reference reasoning."
+		];
+	}
 	if (
 		selected?.pack === assemblyCalculatorPack &&
 		files.some(file => file.name === `${selected.role}/CMakeLists.txt`)
