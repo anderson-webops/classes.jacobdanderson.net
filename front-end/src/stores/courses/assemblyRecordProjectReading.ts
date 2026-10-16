@@ -1,4 +1,6 @@
 export const assemblyRecordConceptReading = [
+	"The assembly pipeline is an artifact flow: source becomes object code, object files are linked into an executable, and the loader prepares a running process.",
+	"",
 	"A machine instruction operates on register bits and memory at a particular address. The assembly source is a readable description of those operations; an object file contains their encoded instructions and link information. An executable adds the selected object code, runtime inputs and loading information. These artifacts answer different questions. The first unit follows one small record decoder through all of them before extending the implementation in later units.",
 	"",
 	"## Read an address, its bytes and its value separately",
@@ -136,6 +138,8 @@ export const assemblyRecordTraceReading = [
 	"Retain the untouched starter's successful build and link alongside its exit-78 failure. After completing only routine.S, preserve the passing unchanged contracts and default/--changed output. A missing definition fails linking; an incorrect definition can link successfully and fail behavior. State which failure the observed evidence represents. Compare the actual C caller bodies at O0/O2 and distinguish their compiler-generated differences from the handwritten decoder's instruction bytes. A changed whole-file hash or address alone does not establish a changed function or a speed result.",
 	"",
 	"## Explain one execution",
+	"",
+	"For each debugger step, record the instruction address, the actual instruction, the value before the instruction, the value after the instruction, and the evidence for the next branch, call, or return. Keep register, flag and memory changes beside their producing instruction so the selected address and loaded value remain separate observations.",
 	"",
 	"Predict all four default records from their eight-byte little-endian encodings before running. For a nonzero index, record RDI/RSI/RDX/RCX at entry, the selected address base + index*8, the bytes there, each load's source width, its sign/zero extension, the resulting register and the four output fields. Explain why LEA calculates an address without reading it. Explain how a 32-bit register write clears its upper half, and why that differs from sign-extending a signed 16-bit field.",
 	"",
