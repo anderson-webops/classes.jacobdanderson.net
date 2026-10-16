@@ -137,7 +137,7 @@ export const assemblyRecordTraceReading = [
 	"",
 	"## Explain one execution",
 	"",
-	"Predict all four default records from their eight-byte little-endian encodings before running. For a nonzero index, record RDI/RSI/RDX/RCX at entry, the selected address base + index*8, the bytes there, each load's source width, its sign/zero extension, the resulting register and the four output fields. Explain why LEA calculates an address without reading it. Show how a 32-bit register write clears its upper half, and why that differs from sign-extending a signed 16-bit field.",
+	"Predict all four default records from their eight-byte little-endian encodings before running. For a nonzero index, record RDI/RSI/RDX/RCX at entry, the selected address base + index*8, the bytes there, each load's source width, its sign/zero extension, the resulting register and the four output fields. Explain why LEA calculates an address without reading it. Explain how a 32-bit register write clears its upper half, and why that differs from sign-extending a signed 16-bit field.",
 	"",
 	"Repeat with --changed and identify the values that changed while the stride and field offsets stayed fixed. Include one rejected null/out-of-range case and the evidence that output remains unchanged. Describe the valid-storage responsibility that remains with the C caller. Keep actual instructions, addresses and register values from the current build rather than copying reference addresses. Passing runtime checks does not complete this explanation.",
 	"",

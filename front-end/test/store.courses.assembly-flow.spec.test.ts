@@ -17,6 +17,9 @@ const EXPECTED_PRIMARY_SEQUENCE = [
 	"Unit 12: Security and Reliability Visibility"
 ];
 
+const REQUIRED_TRACE_ID =
+	"assembly-unit-1-machine-model-and-toolchain-supplemental-register-trace-worksheet-machine-model-and-toolchain";
+
 function requireModule(title: string) {
 	const module = assemblyCourse.modules.find(
 		candidate => candidate.title === title
@@ -48,16 +51,32 @@ describe("Assembly learner flow", () => {
 				module.curriculum.every(item => item.learningPath === "core"),
 				module.title
 			).toBe(true);
-			expect(
-				module.supplementalProjects.every(item =>
-					["choice", "challenge"].includes(item.learningPath ?? "")
-				),
-				module.title
-			).toBe(true);
+			for (const item of module.supplementalProjects) {
+				if (item.id === REQUIRED_TRACE_ID) {
+					const core = module.curriculum.find(candidate =>
+						candidate.title.startsWith("Core Project:")
+					)!;
+					expect(item.learningPath).toBe("core");
+					expect(item.ideImport).toBe(true);
+					expect(item.projectLink).toBe(core.projectLink);
+					expect(item.solutionLink).toBe(core.solutionLink);
+					expect(item.content).toContain("same saved");
+				} else {
+					expect(["choice", "challenge"], item.title).toContain(
+						item.learningPath
+					);
+				}
+			}
 			expect(module.curriculum[0]?.content, module.title).toContain(
 				"**Course flow:**"
 			);
 		}
+		expect(
+			assemblyCourse.modules
+				.flatMap(module => module.supplementalProjects)
+				.filter(item => item.learningPath === "core")
+				.map(item => item.id)
+		).toEqual([REQUIRED_TRACE_ID]);
 	});
 
 	it("moves architecture comparisons and repeat studios out of the required path", () => {
@@ -79,7 +98,8 @@ describe("Assembly learner flow", () => {
 			.map(item => `${item.title}\n${item.content}`)
 			.join("\n");
 
-		expect(curriculumCount).toBe(62);
+		// Four short Unit 1 concept cards become one complete concept reading.
+		expect(curriculumCount).toBe(59);
 		expect(optionCount).toBe(68);
 		expect(archive.supplementalProjects).toHaveLength(29);
 		expect(archiveText).toContain("ASM13 Expansion Ideas and Next Steps");
