@@ -267,6 +267,8 @@ assert.deepEqual(
 	"Browser fixtures must cover every workflow definition"
 );
 const expectedProfiles = fixtures.length * 2 * 2 * 2;
+// Include startup, course actions and cleanup as the complete matrix grows.
+const workflowTimeoutMs = 60_000 + expectedProfiles * 2_500;
 
 const storageKey = "classes-python-ide-projects:anonymous";
 const legacy = {
@@ -377,7 +379,7 @@ async function verifyHardeningCourseButton(
 
 test(
 	"Assembly consent, exact role imports, saved edits, native exports and lesson return",
-	{ timeout: 360_000 },
+	{ timeout: workflowTimeoutMs },
 	async () => {
 		let server, browser, context, page;
 		const captures
@@ -912,6 +914,12 @@ test(
 						}
 					}
 				}
+				console.log(JSON.stringify({
+					event: "assembly-pack-complete",
+					pack: fixture.pack,
+					completedProfiles: proof.length,
+					expectedProfiles
+				}));
 			}
 			assert.equal(courseButtons.length, 10);
 			await writeFile(
