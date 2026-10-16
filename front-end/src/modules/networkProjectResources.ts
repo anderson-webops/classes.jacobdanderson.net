@@ -171,6 +171,51 @@ export const networkResolutionPacks = [
 	}
 ] as const;
 
+export const networkIPv6SourceRevision =
+	"8bfb8ae8ee62f84e462dfca425eac7171416215d";
+export const networkIPv6Packs = [
+	{
+		pack: "NS-08-unit-8-ipv6-in-practice",
+		revision: networkIPv6SourceRevision,
+		roleFiles: [
+			"main.py",
+			"ipv6_lab.py",
+			"network-notes.md",
+			"ipv6-practice-case.md"
+		],
+		coreItemId:
+			"network-systems-unit-8-ipv6-in-practice-curriculum-ipv6-diagnostics-core-project",
+		notebookItemId:
+			"network-systems-unit-8-ipv6-in-practice-supplemental-operations-notebook-ipv6-in-practice"
+	},
+	{
+		pack: "NS-17-unit-8-ipv6-in-practice-supplemental-2",
+		revision: networkIPv6SourceRevision,
+		roleFiles: [
+			"main.py",
+			"ipv6_lab.py",
+			"network-notes.md",
+			"ipv6-practice-case.md"
+		],
+		coreItemId:
+			"network-systems-unit-8-ipv6-in-practice-supplemental-ipv6-transfer-practice",
+		notebookItemId: undefined
+	},
+	{
+		pack: "NS-18-unit-8-ipv6-in-practice-supplemental-3",
+		revision: networkIPv6SourceRevision,
+		roleFiles: [
+			"main.py",
+			"ipv6_lab.py",
+			"network-notes.md",
+			"ipv6-practice-case.md"
+		],
+		coreItemId:
+			"network-systems-unit-8-ipv6-in-practice-supplemental-ipv6-extension-practice",
+		notebookItemId: undefined
+	}
+] as const;
+
 export const networkVerifiedPacks = [
 	...networkFoundationPacks,
 	...networkNamingPacks,
@@ -179,7 +224,8 @@ export const networkVerifiedPacks = [
 	...networkFirewallPacks,
 	...networkReachabilityPacks,
 	...networkListenerPacks,
-	...networkResolutionPacks
+	...networkResolutionPacks,
+	...networkIPv6Packs
 ] as const;
 
 export function networkCourseResource(url: string) {
