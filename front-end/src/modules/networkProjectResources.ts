@@ -129,12 +129,57 @@ export const networkFirewallPacks = [
 	}
 ] as const;
 
+export const networkReachabilitySourceRevision =
+	"33ae65560b4f807e4dc6734436e382995866fc08";
+export const networkReachabilityPacks = [
+	{
+		pack: "NS2-Local-vs-Remote-Reachability-Diagnosis",
+		revision: networkReachabilitySourceRevision,
+		roleFiles: ["network-notes.md", "diagnose_reachability.sh"],
+		coreItemId:
+			"network-systems-unit-6-core-diagnostics-curriculum-project-diagnose-why-a-service-is-reachable-locally-but-not-from-another-machine",
+		notebookItemId:
+			"network-systems-unit-6-core-diagnostics-supplemental-operations-notebook-core-diagnostics"
+	}
+] as const;
+
+export const networkListenerSourceRevision =
+	"33ae65560b4f807e4dc6734436e382995866fc08";
+export const networkListenerPacks = [
+	{
+		pack: "NS1-Listening-Services-Map",
+		revision: networkListenerSourceRevision,
+		roleFiles: ["network-notes.md", "inventory_services.sh"],
+		coreItemId:
+			"network-systems-unit-4-ports-and-listening-services-curriculum-project-map-all-listening-services-on-a-linux-host",
+		notebookItemId:
+			"network-systems-unit-4-ports-and-listening-services-supplemental-operations-notebook-ports-and-listening-services"
+	}
+] as const;
+
+export const networkResolutionSourceRevision =
+	"33ae65560b4f807e4dc6734436e382995866fc08";
+export const networkResolutionPacks = [
+	{
+		pack: "NS4-IPv4-vs-IPv6-Resolution-Comparison",
+		revision: networkResolutionSourceRevision,
+		roleFiles: ["network-notes.md", "compare_resolution.sh"],
+		coreItemId:
+			"network-systems-unit-5-dns-and-name-resolution-curriculum-project-compare-ipv4-and-ipv6-resolution-for-the-same-hostname",
+		notebookItemId:
+			"network-systems-unit-5-dns-and-name-resolution-supplemental-operations-notebook-dns-and-name-resolution"
+	}
+] as const;
+
 export const networkVerifiedPacks = [
 	...networkFoundationPacks,
 	...networkNamingPacks,
 	...networkTopologyPacks,
 	...networkCapturePacks,
-	...networkFirewallPacks
+	...networkFirewallPacks,
+	...networkReachabilityPacks,
+	...networkListenerPacks,
+	...networkResolutionPacks
 ] as const;
 
 export function networkCourseResource(url: string) {

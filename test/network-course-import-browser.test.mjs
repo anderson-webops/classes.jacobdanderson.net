@@ -23,7 +23,10 @@ const fixtures = (
 			"./fixtures/network-naming-contracts.json",
 			"./fixtures/network-topology-contracts.json",
 			"./fixtures/network-capture-contracts.json",
-			"./fixtures/network-firewall-contracts.json"
+			"./fixtures/network-firewall-contracts.json",
+			"./fixtures/network-reachability-contracts.json",
+			"./fixtures/network-listener-contracts.json",
+			"./fixtures/network-resolution-contracts.json"
 		].map(async path =>
 			JSON.parse(await readFile(new URL(path, import.meta.url), "utf8"))
 		)
@@ -472,7 +475,8 @@ nodeTest(
 							);
 							assert.ok(
 								instructions.includes(
-									"Python programming is optional"
+									fixture.optionalProgrammingNote ??
+										"Python programming is optional"
 								)
 							);
 							assert.ok(
