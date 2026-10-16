@@ -1,5 +1,6 @@
 import type { PythonIdeFile } from "@/modules/pythonIde";
 import {
+	assemblyArithmeticPack,
 	assemblyArrayPack,
 	assemblyCalculatorPack,
 	assemblyCompilerPack,
@@ -26,6 +27,58 @@ export function assemblyBuildInstructions(
 		"Assembly compilation, tests and debugging require Linux x86-64, the System V AMD64 ABI, GNU/Clang Intel syntax, and a native Clang or GCC toolchain.",
 		"The workspace edits and saves source. Use an x86-64 Linux VM or lab on macOS, or an x86-64 WSL distribution on Windows."
 	];
+	if (selected?.pack === assemblyArithmeticPack) {
+		const required = [
+			"routine.S",
+			"main.c",
+			"arithmetic.h",
+			"model.c",
+			"tests.c",
+			"abi_checks.S",
+			"fault.c",
+			"fault.S",
+			"CMakeLists.txt",
+			"trace.md"
+		];
+		if (
+			!required.every(name =>
+				files.some(file => file.name === `${selected.role}/${name}`)
+			) ||
+			!files.some(file => file.name === "README.md")
+		) {
+			return [
+				...lines,
+				"The arithmetic project is incomplete. Save the current work, then import its selected role with all ten role files and the shared README before using its native commands."
+			];
+		}
+		return [
+			...lines,
+			`From the extracted project folder: cd ${selected.role}`,
+			'cmake -S . -B build-O0 -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER=clang -DCMAKE_ASM_COMPILER=clang -DCMAKE_C_FLAGS_DEBUG="-O0 -g" -DCMAKE_ASM_FLAGS_DEBUG="-O0 -g" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON',
+			"cmake --build build-O0 --verbose --parallel 1",
+			"./build-O0/assembly_arithmetic",
+			"ctest --test-dir build-O0 --output-on-failure",
+			"./build-O0/assembly_arithmetic --changed",
+			"objdump -d -M intel --disassemble=arithmetic_eval build-O0/assembly_arithmetic",
+			"gdb ./build-O0/assembly_arithmetic",
+			'cmake -S . -B build-O2 -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=clang -DCMAKE_ASM_COMPILER=clang -DCMAKE_C_FLAGS_RELEASE="-O2 -g -DNDEBUG" -DCMAKE_ASM_FLAGS_RELEASE="-O2 -g -DNDEBUG" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON',
+			"cmake --build build-O2 --verbose --parallel 1",
+			"ctest --test-dir build-O2 --output-on-failure",
+			"./build-O2/assembly_arithmetic --changed",
+			"mkdir -p observed",
+			"clang -std=c17 -O0 -g -S -masm=intel model.c -o observed/model-O0.s",
+			"clang -std=c17 -O2 -g -S -masm=intel model.c -o observed/model-O2.s",
+			"Locate ARITH_MUL and ARITH_DIV in routine.S and connect each region to its implicit registers and stored result fields.",
+			"Trace ADD/SUB, AND/OR/XOR/TEST/CMP and the implicit RDX:RAX multiplication/division registers. Capture only defined CF/ZF/SF/OF; IDIV flags are undefined for this contract.",
+			"The public function rejects zero/overflow division without output writes. After recording predictions, the separate owned arithmetic_fault_probe demonstrates the actual kernel SIGFPE for zero and overflow. Its link omits a sanitizer handler; ordinary C contracts remain sanitized.",
+			"For the separate fault experiment, follow ../README.md: ulimit -c 0 in the current lab shell, then gdb --args ./build-O0/arithmetic_fault_probe zero; repeat with overflow. Keep these processes separate from passing contract runs.",
+			"Complete trace.md with actual instruction addresses, before/after values, defined flags, changed cases, separate fault evidence and the arithmetic_c_mix O0/O2 comparison. Use compile_commands.json and current listings; this comparison makes no timing claim.",
+			"Read ../README.md for the exact nine-operation value/auxiliary/flags/defined contract, GCC comparison and GDB checkpoints. Passing code does not complete the required trace explanation.",
+			selected.role === "starter"
+				? "Complete ARITH_MUL and ARITH_DIV only in routine.S, plus trace.md in this same saved attempt. The untouched demo builds but exits 78 without successful rows; keep the driver, model, ABI checker and tests unchanged."
+				: "The reference prints nine operation rows and one C-helper row and passes 591,123 contract cases per completed profile. Record current compiler versions, actual register states and fault evidence beside the portable reference reasoning."
+		];
+	}
 	if (
 		selected?.pack === assemblyRecordPack &&
 		[

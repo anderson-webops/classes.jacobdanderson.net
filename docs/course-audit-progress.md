@@ -2350,3 +2350,33 @@ generic source contexts: Unit 3 Arithmetic and Logic is the remaining required
 core context, with 36 optional contexts also requiring review. This source change
 does not establish public activation. Native-server access and deployment remain
 deferred at the user's request.
+
+## Assembly Unit 3 arithmetic site workflow
+
+The Unit 3 source pin is `0e6243fe594793b931117133c8dc070983af1617`,
+independently accepted with both compilers and merged in Assembly review 16.
+Its 4,728,984 contract cases, 84,112 mathematical-model comparisons, actual
+instruction/fault debugger traces and compiler listings establish the source
+kit. The ordinary C code remains sanitized while the separate intentional
+fault probe observes the kernel SIGFPE. Source correctness does not complete
+the explanation worksheet.
+
+The site preserves the existing concept, core and worksheet IDs and provides
+complete neutral reading for all nine operations, defined flags, implicit
+registers, guarded/reproduced faults and the C helper comparison. The required
+trace continues the same saved core attempt. Transfer/extension activities
+keep their optional paths and separate attempts. Each selected role imports
+ten source/evidence files plus the complete shared guide after consent.
+
+Local workspace and API checks pass for exact source bytes, code/trace save and
+reopen, ZIP exports, earlier-work preservation and both owner types: 222 targeted
+front-end tests and 180 project-route tests. Root lint and type checking pass.
+The source closure, native verifier and both eleven-file exports match the
+immutable source pin. Dependency manifests and both lockfiles are unchanged.
+A shared browser
+driver retains the real Unit 1 course-button checks and adds the same workflow
+for Unit 3. Hosted acceptance must cover 120 role/theme matrix profiles, eight
+real core/worksheet profiles, 31 general ZIPs, sixteen exact/edited core ZIPs
+and 28 native compiler proofs. The broader all-77-course/Juni/Zoom audit and
+36 optional Assembly generic contexts remain open. Server access and
+deployment remain deferred.
