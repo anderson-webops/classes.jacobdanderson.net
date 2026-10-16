@@ -410,6 +410,7 @@ jobs:
               run: JAVAC="$JAVA_HOME_21_X64/bin/javac" node --test test/cpp-course-import-browser.test.mjs
 
             - name: Retain C++ and Java workspace screenshots
+              if: always()
               uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
               with:
                   name: cpp-workspace-screenshots
