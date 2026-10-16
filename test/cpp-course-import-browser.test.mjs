@@ -1340,14 +1340,15 @@ async function downloadProjectFiles(page) {
 	return Object.fromEntries(Object.entries(zip).map(([path, bytes]) => [path.slice(path.indexOf("/") + 1), strFromU8(bytes)]));
 }
 
-nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen and compile natively", { timeout: 900000 }, async () => {
+async function verifyPublishedCourse(courseId) {
+	const courseFixtures = fixtures.filter(fixture => fixture.courseId === courseId);
 	let browser;
 	let server;
 	let page;
 	let temporary;
 	let exitCode = 0;
 	const previousDirectory = process.cwd();
-	record("start", { command: "cpp-course-import-browser", pid: process.pid, timeoutMs: 900000 });
+	record("start", { command: "cpp-course-import-browser", courseId, expectedProfiles: courseFixtures.length, pid: process.pid, timeoutMs: 900000 });
 	try {
 		process.chdir(root);
 		temporary = await mkdtemp(join(tmpdir(), "cpp-course-workflow-"));
@@ -1403,7 +1404,7 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 		});
 		// Each source choice is reached through the real catalog action, including
 		// the two capstone targets. Pin published starter bytes independently.
-		for (const fixture of fixtures) {
+		for (const fixture of courseFixtures) {
 			({ repository, courseId, folder } = fixture);
 			const { revision, standard, hashes, anchor } = fixture;
 			referenceFixture = fixture.reference ?? false;
@@ -2208,4 +2209,10 @@ nodeTest("published bridge and C++ starters confirm, edit, save, export, reopen 
 		process.chdir(previousDirectory);
 		record("cleanup", { pid: process.pid, exitCode });
 	}
-});
+}
+
+// Keep every published profile, with a bounded budget for each course.
+// Await each run so its browser and native work finish before the next starts.
+for (const courseId of new Set(fixtures.map(fixture => fixture.courseId))) {
+	await nodeTest(`published ${courseId} starters confirm, edit, save, export, reopen and compile natively`, { timeout: 900000 }, () => verifyPublishedCourse(courseId));
+}
