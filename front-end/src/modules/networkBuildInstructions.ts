@@ -5,6 +5,11 @@ export function networkBuildInstructions(files: PythonIdeFile[], url: string) {
 	const selected = networkCourseResource(url);
 	if (!selected) return null;
 	const { role, definition } = selected;
+	const setupContext =
+		definition.pack === "NS-01-ns0-setup-and-tooling-supplemental-2";
+	const setupArguments =
+		definition.pack === "NS-02-ns0-setup-and-tooling-supplemental-3";
+	const setup = setupContext || setupArguments;
 	const capstone = definition.pack === "NS-03-network-systems-lab-17";
 	const topology = definition.pack === "NS6-Router-NAT-Topology-Lab";
 	const capture = definition.pack === "NS5-Tcpdump-HTTP-Capture";
@@ -37,8 +42,12 @@ export function networkBuildInstructions(files: PythonIdeFile[], url: string) {
 		"NS-06-unit-2-addresses-and-naming-supplemental-3":
 			"Repeat with python3 main.py --lookup 127.0.0.1. Compare resolver families, actual listener ownership and the IPv6 probe. The IPv6 documentation-prefix table is a separate calculation, not proof of DNS or internet reachability."
 	};
-	const lines =
-		topology || capture || firewall || linkRouting || capstone
+	const lines = setup
+		? [
+				"Save and download the ZIP. Extract it in an owned Linux lab using an ordinary non-root account, Python3.10+, /bin/sh and /bin/bash.",
+				"The browser edits and saves the configuration and notebooks. Run the actual command-context or shell-argument observations in the external Linux terminal."
+			]
+		: topology || capture || firewall || linkRouting || capstone
 			? [
 					`Save and download the ZIP. Extract it in an owned disposable Linux VM with root access and the tools listed in README.md. This kernel lab requires ${capture ? "an owned network namespace" : "network and mount namespaces"}.`,
 					"The browser edits and saves the source and notebook. Run the selected real network experiment in that external VM; the browser cannot perform these Linux kernel operations."
@@ -64,6 +73,19 @@ export function networkBuildInstructions(files: PythonIdeFile[], url: string) {
 		];
 	}
 
+	if (setup) {
+		return [
+			...lines,
+			`Read README.md, then cd ${
+				role
+			}. Keep main.py, setup_lab.py, case.json, network-notes.md and edge-cases.md together. Run python3 main.py --output first-observation.json with a fresh output filename.`,
+			setupContext
+				? "Predict command selection and working directory separately. Preserve the unfinished case, change only first_tool to beta and use tool-corrected.json, then change work_area to second and use both-corrected.json. Match the resolved path, worker tag, PID/UID, cwd, interpreter and namespace observations. The bare-name missing-PATH case records an actual launch error, while the absolute owned launcher remains executable."
+				: "Compare the actual direct, quoted, unquoted and configured argument vectors. Change only quote_arguments from false to true after predicting the received strings. Keep field splitting, filename expansion and the literal semicolon data distinct; the fixed template does not evaluate variable text as a new command.",
+			"Repeat python3 main.py --alternate --output alternate-observation.json and compare its own command name, private paths and inputs. Keep both notebooks and all prior reports. Check target reaping, removal of the private root, unchanged source and the named parent-field comparison.",
+			"Python programming is optional. These are separate optional investigations after the required setup project. Configuration, actual observations and a complete explanation are their deliverables; each learner and reference attempt remains separate."
+		];
+	}
 	if (capstone) {
 		return [
 			...lines,

@@ -326,6 +326,39 @@ export const networkCapstonePacks = [
 	}
 ] as const;
 
+export const networkSetupSourceRevision =
+	"01bc302b3607d82f84176035f6633cdcbef50782";
+export const networkSetupPacks = [
+	{
+		pack: "NS-01-ns0-setup-and-tooling-supplemental-2",
+		revision: networkSetupSourceRevision,
+		roleFiles: [
+			"network-notes.md",
+			"main.py",
+			"setup_lab.py",
+			"case.json",
+			"edge-cases.md"
+		],
+		coreItemId:
+			"network-systems-ns0-setup-and-tooling-supplemental-network-systems-setup-transfer-practice",
+		notebookItemId: undefined
+	},
+	{
+		pack: "NS-02-ns0-setup-and-tooling-supplemental-3",
+		revision: networkSetupSourceRevision,
+		roleFiles: [
+			"network-notes.md",
+			"main.py",
+			"setup_lab.py",
+			"case.json",
+			"edge-cases.md"
+		],
+		coreItemId:
+			"network-systems-ns0-setup-and-tooling-supplemental-network-systems-setup-extension-practice",
+		notebookItemId: undefined
+	}
+] as const;
+
 export const networkVerifiedPacks = [
 	...networkFoundationPacks,
 	...networkNamingPacks,
@@ -338,7 +371,8 @@ export const networkVerifiedPacks = [
 	...networkIPv6Packs,
 	...networkApplicationPacks,
 	...networkLinkRoutingPacks,
-	...networkCapstonePacks
+	...networkCapstonePacks,
+	...networkSetupPacks
 ] as const;
 
 export function networkCourseResource(url: string) {

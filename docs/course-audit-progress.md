@@ -2412,3 +2412,33 @@ The full 77-course/Juni/Zoom audit remains active. The other 29 known generic
 Network source pairs and 36 optional Assembly contexts still require review;
 the capstone's separate optional transfer/extension kits are included in that
 remaining Network work. Native-server access and deployment remain deferred.
+
+## Optional Network setup investigations
+
+The two optional NS0 setup source packs are accepted at immutable revision
+`01bc302b3607d82f84176035f6633cdcbef50782` and merged through source review 16.
+The transfer now diagnoses real command selection and working-directory context;
+the extension compares direct argv with actual quoted/unquoted Bash expansion.
+Complete guides and two notebooks support independent work and paced review.
+The independently read native artifact authenticates 25 source/support files,
+30 raw evidence files, 20 outer process records and 68 worker executions, with
+kernel UID/exit corroboration, exact argument vectors and directory transitions.
+A one-field correction, eight actual failed execs, refusal cases and both
+controlled regressions remain visible. Runtime success does not complete notes.
+
+Both existing optional course identities and paths are preserved. Each selected
+role imports five source/configuration/evidence files and the shared guide;
+learner/reference attempts and the required setup project remain distinct.
+Local checks pass 308 front-end and 188 project-route API tests, root lint and
+type checks, plus guarded Python/workflow validation. All 77 course identities,
+8,375 published item identities and 135 Network identities remain intact.
+Anonymous retrieval of all 33 pinned capstone/setup files matches the exact
+fixture bytes. Dependency manifests and both lockfiles are unchanged.
+
+Hosted validation must cover 92 Network role/width profiles, 184 exact/edited
+archives and the actual browser-exported capstone and setup native experiments.
+The setup verifier retains real execve/chdir evidence in the same workflow
+artifact. Current-head hosted acceptance is still required before merge.
+The broader course/Juni/Zoom audit remains active, including 27 remaining generic
+Network source pairs and 36 optional Assembly contexts. Server access and
+production activation remain deferred.
