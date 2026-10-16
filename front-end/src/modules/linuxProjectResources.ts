@@ -592,7 +592,7 @@ export const linuxVerifiedPacks = [
 		coreItemId:
 			"linux-systems-optional-linux-integration-studio-archive-supplemental-core-project-automation-and-observability-studio",
 		notebookItemId: null,
-		revision: "302c24ed602ce9dbe92abd330bfb40ad9380780f",
+		revision: "fbf06b09894f3fa831facc17bf77818bba9182a0",
 		continuationItemId:
 			"linux-systems-optional-linux-integration-studio-archive-supplemental-extension-challenge-automation-and-observability-studio"
 	},
@@ -608,7 +608,7 @@ export const linuxVerifiedPacks = [
 		coreItemId:
 			"linux-systems-optional-linux-integration-studio-archive-supplemental-automation-observability-transfer-practice",
 		notebookItemId: null,
-		revision: "302c24ed602ce9dbe92abd330bfb40ad9380780f"
+		revision: "fbf06b09894f3fa831facc17bf77818bba9182a0"
 	},
 	{
 		pack: "LS-30-applied-studio-15-linux-systems-lab-15-supplemental-3",
@@ -622,7 +622,7 @@ export const linuxVerifiedPacks = [
 		coreItemId:
 			"linux-systems-optional-linux-integration-studio-archive-supplemental-automation-observability-extension-practice",
 		notebookItemId: null,
-		revision: "302c24ed602ce9dbe92abd330bfb40ad9380780f"
+		revision: "fbf06b09894f3fa831facc17bf77818bba9182a0"
 	},
 	{
 		pack: "LS-03-linux-systems-lab-16",
