@@ -261,6 +261,51 @@ export const networkApplicationPacks = [
 	}
 ] as const;
 
+export const networkLinkRoutingSourceRevision =
+	"6dfb1ccbc3e70ca7ec78ed98600438da8f3a9bed";
+export const networkLinkRoutingPacks = [
+	{
+		pack: "NS-07-unit-3-switches-routers-nat-and-the-internet-edge",
+		revision: networkLinkRoutingSourceRevision,
+		roleFiles: [
+			"main.py",
+			"link_routing_lab.py",
+			"network-notes.md",
+			"edge-cases.md"
+		],
+		coreItemId:
+			"network-systems-unit-3-switches-routers-nat-and-the-internet-edge-curriculum-core-project-switches-routers-nat-and-the-internet-edge",
+		notebookItemId:
+			"network-systems-unit-3-switches-routers-nat-and-the-internet-edge-supplemental-operations-notebook-switches-routers-nat-and-the-internet-edge"
+	},
+	{
+		pack: "NS-07-unit-3-switches-routers-nat-and-the-internet-edge-supplemental-2",
+		revision: networkLinkRoutingSourceRevision,
+		roleFiles: [
+			"main.py",
+			"link_routing_lab.py",
+			"network-notes.md",
+			"edge-cases.md"
+		],
+		coreItemId:
+			"network-systems-unit-3-switches-routers-nat-and-the-internet-edge-supplemental-routing-edge-transfer-practice",
+		notebookItemId: undefined
+	},
+	{
+		pack: "NS-08-unit-3-switches-routers-nat-and-the-internet-edge-supplemental-3",
+		revision: networkLinkRoutingSourceRevision,
+		roleFiles: [
+			"main.py",
+			"link_routing_lab.py",
+			"network-notes.md",
+			"edge-cases.md"
+		],
+		coreItemId:
+			"network-systems-unit-3-switches-routers-nat-and-the-internet-edge-supplemental-routing-edge-extension-practice",
+		notebookItemId: undefined
+	}
+] as const;
+
 export const networkVerifiedPacks = [
 	...networkFoundationPacks,
 	...networkNamingPacks,
@@ -271,7 +316,8 @@ export const networkVerifiedPacks = [
 	...networkListenerPacks,
 	...networkResolutionPacks,
 	...networkIPv6Packs,
-	...networkApplicationPacks
+	...networkApplicationPacks,
+	...networkLinkRoutingPacks
 ] as const;
 
 export function networkCourseResource(url: string) {
