@@ -212,8 +212,8 @@ const workflowDefinitions = {
 
 assert.equal(
 	fixtures.length,
-	17,
-	"All seventeen verified assignment workspaces require browser coverage"
+	19,
+	"All nineteen verified assignment workspaces require browser coverage"
 );
 assert.deepEqual(
 	fixtures.map(row => row.pack).sort(),
@@ -855,7 +855,7 @@ test(
 					}
 				}
 			}
-			assert.equal(courseButtons.length, 4);
+			assert.equal(courseButtons.length, 6);
 			await writeFile(
 				join(captures, "assembly-course-buttons-proof.json"),
 				JSON.stringify(courseButtons, null, 2)
