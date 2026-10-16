@@ -90,10 +90,30 @@ export const networkTopologyPacks = [
 	}
 ] as const;
 
+export const networkCaptureSourceRevision =
+	"5df2b6dc50bf57ef4ce5500189d1c62726540654";
+export const networkCapturePacks = [
+	{
+		pack: "NS5-Tcpdump-HTTP-Capture",
+		revision: networkCaptureSourceRevision,
+		roleFiles: [
+			"network-notes.md",
+			"capture_http.sh",
+			"capture-options.sh",
+			"capture_runtime.py"
+		],
+		coreItemId:
+			"network-systems-unit-10-packet-capture-and-deep-inspection-curriculum-project-capture-and-analyze-a-local-http-request-with-tcpdump",
+		notebookItemId:
+			"network-systems-unit-10-packet-capture-and-deep-inspection-supplemental-operations-notebook-packet-capture-and-deep-inspection"
+	}
+] as const;
+
 export const networkVerifiedPacks = [
 	...networkFoundationPacks,
 	...networkNamingPacks,
-	...networkTopologyPacks
+	...networkTopologyPacks,
+	...networkCapturePacks
 ] as const;
 
 export function networkCourseResource(url: string) {

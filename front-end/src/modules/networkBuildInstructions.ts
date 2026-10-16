@@ -6,6 +6,7 @@ export function networkBuildInstructions(files: PythonIdeFile[], url: string) {
 	if (!selected) return null;
 	const { role, definition } = selected;
 	const topology = definition.pack === "NS6-Router-NAT-Topology-Lab";
+	const capture = definition.pack === "NS5-Tcpdump-HTTP-Capture";
 	const namingCases: Record<string, string> = {
 		"NS-06-unit-2-addresses-and-naming":
 			"Repeat with python3 main.py --lookup 127.0.0.1, then with --network 192.0.2.65/26. Compare system name lookup, the actual IPv4 endpoint and the separate prefix calculation.",
@@ -14,15 +15,16 @@ export function networkBuildInstructions(files: PythonIdeFile[], url: string) {
 		"NS-06-unit-2-addresses-and-naming-supplemental-3":
 			"Repeat with python3 main.py --lookup 127.0.0.1. Compare resolver families, actual listener ownership and the IPv6 probe. The IPv6 documentation-prefix table is a separate calculation, not proof of DNS or internet reachability."
 	};
-	const lines = topology
-		? [
-				"Save and download the ZIP. Extract it in an owned disposable Linux VM with root access and the tools listed in README.md. This kernel lab requires network and mount namespaces.",
-				"The browser edits and saves the source and notebook. Run the real routing and firewall experiments in that external VM; the browser cannot perform these Linux kernel operations."
-			]
-		: [
-				"Save and download the ZIP. Extract it in an owned Linux lab or WSL environment with an ordinary account, Python3.10+ and the tools listed in README.md.",
-				"The browser edits and saves the source and notebook. Run the real socket experiments in that external Linux terminal; browser Python does not provide these Linux observations."
-			];
+	const lines =
+		topology || capture
+			? [
+					`Save and download the ZIP. Extract it in an owned disposable Linux VM with root access and the tools listed in README.md. This kernel lab requires ${capture ? "an owned network namespace" : "network and mount namespaces"}.`,
+					"The browser edits and saves the source and notebook. Run the selected real network experiment in that external VM; the browser cannot perform these Linux kernel operations."
+				]
+			: [
+					"Save and download the ZIP. Extract it in an owned Linux lab or WSL environment with an ordinary account, Python3.10+ and the tools listed in README.md.",
+					"The browser edits and saves the source and notebook. Run the real socket experiments in that external Linux terminal; browser Python does not provide these Linux observations."
+				];
 	if (
 		!files.some(file => file.name === "README.md") ||
 		definition.roleFiles.some(
@@ -32,6 +34,15 @@ export function networkBuildInstructions(files: PythonIdeFile[], url: string) {
 		return [
 			...lines,
 			"The selected lab is incomplete. Restore all required role files and README.md before following the guide."
+		];
+	}
+	if (capture) {
+		return [
+			...lines,
+			`Read README.md, then cd ${role}. Complete the count and filter choices in capture-options.sh. Run sudo bash capture_http.sh --output capture-observations.json with a new output filename.`,
+			"Compare with sudo bash capture_http.sh --reverse --output reversed-capture-observations.json. The supplied apparatus starts its own services, captures only their isolated loopback traffic, retains the pcap and actual HTTP evidence, and stops both processes within a bounded run.",
+			"Record the real source/service ports, SYN and SYN/ACK, HTTP request/response bytes, selected versus noise flows, packet count and cleanup in network-notes.md. Its operations-notebook card reopens this same saved attempt; the reference remains separate.",
+			"Python programming is optional. Keep the supplied capture_runtime.py apparatus unchanged; the capture choices, command observations and notebook explanation are the required work."
 		];
 	}
 	if (topology) {

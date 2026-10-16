@@ -3,6 +3,7 @@ import namingReading2 from "../../assets/course-guides/network-addresses-familie
 import namingReading1 from "../../assets/course-guides/network-addresses-transfer.md?raw";
 import namingReading0 from "../../assets/course-guides/network-addresses.md?raw";
 
+import captureReading from "../../assets/course-guides/network-http-capture.md?raw";
 import topologyReading from "../../assets/course-guides/network-routing-exposure.md?raw";
 import setupReading from "../../assets/course-guides/network-setup.md?raw";
 import transportReading from "../../assets/course-guides/network-transport.md?raw";
@@ -17,7 +18,8 @@ const readings: Record<string, string> = {
 	"NS-06-unit-2-addresses-and-naming": namingReading0,
 	"NS-05-unit-2-addresses-and-naming-supplemental-2": namingReading1,
 	"NS-06-unit-2-addresses-and-naming-supplemental-3": namingReading2,
-	"NS6-Router-NAT-Topology-Lab": topologyReading
+	"NS6-Router-NAT-Topology-Lab": topologyReading,
+	"NS5-Tcpdump-HTTP-Capture": captureReading
 };
 
 export function withNetworkProjectReadings(
@@ -31,6 +33,7 @@ export function withNetworkProjectReadings(
 		if (!selected) return item;
 		const notebook = item.title.startsWith("Operations Notebook:");
 		const topology = selected.pack === "NS6-Router-NAT-Topology-Lab";
+		const capture = selected.pack === "NS5-Tcpdump-HTTP-Capture";
 		const exposure = topology && module.title.startsWith("Unit 12:");
 		const reading = readings[selected.pack]
 			.replace(
@@ -38,6 +41,10 @@ export function withNetworkProjectReadings(
 				""
 			)
 			.replace("should retain", "retains")
+			.replace(
+				"Flow membership should follow",
+				"Check whether flow membership follows"
+			)
 			.replace(
 				/agreed\s+instructor checkpoint/g,
 				"agreed review checkpoint"
@@ -56,6 +63,17 @@ export function withNetworkProjectReadings(
 				"For a guided walkthrough"
 			)
 			.trim();
+		const captureNotebook = `## Preserve an HTTP packet evidence notebook
+
+Opening this notebook reopens the matching core project and preserves its saved capture attempt. Complete the two count/filter choices in capture-options.sh in that project. Use a disposable Linux VM with root access and the tools named in the imported README.md; the site IDE edits and saves the files while the VM performs the real packet capture.
+
+### Predict and identify
+
+Record why the owned loopback interface matches the local HTTP request. Predict the selected service port, the role of the client's ephemeral port, and the effect of including or excluding the independent noise service. Explain why a packet count also needs a wall-clock bound. The supplied numeric display option does not alter the captured headers.
+
+### Compare and review
+
+Keep the original report and the report from --reverse beside their exact settings. Use actual captured bytes and numeric readback to identify SYN, reverse-direction SYN/ACK, the HTTP request line, response status and per-run response token. Compare packet selection with traffic order. A TCP acknowledgement alone does not establish HTTP success, and this plaintext local experiment does not establish what TLS would reveal. Record both process cleanup and unchanged host network configuration. Python programming is optional; the supplied apparatus stays unchanged. Review the explanation independently or pace a walkthrough through endpoints, transport, HTTP, filter contrast and cleanup. Follow the full core-card guide and imported README.md for execution and evidence details.`;
 		const topologyContinuation = exposure
 			? `## Secure exposure: continue the existing router attempt
 
@@ -88,11 +106,13 @@ Keep each prediction beside actual command output, the measured HTTP result and 
 			preserveInstructions: true,
 
 			content:
-				notebook && topology
-					? topologyContinuation
-					: notebook
-						? `${item.content}\n\nContinue the existing core project. Opening this notebook reopens the matching core project rather than creating a second assignment. Keep predictions, actual command output, endpoint and process identities, changed-case comparisons and cleanup in network-notes.md. Follow the complete guide on the core project card and in README.md. Python programming is optional supplemental practice; command observations and the notebook are the core deliverable.`
-						: `${exposure ? "Continue the saved Unit7 attempt for the Unit12 Secure Exposure pass. Complete the fourth shell case and run --exposure-policy; the three earlier routing/NAT cases remain prerequisites.\n\n" : ""}${reading}\n\nSource guide: [Network Systems project](${projectLink}). Edit, save, review and export the selected role in the site IDE, then follow README.md in an external Linux terminal. The reference is separate from the learner attempt.`
+				notebook && capture
+					? captureNotebook
+					: notebook && topology
+						? topologyContinuation
+						: notebook
+							? `${item.content}\n\nContinue the existing core project. Opening this notebook reopens the matching core project rather than creating a second assignment. Keep predictions, actual command output, endpoint and process identities, changed-case comparisons and cleanup in network-notes.md. Follow the complete guide on the core project card and in README.md. Python programming is optional supplemental practice; command observations and the notebook are the core deliverable.`
+							: `${exposure ? "Continue the saved Unit7 attempt for the Unit12 Secure Exposure pass. Complete the fourth shell case and run --exposure-policy; the three earlier routing/NAT cases remain prerequisites.\n\n" : ""}${reading}\n\nSource guide: [Network Systems project](${projectLink}). Edit, save, review and export the selected role in the site IDE, then follow README.md in an external Linux terminal. The reference is separate from the learner attempt.`
 		};
 	};
 	return {

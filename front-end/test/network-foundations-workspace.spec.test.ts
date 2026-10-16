@@ -34,6 +34,7 @@ type Fixture = {
 	moduleId: string;
 	learningPath?: string;
 	instructionCommand?: string;
+	requiresRoot?: boolean;
 	continuationItems?: { moduleId: string; itemId: string }[];
 	revision: string;
 	files: Record<string, { content: string; sha256: string }>;
@@ -62,6 +63,15 @@ const fixtures: Fixture[] = [
 			resolve(
 				process.cwd(),
 				"../test/fixtures/network-topology-contracts.json"
+			),
+			"utf8"
+		)
+	),
+	...JSON.parse(
+		readFileSync(
+			resolve(
+				process.cwd(),
+				"../test/fixtures/network-capture-contracts.json"
 			),
 			"utf8"
 		)
@@ -219,6 +229,10 @@ it("preserves every published lesson while preserving core notebooks and distinc
 			)
 			.replace("should retain", "retains")
 			.replace(
+				"Flow membership should follow",
+				"Check whether flow membership follows"
+			)
+			.replace(
 				/agreed\s+instructor checkpoint/g,
 				"agreed review checkpoint"
 			)
@@ -339,6 +353,10 @@ it.each(
 		expect(instructions).toContain(
 			fixture.instructionCommand ?? "python3 main.py"
 		);
+		if (fixture.requiresRoot || fixture.continuationItems) {
+			expect(instructions).toContain("root access");
+			expect(instructions).not.toContain("ordinary account");
+		}
 		if (fixture.continuationItems) {
 			expect(instructions).toContain("--exposure-policy");
 			expect(instructions).toContain("root access");
