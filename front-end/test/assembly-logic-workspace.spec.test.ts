@@ -88,7 +88,9 @@ it("keeps distinct comparison and shift investigations optional with all publish
 		const item = module.supplementalProjects.find(
 			item => item.id === fixture.itemId
 		)!;
-		expect(item.learningPath).toBe("choice");
+		expect(item.learningPath).toBe(
+			fixture.mode === "shift" ? "challenge" : "choice"
+		);
 		expect(item.ideImport).toBe(true);
 		expect(item.content).toContain(
 			fixture.files[fixture.pack + "/README.md"].content.trim()

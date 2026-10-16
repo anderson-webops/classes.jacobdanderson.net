@@ -282,6 +282,7 @@ const assemblySourceCourse: RawCourse = {
 				{
 					title: "Variable Shift Count Investigation",
 					id: "assembly-unit-3-arithmetic-and-logic-supplemental-flag-logic-extension-practice",
+					learningPath: "challenge",
 					preserveInstructions: true,
 					ideImport: true,
 					content: assemblyShiftReading,
