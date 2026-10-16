@@ -1,4 +1,6 @@
 import type { RawCourse } from "./types";
+import setupPreprocessReading from "../../assets/course-guides/assembly-setup-preprocess.md?raw";
+import setupSymbolsReading from "../../assets/course-guides/assembly-setup-symbols.md?raw";
 import {
 	assemblyArithmeticConceptReading,
 	assemblyArithmeticProjectReading,
@@ -73,30 +75,26 @@ const assemblySourceCourse: RawCourse = {
 						"https://github.com/instruction-material/Assembly/blob/117e34fb8ff90c2046da71090c37e7b45ef20624/ASM-04-asm0-setup-and-tooling/README.md"
 				},
 				{
-					title: "Setup and Tooling Transfer Practice",
-					content: buildProjectGuidance({
-						courseFamily: "assembly",
-						moduleTitle: "ASM0 Setup and Tooling",
-						projectKind: "extension",
-						hasReference: true
-					}),
+					title: "Symbol Binding Transfer Investigation",
+					id: "assembly-asm0-setup-and-tooling-supplemental-assembly-setup-transfer-practice",
+					preserveInstructions: true,
+					ideImport: true,
+					content: setupSymbolsReading,
 					projectLink:
-						"https://github.com/instruction-material/Assembly/tree/main/ASM-01-asm0-setup-and-tooling-supplemental-2/starter",
+						"https://github.com/instruction-material/Assembly/tree/cc76e8c0977ae1b1e97eaa9f321f857a3e4e684f/ASM-01-asm0-setup-and-tooling-supplemental-2/starter",
 					solutionLink:
-						"https://github.com/instruction-material/Assembly/tree/main/ASM-01-asm0-setup-and-tooling-supplemental-2/solution"
+						"https://github.com/instruction-material/Assembly/tree/cc76e8c0977ae1b1e97eaa9f321f857a3e4e684f/ASM-01-asm0-setup-and-tooling-supplemental-2/solution"
 				},
 				{
-					title: "Setup and Tooling Extension Practice",
-					content: buildProjectGuidance({
-						courseFamily: "assembly",
-						moduleTitle: "ASM0 Setup and Tooling",
-						projectKind: "extension",
-						hasReference: true
-					}),
+					title: "Assembly Preprocessing Extension Investigation",
+					id: "assembly-asm0-setup-and-tooling-supplemental-assembly-setup-extension-practice",
+					preserveInstructions: true,
+					ideImport: true,
+					content: setupPreprocessReading,
 					projectLink:
-						"https://github.com/instruction-material/Assembly/tree/main/ASM-02-asm0-setup-and-tooling-supplemental-3/starter",
+						"https://github.com/instruction-material/Assembly/tree/cc76e8c0977ae1b1e97eaa9f321f857a3e4e684f/ASM-02-asm0-setup-and-tooling-supplemental-3/starter",
 					solutionLink:
-						"https://github.com/instruction-material/Assembly/tree/main/ASM-02-asm0-setup-and-tooling-supplemental-3/solution"
+						"https://github.com/instruction-material/Assembly/tree/cc76e8c0977ae1b1e97eaa9f321f857a3e4e684f/ASM-02-asm0-setup-and-tooling-supplemental-3/solution"
 				}
 			]
 		},

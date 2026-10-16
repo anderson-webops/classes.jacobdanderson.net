@@ -13,6 +13,7 @@ import {
 	assemblyPerformancePack,
 	assemblyRecordPack,
 	assemblyReversePack,
+	assemblySetupPacks,
 	assemblyStackPack,
 	assemblyStringPack
 } from "@/modules/assemblyProjectResources";
@@ -24,9 +25,50 @@ export function assemblyBuildInstructions(
 	const selected = assemblyCourseResource(starterUrl ?? "");
 	const lines = [
 		"Save and download the ZIP, then extract it before building.",
-		"Assembly compilation, tests and debugging require Linux x86-64, the System V AMD64 ABI, GNU/Clang Intel syntax, and a native Clang or GCC toolchain.",
+		"Assembly compilation, tests and debugging require Linux x86-64, the System V AMD64 ABI, GNU/Clang assembly with the syntax specified in README.md, and a native Clang or GCC toolchain.",
 		"The workspace edits and saves source. Use an x86-64 Linux VM or lab on macOS, or an x86-64 WSL distribution on Windows."
 	];
+	if (
+		selected &&
+		assemblySetupPacks.some(pack => pack.pack === selected.pack)
+	) {
+		if (
+			!selected.definition.roleFiles.every(name =>
+				files.some(file => file.name === `${selected.role}/${name}`)
+			) ||
+			!files.some(file => file.name === "README.md")
+		) {
+			return [
+				...lines,
+				"This setup project is incomplete. Restore the complete selected role and README.md before building; preserve the saved attempt first."
+			];
+		}
+		const symbols = selected.pack === assemblySetupPacks[0].pack;
+		return [
+			...lines,
+			"These two optional setup investigations use GNU AT&T source syntax: movl $LAB_VALUE, %eax writes the immediate value into EAX. The objdump -Mintel display changes the notation, not the instruction. Required course projects keep their documented Intel source syntax.",
+			`From the extracted project folder: cd ${selected.role}`,
+			"cmake -S . -B build-first -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER=clang -DCMAKE_ASM_COMPILER=clang",
+			"cmake --build build-first --verbose --parallel 1",
+			"Read README.md and retain the first diagnostic. A link failure is expected for the untouched learner; assembly and linking are separate stages.",
+			symbols
+				? "Inspect lab_answer with nm -P and readelf -Ws. The learner task is the single .globl lab_answer export in routine.S; the separate caller already requests a global symbol."
+				: "Inspect the explicit -x assembler selection in compile_commands.json, the unresolved LAB_VALUE symbol and relocation. The learner task is LAB_ASM_LANGUAGE=assembler-with-cpp in CMakeLists.txt; an independent -E command does not prove the selected build preprocesses.",
+			"After the documented change, configure a fresh build directory:",
+			"cmake -S . -B build-completed -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER=clang -DCMAKE_ASM_COMPILER=clang",
+			"cmake --build build-completed --verbose --parallel 1",
+			"ctest --test-dir build-completed --output-on-failure",
+			"./build-completed/app",
+			"cmake -S . -B build-value73 -DCMAKE_C_COMPILER=clang -DCMAKE_ASM_COMPILER=clang -DLAB_VALUE=73",
+			"cmake --build build-value73 --parallel 1",
+			"ctest --test-dir build-value73 --output-on-failure",
+			"./build-value73/app",
+			"The changed build prints answer=73. Repeat the staged object/link commands from README.md with GCC, using separate directories. Record observed symbol binding, relocation, instruction bytes and the controlled regression in trace.md; passing tests does not complete that explanation.",
+			selected.role === "starter"
+				? "The untouched learner reaches a real link failure. Keep main.c, lab.h and tests.c unchanged; complete only the named directive/build-language choice and the separate trace."
+				: `The reference prints answer=${symbols ? 42 : 41} and passes the contract. Predict the regression before changing the source; retain the separate learner attempt.`
+		];
+	}
 	if (selected?.pack === assemblyArithmeticPack) {
 		const required = [
 			"routine.S",

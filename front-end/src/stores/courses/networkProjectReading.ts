@@ -3,12 +3,14 @@ import namingReading2 from "../../assets/course-guides/network-addresses-familie
 import namingReading1 from "../../assets/course-guides/network-addresses-transfer.md?raw";
 import namingReading0 from "../../assets/course-guides/network-addresses.md?raw";
 import applicationReading2 from "../../assets/course-guides/network-application-boundaries.md?raw";
-
 import applicationReading1 from "../../assets/course-guides/network-application-conditions.md?raw";
 import applicationReading0 from "../../assets/course-guides/network-application-responses.md?raw";
-import firewallReading from "../../assets/course-guides/network-firewall-policy.md?raw";
 
+import firewallReading from "../../assets/course-guides/network-firewall-policy.md?raw";
 import captureReading from "../../assets/course-guides/network-http-capture.md?raw";
+import inventoryTcpReading from "../../assets/course-guides/network-inventory-tcp.md?raw";
+
+import inventoryUdpReading from "../../assets/course-guides/network-inventory-udp.md?raw";
 import ipv6Reading0 from "../../assets/course-guides/network-ipv6-diagnostics.md?raw";
 import ipv6Reading2 from "../../assets/course-guides/network-ipv6-family-extension.md?raw";
 
@@ -35,6 +37,10 @@ import {
 } from "../../modules/networkProjectResources";
 
 const readings: Record<string, string> = {
+	"NS-09-unit-4-ports-and-listening-services-supplemental-2":
+		inventoryUdpReading,
+	"NS-10-unit-4-ports-and-listening-services-supplemental-3":
+		inventoryTcpReading,
 	"NS-03-unit-1-the-network-stack-in-plain-english-supplemental-2":
 		transportTcpReading,
 	"NS-04-unit-1-the-network-stack-in-plain-english-supplemental-3":

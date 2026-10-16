@@ -392,6 +392,39 @@ export const networkTransportPacks = [
 	}
 ] as const;
 
+export const networkSocketInventorySourceRevision =
+	"8629da663b9e797ddbca1dc0217ce6869c823501";
+export const networkSocketInventoryPacks = [
+	{
+		pack: "NS-09-unit-4-ports-and-listening-services-supplemental-2",
+		revision: networkSocketInventorySourceRevision,
+		roleFiles: [
+			"network-notes.md",
+			"main.py",
+			"listener_lab.py",
+			"case.json",
+			"edge-cases.md"
+		],
+		coreItemId:
+			"network-systems-unit-4-ports-and-listening-services-supplemental-port-inventory-transfer-practice",
+		notebookItemId: undefined
+	},
+	{
+		pack: "NS-10-unit-4-ports-and-listening-services-supplemental-3",
+		revision: networkSocketInventorySourceRevision,
+		roleFiles: [
+			"network-notes.md",
+			"main.py",
+			"listener_lab.py",
+			"case.json",
+			"edge-cases.md"
+		],
+		coreItemId:
+			"network-systems-unit-4-ports-and-listening-services-supplemental-port-inventory-extension-practice",
+		notebookItemId: undefined
+	}
+] as const;
+
 export const networkVerifiedPacks = [
 	...networkFoundationPacks,
 	...networkNamingPacks,
@@ -406,7 +439,8 @@ export const networkVerifiedPacks = [
 	...networkLinkRoutingPacks,
 	...networkCapstonePacks,
 	...networkSetupPacks,
-	...networkTransportPacks
+	...networkTransportPacks,
+	...networkSocketInventoryPacks
 ] as const;
 
 export function networkCourseResource(url: string) {

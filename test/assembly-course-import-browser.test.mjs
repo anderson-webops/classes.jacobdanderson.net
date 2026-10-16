@@ -41,12 +41,63 @@ const fixtures = await Promise.all(
 		)
 	)
 );
-const hardening = fixtures.find(row => row.pack === "ASM-25-unit-12-security-and-reliability-visibility-supplemental-2");
-fixtures.push({ ...hardening, pack: "ASM-26-unit-12-security-and-reliability-visibility-supplemental-3", sourcePack: hardening.pack });
+fixtures.push(
+	...JSON.parse(
+		await readFile(
+			new URL(
+				"./fixtures/assembly-setup-contracts.json",
+				import.meta.url
+			),
+			"utf8"
+		)
+	)
+);
+const hardening = fixtures.find(
+	row =>
+		row.pack ===
+		"ASM-25-unit-12-security-and-reliability-visibility-supplemental-2"
+);
+fixtures.push({
+	...hardening,
+	pack: "ASM-26-unit-12-security-and-reliability-visibility-supplemental-3",
+	sourcePack: hardening.pack
+});
 let fixture = fixtures[0];
 const workflowDefinitions = {
-	"ASM-06-unit-3-arithmetic-and-logic": { primary: "routine.S", title: "Core Project: Arithmetic and Logic", lesson: "assembly-unit-3-arithmetic-and-logic-assembly-unit-3-arithmetic-and-logic-curriculum-core-project-arithmetic-and-logic", referenceToken: "591,123", starterToken: "ARITH_MUL" },
-	"ASM-05-unit-1-machine-model-and-toolchain": { primary: "routine.S", title: "Core Project: Machine Model and Toolchain", lesson: "assembly-unit-1-machine-model-and-toolchain-assembly-unit-1-machine-model-and-toolchain-curriculum-core-project-machine-model-and-toolchain", referenceToken: "196,609", starterToken: "RECORD_DECODE" },
+	"ASM-01-asm0-setup-and-tooling-supplemental-2": {
+		primary: "routine.S",
+		taskFile: "routine.S",
+		title: "Symbol Binding Transfer Investigation",
+		lesson: "assembly-asm0-setup-and-tooling-assembly-asm0-setup-and-tooling-supplemental-assembly-setup-transfer-practice",
+		moduleId: "assembly-asm0-setup-and-tooling",
+		setupMode: "symbols",
+		starterToken: "link failure",
+		referenceToken: "answer=42"
+	},
+	"ASM-02-asm0-setup-and-tooling-supplemental-3": {
+		primary: "routine.S",
+		taskFile: "CMakeLists.txt",
+		title: "Assembly Preprocessing Extension Investigation",
+		lesson: "assembly-asm0-setup-and-tooling-assembly-asm0-setup-and-tooling-supplemental-assembly-setup-extension-practice",
+		moduleId: "assembly-asm0-setup-and-tooling",
+		setupMode: "preprocess",
+		starterToken: "link failure",
+		referenceToken: "answer=41"
+	},
+	"ASM-06-unit-3-arithmetic-and-logic": {
+		primary: "routine.S",
+		title: "Core Project: Arithmetic and Logic",
+		lesson: "assembly-unit-3-arithmetic-and-logic-assembly-unit-3-arithmetic-and-logic-curriculum-core-project-arithmetic-and-logic",
+		referenceToken: "591,123",
+		starterToken: "ARITH_MUL"
+	},
+	"ASM-05-unit-1-machine-model-and-toolchain": {
+		primary: "routine.S",
+		title: "Core Project: Machine Model and Toolchain",
+		lesson: "assembly-unit-1-machine-model-and-toolchain-assembly-unit-1-machine-model-and-toolchain-curriculum-core-project-machine-model-and-toolchain",
+		referenceToken: "196,609",
+		starterToken: "RECORD_DECODE"
+	},
 	"ASM-04-asm0-setup-and-tooling": {
 		primary: "routine.S",
 		title: "Build and Trace a Linux x86-64 Function",
@@ -95,17 +146,52 @@ const workflowDefinitions = {
 		lesson: "assembly-unit-5-the-stack-and-function-calls-assembly-unit-5-the-stack-and-function-calls-curriculum-core-project-the-stack-and-function-calls",
 		referenceToken: "10,012"
 	},
-	"ASM-08-unit-9-reading-compiler-output": { primary: "model.c", taskFile: "analysis.md", title: "Core Project: Reading Compiler Output", lesson: "assembly-unit-9-reading-compiler-output-assembly-unit-9-reading-compiler-output-curriculum-core-project-reading-compiler-output", referenceToken: "10,013", starterToken: "analysis.md" },
-	"ASM-09-unit-10-debugging-at-instruction-level": { primary: "routine.S", taskFile: "analysis.md", title: "Core Project: Debugging at Instruction Level", lesson: "assembly-unit-10-debugging-at-instruction-level-assembly-unit-10-debugging-at-instruction-level-curriculum-core-project-debugging-at-instruction-level", referenceToken: "10,019", starterToken: "exits 1" },
-	"ASM-10-unit-11-performance-and-code-shape": { primary: "loops.S", taskFile: "analysis.md", title: "Core Project: Performance and Code Shape", lesson: "assembly-unit-11-performance-and-code-shape-assembly-unit-11-performance-and-code-shape-curriculum-core-project-performance-and-code-shape", referenceToken: "10,026", starterToken: "analysis.md" },
-	"ASM-25-unit-12-security-and-reliability-visibility-supplemental-2": { primary: "analysis.md", taskFile: "analysis.md", title: "Binary Hardening Evidence Lab", lesson: "assembly-unit-12-security-and-reliability-visibility-assembly-unit-12-security-and-reliability-visibility-supplemental-reliability-visibility-transfer-practice", referenceToken: "10,079", starterToken: "analysis.md" },
-	"ASM-26-unit-12-security-and-reliability-visibility-supplemental-3": { primary: "trace.md", taskFile: "trace.md", title: "Runtime Hardening Trace Companion", lesson: "assembly-unit-12-security-and-reliability-visibility-assembly-unit-12-security-and-reliability-visibility-supplemental-reliability-visibility-extension-practice", referenceToken: "10,079", starterToken: "trace.md" }
+	"ASM-08-unit-9-reading-compiler-output": {
+		primary: "model.c",
+		taskFile: "analysis.md",
+		title: "Core Project: Reading Compiler Output",
+		lesson: "assembly-unit-9-reading-compiler-output-assembly-unit-9-reading-compiler-output-curriculum-core-project-reading-compiler-output",
+		referenceToken: "10,013",
+		starterToken: "analysis.md"
+	},
+	"ASM-09-unit-10-debugging-at-instruction-level": {
+		primary: "routine.S",
+		taskFile: "analysis.md",
+		title: "Core Project: Debugging at Instruction Level",
+		lesson: "assembly-unit-10-debugging-at-instruction-level-assembly-unit-10-debugging-at-instruction-level-curriculum-core-project-debugging-at-instruction-level",
+		referenceToken: "10,019",
+		starterToken: "exits 1"
+	},
+	"ASM-10-unit-11-performance-and-code-shape": {
+		primary: "loops.S",
+		taskFile: "analysis.md",
+		title: "Core Project: Performance and Code Shape",
+		lesson: "assembly-unit-11-performance-and-code-shape-assembly-unit-11-performance-and-code-shape-curriculum-core-project-performance-and-code-shape",
+		referenceToken: "10,026",
+		starterToken: "analysis.md"
+	},
+	"ASM-25-unit-12-security-and-reliability-visibility-supplemental-2": {
+		primary: "analysis.md",
+		taskFile: "analysis.md",
+		title: "Binary Hardening Evidence Lab",
+		lesson: "assembly-unit-12-security-and-reliability-visibility-assembly-unit-12-security-and-reliability-visibility-supplemental-reliability-visibility-transfer-practice",
+		referenceToken: "10,079",
+		starterToken: "analysis.md"
+	},
+	"ASM-26-unit-12-security-and-reliability-visibility-supplemental-3": {
+		primary: "trace.md",
+		taskFile: "trace.md",
+		title: "Runtime Hardening Trace Companion",
+		lesson: "assembly-unit-12-security-and-reliability-visibility-assembly-unit-12-security-and-reliability-visibility-supplemental-reliability-visibility-extension-practice",
+		referenceToken: "10,079",
+		starterToken: "trace.md"
+	}
 };
 
 assert.equal(
 	fixtures.length,
-	15,
-	"All fifteen verified assignment workspaces require browser coverage"
+	17,
+	"All seventeen verified assignment workspaces require browser coverage"
 );
 assert.deepEqual(
 	fixtures.map(row => row.pack).sort(),
@@ -127,25 +213,53 @@ const legacy = {
 	updatedAt: "2026-10-01T12:00:00.000Z"
 };
 
-async function verifyHardeningCourseButton(page, origin, definition, fixture, storageKey, sourceRequests, setCatalog) {
-	const moduleId = "assembly-unit-12-security-and-reliability-visibility";
+async function verifyHardeningCourseButton(
+	page,
+	origin,
+	definition,
+	fixture,
+	storageKey,
+	sourceRequests,
+	setCatalog
+) {
+	const moduleId =
+		definition.moduleId ??
+		"assembly-unit-12-security-and-reliability-visibility";
 	const sourceUrl = `https://github.com/instruction-material/Assembly/tree/${fixture.revision}/${fixture.pack}/starter`;
 	setCatalog(true);
-	await page.goto(`${origin}/courses#${moduleId}`, { waitUntil: "domcontentloaded" });
+	await page.goto(`${origin}/courses#${moduleId}`, {
+		waitUntil: "domcontentloaded"
+	});
 	await page.waitForSelector(".lesson-view-toggle button");
 	let href;
 	for (const position of [1, 2, 3]) {
-		await page.locator(`.lesson-view-toggle button:nth-child(${position})`).click();
-		await page.waitForSelector(`.lesson-view-toggle button:nth-child(${position})[aria-pressed='true']`);
+		await page
+			.locator(`.lesson-view-toggle button:nth-child(${position})`)
+			.click();
+		await page.waitForSelector(
+			`.lesson-view-toggle button:nth-child(${position})[aria-pressed='true']`
+		);
 		if (!(await page.$(`#${definition.lesson}`))) continue;
-		href = await page.$eval(`#${definition.lesson}`, (card, expected) =>
-			[...card.querySelectorAll("a")].find((link) => {
-				const url = new URL(link.href);
-				return url.pathname === "/ide" && url.searchParams.get("starterUrl") === expected;
-			})?.getAttribute("href"), sourceUrl);
+		href = await page.$eval(
+			`#${definition.lesson}`,
+			(card, expected) =>
+				[...card.querySelectorAll("a")]
+					.find(link => {
+						const url = new URL(link.href);
+						return (
+							url.pathname === "/ide" &&
+							url.searchParams.get("starterUrl") === expected
+						);
+					})
+					?.getAttribute("href"),
+			sourceUrl
+		);
 		if (href) break;
 	}
-	assert.ok(href, "The actual optional lesson must provide its confirmed IDE action");
+	assert.ok(
+		href,
+		"The actual optional lesson must provide its confirmed IDE action"
+	);
 	const params = new URL(href, origin).searchParams;
 	const itemId = definition.lesson.slice(moduleId.length + 1);
 	const key = `assembly:${itemId}:starter:native-assembly`;
@@ -155,14 +269,42 @@ async function verifyHardeningCourseButton(page, origin, definition, fixture, st
 	setCatalog(false);
 	await page.locator(`a[href=${JSON.stringify(href)}]`).click();
 	await page.waitForSelector("[data-testid='ide-route-import-confirm']");
-	assert.equal(sourceRequests(), 0, "Opening the action must still require consent");
+	assert.equal(
+		sourceRequests(),
+		0,
+		"Opening the action must still require consent"
+	);
 	await confirmProjectImport(page);
-	await page.waitForFunction((storage, projectKey) => JSON.parse(localStorage.getItem(storage) ?? "[]").some(p => p.courseProjectKey === projectKey), {}, storageKey, key);
-	const saved = await page.evaluate((storage, projectKey) => JSON.parse(localStorage.getItem(storage)).find(p => p.courseProjectKey === projectKey), storageKey, key);
+	await page.waitForFunction(
+		(storage, projectKey) =>
+			JSON.parse(localStorage.getItem(storage) ?? "[]").some(
+				p => p.courseProjectKey === projectKey
+			),
+		{},
+		storageKey,
+		key
+	);
+	const saved = await page.evaluate(
+		(storage, projectKey) =>
+			JSON.parse(localStorage.getItem(storage)).find(
+				p => p.courseProjectKey === projectKey
+			),
+		storageKey,
+		key
+	);
 	assert.equal(saved.activeFileName, `starter/${definition.primary}`);
-	assert.equal(saved.files.length, 10);
-	assert.equal(sourceRequests(), 10);
-	return { pack: fixture.pack, itemId, key, activeFile: saved.activeFileName, actualCourseAction: true, consentBeforeFetch: true, importedFiles: 10 };
+	const expectedCount = definition.setupMode ? 7 : 10;
+	assert.equal(saved.files.length, expectedCount);
+	assert.equal(sourceRequests(), expectedCount);
+	return {
+		pack: fixture.pack,
+		itemId,
+		key,
+		activeFile: saved.activeFileName,
+		actualCourseAction: true,
+		consentBeforeFetch: true,
+		importedFiles: expectedCount
+	};
 }
 
 test(
@@ -170,11 +312,11 @@ test(
 	{ timeout: 360_000 },
 	async () => {
 		let server, browser, context, page;
-		const captures
-			= process.env.COURSE_IMPORT_SCREENSHOT_DIR ?? "output/playwright";
-		const exports
-			= process.env.ASSEMBLY_BROWSER_EXPORT_PROOF_DIR
-				?? "output/assembly-exports";
+		const captures =
+			process.env.COURSE_IMPORT_SCREENSHOT_DIR ?? "output/playwright";
+		const exports =
+			process.env.ASSEMBLY_BROWSER_EXPORT_PROOF_DIR ??
+			"output/assembly-exports";
 		const proof = [];
 		const courseButtons = [];
 		await mkdir(captures, { recursive: true });
@@ -210,15 +352,15 @@ test(
 					const click = HTMLAnchorElement.prototype.click;
 					HTMLAnchorElement.prototype.click = function () {
 						if (
-							this.download.endsWith(".zip")
-							&& this.href.startsWith("blob:")
+							this.download.endsWith(".zip") &&
+							this.href.startsWith("blob:")
 						) {
 							return;
 						}
 						return click.call(this);
 					};
 					const create = URL.createObjectURL;
-					URL.createObjectURL = (blob) => {
+					URL.createObjectURL = blob => {
 						if (blob.type === "application/zip")
 							window.__assemblyArchive = blob;
 						return create(blob);
@@ -230,7 +372,7 @@ test(
 			await page.setRequestInterception(true);
 			let requests = [];
 			let catalog = false;
-			page.on("request", (request) => {
+			page.on("request", request => {
 				const url = new URL(request.url());
 				if (url.hostname === "raw.githubusercontent.com") {
 					requests.push(url.pathname);
@@ -244,17 +386,31 @@ test(
 						headers: { "access-control-allow-origin": "*" },
 						body: file?.content ?? "Unknown source"
 					});
-				}
-				else if (
-					url.origin !== origin
-					|| url.pathname.startsWith("/api/")
+				} else if (
+					url.origin !== origin ||
+					url.pathname.startsWith("/api/")
 				) {
 					let body = {};
-					if (catalog && url.pathname === "/api/accounts/me") body = { userID: "assembly-learner" };
-					if (catalog && url.pathname === "/api/users/loggedin") body = { currentUser: { _id: "assembly-learner", name: "Learner fixture", email: "learner@example.invalid", age: 14, state: "GA", courseAccess: ["assembly"], courseProgress: [] } };
-					void request.respond({ status: 200, contentType: "application/json", body: JSON.stringify(body) });
-				}
-				else {
+					if (catalog && url.pathname === "/api/accounts/me")
+						body = { userID: "assembly-learner" };
+					if (catalog && url.pathname === "/api/users/loggedin")
+						body = {
+							currentUser: {
+								_id: "assembly-learner",
+								name: "Learner fixture",
+								email: "learner@example.invalid",
+								age: 14,
+								state: "GA",
+								courseAccess: ["assembly"],
+								courseProgress: []
+							}
+						};
+					void request.respond({
+						status: 200,
+						contentType: "application/json",
+						body: JSON.stringify(body)
+					});
+				} else {
 					void request.continue();
 				}
 			});
@@ -262,21 +418,44 @@ test(
 				fixture = current;
 				const sourcePack = fixture.sourcePack ?? fixture.pack;
 				const definition = workflowDefinitions[fixture.pack];
-				const { primary, referenceToken, starterToken = "exits 78", taskFile } = definition;
+				const {
+					primary,
+					referenceToken,
+					starterToken = "exits 78",
+					taskFile
+				} = definition;
 				for (const width of [1280, 360]) {
 					for (const theme of ["light", "dark"]) {
 						for (const role of ["starter", "solution"]) {
-							if (width === 1280 && theme === "light" && role === "starter" && fixture.pack.startsWith("ASM-2") && ["analysis.md", "trace.md"].includes(primary)) {
+							if (
+								width === 1280 &&
+								theme === "light" &&
+								role === "starter" &&
+								(definition.setupMode ||
+									(fixture.pack.startsWith("ASM-2") &&
+										["analysis.md", "trace.md"].includes(
+											primary
+										)))
+							) {
 								requests = [];
-								courseButtons.push(await verifyHardeningCourseButton(page, origin, definition, fixture, storageKey, () => requests.length, value => catalog = value));
+								courseButtons.push(
+									await verifyHardeningCourseButton(
+										page,
+										origin,
+										definition,
+										fixture,
+										storageKey,
+										() => requests.length,
+										value => (catalog = value)
+									)
+								);
 							}
 							const expectedFiles = Object.keys(
 								fixture.files
 							).filter(
 								path =>
-									path.startsWith(
-										`${sourcePack}/${role}/`
-									) || path === `${sourcePack}/README.md`
+									path.startsWith(`${sourcePack}/${role}/`) ||
+									path === `${sourcePack}/README.md`
 							);
 							await page.setViewport({ width, height: 900 });
 							await page.emulateMediaFeatures([
@@ -344,9 +523,7 @@ test(
 							);
 							assert.deepEqual(
 								saved.files
-									.map(
-										file => `${sourcePack}/${file.name}`
-									)
+									.map(file => `${sourcePack}/${file.name}`)
 									.sort(),
 								expectedFiles.sort()
 							);
@@ -382,7 +559,8 @@ test(
 							);
 							assert.equal(
 								await page.$eval("button.run-control", b =>
-									b.textContent.trim()),
+									b.textContent.trim()
+								),
 								"Build instructions"
 							);
 							await page.click("button.run-control");
@@ -398,11 +576,14 @@ test(
 							assert.ok(
 								await page.$eval(
 									".result-panel",
-									(p, { role, referenceToken, starterToken }) =>
+									(
+										p,
+										{ role, referenceToken, starterToken }
+									) =>
 										p.textContent.includes(
 											"Linux x86-64"
-										)
-										&& p.textContent.includes(
+										) &&
+										p.textContent.includes(
 											role === "starter"
 												? starterToken
 												: referenceToken
@@ -435,10 +616,8 @@ test(
 								expectedFiles.length
 							);
 							for (const file of saved.files) {
-								const source
-									= fixture.files[
-										`${sourcePack}/${file.name}`
-									];
+								const source =
+									fixture.files[`${sourcePack}/${file.name}`];
 								const path = Object.keys(entries).find(path =>
 									path.endsWith(`/${file.name}`)
 								);
@@ -472,10 +651,43 @@ test(
 							}
 							const name = `${role}/${taskFile ?? primary}`;
 							if (taskFile) {
-								await page.select("select[aria-label='Active project file']", name);
-								await page.waitForFunction(name => document.querySelector("select[aria-label='Active project file']")?.value === name, {}, name);
+								await page.select(
+									"select[aria-label='Active project file']",
+									name
+								);
+								await page.waitForFunction(
+									name =>
+										document.querySelector(
+											"select[aria-label='Active project file']"
+										)?.value === name,
+									{},
+									name
+								);
 							}
-							const edit = `${saved.files.find(file => file.name === name).content}${taskFile ? "\nSaved worksheet observation: record the actual compiler and trace.\n" : "\n/* Saved Assembly attempt. */\n"}`;
+							const original = saved.files.find(
+								file => file.name === name
+							).content;
+							const edit =
+								definition.setupMode === "symbols"
+									? original.replace(
+											role === "starter"
+												? "# TODO: export lab_answer to the separately compiled C caller"
+												: ".globl lab_answer",
+											role === "starter"
+												? ".globl lab_answer"
+												: "# saved local-symbol regression"
+										)
+									: definition.setupMode === "preprocess"
+										? original.replace(
+												role === "starter"
+													? 'set(LAB_ASM_LANGUAGE "assembler"'
+													: 'set(LAB_ASM_LANGUAGE "assembler-with-cpp"',
+												role === "starter"
+													? 'set(LAB_ASM_LANGUAGE "assembler-with-cpp"'
+													: 'set(LAB_ASM_LANGUAGE "assembler"'
+											)
+										: `${original}${taskFile ? "\nSaved worksheet observation: record the actual compiler and trace.\n" : "\n/* Saved Assembly attempt. */\n"}`;
+							assert.notEqual(edit, original);
 							await page.click(".cm-content");
 							const modifier = await page.evaluate(() =>
 								/Mac/.test(navigator.platform)
@@ -493,10 +705,8 @@ test(
 								(s, k, n, c) =>
 									JSON.parse(localStorage.getItem(s))
 										.find(p => p.courseProjectKey === k)
-										?.files
-										.some(
-											f =>
-												f.name === n && f.content === c
+										?.files.some(
+											f => f.name === n && f.content === c
 										),
 								{},
 								storageKey,
@@ -560,20 +770,29 @@ test(
 									file.content
 								);
 							}
+							if (definition.setupMode)
+								await writeFile(
+									join(
+										exports,
+										`${fixture.pack}-${role}-edited-${width}-${theme}.zip`
+									),
+									Buffer.from(edited, "base64")
+								);
 							const returnHref = await page.$$eval("a", links =>
 								links
 									.find(
 										link =>
-											link.textContent.trim()
-											=== "Return to lesson"
+											link.textContent.trim() ===
+											"Return to lesson"
 									)
-									?.getAttribute("href"));
+									?.getAttribute("href")
+							);
 							assert.equal(returnHref, `/courses#${lesson}`);
 							assert.ok(
 								await page.evaluate(
 									() =>
-										document.documentElement.scrollWidth
-										<= innerWidth + 1
+										document.documentElement.scrollWidth <=
+										innerWidth + 1
 								)
 							);
 							const capture = `course-import-assembly-${fixture.pack}-${role}-${width}-${theme}.png`;
@@ -605,8 +824,11 @@ test(
 					}
 				}
 			}
-			assert.equal(courseButtons.length, 2);
-			await writeFile(join(captures, "assembly-course-buttons-proof.json"), JSON.stringify(courseButtons, null, 2));
+			assert.equal(courseButtons.length, 4);
+			await writeFile(
+				join(captures, "assembly-course-buttons-proof.json"),
+				JSON.stringify(courseButtons, null, 2)
+			);
 			assert.equal(
 				proof.length,
 				expectedProfiles,
@@ -616,22 +838,47 @@ test(
 				join(captures, "assembly-workflow-proof.json"),
 				`${JSON.stringify(proof, null, 2)}\n`
 			);
-		}
-		catch (error) {
-			await writeFile(join(captures, "assembly-workflow-partial.json"), JSON.stringify(proof, null, 2));
+		} catch (error) {
+			await writeFile(
+				join(captures, "assembly-workflow-partial.json"),
+				JSON.stringify(proof, null, 2)
+			);
 			if (page) {
 				const geometry = await page.evaluate(() => ({
 					url: location.href,
 					viewport: innerWidth,
 					documentWidth: document.documentElement.scrollWidth,
-					overflow: [...document.querySelectorAll("body *")].map((node) => {
-						const box = node.getBoundingClientRect();
-						const style = getComputedStyle(node);
-						return { tag: node.tagName, className: (node.getAttribute("class") ?? "").slice(0, 140), right: box.right, width: box.width, minWidth: style.minWidth, overflowX: style.overflowX };
-					}).filter(node => node.width > 0 && node.right > innerWidth + 1).slice(0, 20)
+					overflow: [...document.querySelectorAll("body *")]
+						.map(node => {
+							const box = node.getBoundingClientRect();
+							const style = getComputedStyle(node);
+							return {
+								tag: node.tagName,
+								className: (
+									node.getAttribute("class") ?? ""
+								).slice(0, 140),
+								right: box.right,
+								width: box.width,
+								minWidth: style.minWidth,
+								overflowX: style.overflowX
+							};
+						})
+						.filter(
+							node =>
+								node.width > 0 && node.right > innerWidth + 1
+						)
+						.slice(0, 20)
 				}));
-				console.log(JSON.stringify({ event: "assembly-browser-failure-geometry", ...geometry }));
-				await writeFile(join(captures, "assembly-failure-geometry.json"), JSON.stringify(geometry, null, 2));
+				console.log(
+					JSON.stringify({
+						event: "assembly-browser-failure-geometry",
+						...geometry
+					})
+				);
+				await writeFile(
+					join(captures, "assembly-failure-geometry.json"),
+					JSON.stringify(geometry, null, 2)
+				);
 			}
 			if (page) {
 				await page.screenshot({
@@ -657,8 +904,7 @@ test(
 				);
 			}
 			throw error;
-		}
-		finally {
+		} finally {
 			await page?.close();
 			await context?.close();
 			await browser?.close();

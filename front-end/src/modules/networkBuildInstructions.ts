@@ -17,6 +17,13 @@ export function networkBuildInstructions(files: PythonIdeFile[], url: string) {
 		definition.pack ===
 		"NS-04-unit-1-the-network-stack-in-plain-english-supplemental-3";
 	const transport = transportTcp || transportUdp;
+	const inventoryUdp =
+		definition.pack ===
+		"NS-09-unit-4-ports-and-listening-services-supplemental-2";
+	const inventoryTcp =
+		definition.pack ===
+		"NS-10-unit-4-ports-and-listening-services-supplemental-3";
+	const socketInventory = inventoryUdp || inventoryTcp;
 	const capstone = definition.pack === "NS-03-network-systems-lab-17";
 	const topology = definition.pack === "NS6-Router-NAT-Topology-Lab";
 	const capture = definition.pack === "NS5-Tcpdump-HTTP-Capture";
@@ -80,6 +87,17 @@ export function networkBuildInstructions(files: PythonIdeFile[], url: string) {
 		];
 	}
 
+	if (socketInventory) {
+		return [
+			...lines,
+			`Read README.md, then cd ${role}. Keep main.py, listener_lab.py, case.json, network-notes.md and edge-cases.md together. Run python3 main.py --report first-observation.json in an ordinary Linux account with Python 3.10+ and ss; use a fresh filename.`,
+			inventoryUdp
+				? "Compare the same owned UDP inode in listening-only and all-socket inventories before and after connect, retaining the observation before application traffic. Select inventory_view after recording a prediction. A default UDP peer is not a TCP handshake or an application reply."
+				: "Compare the parent and child PID/descriptor links, namespace and inode with one listening row. Select group_by after recording a prediction. Follow the remaining child owner after the parent closes, then reconcile the local reply, worker exit and final listening selection.",
+			"Change the ASCII token and run again with a new report filename. Compare actual received request/reply bytes. Exit 2 marks an unfinished choice, exit 0 a matching choice, exit 1 a revision or execution error, and exit 64 a pre-experiment refusal. Save the case and complete network-notes.md and edge-cases.md independently of the runtime result.",
+			"These are distinct optional activities after the required Unit 4 service map. Python programming is optional. Preserve earlier work and separate learner/reference attempts. The browser edits and exports these files; the native program observes its own loopback sockets without changing services, routes or policy."
+		];
+	}
 	if (transport) {
 		return [
 			...lines,

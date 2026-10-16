@@ -82,6 +82,15 @@ const fixtures: Fixture[] = [
 		readFileSync(
 			resolve(
 				process.cwd(),
+				"../test/fixtures/network-inventory-contracts.json"
+			),
+			"utf8"
+		)
+	),
+	...JSON.parse(
+		readFileSync(
+			resolve(
+				process.cwd(),
 				"../test/fixtures/network-setup-contracts.json"
 			),
 			"utf8"
