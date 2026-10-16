@@ -49,6 +49,11 @@ supplemental_identity = json.loads((fixture_dir / "linux-systemd-supplemental-so
 supplemental_verifier = (fixture_dir / "linux-systemd-supplemental-source-verifier.py").read_bytes()
 assert hashlib.sha256(supplemental_verifier).hexdigest() == supplemental_identity["sha256"]
 assert all(pack["revision"] == supplemental_identity["revision"] for pack in supplemental_packs)
+assert supplemental_identity["revision"] == systemd_identity["revision"]
+systemd_readiness_identity = json.loads((fixture_dir / "linux-systemd-identity-source-verifier.json").read_text())
+systemd_readiness_verifier = (fixture_dir / "linux-systemd-identity-source-verifier.py").read_bytes()
+assert hashlib.sha256(systemd_readiness_verifier).hexdigest() == systemd_readiness_identity["sha256"]
+assert systemd_readiness_identity["revision"] == systemd_identity["revision"]
 logging_packs = [pack for pack in packs if pack["pack"] in ("LS-09-unit-7-logging-and-observability", "LS-15-unit-7-logging-and-observability-supplemental-2", "LS-16-unit-7-logging-and-observability-supplemental-3")]
 assert len(logging_packs) == 3 and len(packs) == 52
 logging_identity = json.loads((fixture_dir / "linux-logging-source-verifier.json").read_text())
@@ -284,6 +289,23 @@ with tempfile.TemporaryDirectory(prefix="linux-site-exports-") as directory:
     cleanup = [row for row in systemd_native["observations"] if row.get("kind") == "cleanup"]
     assert len(cleanup) == 3
     assert all(all(row[key] for key in ("unitRemoved", "processStopped", "activationRemoved", "installRemoved")) for row in cleanup)
+    systemd_readiness_proof = args.proof.with_name(args.proof.stem + "-systemd-identity-native.json")
+    assert (work / "test/verify_systemd_service.py").read_bytes() == systemd_verifier
+    systemd_readiness = run_pinned_contract(work, "verify_systemd_identity.py", systemd_readiness_verifier, systemd_readiness_proof, 90)
+    assert systemd_readiness["accepted"] and systemd_readiness["actualManager"]
+    assert systemd_readiness["verifierSha256"] == systemd_identity["sha256"]
+    assert len(systemd_readiness["cases"]) == 4
+    assert {row["case"] for row in systemd_readiness["cases"]} == {"delayed-exec", "misleading-argv", "wrong-script", "wrong-managed-pid"}
+    for row in systemd_readiness["cases"]:
+        assert row["accepted"] and all(row["cleanup"].values())
+        assert row["removed"]["LoadState"] == "not-found" and row["removed"]["MainPID"] == "0"
+        if row["case"] in ("delayed-exec", "misleading-argv"):
+            assert row["sameManagedPID"] and row["delayedIdentityObserved"]
+            assert row["initialArgv"] != row["finalArgv"]
+            assert row["finalArgv"] == ["/usr/bin/python3", "-u", row["work"] + "/heartbeat_app.py"]
+        else:
+            assert row["strictRejection"]
+    assert next(row for row in systemd_readiness["cases"] if row["case"] == "misleading-argv")["explicitCallbacksVerified"]
     supplemental_proof = args.proof.with_name(args.proof.stem + "-supplemental-native.json")
     supplemental_native = run_pinned_contract(work, "verify_systemd_supplemental.py", supplemental_verifier, supplemental_proof, 300)
     assert supplemental_native["accepted"] and not supplemental_native["appOnly"]
@@ -579,6 +601,8 @@ with tempfile.TemporaryDirectory(prefix="linux-site-exports-") as directory:
                                      "apacheNativeProof": str(apache_proof),
                                      "apacheReloadGenerations": apache_reload_generations,
                                      "systemdSourceIdentity": systemd_identity,
+                                     "systemdReadinessSourceIdentity": systemd_readiness_identity,
+                                     "systemdReadinessNativeProof": str(systemd_readiness_proof),
                                      "systemdNativeProof": str(systemd_proof),
                                      "supplementalSourceIdentity": supplemental_identity,
                                      "supplementalNativeProof": str(supplemental_proof),
