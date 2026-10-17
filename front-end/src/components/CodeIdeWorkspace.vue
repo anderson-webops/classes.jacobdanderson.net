@@ -5786,6 +5786,13 @@ async function runGameTick(loopID: number) {
 		);
 		recordIdeFailure(error);
 		stopGameLoop();
+		runMessage.value = "Run failed";
+		if (props.runtimeOnly) {
+			emit("runtimeMessage", {
+				type: "error",
+				message: formatPythonRuntimeError(error).slice(0, 16_000)
+			});
+		}
 	} finally {
 		if (loopID === activeGameLoopID) {
 			gameTickInFlight = false;
@@ -6946,6 +6953,21 @@ async function runCurrentProject() {
 					account === storageUserID.value &&
 					!shouldStopPythonIdeRun(runID, project._id),
 				onOutput: appendOutput,
+				onError: message => {
+					if (
+						account !== storageUserID.value ||
+						shouldStopPythonIdeRun(runID, project._id)
+					) {
+						return;
+					}
+					sandboxPresent.value = false;
+					runMessage.value = "Run failed";
+					recordIdeFailure(new Error(message));
+					void markPythonRuntimeErrorInEditor(
+						message,
+						runnableFile.name
+					);
+				},
 				onAudio: (title, data) =>
 					appendArtifact({ title, data, mimeType: "audio/wav" }),
 				onStage: stage => {

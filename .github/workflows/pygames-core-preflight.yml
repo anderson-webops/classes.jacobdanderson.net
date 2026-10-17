@@ -41,6 +41,8 @@ jobs:
           npm exec -w front-end -- vitest run
           test/pygames-core-import.spec.test.ts
           test/python-ide-game-graphics.spec.test.ts
+          test/python-sandbox.spec.test.ts
+          test/components.python-runtime.spec.test.ts
           test/python-ide.module.spec.test.ts
           test/pygames-core-catalog.spec.test.ts
           test/pygames-course-workflows.spec.test.ts
