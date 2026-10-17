@@ -465,6 +465,36 @@ async function observeRun(
 			),
 			"Stop"
 		);
+		let workspaceEvidence = null;
+		if (label.endsWith("-reopened")) {
+			const bounds = await canvas.boundingBox();
+			assert.ok(bounds);
+			const layout = await page.evaluate(() => ({
+				x: scrollX,
+				y: scrollY,
+				fits: document.documentElement.scrollWidth <= innerWidth
+			}));
+			assert.equal(layout.fits, true);
+			const status = await page.$eval(
+				"[data-testid='ide-run-status']",
+				element => element.textContent.trim()
+			);
+			assert.equal(status, "Game running");
+			const image = label.replace(/-reopened$/, "-workspace.png");
+			await page.screenshot({
+				path: join(output, image),
+				fullPage: true
+			});
+			workspaceEvidence = {
+				image,
+				status,
+				canvasBounds: {
+					...bounds,
+					x: bounds.x + layout.x,
+					y: bounds.y + layout.y
+				}
+			};
+		}
 		return {
 			label,
 			complete,
@@ -472,6 +502,7 @@ async function observeRun(
 			captures,
 			pointerTargets,
 			pointerEvents,
+			workspaceEvidence,
 			realCanvasPixels: true
 		};
 	} catch (error) {
@@ -1050,10 +1081,6 @@ nodeTest(
 							),
 							true
 						);
-						await page.screenshot({
-							path: join(output, label + "-workspace.png"),
-							fullPage: true
-						});
 						profiles.push({
 							label,
 							course: activity.course,
@@ -1142,6 +1169,7 @@ nodeTest(
 						sourceRevision: fixture.revision,
 						profiles,
 						sharedLibraryDisabled: true,
+						workspaceImagesCapturedDuringRun: true,
 						expectedSourceFiles: fixture.files,
 						scope: "Actual course actions and prefetch consent, complete role/PNG imports, primary IndexedDB, edited helper reruns, reopened work, exact/edited ZIPs, real canvas pixels and input. Native terminal-state contracts are separately validated."
 					},
