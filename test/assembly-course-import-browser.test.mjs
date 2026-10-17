@@ -59,6 +59,7 @@ fixtures.push(...JSON.parse(await readFile(new URL("./fixtures/assembly-machine-
 fixtures.push(...JSON.parse(await readFile(new URL("./fixtures/assembly-control-contracts.json", import.meta.url), "utf8")));
 fixtures.push(...JSON.parse(await readFile(new URL("./fixtures/assembly-stack-optional-contracts.json", import.meta.url), "utf8")));
 fixtures.push(...JSON.parse(await readFile(new URL("./fixtures/assembly-abi-optional-contracts.json", import.meta.url), "utf8")));
+fixtures.push(...JSON.parse(await readFile(new URL("./fixtures/assembly-memory-layout-optional-contracts.json", import.meta.url), "utf8")));
 const hardening = fixtures.find(
 	row =>
 		row.pack
@@ -71,6 +72,28 @@ fixtures.push({
 });
 let fixture = fixtures[0];
 const workflowDefinitions = {
+
+    "ASM-15-unit-7-memory-addressing-and-data-structures-supplemental-2": {
+        "primary": "routine.S",
+        "taskFile": "routine.S",
+        "title": "Pointer Table Lookup and Record Fields",
+        "lesson": "assembly-unit-7-memory-addressing-and-data-structures-assembly-unit-7-memory-addressing-and-data-structures-supplemental-addressing-mode-transfer-practice",
+        "moduleId": "assembly-unit-7-memory-addressing-and-data-structures",
+        "memoryLayoutMode": "table",
+        "starterToken": "POINTER_LOOKUP",
+        "referenceToken": "separate reference passes"
+    },
+    "ASM-16-unit-7-memory-addressing-and-data-structures-supplemental-3": {
+        "primary": "routine.S",
+        "taskFile": "routine.S",
+        "title": "Bounded Overlap Copy Direction",
+        "lesson": "assembly-unit-7-memory-addressing-and-data-structures-assembly-unit-7-memory-addressing-and-data-structures-supplemental-addressing-mode-extension-practice",
+        "moduleId": "assembly-unit-7-memory-addressing-and-data-structures",
+        "memoryLayoutMode": "overlap",
+        "starterToken": "COPY_DIRECTION",
+        "referenceToken": "separate reference passes"
+    }
+,
 
     "ASM-13-unit-6-calling-conventions-and-abi-supplemental-2": {
         "primary": "routine.S",
@@ -350,7 +373,7 @@ const workflowDefinitions = {
 
 assert.equal(
 	fixtures.length,
-	31,
+	33,
 	"All twenty-one verified assignment workspaces require browser coverage"
 );
 assert.deepEqual(
@@ -455,7 +478,7 @@ async function verifyHardeningCourseButton(
 		key
 	);
 	assert.equal(saved.activeFileName, `starter/${definition.primary}`);
-	const expectedCount = (definition.abiOptionalMode || definition.stackOptionalMode || definition.controlMode || definition.machineMode || definition.logicMode || definition.registerMode) ? 9 : definition.syscallMode ? 8 : definition.setupMode ? 7 : 10;
+	const expectedCount = (definition.memoryLayoutMode || definition.abiOptionalMode || definition.stackOptionalMode || definition.controlMode || definition.machineMode || definition.logicMode || definition.registerMode) ? 9 : definition.syscallMode ? 8 : definition.setupMode ? 7 : 10;
 	assert.equal(saved.files.length, expectedCount);
 	assert.equal(sourceRequests(), expectedCount);
 	return {
@@ -596,7 +619,7 @@ test(
 								width === 1280
 								&& theme === "light"
 								&& role === "starter"
-								&& (definition.abiOptionalMode || definition.stackOptionalMode || definition.controlMode || definition.machineMode || definition.logicMode || definition.registerMode || definition.setupMode || definition.syscallMode
+								&& (definition.memoryLayoutMode || definition.abiOptionalMode || definition.stackOptionalMode || definition.controlMode || definition.machineMode || definition.logicMode || definition.registerMode || definition.setupMode || definition.syscallMode
 									|| (fixture.pack.startsWith("ASM-2")
 										&& ["analysis.md", "trace.md"].includes(
 											primary
@@ -832,7 +855,13 @@ test(
 								file => file.name === name
 							).content;
 							const edit
-								= definition.abiOptionalMode
+								= definition.memoryLayoutMode
+                                    ? role === "starter"
+                                        ? fixture.files[`${fixture.pack}/solution/routine.S`].content
+                                        : definition.memoryLayoutMode === "table"
+                                            ? original.replace("    movzx r9d, WORD PTR [r8 + 8]\n", "    movzx r9d, BYTE PTR [r8 + 8]\n")
+                                            : original.replace("    ja lab_backward\n", "    jmp lab_forward\n")
+                                    : definition.abiOptionalMode
                                     ? role === "starter"
                                         ? fixture.files[`${fixture.pack}/solution/routine.S`].content
                                         : definition.abiOptionalMode === "registers"
@@ -977,7 +1006,7 @@ test(
 									file.content
 								);
 							}
-							if (definition.abiOptionalMode || definition.stackOptionalMode || definition.controlMode || definition.machineMode || definition.logicMode || definition.registerMode || definition.setupMode || definition.syscallMode) {
+							if (definition.memoryLayoutMode || definition.abiOptionalMode || definition.stackOptionalMode || definition.controlMode || definition.machineMode || definition.logicMode || definition.registerMode || definition.setupMode || definition.syscallMode) {
 								await writeFile(
 									join(
 										exports,
@@ -1037,7 +1066,7 @@ test(
 					expectedProfiles
 				}));
 			}
-			assert.equal(courseButtons.length, 18);
+			assert.equal(courseButtons.length, 20);
 			await writeFile(
 				join(captures, "assembly-course-buttons-proof.json"),
 				JSON.stringify(courseButtons, null, 2)

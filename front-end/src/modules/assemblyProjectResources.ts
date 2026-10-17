@@ -303,7 +303,39 @@ export const assemblyAbiOptionalPacks = [
 	}
 ] as const;
 
+export const assemblyMemoryLayoutOptionalPacks = [
+	{
+		pack: "ASM-15-unit-7-memory-addressing-and-data-structures-supplemental-2",
+		revision: "5c2f24f268db0634d11c587328a0ceb3d0aadeb0",
+		roleFiles: [
+			"routine.S",
+			"main.c",
+			"lab.h",
+			"model.c",
+			"tests.c",
+			"abi_checks.S",
+			"CMakeLists.txt",
+			"trace.md"
+		]
+	},
+	{
+		pack: "ASM-16-unit-7-memory-addressing-and-data-structures-supplemental-3",
+		revision: "5c2f24f268db0634d11c587328a0ceb3d0aadeb0",
+		roleFiles: [
+			"routine.S",
+			"main.c",
+			"lab.h",
+			"model.c",
+			"tests.c",
+			"abi_checks.S",
+			"CMakeLists.txt",
+			"trace.md"
+		]
+	}
+] as const;
+
 export const assemblyVerifiedPacks = [
+	...assemblyMemoryLayoutOptionalPacks,
 	...assemblyAbiOptionalPacks,
 	...assemblyStackOptionalPacks,
 	...assemblyControlPacks,

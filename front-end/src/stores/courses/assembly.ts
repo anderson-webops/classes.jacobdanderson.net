@@ -31,6 +31,10 @@ import {
 	assemblyAddressReading,
 	assemblyMemoryReading
 } from "./assemblyMachineProjectReading";
+import {
+	assemblyOverlapCopyReading,
+	assemblyPointerTableReading
+} from "./assemblyMemoryLayoutProjectReading";
 import { assemblyOpeningProjectReading } from "./assemblyOpeningProjectReading";
 import { assemblyParserProjectReading } from "./assemblyParserProjectReading";
 import { assemblyPerformanceProjectReading } from "./assemblyPerformanceProjectReading";
@@ -540,32 +544,28 @@ const assemblySourceCourse: RawCourse = {
 						"https://github.com/instruction-material/Assembly/blob/3d66cd9cd20139f8176098475193b791edd2bcd8/ASM3-String-Length-and-Copy/README.md"
 				},
 				{
-					title: "Addressing Mode Transfer Practice",
-					content: buildProjectGuidance({
-						courseFamily: "assembly",
-						moduleTitle:
-							"Unit 7: Memory Addressing and Data Structures",
-						projectKind: "extension",
-						hasReference: true
-					}),
+					title: "Pointer Table Lookup and Record Fields",
+					id: "assembly-unit-7-memory-addressing-and-data-structures-supplemental-addressing-mode-transfer-practice",
+					learningPath: "choice",
+					preserveInstructions: true,
+					ideImport: true,
+					content: assemblyPointerTableReading,
 					projectLink:
-						"https://github.com/instruction-material/Assembly/tree/main/ASM-15-unit-7-memory-addressing-and-data-structures-supplemental-2/starter",
+						"https://github.com/instruction-material/Assembly/tree/5c2f24f268db0634d11c587328a0ceb3d0aadeb0/ASM-15-unit-7-memory-addressing-and-data-structures-supplemental-2/starter",
 					solutionLink:
-						"https://github.com/instruction-material/Assembly/tree/main/ASM-15-unit-7-memory-addressing-and-data-structures-supplemental-2/solution"
+						"https://github.com/instruction-material/Assembly/tree/5c2f24f268db0634d11c587328a0ceb3d0aadeb0/ASM-15-unit-7-memory-addressing-and-data-structures-supplemental-2/solution"
 				},
 				{
-					title: "Addressing Mode Extension Practice",
-					content: buildProjectGuidance({
-						courseFamily: "assembly",
-						moduleTitle:
-							"Unit 7: Memory Addressing and Data Structures",
-						projectKind: "extension",
-						hasReference: true
-					}),
+					title: "Bounded Overlap Copy Direction",
+					id: "assembly-unit-7-memory-addressing-and-data-structures-supplemental-addressing-mode-extension-practice",
+					learningPath: "challenge",
+					preserveInstructions: true,
+					ideImport: true,
+					content: assemblyOverlapCopyReading,
 					projectLink:
-						"https://github.com/instruction-material/Assembly/tree/main/ASM-16-unit-7-memory-addressing-and-data-structures-supplemental-3/starter",
+						"https://github.com/instruction-material/Assembly/tree/5c2f24f268db0634d11c587328a0ceb3d0aadeb0/ASM-16-unit-7-memory-addressing-and-data-structures-supplemental-3/starter",
 					solutionLink:
-						"https://github.com/instruction-material/Assembly/tree/main/ASM-16-unit-7-memory-addressing-and-data-structures-supplemental-3/solution"
+						"https://github.com/instruction-material/Assembly/tree/5c2f24f268db0634d11c587328a0ceb3d0aadeb0/ASM-16-unit-7-memory-addressing-and-data-structures-supplemental-3/solution"
 				}
 			]
 		},
