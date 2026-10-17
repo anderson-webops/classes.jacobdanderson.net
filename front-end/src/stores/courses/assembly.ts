@@ -12,6 +12,10 @@ import {
 } from "./assemblyArithmeticProjectReading";
 import { assemblyArrayProjectReading } from "./assemblyArrayProjectReading";
 import { assemblyCalculatorProjectReading } from "./assemblyCalculatorProjectReading";
+import {
+	assemblyBytePromotionsReading,
+	assemblyPointerAliasingReading
+} from "./assemblyCompilerOptionalProjectReading";
 import { assemblyCompilerProjectReading } from "./assemblyCompilerProjectReading";
 import {
 	assemblyDispatchReading,
@@ -675,30 +679,28 @@ const assemblySourceCourse: RawCourse = {
 						"https://github.com/instruction-material/Assembly/blob/4fabbbe92deb893d14e2572121fc2393ae426c7b/ASM-08-unit-9-reading-compiler-output/README.md"
 				},
 				{
-					title: "Compiler Output Transfer Practice",
-					content: buildProjectGuidance({
-						courseFamily: "assembly",
-						moduleTitle: "Unit 9: Reading Compiler Output",
-						projectKind: "extension",
-						hasReference: true
-					}),
+					title: "Byte Promotions and Signed Comparisons",
+					id: "assembly-unit-9-reading-compiler-output-supplemental-compiler-output-transfer-practice",
+					learningPath: "choice",
+					preserveInstructions: true,
+					ideImport: true,
+					content: assemblyBytePromotionsReading,
 					projectLink:
-						"https://github.com/instruction-material/Assembly/tree/main/ASM-19-unit-9-reading-compiler-output-supplemental-2/starter",
+						"https://github.com/instruction-material/Assembly/tree/cbdb27f1afacd70246d62a4177e932391d6b3362/ASM-19-unit-9-reading-compiler-output-supplemental-2/starter",
 					solutionLink:
-						"https://github.com/instruction-material/Assembly/tree/main/ASM-19-unit-9-reading-compiler-output-supplemental-2/solution"
+						"https://github.com/instruction-material/Assembly/tree/cbdb27f1afacd70246d62a4177e932391d6b3362/ASM-19-unit-9-reading-compiler-output-supplemental-2/solution"
 				},
 				{
-					title: "Compiler Output Extension Practice",
-					content: buildProjectGuidance({
-						courseFamily: "assembly",
-						moduleTitle: "Unit 9: Reading Compiler Output",
-						projectKind: "extension",
-						hasReference: true
-					}),
+					title: "Pointer Aliasing and Reload Decisions",
+					id: "assembly-unit-9-reading-compiler-output-supplemental-compiler-output-extension-practice",
+					learningPath: "challenge",
+					preserveInstructions: true,
+					ideImport: true,
+					content: assemblyPointerAliasingReading,
 					projectLink:
-						"https://github.com/instruction-material/Assembly/tree/main/ASM-20-unit-9-reading-compiler-output-supplemental-3/starter",
+						"https://github.com/instruction-material/Assembly/tree/cbdb27f1afacd70246d62a4177e932391d6b3362/ASM-20-unit-9-reading-compiler-output-supplemental-3/starter",
 					solutionLink:
-						"https://github.com/instruction-material/Assembly/tree/main/ASM-20-unit-9-reading-compiler-output-supplemental-3/solution"
+						"https://github.com/instruction-material/Assembly/tree/cbdb27f1afacd70246d62a4177e932391d6b3362/ASM-20-unit-9-reading-compiler-output-supplemental-3/solution"
 				}
 			]
 		},
