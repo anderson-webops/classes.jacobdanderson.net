@@ -1,6 +1,5 @@
 import type { RawCourse, RawCourseModule, RawCourseModuleItem } from "./types";
 import { pyGamesCoreUrl } from "../../modules/pyGamesCoreProjectResources";
-import { pyGamesCoreReadings } from "./pyGamesCoreProjectReading";
 import {
 	isPyGamesPinnedSourceUrl,
 	pyGamesCourseProjectKey,
@@ -9,6 +8,7 @@ import {
 	pyGamesPinnedSourceUrl,
 	pyGamesSourceRevision
 } from "../../modules/pyGamesProjectResources";
+import { pyGamesCoreReadings } from "./pyGamesCoreProjectReading";
 
 export const pyGamesPracticeActivities: Record<
 	string,

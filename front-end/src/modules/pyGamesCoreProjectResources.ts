@@ -183,8 +183,9 @@ export function pyGamesCoreResource(url: string) {
 		resource.owner.toLowerCase() !== "instruction-material" ||
 		resource.repo.toLowerCase() !== "pygames" ||
 		resource.ref !== pyGamesCoreSourceRevision
-	)
+	) {
 		return null;
+	}
 	const parts = resource.path.split("/");
 	if (parts.length !== 2) return null;
 	const selected = pyGamesCorePacks.find(pack => pack.pack === parts[0]);
@@ -271,13 +272,15 @@ export async function loadPyGamesCoreFiles(
 			const digest = new Uint8Array(
 				await crypto.subtle.digest("SHA-256", buffer)
 			);
-			const sha256 = Array.from(digest, byte =>
-				byte.toString(16).padStart(2, "0")
-			).join("");
-			if (sha256 !== file.sha256)
+			let sha256 = "";
+			for (const byte of digest) {
+				sha256 += byte.toString(16).padStart(2, "0");
+			}
+			if (sha256 !== file.sha256) {
 				throw new Error(
 					"A required project file does not match the selected version."
 				);
+			}
 			if (file.encoding === "base64") {
 				const signature = [137, 80, 78, 71, 13, 10, 26, 10];
 				const header = new DataView(buffer);
@@ -285,16 +288,13 @@ export async function loadPyGamesCoreFiles(
 					!signature.every((byte, index) => bytes[index] === byte) ||
 					header.getUint32(16) !== 66 ||
 					header.getUint32(20) !== 92
-				)
+				) {
 					throw new Error("The required project image is invalid.");
+				}
 				files.push({
 					name: file.name,
 					encoding: "base64",
-					content: btoa(
-						Array.from(bytes, byte =>
-							String.fromCharCode(byte)
-						).join("")
-					)
+					content: btoa(String.fromCharCode(...bytes))
 				});
 			} else {
 				const content = new TextDecoder("utf-8", {
