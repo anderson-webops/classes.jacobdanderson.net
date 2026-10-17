@@ -5447,8 +5447,9 @@ async function prepareProjectGameImages() {
 				!imageAssetExtensions.some(ext =>
 					file.name.toLowerCase().endsWith(ext)
 				)
-			)
+			) {
 				return;
+			}
 			const src = getPythonIdeAssetDataUrl(file);
 			if (!src) return;
 			const entry = getGameImageEntry({
