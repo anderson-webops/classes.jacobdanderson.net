@@ -1,10 +1,56 @@
 import { afterEach, expect, it, vi } from "vitest";
 import {
 	preparePythonIdeGameCanvas,
+	pythonIdeGamePointerPosition,
 	waitForPythonIdeGameImage
 } from "@/modules/pythonIdeGameGraphics";
 
 afterEach(() => vi.useRealTimers());
+
+it("maps scaled mouse input to native integer game pixels", () => {
+	expect(
+		pythonIdeGamePointerPosition(
+			166.5,
+			287.5,
+			{ left: 24, top: 180.625, width: 285, height: 213.75 },
+			640,
+			480
+		)
+	).toEqual({ x: 320, y: 240 });
+	expect(
+		pythonIdeGamePointerPosition(
+			166,
+			287,
+			{ left: 24, top: 180.625, width: 285, height: 213.75 },
+			640,
+			480
+		)
+	).toEqual({ x: 318, y: 238 });
+});
+
+it("preserves outside release coordinates without fractional pixels", () => {
+	expect(
+		pythonIdeGamePointerPosition(
+			23.9,
+			179,
+			{ left: 24, top: 180.625, width: 285, height: 213.75 },
+			640,
+			480
+		)
+	).toEqual({ x: -1, y: -4 });
+});
+
+it("handles a hidden canvas without dividing by zero", () => {
+	expect(
+		pythonIdeGamePointerPosition(
+			5,
+			5,
+			{ left: 0, top: 0, width: 0, height: 0 },
+			640,
+			480
+		)
+	).toEqual({ x: 0, y: 0 });
+});
 
 it("keeps program pixels and painted content across responsive layout changes", () => {
 	const canvas = document.createElement("canvas");

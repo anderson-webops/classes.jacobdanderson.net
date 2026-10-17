@@ -229,6 +229,7 @@ async function observeRun(
 	);
 	const captures = [];
 	const pointerTargets = [];
+	let pointerEvents = [];
 	await page.locator("button.run-control").click();
 	if (width < 900)
 		await page
@@ -297,6 +298,24 @@ async function observeRun(
 		const box = await canvas.boundingBox();
 		assert.ok(box);
 		if (controls && activity.kind === "sprites") {
+			await canvas.evaluate(element => {
+				window.__corePointerProof = [];
+				element.addEventListener("mousedown", event => {
+					const rect = element.getBoundingClientRect();
+					window.__corePointerProof.push({
+						clientX: event.clientX,
+						clientY: event.clientY,
+						button: event.button,
+						rect: rect.toJSON(),
+						x: Math.floor(
+							((event.clientX - rect.left) / rect.width) * 640
+						),
+						y: Math.floor(
+							((event.clientY - rect.top) / rect.height) * 480
+						)
+					});
+				});
+			});
 			async function clickCorner(name, lower) {
 				const target = await canvas.evaluate((element, lower) => {
 					const rect = element.getBoundingClientRect();
@@ -327,6 +346,9 @@ async function observeRun(
 				);
 				pointerTargets.push({ name, ...target });
 				await page.mouse.click(box.x + target.x, box.y + target.y);
+				pointerEvents = await frame.evaluate(
+					() => window.__corePointerProof
+				);
 			}
 			await clickCorner("top-left", false);
 			await pause(120);
@@ -360,8 +382,21 @@ async function observeRun(
 			);
 			await pause(120);
 			const center = await capture("center");
+			pointerEvents = await frame.evaluate(
+				() => window.__corePointerProof
+			);
+			assert.deepEqual(
+				pointerEvents.map(event => event.button),
+				[0, 0, 2, 0]
+			);
+			const centerInput = pointerEvents[3];
 			assert.equal(center.bodyPixels, cases.sprite.bodyPixels);
-			assert.deepEqual(center.bodyBounds, startup.bodyBounds);
+			assert.deepEqual(center.bodyBounds, [
+				centerInput.x - 31,
+				centerInput.y + 10,
+				centerInput.x + 27,
+				centerInput.y + 44
+			]);
 		} else if (controls && activity.kind === "master") {
 			await page.mouse.click(
 				box.x + box.width / 2,
@@ -436,6 +471,7 @@ async function observeRun(
 			controls,
 			captures,
 			pointerTargets,
+			pointerEvents,
 			realCanvasPixels: true
 		};
 	} catch (error) {
@@ -458,6 +494,7 @@ async function observeRun(
 					error: String(error),
 					captures,
 					pointerTargets,
+					pointerEvents,
 					pixels,
 					frame: frame
 						? await frame

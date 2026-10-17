@@ -1,3 +1,18 @@
+export function pythonIdeGamePointerPosition(
+	clientX: number,
+	clientY: number,
+	rect: Pick<DOMRect, "left" | "top" | "width" | "height">,
+	width: number,
+	height: number
+) {
+	if (rect.width <= 0 || rect.height <= 0) return { x: 0, y: 0 };
+	// PyGame mouse events report integer positions in the game window.
+	return {
+		x: Math.floor(((clientX - rect.left) / rect.width) * width),
+		y: Math.floor(((clientY - rect.top) / rect.height) * height)
+	};
+}
+
 export function preparePythonIdeGameCanvas(
 	canvas: HTMLCanvasElement,
 	width: number,

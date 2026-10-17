@@ -101,6 +101,7 @@ import {
 } from "@/modules/pythonIdeCourseAssets";
 import {
 	preparePythonIdeGameCanvas,
+	pythonIdeGamePointerPosition,
 	waitForPythonIdeGameImage
 } from "@/modules/pythonIdeGameGraphics";
 import { primePythonRuntimeConnection } from "@/modules/pythonIdeRuntimeHints";
@@ -7323,10 +7324,13 @@ function gamePointerPosition(event: MouseEvent) {
 	if (!canvas) return { x: 0, y: 0 };
 
 	const rect = canvas.getBoundingClientRect();
-	return {
-		x: ((event.clientX - rect.left) / rect.width) * gameState.width,
-		y: ((event.clientY - rect.top) / rect.height) * gameState.height
-	};
+	return pythonIdeGamePointerPosition(
+		event.clientX,
+		event.clientY,
+		rect,
+		gameState.width,
+		gameState.height
+	);
 }
 
 function gameMouseButton(event: MouseEvent): GameInputEvent["button"] {
