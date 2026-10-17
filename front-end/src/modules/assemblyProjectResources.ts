@@ -334,7 +334,41 @@ export const assemblyMemoryLayoutOptionalPacks = [
 	}
 ] as const;
 
+export const assemblyCompilerOptionalPacks = [
+	{
+		pack: "ASM-19-unit-9-reading-compiler-output-supplemental-2",
+		revision: "cbdb27f1afacd70246d62a4177e932391d6b3362",
+		roleFiles: [
+			"analysis.md",
+			"baseline.c",
+			"operation.c",
+			"main.c",
+			"lab.h",
+			"model.c",
+			"tests.c",
+			"abi_checks.S",
+			"CMakeLists.txt"
+		]
+	},
+	{
+		pack: "ASM-20-unit-9-reading-compiler-output-supplemental-3",
+		revision: "cbdb27f1afacd70246d62a4177e932391d6b3362",
+		roleFiles: [
+			"analysis.md",
+			"baseline.c",
+			"operation.c",
+			"main.c",
+			"lab.h",
+			"model.c",
+			"tests.c",
+			"abi_checks.S",
+			"CMakeLists.txt"
+		]
+	}
+] as const;
+
 export const assemblyVerifiedPacks = [
+	...assemblyCompilerOptionalPacks,
 	...assemblyMemoryLayoutOptionalPacks,
 	...assemblyAbiOptionalPacks,
 	...assemblyStackOptionalPacks,

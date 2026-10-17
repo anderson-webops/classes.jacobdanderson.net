@@ -60,6 +60,7 @@ fixtures.push(...JSON.parse(await readFile(new URL("./fixtures/assembly-control-
 fixtures.push(...JSON.parse(await readFile(new URL("./fixtures/assembly-stack-optional-contracts.json", import.meta.url), "utf8")));
 fixtures.push(...JSON.parse(await readFile(new URL("./fixtures/assembly-abi-optional-contracts.json", import.meta.url), "utf8")));
 fixtures.push(...JSON.parse(await readFile(new URL("./fixtures/assembly-memory-layout-optional-contracts.json", import.meta.url), "utf8")));
+fixtures.push(...JSON.parse(await readFile(new URL("./fixtures/assembly-compiler-optional-contracts.json", import.meta.url), "utf8")));
 const hardening = fixtures.find(
 	row =>
 		row.pack
@@ -72,6 +73,28 @@ fixtures.push({
 });
 let fixture = fixtures[0];
 const workflowDefinitions = {
+
+    "ASM-19-unit-9-reading-compiler-output-supplemental-2": {
+        "primary": "analysis.md",
+        "taskFile": "analysis.md",
+        "title": "Byte Promotions and Signed Comparisons",
+        "lesson": "assembly-unit-9-reading-compiler-output-assembly-unit-9-reading-compiler-output-supplemental-compiler-output-transfer-practice",
+        "moduleId": "assembly-unit-9-reading-compiler-output",
+        "compilerOptionalMode": "promotions",
+        "starterToken": "Both role programs already work",
+        "referenceToken": "Both role programs already work"
+    },
+    "ASM-20-unit-9-reading-compiler-output-supplemental-3": {
+        "primary": "analysis.md",
+        "taskFile": "analysis.md",
+        "title": "Pointer Aliasing and Reload Decisions",
+        "lesson": "assembly-unit-9-reading-compiler-output-assembly-unit-9-reading-compiler-output-supplemental-compiler-output-extension-practice",
+        "moduleId": "assembly-unit-9-reading-compiler-output",
+        "compilerOptionalMode": "aliasing",
+        "starterToken": "Both role programs already work",
+        "referenceToken": "Both role programs already work"
+    }
+,
 
     "ASM-15-unit-7-memory-addressing-and-data-structures-supplemental-2": {
         "primary": "routine.S",
@@ -373,7 +396,7 @@ const workflowDefinitions = {
 
 assert.equal(
 	fixtures.length,
-	33,
+	35,
 	"All twenty-one verified assignment workspaces require browser coverage"
 );
 assert.deepEqual(
@@ -478,7 +501,7 @@ async function verifyHardeningCourseButton(
 		key
 	);
 	assert.equal(saved.activeFileName, `starter/${definition.primary}`);
-	const expectedCount = (definition.memoryLayoutMode || definition.abiOptionalMode || definition.stackOptionalMode || definition.controlMode || definition.machineMode || definition.logicMode || definition.registerMode) ? 9 : definition.syscallMode ? 8 : definition.setupMode ? 7 : 10;
+	const expectedCount = definition.compilerOptionalMode ? 10 : (definition.compilerOptionalMode || definition.memoryLayoutMode || definition.abiOptionalMode || definition.stackOptionalMode || definition.controlMode || definition.machineMode || definition.logicMode || definition.registerMode) ? 9 : definition.syscallMode ? 8 : definition.setupMode ? 7 : 10;
 	assert.equal(saved.files.length, expectedCount);
 	assert.equal(sourceRequests(), expectedCount);
 	return {
@@ -619,7 +642,7 @@ test(
 								width === 1280
 								&& theme === "light"
 								&& role === "starter"
-								&& (definition.memoryLayoutMode || definition.abiOptionalMode || definition.stackOptionalMode || definition.controlMode || definition.machineMode || definition.logicMode || definition.registerMode || definition.setupMode || definition.syscallMode
+								&& (definition.compilerOptionalMode || definition.memoryLayoutMode || definition.abiOptionalMode || definition.stackOptionalMode || definition.controlMode || definition.machineMode || definition.logicMode || definition.registerMode || definition.setupMode || definition.syscallMode
 									|| (fixture.pack.startsWith("ASM-2")
 										&& ["analysis.md", "trace.md"].includes(
 											primary
@@ -855,7 +878,9 @@ test(
 								file => file.name === name
 							).content;
 							const edit
-								= definition.memoryLayoutMode
+								= definition.compilerOptionalMode
+                                    ? `${original}\nSaved compiler observation: record the actual instructions and input types.\n`
+                                    : definition.memoryLayoutMode
                                     ? role === "starter"
                                         ? fixture.files[`${fixture.pack}/solution/routine.S`].content
                                         : definition.memoryLayoutMode === "table"
@@ -1006,7 +1031,7 @@ test(
 									file.content
 								);
 							}
-							if (definition.memoryLayoutMode || definition.abiOptionalMode || definition.stackOptionalMode || definition.controlMode || definition.machineMode || definition.logicMode || definition.registerMode || definition.setupMode || definition.syscallMode) {
+							if (definition.compilerOptionalMode || definition.memoryLayoutMode || definition.abiOptionalMode || definition.stackOptionalMode || definition.controlMode || definition.machineMode || definition.logicMode || definition.registerMode || definition.setupMode || definition.syscallMode) {
 								await writeFile(
 									join(
 										exports,
@@ -1066,7 +1091,7 @@ test(
 					expectedProfiles
 				}));
 			}
-			assert.equal(courseButtons.length, 20);
+			assert.equal(courseButtons.length, 22);
 			await writeFile(
 				join(captures, "assembly-course-buttons-proof.json"),
 				JSON.stringify(courseButtons, null, 2)

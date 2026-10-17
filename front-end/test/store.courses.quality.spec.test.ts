@@ -9825,6 +9825,8 @@ describe("course text quality normalization", () => {
 		expect(corpus).toContain("Bounded Overlap Copy Direction");
 		expect(corpus).toContain("POINTER_LOOKUP");
 		expect(corpus).toContain("COPY_DIRECTION");
+		expect(corpus).toContain("Byte Promotions and Signed Comparisons");
+		expect(corpus).toContain("Pointer Aliasing and Reload Decisions");
 		expect(corpus).toContain("Assembly Lab 15: Stack Trace Studio");
 		expect(corpus).toContain("Assembly Lab 16: ABI Integration Studio");
 		expect(corpus).toContain("Assembly Lab 17: Reverse Trace Studio");
