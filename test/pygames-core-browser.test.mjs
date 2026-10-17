@@ -228,6 +228,7 @@ async function observeRun(
 		})
 	);
 	const captures = [];
+	const pointerTargets = [];
 	await page.locator("button.run-control").click();
 	if (width < 900)
 		await page
@@ -296,7 +297,38 @@ async function observeRun(
 		const box = await canvas.boundingBox();
 		assert.ok(box);
 		if (controls && activity.kind === "sprites") {
-			await page.mouse.click(box.x + 1, box.y + 1);
+			async function clickCorner(name, lower) {
+				const target = await canvas.evaluate((element, lower) => {
+					const rect = element.getBoundingClientRect();
+					// One pixel from the box corner lies outside its rounded hit area.
+					const x = lower ? rect.width - 5 : 5;
+					const y = lower ? rect.height - 5 : 5;
+					return {
+						x,
+						y,
+						logicalX: (x / rect.width) * 640,
+						logicalY: (y / rect.height) * 480,
+						hitCanvas:
+							document.elementFromPoint(
+								rect.left + x,
+								rect.top + y
+							) === element
+					};
+				}, lower);
+				assert.equal(
+					target.hitCanvas,
+					true,
+					`Canvas must receive ${name} input`
+				);
+				assert.ok(
+					lower
+						? target.logicalX > 607 && target.logicalY > 434
+						: target.logicalX < 33 && target.logicalY < 46
+				);
+				pointerTargets.push({ name, ...target });
+				await page.mouse.click(box.x + target.x, box.y + target.y);
+			}
+			await clickCorner("top-left", false);
 			await pause(120);
 			const upper = await capture("top-left");
 			assert.equal(
@@ -305,10 +337,7 @@ async function observeRun(
 			);
 			if (complete)
 				assert.deepEqual(upper.bodyBounds, cases.sprite.bodyBounds);
-			await page.mouse.click(
-				box.x + box.width - 1,
-				box.y + box.height - 1
-			);
+			await clickCorner("bottom-right", true);
 			await pause(120);
 			const lower = await capture("bottom-right");
 			assert.equal(
@@ -401,7 +430,14 @@ async function observeRun(
 			),
 			"Stop"
 		);
-		return { label, complete, controls, captures, realCanvasPixels: true };
+		return {
+			label,
+			complete,
+			controls,
+			captures,
+			pointerTargets,
+			realCanvasPixels: true
+		};
 	} catch (error) {
 		const frame = await pythonFrame(page).catch(() => null);
 		const pixels = frame
@@ -420,6 +456,8 @@ async function observeRun(
 				{
 					label,
 					error: String(error),
+					captures,
+					pointerTargets,
 					pixels,
 					frame: frame
 						? await frame
