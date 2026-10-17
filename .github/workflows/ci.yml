@@ -615,6 +615,9 @@ jobs:
                   if-no-files-found: error
                   retention-days: 7
 
+            - name: Verify class loops and execution limits
+              run: python3 test/python-runtime-loop-guards.test.py
+
             - name: Verify self-contained PyGames core imports and saved continuations
               env:
                   PYGAMES_CORE_BROWSER_PROOF_DIR: output/pygames-core-exports

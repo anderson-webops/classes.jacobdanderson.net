@@ -49,6 +49,8 @@ jobs:
           --no-file-parallelism --maxWorkers=1
       - name: Build the complete site
         run: node scripts/classes-family-heavy-task.mjs -- npm run build
+      - name: Verify class loops and execution limits
+        run: node scripts/classes-family-heavy-task.mjs -- python3 test/python-runtime-loop-guards.test.py
       - name: Verify actual PyGames core browser workflows
         env:
           PYGAMES_CORE_BROWSER_PROOF_DIR: output/pygames-core-exports
