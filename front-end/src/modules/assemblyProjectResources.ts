@@ -523,6 +523,12 @@ export const assemblyVerifiedPacks = [
 	},
 	{
 		pack: assemblyDebugPack,
+		coreItemId:
+			"assembly-unit-10-debugging-at-instruction-level-curriculum-core-project-debugging-at-instruction-level",
+		continuationItemIds: [
+			"assembly-unit-10-debugging-at-instruction-level-supplemental-instruction-debugging-transfer-practice",
+			"assembly-unit-10-debugging-at-instruction-level-supplemental-instruction-debugging-extension-practice"
+		],
 		revision: assemblyDebugRevision,
 		roleFiles: [
 			"routine.S",
@@ -536,6 +542,12 @@ export const assemblyVerifiedPacks = [
 	},
 	{
 		pack: assemblyPerformancePack,
+		coreItemId:
+			"assembly-unit-11-performance-and-code-shape-curriculum-core-project-performance-and-code-shape",
+		continuationItemIds: [
+			"assembly-unit-11-performance-and-code-shape-supplemental-code-shape-transfer-practice",
+			"assembly-unit-11-performance-and-code-shape-supplemental-code-shape-extension-practice"
+		],
 		revision: assemblyPerformanceRevision,
 		roleFiles: [
 			"loops.S",

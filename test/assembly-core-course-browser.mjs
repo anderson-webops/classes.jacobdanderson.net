@@ -21,7 +21,9 @@ export async function runAssemblyCoreCourseWorkflow(t, definition) {
 	const storageKey = "classes-python-ide-projects:anonymous";
 	const moduleID = definition.moduleID;
 	const coreID = definition.coreID;
-	const traceID = definition.traceID;
+	const continuationIDs = definition.continuationIDs ?? [definition.traceID];
+	const primaryFile = definition.primaryFile ?? "routine.S";
+	const taskFile = definition.taskFile ?? "trace.md";
 	const digest = value => createHash("sha256").update(value).digest("hex");
 	async function savedProjects(page) {
 		return page.evaluate(
@@ -378,7 +380,7 @@ export async function runAssemblyCoreCourseWorkflow(t, definition) {
 					);
 					const saved = await project(page, key);
 					assert.equal(saved.mode, "assembly");
-					assert.equal(saved.activeFileName, `${role}/routine.S`);
+					assert.equal(saved.activeFileName, `${role}/${primaryFile}`);
 					assert.equal(saved.files.length, definition.fileCount);
 					assert.deepEqual(
 						[...requests].sort(),
@@ -428,8 +430,8 @@ export async function runAssemblyCoreCourseWorkflow(t, definition) {
 					);
 					const edits = {};
 					for (const filename of [
-						`${role}/routine.S`,
-						`${role}/trace.md`
+						`${role}/${primaryFile}`,
+						`${role}/${taskFile}`
 					]) {
 						await page.select(
 							"select[aria-label='Active project file']",
@@ -485,35 +487,49 @@ export async function runAssemblyCoreCourseWorkflow(t, definition) {
 						(await project(page, key)).files,
 						edited.files
 					);
-					catalog = true;
-					const trace = await action(page, origin, traceID, role);
-					assert.equal(
-						new URL(trace.href, origin).searchParams.get(
-							"projectKey"
-						),
-						key
-					);
-					catalog = false;
+					const continuationActions = [];
+					let trace;
 					const before = requests.length;
-					await page.locator(trace.selector).click();
-					await page.waitForSelector(".cm-content");
-					assert.equal(
-						await page.$(
-							"[data-testid='ide-route-import-confirm']"
-						),
-						null
-					);
-					const reused = await project(page, key);
-					assert.equal(reused._id, edited._id);
-					assert.deepEqual(reused.files, edited.files);
-					assert.equal(requests.length, before);
-					for (const [filename, content] of Object.entries(edits)) {
+					for (const itemID of continuationIDs) {
+						catalog = true;
+						trace = await action(page, origin, itemID, role);
 						assert.equal(
-							reused.files.find(file => file.name === filename)
-								?.content,
-							content
+							new URL(trace.href, origin).searchParams.get(
+								"projectKey"
+							),
+							key
 						);
+						catalog = false;
+						await page.locator(trace.selector).click();
+						await page.waitForSelector(".cm-content");
+						assert.equal(
+							await page.$(
+								"[data-testid='ide-route-import-confirm']"
+							),
+							null
+						);
+						const reused = await project(page, key);
+						assert.equal(reused._id, edited._id);
+						assert.deepEqual(reused.files, edited.files);
+						assert.equal(requests.length, before);
+						for (const [filename, content] of Object.entries(edits)) {
+							assert.equal(
+								reused.files.find(file => file.name === filename)
+									?.content,
+								content
+							);
+						}
+						const returnHref = await page.$$eval("a", links => links.find(link => link.textContent.trim() === "Return to lesson")?.getAttribute("href"));
+						assert.equal(returnHref, `/courses#${moduleID}-${itemID}`);
+						continuationActions.push({
+							itemID,
+							href: trace.href,
+							sameAttemptReused: true,
+							additionalSourceRequests: requests.length - before,
+							returnHref
+						});
 					}
+					const reused = await project(page, key);
 					const editedBytes = await archive(page);
 					checkArchive(editedBytes, reused.files);
 					await writeFile(
@@ -553,6 +569,7 @@ export async function runAssemblyCoreCourseWorkflow(t, definition) {
 						key,
 						coreAction: core.href,
 						worksheetAction: trace.href,
+						continuationActions,
 						sourceFiles: saved.files.map(file => ({
 							name: file.name,
 							sha256: digest(file.content)
