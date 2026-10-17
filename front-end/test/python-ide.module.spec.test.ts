@@ -3001,7 +3001,7 @@ pgzrun.go()
 			"syncCanvasBitmapSize(canvas, rect, dpr);"
 		);
 		expect(gameTransformSource).toContain(
-			"syncCanvasBitmapSize(canvas, rect, dpr);"
+			"preparePythonIdeGameCanvas(canvas, gameState.width, gameState.height)"
 		);
 		expect(pageSource).toContain("function redrawActiveCanvas");
 		expect(pageSource).toContain("renderTurtleScene();");

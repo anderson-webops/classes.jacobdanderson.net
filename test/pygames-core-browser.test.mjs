@@ -49,6 +49,8 @@ const digest = value => createHash("sha256").update(value).digest("hex");
 const pause = ms => new Promise(resolve => setTimeout(resolve, ms));
 const sourceError =
 	/Traceback \(most recent call last\)|(?:Name|Type|Attribute|FileNotFound|Key|Syntax|Import|Value|Index|Runtime)Error:|Could not load shared PyGame/;
+const disabledLibraryNotice =
+	"Could not load shared PyGame Zero assets: Unable to load PyGame Zero assets (/ide/assets/manifest.json contained no usable assets; /python-ide/assets/manifest.json contained no usable assets).";
 const sourceBytes = path =>
 	Buffer.from(fixture.files[path].contentBase64, "base64");
 const expectedSource = (pack, role, name) =>
@@ -385,10 +387,12 @@ async function observeRun(
 		}
 		assert.ok(
 			!sourceError.test(
-				await page.$eval(
-					".output-panel",
-					element => element.textContent
-				)
+				(
+					await page.$eval(
+						".output-panel",
+						element => element.textContent
+					)
+				).replaceAll(disabledLibraryNotice, "")
 			)
 		);
 		assert.equal(
@@ -398,6 +402,71 @@ async function observeRun(
 			"Stop"
 		);
 		return { label, complete, controls, captures, realCanvasPixels: true };
+	} catch (error) {
+		const frame = await pythonFrame(page).catch(() => null);
+		const pixels = frame
+			? await canvasState(frame).catch(() => null)
+			: null;
+		if (pixels) {
+			await writeFile(
+				join(output, label + "-active-failure-canvas.png"),
+				Buffer.from(pixels.pngBase64, "base64")
+			);
+			delete pixels.pngBase64;
+		}
+		await writeFile(
+			join(output, label + "-active-failure.json"),
+			JSON.stringify(
+				{
+					label,
+					error: String(error),
+					pixels,
+					frame: frame
+						? await frame
+								.evaluate(() => {
+									const canvas = document.querySelector(
+										"canvas.turtle-canvas--game"
+									);
+									const rect =
+										canvas?.getBoundingClientRect();
+									return {
+										url: location.href,
+										canvas: canvas
+											? {
+													width: canvas.width,
+													height: canvas.height,
+													style: canvas.getAttribute(
+														"style"
+													),
+													rect: rect?.toJSON(),
+													devicePixelRatio
+												}
+											: null
+									};
+								})
+								.catch(() => null)
+						: null,
+					status: await page
+						.$eval(
+							"[data-testid='ide-run-status']",
+							element => element.textContent
+						)
+						.catch(() => "unavailable"),
+					output: await page
+						.$eval(".output-panel", element => element.textContent)
+						.catch(() => "unavailable")
+				},
+				null,
+				2
+			)
+		);
+		await page
+			.screenshot({
+				path: join(output, label + "-active-failure.png"),
+				fullPage: true
+			})
+			.catch(() => {});
+		throw error;
 	} finally {
 		if (
 			(await page
@@ -974,7 +1043,7 @@ nodeTest(
 						throw error;
 					} finally {
 						await page.close().catch(() => {});
-						await context.close().catch(() => {});
+						await context?.close().catch(() => {});
 						context = null;
 						await writeFile(
 							join(output, "core-browser-partial-proof.json"),
