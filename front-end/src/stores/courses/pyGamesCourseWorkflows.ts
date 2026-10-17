@@ -389,7 +389,12 @@ function coreWorkspace(
 }
 
 function coreReading(kind: string, classroom: boolean) {
-	const reading = pyGamesCoreReadings[kind]?.replace(/^# [^\n]+\n\n/, "");
+	const reading = pyGamesCoreReadings[kind]
+		?.replace(/^# [^\n]+\n\n/, "")
+		.replace(
+			"Start with the `starter` role.",
+			"Open the `starter` project."
+		);
 	if (!reading) throw new Error("Missing PyGames core project reading.");
 	if (!classroom) return reading;
 	const normal =
@@ -402,7 +407,7 @@ function coreReading(kind: string, classroom: boolean) {
 		kind === "music"
 			? "Reproduce one misspelled asset-name failure in a disposable copy. Use the traceback and project layout to repair it, then export and run the repaired copy with its own PNG."
 			: kind === "images"
-				? "Introduce a differently sized image and adapt the placement rule while preserving center, complete visibility, and the left-button filter. Verify the replacement from an exported project."
+				? "Choose an image with different dimensions and adapt the placement rule while preserving center, complete visibility, and the left-button filter. Verify the replacement from an exported project."
 				: "Add one original mechanic with normal, boundary, end and restart cases. Keep the working Normal version available for comparison.";
 	return `**Classroom framework:** The workspace starts with the complete working reference. The shared reading below also defines the separate independent repair tasks. For classroom work, record a baseline and label the changed block for the selected variation.
 
