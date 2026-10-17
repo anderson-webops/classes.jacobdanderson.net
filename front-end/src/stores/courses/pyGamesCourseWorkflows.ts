@@ -5,8 +5,7 @@ import {
 	pyGamesCourseProjectKey,
 	pyGamesLessonSourceFiles,
 	pyGamesPinnedResourceUrl,
-	pyGamesPinnedSourceUrl,
-	pyGamesSourceRevision
+	pyGamesPinnedSourceUrl
 } from "../../modules/pyGamesProjectResources";
 import { pyGamesCoreReadings } from "./pyGamesCoreProjectReading";
 
@@ -474,7 +473,7 @@ Model source: [Course program](${pyGamesPinnedSourceUrl(practice.file)}).`;
 				item.solutionLink = pyGamesCoreUrl(pack, "solution");
 				item.ideImport = true;
 				item.preserveInstructions = true;
-				item.datasetLink = `https://github.com/instruction-material/PyGames/tree/${pyGamesSourceRevision}/${asset.kind}`;
+				delete item.datasetLink;
 				item.content = asset.challenge
 					? `Continue the matching ${asset.kind === "music" ? "setup" : asset.kind === "images" ? "image studio" : "capstone"} project and keep its working checkpoint. Opening this card continues the same saved attempt.
 

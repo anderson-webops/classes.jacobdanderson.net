@@ -4,6 +4,10 @@ import { rawCourseProse } from "./courseProse";
 import { createPinia, setActivePinia } from "pinia";
 import { useCoursesStore } from "@/stores/courses";
 import {
+	pyGamesCoreResource,
+	pyGamesCoreSourceRevision
+} from "@/modules/pyGamesCoreProjectResources";
+import {
 	pyGamesPinnedSourceUrl,
 	pyGamesSourceRevision
 } from "@/modules/pyGamesProjectResources";
@@ -1269,9 +1273,22 @@ describe("course text quality normalization", () => {
 			expect(corpus).toContain(
 				"Explain cow-ID indexing and retain a trace for two interleaved cows"
 			);
-			expect(corpus).toContain(
-				"Load an image by name, place its Actor and explain its visible bounds before adding movement."
-			);
+			const imageCore = (await loadRawCourse("pygames"))?.modules
+				.flatMap(module => module.curriculum)
+				.find(
+					item =>
+						item.id ===
+						"pygames-images-and-sprites-practice-studio-curriculum-images-and-sprites-core-project"
+				);
+			expect(imageCore).toBeDefined();
+			for (const concept of [
+				'Actor("alien")',
+				"66 by 92",
+				"clamp_center",
+				"ANCHOR_POSITION",
+				"movement physics is a later task"
+			])
+				expect(imageCore!.content).toContain(concept);
 			expect(corpus).not.toMatch(
 				/Open the starter and name the concrete inputs, outputs, state changes, data structures, or system boundaries involved/
 			);
@@ -4731,7 +4748,7 @@ describe("course text quality normalization", () => {
 	);
 
 	it(
-		"hides broad PyGames repo root pairs while preserving specific source folders",
+		"keeps complete PyGames packs separate from broad asset folders",
 		async () => {
 			const pyGamesCourse = await loadRawCourse("pygames");
 			expect(pyGamesCourse).not.toBeNull();
@@ -4760,6 +4777,16 @@ describe("course text quality normalization", () => {
 					item.datasetLink ?? ""
 				)
 			);
+			const completePackItems = allItems.flatMap(item => {
+				if (!item.projectLink?.startsWith("/ide?")) return [];
+				const starter = new URL(
+					item.projectLink,
+					"https://classes.local"
+				).searchParams.get("starterUrl");
+				return starter?.includes("/PG-CORE-")
+					? [{ item, starter }]
+					: [];
+			});
 
 			expect(broadRootPairs).toEqual([]);
 			expect(generatedPracticeItem?.projectLink).toBe(
@@ -4769,7 +4796,27 @@ describe("course text quality normalization", () => {
 			expect(generatedPracticeItem?.content).toContain(
 				"**Required variation:**"
 			);
-			expect(assetFolderItems.length).toBeGreaterThan(0);
+			expect(completePackItems).toHaveLength(7);
+			for (const { item, starter } of completePackItems) {
+				const source = pyGamesCoreResource(starter);
+				expect(source).not.toBeNull();
+				expect(source?.role).toBe("starter");
+				expect(source?.resource.ref).toBe(pyGamesCoreSourceRevision);
+				expect(item.solutionLink).toBe(
+					`https://github.com/instruction-material/PyGames/tree/${pyGamesCoreSourceRevision}/${source?.pack}/solution`
+				);
+			}
+			const selfContainedCoreItems = completePackItems.filter(
+				({ item }) =>
+					item.id?.endsWith("-core-project") ||
+					item.id?.endsWith("-extension-challenge")
+			);
+			expect(selfContainedCoreItems).toHaveLength(6);
+			expect(
+				selfContainedCoreItems.every(
+					({ item }) => item.datasetLink === undefined
+				)
+			).toBe(true);
 			expect(
 				assetFolderItems.every(item => item.solutionLink === undefined)
 			).toBe(true);
