@@ -9752,6 +9752,12 @@ describe("course text quality normalization", () => {
 		expect(corpus).toContain("Variable Shift Count Investigation");
 		expect(corpus).toContain("COMPARE_SIGNED");
 		expect(corpus).toContain("SHIFT_SIGNED");
+		expect(corpus).toContain(
+			"Byte Order and Memory Access Width Investigation"
+		);
+		expect(corpus).toContain("Effective Address Calculation Investigation");
+		expect(corpus).toContain("MEMORY_SPAN");
+		expect(corpus).toContain("ADDRESS_SCALE");
 		expect(corpus).toContain("Assembly Lab 15: Stack Trace Studio");
 		expect(corpus).toContain("Assembly Lab 16: ABI Integration Studio");
 		expect(corpus).toContain("Assembly Lab 17: Reverse Trace Studio");

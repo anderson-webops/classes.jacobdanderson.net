@@ -19,6 +19,10 @@ import {
 	assemblyComparisonReading,
 	assemblyShiftReading
 } from "./assemblyLogicProjectReading";
+import {
+	assemblyAddressReading,
+	assemblyMemoryReading
+} from "./assemblyMachineProjectReading";
 import { assemblyOpeningProjectReading } from "./assemblyOpeningProjectReading";
 import { assemblyParserProjectReading } from "./assemblyParserProjectReading";
 import { assemblyPerformanceProjectReading } from "./assemblyPerformanceProjectReading";
@@ -146,30 +150,28 @@ const assemblySourceCourse: RawCourse = {
 						"https://github.com/instruction-material/Assembly/tree/2ded92a0103d3e518e08cc152a69428d748aafb7/ASM-05-unit-1-machine-model-and-toolchain/solution"
 				},
 				{
-					title: "Toolchain Trace Transfer Practice",
-					content: buildProjectGuidance({
-						courseFamily: "assembly",
-						moduleTitle: "Unit 1: Machine Model and Toolchain",
-						projectKind: "extension",
-						hasReference: true
-					}),
+					title: "Byte Order and Memory Access Width Investigation",
+					id: "assembly-unit-1-machine-model-and-toolchain-supplemental-toolchain-trace-transfer-practice",
+					learningPath: "choice",
+					preserveInstructions: true,
+					ideImport: true,
+					content: assemblyMemoryReading,
 					projectLink:
-						"https://github.com/instruction-material/Assembly/tree/main/ASM-03-unit-1-machine-model-and-toolchain-supplemental-2/starter",
+						"https://github.com/instruction-material/Assembly/tree/6ab461632744b36324d331cd15902acff3204513/ASM-03-unit-1-machine-model-and-toolchain-supplemental-2/starter",
 					solutionLink:
-						"https://github.com/instruction-material/Assembly/tree/main/ASM-03-unit-1-machine-model-and-toolchain-supplemental-2/solution"
+						"https://github.com/instruction-material/Assembly/tree/6ab461632744b36324d331cd15902acff3204513/ASM-03-unit-1-machine-model-and-toolchain-supplemental-2/solution"
 				},
 				{
-					title: "Toolchain Trace Extension Practice",
-					content: buildProjectGuidance({
-						courseFamily: "assembly",
-						moduleTitle: "Unit 1: Machine Model and Toolchain",
-						projectKind: "extension",
-						hasReference: true
-					}),
+					title: "Effective Address Calculation Investigation",
+					id: "assembly-unit-1-machine-model-and-toolchain-supplemental-toolchain-trace-extension-practice",
+					learningPath: "challenge",
+					preserveInstructions: true,
+					ideImport: true,
+					content: assemblyAddressReading,
 					projectLink:
-						"https://github.com/instruction-material/Assembly/tree/main/ASM-04-unit-1-machine-model-and-toolchain-supplemental-3/starter",
+						"https://github.com/instruction-material/Assembly/tree/6ab461632744b36324d331cd15902acff3204513/ASM-04-unit-1-machine-model-and-toolchain-supplemental-3/starter",
 					solutionLink:
-						"https://github.com/instruction-material/Assembly/tree/main/ASM-04-unit-1-machine-model-and-toolchain-supplemental-3/solution"
+						"https://github.com/instruction-material/Assembly/tree/6ab461632744b36324d331cd15902acff3204513/ASM-04-unit-1-machine-model-and-toolchain-supplemental-3/solution"
 				}
 			]
 		},

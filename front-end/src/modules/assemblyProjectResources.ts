@@ -179,7 +179,39 @@ export const assemblyLogicPacks = [
 	}
 ] as const;
 
+export const assemblyMachinePacks = [
+	{
+		pack: "ASM-03-unit-1-machine-model-and-toolchain-supplemental-2",
+		revision: "6ab461632744b36324d331cd15902acff3204513",
+		roleFiles: [
+			"routine.S",
+			"main.c",
+			"lab.h",
+			"model.c",
+			"tests.c",
+			"abi_checks.S",
+			"CMakeLists.txt",
+			"trace.md"
+		]
+	},
+	{
+		pack: "ASM-04-unit-1-machine-model-and-toolchain-supplemental-3",
+		revision: "6ab461632744b36324d331cd15902acff3204513",
+		roleFiles: [
+			"routine.S",
+			"main.c",
+			"lab.h",
+			"model.c",
+			"tests.c",
+			"abi_checks.S",
+			"CMakeLists.txt",
+			"trace.md"
+		]
+	}
+] as const;
+
 export const assemblyVerifiedPacks = [
+	...assemblyMachinePacks,
 	...assemblyLogicPacks,
 	...assemblyRegisterPacks,
 	...assemblySyscallPacks,

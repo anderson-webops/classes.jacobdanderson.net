@@ -10,6 +10,7 @@ import {
 	assemblyHardeningTracePack,
 	assemblyHelperPack,
 	assemblyLogicPacks,
+	assemblyMachinePacks,
 	assemblyParserPack,
 	assemblyPerformancePack,
 	assemblyRecordPack,
@@ -31,6 +32,50 @@ export function assemblyBuildInstructions(
 		"Assembly compilation, tests and debugging require Linux x86-64, the System V AMD64 ABI, GNU/Clang assembly with the syntax specified in README.md, and a native Clang or GCC toolchain.",
 		"The workspace edits and saves source. Use an x86-64 Linux VM or lab on macOS, or an x86-64 WSL distribution on Windows."
 	];
+	if (
+		selected &&
+		assemblyMachinePacks.some(pack => pack.pack === selected.pack)
+	) {
+		if (
+			!selected.definition.roleFiles.every(name =>
+				files.some(file => file.name === `${selected.role}/${name}`)
+			) ||
+			!files.some(file => file.name === "README.md")
+		) {
+			return [
+				...lines,
+				"This memory or address investigation is incomplete. Preserve the saved attempt, then restore all eight selected role files and README.md."
+			];
+		}
+		const memory = selected.pack === assemblyMachinePacks[0].pack;
+		return [
+			...lines,
+			"Use GNU Intel source syntax and ordinary-user Linux x86-64 with CMake 3.20+, Clang or GCC, GDB and binutils.",
+			`From the extracted project folder: cd ${selected.role}`,
+			"cmake -S . -B build-Debug -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER=clang -DCMAKE_ASM_COMPILER=clang",
+			"cmake --build build-Debug --verbose --parallel 1",
+			"./build-Debug/app",
+			"ctest --test-dir build-Debug --output-on-failure",
+			"./build-Debug/app --changed",
+			"cmake -S . -B build-Release -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=clang -DCMAKE_ASM_COMPILER=clang",
+			"cmake --build build-Release --verbose --parallel 1",
+			"ctest --test-dir build-Release --output-on-failure",
+			"./build-Release/app --changed",
+			"Repeat both build profiles with GCC using separate build directories; explicit comparisons keep all checks active in Release.",
+			memory
+				? "Complete MEMORY_SPAN in routine.S. Draw the 16 owned bytes at RSP in increasing address order. At lab_stage4 load the full eight-byte span from offset 3 and compare all six results with the unchanged byte model."
+				: "Complete ADDRESS_SCALE in routine.S. At lab_stage2 preserve the base and displacement while using scale 4. Compare all five 64-bit LEA results with the unchanged model; the generated numeric values remain calculations rather than memory loads.",
+			"RDI and RSI hold the two input words or the base/index bit patterns. RDX points to the owned output buffer. Store each full 64-bit result in its assigned slot and preserve RBX, RBP, R12–R15 and the caller's stack state.",
+			"objdump -d -M intel --disassemble=lab_operation build-Debug/app",
+			"readelf -Ws build-Debug/CMakeFiles/app.dir/routine.S.o",
+			"gdb ./build-Debug/app",
+			"In GDB set disassembly-flavor intel, break lab_stage0, run, and use x/i $pc and si for the operation and its following store. The PC then already reaches the next stage label. Record registers and output slots there before continuing. For memory, capture x/16bx $rsp; for LEA, compare CMP-produced CF/ZF/SF/OF before and after each calculation.",
+			"Keep main.c, lab.h, model.c, tests.c and abi_checks.S unchanged. Complete only the named routine task and trace.md. Read ../README.md for every default/changed row, byte-span and address models, controlled regression and required evidence. Passing 10269 independent operand pairs does not complete the worksheet.",
+			selected.role === "starter"
+				? "The untouched program builds but exits 78 and its contracts fail. Retain that observation, make the minimal repair and export the saved routine.S and trace.md together."
+				: "The separate reference passes the unchanged contracts and both demonstrations. Record the current register and output values beside the prediction."
+		];
+	}
 	if (
 		selected &&
 		assemblyLogicPacks.some(pack => pack.pack === selected.pack)

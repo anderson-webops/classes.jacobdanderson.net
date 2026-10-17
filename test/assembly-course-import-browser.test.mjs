@@ -55,6 +55,7 @@ fixtures.push(
 fixtures.push(...JSON.parse(await readFile(new URL("./fixtures/assembly-syscall-contracts.json", import.meta.url), "utf8")));
 fixtures.push(...JSON.parse(await readFile(new URL("./fixtures/assembly-register-contracts.json", import.meta.url), "utf8")));
 fixtures.push(...JSON.parse(await readFile(new URL("./fixtures/assembly-logic-contracts.json", import.meta.url), "utf8")));
+fixtures.push(...JSON.parse(await readFile(new URL("./fixtures/assembly-machine-contracts.json", import.meta.url), "utf8")));
 const hardening = fixtures.find(
 	row =>
 		row.pack
@@ -67,6 +68,28 @@ fixtures.push({
 });
 let fixture = fixtures[0];
 const workflowDefinitions = {
+
+    "ASM-03-unit-1-machine-model-and-toolchain-supplemental-2": {
+        "primary": "routine.S",
+        "taskFile": "routine.S",
+        "title": "Byte Order and Memory Access Width Investigation",
+        "lesson": "assembly-unit-1-machine-model-and-toolchain-assembly-unit-1-machine-model-and-toolchain-supplemental-toolchain-trace-transfer-practice",
+        "moduleId": "assembly-unit-1-machine-model-and-toolchain",
+        "machineMode": "memory",
+        "starterToken": "MEMORY_SPAN",
+        "referenceToken": "separate reference passes"
+    },
+    "ASM-04-unit-1-machine-model-and-toolchain-supplemental-3": {
+        "primary": "routine.S",
+        "taskFile": "routine.S",
+        "title": "Effective Address Calculation Investigation",
+        "lesson": "assembly-unit-1-machine-model-and-toolchain-assembly-unit-1-machine-model-and-toolchain-supplemental-toolchain-trace-extension-practice",
+        "moduleId": "assembly-unit-1-machine-model-and-toolchain",
+        "machineMode": "lea",
+        "starterToken": "ADDRESS_SCALE",
+        "referenceToken": "separate reference passes"
+    }
+,
 
     "ASM-07-unit-3-arithmetic-and-logic-supplemental-2": {
         "primary": "routine.S",
@@ -258,7 +281,7 @@ const workflowDefinitions = {
 
 assert.equal(
 	fixtures.length,
-	23,
+	25,
 	"All twenty-one verified assignment workspaces require browser coverage"
 );
 assert.deepEqual(
@@ -363,7 +386,7 @@ async function verifyHardeningCourseButton(
 		key
 	);
 	assert.equal(saved.activeFileName, `starter/${definition.primary}`);
-	const expectedCount = (definition.logicMode || definition.registerMode) ? 9 : definition.syscallMode ? 8 : definition.setupMode ? 7 : 10;
+	const expectedCount = (definition.machineMode || definition.logicMode || definition.registerMode) ? 9 : definition.syscallMode ? 8 : definition.setupMode ? 7 : 10;
 	assert.equal(saved.files.length, expectedCount);
 	assert.equal(sourceRequests(), expectedCount);
 	return {
@@ -504,7 +527,7 @@ test(
 								width === 1280
 								&& theme === "light"
 								&& role === "starter"
-								&& (definition.logicMode || definition.registerMode || definition.setupMode || definition.syscallMode
+								&& (definition.machineMode || definition.logicMode || definition.registerMode || definition.setupMode || definition.syscallMode
 									|| (fixture.pack.startsWith("ASM-2")
 										&& ["analysis.md", "trace.md"].includes(
 											primary
@@ -740,7 +763,13 @@ test(
 								file => file.name === name
 							).content;
 							const edit
-								= definition.logicMode
+								= definition.machineMode
+                                    ? role === "starter"
+                                        ? fixture.files[`${fixture.pack}/solution/routine.S`].content
+                                        : definition.machineMode === "memory"
+                                            ? original.replace("    mov rax, QWORD PTR [rsp + 0]\n", "    mov rax, QWORD PTR [rsp + 0]\n    bswap rax\n")
+                                            : original.replace("    lea rax, [rdi + rsi*8 - 7]\n", "    lea rax, [rdi + rsi*4 - 7]\n")
+                                    : definition.logicMode
                                     ? role === "starter"
                                         ? fixture.files[`${fixture.pack}/solution/routine.S`].content
                                         : definition.logicMode === "compare"
@@ -861,7 +890,7 @@ test(
 									file.content
 								);
 							}
-							if (definition.logicMode || definition.registerMode || definition.setupMode || definition.syscallMode) {
+							if (definition.machineMode || definition.logicMode || definition.registerMode || definition.setupMode || definition.syscallMode) {
 								await writeFile(
 									join(
 										exports,
@@ -921,7 +950,7 @@ test(
 					expectedProfiles
 				}));
 			}
-			assert.equal(courseButtons.length, 10);
+			assert.equal(courseButtons.length, 12);
 			await writeFile(
 				join(captures, "assembly-course-buttons-proof.json"),
 				JSON.stringify(courseButtons, null, 2)
