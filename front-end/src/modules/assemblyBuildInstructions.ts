@@ -4,6 +4,7 @@ import {
 	assemblyArithmeticPack,
 	assemblyArrayPack,
 	assemblyCalculatorPack,
+	assemblyCompilerOptionalPacks,
 	assemblyCompilerPack,
 	assemblyControlPacks,
 	assemblyCourseResource,
@@ -36,6 +37,43 @@ export function assemblyBuildInstructions(
 		"Assembly compilation, tests and debugging require Linux x86-64, the System V AMD64 ABI, GNU/Clang assembly with the syntax specified in README.md, and a native Clang or GCC toolchain.",
 		"The workspace edits and saves source. Use an x86-64 Linux VM or lab on macOS, or an x86-64 WSL distribution on Windows."
 	];
+	if (
+		selected &&
+		assemblyCompilerOptionalPacks.some(pack => pack.pack === selected.pack)
+	) {
+		if (
+			!selected.definition.roleFiles.every(name =>
+				files.some(file => file.name === `${selected.role}/${name}`)
+			) ||
+			!files.some(file => file.name === "README.md")
+		) {
+			return [
+				...lines,
+				"This compiler investigation is incomplete. Restore all nine selected role files and README.md while preserving the saved worksheet."
+			];
+		}
+		return [
+			...lines,
+			"Both role programs already work. Complete analysis.md with predictions and actual compiler/debugger observations; keep the provided C and ABI code unchanged outside a separate regression copy.",
+			`From the extracted project folder: cd ${selected.role}`,
+			'cmake -S . -B build-O0 -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER=clang -DCMAKE_ASM_COMPILER=clang -DCMAKE_C_FLAGS_DEBUG="-O0 -g"',
+			"cmake --build build-O0 --verbose --parallel 1",
+			"ctest --test-dir build-O0 --output-on-failure",
+			"./build-O0/app",
+			"./build-O0/app --changed",
+			'cmake -S . -B build-O2 -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=clang -DCMAKE_ASM_COMPILER=clang -DCMAKE_C_FLAGS_RELEASE="-O2 -g -DNDEBUG"',
+			"cmake --build build-O2 --verbose --parallel 1",
+			"ctest --test-dir build-O2 --output-on-failure",
+			"mkdir -p observed",
+			"clang -std=c17 -O0 -g -S -masm=intel -fverbose-asm baseline.c -o observed/baseline-O0.s",
+			"clang -std=c17 -O2 -g -S -masm=intel -fverbose-asm baseline.c -o observed/baseline-O2.s",
+			"objdump -d -M intel build-O0/app > observed/linked-O0.txt",
+			"objdump -d -M intel build-O2/app > observed/linked-O2.txt",
+			"gdb ./build-O0/app",
+			"Read ../README.md for the exact five-word contract, valid custom hexadecimal input pairs, named inspected helpers, controlled regression and entry/return evidence. Compare one compiler at both optimization levels, then repeat with GCC in separate directories. baseline.c and operation.c remain separate without LTO.",
+			"Retain TARGET, PREDICT, TYPES, MAP, OPTIMIZE, TRACE and REGRESSION evidence in analysis.md. The unchanged tests exercise 10269 input pairs and six preserved registers; passing tests does not complete the worksheet."
+		];
+	}
 	if (
 		selected &&
 		assemblyMemoryLayoutOptionalPacks.some(

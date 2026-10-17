@@ -6,12 +6,22 @@ import {
 	assemblySixArgumentReading
 } from "./assemblyAbiOptionalProjectReading";
 import {
+	assemblyBranchCountReading,
+	assemblyCallerReturnReading,
+	assemblyConditionalBreakpointReading,
+	assemblyRepeatScalingReading
+} from "./assemblyAdvancedInvestigationReading";
+import {
 	assemblyArithmeticConceptReading,
 	assemblyArithmeticProjectReading,
 	assemblyArithmeticTraceReading
 } from "./assemblyArithmeticProjectReading";
 import { assemblyArrayProjectReading } from "./assemblyArrayProjectReading";
 import { assemblyCalculatorProjectReading } from "./assemblyCalculatorProjectReading";
+import {
+	assemblyBytePromotionsReading,
+	assemblyPointerAliasingReading
+} from "./assemblyCompilerOptionalProjectReading";
 import { assemblyCompilerProjectReading } from "./assemblyCompilerProjectReading";
 import {
 	assemblyDispatchReading,
@@ -675,30 +685,28 @@ const assemblySourceCourse: RawCourse = {
 						"https://github.com/instruction-material/Assembly/blob/4fabbbe92deb893d14e2572121fc2393ae426c7b/ASM-08-unit-9-reading-compiler-output/README.md"
 				},
 				{
-					title: "Compiler Output Transfer Practice",
-					content: buildProjectGuidance({
-						courseFamily: "assembly",
-						moduleTitle: "Unit 9: Reading Compiler Output",
-						projectKind: "extension",
-						hasReference: true
-					}),
+					title: "Byte Promotions and Signed Comparisons",
+					id: "assembly-unit-9-reading-compiler-output-supplemental-compiler-output-transfer-practice",
+					learningPath: "choice",
+					preserveInstructions: true,
+					ideImport: true,
+					content: assemblyBytePromotionsReading,
 					projectLink:
-						"https://github.com/instruction-material/Assembly/tree/main/ASM-19-unit-9-reading-compiler-output-supplemental-2/starter",
+						"https://github.com/instruction-material/Assembly/tree/cbdb27f1afacd70246d62a4177e932391d6b3362/ASM-19-unit-9-reading-compiler-output-supplemental-2/starter",
 					solutionLink:
-						"https://github.com/instruction-material/Assembly/tree/main/ASM-19-unit-9-reading-compiler-output-supplemental-2/solution"
+						"https://github.com/instruction-material/Assembly/tree/cbdb27f1afacd70246d62a4177e932391d6b3362/ASM-19-unit-9-reading-compiler-output-supplemental-2/solution"
 				},
 				{
-					title: "Compiler Output Extension Practice",
-					content: buildProjectGuidance({
-						courseFamily: "assembly",
-						moduleTitle: "Unit 9: Reading Compiler Output",
-						projectKind: "extension",
-						hasReference: true
-					}),
+					title: "Pointer Aliasing and Reload Decisions",
+					id: "assembly-unit-9-reading-compiler-output-supplemental-compiler-output-extension-practice",
+					learningPath: "challenge",
+					preserveInstructions: true,
+					ideImport: true,
+					content: assemblyPointerAliasingReading,
 					projectLink:
-						"https://github.com/instruction-material/Assembly/tree/main/ASM-20-unit-9-reading-compiler-output-supplemental-3/starter",
+						"https://github.com/instruction-material/Assembly/tree/cbdb27f1afacd70246d62a4177e932391d6b3362/ASM-20-unit-9-reading-compiler-output-supplemental-3/starter",
 					solutionLink:
-						"https://github.com/instruction-material/Assembly/tree/main/ASM-20-unit-9-reading-compiler-output-supplemental-3/solution"
+						"https://github.com/instruction-material/Assembly/tree/cbdb27f1afacd70246d62a4177e932391d6b3362/ASM-20-unit-9-reading-compiler-output-supplemental-3/solution"
 				}
 			]
 		},
@@ -745,30 +753,28 @@ const assemblySourceCourse: RawCourse = {
 						"https://github.com/instruction-material/Assembly/blob/337648e72f375e30b235936f8deb5cd9ac64cfde/ASM-09-unit-10-debugging-at-instruction-level/README.md"
 				},
 				{
-					title: "Instruction Debugging Transfer Practice",
-					content: buildProjectGuidance({
-						courseFamily: "assembly",
-						moduleTitle: "Unit 10: Debugging at Instruction Level",
-						projectKind: "extension",
-						hasReference: true
-					}),
+					title: "Conditional Breakpoints and Reachable Decisions",
+					id: "assembly-unit-10-debugging-at-instruction-level-supplemental-instruction-debugging-transfer-practice",
+					learningPath: "choice",
+					preserveInstructions: true,
+					ideImport: true,
+					content: assemblyConditionalBreakpointReading,
 					projectLink:
-						"https://github.com/instruction-material/Assembly/tree/main/ASM-21-unit-10-debugging-at-instruction-level-supplemental-2/starter",
+						"https://github.com/instruction-material/Assembly/tree/337648e72f375e30b235936f8deb5cd9ac64cfde/ASM-09-unit-10-debugging-at-instruction-level/starter",
 					solutionLink:
-						"https://github.com/instruction-material/Assembly/tree/main/ASM-21-unit-10-debugging-at-instruction-level-supplemental-2/solution"
+						"https://github.com/instruction-material/Assembly/tree/337648e72f375e30b235936f8deb5cd9ac64cfde/ASM-09-unit-10-debugging-at-instruction-level/solution"
 				},
 				{
-					title: "Instruction Debugging Extension Practice",
-					content: buildProjectGuidance({
-						courseFamily: "assembly",
-						moduleTitle: "Unit 10: Debugging at Instruction Level",
-						projectKind: "extension",
-						hasReference: true
-					}),
+					title: "Caller State Across Two Return Paths",
+					id: "assembly-unit-10-debugging-at-instruction-level-supplemental-instruction-debugging-extension-practice",
+					learningPath: "challenge",
+					preserveInstructions: true,
+					ideImport: true,
+					content: assemblyCallerReturnReading,
 					projectLink:
-						"https://github.com/instruction-material/Assembly/tree/main/ASM-22-unit-10-debugging-at-instruction-level-supplemental-3/starter",
+						"https://github.com/instruction-material/Assembly/tree/337648e72f375e30b235936f8deb5cd9ac64cfde/ASM-09-unit-10-debugging-at-instruction-level/starter",
 					solutionLink:
-						"https://github.com/instruction-material/Assembly/tree/main/ASM-22-unit-10-debugging-at-instruction-level-supplemental-3/solution"
+						"https://github.com/instruction-material/Assembly/tree/337648e72f375e30b235936f8deb5cd9ac64cfde/ASM-09-unit-10-debugging-at-instruction-level/solution"
 				}
 			]
 		},
@@ -815,30 +821,28 @@ const assemblySourceCourse: RawCourse = {
 						"https://github.com/instruction-material/Assembly/blob/dfe6d181f0e6e793aebf78270f7c391e3a0225aa/ASM-10-unit-11-performance-and-code-shape/README.md"
 				},
 				{
-					title: "Code Shape Transfer Practice",
-					content: buildProjectGuidance({
-						courseFamily: "assembly",
-						moduleTitle: "Unit 11: Performance and Code Shape",
-						projectKind: "extension",
-						hasReference: true
-					}),
+					title: "Counted Branch Outcomes and Equal Results",
+					id: "assembly-unit-11-performance-and-code-shape-supplemental-code-shape-transfer-practice",
+					learningPath: "choice",
+					preserveInstructions: true,
+					ideImport: true,
+					content: assemblyBranchCountReading,
 					projectLink:
-						"https://github.com/instruction-material/Assembly/tree/main/ASM-23-unit-11-performance-and-code-shape-supplemental-2/starter",
+						"https://github.com/instruction-material/Assembly/tree/dfe6d181f0e6e793aebf78270f7c391e3a0225aa/ASM-10-unit-11-performance-and-code-shape/starter",
 					solutionLink:
-						"https://github.com/instruction-material/Assembly/tree/main/ASM-23-unit-11-performance-and-code-shape-supplemental-2/solution"
+						"https://github.com/instruction-material/Assembly/tree/dfe6d181f0e6e793aebf78270f7c391e3a0225aa/ASM-10-unit-11-performance-and-code-shape/solution"
 				},
 				{
-					title: "Code Shape Extension Practice",
-					content: buildProjectGuidance({
-						courseFamily: "assembly",
-						moduleTitle: "Unit 11: Performance and Code Shape",
-						projectKind: "extension",
-						hasReference: true
-					}),
+					title: "Repeat Scaling and Benchmark Harness Cost",
+					id: "assembly-unit-11-performance-and-code-shape-supplemental-code-shape-extension-practice",
+					learningPath: "challenge",
+					preserveInstructions: true,
+					ideImport: true,
+					content: assemblyRepeatScalingReading,
 					projectLink:
-						"https://github.com/instruction-material/Assembly/tree/main/ASM-24-unit-11-performance-and-code-shape-supplemental-3/starter",
+						"https://github.com/instruction-material/Assembly/tree/dfe6d181f0e6e793aebf78270f7c391e3a0225aa/ASM-10-unit-11-performance-and-code-shape/starter",
 					solutionLink:
-						"https://github.com/instruction-material/Assembly/tree/main/ASM-24-unit-11-performance-and-code-shape-supplemental-3/solution"
+						"https://github.com/instruction-material/Assembly/tree/dfe6d181f0e6e793aebf78270f7c391e3a0225aa/ASM-10-unit-11-performance-and-code-shape/solution"
 				}
 			]
 		},

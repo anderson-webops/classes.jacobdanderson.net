@@ -280,7 +280,7 @@ jobs:
               run: sudo apt-get update && sudo apt-get install -y gdb binutils strace
 
             - name: Export Assembly default and pack workspaces
-              run: ASSEMBLY_EXPORT_PROOF_DIR="$GITHUB_WORKSPACE/output/assembly-exports" npm exec -w front-end -- vitest run test/assembly-memory-layout-optional-workspace.spec.test.ts test/assembly-abi-optional-workspace.spec.test.ts test/assembly-stack-optional-workspace.spec.test.ts test/assembly-control-workspace.spec.test.ts test/assembly-machine-workspace.spec.test.ts test/assembly-logic-workspace.spec.test.ts test/assembly-register-workspace.spec.test.ts test/assembly-syscall-workspace.spec.test.ts test/assembly-setup-workspace.spec.test.ts test/assembly-workspace.spec.test.ts test/assembly-calculator-workspace.spec.test.ts test/assembly-memory-workspace.spec.test.ts test/assembly-call-parser-workspace.spec.test.ts test/assembly-compiler-workspace.spec.test.ts test/assembly-debug-workspace.spec.test.ts test/assembly-performance-workspace.spec.test.ts test/assembly-hardening-workspace.spec.test.ts test/assembly-records-workspace.spec.test.ts test/assembly-arithmetic-workspace.spec.test.ts --no-file-parallelism --maxWorkers=1
+              run: ASSEMBLY_EXPORT_PROOF_DIR="$GITHUB_WORKSPACE/output/assembly-exports" npm exec -w front-end -- vitest run test/assembly-compiler-optional-workspace.spec.test.ts test/assembly-memory-layout-optional-workspace.spec.test.ts test/assembly-abi-optional-workspace.spec.test.ts test/assembly-stack-optional-workspace.spec.test.ts test/assembly-control-workspace.spec.test.ts test/assembly-machine-workspace.spec.test.ts test/assembly-logic-workspace.spec.test.ts test/assembly-register-workspace.spec.test.ts test/assembly-syscall-workspace.spec.test.ts test/assembly-setup-workspace.spec.test.ts test/assembly-workspace.spec.test.ts test/assembly-calculator-workspace.spec.test.ts test/assembly-memory-workspace.spec.test.ts test/assembly-call-parser-workspace.spec.test.ts test/assembly-compiler-workspace.spec.test.ts test/assembly-debug-workspace.spec.test.ts test/assembly-performance-workspace.spec.test.ts test/assembly-hardening-workspace.spec.test.ts test/assembly-records-workspace.spec.test.ts test/assembly-arithmetic-workspace.spec.test.ts --no-file-parallelism --maxWorkers=1
 
             - name: Verify Assembly imports, saved source and ZIP exports
               env:
@@ -305,6 +305,13 @@ jobs:
                   COURSE_IMPORT_SCREENSHOT_DIR: output/playwright
                   ASSEMBLY_SYSCALL_BROWSER_EXPORT_PROOF_DIR: output/assembly-syscall-course
               run: node --test test/assembly-syscall-course-browser.test.mjs
+
+            - name: Verify Unit 10 and 11 actual follow-up actions reuse saved work
+              env:
+                  COURSE_IMPORT_SCREENSHOT_DIR: output/playwright
+              run: |
+                  node --test test/assembly-debug-followups-course-browser.test.mjs
+                  node --test test/assembly-performance-followups-course-browser.test.mjs
 
             - name: Verify Linux confirmed imports, notebook reuse and exact exports
               env:
@@ -417,6 +424,16 @@ jobs:
                   python3 test/assembly-memory-layout-optional-exported-contracts.py --cc clang --archives output/assembly-exports --proof output/assembly-memory-layout-optional-native/clang.json
                   python3 test/assembly-memory-layout-optional-exported-contracts.py --cc gcc --archives output/assembly-exports --proof output/assembly-memory-layout-optional-native/gcc.json
 
+            - name: Verify exported compiler investigations and saved observation worksheets
+              run: |
+                  python3 test/assembly-compiler-optional-exported-contracts.py --cc clang --archives output/assembly-exports --proof output/assembly-compiler-optional-native/clang.json
+                  python3 test/assembly-compiler-optional-exported-contracts.py --cc gcc --archives output/assembly-exports --proof output/assembly-compiler-optional-native/gcc.json
+
+            - name: Run the debugging and performance follow-up activities
+              run: |
+                  python3 test/assembly-followup-activities.py --cc clang --archives output/assembly-exports --proof output/assembly-followup-activities-native/clang/proof.json
+                  python3 test/assembly-followup-activities.py --cc gcc --archives output/assembly-exports --proof output/assembly-followup-activities-native/gcc/proof.json
+
             - name: Retain Assembly workflow and native validation
               if: always()
               uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
@@ -438,6 +455,8 @@ jobs:
                       output/assembly-exports/
                       output/assembly-record-course/
                       output/assembly-arithmetic-course/
+                      output/assembly-debug-followups-course/
+                      output/assembly-performance-followups-course/
                       output/assembly-setup-native/
                       output/assembly-syscall-native/
                       output/assembly-register-native/
@@ -447,6 +466,8 @@ jobs:
                       output/assembly-stack-optional-native/
                       output/assembly-abi-optional-native/
                       output/assembly-memory-layout-optional-native/
+                      output/assembly-compiler-optional-native/
+                      output/assembly-followup-activities-native/
                       output/assembly-syscall-course/
                   if-no-files-found: error
                   retention-days: 7

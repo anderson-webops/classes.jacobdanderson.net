@@ -60,6 +60,7 @@ fixtures.push(...JSON.parse(await readFile(new URL("./fixtures/assembly-control-
 fixtures.push(...JSON.parse(await readFile(new URL("./fixtures/assembly-stack-optional-contracts.json", import.meta.url), "utf8")));
 fixtures.push(...JSON.parse(await readFile(new URL("./fixtures/assembly-abi-optional-contracts.json", import.meta.url), "utf8")));
 fixtures.push(...JSON.parse(await readFile(new URL("./fixtures/assembly-memory-layout-optional-contracts.json", import.meta.url), "utf8")));
+fixtures.push(...JSON.parse(await readFile(new URL("./fixtures/assembly-compiler-optional-contracts.json", import.meta.url), "utf8")));
 const hardening = fixtures.find(
 	row =>
 		row.pack
@@ -72,6 +73,28 @@ fixtures.push({
 });
 let fixture = fixtures[0];
 const workflowDefinitions = {
+
+    "ASM-19-unit-9-reading-compiler-output-supplemental-2": {
+        "primary": "analysis.md",
+        "taskFile": "analysis.md",
+        "title": "Byte Promotions and Signed Comparisons",
+        "lesson": "assembly-unit-9-reading-compiler-output-assembly-unit-9-reading-compiler-output-supplemental-compiler-output-transfer-practice",
+        "moduleId": "assembly-unit-9-reading-compiler-output",
+        "compilerOptionalMode": "promotions",
+        "starterToken": "Both role programs already work",
+        "referenceToken": "Both role programs already work"
+    },
+    "ASM-20-unit-9-reading-compiler-output-supplemental-3": {
+        "primary": "analysis.md",
+        "taskFile": "analysis.md",
+        "title": "Pointer Aliasing and Reload Decisions",
+        "lesson": "assembly-unit-9-reading-compiler-output-assembly-unit-9-reading-compiler-output-supplemental-compiler-output-extension-practice",
+        "moduleId": "assembly-unit-9-reading-compiler-output",
+        "compilerOptionalMode": "aliasing",
+        "starterToken": "Both role programs already work",
+        "referenceToken": "Both role programs already work"
+    }
+,
 
     "ASM-15-unit-7-memory-addressing-and-data-structures-supplemental-2": {
         "primary": "routine.S",
@@ -373,7 +396,7 @@ const workflowDefinitions = {
 
 assert.equal(
 	fixtures.length,
-	33,
+	35,
 	"All twenty-one verified assignment workspaces require browser coverage"
 );
 assert.deepEqual(
@@ -461,8 +484,8 @@ async function verifyHardeningCourseButton(
 	);
 	await confirmProjectImport(page);
 	await page.waitForFunction(
-		(storage, projectKey) =>
-			JSON.parse(localStorage.getItem(storage) ?? "[]").some(
+		async (storage, projectKey) =>
+			(await window.__assemblySavedProjects(storage)).some(
 				p => p.courseProjectKey === projectKey
 			),
 		{},
@@ -470,15 +493,15 @@ async function verifyHardeningCourseButton(
 		key
 	);
 	const saved = await page.evaluate(
-		(storage, projectKey) =>
-			JSON.parse(localStorage.getItem(storage)).find(
+		async (storage, projectKey) =>
+			(await window.__assemblySavedProjects(storage)).find(
 				p => p.courseProjectKey === projectKey
 			),
 		storageKey,
 		key
 	);
 	assert.equal(saved.activeFileName, `starter/${definition.primary}`);
-	const expectedCount = (definition.memoryLayoutMode || definition.abiOptionalMode || definition.stackOptionalMode || definition.controlMode || definition.machineMode || definition.logicMode || definition.registerMode) ? 9 : definition.syscallMode ? 8 : definition.setupMode ? 7 : 10;
+	const expectedCount = definition.compilerOptionalMode ? 10 : (definition.compilerOptionalMode || definition.memoryLayoutMode || definition.abiOptionalMode || definition.stackOptionalMode || definition.controlMode || definition.machineMode || definition.logicMode || definition.registerMode) ? 9 : definition.syscallMode ? 8 : definition.setupMode ? 7 : 10;
 	assert.equal(saved.files.length, expectedCount);
 	assert.equal(sourceRequests(), expectedCount);
 	return {
@@ -534,6 +557,36 @@ test(
 				(key, existing) => {
 					if (localStorage.getItem(key) === null)
 						localStorage.setItem(key, JSON.stringify([existing]));
+					// IndexedDB is authoritative; the legacy mirror can fill up
+					// while this matrix retains every role and saved attempt.
+					window.__assemblySavedProjects = storage =>
+						new Promise((resolve, reject) => {
+							const opening = indexedDB.open("classes-python-ide", 1);
+							opening.onupgradeneeded = () => {
+								opening.transaction.abort();
+							};
+							opening.onerror = () => reject(opening.error);
+							opening.onsuccess = () => {
+								const database = opening.result;
+								const transaction = database.transaction(
+									"projectStores", "readonly"
+								);
+								const request = transaction
+									.objectStore("projectStores").get(storage);
+								let projects;
+								request.onsuccess = () => {
+									projects = request.result?.projects;
+								};
+								transaction.oncomplete = () => {
+									database.close();
+									resolve(Array.isArray(projects) ? projects : []);
+								};
+								transaction.onerror = transaction.onabort = () => {
+									database.close();
+									reject(transaction.error ?? new Error("Primary store read failed"));
+								};
+							};
+						});
 					const click = HTMLAnchorElement.prototype.click;
 					HTMLAnchorElement.prototype.click = function () {
 						if (
@@ -619,7 +672,7 @@ test(
 								width === 1280
 								&& theme === "light"
 								&& role === "starter"
-								&& (definition.memoryLayoutMode || definition.abiOptionalMode || definition.stackOptionalMode || definition.controlMode || definition.machineMode || definition.logicMode || definition.registerMode || definition.setupMode || definition.syscallMode
+								&& (definition.compilerOptionalMode || definition.memoryLayoutMode || definition.abiOptionalMode || definition.stackOptionalMode || definition.controlMode || definition.machineMode || definition.logicMode || definition.registerMode || definition.setupMode || definition.syscallMode
 									|| (fixture.pack.startsWith("ASM-2")
 										&& ["analysis.md", "trace.md"].includes(
 											primary
@@ -685,16 +738,15 @@ test(
 							);
 							await confirmProjectImport(page);
 							await page.waitForFunction(
-								(s, k) =>
-									JSON.parse(
-										localStorage.getItem(s) ?? "[]"
-									).some(p => p.courseProjectKey === k),
+								async (s, k) =>
+									(await window.__assemblySavedProjects(s))
+										.some(p => p.courseProjectKey === k),
 								{},
 								storageKey,
 								key
 							);
 							const projects = await page.evaluate(
-								s => JSON.parse(localStorage.getItem(s)),
+								s => window.__assemblySavedProjects(s),
 								storageKey
 							);
 							assert.deepEqual(
@@ -855,7 +907,9 @@ test(
 								file => file.name === name
 							).content;
 							const edit
-								= definition.memoryLayoutMode
+								= definition.compilerOptionalMode
+                                    ? `${original}\nSaved compiler observation: record the actual instructions and input types.\n`
+                                    : definition.memoryLayoutMode
                                     ? role === "starter"
                                         ? fixture.files[`${fixture.pack}/solution/routine.S`].content
                                         : definition.memoryLayoutMode === "table"
@@ -937,8 +991,8 @@ test(
 							await page.keyboard.press("s");
 							await page.keyboard.up(modifier);
 							await page.waitForFunction(
-								(s, k, n, c) =>
-									JSON.parse(localStorage.getItem(s))
+								async (s, k, n, c) =>
+									(await window.__assemblySavedProjects(s))
 										.find(p => p.courseProjectKey === k)
 										?.files
 										.some(
@@ -957,8 +1011,8 @@ test(
 								"button.run-control:not([disabled])"
 							);
 							const reloaded = await page.evaluate(
-								(s, k) =>
-									JSON.parse(localStorage.getItem(s)).find(
+								async (s, k) =>
+									(await window.__assemblySavedProjects(s)).find(
 										p => p.courseProjectKey === k
 									),
 								storageKey,
@@ -1006,7 +1060,7 @@ test(
 									file.content
 								);
 							}
-							if (definition.memoryLayoutMode || definition.abiOptionalMode || definition.stackOptionalMode || definition.controlMode || definition.machineMode || definition.logicMode || definition.registerMode || definition.setupMode || definition.syscallMode) {
+							if (definition.compilerOptionalMode || definition.memoryLayoutMode || definition.abiOptionalMode || definition.stackOptionalMode || definition.controlMode || definition.machineMode || definition.logicMode || definition.registerMode || definition.setupMode || definition.syscallMode) {
 								await writeFile(
 									join(
 										exports,
@@ -1066,7 +1120,7 @@ test(
 					expectedProfiles
 				}));
 			}
-			assert.equal(courseButtons.length, 20);
+			assert.equal(courseButtons.length, 22);
 			await writeFile(
 				join(captures, "assembly-course-buttons-proof.json"),
 				JSON.stringify(courseButtons, null, 2)
@@ -1075,6 +1129,43 @@ test(
 				proof.length,
 				expectedProfiles,
 				"Every pack, role, width and theme must complete"
+			);
+			const retained = await page.evaluate(
+				s => window.__assemblySavedProjects(s),
+				storageKey
+			);
+			const expectedKeys = new Set([
+				legacy.courseProjectKey,
+				...courseButtons.map(row => row.key),
+				...proof.map(row =>
+					`assembly:${row.pack}-${row.width}-${row.theme}:${row.role === "starter" ? "starter" : "reference"}:native-assembly`
+				)
+			]);
+			for (const key of expectedKeys) {
+				assert.equal(
+					retained.filter(project => project.courseProjectKey === key).length,
+					1,
+					`Primary storage retains exactly one saved attempt for ${key}`
+				);
+			}
+			assert.deepEqual(retained.find(project => project._id === legacy._id), legacy);
+			const mirror = await page.evaluate(
+				s => JSON.parse(localStorage.getItem(s) ?? "[]"),
+				storageKey
+			);
+			await writeFile(
+				join(captures, "assembly-primary-storage-proof.json"),
+				JSON.stringify({
+					primaryIndexedDbVerified: true,
+					expectedSavedAttempts: expectedKeys.size,
+					primaryProjectCount: retained.length,
+					primaryBytes: Buffer.byteLength(JSON.stringify(retained)),
+					legacyMirrorProjectCount: mirror.length,
+					legacyMirrorBytes: Buffer.byteLength(JSON.stringify(mirror)),
+					legacyMirrorBehind: mirror.length < retained.length,
+					allSavedAttemptsRetained: true,
+					legacyPreserved: true
+				}, null, 2)
 			);
 			await writeFile(
 				join(captures, "assembly-workflow-proof.json"),
@@ -1132,12 +1223,14 @@ test(
 					join(captures, "assembly-failure.json"),
 					JSON.stringify(
 						await page.evaluate(
-							s => ({
+							async s => ({
 								url: location.href,
 								body: (document.body.textContent ?? "").slice(
 									-7000
 								),
-								storage: localStorage.getItem(s)
+								storage: localStorage.getItem(s),
+								primaryKeys: (await window.__assemblySavedProjects(s))
+									.map(project => project.courseProjectKey)
 							}),
 							storageKey
 						),
