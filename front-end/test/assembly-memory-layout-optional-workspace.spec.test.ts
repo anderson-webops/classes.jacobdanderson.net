@@ -31,7 +31,7 @@ const fixtures = JSON.parse(
 ) as {
 	pack: string;
 	revision: string;
-	mode: string;
+	mode: "table" | "overlap";
 	moduleId: string;
 	itemId: string;
 	continuationItemId?: string;
@@ -43,6 +43,7 @@ afterEach(() => {
 });
 
 it("keeps distinct pointer-table and overlap-copy investigations optional with all published identities and the required string project intact", async () => {
+	expect(fixtures.map(fixture => fixture.mode)).toEqual(["table", "overlap"]);
 	setActivePinia(createPinia());
 	const app = useAppStore();
 	app.setCurrentTutor({
@@ -221,10 +222,16 @@ it.each(
 		])
 			expect(instructions).toContain(token);
 		expect(instructions).toContain(
-			fixture.mode === "registers"
-				? "ARGUMENT_REGISTER"
-				: "STACK_ARGUMENT"
+			fixture.mode === "table" ? "POINTER_LOOKUP" : "COPY_DIRECTION"
 		);
+		expect(instructions).not.toContain(
+			fixture.mode === "table" ? "COPY_DIRECTION" : "POINTER_LOOKUP"
+		);
+		expect(instructions).not.toMatch(/ARGUMENT_REGISTER|STACK_ARGUMENT/);
+		for (const observation of fixture.mode === "table"
+			? ["lab_lookup", "eight-byte pointer slot", "sixteen-byte C record"]
+			: ["lab_ready", "all sixteen original bytes", "clamped count"])
+			expect(instructions).toContain(observation);
 		expect(
 			assemblyBuildInstructions(
 				files.filter(file => file.name !== role + "/abi_checks.S"),
