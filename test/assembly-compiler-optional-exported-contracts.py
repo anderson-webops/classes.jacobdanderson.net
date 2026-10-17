@@ -118,7 +118,8 @@ with tempfile.TemporaryDirectory(prefix="assembly-compiler-optional-export-") as
     assert sum(row["kind"] == "sanitized" for row in receipt["profiles"]) == 2
     assert sum(row["kind"] == "wrong-contract" for row in receipt["profiles"]) == 2
     assert receipt["everyRestrictedCallUsesDistinctModifiedObjects"] and receipt["undefinedAliasCallsNeverExecuted"]
-    receipt.update(sourceRevision=verifier["revision"], exactBrowserSourceFiles=38, actualSavedEditProfiles=edited_profiles, editedArchivesCompared=16, temporarySourceCleanup=True)
+    assert len(export_hashes) == 38
+    receipt.update(sourceRevision=verifier["revision"], exactBrowserSourceFiles=len(export_hashes), actualSavedEditProfiles=edited_profiles, editedArchivesCompared=16, temporarySourceCleanup=True)
 assert not root.exists()
 args.proof.write_text(json.dumps(receipt, indent=2) + "\n")
-print(json.dumps({"compiler": args.cc, "exactBrowserSourceFiles": 34, "editedArchivesCompared": 16, "actualSavedEditProfiles": 4, "nativeOrdinaryProfiles": 8, "controlledContractRegressions": 2}))
+print(json.dumps({"compiler": args.cc, "exactBrowserSourceFiles": receipt["exactBrowserSourceFiles"], "editedArchivesCompared": 16, "actualSavedEditProfiles": 4, "nativeOrdinaryProfiles": 8, "controlledContractRegressions": 2}))

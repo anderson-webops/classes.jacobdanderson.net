@@ -484,8 +484,8 @@ async function verifyHardeningCourseButton(
 	);
 	await confirmProjectImport(page);
 	await page.waitForFunction(
-		(storage, projectKey) =>
-			JSON.parse(localStorage.getItem(storage) ?? "[]").some(
+		async (storage, projectKey) =>
+			(await window.__assemblySavedProjects(storage)).some(
 				p => p.courseProjectKey === projectKey
 			),
 		{},
@@ -493,8 +493,8 @@ async function verifyHardeningCourseButton(
 		key
 	);
 	const saved = await page.evaluate(
-		(storage, projectKey) =>
-			JSON.parse(localStorage.getItem(storage)).find(
+		async (storage, projectKey) =>
+			(await window.__assemblySavedProjects(storage)).find(
 				p => p.courseProjectKey === projectKey
 			),
 		storageKey,
@@ -557,6 +557,36 @@ test(
 				(key, existing) => {
 					if (localStorage.getItem(key) === null)
 						localStorage.setItem(key, JSON.stringify([existing]));
+					// IndexedDB is authoritative; the legacy mirror can fill up
+					// while this matrix retains every role and saved attempt.
+					window.__assemblySavedProjects = storage =>
+						new Promise((resolve, reject) => {
+							const opening = indexedDB.open("classes-python-ide", 1);
+							opening.onupgradeneeded = () => {
+								opening.transaction.abort();
+							};
+							opening.onerror = () => reject(opening.error);
+							opening.onsuccess = () => {
+								const database = opening.result;
+								const transaction = database.transaction(
+									"projectStores", "readonly"
+								);
+								const request = transaction
+									.objectStore("projectStores").get(storage);
+								let projects;
+								request.onsuccess = () => {
+									projects = request.result?.projects;
+								};
+								transaction.oncomplete = () => {
+									database.close();
+									resolve(Array.isArray(projects) ? projects : []);
+								};
+								transaction.onerror = transaction.onabort = () => {
+									database.close();
+									reject(transaction.error ?? new Error("Primary store read failed"));
+								};
+							};
+						});
 					const click = HTMLAnchorElement.prototype.click;
 					HTMLAnchorElement.prototype.click = function () {
 						if (
@@ -708,16 +738,15 @@ test(
 							);
 							await confirmProjectImport(page);
 							await page.waitForFunction(
-								(s, k) =>
-									JSON.parse(
-										localStorage.getItem(s) ?? "[]"
-									).some(p => p.courseProjectKey === k),
+								async (s, k) =>
+									(await window.__assemblySavedProjects(s))
+										.some(p => p.courseProjectKey === k),
 								{},
 								storageKey,
 								key
 							);
 							const projects = await page.evaluate(
-								s => JSON.parse(localStorage.getItem(s)),
+								s => window.__assemblySavedProjects(s),
 								storageKey
 							);
 							assert.deepEqual(
@@ -962,8 +991,8 @@ test(
 							await page.keyboard.press("s");
 							await page.keyboard.up(modifier);
 							await page.waitForFunction(
-								(s, k, n, c) =>
-									JSON.parse(localStorage.getItem(s))
+								async (s, k, n, c) =>
+									(await window.__assemblySavedProjects(s))
 										.find(p => p.courseProjectKey === k)
 										?.files
 										.some(
@@ -982,8 +1011,8 @@ test(
 								"button.run-control:not([disabled])"
 							);
 							const reloaded = await page.evaluate(
-								(s, k) =>
-									JSON.parse(localStorage.getItem(s)).find(
+								async (s, k) =>
+									(await window.__assemblySavedProjects(s)).find(
 										p => p.courseProjectKey === k
 									),
 								storageKey,
@@ -1101,6 +1130,43 @@ test(
 				expectedProfiles,
 				"Every pack, role, width and theme must complete"
 			);
+			const retained = await page.evaluate(
+				s => window.__assemblySavedProjects(s),
+				storageKey
+			);
+			const expectedKeys = new Set([
+				legacy.courseProjectKey,
+				...courseButtons.map(row => row.key),
+				...proof.map(row =>
+					`assembly:${row.pack}-${row.width}-${row.theme}:${row.role === "starter" ? "starter" : "reference"}:native-assembly`
+				)
+			]);
+			for (const key of expectedKeys) {
+				assert.equal(
+					retained.filter(project => project.courseProjectKey === key).length,
+					1,
+					`Primary storage retains exactly one saved attempt for ${key}`
+				);
+			}
+			assert.deepEqual(retained.find(project => project._id === legacy._id), legacy);
+			const mirror = await page.evaluate(
+				s => JSON.parse(localStorage.getItem(s) ?? "[]"),
+				storageKey
+			);
+			await writeFile(
+				join(captures, "assembly-primary-storage-proof.json"),
+				JSON.stringify({
+					primaryIndexedDbVerified: true,
+					expectedSavedAttempts: expectedKeys.size,
+					primaryProjectCount: retained.length,
+					primaryBytes: Buffer.byteLength(JSON.stringify(retained)),
+					legacyMirrorProjectCount: mirror.length,
+					legacyMirrorBytes: Buffer.byteLength(JSON.stringify(mirror)),
+					legacyMirrorBehind: mirror.length < retained.length,
+					allSavedAttemptsRetained: true,
+					legacyPreserved: true
+				}, null, 2)
+			);
 			await writeFile(
 				join(captures, "assembly-workflow-proof.json"),
 				`${JSON.stringify(proof, null, 2)}\n`
@@ -1157,12 +1223,14 @@ test(
 					join(captures, "assembly-failure.json"),
 					JSON.stringify(
 						await page.evaluate(
-							s => ({
+							async s => ({
 								url: location.href,
 								body: (document.body.textContent ?? "").slice(
 									-7000
 								),
-								storage: localStorage.getItem(s)
+								storage: localStorage.getItem(s),
+								primaryKeys: (await window.__assemblySavedProjects(s))
+									.map(project => project.courseProjectKey)
 							}),
 							storageKey
 						),
