@@ -17,7 +17,7 @@ jobs:
     timeout-minutes: 40
     env:
       CLASSES_FAMILY_TASK_ID: pygames-core-preflight-${{ github.run_id }}
-      COURSE_CATALOG_PROOF_DIR: output/pygames-core-preflight/catalog
+      COURSE_CATALOG_PROOF_DIR: ${{ github.workspace }}/output/pygames-core-preflight/catalog
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
@@ -52,5 +52,5 @@ jobs:
         with:
           name: pygames-core-preflight
           path: output/pygames-core-preflight
-          if-no-files-found: warn
+          if-no-files-found: error
           retention-days: 14
