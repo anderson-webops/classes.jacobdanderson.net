@@ -210,7 +210,103 @@ export const assemblyMachinePacks = [
 	}
 ] as const;
 
+export const assemblyControlPacks = [
+	{
+		pack: "ASM-09-unit-4-branching-and-loops-supplemental-2",
+		revision: "610827243f0b8369cd5dd59bcfa029966dd24aac",
+		roleFiles: [
+			"routine.S",
+			"main.c",
+			"lab.h",
+			"model.c",
+			"tests.c",
+			"abi_checks.S",
+			"CMakeLists.txt",
+			"trace.md"
+		]
+	},
+	{
+		pack: "ASM-10-unit-4-branching-and-loops-supplemental-3",
+		revision: "610827243f0b8369cd5dd59bcfa029966dd24aac",
+		roleFiles: [
+			"routine.S",
+			"main.c",
+			"lab.h",
+			"model.c",
+			"tests.c",
+			"abi_checks.S",
+			"CMakeLists.txt",
+			"trace.md"
+		]
+	}
+] as const;
+
+export const assemblyStackOptionalPacks = [
+	{
+		pack: "ASM-11-unit-5-the-stack-and-function-calls-supplemental-2",
+		revision: "ad7243e4c7577630ec04ce50b03661924d2adfef",
+		roleFiles: [
+			"routine.S",
+			"main.c",
+			"lab.h",
+			"model.c",
+			"tests.c",
+			"abi_checks.S",
+			"CMakeLists.txt",
+			"trace.md"
+		]
+	},
+	{
+		pack: "ASM-12-unit-5-the-stack-and-function-calls-supplemental-3",
+		revision: "ad7243e4c7577630ec04ce50b03661924d2adfef",
+		roleFiles: [
+			"routine.S",
+			"main.c",
+			"lab.h",
+			"model.c",
+			"tests.c",
+			"abi_checks.S",
+			"CMakeLists.txt",
+			"trace.md"
+		]
+	}
+] as const;
+
+export const assemblyAbiOptionalPacks = [
+	{
+		pack: "ASM-13-unit-6-calling-conventions-and-abi-supplemental-2",
+		revision: "b398a79fd3f3ed025540ac2eff178cc7dc697c4a",
+		roleFiles: [
+			"routine.S",
+			"main.c",
+			"lab.h",
+			"model.c",
+			"tests.c",
+			"abi_checks.S",
+			"CMakeLists.txt",
+			"trace.md"
+		]
+	},
+	{
+		pack: "ASM-14-unit-6-calling-conventions-and-abi-supplemental-3",
+		revision: "b398a79fd3f3ed025540ac2eff178cc7dc697c4a",
+		roleFiles: [
+			"routine.S",
+			"main.c",
+			"lab.h",
+			"model.c",
+			"tests.c",
+			"abi_checks.S",
+			"CMakeLists.txt",
+			"trace.md"
+		]
+	}
+] as const;
+
 export const assemblyVerifiedPacks = [
+	...assemblyAbiOptionalPacks,
+	...assemblyStackOptionalPacks,
+	...assemblyControlPacks,
 	...assemblyMachinePacks,
 	...assemblyLogicPacks,
 	...assemblyRegisterPacks,

@@ -2,6 +2,10 @@ import type { RawCourse } from "./types";
 import setupPreprocessReading from "../../assets/course-guides/assembly-setup-preprocess.md?raw";
 import setupSymbolsReading from "../../assets/course-guides/assembly-setup-symbols.md?raw";
 import {
+	assemblySeventhArgumentReading,
+	assemblySixArgumentReading
+} from "./assemblyAbiOptionalProjectReading";
+import {
 	assemblyArithmeticConceptReading,
 	assemblyArithmeticProjectReading,
 	assemblyArithmeticTraceReading
@@ -9,6 +13,10 @@ import {
 import { assemblyArrayProjectReading } from "./assemblyArrayProjectReading";
 import { assemblyCalculatorProjectReading } from "./assemblyCalculatorProjectReading";
 import { assemblyCompilerProjectReading } from "./assemblyCompilerProjectReading";
+import {
+	assemblyDispatchReading,
+	assemblyLoopReading
+} from "./assemblyControlProjectReading";
 import { assemblyDebugProjectReading } from "./assemblyDebugProjectReading";
 import {
 	assemblyHardeningProjectReading,
@@ -36,6 +44,10 @@ import {
 	assemblyWideningReading
 } from "./assemblyRegisterProjectReading";
 import { assemblyReverseProjectReading } from "./assemblyReverseProjectReading";
+import {
+	assemblyCallerFrameReading,
+	assemblyLifoReading
+} from "./assemblyStackOptionalProjectReading";
 import { assemblyStackProjectReading } from "./assemblyStackProjectReading";
 import { assemblyStringProjectReading } from "./assemblyStringProjectReading";
 import {
@@ -334,30 +346,28 @@ const assemblySourceCourse: RawCourse = {
 						"https://github.com/instruction-material/Assembly/blob/4e82e4d5f02067a830f92c19e148d0822220ffe9/ASM2-Array-Sum-and-Search/README.md"
 				},
 				{
-					title: "Branch Trace Transfer Practice",
-					content: buildProjectGuidance({
-						courseFamily: "assembly",
-						moduleTitle: "Unit 4: Branching and Loops",
-						projectKind: "extension",
-						hasReference: true
-					}),
+					title: "Switch Dispatch and Fall-Through Investigation",
+					id: "assembly-unit-4-branching-and-loops-supplemental-branch-trace-transfer-practice",
+					learningPath: "choice",
+					preserveInstructions: true,
+					ideImport: true,
+					content: assemblyDispatchReading,
 					projectLink:
-						"https://github.com/instruction-material/Assembly/tree/main/ASM-09-unit-4-branching-and-loops-supplemental-2/starter",
+						"https://github.com/instruction-material/Assembly/tree/610827243f0b8369cd5dd59bcfa029966dd24aac/ASM-09-unit-4-branching-and-loops-supplemental-2/starter",
 					solutionLink:
-						"https://github.com/instruction-material/Assembly/tree/main/ASM-09-unit-4-branching-and-loops-supplemental-2/solution"
+						"https://github.com/instruction-material/Assembly/tree/610827243f0b8369cd5dd59bcfa029966dd24aac/ASM-09-unit-4-branching-and-loops-supplemental-2/solution"
 				},
 				{
-					title: "Branch Trace Extension Practice",
-					content: buildProjectGuidance({
-						courseFamily: "assembly",
-						moduleTitle: "Unit 4: Branching and Loops",
-						projectKind: "extension",
-						hasReference: true
-					}),
+					title: "Loop Exit Boundary and Invariant Investigation",
+					id: "assembly-unit-4-branching-and-loops-supplemental-branch-trace-extension-practice",
+					learningPath: "challenge",
+					preserveInstructions: true,
+					ideImport: true,
+					content: assemblyLoopReading,
 					projectLink:
-						"https://github.com/instruction-material/Assembly/tree/main/ASM-10-unit-4-branching-and-loops-supplemental-3/starter",
+						"https://github.com/instruction-material/Assembly/tree/610827243f0b8369cd5dd59bcfa029966dd24aac/ASM-10-unit-4-branching-and-loops-supplemental-3/starter",
 					solutionLink:
-						"https://github.com/instruction-material/Assembly/tree/main/ASM-10-unit-4-branching-and-loops-supplemental-3/solution"
+						"https://github.com/instruction-material/Assembly/tree/610827243f0b8369cd5dd59bcfa029966dd24aac/ASM-10-unit-4-branching-and-loops-supplemental-3/solution"
 				}
 			]
 		},
@@ -404,30 +414,28 @@ const assemblySourceCourse: RawCourse = {
 						"https://github.com/instruction-material/Assembly/blob/005e375894ade846a1077e96d4880faea680aed8/ASM-07-unit-5-the-stack-and-function-calls/README.md"
 				},
 				{
-					title: "Stack Frame Transfer Practice",
-					content: buildProjectGuidance({
-						courseFamily: "assembly",
-						moduleTitle: "Unit 5: The Stack and Function Calls",
-						projectKind: "extension",
-						hasReference: true
-					}),
+					title: "LIFO Value Order and Stack Restoration",
+					id: "assembly-unit-5-the-stack-and-function-calls-supplemental-stack-frame-transfer-practice",
+					learningPath: "choice",
+					preserveInstructions: true,
+					ideImport: true,
+					content: assemblyLifoReading,
 					projectLink:
-						"https://github.com/instruction-material/Assembly/tree/main/ASM-11-unit-5-the-stack-and-function-calls-supplemental-2/starter",
+						"https://github.com/instruction-material/Assembly/tree/ad7243e4c7577630ec04ce50b03661924d2adfef/ASM-11-unit-5-the-stack-and-function-calls-supplemental-2/starter",
 					solutionLink:
-						"https://github.com/instruction-material/Assembly/tree/main/ASM-11-unit-5-the-stack-and-function-calls-supplemental-2/solution"
+						"https://github.com/instruction-material/Assembly/tree/ad7243e4c7577630ec04ce50b03661924d2adfef/ASM-11-unit-5-the-stack-and-function-calls-supplemental-2/solution"
 				},
 				{
-					title: "Stack Frame Extension Practice",
-					content: buildProjectGuidance({
-						courseFamily: "assembly",
-						moduleTitle: "Unit 5: The Stack and Function Calls",
-						projectKind: "extension",
-						hasReference: true
-					}),
+					title: "Caller-Owned Locals Across a Nested Call",
+					id: "assembly-unit-5-the-stack-and-function-calls-supplemental-stack-frame-extension-practice",
+					learningPath: "challenge",
+					preserveInstructions: true,
+					ideImport: true,
+					content: assemblyCallerFrameReading,
 					projectLink:
-						"https://github.com/instruction-material/Assembly/tree/main/ASM-12-unit-5-the-stack-and-function-calls-supplemental-3/starter",
+						"https://github.com/instruction-material/Assembly/tree/ad7243e4c7577630ec04ce50b03661924d2adfef/ASM-12-unit-5-the-stack-and-function-calls-supplemental-3/starter",
 					solutionLink:
-						"https://github.com/instruction-material/Assembly/tree/main/ASM-12-unit-5-the-stack-and-function-calls-supplemental-3/solution"
+						"https://github.com/instruction-material/Assembly/tree/ad7243e4c7577630ec04ce50b03661924d2adfef/ASM-12-unit-5-the-stack-and-function-calls-supplemental-3/solution"
 				}
 			]
 		},
@@ -469,30 +477,28 @@ const assemblySourceCourse: RawCourse = {
 						"https://github.com/instruction-material/Assembly/blob/4519a6ecbdb0dc6e932932a8af50a24f2449c8ef/ASM4-Call-C-Helper-from-Assembly/README.md"
 				},
 				{
-					title: "Calling Convention Transfer Practice",
-					content: buildProjectGuidance({
-						courseFamily: "assembly",
-						moduleTitle: "Unit 6: Calling Conventions and ABI",
-						projectKind: "extension",
-						hasReference: true
-					}),
+					title: "Six Integer Argument Registers",
+					id: "assembly-unit-6-calling-conventions-and-abi-supplemental-calling-convention-transfer-practice",
+					learningPath: "choice",
+					preserveInstructions: true,
+					ideImport: true,
+					content: assemblySixArgumentReading,
 					projectLink:
-						"https://github.com/instruction-material/Assembly/tree/main/ASM-13-unit-6-calling-conventions-and-abi-supplemental-2/starter",
+						"https://github.com/instruction-material/Assembly/tree/b398a79fd3f3ed025540ac2eff178cc7dc697c4a/ASM-13-unit-6-calling-conventions-and-abi-supplemental-2/starter",
 					solutionLink:
-						"https://github.com/instruction-material/Assembly/tree/main/ASM-13-unit-6-calling-conventions-and-abi-supplemental-2/solution"
+						"https://github.com/instruction-material/Assembly/tree/b398a79fd3f3ed025540ac2eff178cc7dc697c4a/ASM-13-unit-6-calling-conventions-and-abi-supplemental-2/solution"
 				},
 				{
-					title: "Calling Convention Extension Practice",
-					content: buildProjectGuidance({
-						courseFamily: "assembly",
-						moduleTitle: "Unit 6: Calling Conventions and ABI",
-						projectKind: "extension",
-						hasReference: true
-					}),
+					title: "Seventh Integer Argument and Stack Location",
+					id: "assembly-unit-6-calling-conventions-and-abi-supplemental-calling-convention-extension-practice",
+					learningPath: "challenge",
+					preserveInstructions: true,
+					ideImport: true,
+					content: assemblySeventhArgumentReading,
 					projectLink:
-						"https://github.com/instruction-material/Assembly/tree/main/ASM-14-unit-6-calling-conventions-and-abi-supplemental-3/starter",
+						"https://github.com/instruction-material/Assembly/tree/b398a79fd3f3ed025540ac2eff178cc7dc697c4a/ASM-14-unit-6-calling-conventions-and-abi-supplemental-3/starter",
 					solutionLink:
-						"https://github.com/instruction-material/Assembly/tree/main/ASM-14-unit-6-calling-conventions-and-abi-supplemental-3/solution"
+						"https://github.com/instruction-material/Assembly/tree/b398a79fd3f3ed025540ac2eff178cc7dc697c4a/ASM-14-unit-6-calling-conventions-and-abi-supplemental-3/solution"
 				}
 			]
 		},

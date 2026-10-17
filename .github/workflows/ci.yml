@@ -280,7 +280,7 @@ jobs:
               run: sudo apt-get update && sudo apt-get install -y gdb binutils strace
 
             - name: Export Assembly default and pack workspaces
-              run: ASSEMBLY_EXPORT_PROOF_DIR="$GITHUB_WORKSPACE/output/assembly-exports" npm exec -w front-end -- vitest run test/assembly-machine-workspace.spec.test.ts test/assembly-logic-workspace.spec.test.ts test/assembly-register-workspace.spec.test.ts test/assembly-syscall-workspace.spec.test.ts test/assembly-setup-workspace.spec.test.ts test/assembly-workspace.spec.test.ts test/assembly-calculator-workspace.spec.test.ts test/assembly-memory-workspace.spec.test.ts test/assembly-call-parser-workspace.spec.test.ts test/assembly-compiler-workspace.spec.test.ts test/assembly-debug-workspace.spec.test.ts test/assembly-performance-workspace.spec.test.ts test/assembly-hardening-workspace.spec.test.ts test/assembly-records-workspace.spec.test.ts test/assembly-arithmetic-workspace.spec.test.ts --no-file-parallelism --maxWorkers=1
+              run: ASSEMBLY_EXPORT_PROOF_DIR="$GITHUB_WORKSPACE/output/assembly-exports" npm exec -w front-end -- vitest run test/assembly-abi-optional-workspace.spec.test.ts test/assembly-stack-optional-workspace.spec.test.ts test/assembly-control-workspace.spec.test.ts test/assembly-machine-workspace.spec.test.ts test/assembly-logic-workspace.spec.test.ts test/assembly-register-workspace.spec.test.ts test/assembly-syscall-workspace.spec.test.ts test/assembly-setup-workspace.spec.test.ts test/assembly-workspace.spec.test.ts test/assembly-calculator-workspace.spec.test.ts test/assembly-memory-workspace.spec.test.ts test/assembly-call-parser-workspace.spec.test.ts test/assembly-compiler-workspace.spec.test.ts test/assembly-debug-workspace.spec.test.ts test/assembly-performance-workspace.spec.test.ts test/assembly-hardening-workspace.spec.test.ts test/assembly-records-workspace.spec.test.ts test/assembly-arithmetic-workspace.spec.test.ts --no-file-parallelism --maxWorkers=1
 
             - name: Verify Assembly imports, saved source and ZIP exports
               env:
@@ -397,6 +397,21 @@ jobs:
                   python3 test/assembly-machine-exported-contracts.py --cc clang --archives output/assembly-exports --proof output/assembly-machine-native/clang.json
                   python3 test/assembly-machine-exported-contracts.py --cc gcc --archives output/assembly-exports --proof output/assembly-machine-native/gcc.json
 
+            - name: Verify actual exported dispatch and loop builds and observations
+              run: |
+                  python3 test/assembly-control-exported-contracts.py --cc clang --archives output/assembly-exports --proof output/assembly-control-native/clang.json
+                  python3 test/assembly-control-exported-contracts.py --cc gcc --archives output/assembly-exports --proof output/assembly-control-native/gcc.json
+
+            - name: Verify actual exported LIFO and caller-frame builds and observations
+              run: |
+                  python3 test/assembly-stack-optional-exported-contracts.py --cc clang --archives output/assembly-exports --proof output/assembly-stack-optional-native/clang.json
+                  python3 test/assembly-stack-optional-exported-contracts.py --cc gcc --archives output/assembly-exports --proof output/assembly-stack-optional-native/gcc.json
+
+            - name: Verify actual exported ABI argument builds and call observations
+              run: |
+                  python3 test/assembly-abi-optional-exported-contracts.py --cc clang --archives output/assembly-exports --proof output/assembly-abi-optional-native/clang.json
+                  python3 test/assembly-abi-optional-exported-contracts.py --cc gcc --archives output/assembly-exports --proof output/assembly-abi-optional-native/gcc.json
+
             - name: Retain Assembly workflow and native validation
               if: always()
               uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
@@ -423,6 +438,9 @@ jobs:
                       output/assembly-register-native/
                       output/assembly-logic-native/
                       output/assembly-machine-native/
+                      output/assembly-control-native/
+                      output/assembly-stack-optional-native/
+                      output/assembly-abi-optional-native/
                       output/assembly-syscall-course/
                   if-no-files-found: error
                   retention-days: 7

@@ -9805,6 +9805,22 @@ describe("course text quality normalization", () => {
 		expect(corpus).toContain("Effective Address Calculation Investigation");
 		expect(corpus).toContain("MEMORY_SPAN");
 		expect(corpus).toContain("ADDRESS_SCALE");
+		expect(corpus).toContain(
+			"Switch Dispatch and Fall-Through Investigation"
+		);
+		expect(corpus).toContain(
+			"Loop Exit Boundary and Invariant Investigation"
+		);
+		expect(corpus).toContain("DISPATCH_JOIN");
+		expect(corpus).toContain("LOOP_EXIT");
+		expect(corpus).toContain("LIFO Value Order and Stack Restoration");
+		expect(corpus).toContain("Caller-Owned Locals Across a Nested Call");
+		expect(corpus).toContain("LIFO_POP");
+		expect(corpus).toContain("LOCAL_RELOAD");
+		expect(corpus).toContain("Six Integer Argument Registers");
+		expect(corpus).toContain("Seventh Integer Argument and Stack Location");
+		expect(corpus).toContain("ARGUMENT_REGISTER");
+		expect(corpus).toContain("STACK_ARGUMENT");
 		expect(corpus).toContain("Assembly Lab 15: Stack Trace Studio");
 		expect(corpus).toContain("Assembly Lab 16: ABI Integration Studio");
 		expect(corpus).toContain("Assembly Lab 17: Reverse Trace Studio");

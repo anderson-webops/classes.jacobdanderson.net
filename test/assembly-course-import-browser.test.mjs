@@ -56,6 +56,9 @@ fixtures.push(...JSON.parse(await readFile(new URL("./fixtures/assembly-syscall-
 fixtures.push(...JSON.parse(await readFile(new URL("./fixtures/assembly-register-contracts.json", import.meta.url), "utf8")));
 fixtures.push(...JSON.parse(await readFile(new URL("./fixtures/assembly-logic-contracts.json", import.meta.url), "utf8")));
 fixtures.push(...JSON.parse(await readFile(new URL("./fixtures/assembly-machine-contracts.json", import.meta.url), "utf8")));
+fixtures.push(...JSON.parse(await readFile(new URL("./fixtures/assembly-control-contracts.json", import.meta.url), "utf8")));
+fixtures.push(...JSON.parse(await readFile(new URL("./fixtures/assembly-stack-optional-contracts.json", import.meta.url), "utf8")));
+fixtures.push(...JSON.parse(await readFile(new URL("./fixtures/assembly-abi-optional-contracts.json", import.meta.url), "utf8")));
 const hardening = fixtures.find(
 	row =>
 		row.pack
@@ -68,6 +71,72 @@ fixtures.push({
 });
 let fixture = fixtures[0];
 const workflowDefinitions = {
+
+    "ASM-13-unit-6-calling-conventions-and-abi-supplemental-2": {
+        "primary": "routine.S",
+        "taskFile": "routine.S",
+        "title": "Six Integer Argument Registers",
+        "lesson": "assembly-unit-6-calling-conventions-and-abi-assembly-unit-6-calling-conventions-and-abi-supplemental-calling-convention-transfer-practice",
+        "moduleId": "assembly-unit-6-calling-conventions-and-abi",
+        "abiOptionalMode": "registers",
+        "starterToken": "ARGUMENT_REGISTER",
+        "referenceToken": "separate reference passes"
+    },
+    "ASM-14-unit-6-calling-conventions-and-abi-supplemental-3": {
+        "primary": "routine.S",
+        "taskFile": "routine.S",
+        "title": "Seventh Integer Argument and Stack Location",
+        "lesson": "assembly-unit-6-calling-conventions-and-abi-assembly-unit-6-calling-conventions-and-abi-supplemental-calling-convention-extension-practice",
+        "moduleId": "assembly-unit-6-calling-conventions-and-abi",
+        "abiOptionalMode": "stack",
+        "starterToken": "STACK_ARGUMENT",
+        "referenceToken": "separate reference passes"
+    }
+,
+
+    "ASM-11-unit-5-the-stack-and-function-calls-supplemental-2": {
+        "primary": "routine.S",
+        "taskFile": "routine.S",
+        "title": "LIFO Value Order and Stack Restoration",
+        "lesson": "assembly-unit-5-the-stack-and-function-calls-assembly-unit-5-the-stack-and-function-calls-supplemental-stack-frame-transfer-practice",
+        "moduleId": "assembly-unit-5-the-stack-and-function-calls",
+        "stackOptionalMode": "lifo",
+        "starterToken": "LIFO_POP",
+        "referenceToken": "separate reference passes"
+    },
+    "ASM-12-unit-5-the-stack-and-function-calls-supplemental-3": {
+        "primary": "routine.S",
+        "taskFile": "routine.S",
+        "title": "Caller-Owned Locals Across a Nested Call",
+        "lesson": "assembly-unit-5-the-stack-and-function-calls-assembly-unit-5-the-stack-and-function-calls-supplemental-stack-frame-extension-practice",
+        "moduleId": "assembly-unit-5-the-stack-and-function-calls",
+        "stackOptionalMode": "frame",
+        "starterToken": "LOCAL_RELOAD",
+        "referenceToken": "separate reference passes"
+    }
+,
+
+    "ASM-09-unit-4-branching-and-loops-supplemental-2": {
+        "primary": "routine.S",
+        "taskFile": "routine.S",
+        "title": "Switch Dispatch and Fall-Through Investigation",
+        "lesson": "assembly-unit-4-branching-and-loops-assembly-unit-4-branching-and-loops-supplemental-branch-trace-transfer-practice",
+        "moduleId": "assembly-unit-4-branching-and-loops",
+        "controlMode": "dispatch",
+        "starterToken": "DISPATCH_JOIN",
+        "referenceToken": "separate reference passes"
+    },
+    "ASM-10-unit-4-branching-and-loops-supplemental-3": {
+        "primary": "routine.S",
+        "taskFile": "routine.S",
+        "title": "Loop Exit Boundary and Invariant Investigation",
+        "lesson": "assembly-unit-4-branching-and-loops-assembly-unit-4-branching-and-loops-supplemental-branch-trace-extension-practice",
+        "moduleId": "assembly-unit-4-branching-and-loops",
+        "controlMode": "loop",
+        "starterToken": "LOOP_EXIT",
+        "referenceToken": "separate reference passes"
+    }
+,
 
     "ASM-03-unit-1-machine-model-and-toolchain-supplemental-2": {
         "primary": "routine.S",
@@ -281,7 +350,7 @@ const workflowDefinitions = {
 
 assert.equal(
 	fixtures.length,
-	25,
+	31,
 	"All twenty-one verified assignment workspaces require browser coverage"
 );
 assert.deepEqual(
@@ -386,7 +455,7 @@ async function verifyHardeningCourseButton(
 		key
 	);
 	assert.equal(saved.activeFileName, `starter/${definition.primary}`);
-	const expectedCount = (definition.machineMode || definition.logicMode || definition.registerMode) ? 9 : definition.syscallMode ? 8 : definition.setupMode ? 7 : 10;
+	const expectedCount = (definition.abiOptionalMode || definition.stackOptionalMode || definition.controlMode || definition.machineMode || definition.logicMode || definition.registerMode) ? 9 : definition.syscallMode ? 8 : definition.setupMode ? 7 : 10;
 	assert.equal(saved.files.length, expectedCount);
 	assert.equal(sourceRequests(), expectedCount);
 	return {
@@ -527,7 +596,7 @@ test(
 								width === 1280
 								&& theme === "light"
 								&& role === "starter"
-								&& (definition.machineMode || definition.logicMode || definition.registerMode || definition.setupMode || definition.syscallMode
+								&& (definition.abiOptionalMode || definition.stackOptionalMode || definition.controlMode || definition.machineMode || definition.logicMode || definition.registerMode || definition.setupMode || definition.syscallMode
 									|| (fixture.pack.startsWith("ASM-2")
 										&& ["analysis.md", "trace.md"].includes(
 											primary
@@ -763,7 +832,25 @@ test(
 								file => file.name === name
 							).content;
 							const edit
-								= definition.machineMode
+								= definition.abiOptionalMode
+                                    ? role === "starter"
+                                        ? fixture.files[`${fixture.pack}/solution/routine.S`].content
+                                        : definition.abiOptionalMode === "registers"
+                                            ? original.replace("    imul r10, r9, 13\n", "    imul r10, r8, 13\n")
+                                            : original.replace("    imul r11, r11, 17\n", "    imul r11, r11, 19\n")
+                                    : definition.stackOptionalMode
+                                    ? role === "starter"
+                                        ? fixture.files[`${fixture.pack}/solution/routine.S`].content
+                                        : definition.stackOptionalMode === "lifo"
+                                            ? original.replace("    push rdi # save initial first\n", "    push rsi # wrong first saved value\n")
+                                            : original.replace("    mov r9, QWORD PTR [rsp + 8] # saved incoming\n", "    mov r9, QWORD PTR [rsp + 0] # wrong incoming slot\n")
+                                    : definition.controlMode
+                                    ? role === "starter"
+                                        ? fixture.files[`${fixture.pack}/solution/routine.S`].content
+                                        : definition.controlMode === "dispatch"
+                                            ? original.replace("    jmp lab_join # selected-case exit\n", "    jmp lab_case0 # wrong selected-case exit\n")
+                                            : original.replace("    add rax, rsi\n", "    sub rax, rsi\n")
+                                    : definition.machineMode
                                     ? role === "starter"
                                         ? fixture.files[`${fixture.pack}/solution/routine.S`].content
                                         : definition.machineMode === "memory"
@@ -890,7 +977,7 @@ test(
 									file.content
 								);
 							}
-							if (definition.machineMode || definition.logicMode || definition.registerMode || definition.setupMode || definition.syscallMode) {
+							if (definition.abiOptionalMode || definition.stackOptionalMode || definition.controlMode || definition.machineMode || definition.logicMode || definition.registerMode || definition.setupMode || definition.syscallMode) {
 								await writeFile(
 									join(
 										exports,
@@ -950,7 +1037,7 @@ test(
 					expectedProfiles
 				}));
 			}
-			assert.equal(courseButtons.length, 12);
+			assert.equal(courseButtons.length, 18);
 			await writeFile(
 				join(captures, "assembly-course-buttons-proof.json"),
 				JSON.stringify(courseButtons, null, 2)
