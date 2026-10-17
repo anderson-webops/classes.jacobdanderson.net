@@ -615,6 +615,20 @@ jobs:
                   if-no-files-found: error
                   retention-days: 7
 
+            - name: Verify self-contained PyGames core imports and saved continuations
+              env:
+                  PYGAMES_CORE_BROWSER_PROOF_DIR: output/pygames-core-exports
+              run: node --test test/pygames-core-browser.test.mjs
+
+            - name: Retain PyGames core browser workflow evidence
+              if: always()
+              uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+              with:
+                  name: pygames-core-browser-workflows
+                  path: output/pygames-core-exports/
+                  if-no-files-found: error
+                  retention-days: 14
+
     usaco-workflows:
         needs: test-e2e
         runs-on: ubuntu-24.04

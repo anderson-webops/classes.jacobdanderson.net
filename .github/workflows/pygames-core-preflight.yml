@@ -1,6 +1,7 @@
 name: PyGames core preflight
 
 on:
+  workflow_dispatch:
   push:
     branches: ["codex/pygames-core-workflows"]
 
@@ -46,6 +47,18 @@ jobs:
           --no-file-parallelism --maxWorkers=1
       - name: Build the complete site
         run: node scripts/classes-family-heavy-task.mjs -- npm run build
+      - name: Verify actual PyGames core browser workflows
+        env:
+          PYGAMES_CORE_BROWSER_PROOF_DIR: output/pygames-core-exports
+        run: node scripts/classes-family-heavy-task.mjs -- node --test test/pygames-core-browser.test.mjs
+      - name: Retain PyGames core browser evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: pygames-core-browser-workflows
+          path: output/pygames-core-exports
+          if-no-files-found: error
+          retention-days: 14
       - name: Retain complete catalog evidence
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
