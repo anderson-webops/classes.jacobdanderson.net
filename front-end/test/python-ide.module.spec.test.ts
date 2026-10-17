@@ -6142,7 +6142,12 @@ pgzrun.go()
 		expect(runtimeSource).toContain("_run_animations(now)");
 		expect(pageSource).toContain("await ensureGameCourseAssetsLoaded()");
 		expect(pageSource).toContain(
-			"prepareGameAssetsForExplicitRun();\n\t\t\tawait ensureGameCourseAssetsLoaded();"
+			"prepareGameAssetsForExplicitRun();\n\t\t\tawait prepareProjectGameImages();"
+		);
+		expect(
+			pageSource.indexOf("await prepareProjectGameImages();")
+		).toBeLessThan(
+			pageSource.indexOf("await ensureGameCourseAssetsLoaded();")
 		);
 		expect(pageSource).toContain(
 			"if (entry.failed) gameImageCache.delete(key);"
