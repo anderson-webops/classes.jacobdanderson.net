@@ -49,6 +49,7 @@ import {
 	isGitHubRepositoryUrl,
 	isScratchProjectUrl
 } from "@/modules/resourceUrls";
+import { rustCourseProjectKey } from "@/modules/rustProjectResources";
 import { bronzeRequiredProjectKey } from "@/modules/usacoBronzeRequiredPacks";
 import { goldHistoricalProjectKey } from "@/modules/usacoHistoricalPacks";
 import { silverJavaProjectKey } from "@/modules/usacoSilverJavaPacks";
@@ -1586,21 +1587,24 @@ function ideStarterHref(item: CourseModuleItem, resource: ResourceLink) {
 			selectedCourse.value.id
 		)
 			? pyGamesCourseProjectKey
-			: selectedCourse.value.id === "network-systems"
-				? networkCourseProjectKey
-				: selectedCourse.value.id === "linux-systems"
-					? linuxCourseProjectKey
-					: selectedCourse.value.id === "assembly"
-						? assemblyCourseProjectKey
-						: selectedCourse.value.id === "c-systems-engineering"
-							? c17CourseProjectKey
-							: selectedCourse.value.id === "usaco-bronze" ||
-								  selectedCourse.value.id ===
-										"usaco-bronze-on-demand"
-								? bronzeRequiredProjectKey
-								: selectedCourse.value.id === "usaco-silver"
-									? silverJavaProjectKey
-									: goldHistoricalProjectKey)(
+			: selectedCourse.value.id === "rust-systems-security"
+				? rustCourseProjectKey
+				: selectedCourse.value.id === "network-systems"
+					? networkCourseProjectKey
+					: selectedCourse.value.id === "linux-systems"
+						? linuxCourseProjectKey
+						: selectedCourse.value.id === "assembly"
+							? assemblyCourseProjectKey
+							: selectedCourse.value.id ===
+								  "c-systems-engineering"
+								? c17CourseProjectKey
+								: selectedCourse.value.id === "usaco-bronze" ||
+									  selectedCourse.value.id ===
+											"usaco-bronze-on-demand"
+									? bronzeRequiredProjectKey
+									: selectedCourse.value.id === "usaco-silver"
+										? silverJavaProjectKey
+										: goldHistoricalProjectKey)(
 			selectedCourse.value.id,
 			item.id,
 			resource.kind === "solution" ? "reference" : "starter",

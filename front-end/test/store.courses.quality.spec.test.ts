@@ -1180,9 +1180,7 @@ describe("course text quality normalization", () => {
 			expect(corpus).not.toMatch(/\bshould\b/i);
 		}
 
-		expect(loadedCorpus).toContain(
-			"Tooling, Cargo, and Why Rust Exists Transfer Practice"
-		);
+		expect(loadedCorpus).toContain("Label Input Boundary Cases");
 		expect(loadedCorpus).toContain(
 			"Capstone: Harden a Legacy Tool Extension Practice"
 		);

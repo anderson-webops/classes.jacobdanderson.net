@@ -10,6 +10,91 @@ permissions:
     contents: read
 
 jobs:
+    rust-workflows:
+        runs-on: ubuntu-24.04
+        timeout-minutes: 25
+        env:
+            RUSTUP_TOOLCHAIN: 1.97.1
+        steps:
+            - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+              with:
+                  persist-credentials: false
+
+            - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+              with:
+                  node-version: 24.18.0
+                  cache: npm
+
+            - name: Pin npm version
+              run: |
+                  npm i -g npm@12.0.1
+                  test "$(npm --version)" = "12.0.1"
+
+            - name: Install deps
+              run: npm ci
+
+            - name: Install pinned native Rust tools
+              run: rustup toolchain install 1.97.1 --profile minimal --component rustfmt --component clippy
+
+            - name: Build front-end for Cargo course workflows
+              run: npm run -w front-end build
+
+            - name: Verify exact selected-role source and exported Cargo workspaces
+              env:
+                  RUST_CARGO_EXPORT_PROOF_DIR: output/rust-cargo-exports
+              run: npm exec -w front-end -- vitest run test/rust-cargo-workspace.spec.test.ts --no-file-parallelism --maxWorkers=1
+
+            - name: Verify actual course consent, edits and saved continuations
+              env:
+                  COURSE_IMPORT_SCREENSHOT_DIR: output/rust-cargo-screenshots
+                  RUST_CARGO_BROWSER_PROOF_DIR: output/rust-cargo-browser
+              run: node --test test/rust-cargo-course-browser.test.mjs
+
+            - name: Compile and test original and actual browser-edited Cargo exports
+              run: python3 test/rust-cargo-exported-contracts.py --exports front-end/output/rust-cargo-exports --browser output/rust-cargo-browser --proof output/rust-cargo-native/proof.json
+
+            - name: Retain Cargo browser and native evidence
+              if: always()
+              uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+              with:
+                  name: rust-cargo-workflows
+                  path: |
+                      front-end/output/rust-cargo-exports/
+                      output/rust-cargo-browser/
+                      output/rust-cargo-native/
+                      output/rust-cargo-screenshots/
+                  include-hidden-files: true
+                  if-no-files-found: error
+                  retention-days: 7
+
+            - name: Verify complete ownership imports and source exports
+              env:
+                  RUST_OWNERSHIP_EXPORT_PROOF_DIR: output/rust-ownership-exports
+              run: npm exec -w front-end -- vitest run test/rust-ownership-workspace.spec.test.ts --no-file-parallelism --maxWorkers=1
+
+            - name: Verify actual ownership course actions and saved continuations
+              env:
+                  COURSE_IMPORT_SCREENSHOT_DIR: output/rust-ownership-screenshots
+                  RUST_OWNERSHIP_BROWSER_PROOF_DIR: output/rust-ownership-browser
+              run: node --test test/rust-ownership-course-browser.test.mjs
+
+            - name: Compile original and browser-edited ownership exports
+              run: python3 test/rust-cargo-exported-contracts.py --lesson ownership --exports front-end/output/rust-ownership-exports --browser output/rust-ownership-browser --proof output/rust-ownership-native/proof.json
+
+            - name: Retain ownership browser and native evidence
+              if: always()
+              uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+              with:
+                  name: rust-ownership-workflows
+                  path: |
+                      front-end/output/rust-ownership-exports/
+                      output/rust-ownership-browser/
+                      output/rust-ownership-native/
+                      output/rust-ownership-screenshots/
+                  include-hidden-files: true
+                  if-no-files-found: error
+                  retention-days: 7
+
     backend-install:
         runs-on: ubuntu-24.04
         steps:

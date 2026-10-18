@@ -37,6 +37,10 @@ export const ideDiagnosticSchema = z
 			})
 			.strict(),
 		mode: z.enum([
+			"assembly",
+			"c",
+			"linux",
+			"rust",
 			"cpp",
 			"python",
 			"turtle",
