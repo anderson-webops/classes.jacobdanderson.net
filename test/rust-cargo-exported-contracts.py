@@ -12,7 +12,7 @@ import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument("--lesson", choices=("cargo", "ownership"), default="cargo")
+parser.add_argument("--lesson", choices=("cargo", "ownership", "borrowing"), default="cargo")
 parser.add_argument("--exports", type=Path, required=True)
 parser.add_argument("--browser", type=Path, required=True)
 parser.add_argument("--proof", type=Path, required=True)
@@ -23,6 +23,7 @@ OUT = args.proof.parent
 OUT.mkdir(parents=True, exist_ok=True)
 definition = {
     "cargo": dict(revision="54e4b74c556375f5f57c8fd52d23878aedca255f", sourceFiles=16, selectedFiles=7, commands=122, cases=42, caseField="cases", unitTests=3, verifier="verify_rust_cargo_tooling.py"),
+    "borrowing": dict(revision="660b39f70a2c24d5f702b64e5ce12d10db03f9b8", sourceFiles=28, selectedFiles=13, commands=231, cases=84, caseField="inputCases", unitTests=7, verifier="verify_rust_borrowing.py"),
     "ownership": dict(revision="337017b99d7b64a1bfd32a0cf6295e9e310f6293", sourceFiles=24, selectedFiles=11, commands=216, cases=84, caseField="inputCases", unitTests=4, verifier="verify_rust_ownership.py")
 }[args.lesson]
 fixture = json.loads((ROOT / ("test/fixtures/rust-" + args.lesson + "-contracts.json")).read_text())
@@ -134,7 +135,7 @@ with tempfile.TemporaryDirectory(prefix="rust-" + args.lesson + "-site-export-")
             target.write_bytes(raw)
         proof_path = OUT / label / "proof.json"
         env = {**os.environ, "SOURCE_REVISION": fixture["revision"]}
-        if args.lesson == "ownership":
+        if args.lesson in ("ownership", "borrowing"):
             # The unchanged source verifier enumerates its inventory with Git.
             # This temporary index tracks the exact restored files; it creates
             # no commits and supplies no source or build provenance.
@@ -153,7 +154,7 @@ with tempfile.TemporaryDirectory(prefix="rust-" + args.lesson + "-site-export-")
 assert not work.exists()
 result = dict(baseSourceRevision=fixture["revision"], originalRoleZIPs=original_zips, nativeVariants=variants,
               actualBrowserProfiles=4, savedContinuationActions=12, selectedFilesPerRole=definition["selectedFiles"],
-              temporarySourceInventoryIndex=args.lesson == "ownership", inventoryCommitsCreated=0,
+              temporarySourceInventoryIndex=args.lesson in ("ownership", "borrowing"), inventoryCommitsCreated=0,
               exactOriginalAndSavedSources=True, nativeCommands=3 * definition["commands"], independentInputCases=6 * definition["cases"],
               noExternalDependencyDownloadsDuringChecks=True, temporarySourceCleanup=True,
               learnerWorksheetCompletionNotInferred=True)

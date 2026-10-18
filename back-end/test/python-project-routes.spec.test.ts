@@ -1126,7 +1126,8 @@ describe("Python project routes", () => {
 
 	it.each([
 		["cargo", 7],
-		["ownership", 11]
+		["ownership", 11],
+		["borrowing", 13]
 	] as const)(
 		"stores a complete Rust %s role for user and course-code owners",
 		async (lesson, fileCount) => {

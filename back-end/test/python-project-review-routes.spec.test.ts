@@ -657,6 +657,7 @@ describe("Python project review routes", () => {
 	it.each([
 		"rust",
 		"rust-ownership",
+		"rust-borrowing",
 		"c",
 		"assembly",
 		"compiler",
@@ -665,7 +666,10 @@ describe("Python project review routes", () => {
 	] as const)(
 		"saves, shares, and edits a %s review while preserving the learner's complete pack",
 		async mode => {
-			const rustMode = mode === "rust" || mode === "rust-ownership";
+			const rustMode =
+				mode === "rust" ||
+				mode === "rust-ownership" ||
+				mode === "rust-borrowing";
 			const requestedMode = rustMode
 				? "rust"
 				: mode === "c"
@@ -675,18 +679,20 @@ describe("Python project review routes", () => {
 				readFileSync(
 					resolve(
 						process.cwd(),
-						mode === "rust-ownership"
-							? "../test/fixtures/rust-ownership-contracts.json"
-							: mode === "rust"
-								? "../test/fixtures/rust-cargo-contracts.json"
-								: mode === "hardening" ||
-									  mode === "hardening-trace"
-									? "../test/fixtures/assembly-hardening-contracts.json"
-									: mode === "compiler"
-										? "../test/fixtures/assembly-compiler-contracts.json"
-										: mode === "assembly"
-											? "../test/fixtures/assembly-opening-contracts.json"
-											: "../test/fixtures/c17-opening-contracts.json"
+						mode === "rust-borrowing"
+							? "../test/fixtures/rust-borrowing-contracts.json"
+							: mode === "rust-ownership"
+								? "../test/fixtures/rust-ownership-contracts.json"
+								: mode === "rust"
+									? "../test/fixtures/rust-cargo-contracts.json"
+									: mode === "hardening" ||
+										  mode === "hardening-trace"
+										? "../test/fixtures/assembly-hardening-contracts.json"
+										: mode === "compiler"
+											? "../test/fixtures/assembly-compiler-contracts.json"
+											: mode === "assembly"
+												? "../test/fixtures/assembly-opening-contracts.json"
+												: "../test/fixtures/c17-opening-contracts.json"
 					),
 					"utf8"
 				)

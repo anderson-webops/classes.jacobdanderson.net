@@ -20,6 +20,24 @@ export function rustBuildInstructions(
 				"The Rust lesson is incomplete. Reopen its complete selected-role source before building."
 			];
 		}
+		if (selected.definition.kind === "borrowing") {
+			return [
+				"Download and extract the ZIP. Use Rust 1.97.1 with Cargo, rustfmt and Clippy; the package declares edition 2024.",
+				`cd ${selected.role}`,
+				"rustc -Vv",
+				"cargo -V",
+				"cargo fmt --all --check",
+				"rustfmt --edition 2024 --check diagnostics/*.rs",
+				"cargo clippy --locked --offline --all-targets -- -D warnings",
+				"cargo test --locked --offline",
+				"cargo run --locked --offline",
+				"cargo run --locked --offline -- 'name=ÉA;role=ß' empty",
+				"Refactor the owned baseline into RecordView with borrowed fields. Preserve the schema, ASCII-only normalization, byte-length selection, disjoint slices and deliberate owned result.",
+				"Read ../README.md and complete CORE, BORROW MAP, PREDICT, CHECKS and LIMITS in observations.md. Continue MUTATION, CHOICE or CHALLENGE in the same saved project.",
+				"The separate diagnostics intentionally refuse with E0502, E0499, E0515 and E0106. Follow the guide's rustc commands and compare all four paired fixes.",
+				"Lifetime annotations relate valid references; they do not extend an owner. Run native checks after source edits."
+			];
+		}
 		if (selected.definition.kind === "ownership") {
 			return [
 				"Download and extract the ZIP. Use Rust 1.97.1 with Cargo, rustfmt and Clippy; the package declares edition 2024.",

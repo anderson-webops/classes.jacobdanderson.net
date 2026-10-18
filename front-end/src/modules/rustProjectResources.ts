@@ -41,6 +41,33 @@ export const rustOwnershipRoleFiles = [
 	"diagnostics/copy-owned.rs",
 	"diagnostics/clone-owned.rs"
 ] as const;
+export const rustBorrowingRevision = "660b39f70a2c24d5f702b64e5ce12d10db03f9b8";
+export const rustBorrowingPack = "RUST-02-borrowing-evidence";
+export const rustBorrowingModuleId =
+	"rust-systems-security-rss2-borrowing-aliasing-and-lifetimes";
+export const rustBorrowingItemIds = {
+	core: "rust-systems-security-rss2-borrowing-aliasing-and-lifetimes-curriculum-core-project-borrowing-aliasing-and-lifetimes",
+	workflow:
+		"rust-systems-security-rss2-borrowing-aliasing-and-lifetimes-supplemental-project-borrowing-and-aliasing-lab",
+	choice: "rust-systems-security-rss2-borrowing-aliasing-and-lifetimes-supplemental-borrowing-aliasing-and-lifetimes-transfer-practice",
+	challenge:
+		"rust-systems-security-rss2-borrowing-aliasing-and-lifetimes-supplemental-borrowing-aliasing-and-lifetimes-extension-practice"
+} as const;
+export const rustBorrowingRoleFiles = [
+	"observations.md",
+	"Cargo.toml",
+	"Cargo.lock",
+	"src/main.rs",
+	"diagnostics/escaped-local.rs",
+	"diagnostics/last-use-before-mutation.rs",
+	"diagnostics/missing-lifetime.rs",
+	"diagnostics/owned-result.rs",
+	"diagnostics/related-lifetimes.rs",
+	"diagnostics/shared-and-mutable.rs",
+	"diagnostics/split-borrows.rs",
+	"diagnostics/two-mutable.rs"
+] as const;
+
 const rustLessons = [
 	{
 		kind: "cargo",
@@ -55,6 +82,13 @@ const rustLessons = [
 		pack: rustOwnershipPack,
 		roleFiles: rustOwnershipRoleFiles,
 		itemIds: rustOwnershipItemIds
+	},
+	{
+		kind: "borrowing",
+		revision: rustBorrowingRevision,
+		pack: rustBorrowingPack,
+		roleFiles: rustBorrowingRoleFiles,
+		itemIds: rustBorrowingItemIds
 	}
 ] as const;
 

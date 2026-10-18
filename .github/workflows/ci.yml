@@ -95,6 +95,34 @@ jobs:
                   if-no-files-found: error
                   retention-days: 7
 
+            - name: Verify complete borrowing imports and source exports
+              env:
+                  RUST_BORROWING_EXPORT_PROOF_DIR: output/rust-borrowing-exports
+              run: npm exec -w front-end -- vitest run test/rust-borrowing-workspace.spec.test.ts --no-file-parallelism --maxWorkers=1
+
+            - name: Verify actual borrowing course actions and saved continuations
+              env:
+                  COURSE_IMPORT_SCREENSHOT_DIR: output/rust-borrowing-screenshots
+                  RUST_BORROWING_BROWSER_PROOF_DIR: output/rust-borrowing-browser
+              run: node --test test/rust-borrowing-course-browser.test.mjs
+
+            - name: Compile original and browser-edited borrowing exports
+              run: python3 test/rust-cargo-exported-contracts.py --lesson borrowing --exports front-end/output/rust-borrowing-exports --browser output/rust-borrowing-browser --proof output/rust-borrowing-native/proof.json
+
+            - name: Retain borrowing browser and native evidence
+              if: always()
+              uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+              with:
+                  name: rust-borrowing-workflows
+                  path: |
+                      front-end/output/rust-borrowing-exports/
+                      output/rust-borrowing-browser/
+                      output/rust-borrowing-native/
+                      output/rust-borrowing-screenshots/
+                  include-hidden-files: true
+                  if-no-files-found: error
+                  retention-days: 7
+
     backend-install:
         runs-on: ubuntu-24.04
         steps:

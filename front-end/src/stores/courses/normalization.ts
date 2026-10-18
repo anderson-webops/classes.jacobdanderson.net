@@ -5,6 +5,7 @@ import { mapMarkdownProse } from "./markdownProse";
 import { buildProjectGuidance } from "./projectGuidance";
 import { applyPyGamesCourseWorkflows } from "./pyGamesCourseWorkflows";
 import { applyResearchBackedExpansions } from "./research-expansions";
+import { applyRustBorrowingCourseWorkflows } from "./rustBorrowingCourseWorkflows";
 import { applyRustCargoCourseWorkflows } from "./rustCargoCourseWorkflows";
 import { applyRustOwnershipCourseWorkflows } from "./rustOwnershipCourseWorkflows";
 import {
@@ -9575,5 +9576,6 @@ export function normalizeRawCourse(id: string, rawCourse: RawCourse) {
 	applyPyGamesCourseWorkflows(course, id);
 	applyRustCargoCourseWorkflows(course, id);
 	applyRustOwnershipCourseWorkflows(course, id);
+	applyRustBorrowingCourseWorkflows(course, id);
 	return course;
 }
