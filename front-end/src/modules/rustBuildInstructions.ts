@@ -20,6 +20,25 @@ export function rustBuildInstructions(
 				"The Rust lesson is incomplete. Reopen its complete selected-role source before building."
 			];
 		}
+		if (selected.definition.kind === "typed-errors") {
+			return [
+				"Download and extract the ZIP. Use Rust 1.97.1 with Cargo, rustfmt and Clippy; the package declares edition 2024.",
+				`cd ${selected.role}`,
+				"rustc -Vv",
+				"cargo -V",
+				"cargo fmt --all --check",
+				"rustfmt --edition 2024 --check diagnostics/*.rs",
+				"cargo clippy --locked --offline --all-targets -- -D warnings",
+				"cargo test --locked --offline",
+				"cargo run --locked --offline",
+				"cargo run --locked --offline -- --record 'A:65536'",
+				"cargo run --locked --offline -- --scan '' 'A:0'",
+				"Refactor the numeric baseline into Record, ParseError and Result. MissingSeparator and ValueOutOfRange have different caller actions. Result<Option<Record>, RowError> separates absence, valid zero and an indexed failure.",
+				"Read ../README.md and complete CORE, ERROR TABLE, PREDICT, CHECKS and LIMITS in observations.md. Continue ABSENCE, CHOICE or CHALLENGE in the same saved project.",
+				"The standalone diagnostics intentionally refuse with E0004, E0277 and E0308. Follow the guide's separate rustc commands and compare each working fix.",
+				"Only the CLI chooses an exit status. Record stdout, stderr and status separately; the library returns values without terminating a process."
+			];
+		}
 		if (selected.definition.kind === "borrowing") {
 			return [
 				"Download and extract the ZIP. Use Rust 1.97.1 with Cargo, rustfmt and Clippy; the package declares edition 2024.",

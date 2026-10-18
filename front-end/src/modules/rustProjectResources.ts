@@ -68,6 +68,33 @@ export const rustBorrowingRoleFiles = [
 	"diagnostics/two-mutable.rs"
 ] as const;
 
+export const rustTypedErrorsRevision =
+	"1c436c353bd8664ea92c4abd8cfb71d95a26c75a";
+export const rustTypedErrorsPack = "RUST-03-typed-errors-evidence";
+export const rustTypedErrorsModuleId =
+	"rust-systems-security-rss3-option-result-and-typed-error-paths";
+export const rustTypedErrorsItemIds = {
+	core: "rust-systems-security-rss3-option-result-and-typed-error-paths-curriculum-core-project-option-result-and-typed-error-paths",
+	workflow:
+		"rust-systems-security-rss3-option-result-and-typed-error-paths-supplemental-project-option-and-result-audit-tool",
+	choice: "rust-systems-security-rss3-option-result-and-typed-error-paths-supplemental-option-result-and-typed-error-paths-transfer-practice",
+	challenge:
+		"rust-systems-security-rss3-option-result-and-typed-error-paths-supplemental-option-result-and-typed-error-paths-extension-practice"
+} as const;
+export const rustTypedErrorsRoleFiles = [
+	"observations.md",
+	"Cargo.toml",
+	"Cargo.lock",
+	"src/lib.rs",
+	"src/main.rs",
+	"diagnostics/exhaustive-match.rs",
+	"diagnostics/missing-match.rs",
+	"diagnostics/option-question-mark.rs",
+	"diagnostics/option-to-result.rs",
+	"diagnostics/sentinel-result.rs",
+	"diagnostics/typed-result.rs"
+] as const;
+
 const rustLessons = [
 	{
 		kind: "cargo",
@@ -89,6 +116,13 @@ const rustLessons = [
 		pack: rustBorrowingPack,
 		roleFiles: rustBorrowingRoleFiles,
 		itemIds: rustBorrowingItemIds
+	},
+	{
+		kind: "typed-errors",
+		revision: rustTypedErrorsRevision,
+		pack: rustTypedErrorsPack,
+		roleFiles: rustTypedErrorsRoleFiles,
+		itemIds: rustTypedErrorsItemIds
 	}
 ] as const;
 

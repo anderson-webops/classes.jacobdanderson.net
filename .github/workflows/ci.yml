@@ -123,6 +123,34 @@ jobs:
                   if-no-files-found: error
                   retention-days: 7
 
+            - name: Verify complete typed-errors imports and source exports
+              env:
+                  RUST_TYPED_ERRORS_EXPORT_PROOF_DIR: output/rust-typed-errors-exports
+              run: npm exec -w front-end -- vitest run test/rust-typed-errors-workspace.spec.test.ts --no-file-parallelism --maxWorkers=1
+
+            - name: Verify actual typed-errors course actions and saved continuations
+              env:
+                  COURSE_IMPORT_SCREENSHOT_DIR: output/rust-typed-errors-screenshots
+                  RUST_TYPED_ERRORS_BROWSER_PROOF_DIR: output/rust-typed-errors-browser
+              run: node --test test/rust-typed-errors-course-browser.test.mjs
+
+            - name: Compile original and browser-edited typed-errors exports
+              run: python3 test/rust-cargo-exported-contracts.py --lesson typed-errors --exports front-end/output/rust-typed-errors-exports --browser output/rust-typed-errors-browser --proof output/rust-typed-errors-native/proof.json
+
+            - name: Retain typed-errors browser and native evidence
+              if: always()
+              uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+              with:
+                  name: rust-typed-errors-workflows
+                  path: |
+                      front-end/output/rust-typed-errors-exports/
+                      output/rust-typed-errors-browser/
+                      output/rust-typed-errors-native/
+                      output/rust-typed-errors-screenshots/
+                  include-hidden-files: true
+                  if-no-files-found: error
+                  retention-days: 7
+
     backend-install:
         runs-on: ubuntu-24.04
         steps:

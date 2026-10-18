@@ -658,6 +658,7 @@ describe("Python project review routes", () => {
 		"rust",
 		"rust-ownership",
 		"rust-borrowing",
+		"rust-typed-errors",
 		"c",
 		"assembly",
 		"compiler",
@@ -669,7 +670,8 @@ describe("Python project review routes", () => {
 			const rustMode =
 				mode === "rust" ||
 				mode === "rust-ownership" ||
-				mode === "rust-borrowing";
+				mode === "rust-borrowing" ||
+				mode === "rust-typed-errors";
 			const requestedMode = rustMode
 				? "rust"
 				: mode === "c"
@@ -679,20 +681,22 @@ describe("Python project review routes", () => {
 				readFileSync(
 					resolve(
 						process.cwd(),
-						mode === "rust-borrowing"
-							? "../test/fixtures/rust-borrowing-contracts.json"
-							: mode === "rust-ownership"
-								? "../test/fixtures/rust-ownership-contracts.json"
-								: mode === "rust"
-									? "../test/fixtures/rust-cargo-contracts.json"
-									: mode === "hardening" ||
-										  mode === "hardening-trace"
-										? "../test/fixtures/assembly-hardening-contracts.json"
-										: mode === "compiler"
-											? "../test/fixtures/assembly-compiler-contracts.json"
-											: mode === "assembly"
-												? "../test/fixtures/assembly-opening-contracts.json"
-												: "../test/fixtures/c17-opening-contracts.json"
+						mode === "rust-typed-errors"
+							? "../test/fixtures/rust-typed-errors-contracts.json"
+							: mode === "rust-borrowing"
+								? "../test/fixtures/rust-borrowing-contracts.json"
+								: mode === "rust-ownership"
+									? "../test/fixtures/rust-ownership-contracts.json"
+									: mode === "rust"
+										? "../test/fixtures/rust-cargo-contracts.json"
+										: mode === "hardening" ||
+											  mode === "hardening-trace"
+											? "../test/fixtures/assembly-hardening-contracts.json"
+											: mode === "compiler"
+												? "../test/fixtures/assembly-compiler-contracts.json"
+												: mode === "assembly"
+													? "../test/fixtures/assembly-opening-contracts.json"
+													: "../test/fixtures/c17-opening-contracts.json"
 					),
 					"utf8"
 				)
