@@ -23,7 +23,7 @@ test(
 			taskFile: "observations.md",
 			initialFile: "observations.md",
 			fileCount: 7,
-			readyToken: "BASELINE",
+			readyToken: "cargo test --locked --offline",
 			starterToken: "cd starter",
 			referenceToken: "cd solution",
 			instructionTokens: [

@@ -150,7 +150,7 @@ export async function runAssemblyCoreCourseWorkflow(t, definition) {
 	let outcome = "failed";
 	const taskId =
 		process.env.CLASSES_FAMILY_TASK_ID ??
-		`assembly-${definition.kind}-course-ci`;
+		`${mode}-${definition.kind}-course-ci`;
 	const startedAt = new Date().toISOString();
 	const output =
 		process.env[definition.outputEnv] ?? definition.defaultOutput;
