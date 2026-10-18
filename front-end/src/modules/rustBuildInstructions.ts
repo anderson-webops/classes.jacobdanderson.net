@@ -20,6 +20,71 @@ export function rustBuildInstructions(
 				"The Rust lesson is incomplete. Reopen its complete selected-role source before building."
 			];
 		}
+		if (selected.definition.kind === "concurrency") {
+			return [
+				"Download and extract the ZIP. Use Rust 1.97.1 with Cargo, rustfmt and Clippy; the package declares edition 2024.",
+				`cd ${selected.role}`,
+				"rustc -Vv",
+				"cargo -V",
+				"cargo fmt --all --check",
+				"cargo clippy --locked --offline --all-targets -- -D warnings",
+				"cargo test --locked --offline",
+				"cargo run --locked --offline -- --help",
+				"cargo run --locked --offline -- --case valid",
+				"cargo run --locked --offline -- --case cap",
+				"cargo run --locked --offline -- --case fail",
+				"cargo run --locked --offline -- --case cancel",
+				"Replace the sequential run with two owned partitions, a capacity-two channel and joined handles. Complete CORE, WORKFLOW, CHOICE, CHALLENGE and LIMITS in observations.md; read ../README.md.",
+				"Compile diagnostics/rc-not-send.rs and diagnostics/cell-not-sync.rs separately with rustc --edition=2024; both intentionally refuse with E0277. The arc-owned and scoped-shared alternatives print 7 when compiled and run.",
+				"Record both streams and statuses. Usage is 64 and semantic failure is 65. The two-second receive deadline does not bound join or every execution; an injected worker error does not model every panic or host spawn failure.",
+				"cargo clean",
+				"cargo test --locked --offline",
+				"cargo build --locked --offline"
+			];
+		}
+		if (selected.definition.kind === "boundary-review") {
+			return [
+				"Download and extract the ZIP. Use Rust 1.97.1 with Cargo, rustfmt and Clippy; the package declares edition 2024.",
+				`cd ${selected.role}`,
+				"rustc -Vv",
+				"cargo -V",
+				"cargo fmt --all --check",
+				"cargo clippy --locked --offline --all-targets -- -D warnings",
+				"cargo test --locked --offline",
+				"cargo run --locked --offline -- --help",
+				"cargo run --locked --offline -- --case valid",
+				"cargo run --locked --offline -- --case cap",
+				"cargo run --locked --offline -- --case over",
+				"Audit raw_sum and the private checked bridge in src/bridge.rs. Complete the unsafe ledger and CORE, WORKFLOW, CHOICE, CHALLENGE and LIMITS in observations.md; read ../README.md.",
+				"Compile diagnostics/unsafe-call.rs and diagnostics/unsafe-body.rs separately with rustc --edition=2024; both intentionally refuse with E0133. The explicit-call and explicit-body alternatives print 7.",
+				"Read the recorded Miri evidence in ../README.md. diagnostics/miri-dangling.rs is an interpreter-only rejected example; do not execute it natively. A separate optional interpreter experiment follows the reading, not the normal Cargo run.",
+				"Usage is 64 and over-limit input is 65. The C-ABI stand-in is implemented in Rust; runtime protocol checks and a finite Miri trace do not certify foreign library memory contracts.",
+				"cargo clean",
+				"cargo test --locked --offline",
+				"cargo build --locked --offline"
+			];
+		}
+		if (selected.definition.kind === "record-hardening") {
+			return [
+				"Download and extract the ZIP. Use Rust 1.97.1 with Cargo, rustfmt and Clippy; the package declares edition 2024.",
+				`cd ${selected.role}`,
+				"rustc -Vv",
+				"cargo -V",
+				"cargo fmt --all --check",
+				"cargo clippy --locked --offline --all-targets -- -D warnings",
+				"cargo test --locked --offline",
+				"cargo run --locked --offline -- --help",
+				"cargo run --locked --offline -- --case cat",
+				"cargo run --locked --offline -- --case unicode",
+				"cargo run --locked --offline -- --case combined",
+				"Refactor parse_record into typed refusals while preserving the original valid grammar and owned output. Complete the threat model, failure ledger, claim table, reproduction and residual-risk sections in observations.md; read ../README.md.",
+				"The combined fixture returns 65 with empty stdout and error=unclassified for the starter or error=trailing-data for the reference. Run expected nonzero cases separately when the shell stops on error.",
+				"The reference observations.md contains a completed packet bound to its recorded source/run. The current path uses native fixed-corpus evidence; optional mutations retain explicit case, byte, time and cleanup bounds.",
+				"cargo clean",
+				"cargo test --locked --offline",
+				"cargo build --locked --offline"
+			];
+		}
 		if (selected.definition.kind === "bounded-cli") {
 			return [
 				"Download and extract the ZIP. Use Rust 1.97.1 with Cargo, rustfmt and Clippy; the package declares edition 2024.",

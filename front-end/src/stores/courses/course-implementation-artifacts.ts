@@ -190,7 +190,7 @@ export const courseToolchainAssumptions: Record<string, string[]> = {
 		"Supplied command transcripts, DNS answers, route tables, listener maps, firewall rules, and packet excerpts provide a complete no-VM and no-capture route."
 	],
 	"rust-systems-security": [
-		"Rust 1.97.1 stable with rustup, Cargo, rustfmt, Clippy, and Rust 2024 edition for course-authored work; linked source checkpoints currently declare Rust 2021 edition and remain valid migration exercises.",
+		"Rust 1.97.1 stable with rustup, Cargo, rustfmt, Clippy, and Rust 2024 edition in the pinned RSS0–RSS10 Cargo workspaces.",
 		"Use a committed Cargo.lock where applicable, cargo fmt --check, cargo clippy --all-targets --all-features -- -D warnings, and cargo test --locked as the repeatable baseline.",
 		"cargo audit is an installed RustSec tool whose live advisory refresh may require network access; the supplied advisory case provides an offline-equivalent dependency review.",
 		"Miri and cargo fuzz are optional, bounded advanced tools: both require a compatible nightly toolchain, and cargo fuzz also requires a supported Unix-like x86-64 or AArch64 environment.",
@@ -1144,7 +1144,7 @@ function sourcePolicyFor(courseId: string) {
 		}
 
 		if (courseId === "rust-systems-security") {
-			return `Source-backed course. Canonical source repository: ${url}. The linked RUST-* starter/solution folders are lightweight label-sanitization checkpoints, currently using Rust 2021 edition, rather than distinct implementations of every named module. Existing URLs remain traceable; the supplied Rust cases and verification guide provide the module-specific ownership, parser, concurrency, unsafe, dependency, and capstone evidence.`;
+			return `Canonical source repository: ${url}. RSS0–RSS10 use pinned, module-specific Rust 2024 Cargo workspaces with complete starter and reference roles. Each project includes its reading and observation worksheet; the supplied Rust cases and verification guide add independent review exercises. Earlier label-sanitization checkpoints remain historical source and saved work.`;
 		}
 
 		if (courseId === "javascript-level-1-javascript-superstar") {
