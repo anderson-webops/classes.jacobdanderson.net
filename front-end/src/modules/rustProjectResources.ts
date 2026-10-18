@@ -95,6 +95,35 @@ export const rustTypedErrorsRoleFiles = [
 	"diagnostics/typed-result.rs"
 ] as const;
 
+export const rustLabelSlicesRevision =
+	"308f040261f9cc676ad6a2892ab7f7eea11a2498";
+export const rustLabelSlicesPack = "RUST-04-label-slices-evidence";
+export const rustLabelSlicesModuleId =
+	"rust-systems-security-rss4-strings-slices-collections-and-bounds-safety";
+export const rustLabelSlicesItemIds = {
+	core: "rust-systems-security-rss4-strings-slices-collections-and-bounds-safety-curriculum-core-project-strings-slices-collections-and-bounds-safety",
+	workflow:
+		"rust-systems-security-rss4-strings-slices-collections-and-bounds-safety-supplemental-project-slice-and-bounds-workbench",
+	choice: "rust-systems-security-rss4-strings-slices-collections-and-bounds-safety-supplemental-strings-slices-collections-and-bounds-safety-transfer-practice",
+	challenge:
+		"rust-systems-security-rss4-strings-slices-collections-and-bounds-safety-supplemental-strings-slices-collections-and-bounds-safety-extension-practice"
+} as const;
+export const rustLabelSlicesRoleFiles = [
+	"observations.md",
+	"Cargo.toml",
+	"Cargo.lock",
+	"src/lib.rs",
+	"src/main.rs",
+	"diagnostics/byte-out-of-bounds.rs",
+	"diagnostics/checked-byte.rs",
+	"diagnostics/checked-range.rs",
+	"diagnostics/checked-string.rs",
+	"diagnostics/non-boundary-slice.rs",
+	"diagnostics/reversed-range.rs",
+	"diagnostics/scalar-index.rs",
+	"diagnostics/string-index.rs"
+] as const;
+
 const rustLessons = [
 	{
 		kind: "cargo",
@@ -123,6 +152,13 @@ const rustLessons = [
 		pack: rustTypedErrorsPack,
 		roleFiles: rustTypedErrorsRoleFiles,
 		itemIds: rustTypedErrorsItemIds
+	},
+	{
+		kind: "label-slices",
+		revision: rustLabelSlicesRevision,
+		pack: rustLabelSlicesPack,
+		roleFiles: rustLabelSlicesRoleFiles,
+		itemIds: rustLabelSlicesItemIds
 	}
 ] as const;
 

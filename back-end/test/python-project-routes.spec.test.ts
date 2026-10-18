@@ -1128,7 +1128,8 @@ describe("Python project routes", () => {
 		["cargo", 7],
 		["ownership", 11],
 		["borrowing", 13],
-		["typed-errors", 12]
+		["typed-errors", 12],
+		["label-slices", 14]
 	] as const)(
 		"stores a complete Rust %s role for user and course-code owners",
 		async (lesson, fileCount) => {

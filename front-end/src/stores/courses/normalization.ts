@@ -7,6 +7,7 @@ import { applyPyGamesCourseWorkflows } from "./pyGamesCourseWorkflows";
 import { applyResearchBackedExpansions } from "./research-expansions";
 import { applyRustBorrowingCourseWorkflows } from "./rustBorrowingCourseWorkflows";
 import { applyRustCargoCourseWorkflows } from "./rustCargoCourseWorkflows";
+import { applyRustLabelSlicesCourseWorkflows } from "./rustLabelSlicesCourseWorkflows";
 import { applyRustOwnershipCourseWorkflows } from "./rustOwnershipCourseWorkflows";
 import { applyRustTypedErrorsCourseWorkflows } from "./rustTypedErrorsCourseWorkflows";
 import {
@@ -9579,5 +9580,6 @@ export function normalizeRawCourse(id: string, rawCourse: RawCourse) {
 	applyRustOwnershipCourseWorkflows(course, id);
 	applyRustBorrowingCourseWorkflows(course, id);
 	applyRustTypedErrorsCourseWorkflows(course, id);
+	applyRustLabelSlicesCourseWorkflows(course, id);
 	return course;
 }

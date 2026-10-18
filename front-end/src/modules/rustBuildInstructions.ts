@@ -20,6 +20,27 @@ export function rustBuildInstructions(
 				"The Rust lesson is incomplete. Reopen its complete selected-role source before building."
 			];
 		}
+		if (selected.definition.kind === "label-slices") {
+			return [
+				"Download and extract the ZIP. Use Rust 1.97.1 with Cargo, rustfmt and Clippy; the package declares edition 2024.",
+				`cd ${selected.role}`,
+				"rustc -Vv",
+				"cargo -V",
+				"cargo fmt --all --check",
+				"rustfmt --edition 2024 --check diagnostics/*.rs",
+				"cargo clippy --locked --offline --all-targets -- -D warnings",
+				"cargo test --locked --offline",
+				"cargo run --locked --offline",
+				"cargo run --locked --offline -- --sanitize 'packet-42!'",
+				"cargo run --locked --offline -- --window 'a\uD83E\uDD80bc' 1 5",
+				"cargo run --locked --offline -- --bytes 'a\uD83E\uDD80bc' 2 3",
+				"cargo run --locked --offline -- --chars 'a\uD83E\uDD80bc' 1 2",
+				"The unfinished starter retains the identity filter; the target keeps ASCII letters, digits and dashes. Refactor str_window and byte_window into checked borrowed views while preserving Reversed, OutOfBounds and NotCharBoundary.",
+				"Read ../README.md and complete CORE, LABEL CASES, PREDICT, CHECKS and LIMITS in observations.md. Continue WINDOWS, CHOICE or CHALLENGE in the same saved project.",
+				"The separate diagnostics distinguish E0277 from a deliberate panic with status 101. Follow the guide's rustc commands and compare checked alternatives; Cargo tests do not run those standalone programs.",
+				"Record stdout, stderr and exit status separately. String byte ranges require UTF-8 character boundaries; scalar positions are not grapheme counts. Only the CLI selects an exit status."
+			];
+		}
 		if (selected.definition.kind === "typed-errors") {
 			return [
 				"Download and extract the ZIP. Use Rust 1.97.1 with Cargo, rustfmt and Clippy; the package declares edition 2024.",

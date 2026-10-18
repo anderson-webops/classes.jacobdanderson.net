@@ -151,6 +151,34 @@ jobs:
                   if-no-files-found: error
                   retention-days: 7
 
+            - name: Verify complete label-slices imports and source exports
+              env:
+                  RUST_LABEL_SLICES_EXPORT_PROOF_DIR: output/rust-label-slices-exports
+              run: npm exec -w front-end -- vitest run test/rust-label-slices-workspace.spec.test.ts --no-file-parallelism --maxWorkers=1
+
+            - name: Verify actual label-slices course actions and saved continuations
+              env:
+                  COURSE_IMPORT_SCREENSHOT_DIR: output/rust-label-slices-screenshots
+                  RUST_LABEL_SLICES_BROWSER_PROOF_DIR: output/rust-label-slices-browser
+              run: node --test test/rust-label-slices-course-browser.test.mjs
+
+            - name: Compile original and browser-edited label-slices exports
+              run: python3 test/rust-cargo-exported-contracts.py --lesson label-slices --exports front-end/output/rust-label-slices-exports --browser output/rust-label-slices-browser --proof output/rust-label-slices-native/proof.json
+
+            - name: Retain label-slices browser and native evidence
+              if: always()
+              uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+              with:
+                  name: rust-label-slices-workflows
+                  path: |
+                      front-end/output/rust-label-slices-exports/
+                      output/rust-label-slices-browser/
+                      output/rust-label-slices-native/
+                      output/rust-label-slices-screenshots/
+                  include-hidden-files: true
+                  if-no-files-found: error
+                  retention-days: 7
+
     backend-install:
         runs-on: ubuntu-24.04
         steps:
