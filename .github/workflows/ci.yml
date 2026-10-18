@@ -207,6 +207,34 @@ jobs:
                   if-no-files-found: error
                   retention-days: 7
 
+            - name: Verify complete trait-pipeline imports and source exports
+              env:
+                  RUST_TRAIT_PIPELINE_EXPORT_PROOF_DIR: output/rust-trait-pipeline-exports
+              run: npm exec -w front-end -- vitest run test/rust-trait-pipeline-workspace.spec.test.ts --no-file-parallelism --maxWorkers=1
+
+            - name: Verify actual trait-pipeline course actions and saved continuations
+              env:
+                  COURSE_IMPORT_SCREENSHOT_DIR: output/rust-trait-pipeline-screenshots
+                  RUST_TRAIT_PIPELINE_BROWSER_PROOF_DIR: output/rust-trait-pipeline-browser
+              run: node --test test/rust-trait-pipeline-course-browser.test.mjs
+
+            - name: Compile original and browser-edited trait-pipeline exports
+              run: python3 test/rust-cargo-exported-contracts.py --lesson trait-pipeline --exports front-end/output/rust-trait-pipeline-exports --browser output/rust-trait-pipeline-browser --proof output/rust-trait-pipeline-native/proof.json
+
+            - name: Retain trait-pipeline browser and native evidence
+              if: always()
+              uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+              with:
+                  name: rust-trait-pipeline-workflows
+                  path: |
+                      front-end/output/rust-trait-pipeline-exports/
+                      output/rust-trait-pipeline-browser/
+                      output/rust-trait-pipeline-native/
+                      output/rust-trait-pipeline-screenshots/
+                  include-hidden-files: true
+                  if-no-files-found: error
+                  retention-days: 7
+
     backend-install:
         runs-on: ubuntu-24.04
         steps:

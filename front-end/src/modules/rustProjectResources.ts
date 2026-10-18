@@ -148,6 +148,32 @@ export const rustStateModelsRoleFiles = [
 	"diagnostics/raw-flags.rs"
 ] as const;
 
+export const rustTraitPipelineRevision =
+	"e9c39209a9ada0de34c767273b1d0b38dd068d05";
+export const rustTraitPipelinePack = "RUST-06-trait-pipeline-evidence";
+export const rustTraitPipelineModuleId =
+	"rust-systems-security-rss6-traits-iterators-and-api-contracts";
+export const rustTraitPipelineItemIds = {
+	core: "rust-systems-security-rss6-traits-iterators-and-api-contracts-curriculum-core-project-traits-iterators-and-api-contracts",
+	workflow:
+		"rust-systems-security-rss6-traits-iterators-and-api-contracts-supplemental-project-trait-based-validation-pipeline",
+	choice: "rust-systems-security-rss6-traits-iterators-and-api-contracts-supplemental-traits-iterators-and-api-contracts-transfer-practice",
+	challenge:
+		"rust-systems-security-rss6-traits-iterators-and-api-contracts-supplemental-traits-iterators-and-api-contracts-extension-practice"
+} as const;
+export const rustTraitPipelineRoleFiles = [
+	"observations.md",
+	"Cargo.toml",
+	"Cargo.lock",
+	"src/lib.rs",
+	"src/main.rs",
+	"diagnostics/alternate-source.rs",
+	"diagnostics/missing-method.rs",
+	"diagnostics/mutate-live-iterator.rs",
+	"diagnostics/mutation-after-last-use.rs",
+	"diagnostics/report-after-owner-drop.rs"
+] as const;
+
 const rustLessons = [
 	{
 		kind: "cargo",
@@ -190,6 +216,13 @@ const rustLessons = [
 		pack: rustStateModelsPack,
 		roleFiles: rustStateModelsRoleFiles,
 		itemIds: rustStateModelsItemIds
+	},
+	{
+		kind: "trait-pipeline",
+		revision: rustTraitPipelineRevision,
+		pack: rustTraitPipelinePack,
+		roleFiles: rustTraitPipelineRoleFiles,
+		itemIds: rustTraitPipelineItemIds
 	}
 ] as const;
 

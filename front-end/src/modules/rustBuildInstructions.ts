@@ -20,6 +20,30 @@ export function rustBuildInstructions(
 				"The Rust lesson is incomplete. Reopen its complete selected-role source before building."
 			];
 		}
+		if (selected.definition.kind === "trait-pipeline") {
+			return [
+				"Download and extract the ZIP. Use Rust 1.97.1 with Cargo, rustfmt and Clippy; the package declares edition 2024.",
+				`cd ${selected.role}`,
+				"rustc -Vv",
+				"cargo -V",
+				"cargo fmt --all --check",
+				"rustfmt --edition 2024 --check diagnostics/*.rs",
+				"cargo clippy --locked --offline --all-targets -- -D warnings",
+				"cargo test --locked --offline",
+				"cargo run --locked --offline",
+				"cargo run --locked --offline -- --audit alpha=7 bad omega=17",
+				"cargo run --locked --offline -- --all alpha=7 bad omega=17",
+				"Refactor the concrete eager copying baseline into generic RowSource consumers with borrowed labels. Use try_fold for first-error work; all_records retains every Result in source order. Complete CORE, WORKFLOW, CHOICE, CHALLENGE and LIMITS in observations.md and read ../README.md for the exact contracts.",
+				"cargo build --locked --offline",
+				"rustc --edition=2024 diagnostics/missing-method.rs --extern trait_pipeline_lab=target/debug/libtrait_pipeline_lab.rlib -L dependency=target/debug/deps -o missing-method",
+				"rustc --edition=2024 diagnostics/mutate-live-iterator.rs --extern trait_pipeline_lab=target/debug/libtrait_pipeline_lab.rlib -L dependency=target/debug/deps -o mutate-live-iterator",
+				"rustc --edition=2024 diagnostics/alternate-source.rs --extern trait_pipeline_lab=target/debug/libtrait_pipeline_lab.rlib -L dependency=target/debug/deps -o alternate-source",
+				"rustc --edition=2024 diagnostics/report-after-owner-drop.rs --extern trait_pipeline_lab=target/debug/libtrait_pipeline_lab.rlib -L dependency=target/debug/deps -o report-after-owner-drop",
+				"rustc --edition=2024 diagnostics/mutation-after-last-use.rs --extern trait_pipeline_lab=target/debug/libtrait_pipeline_lab.rlib -L dependency=target/debug/deps -o mutation-after-last-use",
+				"The missing method refuses with E0046 and live-iterator mutation with E0502 in both roles. The alternate source receives E0308 only against the concrete starter; the reference prints count=2 total=12. The owner-drop example prints alpha in the owned starter and refuses with E0505 in the borrowed reference. The scoped repair prints rows=2 in both. Run each executable only when its compilation succeeds.",
+				"Record stdout, stderr, status and pulls separately. The eager starter pulls all rows before a failing audit; the lazy reference stops at the first invalid row. --all preserves every row outcome. Success is 0, usage is 64 and any row error is 65. Compiler rejection has no runtime result."
+			];
+		}
 		if (selected.definition.kind === "state-models") {
 			return [
 				"Download and extract the ZIP. Use Rust 1.97.1 with Cargo, rustfmt and Clippy; the package declares edition 2024.",

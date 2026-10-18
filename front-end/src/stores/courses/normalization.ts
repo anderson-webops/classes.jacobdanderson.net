@@ -10,6 +10,7 @@ import { applyRustCargoCourseWorkflows } from "./rustCargoCourseWorkflows";
 import { applyRustLabelSlicesCourseWorkflows } from "./rustLabelSlicesCourseWorkflows";
 import { applyRustOwnershipCourseWorkflows } from "./rustOwnershipCourseWorkflows";
 import { applyRustStateModelsCourseWorkflows } from "./rustStateModelsCourseWorkflows";
+import { applyRustTraitPipelineCourseWorkflows } from "./rustTraitPipelineCourseWorkflows";
 import { applyRustTypedErrorsCourseWorkflows } from "./rustTypedErrorsCourseWorkflows";
 import {
 	canonicalStaticMediaUrl,
@@ -9583,5 +9584,6 @@ export function normalizeRawCourse(id: string, rawCourse: RawCourse) {
 	applyRustTypedErrorsCourseWorkflows(course, id);
 	applyRustLabelSlicesCourseWorkflows(course, id);
 	applyRustStateModelsCourseWorkflows(course, id);
+	applyRustTraitPipelineCourseWorkflows(course, id);
 	return course;
 }
