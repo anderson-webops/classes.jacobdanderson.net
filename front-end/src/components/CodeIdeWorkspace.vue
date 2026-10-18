@@ -8492,6 +8492,9 @@ defineExpose({ stop: stopCurrentProject, runIsolated, releaseIsolatedPointer });
 						Use Linux instructions for the selected lab’s execution
 						and verification steps.
 					</p>
+					<p v-else-if="selectedProject?.mode === 'rust'">
+						Requires a native Rust toolchain.
+					</p>
 					<p v-else>
 						Edit and save the {{ nativeSourceLanguage }} project
 						here. Download the ZIP and extract it before compiling

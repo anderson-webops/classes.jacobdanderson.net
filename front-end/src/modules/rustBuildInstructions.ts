@@ -1,5 +1,5 @@
 import type { PythonIdeFile } from "@/modules/pythonIde";
-import { rustCargoRoleFiles, rustCourseResource } from "./rustProjectResources";
+import { rustCourseResource } from "./rustProjectResources";
 
 export function rustBuildInstructions(
 	files: PythonIdeFile[],
@@ -8,7 +8,7 @@ export function rustBuildInstructions(
 	const selected = rustCourseResource(starterUrl ?? "");
 	if (selected) {
 		if (
-			!rustCargoRoleFiles.every(name =>
+			!selected.definition.roleFiles.every(name =>
 				files.some(
 					file =>
 						file.name === `${selected.role}/${name}` &&
@@ -17,7 +17,26 @@ export function rustBuildInstructions(
 			)
 		) {
 			return [
-				"The Cargo lesson is incomplete. Reopen its complete selected-role source before building."
+				"The Rust lesson is incomplete. Reopen its complete selected-role source before building."
+			];
+		}
+		if (selected.definition.kind === "ownership") {
+			return [
+				"Download and extract the ZIP. Use Rust 1.97.1 with Cargo, rustfmt and Clippy; the package declares edition 2024.",
+				`cd ${selected.role}`,
+				"rustc -Vv",
+				"cargo -V",
+				"cargo fmt --all --check",
+				"rustfmt --edition 2024 --check diagnostics/*.rs",
+				"cargo clippy --locked --offline --all-targets -- -D warnings",
+				"cargo test --locked --offline",
+				"cargo run --locked --offline",
+				"cargo run --locked --offline -- alpha empty",
+				"Trace the String, Vec and Packet moves, cloned snapshot and borrowed label in src/main.rs. The updated vector gains 9; the snapshot stays unchanged.",
+				"Record the ScopeTag sequence: inner-second, inner-first, explicit, after-explicit-drop, outer. These markers do not measure allocator activity or timing.",
+				"Read ../README.md and complete OWNER LEDGER, PREDICT, CHECKS and LIMITS in observations.md. Continue with SCOPE, CHOICE or CHALLENGE in the same saved project.",
+				"The two use-after examples intentionally refuse compilation with E0382; copy-owned refuses with E0204. Follow the guide's separate rustc commands and compare each paired working example.",
+				"The browser edits and saves source. Build and diagnostic checks run in the native Rust environment."
 			];
 		}
 		return [

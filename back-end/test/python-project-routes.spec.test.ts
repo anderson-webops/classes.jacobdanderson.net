@@ -1124,52 +1124,58 @@ describe("Python project routes", () => {
 		);
 	});
 
-	it("stores a complete Rust Cargo role for user and course-code owners", async () => {
-		const fixture = JSON.parse(
-			readFileSync(
-				resolve(
-					__dirname,
-					"../../test/fixtures/rust-cargo-contracts.json"
-				),
-				"utf8"
-			)
-		);
-		const prefix = fixture.pack + "/";
-		const files = Object.entries(fixture.files)
-			.filter(
-				([name]) =>
-					name === prefix + "README.md" ||
-					name.startsWith(prefix + "starter/")
-			)
-			.map(([name, row]) => ({
-				name: name.slice(prefix.length),
-				content: (row as { content: string }).content
-			}));
-		expect(files).toHaveLength(7);
-		for (const owner of ["user", "course-code"] as const) {
-			await withPythonProjectRoute(
-				async baseUrl => {
-					const response = await postJson(baseUrl, {
-						mode: "rust",
-						files,
-						activeFileName: "starter/observations.md",
-						courseID: "rust-systems-security"
-					});
-					expect(response.status).toBe(201);
-					const body = await response.json();
-					expect(body.project.mode).toBe("rust");
-					expect(body.project.activeFileName).toBe(
-						"starter/observations.md"
-					);
-					expect(body.project.files).toEqual(
-						files.map(file => ({ ...file, encoding: "text" }))
-					);
-				},
-				owner,
-				"rust-systems-security"
+	it.each([
+		["cargo", 7],
+		["ownership", 11]
+	] as const)(
+		"stores a complete Rust %s role for user and course-code owners",
+		async (lesson, fileCount) => {
+			const fixture = JSON.parse(
+				readFileSync(
+					resolve(
+						__dirname,
+						`../../test/fixtures/rust-${lesson}-contracts.json`
+					),
+					"utf8"
+				)
 			);
+			const prefix = fixture.pack + "/";
+			const files = Object.entries(fixture.files)
+				.filter(
+					([name]) =>
+						name === prefix + "README.md" ||
+						name.startsWith(prefix + "starter/")
+				)
+				.map(([name, row]) => ({
+					name: name.slice(prefix.length),
+					content: (row as { content: string }).content
+				}));
+			expect(files).toHaveLength(fileCount);
+			for (const owner of ["user", "course-code"] as const) {
+				await withPythonProjectRoute(
+					async baseUrl => {
+						const response = await postJson(baseUrl, {
+							mode: "rust",
+							files,
+							activeFileName: "starter/observations.md",
+							courseID: "rust-systems-security"
+						});
+						expect(response.status).toBe(201);
+						const body = await response.json();
+						expect(body.project.mode).toBe("rust");
+						expect(body.project.activeFileName).toBe(
+							"starter/observations.md"
+						);
+						expect(body.project.files).toEqual(
+							files.map(file => ({ ...file, encoding: "text" }))
+						);
+					},
+					owner,
+					"rust-systems-security"
+				);
+			}
 		}
-	});
+	);
 
 	it("rejects non-text Cargo files, missing Rust sources and unsafe Rust paths", async () => {
 		const valid = [

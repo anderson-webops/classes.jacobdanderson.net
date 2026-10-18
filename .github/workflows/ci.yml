@@ -67,6 +67,34 @@ jobs:
                   if-no-files-found: error
                   retention-days: 7
 
+            - name: Verify complete ownership imports and source exports
+              env:
+                  RUST_OWNERSHIP_EXPORT_PROOF_DIR: output/rust-ownership-exports
+              run: npm exec -w front-end -- vitest run test/rust-ownership-workspace.spec.test.ts --no-file-parallelism --maxWorkers=1
+
+            - name: Verify actual ownership course actions and saved continuations
+              env:
+                  COURSE_IMPORT_SCREENSHOT_DIR: output/rust-ownership-screenshots
+                  RUST_OWNERSHIP_BROWSER_PROOF_DIR: output/rust-ownership-browser
+              run: node --test test/rust-ownership-course-browser.test.mjs
+
+            - name: Compile original and browser-edited ownership exports
+              run: python3 test/rust-cargo-exported-contracts.py --lesson ownership --exports front-end/output/rust-ownership-exports --browser output/rust-ownership-browser --proof output/rust-ownership-native/proof.json
+
+            - name: Retain ownership browser and native evidence
+              if: always()
+              uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+              with:
+                  name: rust-ownership-workflows
+                  path: |
+                      front-end/output/rust-ownership-exports/
+                      output/rust-ownership-browser/
+                      output/rust-ownership-native/
+                      output/rust-ownership-screenshots/
+                  include-hidden-files: true
+                  if-no-files-found: error
+                  retention-days: 7
+
     backend-install:
         runs-on: ubuntu-24.04
         steps:
