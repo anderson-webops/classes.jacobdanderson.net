@@ -224,7 +224,7 @@ describe("Rust Systems Security learner flow", () => {
 		);
 	});
 
-	it("retains the course's strongest original explanations and project labels", async () => {
+	it("retains original explanations and distinct opening activity labels", async () => {
 		const text = JSON.stringify(await requireRustSystemsCourse());
 
 		expect(text).toContain(
@@ -234,7 +234,7 @@ describe("Rust Systems Security learner flow", () => {
 			"The key question is which guarantees the compiler stops checking"
 		);
 		expect(text).toContain(
-			"Tooling, Cargo, and Why Rust Exists Transfer Practice"
+			"Label Input Boundary Cases"
 		);
 		expect(text).toContain(
 			"Capstone: Harden a Legacy Tool Extension Practice"

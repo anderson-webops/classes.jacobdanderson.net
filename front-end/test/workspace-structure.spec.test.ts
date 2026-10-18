@@ -63,8 +63,8 @@ describe("simplified workspaces", () => {
 			props: { open: true },
 			global: { stubs: { Teleport: true } }
 		});
-		expect(ideStarters).toHaveLength(24);
-		expect(new Set(ideStarters.map(item => item.id)).size).toBe(24);
+		expect(ideStarters).toHaveLength(25);
+		expect(new Set(ideStarters.map(item => item.id)).size).toBe(25);
 		await wrapper.findAll("select")[0].setValue("java");
 		expect(wrapper.text()).toContain("Java Outline");
 		expect(wrapper.text()).not.toContain("Python Level 1 Outline");
@@ -103,6 +103,25 @@ describe("simplified workspaces", () => {
 			.trigger("click");
 		expect(wrapper.emitted("choose")![3][0]).toMatchObject({
 			mode: "assembly",
+			template: "blank"
+		});
+		await wrapper.findAll("select")[0].setValue("rust");
+		await wrapper.findAll("select")[1].setValue("Templates");
+		await wrapper
+			.findAll("button")
+			.find(button => button.text() === "Rust Cargo Project")!
+			.trigger("click");
+		expect(wrapper.emitted("choose")![4][0]).toMatchObject({
+			mode: "rust",
+			template: "course"
+		});
+		await wrapper.findAll("select")[1].setValue("Blank");
+		await wrapper
+			.findAll("button")
+			.find(button => button.text() === "Blank Rust")!
+			.trigger("click");
+		expect(wrapper.emitted("choose")![5][0]).toMatchObject({
+			mode: "rust",
 			template: "blank"
 		});
 		wrapper.unmount();
