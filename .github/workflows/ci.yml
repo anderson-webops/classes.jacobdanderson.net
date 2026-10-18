@@ -263,6 +263,80 @@ jobs:
                   if-no-files-found: error
                   retention-days: 7
 
+            - name: Verify complete concurrency, boundary and capstone imports and exports
+              env:
+                  RUST_FINAL_EXPORT_PROOF_DIR: output
+              run: npm exec -w front-end -- vitest run test/rust-final-workspaces.spec.test.ts --no-file-parallelism --maxWorkers=1
+
+            - name: Verify actual concurrency course actions and saved continuations
+              env:
+                  COURSE_IMPORT_SCREENSHOT_DIR: output/rust-concurrency-screenshots
+                  RUST_CONCURRENCY_BROWSER_PROOF_DIR: output/rust-concurrency-browser
+              run: node --test test/rust-concurrency-course-browser.test.mjs
+
+            - name: Compile original and browser-edited concurrency exports without Git
+              run: python3 test/rust-cargo-exported-contracts.py --lesson concurrency --exports front-end/output/rust-concurrency-exports --browser output/rust-concurrency-browser --proof output/rust-concurrency-native/proof.json
+
+            - name: Retain concurrency browser and native evidence
+              if: always()
+              uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+              with:
+                  name: rust-concurrency-workflows
+                  path: |
+                      front-end/output/rust-concurrency-exports/
+                      output/rust-concurrency-browser/
+                      output/rust-concurrency-native/
+                      output/rust-concurrency-screenshots/
+                  include-hidden-files: true
+                  if-no-files-found: error
+                  retention-days: 7
+
+            - name: Verify actual boundary-review course actions and saved continuations
+              env:
+                  COURSE_IMPORT_SCREENSHOT_DIR: output/rust-boundary-review-screenshots
+                  RUST_BOUNDARY_REVIEW_BROWSER_PROOF_DIR: output/rust-boundary-review-browser
+              run: node --test test/rust-boundary-review-course-browser.test.mjs
+
+            - name: Compile original and browser-edited boundary-review exports without Git
+              run: python3 test/rust-cargo-exported-contracts.py --lesson boundary-review --exports front-end/output/rust-boundary-review-exports --browser output/rust-boundary-review-browser --proof output/rust-boundary-review-native/proof.json
+
+            - name: Retain boundary-review browser and native evidence
+              if: always()
+              uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+              with:
+                  name: rust-boundary-review-workflows
+                  path: |
+                      front-end/output/rust-boundary-review-exports/
+                      output/rust-boundary-review-browser/
+                      output/rust-boundary-review-native/
+                      output/rust-boundary-review-screenshots/
+                  include-hidden-files: true
+                  if-no-files-found: error
+                  retention-days: 7
+
+            - name: Verify actual record-hardening course actions and saved continuations
+              env:
+                  COURSE_IMPORT_SCREENSHOT_DIR: output/rust-record-hardening-screenshots
+                  RUST_RECORD_HARDENING_BROWSER_PROOF_DIR: output/rust-record-hardening-browser
+              run: node --test test/rust-record-hardening-course-browser.test.mjs
+
+            - name: Compile original and browser-edited record-hardening exports without Git
+              run: python3 test/rust-cargo-exported-contracts.py --lesson record-hardening --exports front-end/output/rust-record-hardening-exports --browser output/rust-record-hardening-browser --proof output/rust-record-hardening-native/proof.json
+
+            - name: Retain record-hardening browser and native evidence
+              if: always()
+              uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+              with:
+                  name: rust-record-hardening-workflows
+                  path: |
+                      front-end/output/rust-record-hardening-exports/
+                      output/rust-record-hardening-browser/
+                      output/rust-record-hardening-native/
+                      output/rust-record-hardening-screenshots/
+                  include-hidden-files: true
+                  if-no-files-found: error
+                  retention-days: 7
+
     backend-install:
         runs-on: ubuntu-24.04
         steps:

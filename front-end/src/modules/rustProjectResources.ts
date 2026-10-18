@@ -200,6 +200,93 @@ export const rustBoundedCliRoleFiles = [
 	"fixtures/over.txt"
 ] as const;
 
+export const rustConcurrencyRevision =
+	"cdfcc58e80fc9a206c11673cfbf26f1fac95f1ea";
+
+export const rustConcurrencyPack = "RUST-08-concurrency-evidence";
+
+export const rustConcurrencyModuleId =
+	"rust-systems-security-rss8-concurrency-and-race-reduction";
+
+export const rustConcurrencyItemIds = {
+	core: "rust-systems-security-rss8-concurrency-and-race-reduction-curriculum-core-project-concurrency-and-race-reduction",
+	workflow:
+		"rust-systems-security-rss8-concurrency-and-race-reduction-supplemental-project-threads-and-channels-monitor",
+	choice: "rust-systems-security-rss8-concurrency-and-race-reduction-supplemental-concurrency-and-race-reduction-transfer-practice",
+	challenge:
+		"rust-systems-security-rss8-concurrency-and-race-reduction-supplemental-concurrency-and-race-reduction-extension-practice"
+} as const;
+
+export const rustConcurrencyRoleFiles = [
+	"observations.md",
+	"Cargo.toml",
+	"Cargo.lock",
+	"src/lib.rs",
+	"src/main.rs",
+	"src/ledger.rs",
+	"diagnostics/rc-not-send.rs",
+	"diagnostics/arc-owned.rs",
+	"diagnostics/cell-not-sync.rs",
+	"diagnostics/scoped-shared.rs"
+] as const;
+
+export const rustBoundaryReviewRevision =
+	"7a3aa814462d839deebf4010c0e56ab4643baecf";
+
+export const rustBoundaryReviewPack = "RUST-09-boundary-review-evidence";
+
+export const rustBoundaryReviewModuleId =
+	"rust-systems-security-rss9-unsafe-ffi-and-trusted-boundaries";
+
+export const rustBoundaryReviewItemIds = {
+	core: "rust-systems-security-rss9-unsafe-ffi-and-trusted-boundaries-curriculum-core-project-unsafe-ffi-and-trusted-boundaries",
+	workflow:
+		"rust-systems-security-rss9-unsafe-ffi-and-trusted-boundaries-supplemental-project-unsafe-and-ffi-boundary-review",
+	choice: "rust-systems-security-rss9-unsafe-ffi-and-trusted-boundaries-supplemental-unsafe-ffi-and-trusted-boundaries-transfer-practice",
+	challenge:
+		"rust-systems-security-rss9-unsafe-ffi-and-trusted-boundaries-supplemental-unsafe-ffi-and-trusted-boundaries-extension-practice"
+} as const;
+
+export const rustBoundaryReviewRoleFiles = [
+	"observations.md",
+	"Cargo.toml",
+	"Cargo.lock",
+	"src/lib.rs",
+	"src/main.rs",
+	"src/bridge.rs",
+	"diagnostics/unsafe-call.rs",
+	"diagnostics/explicit-call.rs",
+	"diagnostics/unsafe-body.rs",
+	"diagnostics/explicit-body.rs",
+	"diagnostics/miri-dangling.rs"
+] as const;
+
+export const rustRecordHardeningRevision =
+	"36aa7be22888f3e73a208dee949962c586833257";
+
+export const rustRecordHardeningPack = "RUST-10-record-hardening-capstone";
+
+export const rustRecordHardeningModuleId =
+	"rust-systems-security-rss10-capstone-harden-a-legacy-tool";
+
+export const rustRecordHardeningItemIds = {
+	core: "rust-systems-security-rss10-capstone-harden-a-legacy-tool-curriculum-core-project-harden-a-legacy-tool",
+	workflow:
+		"rust-systems-security-rss10-capstone-harden-a-legacy-tool-supplemental-project-harden-a-legacy-tool",
+	choice: "rust-systems-security-rss10-capstone-harden-a-legacy-tool-supplemental-capstone-harden-a-legacy-tool-transfer-practice",
+	challenge:
+		"rust-systems-security-rss10-capstone-harden-a-legacy-tool-supplemental-capstone-harden-a-legacy-tool-extension-practice"
+} as const;
+
+export const rustRecordHardeningRoleFiles = [
+	"observations.md",
+	"Cargo.toml",
+	"Cargo.lock",
+	"src/lib.rs",
+	"src/main.rs",
+	"src/fixtures.rs"
+] as const;
+
 const rustLessons = [
 	{
 		kind: "cargo",
@@ -256,6 +343,27 @@ const rustLessons = [
 		pack: rustBoundedCliPack,
 		roleFiles: rustBoundedCliRoleFiles,
 		itemIds: rustBoundedCliItemIds
+	},
+	{
+		kind: "concurrency",
+		revision: rustConcurrencyRevision,
+		pack: rustConcurrencyPack,
+		roleFiles: rustConcurrencyRoleFiles,
+		itemIds: rustConcurrencyItemIds
+	},
+	{
+		kind: "boundary-review",
+		revision: rustBoundaryReviewRevision,
+		pack: rustBoundaryReviewPack,
+		roleFiles: rustBoundaryReviewRoleFiles,
+		itemIds: rustBoundaryReviewItemIds
+	},
+	{
+		kind: "record-hardening",
+		revision: rustRecordHardeningRevision,
+		pack: rustRecordHardeningPack,
+		roleFiles: rustRecordHardeningRoleFiles,
+		itemIds: rustRecordHardeningItemIds
 	}
 ] as const;
 

@@ -8,6 +8,7 @@ import { applyResearchBackedExpansions } from "./research-expansions";
 import { applyRustBorrowingCourseWorkflows } from "./rustBorrowingCourseWorkflows";
 import { applyRustBoundedCliCourseWorkflows } from "./rustBoundedCliCourseWorkflows";
 import { applyRustCargoCourseWorkflows } from "./rustCargoCourseWorkflows";
+import { applyRustFinalCourseWorkflows } from "./rustFinalCourseWorkflows";
 import { applyRustLabelSlicesCourseWorkflows } from "./rustLabelSlicesCourseWorkflows";
 import { applyRustOwnershipCourseWorkflows } from "./rustOwnershipCourseWorkflows";
 import { applyRustStateModelsCourseWorkflows } from "./rustStateModelsCourseWorkflows";
@@ -366,9 +367,9 @@ function cleanTitleText(text: string) {
 
 function supplementalPurposeLabel(number: string) {
 	const labels: Record<string, string> = {
-		"2": "Transfer Practice",
-		"3": "Extension Practice",
-		"4": "Challenge Practice"
+		2: "Transfer Practice",
+		3: "Extension Practice",
+		4: "Challenge Practice"
 	};
 
 	return labels[number] ?? `Practice Variant ${number}`;
@@ -9587,5 +9588,6 @@ export function normalizeRawCourse(id: string, rawCourse: RawCourse) {
 	applyRustStateModelsCourseWorkflows(course, id);
 	applyRustTraitPipelineCourseWorkflows(course, id);
 	applyRustBoundedCliCourseWorkflows(course, id);
+	applyRustFinalCourseWorkflows(course, id);
 	return course;
 }
