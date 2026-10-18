@@ -110,6 +110,7 @@ import {
 	startPythonSandbox,
 	unchangedRunFiles
 } from "@/modules/pythonSandbox";
+import { rustBuildInstructions } from "@/modules/rustBuildInstructions";
 import { bronzePythonFileIoForKey } from "@/modules/usacoBronzeRequiredPacks";
 import { useAppStore } from "@/stores/app";
 
@@ -1136,18 +1137,22 @@ const usesNativeSourceWorkspace = computed(
 		selectedProject.value?.mode === "linux" ||
 		selectedProject.value?.mode === "assembly" ||
 		selectedProject.value?.mode === "c" ||
-		selectedProject.value?.mode === "cpp"
+		selectedProject.value?.mode === "cpp" ||
+		selectedProject.value?.mode === "rust"
 );
 const nativeSourceLanguage = computed(() =>
-	selectedProject.value?.mode === "linux"
-		? "Linux"
-		: selectedProject.value?.mode === "assembly"
-			? "Assembly (Linux x86-64)"
-			: selectedProject.value?.mode === "c"
-				? "C17"
-				: "C++"
+	selectedProject.value?.mode === "rust"
+		? "Rust"
+		: selectedProject.value?.mode === "linux"
+			? "Linux"
+			: selectedProject.value?.mode === "assembly"
+				? "Assembly (Linux x86-64)"
+				: selectedProject.value?.mode === "c"
+					? "C17"
+					: "C++"
 );
 const mobileWorkspaceViews = computed(() =>
+	selectedProject.value?.mode === "rust" ||
 	selectedProject.value?.mode === "linux" ||
 	selectedProject.value?.mode === "c" ||
 	selectedProject.value?.mode === "assembly"
@@ -1158,7 +1163,10 @@ watch(
 	() => selectedProject.value?.mode,
 	mode => {
 		if (
-			(mode === "linux" || mode === "c" || mode === "assembly") &&
+			(mode === "rust" ||
+				mode === "linux" ||
+				mode === "c" ||
+				mode === "assembly") &&
 			mobileView.value === "canvas"
 		) {
 			mobileView.value = "code";
@@ -1166,6 +1174,8 @@ watch(
 	}
 );
 const newFileNamePlaceholder = computed(() => {
+	if (selectedProject.value?.mode === "rust")
+		return "src/main.rs, src/helpers.rs or Cargo.toml";
 	if (selectedProject.value?.mode === "linux")
 		return "task.sh, reports/app 1.log or linux-backup.service";
 	if (selectedProject.value?.mode === "assembly")
@@ -3543,17 +3553,19 @@ function addFile() {
 	if (!selectedProject.value) return;
 	const fileName = normalizePythonFileName(
 		newFileName.value,
-		selectedProject.value.mode === "linux"
-			? ".sh"
-			: selectedProject.value.mode === "assembly"
-				? ".S"
-				: selectedProject.value.mode === "c"
-					? ".c"
-					: selectedProject.value.mode === "cpp"
-						? ".cpp"
-						: isJavaIdeMode(selectedProject.value.mode)
-							? ".java"
-							: ".py",
+		selectedProject.value.mode === "rust"
+			? ".rs"
+			: selectedProject.value.mode === "linux"
+				? ".sh"
+				: selectedProject.value.mode === "assembly"
+					? ".S"
+					: selectedProject.value.mode === "c"
+						? ".c"
+						: selectedProject.value.mode === "cpp"
+							? ".cpp"
+							: isJavaIdeMode(selectedProject.value.mode)
+								? ".java"
+								: ".py",
 		selectedProject.value.mode
 	);
 	if (!isValidPythonFileName(fileName, selectedProject.value.mode)) {
@@ -6812,6 +6824,16 @@ async function runCurrentProject() {
 	if (shouldStopPythonIdeRun(runID, project._id)) return;
 
 	clearOutput();
+	if (project.mode === "rust") {
+		for (const line of rustBuildInstructions(
+			project.files,
+			project.starterUrl
+		))
+			appendOutput("system", line);
+		runMessage.value = "Native build instructions";
+		diagnosticStage.value = "completed";
+		return;
+	}
 	const nativeJava =
 		project.mode === "java"
 			? javaNativeBuildInstructions(project.courseProjectKey)
@@ -8609,7 +8631,8 @@ defineExpose({ stop: stopCurrentProject, runIsolated, releaseIsolatedPointer });
 								? "Code"
 								: view === "canvas"
 									? "Canvas"
-									: selectedProject?.mode === "c" ||
+									: selectedProject?.mode === "rust" ||
+										  selectedProject?.mode === "c" ||
 										  selectedProject?.mode ===
 												"assembly" ||
 										  selectedProject?.mode === "linux"
@@ -8740,6 +8763,7 @@ defineExpose({ stop: stopCurrentProject, runIsolated, releaseIsolatedPointer });
 					>
 						<div class="panel-header">
 							<span>{{
+								selectedProject?.mode === "rust" ||
 								selectedProject?.mode === "c" ||
 								selectedProject?.mode === "assembly" ||
 								selectedProject?.mode === "linux"

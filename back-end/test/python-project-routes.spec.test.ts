@@ -1124,6 +1124,72 @@ describe("Python project routes", () => {
 		);
 	});
 
+	it("stores a complete Rust Cargo role for user and course-code owners", async () => {
+		const fixture = JSON.parse(
+			readFileSync(
+				resolve(
+					__dirname,
+					"../../test/fixtures/rust-cargo-contracts.json"
+				),
+				"utf8"
+			)
+		);
+		const prefix = fixture.pack + "/";
+		const files = Object.entries(fixture.files)
+			.filter(
+				([name]) =>
+					name === prefix + "README.md" ||
+					name.startsWith(prefix + "starter/")
+			)
+			.map(([name, row]) => ({
+				name: name.slice(prefix.length),
+				content: (row as { content: string }).content
+			}));
+		expect(files).toHaveLength(7);
+		for (const owner of ["user", "course-code"] as const) {
+			await withPythonProjectRoute(
+				async baseUrl => {
+					const response = await postJson(baseUrl, {
+						mode: "rust",
+						files,
+						activeFileName: "starter/observations.md",
+						courseID: "rust-systems-security"
+					});
+					expect(response.status).toBe(201);
+					const body = await response.json();
+					expect(body.project.mode).toBe("rust");
+					expect(body.project.activeFileName).toBe(
+						"starter/observations.md"
+					);
+					expect(body.project.files).toEqual(
+						files.map(file => ({ ...file, encoding: "text" }))
+					);
+				},
+				owner,
+				"rust-systems-security"
+			);
+		}
+	});
+
+	it("rejects non-text Cargo files, missing Rust sources and unsafe Rust paths", async () => {
+		const valid = [
+			{ name: "Cargo.toml", content: "[package]\n" },
+			{ name: "src/main.rs", content: "fn main() {}\n" }
+		];
+		const invalid = [
+			valid.slice(0, 1),
+			[{ ...valid[0], encoding: "base64" }, valid[1]],
+			[valid[0], { ...valid[1], name: "../main.rs" }],
+			[valid[0], { ...valid[1], encoding: "base64" }]
+		];
+		await withPythonProjectRoute(async baseUrl => {
+			for (const files of invalid)
+				expect(
+					(await postJson(baseUrl, { mode: "rust", files })).status
+				).toBe(400);
+		});
+	});
+
 	it("stores multi-file C++ projects for user and course-code owners", async () => {
 		const files = [
 			{
@@ -1507,13 +1573,13 @@ describe("Python project routes", () => {
 
 		expect(sources).toContain('app.get("/healthz"');
 		expect(sources).toContain(
-			'const projectModeSchema = z.enum(["assembly", "c", "cpp", "data", "java", "karel", "linux", "pgzero", "python", "turtle"])'
+			'const projectModeSchema = z.enum(["assembly", "c", "cpp", "data", "java", "karel", "linux", "pgzero", "python", "rust", "turtle"])'
 		);
 		expect(sources).toContain(
-			'export type PythonProjectMode = "assembly" | "c" | "cpp" | "data" | "java" | "karel" | "linux" | "pgzero" | "python" | "turtle";'
+			'export type PythonProjectMode = "assembly" | "c" | "cpp" | "data" | "java" | "karel" | "linux" | "pgzero" | "python" | "rust" | "turtle";'
 		);
 		expect(sources).toContain(
-			'enum: ["assembly", "c", "cpp", "data", "java", "karel", "linux", "pgzero", "python", "turtle"]'
+			'enum: ["assembly", "c", "cpp", "data", "java", "karel", "linux", "pgzero", "python", "rust", "turtle"]'
 		);
 		expect(sources).toContain("ROOT_TEXT_FILE_RE =");
 		expect(sources).toContain("java|json");

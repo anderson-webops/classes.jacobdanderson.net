@@ -12,6 +12,13 @@ export interface IdeStarter {
 }
 export const ideStarters: IdeStarter[] = [
 	{
+		id: "rust:course",
+		label: "Rust Cargo Project",
+		mode: "rust",
+		template: "course",
+		category: "Templates"
+	},
+	{
 		id: "assembly:course",
 		label: "Assembly and C Caller",
 		mode: "assembly",

@@ -655,6 +655,7 @@ describe("Python project review routes", () => {
 	});
 
 	it.each([
+		"rust",
 		"c",
 		"assembly",
 		"compiler",
@@ -663,18 +664,21 @@ describe("Python project review routes", () => {
 	] as const)(
 		"saves, shares, and edits a %s review while preserving the learner's complete pack",
 		async mode => {
-			const requestedMode = mode === "c" ? "c" : "assembly";
+			const requestedMode =
+				mode === "rust" ? "rust" : mode === "c" ? "c" : "assembly";
 			const fixture = JSON.parse(
 				readFileSync(
 					resolve(
 						process.cwd(),
-						mode === "hardening" || mode === "hardening-trace"
-							? "../test/fixtures/assembly-hardening-contracts.json"
-							: mode === "compiler"
-								? "../test/fixtures/assembly-compiler-contracts.json"
-								: mode === "assembly"
-									? "../test/fixtures/assembly-opening-contracts.json"
-									: "../test/fixtures/c17-opening-contracts.json"
+						mode === "rust"
+							? "../test/fixtures/rust-cargo-contracts.json"
+							: mode === "hardening" || mode === "hardening-trace"
+								? "../test/fixtures/assembly-hardening-contracts.json"
+								: mode === "compiler"
+									? "../test/fixtures/assembly-compiler-contracts.json"
+									: mode === "assembly"
+										? "../test/fixtures/assembly-opening-contracts.json"
+										: "../test/fixtures/c17-opening-contracts.json"
 					),
 					"utf8"
 				)
@@ -684,13 +688,15 @@ describe("Python project review routes", () => {
 					? "CSE-06-unit-1-why-c-for-systems-work"
 					: fixture.pack;
 			const activeFileName =
-				mode === "hardening-trace"
-					? "starter/trace.md"
-					: mode === "compiler" || mode === "hardening"
-						? "starter/analysis.md"
-						: mode === "assembly"
-							? "starter/routine.S"
-							: "starter/main.c";
+				mode === "rust"
+					? "starter/observations.md"
+					: mode === "hardening-trace"
+						? "starter/trace.md"
+						: mode === "compiler" || mode === "hardening"
+							? "starter/analysis.md"
+							: mode === "assembly"
+								? "starter/routine.S"
+								: "starter/main.c";
 			const files = Object.entries(
 				fixture.files as Record<string, { content: string }>
 			)
@@ -709,13 +715,17 @@ describe("Python project review routes", () => {
 				files,
 				activeFileName,
 				courseID:
-					requestedMode === "assembly"
-						? "assembly"
-						: "c-systems-engineering",
+					requestedMode === "rust"
+						? "rust-systems-security"
+						: requestedMode === "assembly"
+							? "assembly"
+							: "c-systems-engineering",
 				courseProjectKey:
-					requestedMode === "assembly"
-						? "assembly:compiler:starter:native-assembly"
-						: "c-systems-engineering:linking:starter:native-c17",
+					requestedMode === "rust"
+						? "rust-systems-security:cargo:starter:native-rust"
+						: requestedMode === "assembly"
+							? "assembly:compiler:starter:native-assembly"
+							: "c-systems-engineering:linking:starter:native-c17",
 				shared: true,
 				shareID: "share_C17_native_123456789"
 			});

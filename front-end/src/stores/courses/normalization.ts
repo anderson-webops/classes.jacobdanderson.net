@@ -5,6 +5,7 @@ import { mapMarkdownProse } from "./markdownProse";
 import { buildProjectGuidance } from "./projectGuidance";
 import { applyPyGamesCourseWorkflows } from "./pyGamesCourseWorkflows";
 import { applyResearchBackedExpansions } from "./research-expansions";
+import { applyRustCargoCourseWorkflows } from "./rustCargoCourseWorkflows";
 import {
 	canonicalStaticMediaUrl,
 	hasPendingStaticMediaNotice,
@@ -9571,5 +9572,6 @@ export function normalizeRawCourse(id: string, rawCourse: RawCourse) {
 	}
 	restoreScratchProjectInstructions(course, preservedScratchInstructions);
 	applyPyGamesCourseWorkflows(course, id);
+	applyRustCargoCourseWorkflows(course, id);
 	return course;
 }

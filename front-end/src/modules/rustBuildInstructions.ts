@@ -1,0 +1,59 @@
+import type { PythonIdeFile } from "@/modules/pythonIde";
+import { rustCargoRoleFiles, rustCourseResource } from "./rustProjectResources";
+
+export function rustBuildInstructions(
+	files: PythonIdeFile[],
+	starterUrl?: string
+) {
+	const selected = rustCourseResource(starterUrl ?? "");
+	if (selected) {
+		if (
+			!rustCargoRoleFiles.every(name =>
+				files.some(
+					file =>
+						file.name === `${selected.role}/${name}` &&
+						file.encoding !== "base64"
+				)
+			)
+		) {
+			return [
+				"The Cargo lesson is incomplete. Reopen its complete selected-role source before building."
+			];
+		}
+		return [
+			"Download and extract the ZIP. Use Rust 1.97.1 with Cargo, rustfmt and Clippy; the package declares edition 2024.",
+			`cd ${selected.role}`,
+			"rustc -Vv",
+			"cargo -V",
+			"cargo fmt --all --check",
+			"cargo clippy --locked --offline --all-targets -- -D warnings",
+			"cargo test --locked --offline",
+			"cargo run --locked --offline",
+			"cargo run --locked --offline -- 'A B_c/9'",
+			"The default stdout is packet-42 and a newline; the changed input gives ABc9. Record actual stderr and exit statuses separately.",
+			"Read ../README.md and complete observations.md for the selected activity. Keep Cargo.lock and both diagnostic examples with the source.",
+			"The moved-value diagnostic is expected to fail compilation with E0382; the corrected example prints packet-42 twice. Follow the guide's separate rustc commands.",
+			"The browser edits and saves source. Build and diagnostic checks run in the native Rust environment."
+		];
+	}
+	const manifests = files.filter(file =>
+		/(?:^|\/)Cargo\.toml$/.test(file.name)
+	);
+	if (manifests.length !== 1 || manifests[0]?.encoding === "base64") {
+		return [
+			"Extract the ZIP and follow the project's build guide. A Cargo project needs one selected Cargo.toml; a standalone Rust source needs its own rustc command."
+		];
+	}
+	const folder = manifests[0].name.split("/").slice(0, -1).join("/");
+	return [
+		"Download and extract the ZIP. Use a native Rust toolchain with edition 2024 support.",
+		...(folder ? [`cd '${folder.replaceAll("'", "'\"'\"'")}'`] : []),
+		"rustc -Vv",
+		"cargo -V",
+		"cargo fmt --all --check",
+		"cargo clippy --locked --offline --all-targets -- -D warnings",
+		"cargo test --locked --offline",
+		"cargo run --locked --offline",
+		"Follow README.md for the program's inputs and expected output."
+	];
+}

@@ -36,6 +36,12 @@ import {
 	networkImportFiles
 } from "@/modules/networkProjectResources";
 import { loadPyGamesCoreFiles } from "@/modules/pyGamesCoreProjectResources";
+import { rustStarterCode, rustStarterFiles } from "@/modules/rustIdeSource";
+import { isRustProjectTextPath } from "@/modules/rustProjectFiles";
+import {
+	rustCourseResource,
+	rustImportFiles
+} from "@/modules/rustProjectResources";
 import { restoredUsacoResource } from "@/modules/usacoProjectResources";
 
 const WHITESPACE_RE = /\s+/g;
@@ -107,6 +113,7 @@ export type PythonIdeMode =
 	| "linux"
 	| "pgzero"
 	| "python"
+	| "rust"
 	| "turtle";
 export type PythonIdeProjectTemplate =
 	| "blank"
@@ -259,6 +266,9 @@ interface PythonIdeProjectStorageRecord {
 
 export const pythonIdeStorageNamespace = "classes-python-ide-projects";
 export const pythonIdeAllowedFileExtensions = [
+	".rs",
+	".toml",
+	".lock",
 	".sh",
 	".log",
 	".conf",
@@ -300,6 +310,7 @@ export const pythonIdeFileUploadAccept =
 let pythonIdeStorageDbPromise: Promise<IDBDatabase> | null = null;
 
 const pythonIdeCourseModes: Record<string, PythonIdeMode> = {
+	"rust-systems-security": "rust",
 	"linux-systems": "linux",
 	assembly: "assembly",
 	"c-systems-engineering": "c",
@@ -336,6 +347,7 @@ export function normalizePythonIdeMode(
 	if (value === "bluej") return "java";
 	if (
 		value === "assembly" ||
+		value === "rust" ||
 		value === "linux" ||
 		value === "c" ||
 		value === "cpp" ||
@@ -396,6 +408,8 @@ export function pythonIdeModeForCourseResource(courseId: string, url: string) {
 		return linuxCourseResource(url) ? "linux" : null;
 	if (courseId === "assembly")
 		return assemblyCourseResource(url) ? "assembly" : null;
+	if (courseId === "rust-systems-security")
+		return rustCourseResource(url) ? "rust" : null;
 	if (courseId === "c-systems-engineering")
 		return c17CourseResource(url) ? "c" : null;
 	if (courseId.startsWith("usaco-")) {
@@ -2231,6 +2245,7 @@ plt.tight_layout()
 `;
 
 export function getPythonIdeModeLabel(mode: PythonIdeMode) {
+	if (mode === "rust") return "Rust";
 	if (mode === "linux") return "Linux";
 	if (mode === "assembly") return "Assembly";
 	if (mode === "c") return "C17";
@@ -2277,6 +2292,7 @@ export function getPythonIdeProjectKindLabel(
 }
 
 function getDemoStarterCode(mode: PythonIdeMode) {
+	if (mode === "rust") return rustStarterCode;
 	if (mode === "linux") return linuxStarterCode;
 	if (mode === "assembly") return assemblyStarterCode;
 	if (mode === "c") return cStarterCode;
@@ -2298,6 +2314,7 @@ function clonePythonIdeFiles(files: PythonIdeFile[]) {
 }
 
 function getBlankStarterFiles(mode: PythonIdeMode): PythonIdeFile[] {
+	if (mode === "rust") return rustStarterFiles();
 	if (mode === "linux") return linuxStarterFiles();
 	if (mode === "assembly") return assemblyStarterFiles();
 	if (mode === "c") {
@@ -2333,6 +2350,7 @@ function getBlankStarterFiles(mode: PythonIdeMode): PythonIdeFile[] {
 }
 
 function getCourseStarterFiles(mode: PythonIdeMode): PythonIdeFile[] {
+	if (mode === "rust") return rustStarterFiles();
 	if (mode === "linux") return linuxStarterFiles();
 	if (mode === "assembly") return assemblyStarterFiles();
 	if (mode === "c") {
@@ -2384,6 +2402,7 @@ function getCourseStarterFiles(mode: PythonIdeMode): PythonIdeFile[] {
 
 function getDemoStarterFiles(mode: PythonIdeMode): PythonIdeFile[] {
 	if (
+		mode === "rust" ||
 		mode === "assembly" ||
 		mode === "c" ||
 		mode === "cpp" ||
@@ -2418,6 +2437,7 @@ function getDemoStarterFiles(mode: PythonIdeMode): PythonIdeFile[] {
 }
 
 function getOutlineStarterFiles(mode: PythonIdeMode): PythonIdeFile[] {
+	if (mode === "rust") return rustStarterFiles();
 	if (mode === "linux") return linuxStarterFiles();
 	if (mode === "assembly") return assemblyStarterFiles();
 	if (mode === "c") {
@@ -2607,6 +2627,7 @@ function getStarterFilesForTemplate(
 	mode: PythonIdeMode,
 	template: PythonIdeProjectTemplate
 ) {
+	if (mode === "rust") return rustStarterFiles();
 	if (mode === "linux") return linuxStarterFiles();
 	if (
 		(template === "event-reference" && mode === "pgzero") ||
@@ -2684,6 +2705,7 @@ function projectTitleForMode(
 	mode: PythonIdeMode,
 	template: PythonIdeProjectTemplate = "blank"
 ) {
+	if (mode === "rust") return "Rust Project";
 	if (mode === "linux") return "Linux Project";
 	if (mode === "assembly") return "Assembly Project";
 	if (mode === "c") return "C17 Project";
@@ -2747,6 +2769,8 @@ export function createPythonIdeProject(
 		mode === "assembly"
 			? assemblyCourseResource(options.starterUrl ?? "")
 			: null;
+	const rustSource =
+		mode === "rust" ? rustCourseResource(options.starterUrl ?? "") : null;
 	return {
 		_id: `local-${crypto.randomUUID()}`,
 		title: options.title ?? projectTitleForMode(mode, template),
@@ -2754,15 +2778,19 @@ export function createPythonIdeProject(
 		files,
 		activeFileName: resolvePythonIdeActiveFileName(
 			files,
-			mode === "linux"
-				? linuxSource
-					? `${linuxSource.role}/${linuxSource.definition.roleFiles[0]}`
-					: files.find(file => /\.sh$/i.test(file.name))?.name
-				: mode === "assembly"
-					? assemblySource
-						? `${assemblySource.role}/${assemblySource.definition.roleFiles[0]}`
-						: files.find(file => /\.s$/i.test(file.name))?.name
-					: undefined
+			mode === "rust"
+				? rustSource
+					? `${rustSource.role}/observations.md`
+					: "src/main.rs"
+				: mode === "linux"
+					? linuxSource
+						? `${linuxSource.role}/${linuxSource.definition.roleFiles[0]}`
+						: files.find(file => /\.sh$/i.test(file.name))?.name
+					: mode === "assembly"
+						? assemblySource
+							? `${assemblySource.role}/${assemblySource.definition.roleFiles[0]}`
+							: files.find(file => /\.s$/i.test(file.name))?.name
+						: undefined
 		),
 		courseID: options.courseID,
 		courseProjectKey: options.courseProjectKey,
@@ -2856,6 +2884,7 @@ export function isValidPythonFileName(
 	mode: PythonIdeMode = "python"
 ) {
 	const linuxPath = mode === "linux" && isLinuxProjectTextPath(value);
+	const rustPath = mode === "rust" && isRustProjectTextPath(value);
 	if (!value || value.length > 80) return false;
 	if (value.startsWith("/") || value.includes("\\") || value.includes("//"))
 		return false;
@@ -2881,6 +2910,7 @@ export function isValidPythonFileName(
 		CODE_EXTENSION_RE.test(value) ||
 		baseName(value) === "CMakeLists.txt" ||
 		NATIVE_WORKSHEET_FILE_RE.test(value) ||
+		rustPath ||
 		linuxPath
 	) {
 		const rootDirectory = segments[0]?.toLowerCase();
@@ -2905,6 +2935,7 @@ export function isPythonIdeRunnableFile(
 	mode: PythonIdeMode = "python"
 ) {
 	if (mode === "linux") return false;
+	if (mode === "rust") return /\.rs$/i.test(value);
 	if (mode === "assembly") return /\.s$/i.test(value);
 	if (mode === "c") return C_EXTENSION_RE.test(value);
 	if (mode === "cpp") return CPP_EXTENSION_RE.test(value);
@@ -2914,7 +2945,11 @@ export function isPythonIdeRunnableFile(
 }
 
 export function isPythonIdeTextFile(value: string) {
-	return isLinuxProjectTextPath(value) || TEXT_FILE_RE.test(value);
+	return (
+		isRustProjectTextPath(value) ||
+		isLinuxProjectTextPath(value) ||
+		TEXT_FILE_RE.test(value)
+	);
 }
 
 export function isPythonIdeBinaryAssetFile(
@@ -2930,7 +2965,7 @@ export function normalizeImportedPythonIdeFileName(
 	const baseName = value.split(/[\\/]/).pop() ?? value;
 	const normalized = normalizePythonFileName(
 		baseName,
-		mode === "linux" ? ".sh" : ".py",
+		mode === "rust" ? ".rs" : mode === "linux" ? ".sh" : ".py",
 		mode
 	);
 	if (IMAGE_EXTENSION_RE.test(normalized)) return `images/${normalized}`;
@@ -2964,6 +2999,8 @@ export function getPythonIdeAssetDataUrl(file: PythonIdeFile) {
 }
 
 export function getPythonIdeFileKindLabel(value: string) {
+	if (/\.rs$/i.test(value)) return "Rust";
+	if (/(?:^|\/)Cargo\.(?:toml|lock)$/.test(value)) return "Cargo build file";
 	if (/^makefile$/i.test(value) || baseName(value) === "CMakeLists.txt")
 		return "Build file";
 	const extension = value.match(FILE_EXTENSION_RE)?.[0]?.toLowerCase();
@@ -2995,6 +3032,9 @@ export function getPythonIdeDefaultFileContent(
 	if (/^makefile$/i.test(fileName) || baseName(fileName) === "CMakeLists.txt")
 		return "";
 	const extension = fileName.match(FILE_EXTENSION_RE)?.[0]?.toLowerCase();
+	if (mode === "rust" && extension === ".rs")
+		return baseName(fileName) === "main.rs" ? rustStarterCode : "";
+	if (mode === "rust" && isRustProjectTextPath(fileName)) return "";
 	if (extension === ".sh") return linuxStarterCode;
 	if (isLinuxProjectTextPath(fileName)) return "";
 	if ([".cpp", ".cc", ".cxx"].includes(extension ?? "")) {
@@ -3084,14 +3124,21 @@ export async function loadPythonIdeStarterFilesFromGitHub(
 		if (files) return files;
 	}
 
-	if (mode === "c" || mode === "assembly" || mode === "linux") {
+	if (
+		mode === "rust" ||
+		mode === "c" ||
+		mode === "assembly" ||
+		mode === "linux"
+	) {
 		const selected =
-			mode === "linux"
-				? (linuxImportFiles(starterUrl) ??
-					networkImportFiles(starterUrl))
-				: mode === "assembly"
-					? assemblyImportFiles(starterUrl)
-					: c17ImportFiles(starterUrl);
+			mode === "rust"
+				? rustImportFiles(starterUrl)
+				: mode === "linux"
+					? (linuxImportFiles(starterUrl) ??
+						networkImportFiles(starterUrl))
+					: mode === "assembly"
+						? assemblyImportFiles(starterUrl)
+						: c17ImportFiles(starterUrl);
 		if (!selected) {
 			throw new Error(
 				`${getPythonIdeModeLabel(mode)} source has no verified site import. Use its documented native workflow.`

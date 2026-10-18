@@ -21,7 +21,13 @@ export async function runAssemblyCoreCourseWorkflow(t, definition) {
 	const storageKey = "classes-python-ide-projects:anonymous";
 	const moduleID = definition.moduleID;
 	const coreID = definition.coreID;
-	const traceID = definition.traceID;
+	const courseID = definition.courseID ?? "assembly";
+	const mode = definition.mode ?? "assembly";
+	const sourceRepository = definition.sourceRepository ?? "Assembly";
+	const continuationIDs = definition.continuationIDs ?? [definition.traceID];
+	const primaryFile = definition.primaryFile ?? "routine.S";
+	const taskFile = definition.taskFile ?? "trace.md";
+	const initialFile = definition.initialFile ?? primaryFile;
 	const digest = value => createHash("sha256").update(value).digest("hex");
 	async function savedProjects(page) {
 		return page.evaluate(
@@ -57,8 +63,8 @@ export async function runAssemblyCoreCourseWorkflow(t, definition) {
 						transaction.onerror = transaction.onabort = () => {
 							database.close();
 							reject(
-								transaction.error
-								?? new Error("Primary store read failed")
+								transaction.error ??
+									new Error("Primary store read failed")
 							);
 						};
 					};
@@ -83,7 +89,9 @@ export async function runAssemblyCoreCourseWorkflow(t, definition) {
 				(element, role) =>
 					[...element.querySelectorAll("a.is-ide-starter")]
 						.find(link =>
-							new URL(link.href).searchParams.get("starterUrl")?.endsWith(`/${role}`)
+							new URL(link.href).searchParams
+								.get("starterUrl")
+								?.endsWith(`/${role}`)
 						)
 						?.getAttribute("href"),
 				role
@@ -140,12 +148,12 @@ export async function runAssemblyCoreCourseWorkflow(t, definition) {
 
 	let server, browser, context;
 	let outcome = "failed";
-	const taskId
-		= process.env.CLASSES_FAMILY_TASK_ID
-			?? `assembly-${definition.kind}-course-ci`;
+	const taskId =
+		process.env.CLASSES_FAMILY_TASK_ID ??
+		`assembly-${definition.kind}-course-ci`;
 	const startedAt = new Date().toISOString();
-	const output
-		= process.env[definition.outputEnv] ?? definition.defaultOutput;
+	const output =
+		process.env[definition.outputEnv] ?? definition.defaultOutput;
 	const screenshots = process.env.COURSE_IMPORT_SCREENSHOT_DIR;
 	const profiles = [];
 	const cleanup = async () => {
@@ -207,15 +215,18 @@ export async function runAssemblyCoreCourseWorkflow(t, definition) {
 		});
 		for (const width of [390, 1280]) {
 			for (const role of ["starter", "solution"]) {
-				const key = `assembly:${coreID}:${role === "starter" ? "starter" : "reference"}:native-assembly`;
+				const key = `${courseID}:${coreID}:${role === "starter" ? "starter" : "reference"}:native-${mode}`;
 				const earlier = {
 					_id: "earlier-record-attempt",
 					title: "Earlier work",
 					mode: "python",
 					files: [{ name: "main.py", content: "# earlier work\n" }],
 					activeFileName: "main.py",
-					courseID: "assembly",
-					courseProjectKey: key.replace(/:native-assembly$/, ""),
+					courseID,
+					courseProjectKey: key.replace(
+						new RegExp(`:native-${mode}$`),
+						""
+					),
 					createdAt: "2026-10-01T12:00:00.000Z",
 					updatedAt: "2026-10-01T12:00:00.000Z"
 				};
@@ -230,7 +241,7 @@ export async function runAssemblyCoreCourseWorkflow(t, definition) {
 					email: "learner@example.invalid",
 					age: 14,
 					state: "GA",
-					courseAccess: ["assembly"],
+					courseAccess: [courseID],
 					courseProgress: []
 				};
 				const tutor = {
@@ -240,7 +251,7 @@ export async function runAssemblyCoreCourseWorkflow(t, definition) {
 					age: 30,
 					state: "GA",
 					usersOfTutorLength: 1,
-					coursePermissions: ["assembly"],
+					coursePermissions: [courseID],
 					editTutors: false,
 					saveEdit: "Save"
 				};
@@ -256,7 +267,7 @@ export async function runAssemblyCoreCourseWorkflow(t, definition) {
 								);
 							}
 							const create = URL.createObjectURL;
-							URL.createObjectURL = (blob) => {
+							URL.createObjectURL = blob => {
 								if (blob.type === "application/zip")
 									window.__recordArchive = blob;
 								return create(blob);
@@ -264,8 +275,8 @@ export async function runAssemblyCoreCourseWorkflow(t, definition) {
 							const click = HTMLAnchorElement.prototype.click;
 							HTMLAnchorElement.prototype.click = function () {
 								if (
-									this.download.endsWith(".zip")
-									&& this.href.startsWith("blob:")
+									this.download.endsWith(".zip") &&
+									this.href.startsWith("blob:")
 								) {
 									return;
 								}
@@ -276,17 +287,17 @@ export async function runAssemblyCoreCourseWorkflow(t, definition) {
 						earlier
 					);
 					await page.setRequestInterception(true);
-					page.on("request", (request) => {
+					page.on("request", request => {
 						const url = new URL(request.url());
 						if (url.hostname === "raw.githubusercontent.com") {
-							const prefix = `/instruction-material/Assembly/${fixture.revision}/${fixture.pack}/`;
+							const prefix = `/instruction-material/${sourceRepository}/${fixture.revision}/${fixture.pack}/`;
 							const name = decodeURIComponent(
 								url.pathname.slice(prefix.length)
 							);
-							const file
-								= url.pathname.startsWith(prefix)
-									&& (name === "README.md"
-										|| name.startsWith(`${role}/`))
+							const file =
+								url.pathname.startsWith(prefix) &&
+								(name === "README.md" ||
+									name.startsWith(`${role}/`))
 									? fixture.files[`${fixture.pack}/${name}`]
 									: null;
 							requests.push(name);
@@ -298,10 +309,9 @@ export async function runAssemblyCoreCourseWorkflow(t, definition) {
 								},
 								body: file?.content ?? "Unknown source"
 							});
-						}
-						else if (
-							url.origin !== origin
-							|| url.pathname.startsWith("/api/")
+						} else if (
+							url.origin !== origin ||
+							url.pathname.startsWith("/api/")
 						) {
 							if (
 								!["GET", "OPTIONS"].includes(request.method())
@@ -310,30 +320,30 @@ export async function runAssemblyCoreCourseWorkflow(t, definition) {
 							}
 							let body = {};
 							if (
-								catalog
-								&& url.pathname === "/api/accounts/me"
+								catalog &&
+								url.pathname === "/api/accounts/me"
 							) {
-								body
-									= role === "starter"
+								body =
+									role === "starter"
 										? { userID: learner._id }
 										: { tutorID: tutor._id };
 							}
 							if (
-								catalog
-								&& url.pathname === "/api/users/loggedin"
+								catalog &&
+								url.pathname === "/api/users/loggedin"
 							) {
 								body = { currentUser: learner };
 							}
 							if (
-								catalog
-								&& url.pathname === "/api/tutors/loggedin"
+								catalog &&
+								url.pathname === "/api/tutors/loggedin"
 							) {
 								body = { currentTutor: tutor };
 							}
 							if (
-								catalog
-								&& url.pathname
-								=== `/api/users/oftutor/${tutor._id}`
+								catalog &&
+								url.pathname ===
+									`/api/users/oftutor/${tutor._id}`
 							) {
 								body = [learner];
 							}
@@ -342,18 +352,17 @@ export async function runAssemblyCoreCourseWorkflow(t, definition) {
 								contentType: "application/json",
 								body: JSON.stringify(body)
 							});
-						}
-						else {
+						} else {
 							void request.continue();
 						}
 					});
 					const core = await action(page, origin, coreID, role);
 					const params = new URL(core.href, origin).searchParams;
 					assert.equal(params.get("projectKey"), key);
-					assert.equal(params.get("mode"), "assembly");
+					assert.equal(params.get("mode"), mode);
 					assert.equal(
 						params.get("starterUrl"),
-						`https://github.com/instruction-material/Assembly/tree/${fixture.revision}/${fixture.pack}/${role}`
+						`https://github.com/instruction-material/${sourceRepository}/tree/${fixture.revision}/${fixture.pack}/${role}`
 					);
 					assert.equal(requests.length, 0);
 					catalog = false;
@@ -377,8 +386,11 @@ export async function runAssemblyCoreCourseWorkflow(t, definition) {
 						"select[aria-label='Active project file']"
 					);
 					const saved = await project(page, key);
-					assert.equal(saved.mode, "assembly");
-					assert.equal(saved.activeFileName, `${role}/routine.S`);
+					assert.equal(saved.mode, mode);
+					assert.equal(
+						saved.activeFileName,
+						`${role}/${initialFile}`
+					);
 					assert.equal(saved.files.length, definition.fileCount);
 					assert.deepEqual(
 						[...requests].sort(),
@@ -400,8 +412,7 @@ export async function runAssemblyCoreCourseWorkflow(t, definition) {
 						token =>
 							document
 								.querySelector(".output-panel")
-								?.textContent
-								.includes(token),
+								?.textContent.includes(token),
 						{},
 						definition.readyToken
 					);
@@ -428,8 +439,8 @@ export async function runAssemblyCoreCourseWorkflow(t, definition) {
 					);
 					const edits = {};
 					for (const filename of [
-						`${role}/routine.S`,
-						`${role}/trace.md`
+						`${role}/${primaryFile}`,
+						`${role}/${taskFile}`
 					]) {
 						await page.select(
 							"select[aria-label='Active project file']",
@@ -439,8 +450,7 @@ export async function runAssemblyCoreCourseWorkflow(t, definition) {
 							text =>
 								document
 									.querySelector(".cm-content")
-									?.textContent
-									.includes(text),
+									?.textContent.includes(text),
 							{},
 							saved.files
 								.find(file => file.name === filename)
@@ -450,11 +460,11 @@ export async function runAssemblyCoreCourseWorkflow(t, definition) {
 							visible: true
 						});
 						await page.focus(".cm-content");
-						const note = filename.endsWith(".S")
+						const note = /\.(?:S|rs)$/.test(filename)
 							? `\n/* Independent ${definition.kind} observation ${width} */\n`
 							: `\n# Independent ${definition.kind} observation ${width}\n`;
-						const content
-							= saved.files.find(file => file.name === filename)
+						const content =
+							saved.files.find(file => file.name === filename)
 								.content + note;
 						edits[filename] = content;
 						await page.keyboard.down(modifier);
@@ -485,35 +495,63 @@ export async function runAssemblyCoreCourseWorkflow(t, definition) {
 						(await project(page, key)).files,
 						edited.files
 					);
-					catalog = true;
-					const trace = await action(page, origin, traceID, role);
-					assert.equal(
-						new URL(trace.href, origin).searchParams.get(
-							"projectKey"
-						),
-						key
-					);
-					catalog = false;
+					const continuationActions = [];
+					let trace;
 					const before = requests.length;
-					await page.locator(trace.selector).click();
-					await page.waitForSelector(".cm-content");
-					assert.equal(
-						await page.$(
-							"[data-testid='ide-route-import-confirm']"
-						),
-						null
-					);
-					const reused = await project(page, key);
-					assert.equal(reused._id, edited._id);
-					assert.deepEqual(reused.files, edited.files);
-					assert.equal(requests.length, before);
-					for (const [filename, content] of Object.entries(edits)) {
+					for (const itemID of continuationIDs) {
+						catalog = true;
+						trace = await action(page, origin, itemID, role);
 						assert.equal(
-							reused.files.find(file => file.name === filename)
-								?.content,
-							content
+							new URL(trace.href, origin).searchParams.get(
+								"projectKey"
+							),
+							key
 						);
+						catalog = false;
+						await page.locator(trace.selector).click();
+						await page.waitForSelector(".cm-content");
+						assert.equal(
+							await page.$(
+								"[data-testid='ide-route-import-confirm']"
+							),
+							null
+						);
+						const reused = await project(page, key);
+						assert.equal(reused._id, edited._id);
+						assert.deepEqual(reused.files, edited.files);
+						assert.equal(requests.length, before);
+						for (const [filename, content] of Object.entries(
+							edits
+						)) {
+							assert.equal(
+								reused.files.find(
+									file => file.name === filename
+								)?.content,
+								content
+							);
+						}
+						const returnHref = await page.$$eval("a", links =>
+							links
+								.find(
+									link =>
+										link.textContent.trim() ===
+										"Return to lesson"
+								)
+								?.getAttribute("href")
+						);
+						assert.equal(
+							returnHref,
+							`/courses#${moduleID}-${itemID}`
+						);
+						continuationActions.push({
+							itemID,
+							href: trace.href,
+							sameAttemptReused: true,
+							additionalSourceRequests: requests.length - before,
+							returnHref
+						});
 					}
+					const reused = await project(page, key);
 					const editedBytes = await archive(page);
 					checkArchive(editedBytes, reused.files);
 					await writeFile(
@@ -533,15 +571,15 @@ export async function runAssemblyCoreCourseWorkflow(t, definition) {
 					assert.ok(
 						await page.evaluate(
 							() =>
-								document.documentElement.scrollWidth
-								<= innerWidth
+								document.documentElement.scrollWidth <=
+								innerWidth
 						)
 					);
 					if (screenshots) {
 						await page.screenshot({
 							path: join(
 								screenshots,
-								`course-import-assembly-${definition.kind}-${name}.png`
+								`course-import-${mode}-${definition.kind}-${name}.png`
 							),
 							fullPage: true
 						});
@@ -553,6 +591,7 @@ export async function runAssemblyCoreCourseWorkflow(t, definition) {
 						key,
 						coreAction: core.href,
 						worksheetAction: trace.href,
+						continuationActions,
 						sourceFiles: saved.files.map(file => ({
 							name: file.name,
 							sha256: digest(file.content)
@@ -574,8 +613,7 @@ export async function runAssemblyCoreCourseWorkflow(t, definition) {
 						nativeInstructions: true,
 						remoteWrites
 					});
-				}
-				catch (error) {
+				} catch (error) {
 					await page
 						.screenshot({
 							path: join(output, `${name}-failed.png`),
@@ -596,8 +634,7 @@ export async function runAssemblyCoreCourseWorkflow(t, definition) {
 						)
 					);
 					throw error;
-				}
-				finally {
+				} finally {
 					await page.close();
 					await context.close();
 					context = null;
@@ -606,12 +643,11 @@ export async function runAssemblyCoreCourseWorkflow(t, definition) {
 		}
 		assert.equal(profiles.length, 4);
 		await writeFile(
-			join(output, `assembly-${definition.kind}-course-proof.json`),
+			join(output, `${mode}-${definition.kind}-course-proof.json`),
 			`${JSON.stringify({ profiles }, null, 2)}\n`
 		);
 		outcome = "passed";
-	}
-	finally {
+	} finally {
 		await cleanup();
 		console.log(
 			JSON.stringify({

@@ -1422,6 +1422,7 @@ function memberCompletionMapForMode(mode: PythonIdeMode = "python") {
 
 function isPythonCodeMirrorMode(mode: PythonIdeMode = "python") {
 	return (
+		mode !== "rust" &&
 		mode !== "linux" &&
 		mode !== "assembly" &&
 		mode !== "c" &&
@@ -1441,6 +1442,7 @@ export function pythonIdeCompletionsForMode(
 	assetCompletions?: PythonCodeMirrorAssetCompletionNames
 ) {
 	if (
+		mode === "rust" ||
 		mode === "linux" ||
 		mode === "assembly" ||
 		mode === "c" ||
@@ -3053,6 +3055,7 @@ export function createPythonCodeMirrorExtensions(
 		syntaxHighlighting(pythonHighlightStyle),
 		bracketPairColorExtension,
 		Prec.highest(closingTokenSkipKeymap),
+		mode === "rust" ||
 		mode === "linux" ||
 		mode === "assembly" ||
 		mode === "c" ||
