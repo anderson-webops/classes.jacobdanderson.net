@@ -391,6 +391,13 @@ jobs:
                   ASSEMBLY_SYSCALL_BROWSER_EXPORT_PROOF_DIR: output/assembly-syscall-course
               run: node --test test/assembly-syscall-course-browser.test.mjs
 
+            - name: Verify Unit 10 and 11 actual follow-up actions reuse saved work
+              env:
+                  COURSE_IMPORT_SCREENSHOT_DIR: output/playwright
+              run: |
+                  node --test test/assembly-debug-followups-course-browser.test.mjs
+                  node --test test/assembly-performance-followups-course-browser.test.mjs
+
             - name: Verify Linux confirmed imports, notebook reuse and exact exports
               env:
                   LINUX_BROWSER_EXPORT_PROOF_DIR: output/linux-exports
@@ -507,6 +514,11 @@ jobs:
                   python3 test/assembly-compiler-optional-exported-contracts.py --cc clang --archives output/assembly-exports --proof output/assembly-compiler-optional-native/clang.json
                   python3 test/assembly-compiler-optional-exported-contracts.py --cc gcc --archives output/assembly-exports --proof output/assembly-compiler-optional-native/gcc.json
 
+            - name: Run the debugging and performance follow-up activities
+              run: |
+                  python3 test/assembly-followup-activities.py --cc clang --archives output/assembly-exports --proof output/assembly-followup-activities-native/clang/proof.json
+                  python3 test/assembly-followup-activities.py --cc gcc --archives output/assembly-exports --proof output/assembly-followup-activities-native/gcc/proof.json
+
             - name: Retain Assembly workflow and native validation
               if: always()
               uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
@@ -528,6 +540,8 @@ jobs:
                       output/assembly-exports/
                       output/assembly-record-course/
                       output/assembly-arithmetic-course/
+                      output/assembly-debug-followups-course/
+                      output/assembly-performance-followups-course/
                       output/assembly-setup-native/
                       output/assembly-syscall-native/
                       output/assembly-register-native/
@@ -538,6 +552,7 @@ jobs:
                       output/assembly-abi-optional-native/
                       output/assembly-memory-layout-optional-native/
                       output/assembly-compiler-optional-native/
+                      output/assembly-followup-activities-native/
                       output/assembly-syscall-course/
                   if-no-files-found: error
                   retention-days: 7

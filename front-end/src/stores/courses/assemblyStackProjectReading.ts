@@ -1,6 +1,6 @@
 export const assemblyStackProjectReading = [
 	"",
-	"Compose two real assembly calls while preserving the caller's state. This replaces the earlier opening leaf arithmetic exercise with a stack-frame task. The later C interop project adds a separate five-to-three argument mapping and clamp contract; this project focuses on two nested assembly calls and their stack lifetime.",
+	"Compose two real assembly calls while preserving the caller's state. The later C interop project adds a separate five-to-three argument mapping and clamp contract; this project focuses on two nested assembly calls and their stack lifetime.",
 	"",
 	"## Target, files and learner task",
 	"",
