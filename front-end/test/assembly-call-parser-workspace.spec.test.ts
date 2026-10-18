@@ -192,6 +192,10 @@ describe.each([
 				)
 				.replaceAll("an instructor", "a course facilitator")
 				.replaceAll("AND and", "`AND` and")
+				.replace(
+					" This replaces the earlier opening leaf arithmetic exercise with a stack-frame task.",
+					""
+				)
 				.trim()
 		);
 		expect(project.content).toContain(row.marker);

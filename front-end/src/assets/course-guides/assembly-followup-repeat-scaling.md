@@ -54,5 +54,4 @@ prove a linear model. Explain which observation supports a proposed explanation
 and which changed experiment could distinguish it from a competing explanation.
 
 Retain the full rows, checksum checks, table, both command orders, one supported
-conclusion and one unresolved alternative. An instructor walkthrough can compute
-one five-trial group before the independent comparison.
+conclusion and one unresolved alternative.
