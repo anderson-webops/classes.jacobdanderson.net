@@ -235,6 +235,34 @@ jobs:
                   if-no-files-found: error
                   retention-days: 7
 
+            - name: Verify complete bounded-cli imports and source exports
+              env:
+                  RUST_BOUNDED_CLI_EXPORT_PROOF_DIR: output/rust-bounded-cli-exports
+              run: npm exec -w front-end -- vitest run test/rust-bounded-cli-workspace.spec.test.ts --no-file-parallelism --maxWorkers=1
+
+            - name: Verify actual bounded-cli course actions and saved continuations
+              env:
+                  COURSE_IMPORT_SCREENSHOT_DIR: output/rust-bounded-cli-screenshots
+                  RUST_BOUNDED_CLI_BROWSER_PROOF_DIR: output/rust-bounded-cli-browser
+              run: node --test test/rust-bounded-cli-course-browser.test.mjs
+
+            - name: Compile original and browser-edited bounded-cli exports
+              run: python3 test/rust-cargo-exported-contracts.py --lesson bounded-cli --exports front-end/output/rust-bounded-cli-exports --browser output/rust-bounded-cli-browser --proof output/rust-bounded-cli-native/proof.json
+
+            - name: Retain bounded-cli browser and native evidence
+              if: always()
+              uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+              with:
+                  name: rust-bounded-cli-workflows
+                  path: |
+                      front-end/output/rust-bounded-cli-exports/
+                      output/rust-bounded-cli-browser/
+                      output/rust-bounded-cli-native/
+                      output/rust-bounded-cli-screenshots/
+                  include-hidden-files: true
+                  if-no-files-found: error
+                  retention-days: 7
+
     backend-install:
         runs-on: ubuntu-24.04
         steps:

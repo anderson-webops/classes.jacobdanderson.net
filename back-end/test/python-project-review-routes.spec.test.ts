@@ -662,6 +662,7 @@ describe("Python project review routes", () => {
 		"rust-label-slices",
 		"rust-state-models",
 		"rust-trait-pipeline",
+		"rust-bounded-cli",
 		"c",
 		"assembly",
 		"compiler",
@@ -677,7 +678,8 @@ describe("Python project review routes", () => {
 				mode === "rust-typed-errors" ||
 				mode === "rust-label-slices" ||
 				mode === "rust-state-models" ||
-				mode === "rust-trait-pipeline";
+				mode === "rust-trait-pipeline" ||
+				mode === "rust-bounded-cli";
 			const requestedMode = rustMode
 				? "rust"
 				: mode === "c"
@@ -687,30 +689,34 @@ describe("Python project review routes", () => {
 				readFileSync(
 					resolve(
 						process.cwd(),
-						mode === "rust-trait-pipeline"
-							? "../test/fixtures/rust-trait-pipeline-contracts.json"
-							: mode === "rust-state-models"
-								? "../test/fixtures/rust-state-models-contracts.json"
-								: mode === "rust-label-slices"
-									? "../test/fixtures/rust-label-slices-contracts.json"
-									: mode === "rust-typed-errors"
-										? "../test/fixtures/rust-typed-errors-contracts.json"
-										: mode === "rust-borrowing"
-											? "../test/fixtures/rust-borrowing-contracts.json"
-											: mode === "rust-ownership"
-												? "../test/fixtures/rust-ownership-contracts.json"
-												: mode === "rust"
-													? "../test/fixtures/rust-cargo-contracts.json"
-													: mode === "hardening" ||
-														  mode ===
-																"hardening-trace"
-														? "../test/fixtures/assembly-hardening-contracts.json"
-														: mode === "compiler"
-															? "../test/fixtures/assembly-compiler-contracts.json"
+						mode === "rust-bounded-cli"
+							? "../test/fixtures/rust-bounded-cli-contracts.json"
+							: mode === "rust-trait-pipeline"
+								? "../test/fixtures/rust-trait-pipeline-contracts.json"
+								: mode === "rust-state-models"
+									? "../test/fixtures/rust-state-models-contracts.json"
+									: mode === "rust-label-slices"
+										? "../test/fixtures/rust-label-slices-contracts.json"
+										: mode === "rust-typed-errors"
+											? "../test/fixtures/rust-typed-errors-contracts.json"
+											: mode === "rust-borrowing"
+												? "../test/fixtures/rust-borrowing-contracts.json"
+												: mode === "rust-ownership"
+													? "../test/fixtures/rust-ownership-contracts.json"
+													: mode === "rust"
+														? "../test/fixtures/rust-cargo-contracts.json"
+														: mode ===
+																	"hardening" ||
+															  mode ===
+																	"hardening-trace"
+															? "../test/fixtures/assembly-hardening-contracts.json"
 															: mode ===
-																  "assembly"
-																? "../test/fixtures/assembly-opening-contracts.json"
-																: "../test/fixtures/c17-opening-contracts.json"
+																  "compiler"
+																? "../test/fixtures/assembly-compiler-contracts.json"
+																: mode ===
+																	  "assembly"
+																	? "../test/fixtures/assembly-opening-contracts.json"
+																	: "../test/fixtures/c17-opening-contracts.json"
 					),
 					"utf8"
 				)

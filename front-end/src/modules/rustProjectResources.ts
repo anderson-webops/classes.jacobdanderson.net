@@ -174,6 +174,32 @@ export const rustTraitPipelineRoleFiles = [
 	"diagnostics/report-after-owner-drop.rs"
 ] as const;
 
+export const rustBoundedCliRevision =
+	"f3669ea2687fe3ca471c285d7334cf63aa1305ef";
+export const rustBoundedCliPack = "RUST-07-bounded-cli-evidence";
+export const rustBoundedCliModuleId =
+	"rust-systems-security-rss7-files-parsers-and-secure-cli-design";
+export const rustBoundedCliItemIds = {
+	core: "rust-systems-security-rss7-files-parsers-and-secure-cli-design-curriculum-core-project-files-parsers-and-secure-cli-design",
+	workflow:
+		"rust-systems-security-rss7-files-parsers-and-secure-cli-design-supplemental-project-secure-cli-audit-tool",
+	choice: "rust-systems-security-rss7-files-parsers-and-secure-cli-design-supplemental-files-parsers-and-secure-cli-design-transfer-practice",
+	challenge:
+		"rust-systems-security-rss7-files-parsers-and-secure-cli-design-supplemental-files-parsers-and-secure-cli-design-extension-practice"
+} as const;
+export const rustBoundedCliRoleFiles = [
+	"observations.md",
+	"Cargo.toml",
+	"Cargo.lock",
+	"src/lib.rs",
+	"src/main.rs",
+	"fixtures/valid.txt",
+	"fixtures/empty.txt",
+	"fixtures/malformed.txt",
+	"fixtures/cap.txt",
+	"fixtures/over.txt"
+] as const;
+
 const rustLessons = [
 	{
 		kind: "cargo",
@@ -223,6 +249,13 @@ const rustLessons = [
 		pack: rustTraitPipelinePack,
 		roleFiles: rustTraitPipelineRoleFiles,
 		itemIds: rustTraitPipelineItemIds
+	},
+	{
+		kind: "bounded-cli",
+		revision: rustBoundedCliRevision,
+		pack: rustBoundedCliPack,
+		roleFiles: rustBoundedCliRoleFiles,
+		itemIds: rustBoundedCliItemIds
 	}
 ] as const;
 

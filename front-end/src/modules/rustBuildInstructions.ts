@@ -20,6 +20,31 @@ export function rustBuildInstructions(
 				"The Rust lesson is incomplete. Reopen its complete selected-role source before building."
 			];
 		}
+		if (selected.definition.kind === "bounded-cli") {
+			return [
+				"Download and extract the ZIP. Use Rust 1.97.1 with Cargo, rustfmt and Clippy; the package declares edition 2024.",
+				`cd ${selected.role}`,
+				"rustc -Vv",
+				"cargo -V",
+				"cargo fmt --all --check",
+				"cargo clippy --locked --offline --all-targets -- -D warnings",
+				"cargo test --locked --offline",
+				"cargo run --locked --offline -- --help",
+				"cargo run --locked --offline -- --file valid.txt",
+				"cargo run --locked --offline -- --file empty.txt",
+				"cargo run --locked --offline -- --file malformed.txt",
+				"cargo run --locked --offline -- --file cap.txt",
+				"cargo run --locked --offline -- --file over.txt",
+				"Refactor the monolithic process function into pure stages. Keep acquire and its Read::take(65) boundary, the 64-byte input and eight-row limits, exact diagnostics and no partial report. Complete CORE, WORKFLOW, CHOICE, CHALLENGE and LIMITS in observations.md; read ../README.md.",
+				"cargo build --locked --offline",
+				"Run the built bounded_cli_lab executable from another working directory with --file valid.txt; it uses the same supplied package fixtures.",
+				"Record stdout, stderr and status separately. Success is 0; usage is 64; input/record errors are 65; missing or non-regular entries give status 66; other I/O failure is 74. No failure prints a report or private input text.",
+				"cargo clean",
+				"cargo test --locked --offline",
+				"cargo build --locked --offline",
+				"The byte limit does not impose a time limit on an arbitrary Read source. Static fixture metadata followed by open is not race-free filesystem confinement."
+			];
+		}
 		if (selected.definition.kind === "trait-pipeline") {
 			return [
 				"Download and extract the ZIP. Use Rust 1.97.1 with Cargo, rustfmt and Clippy; the package declares edition 2024.",
