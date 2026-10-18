@@ -20,6 +20,29 @@ export function rustBuildInstructions(
 				"The Rust lesson is incomplete. Reopen its complete selected-role source before building."
 			];
 		}
+		if (selected.definition.kind === "state-models") {
+			return [
+				"Download and extract the ZIP. Use Rust 1.97.1 with Cargo, rustfmt and Clippy; the package declares edition 2024.",
+				`cd ${selected.role}`,
+				"rustc -Vv",
+				"cargo -V",
+				"cargo fmt --all --check",
+				"rustfmt --edition 2024 --check diagnostics/*.rs",
+				"cargo clippy --locked --offline --all-targets -- -D warnings",
+				"cargo test --locked --offline",
+				"cargo run --locked --offline",
+				"cargo run --locked --offline -- review:Bea reset review:Alex publish",
+				"cargo run --locked --offline -- --from 1 0 Alex publish",
+				"Refactor the starter's public flags into a private State enum, preserve from_legacy and snapshot boundaries, and implement the 32-scalar Reviewer policy. Complete CORE, WORKFLOW, CHOICE, CHALLENGE and LIMITS in observations.md; read ../README.md for the transition and error contracts.",
+				"cargo build --locked --offline",
+				"rustc --edition=2024 diagnostics/non-exhaustive.rs --extern state_model_lab=target/debug/libstate_model_lab.rlib -L dependency=target/debug/deps -o non-exhaustive",
+				"rustc --edition=2024 diagnostics/exhaustive.rs --extern state_model_lab=target/debug/libstate_model_lab.rlib -L dependency=target/debug/deps -o exhaustive",
+				"./exhaustive",
+				"rustc --edition=2024 diagnostics/raw-flags.rs --extern state_model_lab=target/debug/libstate_model_lab.rlib -L dependency=target/debug/deps -o raw-flags",
+				"The omitted Published match intentionally refuses with E0004 in both roles. The raw-flags example compiles only against the starter and prints error=invalid-legacy-state; the reference rejects its fields with E0560. Run ./raw-flags only if compilation succeeded.",
+				"Record stdout, stderr and status separately. Success returns 0, malformed syntax returns 64 before any events, and semantic failure returns 65 with possible earlier successful transitions. Errors preserve the current Session; the event batch is not transactional."
+			];
+		}
 		if (selected.definition.kind === "label-slices") {
 			return [
 				"Download and extract the ZIP. Use Rust 1.97.1 with Cargo, rustfmt and Clippy; the package declares edition 2024.",

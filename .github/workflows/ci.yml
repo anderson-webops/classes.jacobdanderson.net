@@ -179,6 +179,34 @@ jobs:
                   if-no-files-found: error
                   retention-days: 7
 
+            - name: Verify complete state-models imports and source exports
+              env:
+                  RUST_STATE_MODELS_EXPORT_PROOF_DIR: output/rust-state-models-exports
+              run: npm exec -w front-end -- vitest run test/rust-state-models-workspace.spec.test.ts --no-file-parallelism --maxWorkers=1
+
+            - name: Verify actual state-models course actions and saved continuations
+              env:
+                  COURSE_IMPORT_SCREENSHOT_DIR: output/rust-state-models-screenshots
+                  RUST_STATE_MODELS_BROWSER_PROOF_DIR: output/rust-state-models-browser
+              run: node --test test/rust-state-models-course-browser.test.mjs
+
+            - name: Compile original and browser-edited state-models exports
+              run: python3 test/rust-cargo-exported-contracts.py --lesson state-models --exports front-end/output/rust-state-models-exports --browser output/rust-state-models-browser --proof output/rust-state-models-native/proof.json
+
+            - name: Retain state-models browser and native evidence
+              if: always()
+              uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+              with:
+                  name: rust-state-models-workflows
+                  path: |
+                      front-end/output/rust-state-models-exports/
+                      output/rust-state-models-browser/
+                      output/rust-state-models-native/
+                      output/rust-state-models-screenshots/
+                  include-hidden-files: true
+                  if-no-files-found: error
+                  retention-days: 7
+
     backend-install:
         runs-on: ubuntu-24.04
         steps:

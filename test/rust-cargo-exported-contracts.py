@@ -12,7 +12,7 @@ import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument("--lesson", choices=("cargo", "ownership", "borrowing", "typed-errors", "label-slices"), default="cargo")
+parser.add_argument("--lesson", choices=("cargo", "ownership", "borrowing", "typed-errors", "label-slices", "state-models"), default="cargo")
 parser.add_argument("--exports", type=Path, required=True)
 parser.add_argument("--browser", type=Path, required=True)
 parser.add_argument("--proof", type=Path, required=True)
@@ -23,6 +23,7 @@ OUT = args.proof.parent
 OUT.mkdir(parents=True, exist_ok=True)
 definition = {
     "cargo": dict(revision="54e4b74c556375f5f57c8fd52d23878aedca255f", sourceFiles=16, selectedFiles=7, commands=122, cases=42, caseField="cases", unitTests=3, verifier="verify_rust_cargo_tooling.py"),
+    "state-models": dict(revision="5989153b360e62f0a5b96026b88d2f40ae3b0ebd", sourceFiles=19, selectedFiles=9, commands=618, cases=282, caseField="inputCases", unitTests=8, primaryFile="src/lib.rs", verifier="verify_rust_state_models.py"),
     "label-slices": dict(revision="308f040261f9cc676ad6a2892ab7f7eea11a2498", sourceFiles=30, selectedFiles=14, commands=383, cases=152, caseField="inputCases", unitTests=8, primaryFile="src/lib.rs", verifier="verify_rust_label_slices.py"),
     "typed-errors": dict(revision="1c436c353bd8664ea92c4abd8cfb71d95a26c75a", sourceFiles=26, selectedFiles=12, commands=315, cases=84, caseField="inputCases", unitTests=8, primaryFile="src/lib.rs", verifier="verify_rust_typed_errors.py"),
     "borrowing": dict(revision="660b39f70a2c24d5f702b64e5ce12d10db03f9b8", sourceFiles=28, selectedFiles=13, commands=231, cases=84, caseField="inputCases", unitTests=7, verifier="verify_rust_borrowing.py"),
@@ -137,7 +138,7 @@ with tempfile.TemporaryDirectory(prefix="rust-" + args.lesson + "-site-export-")
             target.write_bytes(raw)
         proof_path = OUT / label / "proof.json"
         env = {**os.environ, "SOURCE_REVISION": fixture["revision"]}
-        if args.lesson in ("ownership", "borrowing", "typed-errors", "label-slices"):
+        if args.lesson in ("ownership", "borrowing", "typed-errors", "label-slices", "state-models"):
             # The unchanged source verifier enumerates its inventory with Git.
             # This temporary index tracks the exact restored files; it creates
             # no commits and supplies no source or build provenance.
@@ -156,7 +157,7 @@ with tempfile.TemporaryDirectory(prefix="rust-" + args.lesson + "-site-export-")
 assert not work.exists()
 result = dict(baseSourceRevision=fixture["revision"], originalRoleZIPs=original_zips, nativeVariants=variants,
               actualBrowserProfiles=4, savedContinuationActions=12, selectedFilesPerRole=definition["selectedFiles"],
-              temporarySourceInventoryIndex=args.lesson in ("ownership", "borrowing", "typed-errors", "label-slices"), inventoryCommitsCreated=0,
+              temporarySourceInventoryIndex=args.lesson in ("ownership", "borrowing", "typed-errors", "label-slices", "state-models"), inventoryCommitsCreated=0,
               exactOriginalAndSavedSources=True, nativeCommands=3 * definition["commands"], independentInputCases=6 * definition["cases"],
               noExternalDependencyDownloadsDuringChecks=True, temporarySourceCleanup=True,
               learnerWorksheetCompletionNotInferred=True)

@@ -124,6 +124,30 @@ export const rustLabelSlicesRoleFiles = [
 	"diagnostics/string-index.rs"
 ] as const;
 
+export const rustStateModelsRevision =
+	"5989153b360e62f0a5b96026b88d2f40ae3b0ebd";
+export const rustStateModelsPack = "RUST-05-state-models-evidence";
+export const rustStateModelsModuleId =
+	"rust-systems-security-rss5-structs-enums-and-safer-state-models";
+export const rustStateModelsItemIds = {
+	core: "rust-systems-security-rss5-structs-enums-and-safer-state-models-curriculum-core-project-structs-enums-and-safer-state-models",
+	workflow:
+		"rust-systems-security-rss5-structs-enums-and-safer-state-models-supplemental-project-state-machine-refactor",
+	choice: "rust-systems-security-rss5-structs-enums-and-safer-state-models-supplemental-structs-enums-and-safer-state-models-transfer-practice",
+	challenge:
+		"rust-systems-security-rss5-structs-enums-and-safer-state-models-supplemental-structs-enums-and-safer-state-models-extension-practice"
+} as const;
+export const rustStateModelsRoleFiles = [
+	"observations.md",
+	"Cargo.toml",
+	"Cargo.lock",
+	"src/lib.rs",
+	"src/main.rs",
+	"diagnostics/exhaustive.rs",
+	"diagnostics/non-exhaustive.rs",
+	"diagnostics/raw-flags.rs"
+] as const;
+
 const rustLessons = [
 	{
 		kind: "cargo",
@@ -159,6 +183,13 @@ const rustLessons = [
 		pack: rustLabelSlicesPack,
 		roleFiles: rustLabelSlicesRoleFiles,
 		itemIds: rustLabelSlicesItemIds
+	},
+	{
+		kind: "state-models",
+		revision: rustStateModelsRevision,
+		pack: rustStateModelsPack,
+		roleFiles: rustStateModelsRoleFiles,
+		itemIds: rustStateModelsItemIds
 	}
 ] as const;
 
