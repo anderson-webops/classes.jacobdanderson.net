@@ -165,6 +165,18 @@ context("Compact content-first workspaces", () => {
 			.trigger("input", { force: true });
 		cy.get("#markdown-input").type("Synthetic note body");
 		cy.get("#markdown-input").should("have.value", "Synthetic note body");
+		cy.get('[data-testid="preview-toggle"]').click();
+		cy.get("#markdown-input").should("not.be.visible");
+		cy.get('[data-testid="live-preview-body"]')
+			.should("be.visible")
+			.and("contain.text", "Synthetic note body");
+		cy.screenshot("session-note-preview", { capture: "viewport" });
+		cy.get('[data-testid="compose-toggle"]').click();
+		cy.get('[data-testid="live-preview"]').should("not.exist");
+		cy.get("#markdown-input")
+			.should("be.visible")
+			.and("have.value", "Synthetic note body");
+		cy.screenshot("session-note-compose", { capture: "viewport" });
 		cy.get(
 			"#note-student, #note-session, #note-unlinked, #saved-note"
 		).should("not.exist");

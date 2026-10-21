@@ -718,7 +718,35 @@ function parseDateIso(value: string): string | null {
 						</div>
 					</div>
 				</div>
-				<div class="note-editor">
+				<div
+					class="composer-view-controls"
+					role="group"
+					aria-label="Session note view"
+				>
+					<button
+						type="button"
+						data-testid="compose-toggle"
+						:aria-pressed="!previewOpen"
+						aria-controls="note-composer"
+						@click="previewOpen = false"
+					>
+						Compose
+					</button>
+					<button
+						type="button"
+						data-testid="preview-toggle"
+						:aria-pressed="previewOpen"
+						aria-controls="note-preview"
+						@click="previewOpen = true"
+					>
+						Preview
+					</button>
+				</div>
+				<div
+					v-show="!previewOpen"
+					id="note-composer"
+					class="note-editor"
+				>
 					<SessionNoteGenerate
 						:student-id="
 							pendingStudentId === null ? noteStudentId : ''
@@ -769,16 +797,6 @@ function parseDateIso(value: string): string | null {
 					<p v-if="sendValidation" id="send-validation" role="alert">
 						{{ sendValidation }}
 					</p>
-					<button
-						type="button"
-						class="ghost-btn"
-						data-testid="preview-toggle"
-						:aria-expanded="previewOpen"
-						aria-controls="note-preview"
-						@click="previewOpen = !previewOpen"
-					>
-						{{ previewOpen ? "Hide preview" : "Preview" }}
-					</button>
 					<button
 						v-if="noteOperation"
 						type="button"
@@ -1011,10 +1029,34 @@ function parseDateIso(value: string): string | null {
 }
 
 .preview-pane {
+	min-height: 320px;
+	box-sizing: border-box;
 	border: 1px solid #e2e8f0;
 	border-radius: 18px;
 	padding: 1rem;
 	background: #fff;
+}
+
+.composer-view-controls {
+	display: flex;
+	gap: 0.25rem;
+}
+
+.composer-view-controls button {
+	padding: 0.5rem 0.85rem;
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-sm);
+	background: transparent;
+	color: var(--color-ink-soft);
+	font: inherit;
+	cursor: pointer;
+}
+
+.composer-view-controls button[aria-pressed="true"] {
+	border-color: var(--color-accent);
+	background: var(--color-accent-soft);
+	color: var(--color-ink);
+	font-weight: 700;
 }
 
 label {
@@ -1094,6 +1136,7 @@ textarea {
 	background: #f3f4f6;
 }
 .send-btn {
+	margin-inline-start: auto;
 	padding: 0.85rem 1.25rem;
 	background: linear-gradient(135deg, #2563eb, #1d4ed8);
 	border: 1px solid #2563eb;

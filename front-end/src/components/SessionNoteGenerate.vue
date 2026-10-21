@@ -33,7 +33,6 @@ const available = computed(
 );
 const ready = computed(() => settings.value?.ready === true);
 const busy = ref(false);
-const message = ref("");
 const error = ref("");
 const meetingId = ref("2543520025");
 const requestMeeting = ref(false);
@@ -74,7 +73,7 @@ function reset() {
 	confirmedStudent.value = false;
 	confirmReplace.value = false;
 	replacementApproved = false;
-	message.value = error.value = "";
+	error.value = "";
 }
 
 watch(
@@ -117,7 +116,7 @@ function classLabel(candidate: Candidate) {
 
 async function generate() {
 	if (!available.value || settingsLoading.value || !canGenerate.value) return;
-	error.value = message.value = "";
+	error.value = "";
 	if (!ready.value) {
 		error.value =
 			"AI drafting needs Zoom and AI configuration from the administrator.";
@@ -188,8 +187,6 @@ async function generate() {
 			candidates.value = [];
 			selectionToken.value = "";
 			replacementApproved = false;
-			message.value =
-				"Draft generated. Review and edit it before sending.";
 		}
 	} catch (cause: any) {
 		if (version !== requestVersion || disposed) return;
@@ -282,7 +279,6 @@ function replaceDraft() {
 			/>
 		</label>
 		<p v-if="available && error" role="alert">{{ error }}</p>
-		<p v-if="available && message" role="status">{{ message }}</p>
 	</div>
 </template>
 

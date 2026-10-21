@@ -94,7 +94,10 @@ describe("Generate session-note draft", () => {
 		expect(wrapper.emitted("generated")?.[0]).toEqual([
 			"**In class:** Fractions."
 		]);
-		expect(wrapper.text()).toContain("Review and edit");
+		expect(wrapper.text()).not.toContain(
+			"Draft generated. Review and edit it before sending."
+		);
+		expect(wrapper.find('[role="status"]').exists()).toBe(false);
 		expect(api.post).not.toHaveBeenCalledWith(
 			"/admin-mail/send",
 			expect.anything()
