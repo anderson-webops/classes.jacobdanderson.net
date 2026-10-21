@@ -894,14 +894,19 @@ jobs:
                   if-no-files-found: ignore
                   retention-days: 7
 
+            - name: Verify preview readiness failure recovery
+              run: node --test test/preview-readiness.test.mjs
+
             - name: Cypress
               uses: cypress-io/github-action@fa4a118725a8f001170d49631ea89e5d66fee626 # v7.4.1
+              env:
+                  CYPRESS_BASE_URL: http://127.0.0.1:3333
               with:
                   install: false
                   working-directory: front-end
                   config-file: cypress.config.ts
-                  start: npm run preview -- --port 3333
-                  wait-on: "http://localhost:3333"
+                  start: npm run preview -- --host 127.0.0.1 --port 3333 --strictPort
+                  wait-on: "node ../scripts/wait-for-loopback-preview.mjs"
 
     course-workflows:
         runs-on: ubuntu-24.04
