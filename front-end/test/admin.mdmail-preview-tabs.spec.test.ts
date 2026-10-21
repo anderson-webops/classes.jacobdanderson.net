@@ -52,9 +52,13 @@ describe("switchable session-note compose and preview", () => {
 			wrapper.get('[data-testid="preview-toggle"]').attributes()
 		).toMatchObject({
 			type: "button",
-			"aria-pressed": "false",
-			"aria-controls": "note-preview"
+			"aria-pressed": "false"
 		});
+		expect(
+			wrapper
+				.get('[data-testid="preview-toggle"]')
+				.attributes("aria-controls")
+		).toBeUndefined();
 		expect(wrapper.get('[data-testid="md-input"]').isVisible()).toBe(true);
 	});
 	it("replaces the writing area with sanitized preview without resetting the draft", async () => {
@@ -115,6 +119,7 @@ describe("switchable session-note compose and preview", () => {
 		const compose = wrapper.get('[data-testid="compose-toggle"]');
 		await preview.trigger("click");
 		expect(preview.attributes("aria-pressed")).toBe("true");
+		expect(preview.attributes("aria-controls")).toBe("note-preview");
 		expect(compose.attributes("aria-pressed")).toBe("false");
 		expect(
 			wrapper.get('[data-testid="live-preview"]').attributes()
@@ -129,6 +134,7 @@ describe("switchable session-note compose and preview", () => {
 		);
 		await compose.trigger("click");
 		expect(preview.attributes("aria-pressed")).toBe("false");
+		expect(preview.attributes("aria-controls")).toBeUndefined();
 		expect(compose.attributes("aria-pressed")).toBe("true");
 		expect(wrapper.find('[data-testid="live-preview"]').exists()).toBe(
 			false
