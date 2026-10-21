@@ -4,6 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { nextTick, reactive } from "vue";
 import { routeLocationKey, routerKey } from "vue-router";
 import webNotificationSource from "../../test/fixtures/web-notification-source.json";
+import webContactSource from "../../test/fixtures/web-contact-source.json";
 import webModuleSource from "../../test/fixtures/web-portfolio-module-source.json";
 import webPortfolioSource from "../../test/fixtures/web-portfolio-source.json";
 import { api } from "@/api";
@@ -50,19 +51,23 @@ describe("CourseExplorer.vue", () => {
 				"web-development-foundations-wdf1-positioning-goals-and-suggested-course-family",
 				"web-development-foundations-wdf2-stage-1-strengthen-the-existing-javascript-courses",
 				"web-development-foundations-wdf3-stage-2-web-development-foundations",
-				"web-development-foundations-wdf4-stage-3-front-end-applications"
+				"web-development-foundations-wdf4-stage-3-front-end-applications",
+				"web-development-foundations-wdf5-stage-4-back-end-basics"
 			].map(module => ({ role, module }))
 		)
 	)(
-		"opens the web portfolio from $module with $role role visibility",
+		"opens the web source project from $module with $role role visibility",
 		async ({ role, module }) => {
+			const contact = module.includes("-wdf5-");
 			const notification = module.includes("-wdf4-");
 			const edition = module.includes("-wdf3-") ? 2 : 1;
-			const source = notification
-				? webNotificationSource
-				: edition === 2
-					? webModuleSource
-					: webPortfolioSource;
+			const source = contact
+				? webContactSource
+				: notification
+					? webNotificationSource
+					: edition === 2
+						? webModuleSource
+						: webPortfolioSource;
 			const { pack, revision } = source;
 			const pinia = createPinia();
 			setActivePinia(pinia);
@@ -128,7 +133,7 @@ describe("CourseExplorer.vue", () => {
 					);
 					expect(url.searchParams.get("mode")).toBe("web");
 					expect(url.searchParams.get("projectKey")).toBe(
-						`web-development-foundations:${notification ? "notification-state" : "portfolio"}:${index === 0 ? "starter" : "reference"}:web-source-v${edition}`
+						`web-development-foundations:${contact ? "contact-api" : notification ? "notification-state" : "portfolio"}:${index === 0 ? "starter" : "reference"}:web-source-v${edition}`
 					);
 					expect(url.searchParams.get("starterUrl")).toBe(
 						`https://github.com/instruction-material/Web-Development-Foundations/tree/${revision}/${pack}/${index === 0 ? "starter" : "solution"}`

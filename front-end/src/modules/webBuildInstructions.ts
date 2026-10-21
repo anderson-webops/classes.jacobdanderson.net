@@ -24,6 +24,21 @@ export function webBuildInstructions(starterUrl?: string) {
 			"The included file server runs the source directly. Read README.md for state contracts, fixture cases and completion checks."
 		];
 	}
+	if (selected.definition.workflow === "node") {
+		const workspace = `${selected.pack}/${selected.role}`;
+		return [
+			"Save and download the ZIP to preserve edited source.",
+			`Use the complete Web-Development-Foundations source repository at ${selected.resource.ref} with Node.js 24.`,
+			`Copy the exported src/ and public/ files into ${workspace}; retain that checkout's role package.json, root package.json and root package-lock.json.`,
+			"The role ZIP lacks the monorepo root lockfile. Run these commands from the complete repository root:",
+			"npm ci",
+			`npm run start --workspace ${workspace}`,
+			"Wait for the ready event, then open http://127.0.0.1:3002. This workspace edits source and does not run the Node.js service.",
+			"The unfinished starter returns 501 until parseContact is implemented. The reference validates requests and simulates delivery without sending email.",
+			"Stop this exercise's server with Ctrl+C before changing CONTACT_SCENARIO to fail, timeout or ok and restarting. README.md supplies the shell-specific commands and request checks.",
+			"If port 3002 is occupied, select a free PORT as described in README.md. Stop only the server started for this exercise."
+		];
+	}
 	const nativePack =
 		selected.definition.version === 1
 			? webPortfolioPack

@@ -26,6 +26,7 @@ import {
 	staticMediaUrlsFromText
 } from "./staticMedia";
 import { applyRestoredUsacoProjects } from "./usacoRestoredProjectBriefs";
+import { applyWebContactWorkflow } from "./webContactWorkflow";
 import { applyWebFoundationsEntryWorkflows } from "./webFoundationsEntryWorkflows";
 import { applyWebNotificationWorkflow } from "./webNotificationWorkflow";
 import { applyWebPortfolioModuleWorkflow } from "./webPortfolioModuleWorkflow";
@@ -9595,5 +9596,6 @@ export function normalizeRawCourse(id: string, rawCourse: RawCourse) {
 	applyWebFoundationsEntryWorkflows(course, id);
 	applyWebPortfolioModuleWorkflow(course, id);
 	applyWebNotificationWorkflow(course, id);
+	applyWebContactWorkflow(course, id);
 	return course;
 }

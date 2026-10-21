@@ -247,7 +247,7 @@ describe("Web Development Foundations learner flow", () => {
 			"Use only fictional names, messages, notes, bookings, contact details"
 		);
 		expect(text).toContain("Keep required services on loopback");
-		expect(text).toContain("stream or test email transport");
+		expect(text).toContain("JSON-only Nodemailer transport sends no email");
 		expect(text).toContain("no cloud database requirement");
 		expect(text).toContain(
 			"Public hosting, production DNS, and a custom domain are optional"
