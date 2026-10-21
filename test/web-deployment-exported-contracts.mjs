@@ -53,7 +53,6 @@ async function main() {
 			detached: process.platform !== "win32",
 		});
 		const exited = once(child, "exit");
-		log({ event: "start", cwd, command, pid: child.pid, startupTimeoutMs: 10000, timeoutMs: 60000 });
 		const kill = (signal) => {
 			if (!child.pid || child.exitCode !== null || child.signalCode !== null) return;
 			if (process.platform === "win32") child.kill(signal);
@@ -79,6 +78,7 @@ async function main() {
 		let pending = "";
 		let deadline;
 		try {
+			log({ event: "start", cwd, command, pid: child.pid, startupTimeoutMs: 10000, timeoutMs: 60000 });
 			const ready = await new Promise((resolve, reject) => {
 				deadline = setTimeout(() => reject(new Error(`No ready event from ${file}`)), 10000);
 				child.once("error", reject);
@@ -278,7 +278,7 @@ async function main() {
 		scratch = await mkdtemp(path.join(path.dirname(proofPath), "deployment-exports-"));
 		const executablePath = [
 			process.env.PUPPETEER_EXECUTABLE_PATH,
-			puppeteer.executablePath(),
+			await puppeteer.executablePath(),
 			"/usr/bin/google-chrome",
 			"/usr/bin/chromium",
 			"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
@@ -286,7 +286,6 @@ async function main() {
 		assert.ok(executablePath, "An existing Chrome installation is required");
 		browser = await puppeteer.launch({ executablePath, headless: true, args: ["--no-sandbox"] });
 		const browserProcess = browser.process();
-		log({ event: "start", kind: "browser", cwd: repository, command: browserProcess.spawnargs, pid: browserProcess.pid, timeoutMs: 300000 });
 		let closing;
 		const closeBrowser = () => closing ??= (async () => {
 			await browser.close();
@@ -294,6 +293,7 @@ async function main() {
 			log({ event: "end", kind: "browser", cwd: repository, command: browserProcess.spawnargs, pid: browserProcess.pid, exitCode: browserProcess.exitCode, signal: browserProcess.signalCode, cleanup: "owned browser closed and reaped" });
 		})();
 		cleanups.add(closeBrowser);
+		log({ event: "start", kind: "browser", cwd: repository, command: browserProcess.spawnargs, pid: browserProcess.pid, timeoutMs: 300000 });
 		for (const row of rows) {
 			proof.profiles.push(await runProfile(path.join(scratch, row.name), row, browser));
 			await writeFile(proofPath, `${JSON.stringify(proof, null, 2)}\n`);
