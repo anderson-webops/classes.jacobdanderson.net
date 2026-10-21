@@ -656,6 +656,7 @@ describe("python project review routes", () => {
 
 	it.each([
 		"web",
+		"web-modules",
 		"rust",
 		"rust-ownership",
 		"rust-borrowing",
@@ -675,10 +676,11 @@ describe("python project review routes", () => {
 	] as const)(
 		"saves, shares, and edits a %s review while preserving the learner's complete pack",
 		async mode => {
+			const webMode = mode === "web" || mode === "web-modules";
 			const rustMode = mode === "rust" || mode.startsWith("rust-");
 			const requestedMode = rustMode
 				? "rust"
-				: mode === "web"
+				: webMode
 					? "web"
 					: mode === "c"
 						? "c"
@@ -687,8 +689,10 @@ describe("python project review routes", () => {
 				readFileSync(
 					resolve(
 						process.cwd(),
-						mode === "web"
-							? "../test/fixtures/web-portfolio-source.json"
+						webMode
+							? mode === "web-modules"
+								? "../test/fixtures/web-portfolio-module-source.json"
+								: "../test/fixtures/web-portfolio-source.json"
 							: mode === "rust-concurrency"
 								? "../test/fixtures/rust-concurrency-contracts.json"
 								: mode === "rust-boundary-review"
@@ -738,7 +742,7 @@ describe("python project review routes", () => {
 					: fixture.pack;
 			const activeFileName = rustMode
 				? "starter/observations.md"
-				: mode === "web"
+				: webMode
 					? "index.html"
 					: mode === "hardening-trace"
 						? "starter/trace.md"
@@ -756,10 +760,9 @@ describe("python project review routes", () => {
 						path === `${pack}/README.md`
 				)
 				.map(([path, file]) => ({
-					name:
-						mode === "web"
-							? path.split("/").at(-1)!
-							: path.slice(pack.length + 1),
+					name: webMode
+						? path.split("/").at(-1)!
+						: path.slice(pack.length + 1),
 					content: file.content,
 					encoding: "text"
 				}));
@@ -779,7 +782,7 @@ describe("python project review routes", () => {
 					requestedMode === "rust"
 						? "rust-systems-security:cargo:starter:native-rust"
 						: requestedMode === "web"
-							? "web-development-foundations:portfolio:starter:web-source-v1"
+							? `web-development-foundations:portfolio:starter:web-source-v${mode === "web-modules" ? 2 : 1}`
 							: requestedMode === "assembly"
 								? "assembly:compiler:starter:native-assembly"
 								: "c-systems-engineering:linking:starter:native-c17",
@@ -824,7 +827,7 @@ describe("python project review routes", () => {
 				(mode === "c" ? "starter/labels.c" : activeFileName)
 					? {
 							...file,
-							content: `${file.content}\n${mode === "web" ? "<!-- staff feedback -->" : "/* staff feedback */"}\n`
+							content: `${file.content}\n${webMode ? "<!-- staff feedback -->" : "/* staff feedback */"}\n`
 						}
 					: file
 			);

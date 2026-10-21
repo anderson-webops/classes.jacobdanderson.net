@@ -56,8 +56,7 @@ import { silverJavaProjectKey } from "@/modules/usacoSilverJavaPacks";
 import { goldSpanningIntervalLegacyItemId } from "@/modules/usacoSpanningIntervalPacks";
 import {
 	webCourseProjectKey,
-	webCourseResource,
-	webPortfolioRoot
+	webCourseResourceUrl
 } from "@/modules/webProjectResources";
 import { useAppStore } from "@/stores/app";
 import { useCoursesStore } from "@/stores/courses";
@@ -1585,10 +1584,10 @@ function ideStarterHref(item: CourseModuleItem, resource: ResourceLink) {
 	);
 	if (!mode) return "";
 
-	const webSource = mode === "web" ? webCourseResource(resource.url) : null;
-	const starterUrl = webSource
-		? `${webPortfolioRoot}/${webSource.role}`
-		: resource.url;
+	const starterUrl =
+		mode === "web"
+			? (webCourseResourceUrl(resource.url) ?? resource.url)
+			: resource.url;
 	const params = new URLSearchParams({
 		course: selectedCourse.value.id,
 		mode,

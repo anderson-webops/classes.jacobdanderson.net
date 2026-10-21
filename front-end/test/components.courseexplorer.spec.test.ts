@@ -45,12 +45,18 @@ describe("CourseExplorer.vue", () => {
 			[
 				"web-development-foundations-wdf0-setup-and-tooling",
 				"web-development-foundations-wdf1-positioning-goals-and-suggested-course-family",
-				"web-development-foundations-wdf2-stage-1-strengthen-the-existing-javascript-courses"
+				"web-development-foundations-wdf2-stage-1-strengthen-the-existing-javascript-courses",
+				"web-development-foundations-wdf3-stage-2-web-development-foundations"
 			].map(module => ({ role, module }))
 		)
 	)(
 		"opens the web portfolio from $module with $role role visibility",
 		async ({ role, module }) => {
+			const edition = module.includes("-wdf3-") ? 2 : 1;
+			const revision =
+				edition === 2
+					? "6bfe60b31c07cbfabbc396790f1251503b1f4f7d"
+					: "2c7a9fa89e052cd5cdc51987ebf837ae81e3557f";
 			const pinia = createPinia();
 			setActivePinia(pinia);
 			const app = useAppStore();
@@ -117,10 +123,10 @@ describe("CourseExplorer.vue", () => {
 					);
 					expect(url.searchParams.get("mode")).toBe("web");
 					expect(url.searchParams.get("projectKey")).toBe(
-						`web-development-foundations:portfolio:${index === 0 ? "starter" : "reference"}:web-source-v1`
+						`web-development-foundations:portfolio:${index === 0 ? "starter" : "reference"}:web-source-v${edition}`
 					);
 					expect(url.searchParams.get("starterUrl")).toBe(
-						`https://github.com/instruction-material/Web-Development-Foundations/tree/2c7a9fa89e052cd5cdc51987ebf837ae81e3557f/WDF1-Portfolio-Custom-Domain/${index === 0 ? "starter" : "solution"}`
+						`https://github.com/instruction-material/Web-Development-Foundations/tree/${revision}/WDF1-Portfolio-Custom-Domain/${index === 0 ? "starter" : "solution"}`
 					);
 				}
 			} finally {

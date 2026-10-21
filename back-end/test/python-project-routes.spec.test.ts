@@ -79,14 +79,20 @@ async function postJson(baseUrl: string, body: unknown) {
 }
 
 describe("python project routes", () => {
-	it.each(["starter", "solution"] as const)(
-		"stores the exact web %s role for account and course-code owners",
-		async role => {
+	it.each(
+		["starter", "solution"].flatMap(role =>
+			[1, 2].map(edition => ({ role, edition }))
+		)
+	)(
+		"stores the exact web $role edition $edition for account and course-code owners",
+		async ({ role, edition }) => {
 			const fixture = JSON.parse(
 				readFileSync(
 					resolve(
 						process.cwd(),
-						"../test/fixtures/web-portfolio-source.json"
+						edition === 1
+							? "../test/fixtures/web-portfolio-source.json"
+							: "../test/fixtures/web-portfolio-module-source.json"
 					),
 					"utf8"
 				)
@@ -112,7 +118,7 @@ describe("python project routes", () => {
 							files,
 							activeFileName: "main.js",
 							courseID: "web-development-foundations",
-							courseProjectKey: `web-development-foundations:portfolio:${role === "starter" ? "starter" : "reference"}:web-source-v1`
+							courseProjectKey: `web-development-foundations:portfolio:${role === "starter" ? "starter" : "reference"}:web-source-v${edition}`
 						});
 						expect(response.status).toBe(201);
 						const body = await response.json();

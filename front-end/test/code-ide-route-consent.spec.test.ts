@@ -149,12 +149,21 @@ afterEach(async () => {
 });
 
 describe("Code IDE route import consent", () => {
-	it.each(["starter", "solution"] as const)(
-		"confirms a web %s import and reopens edited source without another fetch",
-		async role => {
+	it.each([
+		["starter", 1],
+		["solution", 1],
+		["starter", 2],
+		["solution", 2]
+	] as const)(
+		"confirms a web %s edition %d import and reopens edited source without another fetch",
+		async (role, edition) => {
 			const fixture = JSON.parse(
 				readFileSync(
-					resolve("../test/fixtures/web-portfolio-source.json"),
+					resolve(
+						edition === 1
+							? "../test/fixtures/web-portfolio-source.json"
+							: "../test/fixtures/web-portfolio-module-source.json"
+					),
 					"utf8"
 				)
 			);
@@ -207,7 +216,7 @@ describe("Code IDE route import consent", () => {
 					return { data: { project: structuredClone(project) } };
 				}
 			);
-			const key = `web-development-foundations:portfolio:${role === "starter" ? "starter" : "reference"}:web-source-v1`;
+			const key = `web-development-foundations:portfolio:${role === "starter" ? "starter" : "reference"}:web-source-v${edition}`;
 			const params = new URLSearchParams({
 				course: "web-development-foundations",
 				mode: "web",
@@ -222,7 +231,7 @@ describe("Code IDE route import consent", () => {
 				.trigger("click");
 			await settle();
 			expect(preview.list).not.toHaveBeenCalled();
-			expect(preview.load).toHaveBeenCalledTimes(5);
+			expect(preview.load).toHaveBeenCalledTimes(edition === 1 ? 5 : 6);
 			const project = workspaceState(wrapper).projects.find(
 				row => row._id === "web-project"
 			)!;
@@ -233,6 +242,7 @@ describe("Code IDE route import consent", () => {
 				"main.js",
 				"styles.css",
 				"package.json",
+				...(edition === 2 ? ["project-idea.js"] : []),
 				"README.md"
 			]);
 			const script = project.files.find(file => file.name === "main.js")!;
@@ -265,7 +275,7 @@ describe("Code IDE route import consent", () => {
 					row => row._id === "web-project"
 				)!.files
 			).toEqual(saved);
-			expect(preview.load).toHaveBeenCalledTimes(5);
+			expect(preview.load).toHaveBeenCalledTimes(edition === 1 ? 5 : 6);
 			expect(requests.post).toHaveBeenCalledTimes(1);
 		}
 	);

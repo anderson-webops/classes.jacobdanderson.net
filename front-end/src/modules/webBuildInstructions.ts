@@ -1,4 +1,4 @@
-import { webCourseResource, webPortfolioRevision } from "./webProjectResources";
+import { webCourseResource } from "./webProjectResources";
 
 export function webBuildInstructions(starterUrl?: string) {
 	const selected = webCourseResource(starterUrl ?? "");
@@ -11,7 +11,7 @@ export function webBuildInstructions(starterUrl?: string) {
 	const workspace = `${selected.pack}/${selected.role}`;
 	return [
 		"Save and download the ZIP to preserve edited files.",
-		`Use the complete Web-Development-Foundations source repository at ${webPortfolioRevision} with Node.js 24.`,
+		`Use the complete Web-Development-Foundations source repository at ${selected.resource.ref} with Node.js 24.`,
 		`Place the exported role files in ${workspace}, preserving the repository's root package.json and package-lock.json.`,
 		"The role ZIP contains its package.json and source files, but not the monorepo's root lockfile. It is not a standalone npm ci checkout.",
 		"From the complete repository root:",

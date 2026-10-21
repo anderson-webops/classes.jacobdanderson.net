@@ -4,6 +4,7 @@ import setupReading from "../../assets/course-guides/web-project-setup.md?raw";
 import boundaryReading from "../../assets/course-guides/web-request-boundaries.md?raw";
 import {
 	webCourseResource,
+	webCourseResourceUrl,
 	webPortfolioRoot
 } from "../../modules/webProjectResources";
 
@@ -186,9 +187,12 @@ export function applyWebFoundationsEntryWorkflows(
 		]) {
 			const selected = webCourseResource(item.projectLink ?? "");
 			if (!selected) continue;
-			item.projectLink = `${webPortfolioRoot}/${selected.role}`;
-			if (webCourseResource(item.solutionLink ?? ""))
-				item.solutionLink = `${webPortfolioRoot}/solution`;
+			item.projectLink = webCourseResourceUrl(item.projectLink ?? "")!;
+			if (webCourseResource(item.solutionLink ?? "")) {
+				item.solutionLink = webCourseResourceUrl(
+					item.solutionLink ?? ""
+				)!;
+			}
 			item.ideImport = true;
 		}
 	}
