@@ -736,7 +736,9 @@ function parseDateIso(value: string): string | null {
 						type="button"
 						data-testid="preview-toggle"
 						:aria-pressed="previewOpen"
-						aria-controls="note-preview"
+						:aria-controls="
+							previewOpen ? 'note-preview' : undefined
+						"
 						@click="previewOpen = true"
 					>
 						Preview
