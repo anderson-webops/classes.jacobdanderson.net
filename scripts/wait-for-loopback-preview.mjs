@@ -33,6 +33,7 @@ export async function waitForLoopbackPreview(
 	const deadline = started + timeoutMs;
 	let attempts = 0;
 	let lastError = "No response";
+	let lastHttpResult;
 	while (performance.now() < deadline) {
 		signal?.throwIfAborted();
 		attempts++;
@@ -52,6 +53,7 @@ export async function waitForLoopbackPreview(
 					? AbortSignal.any([signal, requestSignal])
 					: requestSignal
 			});
+			lastHttpResult = `HTTP ${response.status}`;
 			await response.body?.cancel();
 			if (response.status === 200) {
 				return {
@@ -59,7 +61,7 @@ export async function waitForLoopbackPreview(
 					elapsedMs: Math.round(performance.now() - started)
 				};
 			}
-			lastError = `HTTP ${response.status}`;
+			lastError = lastHttpResult;
 		}
 		catch (error) {
 			signal?.throwIfAborted();
@@ -75,7 +77,7 @@ export async function waitForLoopbackPreview(
 		}
 	}
 	throw new Error(
-		`Preview at ${target.href} was not ready within ${timeoutMs}ms (${attempts} attempts; last result: ${lastError})`
+		`Preview at ${target.href} was not ready within ${timeoutMs}ms (${attempts} attempts; last result: ${lastHttpResult ?? lastError}${lastHttpResult && lastError !== lastHttpResult ? `; last attempt: ${lastError}` : ""})`
 	);
 }
 

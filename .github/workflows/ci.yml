@@ -592,6 +592,9 @@ jobs:
                   npm -v
                   test "$(npm --version)" = "12.0.1"
 
+            - name: Verify preview readiness failure recovery
+              run: node --test test/preview-readiness.test.mjs
+
             - name: Install deps
               run: npm ci
 
@@ -893,9 +896,6 @@ jobs:
                   path: output/playwright/course-import-*.png
                   if-no-files-found: ignore
                   retention-days: 7
-
-            - name: Verify preview readiness failure recovery
-              run: node --test test/preview-readiness.test.mjs
 
             - name: Cypress
               uses: cypress-io/github-action@fa4a118725a8f001170d49631ea89e5d66fee626 # v7.4.1

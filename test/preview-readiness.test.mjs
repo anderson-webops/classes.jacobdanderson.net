@@ -57,14 +57,35 @@ test("preview readiness bounds a server that never returns headers", async (t) =
 	);
 	assert.ok(performance.now() - started < 2_000);
 });
-test("preview readiness reports the last HTTP result at its deadline", async (t) => {
-	const url = await fixture(t, (req, res) => {
-		res.statusCode = 503;
-		res.end();
+test("preview readiness retains HTTP evidence when later attempts time out", async (t) => {
+	let attempts = 0;
+	t.mock.method(globalThis, "fetch", async (_target, { signal }) => {
+		if (++attempts === 1) return new Response(null, { status: 503 });
+		return new Promise((_resolve, reject) => {
+			if (signal.aborted) reject(signal.reason);
+			else signal.addEventListener("abort", () => reject(signal.reason), { once: true });
+		});
 	});
 	await assert.rejects(
-		waitForLoopbackPreview(url, { timeoutMs: 100, intervalMs: 10 }),
-		/last result: HTTP 503/
+		waitForLoopbackPreview("http://127.0.0.1:3333", {
+			timeoutMs: 100,
+			intervalMs: 10,
+			requestTimeoutMs: 35
+		}),
+		/last result: HTTP 503; last attempt: .*timeout/i
+	);
+	assert.ok(attempts >= 2);
+});
+test("preview readiness reports transport failures when no HTTP response arrived", async (t) => {
+	t.mock.method(globalThis, "fetch", async () => {
+		throw new TypeError("fetch failed", { cause: { code: "ECONNREFUSED" } });
+	});
+	await assert.rejects(
+		waitForLoopbackPreview("http://127.0.0.1:3333", {
+			timeoutMs: 50,
+			intervalMs: 10
+		}),
+		/last result: fetch failed: ECONNREFUSED/
 	);
 });
 test("preview readiness cancellation aborts a pending request", async (t) => {
