@@ -17,6 +17,33 @@ export const webPortfolioRoleFiles = [
 export const webNotificationRevision = webMaintainedSourceRevision;
 export const webNotificationPack = "WDF4-Realtime-Chat-App/local-client";
 export const webNotificationRoot = `https://github.com/instruction-material/Web-Development-Foundations/tree/${webNotificationRevision}/${webNotificationPack}`;
+export const webContactRevision = "aed8ef2fcd7488c25c0b977b2099640e7431c55a";
+export const webContactPack = "WDF3-Booking-Contact-App";
+export const webContactRoot = `https://github.com/instruction-material/Web-Development-Foundations/tree/${webContactRevision}/${webContactPack}`;
+export const webContactRoleFiles = [
+	"src/validation.js",
+	"src/app.js",
+	"src/server.js",
+	"src/lib/mailer.js",
+	"public/index.html",
+	"public/app.js",
+	"public/styles.css",
+	"package.json"
+] as const;
+export const webNotesRevision = "8d48a2672e987b5ab1c1b7b93ea395f6da5c37a2";
+export const webNotesPack = "WDF2-Notes-App-with-MongoDB";
+export const webNotesRoot = `https://github.com/instruction-material/Web-Development-Foundations/tree/${webNotesRevision}/${webNotesPack}`;
+export const webNotesRoleFiles = [
+	"src/models/note.js",
+	"src/store.js",
+	"src/routes/notes.js",
+	"src/app.js",
+	"src/server.js",
+	"public/index.html",
+	"public/app.js",
+	"public/styles.css",
+	"package.json"
+] as const;
 
 const definitions = [
 	{
@@ -56,6 +83,24 @@ const definitions = [
 			"out-of-order.json"
 		],
 		shared: ["README.md", "serve.mjs"]
+	},
+	{
+		revision: webContactRevision,
+		pack: webContactPack,
+		project: "contact-api",
+		version: 1,
+		workflow: "node",
+		files: webContactRoleFiles,
+		shared: ["README.md"]
+	},
+	{
+		revision: webNotesRevision,
+		pack: webNotesPack,
+		project: "notes-api",
+		version: 1,
+		workflow: "node",
+		files: webNotesRoleFiles,
+		shared: ["README.md"]
 	}
 ] as const;
 const originalPortfolioRevision = "2c7a9fa89e052cd5cdc51987ebf837ae81e3557f";
@@ -88,7 +133,11 @@ export function webCourseResource(url: string) {
 		resource.ref === "main"
 			? originalMainPath
 				? originalPortfolioRevision
-				: webMaintainedSourceRevision
+				: resource.path.startsWith(`${webContactPack}/`)
+					? webContactRevision
+					: resource.path.startsWith(`${webNotesPack}/`)
+						? webNotesRevision
+						: webMaintainedSourceRevision
 			: resource.ref;
 	const definition = [...definitions, ...historicalDefinitions].find(
 		row =>
