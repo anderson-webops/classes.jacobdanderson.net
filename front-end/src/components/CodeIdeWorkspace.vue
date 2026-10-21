@@ -113,6 +113,7 @@ import {
 import { rustBuildInstructions } from "@/modules/rustBuildInstructions";
 import { bronzePythonFileIoForKey } from "@/modules/usacoBronzeRequiredPacks";
 import { webBuildInstructions } from "@/modules/webBuildInstructions";
+import { webCourseResource } from "@/modules/webProjectResources";
 import { useAppStore } from "@/stores/app";
 
 const props = withDefaults(
@@ -1142,6 +1143,13 @@ const usesNativeSourceWorkspace = computed(
 		selectedProject.value?.mode === "cpp" ||
 		selectedProject.value?.mode === "rust"
 );
+const webProjectRequirement = computed(() => {
+	const selected = webCourseResource(selectedProject.value?.starterUrl ?? "");
+	if (!selected) return "Requires a local web server.";
+	return selected.definition.workflow === "standalone"
+		? "Requires Node.js 24."
+		: "Requires Node.js 24 and the complete source repository's lockfile.";
+});
 const nativeSourceLanguage = computed(() =>
 	selectedProject.value?.mode === "web"
 		? "Web"
@@ -8512,8 +8520,7 @@ defineExpose({ stop: stopCurrentProject, runIsolated, releaseIsolatedPointer });
 						and verification steps.
 					</p>
 					<p v-else-if="selectedProject?.mode === 'web'">
-						Web files run on a local web server. npm scripts require
-						Node.js and the complete source repository's lockfile.
+						{{ webProjectRequirement }}
 					</p>
 					<p v-else-if="selectedProject?.mode === 'rust'">
 						Requires a native Rust toolchain.
@@ -9056,17 +9063,17 @@ defineExpose({ stop: stopCurrentProject, runIsolated, releaseIsolatedPointer });
 								@keydown="selectAllConsoleOutput"
 							>
 								<div
-									v-if="!outputLines.length"
+									v-if="
+										!outputLines.length &&
+										selectedProject?.mode !== 'web'
+									"
 									class="empty-output"
 								>
 									{{
 										usesNativeSourceWorkspace
-											? selectedProject?.mode === "web"
-												? "Select Run instructions for the project's local server and build commands."
-												: selectedProject?.mode ===
-													  "linux"
-													? "Select Linux instructions for this lab's execution and verification steps."
-													: "Select Build instructions for this project's native compiler command."
+											? selectedProject?.mode === "linux"
+												? "Select Linux instructions for this lab's execution and verification steps."
+												: "Select Build instructions for this project's native compiler command."
 											: selectedNativeJavaInstructions
 												? "Select Run for this project's native Java build and input/output instructions."
 												: "Output will appear here after a run."

@@ -81,7 +81,7 @@ async function postJson(baseUrl: string, body: unknown) {
 describe("python project routes", () => {
 	it.each(
 		["starter", "solution"].flatMap(role =>
-			[1, 2].map(edition => ({ role, edition }))
+			[1, 2, 3].map(edition => ({ role, edition }))
 		)
 	)(
 		"stores the exact web $role edition $edition for account and course-code owners",
@@ -90,9 +90,11 @@ describe("python project routes", () => {
 				readFileSync(
 					resolve(
 						process.cwd(),
-						edition === 1
-							? "../test/fixtures/web-portfolio-source.json"
-							: "../test/fixtures/web-portfolio-module-source.json"
+						edition === 3
+							? "../test/fixtures/web-notification-source.json"
+							: edition === 1
+								? "../test/fixtures/web-portfolio-source.json"
+								: "../test/fixtures/web-portfolio-module-source.json"
 					),
 					"utf8"
 				)
@@ -103,7 +105,8 @@ describe("python project routes", () => {
 				.filter(
 					([path]) =>
 						path.startsWith(`${fixture.pack}/${role}/`) ||
-						path === `${fixture.pack}/README.md`
+						path === `${fixture.pack}/README.md` ||
+						(edition === 3 && path === `${fixture.pack}/serve.mjs`)
 				)
 				.map(([path, file]) => ({
 					name: path.split("/").at(-1)!,
@@ -116,15 +119,18 @@ describe("python project routes", () => {
 						const response = await postJson(baseUrl, {
 							mode: "web",
 							files,
-							activeFileName: "main.js",
+							activeFileName:
+								edition === 3 ? "state.mjs" : "main.js",
 							courseID: "web-development-foundations",
-							courseProjectKey: `web-development-foundations:portfolio:${role === "starter" ? "starter" : "reference"}:web-source-v${edition}`
+							courseProjectKey: `web-development-foundations:${edition === 3 ? "notification-state" : "portfolio"}:${role === "starter" ? "starter" : "reference"}:web-source-v${edition === 3 ? 1 : edition}`
 						});
 						expect(response.status).toBe(201);
 						const body = await response.json();
 						expect(body.project.mode).toBe("web");
 						expect(body.project.files).toEqual(files);
-						expect(body.project.activeFileName).toBe("main.js");
+						expect(body.project.activeFileName).toBe(
+							edition === 3 ? "state.mjs" : "main.js"
+						);
 					},
 					owner,
 					"web-development-foundations"

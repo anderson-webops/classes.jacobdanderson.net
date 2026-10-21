@@ -937,6 +937,25 @@ jobs:
                   if-no-files-found: error
                   retention-days: 7
 
+            - name: Verify notification source imports and saved code exports
+              env:
+                  WEB_NOTIFICATION_EXPORT_DIR: output/web-notification-exports
+              run: npm exec -w front-end -- vitest run test/web-notification-workspace.spec.test.ts --no-file-parallelism --maxWorkers=1
+
+            - name: Run actual exported notification projects and contracts
+              run: node test/web-notification-exported-contracts.mjs --exports front-end/output/web-notification-exports --proof output/web-notification-native/proof.json
+
+            - name: Retain notification source and native export evidence
+              if: always()
+              uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+              with:
+                  name: web-notification-workflows
+                  path: |
+                      front-end/output/web-notification-exports/
+                      output/web-notification-native/
+                  if-no-files-found: error
+                  retention-days: 7
+
             - name: Verify Network Systems foundation imports and notebook reuse
               env:
                   NETWORK_BROWSER_EXPORT_PROOF_DIR: output/network-exports

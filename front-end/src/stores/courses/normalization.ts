@@ -27,6 +27,7 @@ import {
 } from "./staticMedia";
 import { applyRestoredUsacoProjects } from "./usacoRestoredProjectBriefs";
 import { applyWebFoundationsEntryWorkflows } from "./webFoundationsEntryWorkflows";
+import { applyWebNotificationWorkflow } from "./webNotificationWorkflow";
 import { applyWebPortfolioModuleWorkflow } from "./webPortfolioModuleWorkflow";
 
 const INSTRUCTION_MATERIAL_BASE = "https://github.com/instruction-material";
@@ -9593,5 +9594,6 @@ export function normalizeRawCourse(id: string, rawCourse: RawCourse) {
 	applyRustFinalCourseWorkflows(course, id);
 	applyWebFoundationsEntryWorkflows(course, id);
 	applyWebPortfolioModuleWorkflow(course, id);
+	applyWebNotificationWorkflow(course, id);
 	return course;
 }

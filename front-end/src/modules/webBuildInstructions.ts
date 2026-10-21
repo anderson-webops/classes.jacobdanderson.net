@@ -8,6 +8,17 @@ export function webBuildInstructions(starterUrl?: string) {
 			"Use the project's README for its server and build commands. This workspace edits source and does not run Node.js or npm."
 		];
 	}
+	if (selected.definition.workflow === "standalone") {
+		return [
+			"Save and download the ZIP, then extract it with every imported file.",
+			"Use Node.js 24 in the extracted project folder containing index.html and serve.mjs:",
+			"node serve.mjs",
+			"Open http://127.0.0.1:4174. Stop this exercise's server with Ctrl+C when finished.",
+			`For the complete source repository at ${selected.resource.ref}:`,
+			`node ${selected.pack}/serve.mjs ${selected.role} 4174`,
+			"The included file server runs the source directly. Read README.md for state contracts, fixture cases and completion checks."
+		];
+	}
 	const workspace = `${selected.pack}/${selected.role}`;
 	return [
 		"Save and download the ZIP to preserve edited files.",

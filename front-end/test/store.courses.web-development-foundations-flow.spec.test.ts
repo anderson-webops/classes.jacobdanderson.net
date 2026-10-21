@@ -34,6 +34,8 @@ const EXPECTED_NORMALIZED_CORE_SEQUENCE = EXPECTED_CORE_SEQUENCE.map(title => {
 		return "WDF2 Files, Git, and Browser Debugging";
 	if (title === "WDF3 Stage 2: Web Development Foundations")
 		return "WDF3 Accessible Portfolio, Modules, and Forms";
+	if (title === "WDF4 Stage 3: Front-End Applications")
+		return "WDF4 Notification Views and Asynchronous State";
 	return title.replace(/^Full Stack/u, "Full-Stack");
 });
 

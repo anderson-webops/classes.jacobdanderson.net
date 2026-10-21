@@ -46,15 +46,21 @@ describe("CourseExplorer.vue", () => {
 				"web-development-foundations-wdf0-setup-and-tooling",
 				"web-development-foundations-wdf1-positioning-goals-and-suggested-course-family",
 				"web-development-foundations-wdf2-stage-1-strengthen-the-existing-javascript-courses",
-				"web-development-foundations-wdf3-stage-2-web-development-foundations"
+				"web-development-foundations-wdf3-stage-2-web-development-foundations",
+				"web-development-foundations-wdf4-stage-3-front-end-applications"
 			].map(module => ({ role, module }))
 		)
 	)(
 		"opens the web portfolio from $module with $role role visibility",
 		async ({ role, module }) => {
+			const notification = module.includes("-wdf4-");
+			const pack = notification
+				? "WDF4-Realtime-Chat-App/local-client"
+				: "WDF1-Portfolio-Custom-Domain";
 			const edition = module.includes("-wdf3-") ? 2 : 1;
-			const revision =
-				edition === 2
+			const revision = notification
+				? "c18190dcca466f35f1e4a7ed677d922fa80daff8"
+				: edition === 2
 					? "6bfe60b31c07cbfabbc396790f1251503b1f4f7d"
 					: "2c7a9fa89e052cd5cdc51987ebf837ae81e3557f";
 			const pinia = createPinia();
@@ -108,9 +114,7 @@ describe("CourseExplorer.vue", () => {
 					.findAll(".lesson-item")
 					.find(row =>
 						row
-							.find(
-								'a.is-project[href*="/WDF1-Portfolio-Custom-Domain/starter"]'
-							)
+							.find(`a.is-project[href*="/${pack}/starter"]`)
 							.exists()
 					)!;
 				expect(card).toBeDefined();
@@ -123,10 +127,10 @@ describe("CourseExplorer.vue", () => {
 					);
 					expect(url.searchParams.get("mode")).toBe("web");
 					expect(url.searchParams.get("projectKey")).toBe(
-						`web-development-foundations:portfolio:${index === 0 ? "starter" : "reference"}:web-source-v${edition}`
+						`web-development-foundations:${notification ? "notification-state" : "portfolio"}:${index === 0 ? "starter" : "reference"}:web-source-v${edition}`
 					);
 					expect(url.searchParams.get("starterUrl")).toBe(
-						`https://github.com/instruction-material/Web-Development-Foundations/tree/${revision}/WDF1-Portfolio-Custom-Domain/${index === 0 ? "starter" : "solution"}`
+						`https://github.com/instruction-material/Web-Development-Foundations/tree/${revision}/${pack}/${index === 0 ? "starter" : "solution"}`
 					);
 				}
 			} finally {

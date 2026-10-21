@@ -657,6 +657,7 @@ describe("python project review routes", () => {
 	it.each([
 		"web",
 		"web-modules",
+		"web-notifications",
 		"rust",
 		"rust-ownership",
 		"rust-borrowing",
@@ -676,7 +677,10 @@ describe("python project review routes", () => {
 	] as const)(
 		"saves, shares, and edits a %s review while preserving the learner's complete pack",
 		async mode => {
-			const webMode = mode === "web" || mode === "web-modules";
+			const webMode =
+				mode === "web" ||
+				mode === "web-modules" ||
+				mode === "web-notifications";
 			const rustMode = mode === "rust" || mode.startsWith("rust-");
 			const requestedMode = rustMode
 				? "rust"
@@ -690,9 +694,11 @@ describe("python project review routes", () => {
 					resolve(
 						process.cwd(),
 						webMode
-							? mode === "web-modules"
-								? "../test/fixtures/web-portfolio-module-source.json"
-								: "../test/fixtures/web-portfolio-source.json"
+							? mode === "web-notifications"
+								? "../test/fixtures/web-notification-source.json"
+								: mode === "web-modules"
+									? "../test/fixtures/web-portfolio-module-source.json"
+									: "../test/fixtures/web-portfolio-source.json"
 							: mode === "rust-concurrency"
 								? "../test/fixtures/rust-concurrency-contracts.json"
 								: mode === "rust-boundary-review"
@@ -757,7 +763,9 @@ describe("python project review routes", () => {
 				.filter(
 					([path]) =>
 						path.startsWith(`${pack}/starter/`) ||
-						path === `${pack}/README.md`
+						path === `${pack}/README.md` ||
+						(mode === "web-notifications" &&
+							path === `${pack}/serve.mjs`)
 				)
 				.map(([path, file]) => ({
 					name: webMode
@@ -782,7 +790,7 @@ describe("python project review routes", () => {
 					requestedMode === "rust"
 						? "rust-systems-security:cargo:starter:native-rust"
 						: requestedMode === "web"
-							? `web-development-foundations:portfolio:starter:web-source-v${mode === "web-modules" ? 2 : 1}`
+							? `web-development-foundations:${mode === "web-notifications" ? "notification-state" : "portfolio"}:starter:web-source-v${mode === "web-modules" ? 2 : 1}`
 							: requestedMode === "assembly"
 								? "assembly:compiler:starter:native-assembly"
 								: "c-systems-engineering:linking:starter:native-c17",

@@ -12,34 +12,78 @@ export const webPortfolioRoleFiles = [
 	"styles.css",
 	"package.json"
 ] as const;
+export const webNotificationRevision =
+	"c18190dcca466f35f1e4a7ed677d922fa80daff8";
+export const webNotificationPack = "WDF4-Realtime-Chat-App/local-client";
+export const webNotificationRoot = `https://github.com/instruction-material/Web-Development-Foundations/tree/${webNotificationRevision}/${webNotificationPack}`;
+
+const definitions = [
+	{
+		revision: webPortfolioRevision,
+		pack: webPortfolioPack,
+		project: "portfolio",
+		version: 1,
+		workflow: "vite",
+		files: webPortfolioRoleFiles,
+		shared: ["README.md"]
+	},
+	{
+		revision: webModulePortfolioRevision,
+		pack: webPortfolioPack,
+		project: "portfolio",
+		version: 2,
+		workflow: "vite",
+		files: [...webPortfolioRoleFiles, "project-idea.js"],
+		shared: ["README.md"]
+	},
+	{
+		revision: webNotificationRevision,
+		pack: webNotificationPack,
+		project: "notification-state",
+		version: 1,
+		workflow: "standalone",
+		files: [
+			"index.html",
+			"app.mjs",
+			"state.mjs",
+			"styles.css",
+			"events.json",
+			"empty.json",
+			"invalid.json",
+			"malformed.json",
+			"history.json",
+			"out-of-order.json"
+		],
+		shared: ["README.md", "serve.mjs"]
+	}
+] as const;
 
 export function webCourseResource(url: string) {
 	const resource = parseGitHubResource(url);
 	if (
 		!resource ||
 		resource.owner.toLowerCase() !== "instruction-material" ||
-		resource.repo.toLowerCase() !== "web-development-foundations" ||
-		!["main", webPortfolioRevision, webModulePortfolioRevision].includes(
-			resource.ref
-		)
+		resource.repo.toLowerCase() !== "web-development-foundations"
 	) {
 		return null;
 	}
-	const [pack, role, ...rest] = resource.path.split("/");
-	if (
-		pack !== webPortfolioPack ||
-		(role !== "starter" && role !== "solution") ||
-		rest.length
-	) {
-		return null;
-	}
+	const ref = resource.ref === "main" ? webPortfolioRevision : resource.ref;
+	const definition = definitions.find(
+		row =>
+			row.revision === ref &&
+			[`${row.pack}/starter`, `${row.pack}/solution`].includes(
+				resource.path
+			)
+	);
+	if (!definition) return null;
+	const role = resource.path.endsWith("/starter")
+		? ("starter" as const)
+		: ("solution" as const);
 	return {
-		resource: {
-			...resource,
-			ref: resource.ref === "main" ? webPortfolioRevision : resource.ref
-		},
-		pack,
-		role
+		resource: { ...resource, ref },
+		pack: definition.pack,
+		role,
+		definition
 	};
 }
 
@@ -56,24 +100,24 @@ export function webCourseProjectKey(
 	role: "starter" | "reference",
 	url: string
 ) {
-	return courseID === "web-development-foundations" && webCourseResource(url)
-		? `${courseID}:portfolio:${role}:web-source-v${webCourseResource(url)!.resource.ref === webModulePortfolioRevision ? 2 : 1}`
+	const selected = webCourseResource(url);
+	return courseID === "web-development-foundations" && selected
+		? `${courseID}:${selected.definition.project}:${role}:web-source-v${selected.definition.version}`
 		: `${courseID}:${itemID}:${role}`;
 }
 
 export function webImportFiles(url: string) {
 	const selected = webCourseResource(url);
 	if (!selected) return null;
-	const { resource, pack, role } = selected;
-	const roleFiles =
-		resource.ref === webModulePortfolioRevision
-			? [...webPortfolioRoleFiles, "project-idea.js"]
-			: webPortfolioRoleFiles;
-	return [...roleFiles, "README.md"].map(name => {
-		const path =
-			name === "README.md"
-				? `${pack}/${name}`
-				: `${pack}/${role}/${name}`;
+	const { resource, pack, role, definition } = selected;
+	const imports = [
+		...definition.files.map(name => ({
+			name,
+			path: `${pack}/${role}/${name}`
+		})),
+		...definition.shared.map(name => ({ name, path: `${pack}/${name}` }))
+	];
+	return imports.map(({ name, path }) => {
 		return {
 			name,
 			file: {
