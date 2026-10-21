@@ -977,6 +977,44 @@ jobs:
                   if-no-files-found: error
                   retention-days: 7
 
+            - name: Verify contact source imports and saved nested-file exports
+              env:
+                  WEB_CONTACT_EXPORT_DIR: output/web-contact-exports
+              run: npm exec -w front-end -- vitest run test/web-contact-workspace.spec.test.ts --no-file-parallelism --maxWorkers=1
+
+            - name: Verify contact course consent, roles and saved continuations
+              env:
+                  COURSE_IMPORT_SCREENSHOT_DIR: output/web-contact-screenshots
+              run: node --test test/web-contact-course-browser.test.mjs
+
+            - name: Fetch the maintained contact dependency graph
+              uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+              with:
+                  repository: instruction-material/Web-Development-Foundations
+                  ref: aed8ef2fcd7488c25c0b977b2099640e7431c55a
+                  path: output/web-contact-native-source
+                  persist-credentials: false
+
+            - name: Install the maintained contact root lockfile
+              working-directory: output/web-contact-native-source
+              run: npm ci
+
+            - name: Run actual saved and browser-edited contact exports
+              run: node test/web-contact-exported-contracts.mjs --source output/web-contact-native-source --exports front-end/output/web-contact-exports --browser output/web-contact-browser --proof output/web-contact-native/proof.json
+
+            - name: Retain contact course, source and native export evidence
+              if: always()
+              uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+              with:
+                  name: web-contact-workflows
+                  path: |
+                      front-end/output/web-contact-exports/
+                      output/web-contact-browser/
+                      output/web-contact-native/
+                      output/web-contact-screenshots/
+                  if-no-files-found: error
+                  retention-days: 7
+
             - name: Verify Network Systems foundation imports and notebook reuse
               env:
                   NETWORK_BROWSER_EXPORT_PROOF_DIR: output/network-exports
