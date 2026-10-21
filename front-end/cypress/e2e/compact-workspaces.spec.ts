@@ -96,6 +96,33 @@ context("Compact content-first workspaces", () => {
 	it("sends a complete unlinked note directly while every write is intercepted", () => {
 		const studentId = "a".repeat(24);
 		const noteId = "c".repeat(24);
+		cy.intercept("GET", "**/api/session-notes/drafting/settings", {
+			body: {
+				siteAvailable: true,
+				allowed: true,
+				ready: true,
+				tutorsEnabled: false
+			}
+		});
+		cy.intercept("POST", "**/api/session-notes/drafting/candidates", {
+			body: {
+				status: "selection_required",
+				candidates: [
+					{
+						selectionToken: "d".repeat(64),
+						startAt: "2026-09-30T17:00:00Z",
+						timezone: "America/New_York"
+					}
+				]
+			}
+		}).as("draftCandidates");
+		cy.intercept("POST", "**/api/session-notes/drafting/generate", {
+			body: {
+				markdown: "Synthetic note body",
+				reviewWarnings: ["homework_uncertain", "transcript_incomplete"],
+				draftOnly: true
+			}
+		}).as("generateNote");
 		cy.intercept("GET", "**/api/admin-mail/session-notes/identities", {
 			body: {
 				students: [
@@ -146,7 +173,8 @@ context("Compact content-first workspaces", () => {
 			body: {
 				ok: true,
 				operationId: "synthetic-operation",
-				evidenceStatus: "smtp_accepted"
+				evidenceStatus: "smtp_accepted",
+				archivalStatus: "archived"
 			}
 		}).as("sendNote");
 		cy.visit("/admin/mdmail");
@@ -163,13 +191,24 @@ context("Compact content-first workspaces", () => {
 		cy.get("#subject-date-input")
 			.invoke("val", "2026-09-30")
 			.trigger("input", { force: true });
-		cy.get("#markdown-input").type("Synthetic note body");
+		cy.contains(".note-generation button", "Generate").click();
+		cy.wait("@draftCandidates");
+		cy.get('.note-generation input[type="checkbox"]').check();
+		cy.contains(".note-generation button", "Generate").click();
+		cy.wait("@generateNote");
+		cy.get('[aria-label="Instructor review"]')
+			.should("be.visible")
+			.and("contain.text", "Verify homework");
 		cy.get("#markdown-input").should("have.value", "Synthetic note body");
 		cy.get('[data-testid="preview-toggle"]').click();
 		cy.get("#markdown-input").should("not.be.visible");
 		cy.get('[data-testid="live-preview-body"]')
 			.should("be.visible")
 			.and("contain.text", "Synthetic note body");
+		cy.get('[data-testid="live-preview-body"]').should(
+			"not.contain.text",
+			"Verify homework"
+		);
 		cy.screenshot("session-note-preview", { capture: "viewport" });
 		cy.get('[data-testid="compose-toggle"]').click();
 		cy.get('[data-testid="live-preview"]').should("not.exist");
@@ -194,7 +233,15 @@ context("Compact content-first workspaces", () => {
 			unlinked: true,
 			subject: "Session Notes (09/30)"
 		});
-		cy.contains("Primary recipient accepted by SMTP").should("be.visible");
+		cy.get("@saveNote")
+			.its("request.body.markdown")
+			.should("eq", "Synthetic note body");
+		cy.get("@sendNote")
+			.its("request.body")
+			.should("not.have.property", "reviewWarnings");
+		cy.contains(
+			"Submitted successfully; Sent copy saved. Recipient delivery is not tracked."
+		).should("be.visible");
 		cy.get('[data-testid="live-preview"]').should("not.exist");
 	});
 	it("uses compact stacked course and learner selectors, and puts search beside them", () => {

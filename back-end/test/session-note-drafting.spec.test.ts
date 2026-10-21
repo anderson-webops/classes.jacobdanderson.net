@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { SESSION_NOTE_DRAFT_STYLE, sessionNoteStudentFormat } from "../src/services/sessionNoteDraftStyle.js";
+import { SESSION_NOTE_DRAFT_STYLE } from "../src/services/sessionNoteDraftStyle.js";
 import {
 	classDateInTimezone,
 	createSessionNoteDrafting,
@@ -40,7 +40,7 @@ beforeEach(() => {
 		if (path.includes("/past_meetings/")) return json(meeting);
 		if (path.endsWith("/transcript")) return json({ can_download: true, download_url: "https://us06web.zoom.us/rec/meeting/transcript/download/synthetic" });
 		if (path.includes("/rec/meeting/transcript/download/")) return new Response(transcript);
-		if (path === "https://api.openai.com/v1/responses") return json({ status: "completed", output: [{ type: "message", content: [{ type: "output_text", text: "**In class:** We practiced fractions.\n\n**Next:** Review equivalent fractions." }] }] });
+		if (path === "https://api.openai.com/v1/responses") return draftResponse({ markdown: "**In Class**: We practiced fractions.", reviewWarnings: ["homework_uncertain"] });
 		throw new Error("Unexpected synthetic request");
 	});
 	service = createSessionNoteDrafting({ fetch: request as typeof fetch, config: () => config, style: async () => "Use a short In class section and an optional Next section.", now: () => now });
@@ -52,18 +52,29 @@ async function selected() {
 	return { ...input, selectionToken: result.candidates[0].selectionToken, confirmedStudent: true as const };
 }
 
+function draftResponse(value: unknown) {
+	return json({ status: "completed", output: [{ type: "message", content: [{ type: "output_text", text: JSON.stringify(value) }] }] });
+}
+
+function providerBody() {
+	const [, init] = request.mock.calls.find(([url]) => String(url).includes("api.openai"))! as unknown as [string, RequestInit];
+	return JSON.parse(String(init.body));
+}
+
 describe("session-note AI drafting", () => {
 	it("looks up the recurring occurrence and creates only a draft after confirmation", async () => {
 		const choice = await selected();
 		expect(request.mock.calls.some(([url]) => String(url).includes("api.openai"))).toBe(false);
 		const result = await service.generate(scope, choice);
 		expect(result).toMatchObject({ draftOnly: true, source: { startAt: meeting.start_time, timezone: config.timezone } });
-		expect(result.markdown).toContain("**In class:**");
+		expect(result.markdown).toBe("**In Class**: We practiced fractions.");
+		expect(result.reviewWarnings).toEqual(["homework_uncertain"]);
 		const [, init] = request.mock.calls.find(([url]) => String(url).includes("api.openai"))! as unknown as [string, RequestInit];
 		const body = JSON.parse(String(init.body));
 		expect(body).toMatchObject({ model: config.model, store: false, max_output_tokens: 3000 });
 		expect(body.tools).toBeUndefined();
 		expect(body.instructions).toContain("untrusted quoted data");
+		expect(body.text.format).toMatchObject({ type: "json_schema", strict: true, name: "session_note_draft", schema: { additionalProperties: false, required: ["markdown", "reviewWarnings"] } });
 		expect(JSON.stringify(body.input)).not.toContain("private@example.invalid");
 		expect(JSON.stringify(body.input)).not.toContain("private-code");
 		expect(JSON.stringify(body.input)).not.toContain("https://zoom.us");
@@ -77,18 +88,64 @@ describe("session-note AI drafting", () => {
 		expect(body.instructions).toContain(SESSION_NOTE_DRAFT_STYLE);
 		expect(body.instructions).toContain("**Homework Check**:");
 		expect(body.instructions).toContain("colon outside");
-		expect(body.instructions).toContain("without an enclosing code block");
+		expect(body.instructions).toContain("an enclosing code block");
 	});
-	it("applies student-specific formats without pretending to retain a reporting period", () => {
-		for (const name of ["Devin Gupta", "Jinen Gandhi"]) {
-			expect(sessionNoteStudentFormat(name)).toContain("omit Homework Check entirely");
-			expect(sessionNoteStudentFormat(name)).toContain("second person");
+	it("uses only the selected stable ID's approved preferences and separates examples from current facts", async () => {
+		const preferences = vi.fn(async () => ({ approved: true as const, audience: "student" as const, format: "session" as const, homeworkCheck: "omit" as const, examples: ["**In Class**: You practiced loops in an earlier example. example@example.invalid", "**Homework**: Complete the old example only. https://private.invalid"] }));
+		const personalized = createSessionNoteDrafting({ fetch: request as typeof fetch, config: () => ({ ...config, styleFile: "", referencesFile: "/synthetic/references.json" }), preferences });
+		const choices = await personalized.candidates(scope, input);
+		await personalized.generate(scope, { ...input, selectionToken: choices.candidates[0].selectionToken, confirmedStudent: true });
+		expect(preferences).toHaveBeenCalledWith("/synthetic/references.json", scope.studentId);
+		const body = providerBody();
+		expect(body.instructions).toContain("second person");
+		expect(body.instructions).toContain("omit Homework Check entirely");
+		expect(body.instructions).toContain("never transfer their assignments");
+		const data = JSON.parse(body.input[0].content[0].text);
+		expect(data.styleReferences.examples).toHaveLength(2);
+		expect(data.currentSession.transcript).toContain("common denominator");
+		expect(data.currentSession.transcript).not.toContain("old example");
+		expect(JSON.stringify(body)).not.toContain("example@example.invalid");
+		expect(JSON.stringify(body)).not.toContain("https://private.invalid");
+	});
+	it("keeps mandatory homework and review-output rules after a custom style override", async () => {
+		await service.generate(scope, await selected());
+		const instructions = providerBody().instructions;
+		expect(instructions.indexOf("Mandatory factual and output rules")).toBeGreaterThan(instructions.indexOf("Approved style"));
+		for (const rule of ["Unfinished", "explicit evidence", "Omit unsupported sections", "homework_uncertain", "transcript_incomplete", "follow_up_uncertain"]) {
+			expect(`${SESSION_NOTE_DRAFT_STYLE}\n${instructions}`).toContain(rule);
 		}
-		for (const name of ["Abby", "Jayden Parmar"]) {
-			expect(sessionNoteStudentFormat(name)).toContain("**Overall Update**:");
-			expect(sessionNoteStudentFormat(name)).toContain("Do not claim a cumulative multi-session update");
-		}
-		expect(sessionNoteStudentFormat("Synthetic Student")).toContain("standard third-person");
+	});
+	it.each([
+		"Teacher: We could try the bonus game. This is optional, not assigned homework.",
+		"Teacher: We did not finish the game. We will continue it together next class.",
+		"Teacher: Correction: the April note invented a worksheet assignment. Do not do that worksheet; it was never assigned.",
+		"Teacher: Your function worked in our tests. We have not tested all edge cases."
+	])("supplies the actual evidence and mandatory safeguards without substituting example facts: %s", async evidence => {
+		const choice = await selected();
+		custom = url => url.includes("/rec/meeting/transcript/download/") ? new Response(evidence) : undefined;
+		await service.generate(scope, choice);
+		const body = providerBody();
+		expect(JSON.parse(body.input[0].content[0].text).currentSession.transcript).toBe(evidence);
+		expect(body.instructions).toContain("contradicted or retracted");
+		expect(body.instructions).toContain("Keep optional challenges optional");
+	});
+	it("fails closed on invalid configured preferences before calling providers", async () => {
+		const personalized = createSessionNoteDrafting({ fetch: request as typeof fetch, config: () => ({ ...config, styleFile: "" }), preferences: async () => { throw new Error("private malformed references"); } });
+		const choices = await personalized.candidates(scope, input);
+		request.mockClear();
+		await expect(personalized.generate(scope, { ...input, selectionToken: choices.candidates[0].selectionToken, confirmedStudent: true })).rejects.toMatchObject({ code: "STYLE_UNAVAILABLE", message: expect.not.stringContaining("private") });
+		expect(request).not.toHaveBeenCalled();
+	});
+	it.each([
+		{ markdown: "**In Class**: We tested fractions.", reviewWarnings: ["private free-text warning"] },
+		{ markdown: "**In Class**: We tested fractions." },
+		{ markdown: "", reviewWarnings: [] },
+		{ markdown: "x".repeat(12_001), reviewWarnings: [] },
+		{ markdown: "Synthetic draft", reviewWarnings: [], extra: "private" }
+	])("rejects invalid structured drafts without inserting partial text", async value => {
+		const choice = await selected();
+		custom = url => url.includes("api.openai") ? draftResponse(value) : undefined;
+		await expect(service.generate(scope, choice)).rejects.toMatchObject({ code: "DRAFT_INCOMPLETE" });
 	});
 	it("requires valid date, identity, meeting ID and explicit confirmation", () => {
 		expect(noteDraftRequest.parse({ studentId: scope.studentId, classDate: input.classDate }).meetingId).toBe("2543520025");

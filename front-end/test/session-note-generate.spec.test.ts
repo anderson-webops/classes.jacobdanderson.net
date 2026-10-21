@@ -120,6 +120,56 @@ describe("Generate session-note draft", () => {
 			expect.any(Object)
 		);
 	});
+	it("shows instructor-only warnings separately and emits only the editable body", async () => {
+		const wrapper = await create();
+		await choose(wrapper);
+		vi.mocked(api.post).mockResolvedValue({
+			data: {
+				markdown: "**In Class**: We tested fractions.",
+				reviewWarnings: ["homework_uncertain", "transcript_incomplete"],
+				draftOnly: true
+			}
+		});
+		await wrapper.get("button").trigger("click");
+		await flushPromises();
+		expect(
+			wrapper.get('[aria-label="Instructor review"]').text()
+		).toContain("Verify homework");
+		expect(wrapper.emitted("generated")?.[0]).toEqual([
+			"**In Class**: We tested fractions."
+		]);
+		expect(api.post).toHaveBeenCalledTimes(2);
+		await wrapper.setProps({ studentId: "c".repeat(24) });
+		expect(wrapper.find('[aria-label="Instructor review"]').exists()).toBe(
+			false
+		);
+	});
+	it.each([
+		{ warnings: ["unknown_private_text"] },
+		{ warnings: "private warning" },
+		{ warnings: null },
+		{ warnings: Array(4).fill("homework_uncertain") }
+	])(
+		"rejects invalid review warnings without replacing the draft (%j)",
+		async ({ warnings: reviewWarnings }) => {
+			const wrapper = await create();
+			await choose(wrapper);
+			vi.mocked(api.post).mockResolvedValue({
+				data: {
+					markdown: "Invalid draft",
+					reviewWarnings,
+					draftOnly: true
+				}
+			});
+			await wrapper.get("button").trigger("click");
+			await flushPromises();
+			expect(wrapper.emitted("generated")).toBeUndefined();
+			expect(wrapper.get('[role="alert"]').text()).toContain(
+				"existing notes are unchanged"
+			);
+			expect(wrapper.text()).not.toContain("private warning");
+		}
+	);
 	it("confirms replacement before touching an existing draft and preserves it on provider failure", async () => {
 		const wrapper = await create({ markdown: "Keep my existing notes" });
 		await wrapper.get("button").trigger("click");

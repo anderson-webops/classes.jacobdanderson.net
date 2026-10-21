@@ -144,13 +144,14 @@ function describeNoteOperation(operation: SendMailResponse): string {
 			: `${reference}Queued; SMTP has not accepted the message. Check this operation before taking further action. Do not submit again.`;
 	}
 	if (operation.evidenceStatus === "smtp_accepted") {
+		if (operation.archivalStatus === "archived") {
+			return `${reference}Submitted successfully; Sent copy saved. Recipient delivery is not tracked.`;
+		}
 		const archive =
-			operation.archivalStatus === "archived"
-				? "The Sent copy was archived."
-				: operation.archivalStatus === "review_required"
-					? "The Sent copy requires separate archival review; do not resend."
-					: "Sent-copy archival is not confirmed.";
-		return `${reference}Primary recipient accepted by SMTP; remote handoff and inbox delivery are not confirmed. ${archive}`;
+			operation.archivalStatus === "review_required"
+				? "The Sent copy requires separate archival review; do not resend."
+				: "Sent-copy archival is not confirmed.";
+		return `${reference}Submitted successfully. Recipient delivery is not tracked. ${archive}`;
 	}
 	if (
 		operation.evidenceStatus === "smtp_rejected" ||

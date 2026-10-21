@@ -34,6 +34,15 @@ const available = computed(
 const ready = computed(() => settings.value?.ready === true);
 const busy = ref(false);
 const error = ref("");
+const warningLabels = {
+	homework_uncertain:
+		"Verify homework: the transcript does not establish a clear assignment.",
+	transcript_incomplete:
+		"The transcript may not cover the whole class. Check the draft for omissions.",
+	follow_up_uncertain:
+		"Check whether promised resources or follow-up are still outstanding."
+};
+const reviewWarnings = ref<(keyof typeof warningLabels)[]>([]);
 const meetingId = ref("2543520025");
 const requestMeeting = ref(false);
 const candidates = ref<Candidate[]>([]);
@@ -74,6 +83,7 @@ function reset() {
 	confirmReplace.value = false;
 	replacementApproved = false;
 	error.value = "";
+	reviewWarnings.value = [];
 }
 
 watch(
@@ -182,6 +192,22 @@ async function generate() {
 			typeof data.markdown === "string" &&
 			data.draftOnly === true
 		) {
+			const warnings: unknown =
+				data.reviewWarnings === undefined ? [] : data.reviewWarnings;
+			if (
+				!Array.isArray(warnings) ||
+				warnings.length > 3 ||
+				!warnings.every(
+					code =>
+						typeof code === "string" &&
+						Object.hasOwn(warningLabels, code)
+				)
+			) {
+				throw new Error("Invalid draft review warnings");
+			}
+			reviewWarnings.value = [
+				...new Set(warnings)
+			] as (keyof typeof warningLabels)[];
 			setBusy(false);
 			emit("generated", data.markdown);
 			candidates.value = [];
@@ -279,6 +305,19 @@ function replaceDraft() {
 			/>
 		</label>
 		<p v-if="available && error" role="alert">{{ error }}</p>
+		<aside
+			v-if="available && reviewWarnings.length"
+			class="note-generation__review"
+			role="status"
+			aria-label="Instructor review"
+		>
+			<strong>Review</strong>
+			<ul>
+				<li v-for="code in reviewWarnings" :key="code">
+					{{ warningLabels[code] }}
+				</li>
+			</ul>
+		</aside>
 	</div>
 </template>
 
@@ -337,5 +376,12 @@ function replaceDraft() {
 .note-generation p {
 	margin: 0;
 	font-size: 0.9rem;
+}
+.note-generation__review {
+	font-size: 0.9rem;
+}
+.note-generation__review ul {
+	margin: 0.25rem 0 0;
+	padding-inline-start: 1.25rem;
 }
 </style>

@@ -229,13 +229,34 @@ describe("direct, safely validated session-note sending", () => {
 		await compose();
 		await wrapper.get(".send-btn").trigger("click");
 		await flushPromises();
-		expect(wrapper.get(".result").text()).toContain("accepted by SMTP");
 		expect(wrapper.get(".result").text()).toContain(
-			"inbox delivery are not confirmed"
+			"Submitted successfully"
+		);
+		expect(wrapper.get(".result").text()).toContain(
+			"Recipient delivery is not tracked"
 		);
 		expect(wrapper.get(".result").text()).toContain(
 			"archival review; do not resend"
 		);
+	});
+	it("describes an accepted submission and confirmed Sent copy without claiming inbox delivery", async () => {
+		vi.mocked(api.post).mockImplementation(async path => ({
+			data: path.endsWith("/session-notes")
+				? { sessionNote: { _id: noteId } }
+				: {
+						operationId: "synthetic-operation",
+						evidenceStatus: "smtp_accepted",
+						archivalStatus: "archived",
+						ok: true
+					}
+		}));
+		await compose();
+		await wrapper.get(".send-btn").trigger("click");
+		await flushPromises();
+		expect(wrapper.get(".result").text()).toContain(
+			"Submitted successfully; Sent copy saved. Recipient delivery is not tracked."
+		);
+		expect(wrapper.get(".result").text()).not.toContain("delivered");
 	});
 	it("never guesses a scheduled session from the selected subject date", async () => {
 		await compose();

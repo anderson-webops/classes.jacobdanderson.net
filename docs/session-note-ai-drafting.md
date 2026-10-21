@@ -27,6 +27,9 @@ credentials, session associations and historical evidence remain unchanged.
   Generation never saves a note, queues a message or invokes SMTP/IMAP.
 - Student/date changes, typing during generation, sending, or leaving the page
   invalidate outstanding results. Stale output never replaces a different draft.
+- Evidence gaps appear as instructor-only **Review** warnings next to the editor,
+  never in the generated email body, preview, saved note or send payload.
+  Unsupported sections are omitted rather than filled with missing-evidence prose.
 - Under administrator Account Settings, **Session-note AI** contains the
   Disabled/Enabled radio setting for tutor drafting. Disabled is the default.
   Enabled tutors use the same control in their assigned student's save-only note
@@ -52,28 +55,82 @@ configuration. No existing Zoom, SMTP, MongoDB or Vault values are replaced.
 | `SESSION_NOTE_OPENAI_API_KEY` | Dedicated server-side project key with Responses permission and a spending limit. |
 | `SESSION_NOTE_OPENAI_MODEL` | Explicit operator-selected compatible Responses text model; no implicit model upgrade. |
 | `SESSION_NOTE_AI_STYLE_FILE` | Optional protected server-local UTF-8 file overriding the built-in approved style, maximum 16,000 bytes. Missing/empty/invalid configured files fail closed. |
+| `SESSION_NOTE_AI_REFERENCES_FILE` | Optional protected server-local JSON file of explicitly approved preferences and style examples keyed by stable student ID. Maximum 64,000 bytes; invalid configured files fail closed. |
 
 The requested style reference is
 `https://chatgpt.com/share/6ac660b2-b16c-83ea-a2c8-c5eb29e2ea39`.
 The shared URL redirected to an account-loading failure. The administrator then
-provided the GPT's conventions directly, and those are the built-in default:
-third-person, factual, constructive notes with **Homework Check**:, **In Class**:
-and **Homework**:. Colons remain outside the bold labels and project names are
-bold. Uncertain homework remains uncertain; confirmed promises can appear in a
-short **Follow-up**: section. The output is raw Markdown rather than an outer
-code block because it goes directly into the Markdown editor.
+provided the GPT's conventions directly, then approved a refinement emphasizing
+homework accuracy, natural audience choices and demonstrated learning. Sections
+are optional: **Homework Check**: only for actual prior homework reviewed,
+**In Class**: for the work and learning, and **Homework**: only for evidenced
+assignments. Colons remain outside bold labels and project names are bold.
+Optional challenges stay optional, unfinished work is not automatically homework,
+and claiming no homework was assigned also requires explicit evidence.
+Discussion, attempts, completed work and independent demonstrations remain
+distinct. Prefer coherent paragraphs and specific encouragement. About 100 to
+200 words is a tendency, not a quota. Confirmed promises may appear in a short
+**Follow-up**: section; uncertain completion belongs in instructor review.
 
-The selected student's first given name controls formatting only, never identity
-or authorization. Devin/Jinen use second person and omit Homework Check.
-Jayden/Abby use a topic-organized **Overall Update**: format. This single-class
-feature does not silently claim to accumulate a complete reporting period,
-combine students, track earlier updates or reset them after sending. Those
-multi-session workflows require separately verified transcripts and history;
-existing notes are never deleted or marked sent by generation.
+### Approved preferences and examples
 
-An optional style override must exclude private example details and factual
-example-student content that should not be shared with the provider. The
-student-specific formatting and factual safety rules still apply to overrides.
+Do not infer preferences from a name or shared parent mailbox. The protected
+references file uses stable student ObjectIds, verified privately by the operator
+against the teacher's intended student. Without a matching approved entry, the
+default is third person with natural "we" for shared work. The previous
+first-name-based special cases have been removed; provision approved ID mappings
+before activation to preserve their intended audience and update formats.
+
+The supplied guidance approves student-specific second-person or family-facing
+audiences, optional omission of Homework Check, and topic-organized Overall
+Updates. These preferences are not authorization to identify records by name or
+copy emails. Verify the intended students and stable IDs privately. Never commit
+actual mappings or reference emails. Two or three anonymized teacher-approved
+examples may be included per student; they are optional until provided/approved.
+
+File contract, using a synthetic ID and synthetic examples only:
+
+```json
+{
+  "schemaVersion": 1,
+  "students": {
+    "bbbbbbbbbbbbbbbbbbbbbbbb": {
+      "approved": true,
+      "audience": "student",
+      "format": "session",
+      "homeworkCheck": "omit",
+      "examples": [
+        "**In Class**: You compared equivalent fractions and explained why their values match.",
+        "**In Class**: We tested a loop on two inputs. It worked in our tests; more edge cases remain."
+      ]
+    }
+  }
+}
+```
+
+`audience` is `student` or `family`; `format` is `session` (default) or
+`overall_update`; `homeworkCheck` is `when_reviewed` (default) or `omit`.
+Every entry requires `approved: true`. `examples`, when present, contains two or
+three nonempty strings, at most 2,500 characters each. The file accepts at most
+200 lowercase ObjectId keys and no unknown fields. It is read afresh per request
+without persisting or caching content. Use an operator-owned file readable only
+by its owner and the Classes service as needed, never Downloads, Git, frontend
+storage or public assets. A configured missing, malformed, unsupported-version
+or oversized file blocks generation without provider calls. Removing the
+optional variable restores generic defaults, not name inference.
+
+Only the selected ID's approved preferences and examples enter the request.
+Examples are sanitized and sent as a separate, explicitly style-only data object,
+not instructions or current-session facts. Never transfer an example's homework
+or accomplishments into the selected session. No automatic mailbox/history
+lookup or example approval occurs. Examples require teacher approval and
+appropriate processing permission before use. Mandatory factual and output rules
+apply after any optional style override.
+
+An Overall Update still covers only the selected session. This feature does not
+claim a complete cumulative reporting period, combine students, track earlier
+updates or reset them after sending. Those workflows require separately verified
+transcripts and history; generation never deletes notes or marks them sent.
 
 Use least-privilege read scopes for listing a configured host's cloud recordings,
 listing past meeting instances, reading past-meeting ownership/details, reading
@@ -96,7 +153,8 @@ not an expanded host allowlist or permission to use the administrator's host.
 Official contracts used:
 [Zoom meeting/recording APIs](https://developers.zoom.us/docs/api/meetings/),
 [Zoom Server-to-Server OAuth](https://developers.zoom.us/docs/internal-apps/s2s-oauth/),
-[OpenAI Responses](https://developers.openai.com/api/reference/python/resources/responses/methods/create).
+[OpenAI Responses](https://developers.openai.com/api/reference/python/resources/responses/methods/create),
+[OpenAI Structured Outputs](https://developers.openai.com/api/docs/guides/structured-outputs).
 
 ## API
 
@@ -111,7 +169,16 @@ bounded to 4 KB. Responses are `Cache-Control: no-store`.
 | `GET /settings` | `{siteAvailable, allowed, ready, tutorsEnabled, timezone?}`; no host IDs or provider secrets. |
 | `PUT /settings` | Administrator only: `{tutorsEnabled: boolean}`. Persists a bounded, timestamped operator-change history. |
 | `POST /candidates` | `{studentId, classDate: "YYYY-MM-DD", meetingId?: "2543520025"}`. Returns `{status: "selection_required" | "no_transcript", candidates: [{selectionToken, startAt, timezone}]}`. |
-| `POST /generate` | Same identity/date/meeting metadata plus `{selectionToken, confirmedStudent: true}`. Returns `{markdown, draftOnly: true, source: {startAt, timezone}}`. |
+| `POST /generate` | Same identity/date/meeting metadata plus `{selectionToken, confirmedStudent: true}`. Returns `{markdown, reviewWarnings: [], draftOnly: true, source: {startAt, timezone}}`. |
+
+`reviewWarnings` is an additive array of at most three deduplicated codes:
+`homework_uncertain`, `transcript_incomplete`, `follow_up_uncertain`. The provider
+returns a strict structured object; invalid, incomplete or refused output leaves
+the existing draft unchanged. Only `markdown` is emitted to the editor. Warnings
+use fixed UI text, not provider-supplied prose, clear on student/date/meeting
+changes, and are not persisted or sent. Older clients can ignore this additive
+field. During rolling activation the updated UI accepts an older server's absent
+warning array, but rejects malformed or unknown codes.
 
 Selection tokens are opaque, in-memory, bounded to 200 total and expire in five
 minutes. They bind the actor, student, host, date, meeting and actual occurrence.
@@ -135,19 +202,34 @@ pages and 20 same-day occurrences. Requests time out after 90 seconds. Transcrip
 downloads are capped at 256,000 bytes and are never silently truncated.
 
 OpenAI receives the selected student's name, class date, actual occurrence time,
-sanitized transcript and approved style, not recipient addresses, passwords,
-meeting URLs, mailbox contents or other student's saved note history. Caption
+sanitized transcript, approved style and that student's explicitly approved
+style-only examples, not recipient addresses, passwords, meeting URLs, mailbox
+contents or other students' saved note history. Caption
 timing, email addresses, URLs and labeled access details are removed. Transcript
 content remains untrusted data, never system instructions. Sanitization is not a
 guarantee that every personal detail in a spoken conversation can be removed;
 enable this only with appropriate permission to process student transcripts.
 
-Responses use `store: false`, no tools, and an output budget of 3,000 tokens.
+Responses use `store: false`, no tools, strict JSON-schema output separating the
+Markdown body from review codes, and an output budget of 3,000 tokens. The
+operator-selected model must support Responses Structured Outputs; no implicit
+model upgrade or unstructured fallback occurs.
 This avoids stored Responses application state; it does not promise zero provider
 retention or replace an organization's retention/privacy agreement. Incomplete,
 refused, oversized and failed responses do not update the draft. No transcript,
 AI body, token, address, raw provider error or external meeting identity is logged
 or persisted by this integration.
+
+Prompt/contract regression tests include synthetic retraction of an invented
+April assignment, optional challenges, unfinished work and qualified test results.
+They verify request boundaries and mocked response handling, not the factual
+accuracy of a live model. Manual review remains essential. No real transcript or
+historical email is required for source acceptance.
+
+Delivery status copy distinguishes successful SMTP submission and a confirmed
+Sent copy from recipient delivery: "Submitted successfully; Sent copy saved.
+Recipient delivery is not tracked." This does not claim SES delivery events,
+inbox placement or reading. No SMTP, archival, evidence or retry behavior changes.
 
 Limits: 30 mutation requests/hour/account (lookup and generation both count),
 one in-flight request/account, two total per native API process. Production uses
