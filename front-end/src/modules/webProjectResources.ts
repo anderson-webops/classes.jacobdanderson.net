@@ -30,6 +30,20 @@ export const webContactRoleFiles = [
 	"public/styles.css",
 	"package.json"
 ] as const;
+export const webNotesRevision = "8d48a2672e987b5ab1c1b7b93ea395f6da5c37a2";
+export const webNotesPack = "WDF2-Notes-App-with-MongoDB";
+export const webNotesRoot = `https://github.com/instruction-material/Web-Development-Foundations/tree/${webNotesRevision}/${webNotesPack}`;
+export const webNotesRoleFiles = [
+	"src/models/note.js",
+	"src/store.js",
+	"src/routes/notes.js",
+	"src/app.js",
+	"src/server.js",
+	"public/index.html",
+	"public/app.js",
+	"public/styles.css",
+	"package.json"
+] as const;
 
 const definitions = [
 	{
@@ -78,6 +92,15 @@ const definitions = [
 		workflow: "node",
 		files: webContactRoleFiles,
 		shared: ["README.md"]
+	},
+	{
+		revision: webNotesRevision,
+		pack: webNotesPack,
+		project: "notes-api",
+		version: 1,
+		workflow: "node",
+		files: webNotesRoleFiles,
+		shared: ["README.md"]
 	}
 ] as const;
 const originalPortfolioRevision = "2c7a9fa89e052cd5cdc51987ebf837ae81e3557f";
@@ -112,7 +135,9 @@ export function webCourseResource(url: string) {
 				? originalPortfolioRevision
 				: resource.path.startsWith(`${webContactPack}/`)
 					? webContactRevision
-					: webMaintainedSourceRevision
+					: resource.path.startsWith(`${webNotesPack}/`)
+						? webNotesRevision
+						: webMaintainedSourceRevision
 			: resource.ref;
 	const definition = [...definitions, ...historicalDefinitions].find(
 		row =>

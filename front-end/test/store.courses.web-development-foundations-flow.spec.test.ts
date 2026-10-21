@@ -248,7 +248,8 @@ describe("Web Development Foundations learner flow", () => {
 		);
 		expect(text).toContain("Keep required services on loopback");
 		expect(text).toContain("JSON-only Nodemailer transport sends no email");
-		expect(text).toContain("no cloud database requirement");
+		expect(text).toContain("The default memory adapter runs without a database.");
+		expect(text).toContain("The optional MongoDB adapter");
 		expect(text).toContain(
 			"Public hosting, production DNS, and a custom domain are optional"
 		);

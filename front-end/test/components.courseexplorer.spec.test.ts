@@ -5,6 +5,7 @@ import { nextTick, reactive } from "vue";
 import { routeLocationKey, routerKey } from "vue-router";
 import webNotificationSource from "../../test/fixtures/web-notification-source.json";
 import webContactSource from "../../test/fixtures/web-contact-source.json";
+import webNotesSource from "../../test/fixtures/web-notes-source.json";
 import webModuleSource from "../../test/fixtures/web-portfolio-module-source.json";
 import webPortfolioSource from "../../test/fixtures/web-portfolio-source.json";
 import { api } from "@/api";
@@ -52,16 +53,20 @@ describe("CourseExplorer.vue", () => {
 				"web-development-foundations-wdf2-stage-1-strengthen-the-existing-javascript-courses",
 				"web-development-foundations-wdf3-stage-2-web-development-foundations",
 				"web-development-foundations-wdf4-stage-3-front-end-applications",
-				"web-development-foundations-wdf5-stage-4-back-end-basics"
+				"web-development-foundations-wdf5-stage-4-back-end-basics",
+				"web-development-foundations-wdf6-stage-5-databases-and-data-models"
 			].map(module => ({ role, module }))
 		)
 	)(
 		"opens the web source project from $module with $role role visibility",
 		async ({ role, module }) => {
+			const notes = module.includes("-wdf6-");
 			const contact = module.includes("-wdf5-");
 			const notification = module.includes("-wdf4-");
 			const edition = module.includes("-wdf3-") ? 2 : 1;
-			const source = contact
+			const source = notes
+				? webNotesSource
+				: contact
 				? webContactSource
 				: notification
 					? webNotificationSource
@@ -133,7 +138,7 @@ describe("CourseExplorer.vue", () => {
 					);
 					expect(url.searchParams.get("mode")).toBe("web");
 					expect(url.searchParams.get("projectKey")).toBe(
-						`web-development-foundations:${contact ? "contact-api" : notification ? "notification-state" : "portfolio"}:${index === 0 ? "starter" : "reference"}:web-source-v${edition}`
+						`web-development-foundations:${notes ? "notes-api" : contact ? "contact-api" : notification ? "notification-state" : "portfolio"}:${index === 0 ? "starter" : "reference"}:web-source-v${edition}`
 					);
 					expect(url.searchParams.get("starterUrl")).toBe(
 						`https://github.com/instruction-material/Web-Development-Foundations/tree/${revision}/${pack}/${index === 0 ? "starter" : "solution"}`

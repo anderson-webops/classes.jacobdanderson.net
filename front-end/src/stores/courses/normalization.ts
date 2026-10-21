@@ -28,6 +28,7 @@ import {
 import { applyRestoredUsacoProjects } from "./usacoRestoredProjectBriefs";
 import { applyWebContactWorkflow } from "./webContactWorkflow";
 import { applyWebFoundationsEntryWorkflows } from "./webFoundationsEntryWorkflows";
+import { applyWebNotesWorkflow } from "./webNotesWorkflow";
 import { applyWebNotificationWorkflow } from "./webNotificationWorkflow";
 import { applyWebPortfolioModuleWorkflow } from "./webPortfolioModuleWorkflow";
 
@@ -9597,5 +9598,6 @@ export function normalizeRawCourse(id: string, rawCourse: RawCourse) {
 	applyWebPortfolioModuleWorkflow(course, id);
 	applyWebNotificationWorkflow(course, id);
 	applyWebContactWorkflow(course, id);
+	applyWebNotesWorkflow(course, id);
 	return course;
 }

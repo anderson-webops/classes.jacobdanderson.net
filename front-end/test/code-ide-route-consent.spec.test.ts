@@ -157,14 +157,18 @@ describe("Code IDE route import consent", () => {
 		["starter", 3],
 		["solution", 3],
 		["starter", 4],
-		["solution", 4]
+		["solution", 4],
+		["starter", 5],
+		["solution", 5]
 	] as const)(
 		"confirms a web %s edition %d import and reopens edited source without another fetch",
 		async (role, edition) => {
 			const fixture = JSON.parse(
 				readFileSync(
 					resolve(
-						edition === 4
+						edition === 5
+							? "../test/fixtures/web-notes-source.json"
+							: edition === 4
 							? "../test/fixtures/web-contact-source.json"
 							: edition === 3
 								? "../test/fixtures/web-notification-source.json"
@@ -224,9 +228,9 @@ describe("Code IDE route import consent", () => {
 					return { data: { project: structuredClone(project) } };
 				}
 			);
-			const key = `web-development-foundations:${edition === 4 ? "contact-api" : edition === 3 ? "notification-state" : "portfolio"}:${role === "starter" ? "starter" : "reference"}:web-source-v${edition >= 3 ? 1 : edition}`;
+			const key = `web-development-foundations:${edition === 5 ? "notes-api" : edition === 4 ? "contact-api" : edition === 3 ? "notification-state" : "portfolio"}:${role === "starter" ? "starter" : "reference"}:web-source-v${edition >= 3 ? 1 : edition}`;
 			const fileCount =
-				edition === 4 ? 9 : edition === 3 ? 12 : edition === 1 ? 5 : 6;
+				edition === 5 ? 10 : edition === 4 ? 9 : edition === 3 ? 12 : edition === 1 ? 5 : 6;
 			const params = new URLSearchParams({
 				course: "web-development-foundations",
 				mode: "web",
@@ -247,10 +251,10 @@ describe("Code IDE route import consent", () => {
 			)!;
 			expect(project.mode).toBe("web");
 			expect(project.activeFileName).toBe(
-				edition === 4 ? "src/validation.js" : "index.html"
+				edition === 5 ? "src/models/note.js" : edition === 4 ? "src/validation.js" : "index.html"
 			);
 			expect(project.files.map(file => file.name)).toEqual(
-				edition === 4
+				edition >= 4
 					? [...fixture.roleFiles, "README.md"]
 					: edition === 3
 						? [
@@ -279,7 +283,9 @@ describe("Code IDE route import consent", () => {
 			const script = project.files.find(
 				file =>
 					file.name ===
-					(edition === 4
+					(edition === 5
+						? "src/models/note.js"
+						: edition === 4
 						? "src/validation.js"
 						: edition === 3
 							? "state.mjs"
@@ -292,7 +298,7 @@ describe("Code IDE route import consent", () => {
 			await wrapper.find("button.run-control").trigger("click");
 			await settle();
 			expect(wrapper.text()).toContain(
-				edition === 4
+				edition >= 4
 					? `npm run start --workspace ${fixture.pack}/${role}`
 					: edition === 3
 						? "node serve.mjs"
