@@ -13,7 +13,7 @@ export const webPortfolioRoleFiles = [
 	"package.json"
 ] as const;
 export const webNotificationRevision =
-	"c18190dcca466f35f1e4a7ed677d922fa80daff8";
+	"26aa4f20a2230f5b422b0afa67b3d06426875adf";
 export const webNotificationPack = "WDF4-Realtime-Chat-App/local-client";
 export const webNotificationRoot = `https://github.com/instruction-material/Web-Development-Foundations/tree/${webNotificationRevision}/${webNotificationPack}`;
 

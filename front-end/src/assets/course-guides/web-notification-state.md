@@ -7,12 +7,12 @@ files; it does not implement live chat or a continuous event connection.
 
 ## Select the source revision
 
-Use revision `c18190dcca466f35f1e4a7ed677d922fa80daff8` in a separate native exercise directory:
+Use revision `26aa4f20a2230f5b422b0afa67b3d06426875adf` in a separate native exercise directory:
 
 ```sh
 git clone https://github.com/instruction-material/Web-Development-Foundations.git Web-Notification-Lab
 cd Web-Notification-Lab
-git switch --detach c18190dcca466f35f1e4a7ed677d922fa80daff8
+git switch --detach 26aa4f20a2230f5b422b0afa67b3d06426875adf
 git switch -c notification-work
 git rev-parse HEAD
 ```
@@ -157,7 +157,7 @@ From the complete repository, the default tests check the reference:
 node --test test/notification-state.test.mjs
 ```
 
-Use the same checks against the completed learner starter:
+Run the same checks against the completed starter:
 
 ```sh
 node test/notification-state.test.mjs starter
