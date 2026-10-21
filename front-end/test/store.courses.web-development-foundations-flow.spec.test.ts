@@ -227,7 +227,7 @@ describe("Web Development Foundations learner flow", () => {
 
 		expect(metadata?.toolchain.join(" ")).toContain("Node.js 24 LTS");
 		expect(metadata?.toolchain.join(" ")).toContain(
-			"Vite 8, Express 5, Mongoose 9, Zod 4, Nodemailer 8, and Socket.IO 4"
+			"Vite 8, Express 5, Mongoose 9, Zod 4, Nodemailer 10, and Socket.IO 4"
 		);
 		expect(metadata?.sourcePolicy).toContain(
 			"substantive teaching skeletons"

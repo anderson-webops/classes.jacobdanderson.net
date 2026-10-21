@@ -172,7 +172,7 @@ export function applyWebFoundationsEntryWorkflows(
 			check,
 			`${entry.id}-curriculum-${entry.checkSuffix}`,
 			entry.checkTitle,
-			`${entry.check}\n\n**Completion checks:** ${
+			`${entry.check}\n\n**Checkpoints:** ${
 				completionChecks[entries.indexOf(entry)][0]
 			}`,
 			"core"
@@ -181,7 +181,7 @@ export function applyWebFoundationsEntryWorkflows(
 			project,
 			`${entry.id}-curriculum-${entry.projectSuffix}`,
 			entry.projectTitle,
-			`${entry.project}\n\n**Completion checks:** ${
+			`${entry.project}\n\n**Checkpoints:** ${
 				completionChecks[entries.indexOf(entry)][1]
 			}`,
 			"core"
@@ -190,7 +190,7 @@ export function applyWebFoundationsEntryWorkflows(
 			notebook,
 			`${entry.id}-supplemental-${entry.notebookSuffix}`,
 			entry.notebookTitle,
-			`${entry.notebook}\n\n**Completion checks:** ${
+			`${entry.notebook}\n\n**Checkpoints:** ${
 				completionChecks[entries.indexOf(entry)][2]
 			}`,
 			"choice"
@@ -199,7 +199,7 @@ export function applyWebFoundationsEntryWorkflows(
 			choice,
 			`${entry.id}-supplemental-${entry.choiceSuffix}`,
 			entry.choiceTitle,
-			`${entry.choice}\n\n**Completion checks:** ${
+			`${entry.choice}\n\n**Checkpoints:** ${
 				completionChecks[entries.indexOf(entry)][3]
 			}`,
 			"choice"
@@ -208,7 +208,7 @@ export function applyWebFoundationsEntryWorkflows(
 			challenge,
 			`${entry.id}-supplemental-${entry.challengeSuffix}`,
 			entry.challengeTitle,
-			`${entry.challenge}\n\n**Completion checks:** ${
+			`${entry.challenge}\n\n**Checkpoints:** ${
 				completionChecks[entries.indexOf(entry)][4]
 			}`,
 			"challenge"
