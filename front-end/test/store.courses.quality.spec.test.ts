@@ -4474,24 +4474,18 @@ describe("course text quality normalization", () => {
 		expect(source).not.toMatch(/\bsupplemental [23]\b/i);
 		expect(source).not.toMatch(/\bshould\b/i);
 		expect(source).not.toContain("local dev server`");
-		expect(corpus).toContain(
-			"browser devtools, Git/GitHub basics, npm, and project layout need to become recurring strands"
-		);
+		expect(corpus).toContain("Project Files and a Local Server");
 		expect(corpus).toContain(
 			"Environment variables are configuration boundaries"
 		);
 		expect(corpus).toContain(
 			"DNS and domain routing are the networking layer"
 		);
-		expect(corpus).toContain("The expanded path has four main goals");
-		expect(corpus).toContain(
-			"Browser fundamentals remain the technical base"
-		);
-		expect(corpus).toContain(
-			"Web Development Foundations Setup Transfer Practice"
-		);
-		expect(corpus).toContain("Course Path Transfer Practice");
-		expect(corpus).toContain("JavaScript Bridge Transfer Practice");
+		expect(corpus).toContain("Continue the same saved portfolio");
+		expect(corpus).toContain("Browser, Server and Data Boundaries");
+		expect(corpus).toContain("Choice: A Project Path with Spaces");
+		expect(corpus).toContain("Choice: Compare Local Origins");
+		expect(corpus).toContain("Choice: Review One Commit");
 		expect(corpus).toContain("Web Foundations Transfer Practice");
 		expect(corpus).toContain("Feature Slice Transfer Practice");
 		expect(corpus).toContain("Full Stack Web Lab 14: Feature Slice Studio");

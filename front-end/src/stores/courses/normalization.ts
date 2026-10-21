@@ -26,6 +26,7 @@ import {
 	staticMediaUrlsFromText
 } from "./staticMedia";
 import { applyRestoredUsacoProjects } from "./usacoRestoredProjectBriefs";
+import { applyWebFoundationsEntryWorkflows } from "./webFoundationsEntryWorkflows";
 
 const INSTRUCTION_MATERIAL_BASE = "https://github.com/instruction-material";
 const CLASSROOM_BASE_COURSE_IDS: Record<string, string> = {
@@ -9589,5 +9590,6 @@ export function normalizeRawCourse(id: string, rawCourse: RawCourse) {
 	applyRustTraitPipelineCourseWorkflows(course, id);
 	applyRustBoundedCliCourseWorkflows(course, id);
 	applyRustFinalCourseWorkflows(course, id);
+	applyWebFoundationsEntryWorkflows(course, id);
 	return course;
 }

@@ -27,9 +27,13 @@ const EXPECTED_APPENDICES = [
 	"WDF12 Expansion Ideas and Next Steps"
 ];
 
-const EXPECTED_NORMALIZED_CORE_SEQUENCE = EXPECTED_CORE_SEQUENCE.map(title =>
-	title.replace(/^Full Stack/u, "Full-Stack")
-);
+const EXPECTED_NORMALIZED_CORE_SEQUENCE = EXPECTED_CORE_SEQUENCE.map(title => {
+	if (title === "WDF1 Positioning, Goals, and Suggested Course Family")
+		return "WDF1 Browser, Server, and Data Boundaries";
+	if (title === "WDF2 Stage 1: Strengthen the Existing JavaScript Courses")
+		return "WDF2 Files, Git, and Browser Debugging";
+	return title.replace(/^Full Stack/u, "Full-Stack");
+});
 
 const PRACTICE_SECTIONS = [
 	"toolchain-preflight-case",
