@@ -7,12 +7,12 @@ files; it does not implement live chat or a continuous event connection.
 
 ## Select the source revision
 
-Use revision `26aa4f20a2230f5b422b0afa67b3d06426875adf` in a separate native exercise directory:
+Use revision `5bfdf1b25452fb65aa36d38cea6d836fdf6ae5cc` in a separate native exercise directory:
 
 ```sh
 git clone https://github.com/instruction-material/Web-Development-Foundations.git Web-Notification-Lab
 cd Web-Notification-Lab
-git switch --detach 26aa4f20a2230f5b422b0afa67b3d06426875adf
+git switch --detach 5bfdf1b25452fb65aa36d38cea6d836fdf6ae5cc
 git switch -c notification-work
 git rev-parse HEAD
 ```

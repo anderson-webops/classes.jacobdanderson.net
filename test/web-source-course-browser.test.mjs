@@ -10,7 +10,10 @@ const notifications = `${courseID}-wdf4-stage-3-front-end-applications`;
 const roleKey = role => (role === "starter" ? "starter" : "reference");
 const legacy = JSON.parse(
 	readFileSync(
-		new URL("./fixtures/web-portfolio-source.json", import.meta.url)
+		new URL(
+			"./fixtures/web-portfolio-original-source.json",
+			import.meta.url
+		)
 	)
 );
 function previousPortfolio(role) {
@@ -45,9 +48,11 @@ const definitions = [
 		coreID: `${first}-curriculum-core-project-web-development-foundations`,
 		continuationIDs: [
 			`${first}-supplemental-workflow-notebook-setup-and-tooling`,
-			`${first
+			`${
+				first
 			}-supplemental-web-development-foundations-setup-transfer-practice`,
-			`${first
+			`${
+				first
 			}-supplemental-web-development-foundations-setup-extension-practice`
 		],
 		projectKey: role =>
@@ -69,10 +74,10 @@ const definitions = [
 		kind: "portfolio-v2",
 		fixturePath: "./fixtures/web-portfolio-module-source.json",
 		moduleID: modules,
-		coreID:
-			`${modules}-curriculum-core-project-web-development-foundations`,
+		coreID: `${modules}-curriculum-core-project-web-development-foundations`,
 		continuationIDs: [
-			`${modules
+			`${
+				modules
 			}-supplemental-project-portfolio-site-with-custom-domain-preparation`,
 			`${modules}-supplemental-web-foundations-transfer-practice`,
 			`${modules}-supplemental-web-foundations-extension-practice`
@@ -93,8 +98,7 @@ const definitions = [
 		kind: "notifications",
 		fixturePath: "./fixtures/web-notification-source.json",
 		moduleID: notifications,
-		coreID:
-			`${notifications}-curriculum-core-project-front-end-applications`,
+		coreID: `${notifications}-curriculum-core-project-front-end-applications`,
 		continuationIDs: [
 			`${notifications}-supplemental-front-end-apps-transfer-practice`,
 			`${notifications}-supplemental-front-end-apps-extension-practice`
@@ -113,7 +117,7 @@ for (const definition of definitions) {
 	test(
 		`Web ${definition.kind}: course consent, both roles, saved edits and ZIPs at two widths`,
 		{ timeout: 180000 },
-		async (t) => {
+		async t => {
 			await runAssemblyCoreCourseWorkflow(t, {
 				...definition,
 				courseID,
@@ -126,11 +130,15 @@ for (const definition of definitions) {
 				starterToken:
 					definition.kind === "notifications"
 						? "local-client/serve.mjs starter"
-						: "Domain/starter",
+						: definition.kind === "portfolio-v1"
+							? "Domain/basics/starter"
+							: "Domain/starter",
 				referenceToken:
 					definition.kind === "notifications"
 						? "local-client/serve.mjs solution"
-						: "Domain/solution",
+						: definition.kind === "portfolio-v1"
+							? "Domain/basics/solution"
+							: "Domain/solution",
 				outputEnv: `WEB_${definition.kind.toUpperCase().replaceAll("-", "_")}_BROWSER_DIR`,
 				defaultOutput: `output/web-source-browser/${definition.kind}`
 			});

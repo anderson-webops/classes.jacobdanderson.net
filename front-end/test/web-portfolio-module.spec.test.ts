@@ -72,7 +72,12 @@ describe("web portfolio module edition", () => {
 			"## Run from the complete repository"
 		);
 		expect(learner.curriculum[0].content).toContain(
-			sourceIntroduction.trim()
+			sourceIntroduction
+				.replace(
+					"(basics/README.md)",
+					`(https://github.com/instruction-material/Web-Development-Foundations/tree/${fixture.revision}/${fixture.pack}/basics)`
+				)
+				.trim()
 		);
 		expect(learner.curriculum[0].content).toContain(
 			`## Run from the complete repository${sourceWorkflow}`.trim()

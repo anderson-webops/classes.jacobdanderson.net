@@ -3,6 +3,9 @@ import { createPinia, setActivePinia } from "pinia";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { nextTick, reactive } from "vue";
 import { routeLocationKey, routerKey } from "vue-router";
+import webNotificationSource from "../../test/fixtures/web-notification-source.json";
+import webModuleSource from "../../test/fixtures/web-portfolio-module-source.json";
+import webPortfolioSource from "../../test/fixtures/web-portfolio-source.json";
 import { api } from "@/api";
 import { resetCourseAssetPreviewCache } from "@/modules/courseAssetPreview";
 import { c17StudioContinuations } from "@/modules/c17StudioLessons";
@@ -54,15 +57,13 @@ describe("CourseExplorer.vue", () => {
 		"opens the web portfolio from $module with $role role visibility",
 		async ({ role, module }) => {
 			const notification = module.includes("-wdf4-");
-			const pack = notification
-				? "WDF4-Realtime-Chat-App/local-client"
-				: "WDF1-Portfolio-Custom-Domain";
 			const edition = module.includes("-wdf3-") ? 2 : 1;
-			const revision = notification
-				? "c18190dcca466f35f1e4a7ed677d922fa80daff8"
+			const source = notification
+				? webNotificationSource
 				: edition === 2
-					? "6bfe60b31c07cbfabbc396790f1251503b1f4f7d"
-					: "2c7a9fa89e052cd5cdc51987ebf837ae81e3557f";
+					? webModuleSource
+					: webPortfolioSource;
+			const { pack, revision } = source;
 			const pinia = createPinia();
 			setActivePinia(pinia);
 			const app = useAppStore();

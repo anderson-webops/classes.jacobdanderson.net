@@ -2,7 +2,7 @@
 
 This lab continues the HTML, CSS and DOM portfolio with a separate JavaScript
 validation module and a local project-idea form. WDF0-WDF2 use the original
-four-file edition. This module edition is a new saved project: retain the
+[four-file edition](https://github.com/instruction-material/Web-Development-Foundations/tree/5bfdf1b25452fb65aa36d38cea6d836fdf6ae5cc/WDF1-Portfolio-Custom-Domain/basics). This module edition is a new saved project: retain the
 earlier files and transfer intended content edits into it.
 
 ## Files and roles
@@ -20,13 +20,13 @@ reference after completing and checking the starter.
 
 ## Select the module edition
 
-The project links select revision `6bfe60b31c07cbfabbc396790f1251503b1f4f7d`.
+The project links select revision `5bfdf1b25452fb65aa36d38cea6d836fdf6ae5cc`.
 For native work, clone into a new directory and select that same revision:
 
 ```sh
 git clone https://github.com/instruction-material/Web-Development-Foundations.git Web-Portfolio-Modules
 cd Web-Portfolio-Modules
-git switch --detach 6bfe60b31c07cbfabbc396790f1251503b1f4f7d
+git switch --detach 5bfdf1b25452fb65aa36d38cea6d836fdf6ae5cc
 git switch -c portfolio-work
 git rev-parse HEAD
 ```

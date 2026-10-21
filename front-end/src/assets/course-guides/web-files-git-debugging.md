@@ -10,7 +10,7 @@ Run Git commands from the repository root. Before changing anything, inspect its
 
 ```sh
 git status --short
-git diff -- WDF1-Portfolio-Custom-Domain/starter
+git diff -- WDF1-Portfolio-Custom-Domain/basics/starter
 git log -3 --oneline
 ```
 
@@ -33,7 +33,7 @@ After every deliberate fault is restored, make one useful content or layout impr
 
 ```sh
 git diff --check
-git add -- WDF1-Portfolio-Custom-Domain/starter/index.html WDF1-Portfolio-Custom-Domain/starter/main.js WDF1-Portfolio-Custom-Domain/starter/styles.css
+git add -- WDF1-Portfolio-Custom-Domain/basics/starter/index.html WDF1-Portfolio-Custom-Domain/basics/starter/main.js WDF1-Portfolio-Custom-Domain/basics/starter/styles.css
 git diff --cached
 git commit -m "Clarify portfolio project descriptions"
 git status --short
@@ -46,11 +46,11 @@ Choose a message that describes the actual change. Review the staged diff before
 From the same maintained repository root, use only the selected workspace:
 
 ```sh
-npm run build --workspace WDF1-Portfolio-Custom-Domain/starter
-npm run preview --workspace WDF1-Portfolio-Custom-Domain/starter -- --host 127.0.0.1 --port 4173 --strictPort
+npm run build --workspace WDF1-Portfolio-Custom-Domain/basics/starter
+npm run preview --workspace WDF1-Portfolio-Custom-Domain/basics/starter -- --host 127.0.0.1 --port 4173 --strictPort
 ```
 
-The build writes `WDF1-Portfolio-Custom-Domain/starter/dist`. The preview serves that built output at `http://127.0.0.1:4173`. Inspect the page, asset requests, console and both viewport widths again. Source edits made after the build do not update this build until it is rebuilt. Stop only the preview process started for this exercise. Vite preview is a local inspection tool, not a production hosting service.
+The build writes `WDF1-Portfolio-Custom-Domain/basics/starter/dist`. The preview serves that built output at `http://127.0.0.1:4173`. Inspect the page, asset requests, console and both viewport widths again. Source edits made after the build do not update this build until it is rebuilt. Stop only the preview process started for this exercise. Vite preview is a local inspection tool, not a production hosting service.
 
 A successful build is evidence about that build command; it does not prove correct links, accessible controls, public hosting or a custom domain. Record the actual command status and browser checks separately. The [local-workflow case](/course-assets/web-development-foundations/web-development-foundations-practice-pack.md#local-workflow-case) remains available for diagnosing supplied evidence when a local build is unavailable; mark that work as analysis rather than an executed build.
 

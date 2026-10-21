@@ -198,11 +198,11 @@ export async function runAssemblyCoreCourseWorkflow(t, definition) {
 		const origin = server.resolvedUrls.local[0].replace(/\/$/, "");
 		const executablePath = [
 			process.env.PUPPETEER_EXECUTABLE_PATH,
-			puppeteer.executablePath(),
+			await puppeteer.executablePath(),
 			"/usr/bin/google-chrome",
 			"/usr/bin/chromium",
 			"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
-		].find(path => path && existsSync(path));
+		].find(path => typeof path === "string" && path && existsSync(path));
 		assert.ok(
 			executablePath,
 			"An existing Chrome installation is required"

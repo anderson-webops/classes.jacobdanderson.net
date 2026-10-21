@@ -4,7 +4,7 @@ JavaScript Level 1 and 2 supply the programming, DOM, HTML and CSS foundation fo
 
 ## What the files do
 
-The supplied `WDF1-Portfolio-Custom-Domain/starter` contains four files:
+The supplied `WDF1-Portfolio-Custom-Domain/basics/starter` contains four files:
 
 | File | Responsibility |
 | --- | --- |
@@ -19,6 +19,20 @@ Node runs the development tools. npm reads package scripts and installs dependen
 
 ## Open the maintained project
 
+Use Node.js 24, npm and Git. The [official Node.js download](https://nodejs.org/en/download) includes npm; [Git downloads](https://git-scm.com/downloads) provides the version-control tool if it is missing. Verify `node --version`, `npm --version` and `git --version` before cloning.
+
+Select the maintained source revision in a new directory:
+
+```sh
+git clone https://github.com/instruction-material/Web-Development-Foundations.git Web-Portfolio
+cd Web-Portfolio
+git switch --detach 5bfdf1b25452fb65aa36d38cea6d836fdf6ae5cc
+git switch -c portfolio-work
+git rev-parse HEAD
+```
+
+The final command must print the selected revision before edits. Keep that checkout's root `package.json`, root `package-lock.json` and workspace `package.json`. When transferring an older export, copy its HTML, CSS and JavaScript while retaining those maintained manifests.
+
 Use a local copy of the complete `Web-Development-Foundations` repository. Its root `package-lock.json` belongs with its root `package.json` and the declared workspace manifests. A download containing only the starter's four files does not contain that lockfile.
 
 Open a terminal in the repository root, where both root package files are visible. Verify the tools and select only the starter workspace:
@@ -26,8 +40,8 @@ Open a terminal in the repository root, where both root package files are visibl
 ```sh
 node --version
 npm --version
-npm ci --workspace WDF1-Portfolio-Custom-Domain/starter
-npm run dev --workspace WDF1-Portfolio-Custom-Domain/starter -- --host 127.0.0.1 --port 5173 --strictPort
+npm ci --workspace WDF1-Portfolio-Custom-Domain/basics/starter
+npm run dev --workspace WDF1-Portfolio-Custom-Domain/basics/starter -- --host 127.0.0.1 --port 5173 --strictPort
 ```
 
 Use Node.js 24 with the repository's current lockfile. `npm ci` installs the recorded dependency graph and refuses incompatible manifest/lockfile pairs. Keep a failed install's actual message; do not delete the lockfile or replace the command with an unrecorded install. A missing Node command is a tool setup issue, a missing Vite command usually concerns dependencies, and an occupied port concerns a running process. These require different corrections.

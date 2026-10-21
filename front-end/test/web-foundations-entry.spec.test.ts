@@ -25,8 +25,10 @@ const modules = [
 		title: "WDF2 Files, Git, and Browser Debugging"
 	}
 ];
-const root =
-	"https://github.com/instruction-material/Web-Development-Foundations/tree/2c7a9fa89e052cd5cdc51987ebf837ae81e3557f/WDF1-Portfolio-Custom-Domain";
+const source = JSON.parse(
+	readFileSync(resolve("../test/fixtures/web-portfolio-source.json"), "utf8")
+);
+const root = `https://github.com/instruction-material/Web-Development-Foundations/tree/${source.revision}/${source.pack}`;
 
 describe("web foundations entry progression", () => {
 	it("preserves every published module/activity/section identity", async () => {
