@@ -56,7 +56,7 @@ export function applyWebPortfolioModuleWorkflow(
 		check,
 		"curriculum-web-development-foundations-core-concepts",
 		"Application Check: Native Constraints and Script Results",
-		"Compare an empty title with a title containing only spaces. Identify which input is rejected by the native required constraint and which reaches the JavaScript validator. Predict the error fields for an unknown projectType supplied directly to validateProjectIdea, then compare the observed result. Explain why a dropdown alone does not establish the function's input contract, why textContent displays markup literally, and why an omitted imported module can stop the original list and year updates as well as the form.",
+		"Compare an empty title with a title containing only spaces. Identify which input is rejected by the native required constraint and which reaches the JavaScript validator. Predict the error fields for an unknown projectType supplied directly to validateProjectIdea, then compare the observed result. Explain why a dropdown alone does not establish the function's input contract, why textContent displays markup literally, and why an omitted imported module can stop the original list and year updates as well as the form.\n\n**Completion checks:** Retain each predicted error field, the actual validator result and focused control, and the list/year result after restoring the omitted module.",
 		"core"
 	);
 	update(
@@ -70,14 +70,14 @@ export function applyWebPortfolioModuleWorkflow(
 		layout,
 		"supplemental-project-portfolio-site-with-custom-domain-preparation",
 		"Choice: Two Responsive Portfolio Layouts",
-		"Continue the completed module-edition portfolio. Make a second CSS layout for the same project cards without changing semantic heading order or introducing extra focus stops. Compare both at 390 and 1280 CSS pixels and 200% zoom, including a long unbroken project title. Keep the clearer layout and record the reason from the observed result. The supplied code is the common starting point; this layout choice has no separate reference implementation.",
+		"Continue the completed module-edition portfolio. Make a second CSS layout for the same project cards without changing semantic heading order or introducing extra focus stops. Compare both at 390 and 1280 CSS pixels and 200% zoom, including a long unbroken project title. Keep the clearer layout and record the reason from the observed result. The supplied code is the common starting point; this layout choice has no separate reference implementation.\n\n**Completion checks:** Retain both viewport comparisons, original heading order, visible focus and the observed treatment of the longest title.",
 		"choice"
 	);
 	update(
 		transfer,
 		"supplemental-web-foundations-transfer-practice",
 		"Choice: A Checklist Data Module",
-		"Continue the saved portfolio. Move deploymentChecklist from main.js into a new checklist.js file, export that array, and import it into main.js. Keep the original list text, order and year output. Save and export every module, then verify the source dependency request, fresh page and rebuilt preview. Explain why omitting checklist.js breaks the import before the script can update the page. Restore the file after the deliberate fault. The core reference does not include this optional refactor.",
+		"Continue the saved portfolio. Move deploymentChecklist from main.js into a new checklist.js file, export that array, and import it into main.js. Keep the original list text, order and year output. Save and export every module, then verify the source dependency request, fresh page and rebuilt preview. Explain why omitting checklist.js breaks the import before the script can update the page. Restore the file after the deliberate fault. The core reference does not include this optional refactor.\n\n**Completion checks:** Include the new file, its matching import/export, the observed missing-file error and the corrected source and rebuilt-preview results.",
 		"choice"
 	);
 	update(

@@ -43,3 +43,9 @@ For the proposed notes feature, classify an empty title, a malformed request bod
 ## Reference review
 
 The reference's `#domain-status` text is assigned by `main.js`; it is not a DNS lookup or a hosting health check. Its checklist is an array of source strings. A useful comparison identifies these implementation facts separately from a future release plan. The [request-map case](/course-assets/web-development-foundations/web-development-foundations-practice-pack.md#course-path-map-case) supplies another feature for independent mapping.
+
+## Configuration and domain names
+
+Environment variables are configuration boundaries. A Node process can read its own environment; browser code receives only values deliberately exposed to it, often when a front-end bundle is built. Public labels and API origins can be browser configuration, while a password or mail credential belongs on a server. Changing a source environment value does not rewrite an already built bundle.
+
+DNS and domain routing are the networking layer that maps a hostname to an address. A port selects a service at that address; an HTTP path selects a resource at the service. A working domain lookup does not establish that a particular API handler, database or TLS configuration works. The local portfolio needs none of those external services to demonstrate its file and request behavior.

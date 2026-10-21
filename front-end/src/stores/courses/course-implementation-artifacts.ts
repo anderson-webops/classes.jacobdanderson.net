@@ -202,7 +202,7 @@ export const courseToolchainAssumptions: Record<string, string[]> = {
 		"Local play-mode/build checks before capstone publication."
 	],
 	"web-development-foundations": [
-		"Node.js 24 LTS with the package-manager and lockfile state recorded for every reusable scaffold; source projects currently pin Vite 8, Express 5, Mongoose 9, Zod 4, Nodemailer 8, and Socket.IO 4 where applicable.",
+		"Node.js 24 LTS with the package-manager and lockfile state recorded for every reusable scaffold; source projects currently pin Vite 8, Express 5, Mongoose 9, Zod 4, Nodemailer 10, and Socket.IO 4 where applicable.",
 		"Localhost is the required runtime boundary: static files, supplied fixtures, in-memory adapters, test transports, and local databases provide a complete route without a public account or deployment.",
 		"Browser checks cover keyboard and pointer use, visible focus, status and error communication, reduced motion, 200% zoom, and narrow and desktop widths.",
 		"Server checks cover request size, schema validation, stable error shapes, timeouts, rate or resource limits, clean shutdown, health and readiness, and redacted logs.",
@@ -679,7 +679,7 @@ const standardsOverrides: Record<string, string[]> = {
 	"web-development-foundations": [
 		"Node.js 24 LTS release and package-management documentation.",
 		"WHATWG HTML, ECMA-262, MDN, WCAG 2.2, and WAI-ARIA Authoring Practices for front-end structure, state, interaction, and accessibility.",
-		"Vite 8, Express 5, Mongoose 9, MongoDB, Zod 4, Nodemailer 8, and Socket.IO 4 first-party documentation where the preserved source projects use those tools.",
+		"Vite 8, Express 5, Mongoose 9, MongoDB, Zod 4, Nodemailer 10, and Socket.IO 4 first-party documentation where the preserved source projects use those tools.",
 		"OWASP input-validation, secrets, logging, REST, WebSocket, and deployment guidance for local teaching services.",
 		"HTTP, DNS, TLS, CORS, reverse-proxy, health-check, backup, restore, and observability references for deployment-readiness evidence."
 	],

@@ -31,7 +31,7 @@ const entries = [
 			"Use the existing portfolio starter. Complete the reading's five-step core project: identify the four files, use the maintained repository lockfile, start the selected workspace on loopback, make one card and one checklist edit, inspect both viewport widths, then stop/restart and verify the saved work. Preserve this project for WDF1 and WDF2. A supplied-case analysis can support setup reasoning but cannot substitute for an observed startup.",
 		notebookTitle: "Setup Record",
 		notebook:
-			"Continue the same portfolio. Record the repository revision, terminal directory, Node/npm versions, selected workspace command, URL, actual result and one diagnosed failure. Separate predicted output from an executed run, and source changes from browser-only edits. Use this record to repeat the startup after closing the original terminal.",
+			"Continue the same saved portfolio. Record the repository revision, terminal directory, Node/npm versions, selected workspace command, URL, actual result and one diagnosed failure. Separate predicted output from an executed run, and source changes from browser-only edits. Use this record to repeat the startup after closing the original terminal.",
 		choiceTitle: "Choice: A Project Path with Spaces",
 		choice: "Continue the portfolio in a copy of the maintained repository whose directory name contains spaces. Follow the reading's choice exercise: quote the directory, preserve relative resource paths and compare the new startup with the original. Explain why a URL-relative stylesheet link does not need the terminal's absolute path.",
 		challengeTitle: "Challenge: A Strict Port Collision",
@@ -99,6 +99,30 @@ const entries = [
 	}
 ] as const;
 
+const completionChecks = [
+	[
+		"Show the document, stylesheet and script requests, the changed checklist item after reload, the removed unsaved DOM edit and the year produced by the saved script.",
+		"Retain the three-card layout, changed checklist item, current year, both viewport observations and the exact second startup command with its freshly requested page.",
+		"Include the four source filenames, selected role, complete startup command, response status, one console observation and the exact failure message. Another run from the same directory must reproduce the saved page, with the original exercise server stopped afterward.",
+		"Keep both quoted startup commands and the resulting stylesheet and script URLs. Verify their status and initiator after a fresh request, check the same saved card and checklist edits, and explain any difference without hardcoding a machine-specific filesystem path.",
+		"Keep the successful server's URL, the refused command and its exit result, and a fresh successful request to the original page. After stopping that server, verify that a fresh request fails; a previously rendered tab is insufficient evidence of a listener."
+	],
+	[
+		"Use a captured response or the supplied request example to name the actual content type, response body and deciding evidence. A successful document request does not prove that a separate notes endpoint exists or that a note was persisted.",
+		"Supply the observed resource table, selector-to-DOM trace and ownership/lifetime map. Mark the proposed endpoint separately from measured traffic and explain the source of the displayed year.",
+		"Give each observation its own URL or source location. Distinguish source text, current-clock output and temporary browser state. The resulting record must let another reader retrace the same saved portfolio without assuming that an imagined API or database was contacted.",
+		"List the complete origin and resolved stylesheet URL for all three cases, identify which comparison changes host or port, and keep browser same-origin policy separate from physical machine identity. No entry may claim a successful cross-origin API call without an actual observed request.",
+		"Give all five failures a detecting layer, observable response or absence of response, and specific user feedback. For the lost response, record that persistence is uncertain and explain a stable request identifier or status check that could prevent an unsafe blind retry."
+	],
+	[
+		"Identify the selected element and both changed identifiers, predict whether execution stops, and keep the actual console or DOM observation for each fault. Finish with the original selector, restored function name and a fresh page showing both expected outputs.",
+		"Preserve the four diagnoses, reviewed source diff and commit, selected build command and observed preview requests. A fresh run must contain the intended improvement and no deliberate fault.",
+		"Include the changed filename and exact identifier or path, observed symptom, correction and fresh-load evidence for every fault. Where a build was run, retain the command status and preview URL; where only supplied evidence was analyzed, label that limitation explicitly.",
+		"Keep the parent revision, changed filenames, focused diff and corresponding rendered observations. Explain whether each change affects source, generated output or temporary DOM state. End on the intended exercise branch with unrelated work intact and the deliberately introduced fault removed.",
+		"Retain the changed source heading, the old built heading, the rebuild status and the final matching preview request. Identify which files each server reads, verify that the fresh preview contains the intended heading, and stop only this experiment's own server."
+	]
+] as const;
+
 function rewriteItem(
 	item: RawCourseModuleItem,
 	id: string,
@@ -148,35 +172,45 @@ export function applyWebFoundationsEntryWorkflows(
 			check,
 			`${entry.id}-curriculum-${entry.checkSuffix}`,
 			entry.checkTitle,
-			entry.check,
+			`${entry.check}\n\n**Completion checks:** ${
+				completionChecks[entries.indexOf(entry)][0]
+			}`,
 			"core"
 		);
 		rewriteItem(
 			project,
 			`${entry.id}-curriculum-${entry.projectSuffix}`,
 			entry.projectTitle,
-			entry.project,
+			`${entry.project}\n\n**Completion checks:** ${
+				completionChecks[entries.indexOf(entry)][1]
+			}`,
 			"core"
 		);
 		rewriteItem(
 			notebook,
 			`${entry.id}-supplemental-${entry.notebookSuffix}`,
 			entry.notebookTitle,
-			entry.notebook,
+			`${entry.notebook}\n\n**Completion checks:** ${
+				completionChecks[entries.indexOf(entry)][2]
+			}`,
 			"choice"
 		);
 		rewriteItem(
 			choice,
 			`${entry.id}-supplemental-${entry.choiceSuffix}`,
 			entry.choiceTitle,
-			entry.choice,
+			`${entry.choice}\n\n**Completion checks:** ${
+				completionChecks[entries.indexOf(entry)][3]
+			}`,
 			"choice"
 		);
 		rewriteItem(
 			challenge,
 			`${entry.id}-supplemental-${entry.challengeSuffix}`,
 			entry.challengeTitle,
-			entry.challenge,
+			`${entry.challenge}\n\n**Completion checks:** ${
+				completionChecks[entries.indexOf(entry)][4]
+			}`,
 			"challenge"
 		);
 	}

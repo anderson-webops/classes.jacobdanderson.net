@@ -67,14 +67,14 @@ export function applyWebNotificationWorkflow(
 		choice,
 		"supplemental-front-end-apps-transfer-practice",
 		"Choice: One More Notification View",
-		"Continue the same saved notification project. Add a view for records whose text contains one chosen fictional workshop topic. Extend the navigation link, selectedView route and visibleEntries filter together. Verify direct fragment entry, switching away/back, an empty filtered view, current-link semantics and unchanged history/counts without another data request. Preserve the six baseline fixture cases. The supplied reference covers the core views, not this extra filter.",
+		"Continue the same saved notification project. Add a view for records whose text contains one chosen fictional workshop topic. Extend the navigation link, selectedView route and visibleEntries filter together. Verify direct fragment entry, switching away/back, an empty filtered view, current-link semantics and unchanged history/counts without another data request. Preserve the six baseline fixture cases. The supplied reference covers the core views, not this extra filter.\n\n**Completion checks:** Keep the direct-fragment result, empty-view status, active-link state, unchanged request count and retained records when returning to a core view.",
 		"choice"
 	);
 	update(
 		challenge,
 		"supplemental-front-end-apps-extension-practice",
 		"Challenge: A Fixture at the Contract Boundaries",
-		"Continue the notification project. Add boundary.json with exact-limit, one-over-limit and delayed records, keeping the baseline six files unchanged. Add boundary.json to the files set in serve.mjs and a Data set option with value boundary. Predict accepted IDs, rejection/duplicate counts and retained history before loading it. Compare reducer and browser results, then export/reopen the added file and retest from the extracted folder. Keep the documented event, batch, history and ID-window limits. The core reference does not contain this extra fixture.",
+		"Continue the notification project. Add boundary.json with exact-limit, one-over-limit and delayed records, keeping the baseline six files unchanged. Add boundary.json to the files set in serve.mjs and a Data set option with value boundary. Predict accepted IDs, rejection/duplicate counts and retained history before loading it. Compare reducer and browser results, then export/reopen the added file and retest from the extracted folder. Keep the documented event, batch, history and ID-window limits. The core reference does not contain this extra fixture.\n\n**Completion checks:** Preserve the predictions, accepted IDs, actual counters and matching extracted-folder response for the added data set.",
 		"challenge"
 	);
 }

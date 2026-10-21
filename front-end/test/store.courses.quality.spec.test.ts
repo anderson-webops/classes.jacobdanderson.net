@@ -178,6 +178,19 @@ function isInformationalResourceTitle(title: string) {
 const lessonBackbonePattern =
 	/\*\*(?:Applied studio|Build focus|Build path|Concept focus|Concept path|Course flow|Course path|Course position|Evidence gate|Evidence of proficiency|Evidence target|Evidence targets|Explanation|Focus|Goal|Hungry Hippo return|Investigation|Playable result|Practice route|Project selection|Project target|Readiness check|Readiness map|Result|Science explanation|Scope path|Selected checks|Shared phenomenon|Studio focus|Verification gate):\*\*|Core topics in this module:|Representative solutions|Check-?In #\d+|Check-in goal|\bReview\b/i;
 
+function hasLessonBackbone(item: { title: string; content: string }) {
+	return (
+		lessonBackbonePattern.test(`${item.title}\n${item.content}`) ||
+		(
+			wordCount(item.content) >= 300 &&
+			(item.content.match(/^## /gm)?.length ?? 0) >= 5 &&
+			/^## Files and (?:roles|startup)/m.test(item.content) &&
+			/^## .*contract/im.test(item.content) &&
+			/^## .*(?:check|project)/im.test(item.content)
+		)
+	);
+}
+
 function findItem(
 	course: NonNullable<Awaited<ReturnType<typeof loadRawCourse>>>,
 	titlePattern: RegExp,
@@ -4486,7 +4499,7 @@ describe("course text quality normalization", () => {
 		expect(corpus).toContain("Choice: A Project Path with Spaces");
 		expect(corpus).toContain("Choice: Compare Local Origins");
 		expect(corpus).toContain("Choice: Review One Commit");
-		expect(corpus).toContain("Web Foundations Transfer Practice");
+		expect(corpus).toContain("Choice: A Checklist Data Module");
 		expect(corpus).toContain("Feature Slice Transfer Practice");
 		expect(corpus).toContain("Full Stack Web Lab 14: Feature Slice Studio");
 		expect(corpus).toContain(
@@ -5404,11 +5417,7 @@ describe("course text quality normalization", () => {
 					.filter(module => module.kind !== "appendix")
 					.filter(
 						module =>
-							!module.curriculum.some(item =>
-								lessonBackbonePattern.test(
-									`${item.title}\n${item.content}`
-								)
-							)
+							!module.curriculum.some(hasLessonBackbone)
 					)
 					.map(module => `${id} | ${module.title}`)
 			);

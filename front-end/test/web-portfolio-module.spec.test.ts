@@ -71,7 +71,7 @@ describe("web portfolio module edition", () => {
 		const [sourceIntroduction, sourceWorkflow] = sourceReading.split(
 			"## Run from the complete repository"
 		);
-		expect(learner.curriculum[0].content).toContain(
+		expect(learner.curriculum[0].content.replaceAll("`TODO`", "TODO")).toContain(
 			sourceIntroduction
 				.replace(
 					"(basics/README.md)",

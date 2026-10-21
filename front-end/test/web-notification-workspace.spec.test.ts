@@ -83,7 +83,7 @@ describe("web notification source workflow", () => {
 		const source = fixture.files[`${fixture.pack}/README.md`].content;
 		const [intro, body] = source.split("## Files and startup");
 		expect(learner.curriculum[0].content).toContain(intro.trim());
-		expect(learner.curriculum[0].content).toContain(
+		expect(learner.curriculum[0].content.replaceAll("`TODO`", "TODO")).toContain(
 			`## Files and startup${body}`.trim()
 		);
 		expect(learner.curriculum[0].content).toBe(

@@ -13,7 +13,7 @@ constraints. CSS controls layout and focus. `main.js` handles DOM events and
 safe rendering; it imports `validateProjectIdea` from `project-idea.js`.
 The validator reads values and returns a result without accessing the DOM.
 
-The starter keeps that validator as a deliberate TODO and refuses previews
+The starter keeps that validator as a deliberate `TODO` and refuses previews
 until it is implemented. The reference implements the same stated contract.
 Both keep the original deployment list and year behavior. Compare the
 reference after completing and checking the starter.

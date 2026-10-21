@@ -145,7 +145,7 @@ functionality. Check an empty filtered view independently of an empty batch.
 
 ## Core project and contract checks
 
-Implement the two TODO functions in the starter's `state.mjs`. Keep the
+Implement the two `TODO` functions in the starter's `state.mjs`. Keep the
 supplied browser wiring, event contract, history/ID caps and fixture cases.
 Before each run, predict the phase, visible IDs and counts; then record the
 observed result and any correction. Explain which code handles a bad HTTP
