@@ -2,9 +2,12 @@ import type { RawCourse, RawCourseModuleItem } from "./types";
 import debuggingReading from "../../assets/course-guides/web-files-git-debugging.md?raw";
 import setupReading from "../../assets/course-guides/web-project-setup.md?raw";
 import boundaryReading from "../../assets/course-guides/web-request-boundaries.md?raw";
+import {
+	webCourseResource,
+	webPortfolioRoot
+} from "../../modules/webProjectResources";
 
-const sourceRoot =
-	"https://github.com/instruction-material/Web-Development-Foundations/tree/2c7a9fa89e052cd5cdc51987ebf837ae81e3557f/WDF1-Portfolio-Custom-Domain";
+const sourceRoot = webPortfolioRoot;
 
 const entries = [
 	{
@@ -110,6 +113,7 @@ function rewriteItem(
 	if (item.projectLink) {
 		item.projectLink = `${sourceRoot}/starter`;
 		item.solutionLink = `${sourceRoot}/solution`;
+		item.ideImport = true;
 	}
 }
 
@@ -174,5 +178,18 @@ export function applyWebFoundationsEntryWorkflows(
 			entry.challenge,
 			"challenge"
 		);
+	}
+	for (const module of course.modules) {
+		for (const item of [
+			...module.curriculum,
+			...module.supplementalProjects
+		]) {
+			const selected = webCourseResource(item.projectLink ?? "");
+			if (!selected) continue;
+			item.projectLink = `${webPortfolioRoot}/${selected.role}`;
+			if (webCourseResource(item.solutionLink ?? ""))
+				item.solutionLink = `${webPortfolioRoot}/solution`;
+			item.ideImport = true;
+		}
 	}
 }

@@ -655,6 +655,7 @@ describe("python project review routes", () => {
 	});
 
 	it.each([
+		"web",
 		"rust",
 		"rust-ownership",
 		"rust-borrowing",
@@ -673,82 +674,92 @@ describe("python project review routes", () => {
 		"hardening-trace"
 	] as const)(
 		"saves, shares, and edits a %s review while preserving the learner's complete pack",
-		async (mode) => {
+		async mode => {
 			const rustMode = mode === "rust" || mode.startsWith("rust-");
 			const requestedMode = rustMode
 				? "rust"
-				: mode === "c"
-					? "c"
-					: "assembly";
+				: mode === "web"
+					? "web"
+					: mode === "c"
+						? "c"
+						: "assembly";
 			const fixture = JSON.parse(
 				readFileSync(
 					resolve(
 						process.cwd(),
-						mode === "rust-concurrency"
-							? "../test/fixtures/rust-concurrency-contracts.json"
-							: mode === "rust-boundary-review"
-								? "../test/fixtures/rust-boundary-review-contracts.json"
-								: mode === "rust-record-hardening"
-									? "../test/fixtures/rust-record-hardening-contracts.json"
-									: mode === "rust-bounded-cli"
-										? "../test/fixtures/rust-bounded-cli-contracts.json"
-										: mode === "rust-trait-pipeline"
-											? "../test/fixtures/rust-trait-pipeline-contracts.json"
-											: mode === "rust-state-models"
-												? "../test/fixtures/rust-state-models-contracts.json"
-												: mode === "rust-label-slices"
-													? "../test/fixtures/rust-label-slices-contracts.json"
-													: mode
-														=== "rust-typed-errors"
-														? "../test/fixtures/rust-typed-errors-contracts.json"
-														: mode
-															=== "rust-borrowing"
-															? "../test/fixtures/rust-borrowing-contracts.json"
-															: mode
-																=== "rust-ownership"
-																? "../test/fixtures/rust-ownership-contracts.json"
-																: mode
-																	=== "rust"
-																	? "../test/fixtures/rust-cargo-contracts.json"
-																	: mode
-																		=== "hardening"
-																		|| mode
-																		=== "hardening-trace"
-																		? "../test/fixtures/assembly-hardening-contracts.json"
-																		: mode
-																			=== "compiler"
-																			? "../test/fixtures/assembly-compiler-contracts.json"
-																			: mode
-																				=== "assembly"
-																				? "../test/fixtures/assembly-opening-contracts.json"
-																				: "../test/fixtures/c17-opening-contracts.json"
+						mode === "web"
+							? "../test/fixtures/web-portfolio-source.json"
+							: mode === "rust-concurrency"
+								? "../test/fixtures/rust-concurrency-contracts.json"
+								: mode === "rust-boundary-review"
+									? "../test/fixtures/rust-boundary-review-contracts.json"
+									: mode === "rust-record-hardening"
+										? "../test/fixtures/rust-record-hardening-contracts.json"
+										: mode === "rust-bounded-cli"
+											? "../test/fixtures/rust-bounded-cli-contracts.json"
+											: mode === "rust-trait-pipeline"
+												? "../test/fixtures/rust-trait-pipeline-contracts.json"
+												: mode === "rust-state-models"
+													? "../test/fixtures/rust-state-models-contracts.json"
+													: mode ===
+														  "rust-label-slices"
+														? "../test/fixtures/rust-label-slices-contracts.json"
+														: mode ===
+															  "rust-typed-errors"
+															? "../test/fixtures/rust-typed-errors-contracts.json"
+															: mode ===
+																  "rust-borrowing"
+																? "../test/fixtures/rust-borrowing-contracts.json"
+																: mode ===
+																	  "rust-ownership"
+																	? "../test/fixtures/rust-ownership-contracts.json"
+																	: mode ===
+																		  "rust"
+																		? "../test/fixtures/rust-cargo-contracts.json"
+																		: mode ===
+																					"hardening" ||
+																			  mode ===
+																					"hardening-trace"
+																			? "../test/fixtures/assembly-hardening-contracts.json"
+																			: mode ===
+																				  "compiler"
+																				? "../test/fixtures/assembly-compiler-contracts.json"
+																				: mode ===
+																					  "assembly"
+																					? "../test/fixtures/assembly-opening-contracts.json"
+																					: "../test/fixtures/c17-opening-contracts.json"
 					),
 					"utf8"
 				)
 			);
-			const pack
-				= mode === "c"
+			const pack =
+				mode === "c"
 					? "CSE-06-unit-1-why-c-for-systems-work"
 					: fixture.pack;
 			const activeFileName = rustMode
 				? "starter/observations.md"
-				: mode === "hardening-trace"
-					? "starter/trace.md"
-					: mode === "compiler" || mode === "hardening"
-						? "starter/analysis.md"
-						: mode === "assembly"
-							? "starter/routine.S"
-							: "starter/main.c";
+				: mode === "web"
+					? "index.html"
+					: mode === "hardening-trace"
+						? "starter/trace.md"
+						: mode === "compiler" || mode === "hardening"
+							? "starter/analysis.md"
+							: mode === "assembly"
+								? "starter/routine.S"
+								: "starter/main.c";
 			const files = Object.entries(
 				fixture.files as Record<string, { content: string }>
 			)
 				.filter(
 					([path]) =>
-						path.startsWith(`${pack}/starter/`)
-						|| path === `${pack}/README.md`
+						path.startsWith(`${pack}/starter/`) ||
+						path === `${pack}/README.md`
 				)
 				.map(([path, file]) => ({
-					name: path.slice(pack.length + 1),
+					name:
+						mode === "web"
+							? path.split("/").at(-1)!
+							: path.slice(pack.length + 1),
 					content: file.content,
 					encoding: "text"
 				}));
@@ -759,21 +770,25 @@ describe("python project review routes", () => {
 				courseID:
 					requestedMode === "rust"
 						? "rust-systems-security"
-						: requestedMode === "assembly"
-							? "assembly"
-							: "c-systems-engineering",
+						: requestedMode === "web"
+							? "web-development-foundations"
+							: requestedMode === "assembly"
+								? "assembly"
+								: "c-systems-engineering",
 				courseProjectKey:
 					requestedMode === "rust"
 						? "rust-systems-security:cargo:starter:native-rust"
-						: requestedMode === "assembly"
-							? "assembly:compiler:starter:native-assembly"
-							: "c-systems-engineering:linking:starter:native-c17",
+						: requestedMode === "web"
+							? "web-development-foundations:portfolio:starter:web-source-v1"
+							: requestedMode === "assembly"
+								? "assembly:compiler:starter:native-assembly"
+								: "c-systems-engineering:linking:starter:native-c17",
 				shared: true,
 				shareID: "share_C17_native_123456789"
 			});
 			modelMocks.pythonProjectFindOne.mockResolvedValue(project);
 			modelMocks.pythonProjectReviewFindOne.mockResolvedValueOnce(null);
-			await withUserRoutes(async (baseUrl) => {
+			await withUserRoutes(async baseUrl => {
 				const update = await putJson(
 					baseUrl,
 					`/users/loggedin/python-projects/${projectID}`,
@@ -805,15 +820,15 @@ describe("python project review routes", () => {
 			});
 			modelMocks.pythonProjectReviewFindOne.mockResolvedValue(review);
 			const revised = files.map(file =>
-				file.name
-				=== (mode === "c" ? "starter/labels.c" : activeFileName)
+				file.name ===
+				(mode === "c" ? "starter/labels.c" : activeFileName)
 					? {
 							...file,
-							content: `${file.content}\n/* staff feedback */\n`
+							content: `${file.content}\n${mode === "web" ? "<!-- staff feedback -->" : "/* staff feedback */"}\n`
 						}
 					: file
 			);
-			await withUserRoutes(async (baseUrl) => {
+			await withUserRoutes(async baseUrl => {
 				const response = await putJson(
 					baseUrl,
 					`/users/${studentID}/python-projects/${projectID}/review/${reviewID}`,

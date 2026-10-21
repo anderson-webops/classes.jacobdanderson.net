@@ -79,6 +79,80 @@ async function postJson(baseUrl: string, body: unknown) {
 }
 
 describe("python project routes", () => {
+	it.each(["starter", "solution"] as const)(
+		"stores the exact web %s role for account and course-code owners",
+		async role => {
+			const fixture = JSON.parse(
+				readFileSync(
+					resolve(
+						process.cwd(),
+						"../test/fixtures/web-portfolio-source.json"
+					),
+					"utf8"
+				)
+			);
+			const files = Object.entries(
+				fixture.files as Record<string, { content: string }>
+			)
+				.filter(
+					([path]) =>
+						path.startsWith(`${fixture.pack}/${role}/`) ||
+						path === `${fixture.pack}/README.md`
+				)
+				.map(([path, file]) => ({
+					name: path.split("/").at(-1)!,
+					content: file.content,
+					encoding: "text"
+				}));
+			for (const owner of ["user", "course-code"] as const) {
+				await withPythonProjectRoute(
+					async baseUrl => {
+						const response = await postJson(baseUrl, {
+							mode: "web",
+							files,
+							activeFileName: "main.js",
+							courseID: "web-development-foundations",
+							courseProjectKey: `web-development-foundations:portfolio:${role === "starter" ? "starter" : "reference"}:web-source-v1`
+						});
+						expect(response.status).toBe(201);
+						const body = await response.json();
+						expect(body.project.mode).toBe("web");
+						expect(body.project.files).toEqual(files);
+						expect(body.project.activeFileName).toBe("main.js");
+					},
+					owner,
+					"web-development-foundations"
+				);
+			}
+		}
+	);
+
+	it.each([
+		{ name: "../main.js", encoding: "text" },
+		{ name: "main.py", encoding: "text" },
+		{ name: "secrets.env", encoding: "text" },
+		{ name: "main.js", encoding: "base64" }
+	])(
+		"rejects unsupported web source $name/$encoding before storage",
+		async file => {
+			await withPythonProjectRoute(async baseUrl => {
+				const response = await postJson(baseUrl, {
+					mode: "web",
+					files: [
+						{
+							name: "index.html",
+							content: "<main></main>",
+							encoding: "text"
+						},
+						{ ...file, content: "eA==" }
+					]
+				});
+				expect(response.status).toBe(400);
+				expect(modelMocks.pythonProjectCreate).not.toHaveBeenCalled();
+			});
+		}
+	);
+
 	beforeEach(() => {
 		vi.clearAllMocks();
 		modelMocks.pythonProjectCountDocuments.mockReturnValue({
@@ -1591,13 +1665,13 @@ describe("python project routes", () => {
 
 		expect(sources).toContain("app.get(\"/healthz\"");
 		expect(sources).toContain(
-			"const projectModeSchema = z.enum([\"assembly\", \"c\", \"cpp\", \"data\", \"java\", \"karel\", \"linux\", \"pgzero\", \"python\", \"rust\", \"turtle\"])"
+			"const projectModeSchema = z.enum([\"assembly\", \"c\", \"cpp\", \"data\", \"java\", \"karel\", \"linux\", \"pgzero\", \"python\", \"rust\", \"turtle\", \"web\"])"
 		);
 		expect(sources).toContain(
-			"export type PythonProjectMode = \"assembly\" | \"c\" | \"cpp\" | \"data\" | \"java\" | \"karel\" | \"linux\" | \"pgzero\" | \"python\" | \"rust\" | \"turtle\";"
+			"export type PythonProjectMode = \"assembly\" | \"c\" | \"cpp\" | \"data\" | \"java\" | \"karel\" | \"linux\" | \"pgzero\" | \"python\" | \"rust\" | \"turtle\" | \"web\";"
 		);
 		expect(sources).toContain(
-			"enum: [\"assembly\", \"c\", \"cpp\", \"data\", \"java\", \"karel\", \"linux\", \"pgzero\", \"python\", \"rust\", \"turtle\"]"
+			"enum: [\"assembly\", \"c\", \"cpp\", \"data\", \"java\", \"karel\", \"linux\", \"pgzero\", \"python\", \"rust\", \"turtle\", \"web\"]"
 		);
 		expect(sources).toContain("ROOT_TEXT_FILE_RE =");
 		expect(sources).toContain("java|json");

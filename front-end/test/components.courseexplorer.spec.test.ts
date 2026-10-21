@@ -41,6 +41,95 @@ function installLocalStorageStub() {
 
 describe("CourseExplorer.vue", () => {
 	it.each(
+		["learner", "instructor"].flatMap(role =>
+			[
+				"web-development-foundations-wdf0-setup-and-tooling",
+				"web-development-foundations-wdf1-positioning-goals-and-suggested-course-family",
+				"web-development-foundations-wdf2-stage-1-strengthen-the-existing-javascript-courses"
+			].map(module => ({ role, module }))
+		)
+	)(
+		"opens the web portfolio from $module with $role role visibility",
+		async ({ role, module }) => {
+			const pinia = createPinia();
+			setActivePinia(pinia);
+			const app = useAppStore();
+			app.setCurrentUser({
+				_id: "web-learner",
+				name: "Learner",
+				email: "learner@example.invalid",
+				age: 14,
+				state: "GA",
+				courseAccess: ["web-development-foundations"],
+				courseProgress: [],
+				editUsers: false,
+				saveEdit: "Save"
+			});
+			if (role === "instructor") {
+				app.setCurrentTutor({
+					_id: "web-tutor",
+					name: "Tutor",
+					email: "tutor@example.invalid",
+					age: 30,
+					state: "GA",
+					coursePermissions: ["web-development-foundations"],
+					usersOfTutorLength: 0,
+					editTutors: false,
+					saveEdit: "Save"
+				});
+				app.setUsers([app.currentUser!]);
+				vi.mocked(api.get).mockResolvedValueOnce({
+					data: [app.currentUser!]
+				});
+			}
+			window.history.replaceState({}, "", `/courses#${module}`);
+			const wrapper = mount(CourseExplorer, {
+				global: { plugins: [pinia] }
+			});
+			try {
+				await flushPromises();
+				await vi.waitFor(() =>
+					expect(wrapper.find(".lesson-view-toggle").exists()).toBe(
+						true
+					)
+				);
+				await wrapper
+					.findAll(".lesson-view-toggle button")
+					.find(button => button.text() === "Projects")!
+					.trigger("click");
+				await flushPromises();
+				const card = wrapper
+					.findAll(".lesson-item")
+					.find(row =>
+						row
+							.find(
+								'a.is-project[href*="/WDF1-Portfolio-Custom-Domain/starter"]'
+							)
+							.exists()
+					)!;
+				expect(card).toBeDefined();
+				const links = card.findAll("a.is-ide-starter");
+				expect(links).toHaveLength(role === "instructor" ? 2 : 1);
+				for (const [index, link] of links.entries()) {
+					const url = new URL(
+						link.attributes("href"),
+						"https://example.invalid"
+					);
+					expect(url.searchParams.get("mode")).toBe("web");
+					expect(url.searchParams.get("projectKey")).toBe(
+						`web-development-foundations:portfolio:${index === 0 ? "starter" : "reference"}:web-source-v1`
+					);
+					expect(url.searchParams.get("starterUrl")).toBe(
+						`https://github.com/instruction-material/Web-Development-Foundations/tree/2c7a9fa89e052cd5cdc51987ebf837ae81e3557f/WDF1-Portfolio-Custom-Domain/${index === 0 ? "starter" : "solution"}`
+					);
+				}
+			} finally {
+				wrapper.unmount();
+			}
+		}
+	);
+
+	it.each(
 		["learner", "instructor"].flatMap((role) => [
 			{
 				role,
