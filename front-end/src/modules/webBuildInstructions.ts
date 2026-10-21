@@ -45,6 +45,18 @@ export function webBuildInstructions(starterUrl?: string) {
 	}
 	if (selected.definition.workflow === "node") {
 		const workspace = `${selected.pack}/${selected.role}`;
+		if (selected.definition.project === "live-chat") {
+			return [
+				"Save and download the ZIP with every nested file and any added exercise files.",
+				`Use the complete Web-Development-Foundations checkout at ${selected.resource.ref} with Node.js 24. Copy the exported files into ${workspace}; retain the checkout's root package.json and package-lock.json.`,
+				"The selected-role ZIP lacks the root dependency lockfile. From the complete repository root, install recorded dependencies with npm ci if they are missing, then start the selected role:",
+				`npm run start --workspace ${workspace}`,
+				"Wait for the JSON ready event and open http://127.0.0.1:3003 in two browser windows. Use the actual port in that record if PORT was changed. Both clients must use the same hostname and port.",
+				"This workspace edits source and does not run the Node.js or Socket.IO service. Run the exported source in the matching complete checkout.",
+				"README.md supplies startup commands for macOS, Linux and PowerShell, input limits, acknowledgement and recovery checks. The starter broadcasts anonymous text; the reference adds acknowledged nicknames and join/rename/leave notices.",
+				"Stop only the owned server with Ctrl+C before starting the other role on the same port. Restarting clears server memory; reconnect each client and check its retained draft before resending."
+			];
+		}
 		if (selected.definition.project === "notes-api") {
 			return [
 				"Save and download the ZIP to preserve edited source and added exercise files.",

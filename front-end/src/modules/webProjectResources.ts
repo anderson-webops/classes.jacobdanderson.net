@@ -17,6 +17,15 @@ export const webPortfolioRoleFiles = [
 export const webNotificationRevision = webMaintainedSourceRevision;
 export const webNotificationPack = "WDF4-Realtime-Chat-App/local-client";
 export const webNotificationRoot = `https://github.com/instruction-material/Web-Development-Foundations/tree/${webNotificationRevision}/${webNotificationPack}`;
+export const webChatRevision = "b179a9e0e523a95fc5c71de3434322a7f7840579";
+export const webChatPack = "WDF4-Realtime-Chat-App";
+export const webChatRoot = `https://github.com/instruction-material/Web-Development-Foundations/tree/${webChatRevision}/${webChatPack}`;
+export const webChatRoleFiles = [
+	"src/server.js",
+	"public/index.html",
+	"public/chat.js",
+	"package.json"
+] as const;
 export const webContactRevision = "aed8ef2fcd7488c25c0b977b2099640e7431c55a";
 export const webContactPack = "WDF3-Booking-Contact-App";
 export const webContactRoot = `https://github.com/instruction-material/Web-Development-Foundations/tree/${webContactRevision}/${webContactPack}`;
@@ -97,6 +106,16 @@ const definitions = [
 		shared: ["README.md", "serve.mjs"]
 	},
 	{
+		revision: webChatRevision,
+		pack: webChatPack,
+		project: "live-chat",
+		version: 1,
+		workflow: "node",
+		files: webChatRoleFiles,
+		extraRoleFiles: { starter: [], solution: ["public/styles.css"] },
+		shared: ["README.md"]
+	},
+	{
 		revision: webContactRevision,
 		pack: webContactPack,
 		project: "contact-api",
@@ -153,18 +172,24 @@ export function webCourseResource(url: string) {
 		`${webModulePortfolioPack}/starter`,
 		`${webModulePortfolioPack}/solution`
 	].includes(resource.path);
+	const liveChatPath = [
+		`${webChatPack}/starter`,
+		`${webChatPack}/solution`
+	].includes(resource.path);
 	// Existing main URLs identify the original four-file saved project.
 	const ref =
 		resource.ref === "main"
 			? originalMainPath
 				? originalPortfolioRevision
-				: resource.path.startsWith(`${webContactPack}/`)
-					? webContactRevision
-					: resource.path.startsWith(`${webNotesPack}/`)
-						? webNotesRevision
-						: resource.path.startsWith(`${webDeploymentPack}/`)
-							? webDeploymentRevision
-							: webMaintainedSourceRevision
+				: liveChatPath
+					? webChatRevision
+					: resource.path.startsWith(`${webContactPack}/`)
+						? webContactRevision
+						: resource.path.startsWith(`${webNotesPack}/`)
+							? webNotesRevision
+							: resource.path.startsWith(`${webDeploymentPack}/`)
+								? webDeploymentRevision
+								: webMaintainedSourceRevision
 			: resource.ref;
 	const definition = [...definitions, ...historicalDefinitions].find(
 		row =>
