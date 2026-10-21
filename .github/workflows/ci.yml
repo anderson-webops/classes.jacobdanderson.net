@@ -1053,6 +1053,49 @@ jobs:
                   if-no-files-found: error
                   retention-days: 7
 
+            - name: Verify deployment readings and complete saved role exports
+              env:
+                  WEB_DEPLOYMENT_EXPORT_DIR: output/web-deployment-exports
+              run: npm exec -w front-end -- vitest run test/web-deployment-workspace.spec.test.ts --no-file-parallelism --maxWorkers=1
+
+            - name: Verify deployment consent, both roles and saved continuations
+              env:
+                  COURSE_IMPORT_SCREENSHOT_DIR: output/web-deployment-screenshots
+              run: node --test test/web-deployment-course-browser.test.mjs
+
+            - name: Fetch the maintained deployment source
+              uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+              with:
+                  repository: instruction-material/Web-Development-Foundations
+                  ref: 781eba647bbdcb3f89aa0417011dabe2fca30d53
+                  path: output/web-deployment-native-source
+                  persist-credentials: false
+
+            - name: Verify and reuse the identical maintained dependency graph
+              run: |
+                  for input in package.json package-lock.json WDF5-Separate-Deployment-Lab/starter/backend/package.json WDF5-Separate-Deployment-Lab/solution/backend/package.json; do
+                    cmp "output/web-notes-native-source/$input" "output/web-deployment-native-source/$input"
+                  done
+                  test -d output/web-notes-native-source/node_modules
+                  test ! -e output/web-deployment-native-source/node_modules
+                  ln -s ../web-notes-native-source/node_modules output/web-deployment-native-source/node_modules
+
+            - name: Verify actual exported deployment artifacts and browser rollback
+              run: node test/web-deployment-exported-contracts.mjs --source output/web-deployment-native-source --exports front-end/output/web-deployment-exports --browser output/web-deployment-browser --proof output/web-deployment-native/proof.json
+
+            - name: Retain deployment course and native recovery evidence
+              if: always()
+              uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+              with:
+                  name: web-deployment-workflows
+                  path: |
+                      front-end/output/web-deployment-exports/
+                      output/web-deployment-browser/
+                      output/web-deployment-native/
+                      output/web-deployment-screenshots/
+                  if-no-files-found: error
+                  retention-days: 7
+
             - name: Verify Network Systems foundation imports and notebook reuse
               env:
                   NETWORK_BROWSER_EXPORT_PROOF_DIR: output/network-exports

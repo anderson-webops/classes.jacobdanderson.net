@@ -44,6 +44,18 @@ export const webNotesRoleFiles = [
 	"public/styles.css",
 	"package.json"
 ] as const;
+export const webDeploymentRevision = "781eba647bbdcb3f89aa0417011dabe2fca30d53";
+export const webDeploymentPack = "WDF5-Separate-Deployment-Lab";
+export const webDeploymentRoot = `https://github.com/instruction-material/Web-Development-Foundations/tree/${webDeploymentRevision}/${webDeploymentPack}`;
+export const webDeploymentRoleFiles = [
+	"backend/package.json",
+	"backend/src/server.js",
+	"frontend/index.html",
+	"frontend/main.js",
+	"frontend/serve.mjs",
+	"release.mjs",
+	"release-model.mjs"
+] as const;
 
 const definitions = [
 	{
@@ -101,6 +113,19 @@ const definitions = [
 		workflow: "node",
 		files: webNotesRoleFiles,
 		shared: ["README.md"]
+	},
+	{
+		revision: webDeploymentRevision,
+		pack: webDeploymentPack,
+		project: "deployment",
+		version: 1,
+		workflow: "separate-services",
+		files: webDeploymentRoleFiles,
+		extraRoleFiles: {
+			starter: ["frontend/env.template.js"],
+			solution: ["frontend/env.js", "frontend/styles.css"]
+		},
+		shared: ["README.md"]
 	}
 ] as const;
 const originalPortfolioRevision = "2c7a9fa89e052cd5cdc51987ebf837ae81e3557f";
@@ -137,7 +162,9 @@ export function webCourseResource(url: string) {
 					? webContactRevision
 					: resource.path.startsWith(`${webNotesPack}/`)
 						? webNotesRevision
-						: webMaintainedSourceRevision
+						: resource.path.startsWith(`${webDeploymentPack}/`)
+							? webDeploymentRevision
+							: webMaintainedSourceRevision
 			: resource.ref;
 	const definition = [...definitions, ...historicalDefinitions].find(
 		row =>
@@ -181,8 +208,12 @@ export function webImportFiles(url: string) {
 	const selected = webCourseResource(url);
 	if (!selected) return null;
 	const { resource, pack, role, definition } = selected;
+	const files =
+		"extraRoleFiles" in definition
+			? [...definition.files, ...definition.extraRoleFiles[role]]
+			: definition.files;
 	const imports = [
-		...definition.files.map(name => ({
+		...files.map(name => ({
 			name,
 			path: `${pack}/${role}/${name}`
 		})),

@@ -24,6 +24,25 @@ export function webBuildInstructions(starterUrl?: string) {
 			"The included file server runs the source directly. Read README.md for state contracts, fixture cases and completion checks."
 		];
 	}
+	if (selected.definition.workflow === "separate-services") {
+		const workspace = `${selected.pack}/${selected.role}`;
+		return [
+			"Save and download the ZIP with every nested file and any added exercise programs.",
+			`Use the complete Web-Development-Foundations checkout at ${selected.resource.ref} with Node.js 24. Copy the exported files into ${workspace}; retain the complete checkout's root manifest and lockfile.`,
+			"A selected-role ZIP alone lacks the root dependency lockfile. From the complete repository root, install existing dependencies with npm ci if they are missing.",
+			...(selected.role === "starter"
+				? [
+						`Copy ${workspace}/frontend/env.template.js to ${workspace}/frontend/env.js before startup. Complete digestBytes and assertInventory in release-model.mjs before artifact commands.`
+					]
+				: []),
+			"Run the API and front end in two separate terminals, both initially at the repository root:",
+			`npm run start --workspace ${workspace}/backend`,
+			`node ${workspace}/frontend/serve.mjs`,
+			"Open http://127.0.0.1:4173. The default API is http://127.0.0.1:4001; the ready records show actual loopback ports. This workspace edits source and does not run either native service.",
+			"README.md supplies matching shell-specific configuration commands, wrong-origin and unavailable-API cases, build/verify/restore commands and the retained-release rollback drill.",
+			"Stop only this exercise's owned processes. A front-end rollback retains the running API and uses a new restore target; it does not rebuild the retained artifact from edited source."
+		];
+	}
 	if (selected.definition.workflow === "node") {
 		const workspace = `${selected.pack}/${selected.role}`;
 		if (selected.definition.project === "notes-api") {
