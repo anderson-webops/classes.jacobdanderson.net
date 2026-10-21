@@ -3,7 +3,7 @@ import { Buffer } from "node:buffer";
 import { spawn, spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { once } from "node:events";
-import { appendFileSync } from "node:fs";
+import { appendFileSync, existsSync } from "node:fs";
 import { cp, lstat, mkdir, mkdtemp, readFile, rm, symlink, writeFile } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
@@ -276,7 +276,15 @@ async function main() {
 		assert.equal(rows.length, 10);
 		await mkdir(path.dirname(proofPath), { recursive: true });
 		scratch = await mkdtemp(path.join(path.dirname(proofPath), "deployment-exports-"));
-		browser = await puppeteer.launch({ executablePath: process.env.PUPPETEER_EXECUTABLE_PATH, headless: true, args: ["--no-sandbox"] });
+		const executablePath = [
+			process.env.PUPPETEER_EXECUTABLE_PATH,
+			puppeteer.executablePath(),
+			"/usr/bin/google-chrome",
+			"/usr/bin/chromium",
+			"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+		].find(candidate => typeof candidate === "string" && candidate && existsSync(candidate));
+		assert.ok(executablePath, "An existing Chrome installation is required");
+		browser = await puppeteer.launch({ executablePath, headless: true, args: ["--no-sandbox"] });
 		const browserProcess = browser.process();
 		log({ event: "start", kind: "browser", cwd: repository, command: browserProcess.spawnargs, pid: browserProcess.pid, timeoutMs: 300000 });
 		let closing;
