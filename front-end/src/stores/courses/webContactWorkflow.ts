@@ -9,6 +9,24 @@ import routes from "../../assets/course-guides/web-contact-routes.md?raw";
 import runtime from "../../assets/course-guides/web-contact-runtime.md?raw";
 import { webContactRoot } from "../../modules/webProjectResources";
 
+const staleResponseFixture = `(() => {
+  const realFetch = window.fetch.bind(window);
+  const pending = [];
+  window.fetch = (input, options) => {
+    if (String(input) !== "/api/contact") return realFetch(input, options);
+    if (pending.length === 2) return Promise.reject(new Error("Reload this two-call fixture."));
+    return new Promise(resolve => pending.push(resolve));
+  };
+  window.releaseContact = index => {
+    const release = pending[index];
+    if (!release) throw new Error("No pending response at this index.");
+    pending[index] = null;
+    release(new Response('{"ok":true,"delivery":"simulated"}', {
+      status: 202, headers: { "Content-Type": "application/json" }
+    }));
+  };
+})();`;
+
 export function applyWebContactWorkflow(course: RawCourse, courseId: string) {
 	if (courseId !== "web-development-foundations") return;
 	const module = course.modules.find(
@@ -59,20 +77,26 @@ export function applyWebContactWorkflow(course: RawCourse, courseId: string) {
 	);
 	update(
 		module.supplementalProjects[0],
-		"Choice: Trace HTTP Failure and Recovery",
-		"Continue the saved contact project after completing its core validator. Use the reading's local request cases to distinguish malformed JSON, wrong media type, excessive body size and the seventh quick POST. For each, predict status, safe body and whether delivery runs before sending the request. Restart with fail and timeout scenarios, compare health with delivery, then restore ok and demonstrate recovery. Inspect logs for event/status/outcome only. The core reference demonstrates the supplied HTTP behavior; this investigation adds an evidence table, not real email delivery.\n\n**Checkpoints:** Preserve each prediction, observed response, recovery result and the distinction between service availability and simulated delivery.",
+		"Choice: Write a Local API Probe",
+		"Continue the completed contact project. Add probe.mjs to the saved workspace and write a repeatable Node.js 24 check using built-in fetch and node:assert/strict. Use only the owned loopback host and port from this service's ready record, with CONTACT_SCENARIO=ok. Check GET /health, a valid fictional POST returning the exact 202 body, a wrong-field POST returning 400 invalid_contact, and an unknown API path returning JSON 404. The request example and response shapes are in the reading. Use assert.equal for status and assert.deepEqual for parsed JSON; fetch resolving does not establish success. Bound each request with AbortSignal.timeout(2000). Print only case labels and pass/fail; a failed case must set process.exitCode=1. Export probe.mjs with the project, copy it into the matching role directory alongside src/ and public/, and run node probe.mjs there while the service is running. Start with a fresh service budget or wait ten seconds between runs. Stop the owned service and confirm a failed probe exits unsuccessfully, then restart and show recovery. No separate reference implementation is provided for the probe; the core reference supplies the API it checks.\n\n**Checkpoints:** Retain the added script, successful run, failed run and exit codes from the exported project.",
 		"choice"
 	);
 	update(
 		module.supplementalProjects[1],
 		"Choice: Extend One Contact Topic",
-		"Continue the same saved project. Add one fictional topic to the documented contract, browser select and validator together. Create independent valid and invalid request cases, including the new topic sent directly without the form. Retain the original project and lesson values, field limits, unknown-key rejection and stable error shape. Verify that changing only the select does not change the server contract. Save, reopen and export the added work, then run that export in the maintained checkout. The supplied core reference does not implement this extra topic.\n\n**Checkpoints:** Keep the revised contract, source diff, original-case results and new direct-request evidence.",
+		"Continue the same saved project. Add one fictional topic to the documented contract, browser select and validator together. Create independent valid and invalid request cases, including the new topic sent directly without the form. Retain the original project and lesson values, field limits, unknown-key rejection and stable error shape. Verify that changing only the select does not change the server contract. Save, reopen and export the added work, then run that export in the maintained checkout. The core reference does not include this extra topic.\n\n**Checkpoints:** Keep the revised contract, source diff, original-case results and new direct-request evidence.",
 		"choice"
 	);
 	update(
 		module.supplementalProjects[2],
-		"Challenge: Reset During a Pending Request",
-		"Continue the saved contact project with fictional input. Start the local timeout scenario, submit once, then use Reset while the request is pending. Record the fresh form and status before the older response could arrive. Explain the separate jobs of AbortController, the generation counter and the pending-submission guard in public/app.js. Compare this result with a submission to a stopped service, then restore ok and confirm a fresh request succeeds. Preserve the bounded deadlines and safe error text. The core reference supplies the reset behavior; it does not supply this investigation's recorded trace.\n\n**Checkpoints:** Retain the action order, status timeline, observed network outcome and recovery result without contact text in logs.",
+		"Challenge: A Response That Ignores Cancellation",
+		[
+			"Continue the saved contact project. Add public/stale-response.js containing the fixture below. In public/index.html load it with `<script src='/stale-response.js'></script>` immediately before the app.js module. It intercepts two contact submissions and deliberately ignores AbortSignal, allowing response order to be controlled. It does not model server delivery or transport deadlines.",
+			`\`\`\`js\n${staleResponseFixture}\n\`\`\``,
+			"Submit valid fictional input, use Reset, fill a new valid form and submit again. In the browser console run window.releaseContact(0). The fresh form must remain Submitting with its submit button disabled. Run window.releaseContact(1); only that current response may show success and release the button. Reload between experiments to reset the two-call fixture.",
+			"Temporarily remove only the `if (current !== generation) return;` check immediately before the 202 response branch in public/app.js. Reload and repeat the action order. Predict and observe how the old response replaces the fresh pending status even though Reset aborted its controller. Restore the check and demonstrate the protected result. Explain the different responsibilities of cancellation, generation identity and the pending guard. Remove the fixture script tag and restore ordinary HTTP behavior before final export. The core reference does not include this extra fixture.",
+			"**Checkpoints:** Save the fixture, action order, predicted and observed status timeline, and restored source. Confirm that the ordinary local service still succeeds after removing the fixture."
+		].join("\n\n"),
 		"challenge"
 	);
 }

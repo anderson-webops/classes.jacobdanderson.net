@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { strFromU8, unzipSync } from "fflate";
+import { JSDOM } from "jsdom";
 import { createPinia, setActivePinia } from "pinia";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { createProjectArchive } from "@/modules/projectArchive";
@@ -34,6 +35,107 @@ afterEach(async () => {
 });
 
 describe("contact API course workspace", () => {
+	it.each([true, false])(
+		"executes the documented cancellation fixture with generation protection=%s",
+		async protectedResponse => {
+			setActivePinia(createPinia());
+			const course = (await useCoursesStore().loadCourseById(
+				"web-development-foundations"
+			))!;
+			const challenge = course.modules.find(row => row.id === moduleId)!
+				.supplementalProjects[2];
+			const fixtureCode = challenge.content.match(
+				/```js\n([\s\S]*?)\n```/
+			)![1];
+			const role = `${fixture.pack}/solution/`;
+			const dom = new JSDOM(
+				fixture.files[role + "public/index.html"].content,
+				{ url: "http://127.0.0.1:3002", runScripts: "outside-only" }
+			);
+			const { window } = dom;
+			const realFetch = vi.fn(
+				async () => new Response("unexpected request", { status: 404 })
+			);
+			Object.assign(window, { fetch: realFetch, Response });
+			try {
+				window.eval(fixtureCode);
+				let client = fixture.files[role + "public/app.js"].content;
+				const marker =
+					"        if (current !== generation) return;\n        if (response.status === 202";
+				expect(client.split(marker)).toHaveLength(2);
+				if (!protectedResponse)
+					client = client.replace(
+						marker,
+						"        if (response.status === 202"
+					);
+				window.eval(client);
+				const form = window.document.querySelector("form")!;
+				const fill = (name: string) => {
+					for (const [key, value] of Object.entries({
+						name,
+						replyTo: "reader@example.invalid",
+						topic: "project",
+						message: "A fictional request."
+					})) {
+						(
+							form.elements.namedItem(key) as HTMLInputElement
+						).value = value;
+					}
+				};
+				fill("Older Reader");
+				form.dispatchEvent(
+					new window.Event("submit", { cancelable: true })
+				);
+				form.reset();
+				fill("Current Reader");
+				form.dispatchEvent(
+					new window.Event("submit", { cancelable: true })
+				);
+				const release = (
+					window as unknown as {
+						releaseContact: (index: number) => void;
+					}
+				).releaseContact;
+				release(0);
+				for (let step = 0; step < 4; step++)
+					await new Promise(resolve => setTimeout(resolve, 0));
+				const status = window.document.querySelector("#status")!;
+				await vi.waitFor(() =>
+					expect(status.textContent).toBe(
+						protectedResponse
+							? "Submitting..."
+							: "Recorded locally. No email was sent."
+					)
+				);
+				expect(
+					(
+						window.document.querySelector(
+							'[type="submit"]'
+						) as HTMLButtonElement
+					).disabled
+				).toBe(true);
+				release(1);
+				await vi.waitFor(() =>
+					expect(status.textContent).toBe(
+						"Recorded locally. No email was sent."
+					)
+				);
+				await vi.waitFor(() =>
+					expect(
+						(
+							window.document.querySelector(
+								'[type="submit"]'
+							) as HTMLButtonElement
+						).disabled
+					).toBe(false)
+				);
+				expect(realFetch).not.toHaveBeenCalled();
+			} finally {
+				window.close();
+			}
+		}
+	);
+
 	it("retains the five published activities, complete readings and staff-only core reference", async () => {
 		setActivePinia(createPinia());
 		const app = useAppStore();
