@@ -239,6 +239,7 @@ export function createIdeDiagnostics(
 		runtime: {
 			engine:
 				mode === "web" ||
+				mode === "swift" ||
 				mode === "rust" ||
 				mode === "linux" ||
 				mode === "assembly" ||
@@ -251,6 +252,7 @@ export function createIdeDiagnostics(
 			version:
 				java ||
 				mode === "web" ||
+				mode === "swift" ||
 				mode === "rust" ||
 				mode === "linux" ||
 				mode === "assembly" ||
@@ -261,6 +263,7 @@ export function createIdeDiagnostics(
 			pythonVersion:
 				java ||
 				mode === "web" ||
+				mode === "swift" ||
 				mode === "rust" ||
 				mode === "linux" ||
 				mode === "assembly" ||
