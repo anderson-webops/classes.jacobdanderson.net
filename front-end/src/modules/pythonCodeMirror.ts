@@ -1060,7 +1060,7 @@ export function pythonRuntimeDiagnosticForLine(
 	const line = state.doc.line(Math.min(lineNumber, state.doc.lines));
 	return {
 		from: line.from,
-		to: Math.max(line.from + 1, line.to),
+		to: Math.min(state.doc.length, Math.max(line.from + 1, line.to)),
 		severity: "error",
 		source: pythonRuntimeErrorSource,
 		message

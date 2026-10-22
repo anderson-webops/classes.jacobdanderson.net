@@ -183,20 +183,18 @@ describe("python IDE CodeMirror editor", () => {
 		);
 		expect(routeSource).not.toContain("new EditorView");
 		expect(routeSource).not.toContain("loadPythonIdeRuntime");
-		expect(legacyRouteSource).toContain("defineAsyncComponent");
-		expect(legacyRouteSource).toContain(
-			'() => import("@/components/AccountCodeIdeWorkspace.vue")'
-		);
+		expect(legacyRouteSource).not.toContain("defineAsyncComponent");
+		expect(legacyRouteSource).not.toContain("AccountCodeIdeWorkspace.vue");
 		expect(legacyRouteSource).toContain('path: "/ide"');
-		expect(legacyRouteSource).toContain("<CodeIdeWorkspace />");
+		expect(legacyRouteSource).not.toContain("<CodeIdeWorkspace />");
 		expect(legacyRouteSource).not.toContain("new EditorView");
 		expect(legacyRouteSource).not.toContain("loadPythonIdeRuntime");
-		expect(blueJLegacyRouteSource).toContain("defineAsyncComponent");
+		expect(blueJLegacyRouteSource).not.toContain("defineAsyncComponent");
 		expect(blueJLegacyRouteSource).toContain('path: "/ide"');
 		expect(blueJLegacyRouteSource).toContain(
 			'mode: route.query.mode ?? "bluej"'
 		);
-		expect(blueJLegacyRouteSource).toContain("<CodeIdeWorkspace />");
+		expect(blueJLegacyRouteSource).not.toContain("<CodeIdeWorkspace />");
 		expect(workspaceSource).not.toContain('route.path === "/bluej"');
 		expect(workspaceSource).toContain(
 			'<WorkspaceHeader title="Code workspace">'
@@ -2449,5 +2447,22 @@ describe("python IDE CodeMirror editor", () => {
 		expect(
 			pythonRuntimeDiagnosticForLine(state, 0, "Invalid line")
 		).toBeNull();
+		const emptyState = EditorState.create({ doc: "" });
+		const emptyDiagnostic = pythonRuntimeDiagnosticForLine(
+			emptyState,
+			1,
+			"Empty file"
+		);
+		expect(emptyDiagnostic).toMatchObject({ from: 0, to: 0 });
+		if (emptyDiagnostic) {
+			expect(() =>
+				emptyState.update({
+					selection: {
+						anchor: emptyDiagnostic.from,
+						head: emptyDiagnostic.to
+					}
+				})
+			).not.toThrow();
+		}
 	});
 });
