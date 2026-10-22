@@ -4,6 +4,83 @@ import { useCoursesStore } from "@/stores/courses";
 import { courseCatalog } from "@/stores/courses/index";
 
 describe("saved course progress identities", () => {
+	it("recognizes section IDs from the generic-title era", async () => {
+		setActivePinia(createPinia());
+		const store = useCoursesStore();
+		const scratchModules = [
+			["scratch-level-1", "scratch-level-1-gs14-mini-game-polish-studio"],
+			[
+				"scratch-level-1",
+				"scratch-level-1-gs15-interactive-story-studio"
+			],
+			[
+				"scratch-level-1",
+				"scratch-level-1-gs16-debugging-and-remix-studio"
+			],
+			[
+				"scratch-level-1",
+				"scratch-level-1-gs17-text-based-programming-bridge"
+			],
+			["scratch-level-2", "scratch-level-2-gm12-arcade-systems-studio"],
+			[
+				"scratch-level-2",
+				"scratch-level-2-gm13-simulation-and-data-studio"
+			],
+			[
+				"scratch-level-2",
+				"scratch-level-2-gm14-code-organization-and-debugging-studio"
+			],
+			[
+				"scratch-level-2",
+				"scratch-level-2-gm15-text-based-programming-bridge"
+			]
+		] as const;
+
+		for (const [courseId, oldModuleId] of scratchModules) {
+			const course = await store.loadCourseById(courseId);
+			const module = course?.modules.find(
+				entry => entry.id === oldModuleId
+			);
+			expect(module, oldModuleId).toBeDefined();
+			const itemAliases = [
+				...(module?.curriculum ?? []),
+				...(module?.supplementalProjects ?? [])
+			].flatMap(item => item.aliases ?? []);
+			for (const oldId of [
+				`${oldModuleId}-curriculum-core-concepts`,
+				`${oldModuleId}-curriculum-build-requirements`,
+				`${oldModuleId}-supplemental-common-bug-patterns`
+			]) {
+				expect(itemAliases, oldId).toContain(oldId);
+			}
+		}
+
+		const dataScienceModules = [
+			"data-science-in-python-dsp10-applied-studio-csv-summaries-and-sanity-checks",
+			"data-science-in-python-dsp11-applied-studio-cleaning-missing-and-invalid-rows",
+			"data-science-in-python-dsp12-applied-studio-grouped-summaries-by-category",
+			"data-science-in-python-dsp13-applied-studio-visualization-choice-and-chart-integrity",
+			"data-science-in-python-dsp14-applied-studio-reproducible-mini-reports",
+			"data-science-in-python-dsp15-applied-studio-lightweight-dashboards-and-filters",
+			"data-science-in-python-dsp16-applied-studio-capstone-data-story-readiness"
+		];
+		const dataScienceCourse = await store.loadCourseById(
+			"data-science-in-python"
+		);
+		for (const oldModuleId of dataScienceModules) {
+			const module = dataScienceCourse?.modules.find(
+				entry => entry.id === oldModuleId
+			);
+			expect(module, oldModuleId).toBeDefined();
+			expect(module?.curriculum[0].aliases).toContain(
+				`${oldModuleId}-curriculum-concept-path`
+			);
+			expect(module?.curriculum[1].aliases).toContain(
+				`${oldModuleId}-curriculum-worked-example`
+			);
+		}
+	});
+
 	it("recognizes IDs from legacy-branded project titles", async () => {
 		setActivePinia(createPinia());
 		const store = useCoursesStore();

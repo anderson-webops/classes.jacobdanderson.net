@@ -268,6 +268,7 @@ function applyDataScienceAppliedLabs(course: RawCourse) {
 		module.curriculum = [
 			{
 				title: `${dataScienceAppliedTopic(lab)} Concepts`,
+				aliases: ["Concept Path"],
 				content: dataScienceStudioContent(
 					lab,
 					"Concept Path",
@@ -280,6 +281,7 @@ function applyDataScienceAppliedLabs(course: RawCourse) {
 			},
 			{
 				title: `${dataScienceAppliedTopic(lab)} Worked Example`,
+				aliases: ["Worked Example"],
 				content: dataScienceStudioContent(
 					lab,
 					"Worked Example",

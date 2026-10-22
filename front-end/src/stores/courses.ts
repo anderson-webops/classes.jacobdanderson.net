@@ -584,6 +584,11 @@ function normalizeCourse(
 								`${generatedModuleId}-${prefix}`,
 								item.stableAliases
 							),
+							...legacyTitleIds(
+								courseId,
+								`${moduleId}-${prefix}`,
+								item.stableAliases
+							),
 							...legacyModuleIds.flatMap(moduleHistoryId =>
 								legacyItemTitles.map(title =>
 									slugify(

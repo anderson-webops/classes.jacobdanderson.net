@@ -1411,16 +1411,21 @@ function groupConceptLessons(
 		const title = conceptGroupTitle(course, module, label);
 		const aliases = [
 			...new Set(
-				(module.aliases ?? [])
-					.filter(alias => /\s/.test(alias))
-					.map(alias =>
-						conceptGroupTitle(
-							course,
-							{ ...module, title: alias },
-							label
-						)
-					)
-					.filter(alias => alias !== title)
+				[
+					...(module.aliases ?? [])
+						.filter(alias => /\s/.test(alias))
+						.map(alias =>
+							conceptGroupTitle(
+								course,
+								{ ...module, title: alias },
+								label
+							)
+						),
+					...lessons.flatMap(lesson => [
+						...(lesson.id ? [lesson.id] : []),
+						...(lesson.aliases ?? [])
+					])
+				].filter(alias => alias !== title)
 			)
 		];
 		return {
