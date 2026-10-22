@@ -1272,6 +1272,32 @@ jobs:
                   name: swift-welcome-workflows
                   path: output/swift-welcome-workflows
 
+            - name: Wait for the hosted Mac to settle within the native load limit
+              run: |
+                  python3 - <<'PY'
+                  import datetime
+                  import json
+                  import os
+                  from pathlib import Path
+                  import time
+
+                  proof = Path("output/swift-welcome-ios/runner-readiness.json")
+                  proof.parent.mkdir(parents=True, exist_ok=True)
+                  samples = []
+                  deadline = time.monotonic() + 300
+                  while True:
+                      load = os.getloadavg()[0]
+                      samples.append({"at": datetime.datetime.now(datetime.timezone.utc).isoformat(), "load": load})
+                      ready = load <= 8
+                      proof.write_text(json.dumps({"ready": ready, "maximumLoad": 8, "samples": samples}, indent=2) + "\n")
+                      print(f"Hosted Mac load: {load:.2f}; required maximum: 8", flush=True)
+                      if ready:
+                          break
+                      if time.monotonic() >= deadline:
+                          raise SystemExit("Hosted Mac did not settle within five minutes; native checks have not run")
+                      time.sleep(10)
+                  PY
+
             - name: Compile downloaded Swift ZIPs and test both source roles on two iPhone sizes
               run: node scripts/classes-family-heavy-task.mjs -- python3 test/swift-welcome-exported-ios.py --browser output/swift-welcome-workflows/swift-welcome-browser --proof output/swift-welcome-ios/proof.json
 
@@ -1281,6 +1307,7 @@ jobs:
               with:
                   name: swift-welcome-ios
                   path: |
+                      output/swift-welcome-ios/runner-readiness.json
                       output/swift-welcome-ios/proof.json
                       output/swift-welcome-ios/processes.jsonl
                       output/swift-welcome-ios/logs/
