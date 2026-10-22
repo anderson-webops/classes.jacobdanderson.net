@@ -1087,6 +1087,12 @@ describe("course text quality normalization", () => {
 			const dataScienceText = dataScienceCourse
 				? allCourseText(dataScienceCourse)
 				: "";
+			const elementaryScienceCourse = loadedCourses.find(
+				({ entry }) => entry.id === "elementary-science"
+			)?.course;
+			const elementaryScienceText = elementaryScienceCourse
+				? allCourseText(elementaryScienceCourse)
+				: "";
 
 			expect(badTitles).toEqual([]);
 			expect(corpus).toContain(
@@ -1097,6 +1103,12 @@ describe("course text quality normalization", () => {
 			expect(corpus).toContain("Median and Mode Practice");
 			expect(dataScienceText).not.toContain(
 				"equipment-free investigation writeup"
+			);
+			expect(dataScienceText).toContain(
+				"a notebook or script that turns a defined dataset"
+			);
+			expect(elementaryScienceText).not.toContain(
+				"a notebook or script that turns a defined dataset"
 			);
 		},
 		COURSE_SWEEP_TIMEOUT

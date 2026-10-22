@@ -7259,7 +7259,7 @@ function studioArtifact(context: CourseTextContext) {
 	if (/algorithm|data structures|cpp/.test(source)) {
 		return "a tested data-structure or algorithm implementation with visible before/after behavior";
 	}
-	if (/data science|machine learning|ai/.test(source)) {
+	if (/data science|machine learning|\bai\b/.test(source)) {
 		return "a notebook or script that turns a defined dataset or state space into measured, interpreted output";
 	}
 	if (
