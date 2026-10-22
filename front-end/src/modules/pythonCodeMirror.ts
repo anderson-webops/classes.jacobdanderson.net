@@ -137,6 +137,7 @@ const pythonTurtleShapeStringCompletionValidForRegex = /^[A-Z_]*$/i;
 const pythonTurtleColorStringCompletionValidForRegex = /^[A-Z_ ]*$/i;
 const karelColorStringCompletionValidForRegex = /^[A-Z_ ]*$/i;
 const pythonIdentifierRegex = /^[A-Z_]\w*$/i;
+const completionLineLimit = 1024;
 const closingBrackets = new Set(Object.values(openingBracketToClosingBracket));
 const pythonCompletionBlockedNodeNames = new Set([
 	"BlockComment",
@@ -166,18 +167,11 @@ const pgzeroAssetStringCompletionPatterns: Array<{
 ];
 const turtleShapeStringCompletionPattern =
 	/\b(?:shape|[A-Z_]\w*\.shape)\s*\(\s*["']([^"'\n]*)$/i;
-const turtleColorStringCompletionPattern = new RegExp(
-	String.raw`\b(?:bgcolor|pencolor|fillcolor|color|dot|` +
-		String.raw`[A-Z_]\w*\.(?:bgcolor|pencolor|fillcolor|color|dot))` +
-		String.raw`\s*\((?:[^"'\n]|["'][^"'\n]*["'])*["']([^"'\n]*)$`,
-	"i"
-);
-const karelColorStringCompletionPattern = new RegExp(
-	String.raw`\b(?:[A-Z_]\w*\.)?` +
-		String.raw`(?:paint|paintCorner|colorIs|colorIsNot|` +
-		String.raw`cornerColorIs|cornerColorIsNot)\s*\(\s*["']([^"'\n]*)$`,
-	"i"
-);
+const turtleColorCallPattern =
+	/\b(?:[A-Z_]\w*\.)?(?:bgcolor|pencolor|fillcolor|color|dot)\s*\(/gi;
+const karelColorCallPattern =
+	/\b(?:[A-Z_]\w*\.)?(?:paint|paintCorner|colorIs|colorIsNot|cornerColorIs|cornerColorIsNot)\s*\(\s*$/i;
+const colorStringPrefixPattern = /["']([^"']*)$/;
 const turtleShapeCompletions = [
 	"classic",
 	"arrow",
@@ -1502,6 +1496,13 @@ export function pythonIdeCompletionSource(
 	assetCompletions?: PythonCodeMirrorAssetCompletionProvider
 ) {
 	return (context: PythonIdeCompletionContext) => {
+		if (
+			context.pos - context.state.doc.lineAt(context.pos).from >
+			completionLineLimit
+		) {
+			return null;
+		}
+
 		const stringCompletion = pythonIdeStringCompletionContext(
 			context.state,
 			context.pos,
@@ -2643,6 +2644,13 @@ export function javaIdeCompletionsForMode(
 
 function javaIdeCompletionSource(mode: PythonIdeMode = "java") {
 	return (context: PythonIdeCompletionContext) => {
+		if (
+			context.pos - context.state.doc.lineAt(context.pos).from >
+			completionLineLimit
+		) {
+			return null;
+		}
+
 		const stringCompletion = javaIdeStringCompletionContext(
 			context.state,
 			context.pos,
@@ -2729,10 +2737,10 @@ function javaIdeStringCompletionContext(
 
 	const line = state.doc.lineAt(position);
 	const lineBeforeCursor = line.text.slice(0, position - line.from);
-	const colorMatch = lineBeforeCursor.match(
-		karelColorStringCompletionPattern
-	);
+	const colorMatch = lineBeforeCursor.match(colorStringPrefixPattern);
 	if (!colorMatch) return null;
+	const callPrefix = lineBeforeCursor.slice(0, -colorMatch[0].length);
+	if (!karelColorCallPattern.test(callPrefix)) return null;
 
 	const partial = colorMatch[1] ?? "";
 	return {
@@ -2747,9 +2755,12 @@ function javaDeclaredReceiverCompletions(
 	mode: PythonIdeMode,
 	receiver: string
 ) {
-	if (!isJavaCodeMirrorMode(mode) || !javaIdentifierRegex.test(receiver))
+	if (!isJavaCodeMirrorMode(mode) || !javaIdentifierRegex.test(receiver)) {
 		return null;
+	}
 	const escapedReceiver = escapeRegExpText(receiver);
+	const genericDeclarationSuffix = String.raw`(?:[ \t]*<[^;>{}\n]+>[ \t]+|[ \t]+)`;
+	const arrayDeclarationSuffix = String.raw`(?:[ \t]*<[^;>{}\n]+>[ \t]*|[ \t]*)\[[ \t]*\][ \t]+`;
 	const randomDeclarationPattern = new RegExp(
 		`\\b(?:java\\.util\\.)?Random\\s+${escapedReceiver}\\b`
 	);
@@ -2760,29 +2771,29 @@ function javaDeclaredReceiverCompletions(
 		`\\bString\\s+${escapedReceiver}\\b`
 	);
 	const arrayDeclarationPattern = new RegExp(
-		`\\b[A-Z_]\\w*(?:\\s*<[^;>{}]+>)?\\s*\\[\\s*\\]\\s+${escapedReceiver}\\b`,
+		`\\b[A-Z_]\\w*${arrayDeclarationSuffix}${escapedReceiver}\\b`,
 		"i"
 	);
 	const listDeclarationPattern = new RegExp(
-		`\\b(?:java\\.util\\.)?(?:ArrayList|List|LinkedList)\\s*(?:<[^;>{}]+>)?\\s+${escapedReceiver}\\b`
+		`\\b(?:java\\.util\\.)?(?:ArrayList|List|LinkedList)${genericDeclarationSuffix}${escapedReceiver}\\b`
 	);
 	const setDeclarationPattern = new RegExp(
-		`\\b(?:java\\.util\\.)?(?:HashSet|TreeSet|Set)\\s*(?:<[^;>{}]+>)?\\s+${escapedReceiver}\\b`
+		`\\b(?:java\\.util\\.)?(?:HashSet|TreeSet|Set)${genericDeclarationSuffix}${escapedReceiver}\\b`
 	);
 	const queueDeclarationPattern = new RegExp(
-		`\\b(?:java\\.util\\.)?(?:PriorityQueue|Queue)\\s*(?:<[^;>{}]+>)?\\s+${escapedReceiver}\\b`
+		`\\b(?:java\\.util\\.)?(?:PriorityQueue|Queue)${genericDeclarationSuffix}${escapedReceiver}\\b`
 	);
 	const mapDeclarationPattern = new RegExp(
-		`\\b(?:java\\.util\\.)?(?:HashMap|TreeMap|Map)\\s*(?:<[^;>{}]+>)?\\s+${escapedReceiver}\\b`
+		`\\b(?:java\\.util\\.)?(?:HashMap|TreeMap|Map)${genericDeclarationSuffix}${escapedReceiver}\\b`
 	);
 	const mapEntryDeclarationPattern = new RegExp(
-		`\\b(?:java\\.util\\.)?Map\\.Entry\\s*(?:<[^;>{}]+>)?\\s+${escapedReceiver}\\b`
+		`\\b(?:java\\.util\\.)?Map\\.Entry${genericDeclarationSuffix}${escapedReceiver}\\b`
 	);
 	const optionalDeclarationPattern = new RegExp(
-		`\\b(?:java\\.util\\.)?Optional\\s*(?:<[^;>{}]+>)?\\s+${escapedReceiver}\\b`
+		`\\b(?:java\\.util\\.)?Optional${genericDeclarationSuffix}${escapedReceiver}\\b`
 	);
 	const streamDeclarationPattern = new RegExp(
-		`\\b(?:java\\.util\\.stream\\.)?Stream\\s*(?:<[^;>{}]+>)?\\s+${escapedReceiver}\\b`
+		`\\b(?:java\\.util\\.stream\\.)?Stream${genericDeclarationSuffix}${escapedReceiver}\\b`
 	);
 	const doc = state.doc.toString();
 	if (randomDeclarationPattern.test(doc)) return javaRandomMemberCompletions;
@@ -2850,16 +2861,58 @@ function pythonIdeStringCompletionContext(
 		};
 	}
 
-	const colorMatch = lineBeforeCursor.match(
-		turtleColorStringCompletionPattern
-	);
+	const colorMatch = lineBeforeCursor.match(colorStringPrefixPattern);
 	if (!colorMatch) return null;
+	const callPrefix = lineBeforeCursor.slice(0, -colorMatch[0].length);
+	const calls = [...callPrefix.matchAll(turtleColorCallPattern)];
+	const lastCall = calls.at(-1);
+	if (!lastCall || lastCall.index === undefined) return null;
+	const priorArguments = callPrefix.slice(
+		lastCall.index + lastCall[0].length
+	);
+	if (!isTurtleColorArgumentPrefix(priorArguments)) return null;
 	const partial = colorMatch[1] ?? "";
 	return {
 		from: position - partial.length,
 		options: turtleColorCompletions,
 		validFor: pythonTurtleColorStringCompletionValidForRegex
 	};
+}
+
+function isTurtleColorArgumentPrefix(argumentsBeforeColor: string) {
+	let depth = 0;
+	let quote: '"' | "'" | null = null;
+	let commaIndex = -1;
+	for (let index = 0; index < argumentsBeforeColor.length; index++) {
+		const character = argumentsBeforeColor[index];
+		if (quote) {
+			if (character === "\\") {
+				index++;
+			} else if (character === quote) {
+				quote = null;
+			}
+			continue;
+		}
+		if (character === '"' || character === "'") {
+			quote = character;
+			continue;
+		}
+		if (character === "(") {
+			depth++;
+		} else if (character === ")") {
+			if (depth === 0) return false;
+			depth--;
+		} else if (character === "," && depth === 0) {
+			if (commaIndex !== -1) return false;
+			commaIndex = index;
+		}
+	}
+	if (quote || depth !== 0) return false;
+	if (commaIndex === -1) return argumentsBeforeColor.trim() === "";
+	return (
+		argumentsBeforeColor.slice(0, commaIndex).trim().length > 0 &&
+		argumentsBeforeColor.slice(commaIndex + 1).trim() === ""
+	);
 }
 
 function assetCompletionOptions(

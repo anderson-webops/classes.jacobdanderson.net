@@ -2144,6 +2144,11 @@ describe("python IDE CodeMirror editor", () => {
 				doc: 't.dot(24, "dark o',
 				from: 't.dot(24, "'.length,
 				labels: ["dark olive green", "dark orange"]
+			},
+			{
+				doc: 't.dot(abs(24), "dark o',
+				from: 't.dot(abs(24), "'.length,
+				labels: ["dark olive green", "dark orange"]
 			}
 		];
 
@@ -2163,6 +2168,48 @@ describe("python IDE CodeMirror editor", () => {
 			);
 			expect(result?.validFor.test(doc.slice(from))).toBe(true);
 		}
+	});
+
+	it("bounds completion work on adversarially long editor lines", () => {
+		const longPrefix = '"x",'.repeat(4000);
+		const turtleDoc = `${longPrefix}t.color("red", "`;
+		const turtleState = EditorState.create({ doc: turtleDoc });
+		expect(
+			pythonIdeCompletionSource("turtle")({
+				explicit: true,
+				pos: turtleDoc.length,
+				state: turtleState,
+				matchBefore: expression =>
+					completionMatchBefore(
+						turtleDoc,
+						turtleDoc.length,
+						expression
+					)
+			})
+		).toBeNull();
+		expect(
+			autocompleteLabelsForDoc("karel", `${longPrefix}paintCorner("`)
+		).not.toContain("purple");
+		expect(
+			autocompleteLabelsForDoc("java", `${longPrefix}names.`)
+		).not.toContain("put");
+	});
+
+	it("keeps Java type-aware completions in large projects", () => {
+		const doc = [
+			"ArrayList<String> names = new ArrayList<>();",
+			"//" + "a".repeat(9000),
+			"names."
+		].join("\n");
+		const labels = autocompleteLabelsForDoc("java", doc);
+		expect(labels).toContain("add");
+		expect(labels).not.toContain("put");
+	});
+
+	it("handles near-limit adversarial Java declarations without backtracking", () => {
+		const doc = `Foo ${" ".repeat(3000)}<${" ".repeat(10)}\nitem.`;
+		const labels = autocompleteLabelsForDoc("java", doc);
+		expect(labels).toContain("equals");
 	});
 
 	it("bounds custom bracket-pair colorization to the visible editor range", () => {
