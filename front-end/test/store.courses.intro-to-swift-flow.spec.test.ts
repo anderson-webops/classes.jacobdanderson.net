@@ -1,6 +1,8 @@
 import fs from "node:fs";
 import path from "node:path";
+import { createPinia, setActivePinia } from "pinia";
 import { describe, expect, it } from "vitest";
+import { useCoursesStore } from "@/stores/courses";
 import { loadRawCourse } from "@/stores/courses/index";
 import { introToSwiftAppDevelopmentCourse } from "@/stores/courses/intro-to-swift-app-development";
 
@@ -377,6 +379,47 @@ describe("Intro to Swift App Development learner flow", () => {
 		);
 		expect(JSON.stringify(loaded)).toContain(
 			"/course-assets/swift/intro-swift-verification-guide.md#"
+		);
+	});
+
+	it("recognizes saved IDs from the original module and lesson titles", async () => {
+		setActivePinia(createPinia());
+		const course = await useCoursesStore().loadCourseById(
+			"intro-to-swift-app-development"
+		);
+		const module = course?.modules.find(
+			candidate => candidate.title === "SW1 Mac Setup and First Launch"
+		);
+		expect(module?.aliases).toContain(
+			"intro-to-swift-app-development-sad2-mac-setup-and-project-tooling"
+		);
+		expect(
+			module?.curriculum.find(
+				item =>
+					item.title === "Machine Requirements and Platform Reality"
+			)?.aliases
+		).toContain(
+			"intro-to-swift-app-development-sad2-mac-setup-and-project-tooling-curriculum-machine-requirements-and-platform-reality"
+		);
+		expect(
+			module?.supplementalProjects.find(item =>
+				item.title.includes("Readiness Check")
+			)?.aliases
+		).toContain(
+			"intro-to-swift-app-development-sad2-mac-setup-and-project-tooling-supplemental-diagnostic-checkpoint"
+		);
+		const publishingModule = course?.modules.find(
+			candidate =>
+				candidate.title ===
+				"SW16 Apple Development and Distribution Map"
+		);
+		expect(
+			publishingModule?.supplementalProjects.find(
+				item =>
+					item.title === "Distribution Pipeline Reference Walkthrough"
+			)?.aliases
+		).toContain(
+			"intro-to-swift-app-development-sad1-apple-developer-ecosystem-overview-supplemental-mod5pro3"
 		);
 	});
 

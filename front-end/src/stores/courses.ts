@@ -130,6 +130,17 @@ function courseEntityAliases(
 		.filter(alias => alias && alias !== normalizedExplicitId);
 }
 
+function legacyTitleIds(
+	courseId: string,
+	scopeId: string,
+	titles: string[] | undefined
+) {
+	return (titles ?? [])
+		.map(title => slugify(title))
+		.filter(title => title && !title.startsWith(`${courseId}-`))
+		.map(title => `${scopeId}-${title}`);
+}
+
 const HIDDEN_ITEM_TITLES = new Set([
 	"session recap & assignment",
 	"recap & assignment review"
@@ -431,11 +442,21 @@ function normalizeCourse(
 		modules: course.modules.map(module => {
 			const generatedModuleId = slugify(`${courseId}-${module.title}`);
 			const moduleId = courseEntityId(module.id, generatedModuleId);
-			const moduleAliases = courseEntityAliases(
-				module.id,
-				generatedModuleId,
+			const legacyModuleIds = legacyTitleIds(
+				courseId,
+				courseId,
 				module.aliases
 			);
+			const moduleAliases = [
+				...new Set([
+					...courseEntityAliases(
+						module.id,
+						generatedModuleId,
+						module.aliases
+					),
+					...legacyModuleIds
+				])
+			].filter(alias => alias !== moduleId);
 
 			const mapItems = (
 				items: typeof module.curriculum,
@@ -545,11 +566,33 @@ function normalizeCourse(
 						item.stableId,
 						generatedItemId
 					);
-					const itemAliases = courseEntityAliases(
-						item.stableId,
-						generatedItemId,
-						item.stableAliases
-					);
+					const legacyItemTitles = [
+						item.title,
+						...(item.stableAliases ?? []).filter(
+							alias => !slugify(alias).startsWith(`${courseId}-`)
+						)
+					];
+					const itemAliases = [
+						...new Set([
+							...courseEntityAliases(
+								item.stableId,
+								generatedItemId,
+								item.stableAliases
+							),
+							...legacyTitleIds(
+								courseId,
+								`${generatedModuleId}-${prefix}`,
+								item.stableAliases
+							),
+							...legacyModuleIds.flatMap(moduleHistoryId =>
+								legacyItemTitles.map(title =>
+									slugify(
+										`${moduleHistoryId}-${prefix}-${title}`
+									)
+								)
+							)
+						])
+					].filter(alias => alias !== itemId);
 					const {
 						stableAliases: _stableAliases,
 						stableId: _stableId,
