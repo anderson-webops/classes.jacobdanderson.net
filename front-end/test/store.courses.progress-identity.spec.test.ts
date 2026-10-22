@@ -15,6 +15,64 @@ function historicalId(value: string) {
 }
 
 describe("saved course progress identities", () => {
+	it("retains Machine Learning completion owners from before the starter-build rename", async () => {
+		setActivePinia(createPinia());
+		const course =
+			await useCoursesStore().loadCourseById("machine-learning");
+		const topics = [
+			["customer-segmentation", "Customer Segmentation"],
+			["disney-movie-clustering", "Disney Movie Clustering"]
+		] as const;
+		const sections = [
+			"core-concepts",
+			"guided-example",
+			"core-project",
+			"review-and-reflection"
+		] as const;
+		const supplements = [
+			"extension-challenge",
+			"supplemental-2",
+			"supplemental-3"
+		] as const;
+
+		for (const [topic, label] of topics) {
+			const oldModuleId = `machine-learning-${topic}`;
+			const moduleOwners = course?.modules.filter(
+				module =>
+					module.id === oldModuleId ||
+					module.aliases?.includes(oldModuleId)
+			);
+			expect(moduleOwners, oldModuleId).toHaveLength(1);
+			const module = moduleOwners?.[0];
+			expect(module?.title).toContain(label);
+			expect(module?.title).toContain("Starter Build");
+			for (const [section, suffixes] of [
+				["curriculum", sections],
+				["supplemental", supplements]
+			] as const) {
+				for (const [index, suffix] of suffixes.entries()) {
+					const oldId = `${oldModuleId}-${section}-${topic}-${suffix}`;
+					const item =
+						section === "curriculum"
+							? module?.curriculum[index]
+							: module?.supplementalProjects[index];
+					expect(item?.aliases, oldId).toContain(oldId);
+					const owners = course?.modules.flatMap(candidate =>
+						[
+							...candidate.curriculum,
+							...candidate.supplementalProjects
+						].filter(
+							entry =>
+								entry.id === oldId ||
+								entry.aliases?.includes(oldId)
+						)
+					);
+					expect(owners, oldId).toEqual([item]);
+				}
+			}
+		}
+	});
+
 	it("preserves progress through the archive and Swift enrichment renames", async () => {
 		setActivePinia(createPinia());
 		const store = useCoursesStore();
