@@ -4478,14 +4478,18 @@ describe("course text quality normalization", () => {
 			"src/stores/courses/web-development-foundations.ts",
 			"utf8"
 		);
+		const authoredSource = source.replace(
+			/^[ \t]*aliases: \[[^\]]*\],?\n/gm,
+			""
+		);
 
 		expect(corpus).not.toMatch(/This section covers/i);
 		expect(corpus).not.toMatch(/Key idea:/i);
 		expect(corpus).not.toMatch(/Skill target:/i);
 		expect(corpus).not.toMatch(/The goal is to/i);
-		expect(source).not.toMatch(/should include/i);
-		expect(source).not.toMatch(/\bsupplemental [23]\b/i);
-		expect(source).not.toMatch(/\bshould\b/i);
+		expect(authoredSource).not.toMatch(/should include/i);
+		expect(authoredSource).not.toMatch(/\bsupplemental [23]\b/i);
+		expect(authoredSource).not.toMatch(/\bshould\b/i);
 		expect(source).not.toContain("local dev server`");
 		expect(corpus).toContain("Project Files and a Local Server");
 		expect(corpus).toContain(

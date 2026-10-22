@@ -2,6 +2,7 @@ import { createPinia, setActivePinia } from "pinia";
 import { describe, expect, it } from "vitest";
 import { useCoursesStore } from "@/stores/courses";
 import { courseCatalog } from "@/stores/courses/index";
+import { webDevelopmentFoundationsCourse } from "@/stores/courses/web-development-foundations";
 import { researchBackedExpansionCourseIds } from "@/stores/courses/research-expansions";
 
 function historicalId(value: string) {
@@ -263,6 +264,171 @@ describe("saved course progress identities", () => {
 		}
 	});
 
+	it("retains the first Web Development title-change completion IDs", async () => {
+		setActivePinia(createPinia());
+		const store = useCoursesStore();
+		const course = await store.loadCourseById(
+			"web-development-foundations"
+		);
+		const renamedItems = [
+			[
+				"Setup and Tooling supplemental 2",
+				"Setup and Tooling Transfer Practice"
+			],
+			[
+				"Setup and Tooling supplemental 3",
+				"Setup and Tooling Extension Practice"
+			],
+			[
+				"Why the JavaScript Path Should Expand into Web Development",
+				"JavaScript Path Into Web Development"
+			],
+			[
+				"Positioning, Goals, and Suggested Course Family supplemental 2",
+				"Course Path Transfer Practice"
+			],
+			[
+				"Positioning, Goals, and Suggested Course Family supplemental 3",
+				"Course Path Extension Practice"
+			],
+			[
+				"Stage 1: Strengthen the Existing JavaScript Courses supplemental 2",
+				"JavaScript Bridge Transfer Practice"
+			],
+			[
+				"Stage 1: Strengthen the Existing JavaScript Courses supplemental 3",
+				"JavaScript Bridge Extension Practice"
+			],
+			[
+				"Stage 2: Web Development Foundations supplemental 2",
+				"Web Foundations Transfer Practice"
+			],
+			[
+				"Stage 2: Web Development Foundations supplemental 3",
+				"Web Foundations Extension Practice"
+			],
+			[
+				"Stage 3: Front End Applications supplemental 2",
+				"Front-End Apps Transfer Practice"
+			],
+			[
+				"Stage 3: Front End Applications supplemental 3",
+				"Front-End Apps Extension Practice"
+			],
+			[
+				"Stage 4: Back End Basics supplemental 2",
+				"Back-End Basics Transfer Practice"
+			],
+			[
+				"Stage 4: Back End Basics supplemental 3",
+				"Back-End Basics Extension Practice"
+			],
+			[
+				"Stage 5: Databases and Data Models supplemental 2",
+				"Database Models Transfer Practice"
+			],
+			[
+				"Stage 5: Databases and Data Models supplemental 3",
+				"Database Models Extension Practice"
+			],
+			[
+				"Stage 6: Hosting and Deployment supplemental 2",
+				"Hosting Deployment Transfer Practice"
+			],
+			[
+				"Stage 6: Hosting and Deployment supplemental 3",
+				"Hosting Deployment Extension Practice"
+			],
+			[
+				"Hosting and Operations Topics to Add supplemental 2",
+				"Hosting Ops Transfer Practice"
+			],
+			[
+				"Hosting and Operations Topics to Add supplemental 3",
+				"Hosting Ops Extension Practice"
+			],
+			[
+				"Good Practical Projects supplemental 2",
+				"Practical Projects Transfer Practice"
+			],
+			[
+				"Good Practical Projects supplemental 3",
+				"Practical Projects Extension Practice"
+			],
+			[
+				"Suggested Advanced Strand supplemental 2",
+				"Operations Strand Transfer Practice"
+			],
+			[
+				"Suggested Advanced Strand supplemental 3",
+				"Operations Strand Extension Practice"
+			],
+			[
+				"Integration with Network Topics supplemental 2",
+				"Network Integration Transfer Practice"
+			],
+			[
+				"Integration with Network Topics supplemental 3",
+				"Network Integration Extension Practice"
+			],
+			[
+				"Expansion Ideas and Next Steps supplemental 2",
+				"Next Steps Transfer Practice"
+			],
+			[
+				"Expansion Ideas and Next Steps supplemental 3",
+				"Next Steps Extension Practice"
+			]
+		] as const;
+		const authoredItems = webDevelopmentFoundationsCourse.modules.flatMap(
+			module => [
+				...module.curriculum.map(item => ({
+					module,
+					section: "curriculum" as const,
+					item
+				})),
+				...module.supplementalProjects.map(item => ({
+					module,
+					section: "supplemental" as const,
+					item
+				}))
+			]
+		);
+		const allItems =
+			course?.modules.flatMap(module => [
+				...module.curriculum.map(item => ({
+					module,
+					section: "curriculum" as const,
+					item
+				})),
+				...module.supplementalProjects.map(item => ({
+					module,
+					section: "supplemental" as const,
+					item
+				}))
+			]) ?? [];
+
+		for (const [oldTitle, currentTitle] of renamedItems) {
+			const matches = authoredItems.filter(
+				({ item }) => item.title === currentTitle
+			);
+			expect(matches, currentTitle).toHaveLength(1);
+			const [{ module, section, item }] = matches;
+			expect(item.aliases, oldTitle).toContain(oldTitle);
+			const oldId = historicalId(
+				`web-development-foundations-${module.title}-${section}-${oldTitle}`
+			);
+			const owners = allItems
+				.filter(
+					({ item: candidate }) =>
+						candidate.id === oldId ||
+						candidate.aliases?.includes(oldId)
+				)
+				.map(({ item: candidate }) => candidate);
+			expect(owners, oldId).toHaveLength(1);
+		}
+	}, 180000);
+
 	it("retains both original Web Development lab progress identities", async () => {
 		setActivePinia(createPinia());
 		const store = useCoursesStore();
@@ -311,6 +477,48 @@ describe("saved course progress identities", () => {
 						"Full Stack Web Lab 15 Extension Practice"
 					]
 				]
+			},
+			{
+				number: 16,
+				current: "Data Persistence Studio",
+				curriculum: [
+					["Core Concepts", "Core Concepts"],
+					["Guided Example", "Guided Example"],
+					["Core Project", "Core Project"],
+					["Review", "Review and Reflection"]
+				],
+				supplemental: [
+					["Extension Challenge", "Extension Challenge"],
+					[
+						"Data Persistence Transfer Practice",
+						"Full Stack Web Lab 16 Transfer Practice"
+					],
+					[
+						"Data Persistence Extension Practice",
+						"Full Stack Web Lab 16 Extension Practice"
+					]
+				]
+			},
+			{
+				number: 17,
+				current: "Deployment Readiness Studio",
+				curriculum: [
+					["Core Concepts", "Core Concepts"],
+					["Guided Example", "Guided Example"],
+					["Core Project", "Core Project"],
+					["Review", "Review and Reflection"]
+				],
+				supplemental: [
+					["Extension Challenge", "Extension Challenge"],
+					[
+						"Deployment Readiness Transfer Practice",
+						"Full Stack Web Lab 17 Transfer Practice"
+					],
+					[
+						"Deployment Readiness Extension Practice",
+						"Full Stack Web Lab 17 Extension Practice"
+					]
+				]
 			}
 		] as const;
 
@@ -355,6 +563,31 @@ describe("saved course progress identities", () => {
 						)
 					);
 					expect(owners, oldItemId).toEqual([item]);
+					if (
+						oldTitle.endsWith("Transfer Practice") ||
+						oldTitle.endsWith("Extension Practice")
+					) {
+						const ordinal = oldTitle.endsWith("Transfer Practice")
+							? 2
+							: 3;
+						const oldestItemId = historicalId(
+							`${oldModuleId}-supplemental-Full Stack Web Lab ${lab.number} supplemental ${ordinal}: Implementation Lab`
+						);
+						expect(item?.aliases, oldestItemId).toContain(
+							oldestItemId
+						);
+						const oldestOwners = course?.modules.flatMap(entry =>
+							[
+								...entry.curriculum,
+								...entry.supplementalProjects
+							].filter(
+								candidate =>
+									candidate.id === oldestItemId ||
+									candidate.aliases?.includes(oldestItemId)
+							)
+						);
+						expect(oldestOwners, oldestItemId).toEqual([item]);
+					}
 				}
 			}
 		}
