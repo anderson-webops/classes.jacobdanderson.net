@@ -269,7 +269,13 @@ describe("python IDE project helpers", () => {
 			"###   EVENT LISTENERS   ###"
 		);
 		expect(turtleOutline.files[0]?.content).toContain(
-			"while animation_running:"
+			"while animation_running and animation_steps < MAX_ANIMATION_STEPS:"
+		);
+		expect(turtleOutline.files[0]?.content).toContain(
+			"MAX_ANIMATION_STEPS = 120"
+		);
+		expect(turtleOutline.files[0]?.content).toContain(
+			"animation_steps += 1"
 		);
 		expect(turtleOutline.files[0]?.content).toContain(
 			"for current_turtle in turtle_list:"

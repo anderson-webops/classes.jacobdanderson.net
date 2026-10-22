@@ -559,6 +559,7 @@ import turtle
 #####################
 NUM_TURTLES = 0
 MOVE_DISTANCE = 1
+MAX_ANIMATION_STEPS = 120
 
 
 #####################
@@ -612,9 +613,11 @@ screen.listen()
 ###   MAIN CODE   ###
 #####################
 animation_running = True
+animation_steps = 0
 
 # Keep the main animation running while the project is active
-while animation_running:
+while animation_running and animation_steps < MAX_ANIMATION_STEPS:
+    animation_steps += 1
     main_turtle.forward(MOVE_DISTANCE)
 
     # Conditions and additional actions here
