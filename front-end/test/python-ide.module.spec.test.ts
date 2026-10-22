@@ -3988,6 +3988,64 @@ pgzrun.go()
 		]);
 	});
 
+	it("discovers inline imports after strings, comments, and multiline text", () => {
+		expect([
+			...pythonIdeImportedTopLevelModules([
+				{
+					name: "main.py",
+					content: [
+						'heading = "# not a comment"; import numpy as np',
+						'"""module note # still text',
+						"import hidden",
+						'"""; from pandas.io import reader',
+						'import scipy; print("import hidden_too")',
+						"if True: import seaborn",
+						"# import also_hidden",
+						"from sklearn.model_selection import train_test_split"
+					].join("\n")
+				},
+				{
+					name: "helper.py",
+					content: '"""unclosed text\nimport hidden_in_this_file'
+				},
+				{
+					name: "later.py",
+					content: "import matplotlib.pyplot as plt"
+				}
+			])
+		]).toEqual([
+			"numpy",
+			"pandas",
+			"scipy",
+			"seaborn",
+			"sklearn",
+			"matplotlib"
+		]);
+	});
+
+	it("scans imports after and within long statements without quadratic joining", () => {
+		expect([
+			...pythonIdeImportedTopLevelModules([
+				{
+					name: "main.py",
+					content: `${"x".repeat(100_000)}\nimport ${" ".repeat(100_000)}altair`
+				}
+			])
+		]).toEqual(["altair"]);
+	});
+
+	it("recognizes continued imports and comments across CRLF and CR lines", () => {
+		expect([
+			...pythonIdeImportedTopLevelModules([
+				{
+					name: "main.py",
+					content:
+						"import os, \\\r\n numpy\r# import hidden\rfrom pandas.io import reader"
+				}
+			])
+		]).toEqual(["os", "numpy", "pandas"]);
+	});
+
 	it("normalizes local Python project module names for fresh imports", () => {
 		expect(
 			pythonIdeProjectModuleNames([
