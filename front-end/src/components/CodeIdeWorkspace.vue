@@ -3502,6 +3502,7 @@ async function resetCodeEditor() {
 	useFreshCodeEditorStateOnNextReset = false;
 	const extensions = createPythonCodeMirrorExtensions({
 		assetCompletions: loadPythonCodeMirrorAssetCompletions,
+		fileName: activeFile.value?.name ?? "",
 		lineWrappingEnabled: editorLineWrapEnabled.value,
 		mode: selectedProject.value?.mode ?? "python",
 		onChange(content) {

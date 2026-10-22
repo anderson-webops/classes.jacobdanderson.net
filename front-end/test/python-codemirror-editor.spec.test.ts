@@ -2425,6 +2425,31 @@ describe("python IDE CodeMirror editor", () => {
 		);
 	});
 
+	it("does not parse project notes as Java source", () => {
+		const options = {
+			mode: "java" as const,
+			onChange: vi.fn(),
+			onCursorCountChange: vi.fn()
+		};
+		const note = EditorState.create({
+			doc: "Project notes: this is not Java source.",
+			extensions: createPythonCodeMirrorExtensions({
+				...options,
+				fileName: "README.md"
+			})
+		});
+		const source = EditorState.create({
+			doc: "class Main {}",
+			extensions: createPythonCodeMirrorExtensions({
+				...options,
+				fileName: "Main.java"
+			})
+		});
+
+		expect(note.languageDataAt("autocomplete", 0)).toEqual([]);
+		expect(source.languageDataAt("autocomplete", 0)).not.toEqual([]);
+	});
+
 	it("maps runtime traceback lines to editor diagnostics", () => {
 		const state = EditorState.create({
 			doc: ["total = 1", "print(total / 0)", "print('done')"].join("\n"),

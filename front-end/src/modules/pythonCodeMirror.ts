@@ -63,6 +63,7 @@ interface PythonCodeMirrorOptions {
 	onChange: (content: string) => void;
 	onCursorCountChange: (count: number) => void;
 	assetCompletions?: PythonCodeMirrorAssetCompletionProvider;
+	fileName?: string;
 	lineWrappingEnabled?: boolean;
 	mode?: PythonIdeMode;
 	onRun?: () => void;
@@ -3082,7 +3083,9 @@ export function createPythonCodeMirrorExtensions(
 ): Extension[] {
 	const mode = options.mode ?? "python";
 	const isPythonMode = isPythonCodeMirrorMode(mode);
-	const isJavaMode = isJavaCodeMirrorMode(mode);
+	const isJavaMode =
+		isJavaCodeMirrorMode(mode) &&
+		(options.fileName === undefined || /\.java$/i.test(options.fileName));
 	const lineWrappingEnabled = options.lineWrappingEnabled ?? true;
 	const recommendationsEnabled = options.recommendationsEnabled ?? true;
 
