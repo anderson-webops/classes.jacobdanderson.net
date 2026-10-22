@@ -503,11 +503,6 @@ export async function releasePythonIdeRuntimeCallbacks() {
 	releaseRuntimeCallbackRegistries(await pyodidePromise);
 }
 
-function getPlainPythonWorker() {
-	plainPythonWorker ??= new PythonWorker();
-	return plainPythonWorker;
-}
-
 function terminatePlainPythonWorker() {
 	plainPythonWorker?.terminate();
 	plainPythonWorker = null;
@@ -542,15 +537,22 @@ async function runPlainPythonProjectInWorker(options: RunPythonProjectOptions) {
 	if (!activeFile)
 		throw new Error("Project does not have a runnable Python file.");
 
-	const worker = getPlainPythonWorker();
+	stopActivePlainPythonWorkerRun?.("Python run replaced.");
+	const worker = new PythonWorker();
+	plainPythonWorker = worker;
+	const channel = new MessageChannel();
+	const replyPort = channel.port1;
 	const runID = ++plainPythonWorkerRunID;
+	worker.postMessage({ type: "connect" }, [channel.port2]);
 
 	return new Promise<void>((resolve, reject) => {
 		let settled = false;
 		let activeStopRun: ((reason: string) => void) | null = null;
 		const cleanup = () => {
-			worker.removeEventListener("message", handleMessage);
+			replyPort.removeEventListener("message", handleMessage);
+			replyPort.close();
 			worker.removeEventListener("error", handleWorkerError);
+			if (plainPythonWorker === worker) terminatePlainPythonWorker();
 			if (stopActivePlainPythonWorkerRun === activeStopRun)
 				stopActivePlainPythonWorkerRun = null;
 		};
@@ -561,11 +563,9 @@ async function runPlainPythonProjectInWorker(options: RunPythonProjectOptions) {
 			finish();
 		};
 		activeStopRun = (reason: string) => {
-			terminatePlainPythonWorker();
 			settle(() => reject(new Error(reason)));
 		};
 		function handleWorkerError(event: ErrorEvent) {
-			terminatePlainPythonWorker();
 			settle(() =>
 				reject(
 					new Error(
@@ -607,16 +607,19 @@ async function runPlainPythonProjectInWorker(options: RunPythonProjectOptions) {
 				settle(() => reject(new Error(message.message)));
 				return;
 			}
-			options.onProjectFilesUpdate?.(
-				filterCapturedProjectTextFiles(message.files)
-			);
-			settle(resolve);
+			if (message.type === "done") {
+				options.onProjectFilesUpdate?.(
+					filterCapturedProjectTextFiles(message.files)
+				);
+				settle(resolve);
+			}
 		}
 
 		stopActivePlainPythonWorkerRun = activeStopRun;
-		worker.addEventListener("message", handleMessage);
+		replyPort.addEventListener("message", handleMessage);
+		replyPort.start();
 		worker.addEventListener("error", handleWorkerError);
-		worker.postMessage({
+		replyPort.postMessage({
 			type: "run",
 			id: runID,
 			activeFileName: activeFile.name,
