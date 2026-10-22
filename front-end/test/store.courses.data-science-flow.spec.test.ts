@@ -62,6 +62,7 @@ describe("Data Science in Python learner flow", () => {
 			);
 			const historicalItems = [
 				[module!.curriculum[2], `curriculum-core-project-${topicId}`],
+				[module!.curriculum[3], `curriculum-review-${topicId}`],
 				[
 					module!.supplementalProjects[0],
 					`supplemental-extension-challenge-${topicId}`
@@ -78,7 +79,7 @@ describe("Data Science in Python learner flow", () => {
 
 			for (const [item, historicalSuffix] of historicalItems) {
 				expect(
-					item?.aliases,
+					[item?.id, ...(item?.aliases ?? [])],
 					`${publishedModuleId}-${historicalSuffix}`
 				).toContain(`${publishedModuleId}-${historicalSuffix}`);
 			}

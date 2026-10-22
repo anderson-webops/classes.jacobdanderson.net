@@ -299,6 +299,7 @@ function applyDataScienceAppliedLabs(course: RawCourse) {
 			},
 			{
 				title: lab.reviewTitle,
+				aliases: [`Review: ${dataScienceAppliedTopic(lab)}`],
 				content: dataScienceStudioContent(
 					lab,
 					"Review and Reflection",
