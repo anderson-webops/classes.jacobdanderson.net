@@ -2299,6 +2299,37 @@ pgzrun.go()
 		expect(pageSource).toContain("cancelTurtleAnimation()");
 	});
 
+	it("limits Turtle work per run across tracer changes and canvas resets", () => {
+		const pageSource = readFileSync(
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
+			"utf8"
+		);
+		const queueSource = pageSource.slice(
+			pageSource.indexOf("function queueTurtleStep"),
+			pageSource.indexOf("function waitForTurtleAnimation")
+		);
+		const resetSource = pageSource.slice(
+			pageSource.indexOf("function resetTurtleCanvas"),
+			pageSource.indexOf("function cancelActiveTurtleDrawingSteps")
+		);
+		const fillSource = pageSource.slice(
+			pageSource.indexOf("function trackTurtleFillPoint"),
+			pageSource.indexOf("function teleportTurtle")
+		);
+
+		expect(queueSource).toContain("reserveTurtleAnimationStep(");
+		expect(queueSource.indexOf("reserveTurtleAnimationStep(")).toBeLessThan(
+			queueSource.indexOf("if (!turtleTracerEnabled)")
+		);
+		expect(resetSource).not.toContain("createTurtleAnimationBudget()");
+		expect(fillSource).toContain(
+			"assertTurtleStepAvailable(turtleAnimationBudget);"
+		);
+		expect(pageSource).toContain(
+			'if (project.mode === "turtle")\n\t\tturtleAnimationBudget = createTurtleAnimationBudget();'
+		);
+	});
+
 	it("keeps Turtle trail drawing synchronized to the visible cursor pose", () => {
 		const pageSource = readFileSync(
 			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),

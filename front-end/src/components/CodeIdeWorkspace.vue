@@ -112,6 +112,11 @@ import {
 	unchangedRunFiles
 } from "@/modules/pythonSandbox";
 import { rustBuildInstructions } from "@/modules/rustBuildInstructions";
+import {
+	assertTurtleStepAvailable,
+	createTurtleAnimationBudget,
+	reserveTurtleAnimationStep
+} from "@/modules/turtleAnimationBudget";
 import { bronzePythonFileIoForKey } from "@/modules/usacoBronzeRequiredPacks";
 import { webBuildInstructions } from "@/modules/webBuildInstructions";
 import { webCourseResource } from "@/modules/webProjectResources";
@@ -752,6 +757,7 @@ let gameCourseAssetPackSilentLoadFailed = false;
 let turtleStampCounter = 0;
 let turtleCompletedCommands: TurtleCompletedCommand[] = [];
 let turtleQueuedSteps: TurtleAnimationStep[] = [];
+let turtleAnimationBudget = createTurtleAnimationBudget();
 let turtleManualFrame: TurtleManualFrame | null = null;
 let turtleVisiblePoses = new Map<string, TurtlePose>();
 let turtleWorldCoordinates: [number, number, number, number] | null = null;
@@ -4609,8 +4615,14 @@ function scheduleTurtleAnimation() {
 function queueTurtleStep(
 	step: Omit<TurtleAnimationStep, "turtleID"> & { turtleID?: string }
 ) {
+	const admission = reserveTurtleAnimationStep(
+		turtleAnimationBudget,
+		turtleTracerEnabled ? step.durationMs : 0
+	);
+	turtleAnimationBudget = admission.budget;
 	const nextStep = {
 		...step,
+		durationMs: admission.durationMs,
 		turtleID: step.turtleID ?? activeTurtleID
 	};
 	if (!turtleTracerEnabled) {
@@ -4773,6 +4785,7 @@ function trackTurtleFillPoint(x: number, y: number) {
 	if (!turtleFillState.active) return;
 	const previous = turtleFillState.points.at(-1);
 	if (previous && previous.x === x && previous.y === y) return;
+	assertTurtleStepAvailable(turtleAnimationBudget);
 	turtleFillState.points.push({ x, y });
 }
 
@@ -6889,6 +6902,8 @@ async function runCurrentProject() {
 	const project = selectedProject.value;
 	if (!project) return;
 	if (shouldStopPythonIdeRun(runID, project._id)) return;
+	if (project.mode === "turtle")
+		turtleAnimationBudget = createTurtleAnimationBudget();
 
 	clearOutput();
 	if (project.mode === "web") {
@@ -7168,6 +7183,7 @@ async function runCurrentProject() {
 		}
 	} catch (error) {
 		if (shouldStopPythonIdeRun(runID, project._id)) return;
+		if (project.mode === "turtle") cancelTurtleAnimation();
 		if (!props.runtimeOnly) sandboxPresent.value = false;
 		const formattedError = formatPythonRuntimeError(error);
 		if (props.runtimeOnly) {
