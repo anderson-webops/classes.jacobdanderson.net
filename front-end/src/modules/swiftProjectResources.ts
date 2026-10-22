@@ -1,6 +1,6 @@
 import { githubRawUrl, parseGitHubResource } from "@/modules/codePreview";
 
-export const swiftSourceRevision = "c59f652bf478bd435e7f83af08d64f45a921e93e";
+export const swiftSourceRevision = "d632ceb25abfac35ec4604babc9ea385a6afbcc2";
 export const swiftWelcomePack = "SAD1-Welcome-Profile-App";
 export const swiftWelcomeRoot = `https://github.com/instruction-material/Swift/tree/${swiftSourceRevision}/${swiftWelcomePack}`;
 export const swiftWelcomeRoleFiles = [

@@ -115,7 +115,7 @@ def generate(browser: Path, root: Path):
                 let area = app.textViews.firstMatch
                 if field.isHittable { return field }
                 if area.isHittable { return area }
-                app.swipeUp()
+                app.scrollViews.firstMatch.swipeUp()
             }
             XCTFail("The note editor must be reachable by scrolling")
             return app.textFields.firstMatch
@@ -138,10 +138,18 @@ def generate(browser: Path, root: Path):
                 note.tap()
                 note.typeText(" UI verification")
                 XCTAssertTrue((note.value as? String)?.contains("UI verification") == true)
-                app.swipeUp()
+                let editing = XCTAttachment(screenshot: app.screenshot())
+                editing.name = "Editing note"
+                editing.lifetime = .keepAlways
+                add(editing)
+                if app.keyboards.firstMatch.exists {
+                    let done = app.buttons["Done"]
+                    XCTAssertTrue(done.waitForExistence(timeout: 5))
+                    done.tap()
+                }
             }
             let destination = app.buttons[reference ? "Open Detailed Profile" : "Open Profile Detail"]
-            for _ in 0..<6 { if destination.isHittable { break }; app.swipeUp() }
+            for _ in 0..<6 { if destination.isHittable { break }; app.scrollViews.firstMatch.swipeUp() }
             XCTAssertTrue(destination.isHittable)
             destination.tap()
             XCTAssertTrue(app.navigationBars["Kai Rivera"].waitForExistence(timeout: 5))

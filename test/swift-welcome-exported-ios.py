@@ -50,7 +50,7 @@ signal.signal(signal.SIGTERM, stop)
 signal.signal(signal.SIGINT, stop)
 
 
-def run(label, command, timeout=180):
+def run(label, command, timeout=180, check=True):
     event = dict(parentTaskId=task_id, parentPid=os.getpid(), cwd=str(ROOT),
                  command=command, startTime=now(), timeoutSeconds=timeout,
                  hostLoadAtStart=os.getloadavg()[0])
@@ -81,8 +81,11 @@ def run(label, command, timeout=180):
                                          childProcessGroupCleanup=cleanup)) + "\n")
         (LOGS / (label + ".stdout.txt")).write_bytes(stdout)
         (LOGS / (label + ".stderr.txt")).write_bytes(stderr)
-    assert child.returncode == 0, (label, stderr.decode(errors="replace")[-4000:])
-    return stdout
+    if check:
+        assert child.returncode == 0, (label, stdout.decode(errors="replace")[-6000:],
+                                      stderr.decode(errors="replace")[-4000:])
+        return stdout
+    return child.returncode, stdout, stderr
 
 
 def version(value):
@@ -187,22 +190,27 @@ for size, model in [("small", small), ("large", large)]:
         for profile in inputs["profiles"]:
             label = profile["role"] + "-" + size
             result = RESULTS / (label + ".xcresult")
-            run("ui-" + label, [
+            status, stdout, stderr = run("ui-" + label, [
                 "/usr/bin/xcrun", "xcodebuild", "test-without-building", "-project", project,
                 "-scheme", profile["scheme"], "-configuration", "Debug", "-jobs", "1",
                 "-destination", "platform=iOS Simulator,id=" + device, "-destination-timeout", "60",
                 "-parallel-testing-enabled", "NO", "-maximum-concurrent-test-simulator-destinations", "1",
                 "-derivedDataPath", str(WORK / "derived"), "-resultBundlePath", str(result),
                 "SWIFT_VERSION=6.0", "IPHONEOS_DEPLOYMENT_TARGET=17.0", "CODE_SIGNING_ALLOWED=NO"
-            ], timeout=600)
+            ], timeout=600, check=False)
+            assert result.exists(), (label, status, stdout.decode(errors="replace")[-6000:],
+                                     stderr.decode(errors="replace")[-4000:])
             summary = json.loads(run("summary-" + label, [
                 "/usr/bin/xcrun", "xcresulttool", "get", "test-results", "summary", "--path", str(result)
             ]))
-            assert summary.get("totalTestCount") == summary.get("passedTests") == 1, summary
-            assert summary.get("failedTests") == summary.get("skippedTests") == 0, summary
+            passed = status == 0 and summary.get("totalTestCount") == summary.get("passedTests") == 1 \
+                and summary.get("failedTests") == summary.get("skippedTests") == 0
             record["simulatorTests"].append(dict(role=profile["role"], size=size, model=model["name"],
-                                                passed=True, resultBundle=str(result), executedTests=1))
+                                                passed=passed, resultBundle=str(result),
+                                                executedTests=summary.get("totalTestCount"),
+                                                processExitCode=status, testSummary=summary))
             args.proof.write_text(json.dumps(record, indent=2) + "\n")
+            assert passed, (label, status, summary)
     finally:
         try:
             run("shutdown-" + size, ["/usr/bin/xcrun", "simctl", "shutdown", device])
@@ -212,6 +220,7 @@ for size, model in [("small", small), ("large", large)]:
         record["ownedSimulatorsDeleted"].append(device)
         args.proof.write_text(json.dumps(record, indent=2) + "\n")
 record.update(at=now(), accepted=len(record["exports"]) == 8 and len(record["simulatorTests"]) == 4
+              and all(row["passed"] for row in record["simulatorTests"])
               and len(record["ownedSimulatorsDeleted"]) == 2)
 args.proof.write_text(json.dumps(record, indent=2) + "\n")
 assert record["accepted"]
