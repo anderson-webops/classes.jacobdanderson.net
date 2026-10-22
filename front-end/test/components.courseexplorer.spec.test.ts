@@ -1752,8 +1752,11 @@ describe("CourseExplorer.vue", () => {
 			await catalogView
 				.get("#course-select")
 				.setValue("ap-computer-science-a");
-			await flushPromises();
-			expect(catalogView.findAll(".lesson-item").length).toBeGreaterThan(0);
+			await vi.waitFor(() =>
+				expect(
+					catalogView.findAll(".lesson-item").length
+				).toBeGreaterThan(0)
+			);
 			expect(catalogView.html()).not.toContain("APCS1-Mad-Libs/solution");
 			expect(catalogView.findAll(".progress-toggle")).toHaveLength(0);
 		} finally {
