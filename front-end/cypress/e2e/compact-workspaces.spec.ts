@@ -196,9 +196,9 @@ context("Compact content-first workspaces", () => {
 		cy.get('.note-generation input[type="checkbox"]').check();
 		cy.contains(".note-generation button", "Generate").click();
 		cy.wait("@generateNote");
-		cy.get('[aria-label="Instructor review"]')
-			.should("be.visible")
-			.and("contain.text", "Verify homework");
+		cy.get('[aria-label="Instructor review"]').should("not.exist");
+		cy.contains("Verify homework:").should("not.exist");
+		cy.contains("The transcript may not cover").should("not.exist");
 		cy.get("#markdown-input").should("have.value", "Synthetic note body");
 		cy.get('[data-testid="preview-toggle"]').click();
 		cy.get("#markdown-input").should("not.be.visible");

@@ -120,7 +120,7 @@ describe("Generate session-note draft", () => {
 			expect.any(Object)
 		);
 	});
-	it("shows instructor-only warnings separately and emits only the editable body", async () => {
+	it("omits homework and transcript notices without changing the editable body", async () => {
 		const wrapper = await create();
 		await choose(wrapper);
 		vi.mocked(api.post).mockResolvedValue({
@@ -132,9 +132,11 @@ describe("Generate session-note draft", () => {
 		});
 		await wrapper.get("button").trigger("click");
 		await flushPromises();
-		expect(
-			wrapper.get('[aria-label="Instructor review"]').text()
-		).toContain("Verify homework");
+		expect(wrapper.find('[aria-label="Instructor review"]').exists()).toBe(
+			false
+		);
+		expect(wrapper.text()).not.toContain("Verify homework:");
+		expect(wrapper.text()).not.toContain("The transcript may not cover");
 		expect(wrapper.emitted("generated")?.[0]).toEqual([
 			"**In Class**: We tested fractions."
 		]);
@@ -143,6 +145,34 @@ describe("Generate session-note draft", () => {
 		expect(wrapper.find('[aria-label="Instructor review"]').exists()).toBe(
 			false
 		);
+	});
+	it("keeps only the remaining follow-up warning when notices are mixed", async () => {
+		const wrapper = await create();
+		await choose(wrapper);
+		vi.mocked(api.post).mockResolvedValue({
+			data: {
+				markdown: "**In Class**: We tested fractions.",
+				reviewWarnings: [
+					"homework_uncertain",
+					"transcript_incomplete",
+					"follow_up_uncertain"
+				],
+				draftOnly: true
+			}
+		});
+		await wrapper.get("button").trigger("click");
+		await flushPromises();
+		expect(
+			wrapper
+				.get('[aria-label="Instructor review"]')
+				.findAll("li")
+				.map(item => item.text())
+		).toEqual([
+			"Check whether promised resources or follow-up are still outstanding."
+		]);
+		expect(wrapper.emitted("generated")?.[0]).toEqual([
+			"**In Class**: We tested fractions."
+		]);
 	});
 	it.each([
 		{ warnings: ["unknown_private_text"] },

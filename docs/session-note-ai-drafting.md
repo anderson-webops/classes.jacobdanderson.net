@@ -180,6 +180,10 @@ changes, and are not persisted or sent. Older clients can ignore this additive
 field. During rolling activation the updated UI accepts an older server's absent
 warning array, but rejects malformed or unknown codes.
 
+The composer suppresses `homework_uncertain` and `transcript_incomplete` notices,
+including an empty Review section. The API contract and factual drafting rules
+remain unchanged; `follow_up_uncertain` can still appear in instructor review.
+
 Selection tokens are opaque, in-memory, bounded to 200 total and expire in five
 minutes. They bind the actor, student, host, date, meeting and actual occurrence.
 They expire on restart; repeat lookup rather than persisting or logging them.

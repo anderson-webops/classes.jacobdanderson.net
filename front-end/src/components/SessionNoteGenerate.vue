@@ -35,10 +35,8 @@ const ready = computed(() => settings.value?.ready === true);
 const busy = ref(false);
 const error = ref("");
 const warningLabels = {
-	homework_uncertain:
-		"Verify homework: the transcript does not establish a clear assignment.",
-	transcript_incomplete:
-		"The transcript may not cover the whole class. Check the draft for omissions.",
+	homework_uncertain: null,
+	transcript_incomplete: null,
 	follow_up_uncertain:
 		"Check whether promised resources or follow-up are still outstanding."
 };
@@ -205,9 +203,9 @@ async function generate() {
 			) {
 				throw new Error("Invalid draft review warnings");
 			}
-			reviewWarnings.value = [
-				...new Set(warnings)
-			] as (keyof typeof warningLabels)[];
+			reviewWarnings.value = [...new Set(warnings)].filter(
+				code => warningLabels[code as keyof typeof warningLabels]
+			) as (keyof typeof warningLabels)[];
 			setBusy(false);
 			emit("generated", data.markdown);
 			candidates.value = [];
