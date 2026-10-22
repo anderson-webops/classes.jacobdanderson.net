@@ -920,6 +920,29 @@ pgzrun.go()
 		expect(result.skippedFiles).toEqual([]);
 	});
 
+	it("strips the full nested BlueJ package root without importing siblings", () => {
+		const archiveBytes = zipSync({
+			"bundle/student.lab/package.bluej": strToU8("#BlueJ package file"),
+			"bundle/student.lab/Main.java": strToU8("public class Main {}"),
+			"bundle/student.lab/src/Helper.java": strToU8("class Helper {}"),
+			"bundle/Other.java": strToU8("class Other {}")
+		});
+
+		const result = importBlueJProjectArchive(archiveBytes, {
+			maxFiles: 10,
+			maxTextFileBytes: 1024
+		});
+
+		expect(result.hasBlueJPackage).toBe(true);
+		expect(result.files.map(file => file.name)).toEqual([
+			"Main.java",
+			"src/Helper.java"
+		]);
+		expect(result.skippedFiles).toEqual([
+			"bundle/Other.java (outside BlueJ project)"
+		]);
+	});
+
 	it("keeps BlueJ project root stripping stable when unsupported sibling folders are present", () => {
 		const archiveBytes = zipSync({
 			"Student-Lab/Main.java": strToU8("public class Main {}"),
