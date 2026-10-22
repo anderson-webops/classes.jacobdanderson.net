@@ -15,6 +15,86 @@ function historicalId(value: string) {
 }
 
 describe("saved course progress identities", () => {
+	it("preserves progress through the archive and Swift enrichment renames", async () => {
+		setActivePinia(createPinia());
+		const store = useCoursesStore();
+		const previousItems = [
+			[
+				"ai-level-1",
+				"ai-level-1-fai0-setup-and-tooling-supplemental-legacy-archive-ai-level-1-workspace",
+				"Reference Archive: AI Level 1 Workspace"
+			],
+			[
+				"data-science-in-python",
+				"data-science-in-python-dsp0-setup-and-tooling-supplemental-legacy-archive-data-science-in-python-workspace",
+				"Reference Archive: Data Science in Python Workspace"
+			],
+			[
+				"intro-to-swift-app-development",
+				"intro-to-swift-app-development-sadx-enrichment-and-legacy-archive-boundaries-curriculum-core-concepts",
+				"Canonical Swift Repo Structure"
+			],
+			[
+				"intro-to-swift-app-development",
+				"intro-to-swift-app-development-sadx-enrichment-and-legacy-archive-boundaries-curriculum-verification-review-sadx-enrichment-and-legacy-archive-boundaries",
+				"Verification Review: Enrichment and Reference Boundaries"
+			],
+			[
+				"intro-to-swift-app-development",
+				"intro-to-swift-app-development-sadx-enrichment-and-legacy-archive-boundaries-curriculum-core-project-sadx-enrichment-and-legacy-archive-boundaries",
+				"Core Project: Enrichment and Reference Boundaries"
+			],
+			[
+				"intro-to-swift-app-development",
+				"intro-to-swift-app-development-sadx-enrichment-and-legacy-archive-boundaries-supplemental-extension-swiftui-shapes-studio",
+				"Extension: SwiftUI Shapes Studio"
+			],
+			[
+				"intro-to-swift-app-development",
+				"intro-to-swift-app-development-sadx-enrichment-and-legacy-archive-boundaries-supplemental-transfer-practice-sadx-enrichment-and-legacy-archive-boundaries",
+				"SADX Enrichment and Reference Boundaries Transfer Practice"
+			],
+			[
+				"intro-to-swift-app-development",
+				"intro-to-swift-app-development-sadx-enrichment-and-legacy-archive-boundaries-supplemental-extension-practice-sadx-enrichment-and-legacy-archive-boundaries",
+				"SADX Enrichment and Reference Boundaries Extension Practice"
+			]
+		] as const;
+
+		for (const [courseId, previousId, currentTitle] of previousItems) {
+			const course = await store.loadCourseById(courseId);
+			const items = course?.modules.flatMap(module => [
+				...module.curriculum,
+				...module.supplementalProjects
+			]);
+			const currentItems = items?.filter(
+				item => item.title === currentTitle
+			);
+			expect(currentItems, currentTitle).toHaveLength(1);
+			expect(currentItems?.[0].aliases, previousId).toContain(previousId);
+			const owners = items?.filter(
+				item =>
+					item.id === previousId || item.aliases?.includes(previousId)
+			);
+			expect(owners, previousId).toHaveLength(1);
+		}
+
+		const swiftCourse = await store.loadCourseById(
+			"intro-to-swift-app-development"
+		);
+		const previousModuleId =
+			"intro-to-swift-app-development-sadx-enrichment-and-legacy-archive-boundaries";
+		const moduleOwners = swiftCourse?.modules.filter(
+			module =>
+				module.id === previousModuleId ||
+				module.aliases?.includes(previousModuleId)
+		);
+		expect(moduleOwners).toHaveLength(1);
+		expect(moduleOwners?.[0].title).toBe(
+			"SWX Shapes and Legacy Reference Boundaries"
+		);
+	});
+
 	it("retains generated appendix IDs from before the title revisions", async () => {
 		setActivePinia(createPinia());
 		const store = useCoursesStore();

@@ -398,6 +398,9 @@ export const dataScienceInPythonCourse: RawCourse = {
 			supplementalProjects: [
 				{
 					title: "Reference Archive: Data Science in Python Workspace",
+					aliases: [
+						"Legacy Archive: Data Science in Python Workspace"
+					],
 					content:
 						"The reference workspace is a course asset, not a replacement for the lesson sequence. It shows the expected folder layout, notebook and script organization, sample data locations, and completed variants that can be compared against current work. It is useful when a project needs a clean starter state, when a result needs to be checked against a known structure, or when an older classroom version explains a design choice that is still relevant. A useful comparison names the file being inspected, the input data it expects, the output it produces, and one limitation before copying any structure into current work.",
 					projectLink:

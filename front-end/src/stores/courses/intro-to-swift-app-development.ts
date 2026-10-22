@@ -1400,9 +1400,11 @@ const introToSwiftAppDevelopmentSourceCourse: RawCourse = {
 		},
 		{
 			title: "SADX Enrichment and Reference Boundaries",
+			aliases: ["SADX Enrichment and Legacy Archive Boundaries"],
 			curriculum: [
 				{
 					title: "Canonical Swift Repo Structure",
+					aliases: ["Core Concepts"],
 					content:
 						"Treat the `SAD1` through `SAD7` projects as the canonical active course path. The older `Mod1Pro*` through `Mod5Pro*` folders remain available as reference material rather than as a second competing sequence."
 				},
@@ -1418,6 +1420,9 @@ const introToSwiftAppDevelopmentSourceCourse: RawCourse = {
 				},
 				{
 					title: "SADX Enrichment and Reference Boundaries: Verification and Reflection",
+					aliases: [
+						"intro-to-swift-app-development-sadx-enrichment-and-legacy-archive-boundaries-curriculum-verification-review-sadx-enrichment-and-legacy-archive-boundaries"
+					],
 					content: buildSupportSectionGuidance({
 						courseFamily: "Swift",
 						moduleTitle: "SADX Enrichment and Reference Boundaries",
@@ -1426,6 +1431,9 @@ const introToSwiftAppDevelopmentSourceCourse: RawCourse = {
 				},
 				{
 					title: "SADX Enrichment and Reference Boundaries: Core Project",
+					aliases: [
+						"intro-to-swift-app-development-sadx-enrichment-and-legacy-archive-boundaries-curriculum-core-project-sadx-enrichment-and-legacy-archive-boundaries"
+					],
 					content: buildProjectGuidance({
 						courseFamily: "Swift app",
 						moduleTitle: "SADX Enrichment and Reference Boundaries",
@@ -1450,6 +1458,9 @@ const introToSwiftAppDevelopmentSourceCourse: RawCourse = {
 				},
 				{
 					title: "SADX Enrichment and Reference Boundaries Transfer Practice",
+					aliases: [
+						"intro-to-swift-app-development-sadx-enrichment-and-legacy-archive-boundaries-supplemental-transfer-practice-sadx-enrichment-and-legacy-archive-boundaries"
+					],
 					content: buildProjectGuidance({
 						courseFamily: "Swift app",
 						moduleTitle: "SADX Enrichment and Reference Boundaries",
@@ -1463,6 +1474,9 @@ const introToSwiftAppDevelopmentSourceCourse: RawCourse = {
 				},
 				{
 					title: "SADX Enrichment and Reference Boundaries Extension Practice",
+					aliases: [
+						"intro-to-swift-app-development-sadx-enrichment-and-legacy-archive-boundaries-supplemental-extension-practice-sadx-enrichment-and-legacy-archive-boundaries"
+					],
 					content: buildProjectGuidance({
 						courseFamily: "Swift app",
 						moduleTitle: "SADX Enrichment and Reference Boundaries",

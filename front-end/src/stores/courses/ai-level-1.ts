@@ -100,6 +100,7 @@ export const aiLevel1Course: RawCourse = {
 			supplementalProjects: [
 				{
 					title: "Reference Archive: AI Level 1 Workspace",
+					aliases: ["Legacy Archive: AI Level 1 Workspace"],
 					content:
 						"The AI Level 1 workspace archive is a reference map for the course's Python search and game-AI materials. It identifies the folder layout, starter files, graph and grid examples, trace-output patterns, and earlier classroom variants that may clarify how a lab is organized. The archive is most useful for comparing state representation, action rules, search order, scoring logic, and reflection notes across projects. A strong use of the archive names the file being inspected, the behavior it demonstrates, and the part of the current project it helps verify; it is not a shortcut around explaining the algorithm.",
 					projectLink:
