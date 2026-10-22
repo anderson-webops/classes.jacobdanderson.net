@@ -10,7 +10,6 @@ import re
 import signal
 import subprocess
 import sys
-import time
 import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -32,6 +31,11 @@ LOGS.mkdir()
 RESULTS = OUT / "results"
 RESULTS.mkdir()
 task_id = "swift-welcome-ios-" + os.environ.get("GITHUB_RUN_ID", str(os.getpid()))
+lock = Path(os.environ.get("CLASSES_FAMILY_LOCK", "/tmp/classes-family-heavy-task.lock"))
+owner = json.loads((lock / "owner.json").read_text())
+assert owner["parentPid"] == os.getppid() and owner["childPid"] == os.getpid(), \
+    "Run native verification through the shared heavy-task wrapper"
+assert os.environ.get("CLASSES_FAMILY_ALLOW_HIGH_LOAD") != "1", "The entry load guard must remain enabled"
 
 
 def now():
@@ -48,7 +52,8 @@ signal.signal(signal.SIGINT, stop)
 
 def run(label, command, timeout=180):
     event = dict(parentTaskId=task_id, parentPid=os.getpid(), cwd=str(ROOT),
-                 command=command, startTime=now(), timeoutSeconds=timeout)
+                 command=command, startTime=now(), timeoutSeconds=timeout,
+                 hostLoadAtStart=os.getloadavg()[0])
     child = subprocess.Popen(command, cwd=ROOT, stdout=subprocess.PIPE,
                              stderr=subprocess.PIPE, start_new_session=True)
     event["pid"] = child.pid
@@ -86,13 +91,6 @@ def version(value):
     return tuple(int(x or "0") for x in numbers.groups())
 
 
-def wait_for_idle():
-    deadline = time.monotonic() + 300
-    while os.getloadavg()[0] > 8:
-        assert time.monotonic() < deadline, "Host load must settle before another native build/test"
-        time.sleep(10)
-
-
 fixture = json.loads((ROOT / "test/fixtures/swift-welcome-source.json").read_text())
 browser = json.loads((args.browser / "swift-swift-welcome-course-proof.json").read_text())
 profiles = browser["profiles"]
@@ -103,7 +101,9 @@ assert all(x["revision"] == fixture["revision"] and x["consentBeforeFetch"]
            and x["sameAttemptReused"] and x["previousWorkPreserved"]
            and x["remoteWrites"] == 0 for x in profiles)
 record = dict(at=now(), accepted=False, sourceRevision=fixture["revision"],
-              exports=[], simulatorTests=[], ownedSimulatorsDeleted=[])
+              exports=[], simulatorTests=[], ownedSimulatorsDeleted=[],
+              resourcePolicy=dict(sharedLockOwner=owner, entryLoadGuardEnabled=True,
+                                  buildsAndSimulatorsRunSequentially=True))
 args.proof.write_text(json.dumps(record, indent=2) + "\n")
 sdk = run("sdk-path", ["/usr/bin/xcrun", "--sdk", "iphonesimulator", "--show-sdk-path"]).decode().strip()
 sdk_version = run("sdk-version", ["/usr/bin/xcrun", "--sdk", "iphonesimulator", "--show-sdk-version"]).decode().strip()
@@ -158,7 +158,6 @@ run("project-inputs", [sys.executable, str(ROOT / "test/swift-welcome-xcode.py")
 inputs = json.loads((project_root / "inputs.json").read_text())
 project = inputs["project"]
 for profile in inputs["profiles"]:
-    wait_for_idle()
     run("build-" + profile["role"], [
         "/usr/bin/xcrun", "xcodebuild", "build-for-testing", "-project", project,
         "-scheme", profile["scheme"], "-configuration", "Debug", "-sdk", "iphonesimulator",
@@ -179,16 +178,13 @@ large = next((x for name in ["iPhone 17 Pro Max", "iPhone 16 Pro Max", "iPhone 1
 assert small and large and small["identifier"] != large["identifier"], "Two installed iPhone size profiles are required"
 record["runtime"] = dict(identifier=runtime["identifier"], version=runtime["version"])
 for size, model in [("small", small), ("large", large)]:
-    wait_for_idle()
     device = run("create-" + size, ["/usr/bin/xcrun", "simctl", "create", task_id + "-" + size,
                                   model["identifier"], runtime["identifier"]]).decode().strip()
     assert re.fullmatch(r"[0-9A-Fa-f-]{36}", device)
     try:
         run("boot-" + size, ["/usr/bin/xcrun", "simctl", "boot", device])
         run("ready-" + size, ["/usr/bin/xcrun", "simctl", "bootstatus", device, "-b"], timeout=300)
-        wait_for_idle()
         for profile in inputs["profiles"]:
-            wait_for_idle()
             label = profile["role"] + "-" + size
             result = RESULTS / (label + ".xcresult")
             run("ui-" + label, [
