@@ -190,9 +190,15 @@ let pendingProgressSave: {
 
 const allCourses = computed(() => courses.value ?? []);
 
-const canViewSolutions = computed(
-	() => !!currentTutor.value || !!currentAdmin.value
-);
+const canViewSolutions = computed(() => {
+	if (props.publicCatalog) return false;
+	if (currentAdmin.value) return true;
+	return (
+		currentTutor.value?.coursePermissions?.includes(
+			selectedCourseId.value
+		) ?? false
+	);
+});
 
 const isStaffContext = computed(
 	() => !props.publicCatalog && (!!currentTutor.value || !!currentAdmin.value)
@@ -236,7 +242,12 @@ const permittedCourseIds = computed(() => {
 		if (isAllLearnersContext.value) {
 			return allCourses.value.map(course => course.id);
 		}
-		return selectedLearner.value?.courseAccess ?? [];
+		const learnerCourses = selectedLearner.value?.courseAccess ?? [];
+		if (currentAdmin.value) return learnerCourses;
+		const tutorCourses = new Set(
+			currentTutor.value?.coursePermissions ?? []
+		);
+		return learnerCourses.filter(courseId => tutorCourses.has(courseId));
 	}
 	if (currentTutor.value) return currentTutor.value.coursePermissions ?? [];
 	if (currentUser.value) return currentUser.value.courseAccess ?? [];
@@ -343,6 +354,7 @@ const canEditProgress = computed(() => {
 		!!courseId &&
 		!!course &&
 		course.id === courseId &&
+		permittedCourseIds.value.includes(courseId) &&
 		learnerCanAccessCourse(learner, courseId)
 	);
 });
@@ -547,6 +559,7 @@ watch(
 
 		isCourseLoading.value = true;
 		courseLoadError.value = "";
+		selectedCourse.value = null;
 
 		const course = await coursesStore.loadCourseById(courseId);
 

@@ -657,16 +657,17 @@ export const useCoursesStore = defineStore("courses", () => {
 	const courses = computed(() => courseSummaries);
 	const appStore = useAppStore();
 
-	const canViewSolutions = computed(
-		() => !!appStore.currentTutor || !!appStore.currentAdmin
-	);
+	function canViewCourseSolutions(id: string) {
+		if (appStore.currentAdmin) return true;
+		return appStore.currentTutor?.coursePermissions?.includes(id) ?? false;
+	}
 
 	function getCourseById(id: string) {
-		return courseCacheFor(canViewSolutions.value).get(id) ?? null;
+		return courseCacheFor(canViewCourseSolutions(id)).get(id) ?? null;
 	}
 
 	async function loadCourseById(id: string) {
-		const includeSolutions = canViewSolutions.value;
+		const includeSolutions = canViewCourseSolutions(id);
 		const courseCache = courseCacheFor(includeSolutions);
 		const cachedCourse = courseCache.get(id);
 
@@ -680,11 +681,16 @@ export const useCoursesStore = defineStore("courses", () => {
 			return null;
 		}
 
+		const permittedAfterLoad = canViewCourseSolutions(id);
+		const finalCache = courseCacheFor(permittedAfterLoad);
+		const updatedCachedCourse = finalCache.get(id);
+		if (updatedCachedCourse) return updatedCachedCourse;
+
 		const normalizedCourse = normalizeCourse(rawCourse, id, {
-			includeSolutions
+			includeSolutions: permittedAfterLoad
 		});
 
-		courseCache.set(id, normalizedCourse);
+		finalCache.set(id, normalizedCourse);
 
 		return normalizedCourse;
 	}
