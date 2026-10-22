@@ -176,6 +176,7 @@ export interface GameBridge {
 	setMusicVolume: (volume: number) => void;
 	stopMusic: () => void;
 	playTone: (frequency: number, duration: number) => number;
+	isToneActive: (toneID: number) => boolean;
 	stopTone: (toneID: number) => void;
 	log: (text: string) => void;
 }
@@ -4238,6 +4239,7 @@ class _ToneSound:
 
     def play(self, *_args, **_kwargs):
         _require_audio_initialized()
+        self._active_ids = [tone_id for tone_id in self._active_ids if _bridge.isToneActive(int(tone_id))]
         tone_id = int(_bridge.playTone(float(self.frequency), float(self.duration)))
         if tone_id:
             self._active_ids.append(tone_id)

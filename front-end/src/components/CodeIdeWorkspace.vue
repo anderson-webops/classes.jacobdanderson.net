@@ -45,6 +45,7 @@ import {
 	getCodeIdeProjectSubtitle
 } from "@/modules/codeIdeProjectLabels";
 import { cppBuildInstructions } from "@/modules/cppBuildInstructions";
+import { createGameAudioBudget } from "@/modules/gameAudioBudget";
 import {
 	createIdeDiagnostics,
 	safeRuntimeVersion,
@@ -346,9 +347,9 @@ interface ResolvedGameAsset {
 }
 
 interface GameToneHandle {
+	cleanup: () => void;
 	gain: GainNode;
 	oscillator: OscillatorNode;
-	timeout: ReturnType<typeof window.setTimeout>;
 }
 
 type PythonIdeAssetFolder = "images" | "music" | "sounds";
@@ -689,6 +690,8 @@ const gameEvents: GameInputEvent[] = [];
 const gameImageCache = new Map<string, CachedGameImage>();
 const activeGameMouseButtons = new Set<number>();
 const gameSoundAudio = new Map<string, Set<HTMLAudioElement>>();
+const gameSoundCleanup = new WeakMap<HTMLAudioElement, () => void>();
+const gameAudioBudget = createGameAudioBudget();
 const intentionallyStoppedGameAudio = new WeakSet<HTMLAudioElement>();
 const gameToneAudio = new Map<number, GameToneHandle>();
 const codeEditorViewStates = new Map<string, CodeEditorViewState>();
@@ -739,6 +742,7 @@ let gameMusicVolume = 1;
 let gameToneAudioContext: AudioContext | null = null;
 let gameToneCounter = 0;
 let gameAudioPlaybackBlockedNoticeShown = false;
+let gameAudioLimitNoticeShown = false;
 let codeEditorView: CodeEditorView | null = null;
 let syncingCodeMirrorContent = false;
 let useFreshCodeEditorStateOnNextReset = false;
@@ -3785,6 +3789,7 @@ function clearOutput() {
 	runtimeArtifacts.value = [];
 	karelWorld.value = null;
 	gameAudioPlaybackBlockedNoticeShown = false;
+	gameAudioLimitNoticeShown = false;
 	resetActiveCanvas();
 }
 
@@ -5503,28 +5508,34 @@ function gameImageSizeJson(name: string) {
 	);
 }
 
-function playProjectAudio(
-	folder: "music" | "sounds",
-	name: string,
-	loop = false,
-	onPlaybackBlocked?: (audio: HTMLAudioElement) => void
-) {
+function resolveProjectAudio(folder: "music" | "sounds", name: string) {
 	const asset = resolveGameAsset(folder, name, audioAssetExtensions);
 	if (!asset) {
 		appendOutput("system", `Missing ${folder} asset: ${name}`);
 		return null;
 	}
-
-	const src = asset.src;
-	if (!src) {
+	if (!asset.src) {
 		appendOutput(
 			"system",
 			`Cannot play ${name}; import an audio file or use the shared asset pack.`
 		);
 		return null;
 	}
+	return asset;
+}
 
-	const audio = new Audio(src);
+function playProjectAudio(
+	asset: ResolvedGameAsset,
+	loop = false,
+	onPlaybackBlocked?: (audio: HTMLAudioElement) => void
+) {
+	let audio: HTMLAudioElement;
+	try {
+		audio = new Audio(asset.src);
+	} catch {
+		reportGameAudioPlaybackBlocked();
+		return null;
+	}
 	audio.loop = loop;
 	void audio.play().catch(() => {
 		if (intentionallyStoppedGameAudio.has(audio)) return;
@@ -5543,9 +5554,16 @@ function reportGameAudioPlaybackBlocked() {
 	);
 }
 
+function reportGameAudioLimitReached() {
+	if (gameAudioLimitNoticeShown) return;
+	gameAudioLimitNoticeShown = true;
+	appendOutput("system", "Audio playback limit reached.");
+}
+
 function trackGameSoundAudio(
 	name: string,
 	audio: HTMLAudioElement,
+	release: () => void,
 	options: { cleanupOnEnded?: boolean } = {}
 ) {
 	const existing = gameSoundAudio.get(name) ?? new Set<HTMLAudioElement>();
@@ -5554,11 +5572,14 @@ function trackGameSoundAudio(
 	const cleanupOnEnded = options.cleanupOnEnded ?? true;
 
 	const cleanup = () => {
+		release();
+		gameSoundCleanup.delete(audio);
 		const activeSounds = gameSoundAudio.get(name);
 		if (!activeSounds) return;
 		activeSounds.delete(audio);
 		if (!activeSounds.size) gameSoundAudio.delete(name);
 	};
+	gameSoundCleanup.set(audio, cleanup);
 
 	if (cleanupOnEnded)
 		audio.addEventListener("ended", cleanup, { once: true });
@@ -5567,6 +5588,17 @@ function trackGameSoundAudio(
 }
 
 function playGameSound(name: string, loops = 0) {
+	const asset = resolveProjectAudio("sounds", name);
+	if (!asset) return;
+	if (Number.isFinite(loops) && loops > 32) {
+		reportGameAudioLimitReached();
+		return;
+	}
+	const release = gameAudioBudget.acquire(performance.now());
+	if (!release) {
+		reportGameAudioLimitReached();
+		return;
+	}
 	const repeatCount = Math.max(
 		-1,
 		Math.trunc(Number.isFinite(loops) ? loops : 0)
@@ -5575,25 +5607,30 @@ function playGameSound(name: string, loops = 0) {
 	const cleanupBlockedSound = () => {
 		cleanup?.();
 	};
-	const audio = playProjectAudio(
-		"sounds",
-		name,
-		repeatCount < 0,
-		cleanupBlockedSound
-	);
-	if (!audio) return;
-
-	if (repeatCount <= 0) {
-		cleanup = trackGameSoundAudio(name, audio);
+	const audio = playProjectAudio(asset, repeatCount < 0, cleanupBlockedSound);
+	if (!audio) {
+		release();
 		return;
 	}
 
-	cleanup = trackGameSoundAudio(name, audio, { cleanupOnEnded: false });
+	if (repeatCount <= 0) {
+		cleanup = trackGameSoundAudio(name, audio, release);
+		return;
+	}
+
+	cleanup = trackGameSoundAudio(name, audio, release, {
+		cleanupOnEnded: false
+	});
 	let remainingLoops = repeatCount;
 	audio.addEventListener("ended", () => {
 		if (intentionallyStoppedGameAudio.has(audio)) return;
 		if (remainingLoops <= 0) {
 			cleanup?.();
+			return;
+		}
+		if (!gameAudioBudget.allowRestart(performance.now())) {
+			cleanup?.();
+			reportGameAudioLimitReached();
 			return;
 		}
 
@@ -5621,6 +5658,7 @@ function stopGameSound(name: string) {
 		intentionallyStoppedGameAudio.add(audio);
 		audio.pause();
 		audio.currentTime = 0;
+		gameSoundCleanup.get(audio)?.();
 	}
 	gameSoundAudio.delete(name);
 }
@@ -5634,7 +5672,9 @@ function queueGameMusicEndedEvent(audio: HTMLAudioElement) {
 
 function playGameMusic(name: string, loop = true) {
 	stopGameMusic();
-	const audio = playProjectAudio("music", name, loop, blockedAudio => {
+	const asset = resolveProjectAudio("music", name);
+	if (!asset) return;
+	const audio = playProjectAudio(asset, loop, blockedAudio => {
 		if (gameMusicAudio === blockedAudio) gameMusicAudio = null;
 	});
 	gameMusicAudio = audio;
@@ -5696,7 +5736,6 @@ function suspendGameAudioContext() {
 function stopGameTone(toneID: number) {
 	const handle = gameToneAudio.get(toneID);
 	if (!handle) return;
-	window.clearTimeout(handle.timeout);
 	try {
 		handle.gain.gain.cancelScheduledValues(handle.gain.context.currentTime);
 		handle.gain.gain.setValueAtTime(0, handle.gain.context.currentTime);
@@ -5704,7 +5743,7 @@ function stopGameTone(toneID: number) {
 	} catch {
 		// Already stopped.
 	}
-	gameToneAudio.delete(toneID);
+	handle.cleanup();
 }
 
 function stopAllGameTones() {
@@ -5712,8 +5751,14 @@ function stopAllGameTones() {
 }
 
 function playGameTone(frequency: number, duration: number) {
+	const release = gameAudioBudget.acquire(performance.now());
+	if (!release) {
+		reportGameAudioLimitReached();
+		return 0;
+	}
 	const context = gameAudioContext();
 	if (!context) {
+		release();
 		appendOutput(
 			"system",
 			"Tone playback is not available in this browser."
@@ -5746,6 +5791,7 @@ function playGameTone(frequency: number, duration: number) {
 	gain.connect(context.destination);
 
 	const cleanup = () => {
+		release();
 		if (timeout !== null) {
 			window.clearTimeout(timeout);
 			timeout = null;
@@ -5765,7 +5811,7 @@ function playGameTone(frequency: number, duration: number) {
 		Math.ceil((safeDuration + 0.05) * 1000),
 		toneID
 	);
-	gameToneAudio.set(toneID, { gain, oscillator, timeout });
+	gameToneAudio.set(toneID, { cleanup, gain, oscillator });
 	void context.resume().catch(() => reportGameAudioPlaybackBlocked());
 	oscillator.start(startedAt);
 	oscillator.stop(stoppedAt);
@@ -6680,6 +6726,7 @@ const gameBridge: GameBridge = {
 	setMusicVolume: setGameMusicVolume,
 	stopMusic: stopGameMusic,
 	playTone: playGameTone,
+	isToneActive: toneID => gameToneAudio.has(toneID),
 	stopTone: stopGameTone,
 	log(text: string) {
 		appendOutput("system", text);
@@ -6782,6 +6829,9 @@ function createGuardedGameBridgeRun(): GameBridge {
 		},
 		playTone(frequency: number, duration: number) {
 			return isActiveRun() ? gameBridge.playTone(frequency, duration) : 0;
+		},
+		isToneActive(toneID: number) {
+			return isActiveRun() && gameBridge.isToneActive(toneID);
 		},
 		stopTone(toneID: number) {
 			if (isActiveRun()) gameBridge.stopTone(toneID);
