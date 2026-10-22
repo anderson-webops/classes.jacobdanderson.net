@@ -288,6 +288,7 @@ function applyDataScienceAppliedLabs(course: RawCourse) {
 			},
 			{
 				title: lab.coreProjectTitle,
+				aliases: [`Core Project: ${dataScienceAppliedTopic(lab)}`],
 				content: dataScienceStudioContent(
 					lab,
 					"Core Project",
@@ -308,6 +309,9 @@ function applyDataScienceAppliedLabs(course: RawCourse) {
 		module.supplementalProjects = [
 			{
 				title: lab.extensionTitle,
+				aliases: [
+					`Extension Challenge: ${dataScienceAppliedTopic(lab)}`
+				],
 				content: dataScienceStudioContent(
 					lab,
 					"Extension Challenge",
@@ -318,6 +322,7 @@ function applyDataScienceAppliedLabs(course: RawCourse) {
 			},
 			{
 				title: lab.supplemental2Title,
+				aliases: [`Transfer Practice: ${dataScienceAppliedTopic(lab)}`],
 				content: dataScienceStudioContent(
 					lab,
 					"Supplemental Project 2",
@@ -332,6 +337,9 @@ function applyDataScienceAppliedLabs(course: RawCourse) {
 			},
 			{
 				title: lab.supplemental3Title,
+				aliases: [
+					`Extension Practice: ${dataScienceAppliedTopic(lab)}`
+				],
 				content: dataScienceStudioContent(
 					lab,
 					"Supplemental Project 3",
