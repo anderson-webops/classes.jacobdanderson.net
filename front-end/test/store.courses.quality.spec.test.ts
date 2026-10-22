@@ -181,13 +181,13 @@ const lessonBackbonePattern =
 function hasLessonBackbone(item: { title: string; content: string }) {
 	return (
 		lessonBackbonePattern.test(`${item.title}\n${item.content}`) ||
-		(
-			wordCount(item.content) >= 300 &&
+		(wordCount(item.content) >= 300 &&
 			(item.content.match(/^## /gm)?.length ?? 0) >= 5 &&
-			/^## (?:Files and (?:roles|startup)|The route through the project)/m.test(item.content) &&
+			/^## (?:Files and (?:roles|startup)|The route through the project)/m.test(
+				item.content
+			) &&
 			/^## (?:.*contract|Input and stored data)/im.test(item.content) &&
-			/^## .*(?:check|project)/im.test(item.content)
-		)
+			/^## .*(?:check|project)/im.test(item.content))
 	);
 }
 
@@ -5249,7 +5249,7 @@ describe("course text quality normalization", () => {
 			"src/stores/courses/course-implementation-artifacts.ts",
 			"src/stores/courses/research-expansions.ts"
 		]
-			.map(path => fs.readFileSync(path, "utf8"))
+			.map(path => rawCourseProse(fs.readFileSync(path, "utf8")))
 			.join("\n");
 		const normalizerCorpus = fs.readFileSync(
 			"src/stores/courses/normalization.ts",
@@ -5416,8 +5416,7 @@ describe("course text quality normalization", () => {
 				(course?.modules ?? [])
 					.filter(module => module.kind !== "appendix")
 					.filter(
-						module =>
-							!module.curriculum.some(hasLessonBackbone)
+						module => !module.curriculum.some(hasLessonBackbone)
 					)
 					.map(module => `${id} | ${module.title}`)
 			);

@@ -2,8 +2,98 @@ import { createPinia, setActivePinia } from "pinia";
 import { describe, expect, it } from "vitest";
 import { useCoursesStore } from "@/stores/courses";
 import { courseCatalog } from "@/stores/courses/index";
+import { researchBackedExpansionCourseIds } from "@/stores/courses/research-expansions";
+
+function historicalId(value: string) {
+	return value
+		.toLowerCase()
+		.normalize("NFKD")
+		.replace(/[\u0300-\u036f]/g, "")
+		.replace(/[^a-z0-9]+/g, "-")
+		.replace(/^-+|-+$/g, "");
+}
 
 describe("saved course progress identities", () => {
+	it("retains generated appendix IDs from before the title revisions", async () => {
+		setActivePinia(createPinia());
+		const store = useCoursesStore();
+		const renamedItems = [
+			{
+				moduleTitle: "Standards Map",
+				moduleSuffix: "standards-map",
+				intermediateSuffix: "course-foundations",
+				items: [
+					["curriculum", 0, "Source Map"],
+					["supplemental", 0, "Standards Checkpoint"],
+					["supplemental", 1, "Sequence Map"]
+				]
+			},
+			{
+				moduleTitle: "Course Roadmap",
+				moduleSuffix: "course-roadmap",
+				intermediateSuffix: "course-next-steps",
+				items: [
+					["curriculum", 0, "Module Options"],
+					["curriculum", 1, "Resources"],
+					["curriculum", 2, "Readiness Checklist"],
+					["curriculum", 3, "Reference Refresh"],
+					["supplemental", 0, "Dependency Graph"],
+					["supplemental", 1, "Materials Readiness"]
+				]
+			}
+		] as const;
+
+		for (const courseId of researchBackedExpansionCourseIds) {
+			const course = await store.loadCourseById(courseId);
+			expect(course, courseId).not.toBeNull();
+			for (const configuration of renamedItems) {
+				const module = course?.modules.find(
+					entry => entry.title === configuration.moduleTitle
+				);
+				expect(
+					module,
+					`${courseId}: ${configuration.moduleTitle}`
+				).toBeDefined();
+				expect(module?.aliases).toContain(
+					`${courseId}-${configuration.intermediateSuffix}`
+				);
+				for (const [section, index, oldTitle] of configuration.items) {
+					const item =
+						section === "curriculum"
+							? module?.curriculum[index]
+							: module?.supplementalProjects[index];
+					const oldId = historicalId(
+						`${courseId}-${configuration.moduleSuffix}-${section}-${course!.name} ${oldTitle}`
+					);
+					expect(item?.aliases, `${courseId}: ${oldId}`).toContain(
+						oldId
+					);
+				}
+			}
+		}
+	}, 180000);
+
+	it("retains the original chemistry course-map completion ID", async () => {
+		setActivePinia(createPinia());
+		const store = useCoursesStore();
+		const course = await store.loadCourseById("intro-to-chemistry");
+		expect(course?.modules[0].curriculum[0].aliases).toContain(
+			"intro-to-chemistry-chm1-workflow-safety-measurement-and-models-curriculum-course-map-and-learning-workflow"
+		);
+	});
+
+	it("retains the intermediate Machine Learning sequence ID", async () => {
+		setActivePinia(createPinia());
+		const store = useCoursesStore();
+		const course = await store.loadCourseById("machine-learning");
+		const module = course?.modules.find(
+			entry => entry.title === "Standards Map"
+		);
+		expect(module?.supplementalProjects[1].aliases).toContain(
+			"machine-learning-course-foundations-supplemental-machine-learning-learning-sequence"
+		);
+	});
+
 	it("recognizes section IDs from the generic-title era", async () => {
 		setActivePinia(createPinia());
 		const store = useCoursesStore();

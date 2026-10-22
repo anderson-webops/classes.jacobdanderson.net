@@ -136,9 +136,14 @@ function legacyTitleIds(
 	titles: string[] | undefined
 ) {
 	return (titles ?? [])
+		.filter(title => !isCourseScopedAlias(courseId, title))
 		.map(title => slugify(title))
-		.filter(title => title && !title.startsWith(`${courseId}-`))
+		.filter(Boolean)
 		.map(title => `${scopeId}-${title}`);
+}
+
+function isCourseScopedAlias(courseId: string, alias: string) {
+	return alias === slugify(alias) && alias.startsWith(`${courseId}-`);
 }
 
 const HIDDEN_ITEM_TITLES = new Set([
@@ -569,7 +574,7 @@ function normalizeCourse(
 					const legacyItemTitles = [
 						item.title,
 						...(item.stableAliases ?? []).filter(
-							alias => !slugify(alias).startsWith(`${courseId}-`)
+							alias => !isCourseScopedAlias(courseId, alias)
 						)
 					];
 					const itemAliases = [
