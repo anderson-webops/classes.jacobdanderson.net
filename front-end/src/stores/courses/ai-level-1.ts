@@ -478,6 +478,7 @@ export const aiLevel1Course: RawCourse = {
 				},
 				{
 					title: "Project: Book Rule System",
+					aliases: ["Project: Juni Book Rule System"],
 					content:
 						"Use a structured decision or lookup problem to practice explicit rules, routing, and explainability. Justify each program choice in natural language.",
 					projectLink:
