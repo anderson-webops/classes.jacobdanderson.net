@@ -21,6 +21,7 @@ const scope = { actorId: "a".repeat(24), studentId: "b".repeat(24), studentName:
 const input = { studentId: scope.studentId, classDate: "2026-10-07", meetingId: "2543520025" };
 const meeting = { uuid: "/synthetic//uuid", id: 2543520025, host_id: scope.hostId, start_time: "2026-10-07T17:00:00Z", recording_files: [] };
 const transcript = "WEBVTT\n\n1\n00:00:00.000 --> 00:00:12.000\nSynthetic Student practiced fractions and explained the common denominator.\n\nEmail: private@example.invalid\nhttps://zoom.us/j/private\nPasscode: private-code";
+const markdown = "**In Class**: We practiced fractions.\n\n**Homework**: To be confirmed.";
 let request: ReturnType<typeof vi.fn>;
 let custom: (url: string) => Response | undefined;
 let now: number;
@@ -40,7 +41,7 @@ beforeEach(() => {
 		if (path.includes("/past_meetings/")) return json(meeting);
 		if (path.endsWith("/transcript")) return json({ can_download: true, download_url: "https://us06web.zoom.us/rec/meeting/transcript/download/synthetic" });
 		if (path.includes("/rec/meeting/transcript/download/")) return new Response(transcript);
-		if (path === "https://api.openai.com/v1/responses") return draftResponse({ markdown: "**In Class**: We practiced fractions.", reviewWarnings: ["homework_uncertain"] });
+		if (path === "https://api.openai.com/v1/responses") return draftResponse({ markdown, reviewWarnings: ["homework_uncertain"] });
 		throw new Error("Unexpected synthetic request");
 	});
 	service = createSessionNoteDrafting({ fetch: request as typeof fetch, config: () => config, style: async () => "Use a short In class section and an optional Next section.", now: () => now });
@@ -67,7 +68,7 @@ describe("session-note AI drafting", () => {
 		expect(request.mock.calls.some(([url]) => String(url).includes("api.openai"))).toBe(false);
 		const result = await service.generate(scope, choice);
 		expect(result).toMatchObject({ draftOnly: true, source: { startAt: meeting.start_time, timezone: config.timezone } });
-		expect(result.markdown).toBe("**In Class**: We practiced fractions.");
+		expect(result.markdown).toBe(markdown);
 		expect(result.reviewWarnings).toEqual(["homework_uncertain"]);
 		const [, init] = request.mock.calls.find(([url]) => String(url).includes("api.openai"))! as unknown as [string, RequestInit];
 		const body = JSON.parse(String(init.body));
@@ -75,6 +76,7 @@ describe("session-note AI drafting", () => {
 		expect(body.tools).toBeUndefined();
 		expect(body.instructions).toContain("untrusted quoted data");
 		expect(body.text.format).toMatchObject({ type: "json_schema", strict: true, name: "session_note_draft", schema: { additionalProperties: false, required: ["markdown", "reviewWarnings"] } });
+		expect(body.text.format.schema.properties.markdown.pattern).toBe("(?:^|\\n)\\*\\*Homework\\*\\*:");
 		expect(JSON.stringify(body.input)).not.toContain("private@example.invalid");
 		expect(JSON.stringify(body.input)).not.toContain("private-code");
 		expect(JSON.stringify(body.input)).not.toContain("https://zoom.us");
@@ -97,7 +99,8 @@ describe("session-note AI drafting", () => {
 		await personalized.generate(scope, { ...input, selectionToken: choices.candidates[0].selectionToken, confirmedStudent: true });
 		expect(preferences).toHaveBeenCalledWith("/synthetic/references.json", scope.studentId);
 		const body = providerBody();
-		expect(body.instructions).toContain("second person");
+		expect(body.instructions).toContain("primarily as we/our");
+		expect(body.instructions).toContain("address the student as you/your when needed");
 		expect(body.instructions).toContain("omit Homework Check entirely");
 		expect(body.instructions).toContain("never transfer their assignments");
 		const data = JSON.parse(body.input[0].content[0].text);
@@ -111,9 +114,26 @@ describe("session-note AI drafting", () => {
 		await service.generate(scope, await selected());
 		const instructions = providerBody().instructions;
 		expect(instructions.indexOf("Mandatory factual and output rules")).toBeGreaterThan(instructions.indexOf("Approved style"));
-		for (const rule of ["Unfinished", "explicit evidence", "Omit unsupported sections", "homework_uncertain", "transcript_incomplete", "follow_up_uncertain"]) {
+		for (const rule of ["unfinished classwork", "explicit evidence", "omit unsupported optional sections", "homework_uncertain", "transcript_incomplete", "follow_up_uncertain"]) {
 			expect(`${SESSION_NOTE_DRAFT_STYLE}\n${instructions}`).toContain(rule);
 		}
+		const mandatory = instructions.slice(instructions.indexOf("Mandatory factual and output rules"));
+		expect(mandatory).toContain("Always include a nonempty **Homework**: section");
+		expect(mandatory).toContain("**Homework**: To be confirmed.");
+		expect(mandatory).toContain("primarily in first-person plural (we/our)");
+		expect(mandatory).toContain("even when a style override or reference example");
+	});
+	it.each([
+		{ evidence: "Teacher: For homework, complete exercises one through three before our next class.", homework: "Complete exercises 1 through 3 before our next class." },
+		{ evidence: "Teacher: There is no homework assigned for this class; we will continue together next time.", homework: "No homework assigned." }
+	])("preserves a required Homework section for explicit assignments or explicit nonassignment: $homework", async ({ evidence, homework }) => {
+		const choice = await selected();
+		const draft = `**In Class**: We practiced fractions.\n\n**Homework**: ${homework}`;
+		custom = url => url.includes("/rec/meeting/transcript/download/")
+			? new Response(evidence)
+			: url.includes("api.openai") ? draftResponse({ markdown: draft, reviewWarnings: [] }) : undefined;
+		expect(await service.generate(scope, choice)).toMatchObject({ markdown: draft, reviewWarnings: [], draftOnly: true });
+		expect(JSON.parse(providerBody().input[0].content[0].text).currentSession.transcript).toBe(evidence);
 	});
 	it.each([
 		"Teacher: We could try the bonus game. This is optional, not assigned homework.",
@@ -137,11 +157,12 @@ describe("session-note AI drafting", () => {
 		expect(request).not.toHaveBeenCalled();
 	});
 	it.each([
-		{ markdown: "**In Class**: We tested fractions.", reviewWarnings: ["private free-text warning"] },
-		{ markdown: "**In Class**: We tested fractions." },
+		{ markdown: "**In Class**: We tested fractions.", reviewWarnings: [] },
+		{ markdown, reviewWarnings: ["private free-text warning"] },
+		{ markdown },
 		{ markdown: "", reviewWarnings: [] },
 		{ markdown: "x".repeat(12_001), reviewWarnings: [] },
-		{ markdown: "Synthetic draft", reviewWarnings: [], extra: "private" }
+		{ markdown, reviewWarnings: [], extra: "private" }
 	])("rejects invalid structured drafts without inserting partial text", async value => {
 		const choice = await selected();
 		custom = url => url.includes("api.openai") ? draftResponse(value) : undefined;

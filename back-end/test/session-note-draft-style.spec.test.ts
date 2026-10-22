@@ -2,7 +2,7 @@ import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { readApprovedNotePreferences, sessionNoteStudentFormat } from "../src/services/sessionNoteDraftStyle.js";
+import { readApprovedNotePreferences, SESSION_NOTE_DRAFT_STYLE, sessionNoteStudentFormat } from "../src/services/sessionNoteDraftStyle.js";
 
 const studentId = "b".repeat(24);
 const siblingId = "c".repeat(24);
@@ -42,11 +42,17 @@ describe("approved session-note preferences", () => {
 		}
 		await expect(readApprovedNotePreferences(join(directory, "absent"), studentId)).rejects.toThrow();
 	});
-	it("uses audience preferences without forcing every sentence or unsupported sections", () => {
-		expect(sessionNoteStudentFormat(preferences)).toContain("second person");
+	it("uses we for shared work while retaining individual audience preferences and Homework", () => {
+		expect(SESSION_NOTE_DRAFT_STYLE).toContain("Always include **Homework**:");
+		expect(SESSION_NOTE_DRAFT_STYLE).toContain("**Homework**: To be confirmed.");
+		expect(SESSION_NOTE_DRAFT_STYLE).toContain("primarily in first-person plural (we/our)");
+		expect(sessionNoteStudentFormat(preferences)).toContain("address the student as you/your when needed");
 		expect(sessionNoteStudentFormat(preferences)).toContain("omit Homework Check entirely");
-		expect(sessionNoteStudentFormat()).toContain("third person");
-		expect(sessionNoteStudentFormat()).toContain("natural we");
+		for (const profile of [undefined, preferences, { ...preferences, audience: "family" as const }, { ...preferences, format: "overall_update" as const }]) {
+			expect(sessionNoteStudentFormat(profile)).toContain("primarily as we/our");
+			expect(sessionNoteStudentFormat(profile)).toContain("**Homework**:");
+		}
+		expect(sessionNoteStudentFormat()).toContain("family-facing wording when needed");
 		expect(sessionNoteStudentFormat({ ...preferences, format: "overall_update" })).toContain("Do not claim a cumulative multi-session update");
 	});
 });

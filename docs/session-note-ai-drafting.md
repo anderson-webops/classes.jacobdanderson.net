@@ -29,7 +29,8 @@ credentials, session associations and historical evidence remain unchanged.
   invalidate outstanding results. Stale output never replaces a different draft.
 - Evidence gaps appear as instructor-only **Review** warnings next to the editor,
   never in the generated email body, preview, saved note or send payload.
-  Unsupported sections are omitted rather than filled with missing-evidence prose.
+  Unsupported optional sections are omitted. **Homework**: is always included;
+  an unconfirmed assignment uses "To be confirmed." rather than invented work.
 - Under administrator Account Settings, **Session-note AI** contains the
   Disabled/Enabled radio setting for tutor drafting. Disabled is the default.
   Enabled tutors use the same control in their assigned student's save-only note
@@ -61,10 +62,11 @@ The requested style reference is
 `https://chatgpt.com/share/6ac660b2-b16c-83ea-a2c8-c5eb29e2ea39`.
 The shared URL redirected to an account-loading failure. The administrator then
 provided the GPT's conventions directly, then approved a refinement emphasizing
-homework accuracy, natural audience choices and demonstrated learning. Sections
-are optional: **Homework Check**: only for actual prior homework reviewed,
-**In Class**: for the work and learning, and **Homework**: only for evidenced
-assignments. Colons remain outside bold labels and project names are bold.
+homework accuracy, shared-work wording and demonstrated learning. Use
+**Homework Check**: only for actual prior homework reviewed and **In Class**:
+for the work and learning. Always include **Homework**: with evidenced
+assignments, or "To be confirmed." when an assignment is not established.
+Colons remain outside bold labels and project names are bold.
 Optional challenges stay optional, unfinished work is not automatically homework,
 and claiming no homework was assigned also requires explicit evidence.
 Discussion, attempts, completed work and independent demonstrations remain
@@ -77,13 +79,17 @@ distinct. Prefer coherent paragraphs and specific encouragement. About 100 to
 Do not infer preferences from a name or shared parent mailbox. The protected
 references file uses stable student ObjectIds, verified privately by the operator
 against the teacher's intended student. Without a matching approved entry, the
-default is third person with natural "we" for shared work. The previous
+default is primarily "we/our" for shared classwork, not "you" or the student's
+name. Individual work and homework instructions can use audience-appropriate
+wording without attributing independent student work to the teacher. The previous
 first-name-based special cases have been removed; provision approved ID mappings
 before activation to preserve their intended audience and update formats.
 
-The supplied guidance approves student-specific second-person or family-facing
-audiences, optional omission of Homework Check, and topic-organized Overall
-Updates. These preferences are not authorization to identify records by name or
+The supplied guidance approves student-specific or family-facing audiences for
+individual work and homework instructions, optional omission of Homework Check,
+and topic-organized Overall Updates, which also retain **Homework**:. Shared
+classwork still defaults to "we/our", including with custom styles and examples.
+These preferences are not authorization to identify records by name or
 copy emails. Verify the intended students and stable IDs privately. Never commit
 actual mappings or reference emails. Two or three anonymized teacher-approved
 examples may be included per student; they are optional until provided/approved.
@@ -173,7 +179,8 @@ bounded to 4 KB. Responses are `Cache-Control: no-store`.
 
 `reviewWarnings` is an additive array of at most three deduplicated codes:
 `homework_uncertain`, `transcript_incomplete`, `follow_up_uncertain`. The provider
-returns a strict structured object; invalid, incomplete or refused output leaves
+returns a strict structured object whose Markdown must contain **Homework**:;
+invalid, incomplete or refused output leaves
 the existing draft unchanged. Only `markdown` is emitted to the editor. Warnings
 use fixed UI text, not provider-supplied prose, clear on student/date/meeting
 changes, and are not persisted or sent. Older clients can ignore this additive
