@@ -83,6 +83,7 @@ import {
 import { resetCodePreviewCaches } from "../src/modules/codePreview";
 import {
 	findPythonIdeCourseAsset,
+	findPythonIdeProjectAssetFile,
 	getPythonIdeCourseAssetObjectUrl,
 	loadPythonIdeCourseAssetPack,
 	parsePythonIdeCourseAssetZip,
@@ -3569,6 +3570,17 @@ pgzrun.go()
 			"gameImageCache.set(asset.key, entry);"
 		);
 		expect(getGameImageEntrySource).toContain("requestGameTick();");
+		const courseAssetSizeSource = pageSource.slice(
+			pageSource.indexOf(
+				"function courseAssetSize",
+				getGameImageEntryStart
+			),
+			pageSource.indexOf(
+				"async function prepareProjectGameImages",
+				getGameImageEntryStart
+			)
+		);
+		expect(courseAssetSizeSource).toContain("cached?.src === asset.src");
 	});
 
 	it("runs plain Python projects in a terminable Pyodide worker", () => {
@@ -5484,6 +5496,40 @@ pgzrun.go()
 		expect(battleTheme?.name).toBe("music/Battle Theme.mp3");
 	});
 
+	it("prefers exact project asset paths over earlier alias collisions", () => {
+		const files = [
+			{ name: "images/alien-left.png" },
+			{ name: "images/alien_left.png" },
+			{ name: "images/forest/hero.png" },
+			{ name: "images/hero.png" }
+		];
+
+		expect(
+			findPythonIdeProjectAssetFile(
+				files,
+				pythonIdeAssetCandidateNames("images", "alien_left", [".png"])
+			)
+		).toBe(files[1]);
+		expect(
+			findPythonIdeProjectAssetFile(
+				files,
+				pythonIdeAssetCandidateNames("images", "alien-left", [".png"])
+			)
+		).toBe(files[0]);
+		expect(
+			findPythonIdeProjectAssetFile(
+				files,
+				pythonIdeAssetCandidateNames("images", "hero", [".png"])
+			)
+		).toBe(files[3]);
+		expect(
+			findPythonIdeProjectAssetFile(
+				files.slice(0, 1),
+				pythonIdeAssetCandidateNames("images", "alien_left", [".png"])
+			)
+		).toBe(files[0]);
+	});
+
 	it("reuses and revokes generated PyGame Zero asset object URLs", async () => {
 		const createdUrls: string[] = [];
 		const revokedUrls: string[] = [];
@@ -6371,6 +6417,15 @@ pgzrun.go()
 		project.activeFileName = "Notes.java";
 
 		expect(getPythonIdeRunnableFile(project)?.name).toBe("App.java");
+
+		project.files = [
+			{
+				name: "Main.java",
+				content: "public class Main { void help() {} }"
+			},
+			project.files[1]!
+		];
+		expect(getPythonIdeRunnableFile(project)?.name).toBe("App.java");
 	});
 
 	it("runs Karel driver files instead of active helper classes", () => {
@@ -6416,6 +6471,16 @@ pgzrun.go()
 		project.activeFileName = "Helper.java";
 
 		expect(getPythonIdeRunnableFile(project)?.name).toBe("Algo.java");
+
+		project.files = [
+			{
+				name: "MyProgram.java",
+				content: "public class MyProgram { void help() {} }"
+			},
+			{ name: "Driver.java", content: karelStarterCode },
+			{ name: "world.txt", content: karelStarterWorld }
+		];
+		expect(getPythonIdeRunnableFile(project)?.name).toBe("Driver.java");
 	});
 
 	it("runs the Karel starter through visible world snapshots", () => {

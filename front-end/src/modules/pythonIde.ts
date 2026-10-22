@@ -3272,12 +3272,11 @@ function getJavaIdeRunnableFile(
 	);
 	const mainFile = javaFiles.find(file => file.name === "Main.java");
 
+	if (activeFile && hasJavaMainMethod(activeFile)) return activeFile;
+	if (mainFile && hasJavaMainMethod(mainFile)) return mainFile;
 	return (
-		(activeFile && hasJavaMainMethod(activeFile)
-			? activeFile
-			: undefined) ||
-		mainFile ||
 		javaFiles.find(hasJavaMainMethod) ||
+		mainFile ||
 		activeFile ||
 		javaFiles[0] ||
 		null
@@ -3298,13 +3297,14 @@ function getKarelIdeRunnableFile(
 	);
 	const algoFile = javaFiles.find(file => file.name === "Algo.java");
 
+	if (activeFile && isLikelyKarelEntryFile(activeFile)) return activeFile;
+	if (myProgramFile && isLikelyKarelEntryFile(myProgramFile))
+		return myProgramFile;
+	if (algoFile && isLikelyKarelEntryFile(algoFile)) return algoFile;
 	return (
-		(activeFile && isLikelyKarelEntryFile(activeFile)
-			? activeFile
-			: undefined) ||
+		javaFiles.find(isLikelyKarelEntryFile) ||
 		myProgramFile ||
 		algoFile ||
-		javaFiles.find(isLikelyKarelEntryFile) ||
 		activeFile ||
 		javaFiles[0] ||
 		null

@@ -94,11 +94,11 @@ import {
 } from "@/modules/pythonIde";
 import {
 	findPythonIdeCourseAsset,
+	findPythonIdeProjectAssetFile,
 	getPythonIdeCourseAssetObjectUrl,
 	loadPythonIdeCourseAssetPack,
 	normalizePythonIdeAssetLookupPath,
-	pythonIdeAssetCandidateNames,
-	pythonIdeAssetLookupAliases
+	pythonIdeAssetCandidateNames
 } from "@/modules/pythonIdeCourseAssets";
 import {
 	preparePythonIdeGameCanvas,
@@ -5393,13 +5393,7 @@ function findProjectAssetFile(
 	const project = selectedProject.value;
 	if (!project) return null;
 	const candidateNames = localAssetCandidateNames(folder, name, extensions);
-	return (
-		project.files.find(file =>
-			pythonIdeAssetLookupAliases(file.name).some(alias =>
-				candidateNames.has(alias)
-			)
-		) ?? null
-	);
+	return findPythonIdeProjectAssetFile(project.files, candidateNames);
 }
 
 function findCourseAsset(
@@ -5467,7 +5461,11 @@ function courseAssetSize(asset: ResolvedGameAsset | null) {
 		return { height: asset.height, width: asset.width };
 
 	const cached = gameImageCache.get(asset.key);
-	if (cached?.loaded && cached.element.naturalWidth > 0) {
+	if (
+		cached?.src === asset.src &&
+		cached.loaded &&
+		cached.element.naturalWidth > 0
+	) {
 		return {
 			height: cached.element.naturalHeight,
 			width: cached.element.naturalWidth
