@@ -1,4 +1,5 @@
 import type { RawCourse, RawCourseModuleItem } from "./types";
+import swiftWelcomeReading from "@/assets/course-guides/swift-welcome-profile.md?raw";
 import { buildProjectGuidance } from "./projectGuidance";
 import { buildSupportSectionGuidance } from "./supportSectionGuidance";
 
@@ -2211,6 +2212,9 @@ function contextualizeSwiftItem(
 	flow: SwiftCourseModuleFlow,
 	isSupplemental: boolean
 ): RawCourseModuleItem {
+	const welcomeProject =
+		flow.title === "SW3 SwiftUI Views, Layout, and Modifiers" &&
+		item.title === "Project: Welcome Profile App";
 	const practiceLink = swiftPracticePack(flow.materialSection);
 	const verificationLink = swiftVerificationGuide(flow.answerSection);
 	const isExtension =
@@ -2226,7 +2230,10 @@ function contextualizeSwiftItem(
 		...item,
 		title: contextualSwiftTitle(item, flow),
 		aliases: [...new Set([...(item.aliases ?? []), item.title])],
-		content: `${item.content.trim()}
+		ideImport: welcomeProject ? true : item.ideImport,
+		content: welcomeProject
+			? swiftWelcomeReading.trim()
+			: `${item.content.trim()}
 
 **Course position:** ${flow.stage}. ${legacyNote}
 

@@ -42,6 +42,12 @@ import {
 	rustCourseResource,
 	rustImportFiles
 } from "@/modules/rustProjectResources";
+import { swiftStarterCode, swiftStarterFiles } from "@/modules/swiftIdeSource";
+import { isSwiftProjectTextPath } from "@/modules/swiftProjectFiles";
+import {
+	swiftCourseResource,
+	swiftImportFiles
+} from "@/modules/swiftProjectResources";
 import { restoredUsacoResource } from "@/modules/usacoProjectResources";
 import { webStarterCode, webStarterFiles } from "@/modules/webIdeSource";
 import {
@@ -124,6 +130,7 @@ export type PythonIdeMode =
 	| "pgzero"
 	| "python"
 	| "rust"
+	| "swift"
 	| "turtle"
 	| "web";
 export type PythonIdeProjectTemplate =
@@ -301,6 +308,8 @@ export const pythonIdeAllowedFileExtensions = [
 	".cxx",
 	".h",
 	".hpp",
+	".swift",
+	".plist",
 	".csv",
 	".tsv",
 	".json",
@@ -325,6 +334,7 @@ export const pythonIdeFileUploadAccept =
 let pythonIdeStorageDbPromise: Promise<IDBDatabase> | null = null;
 
 const pythonIdeCourseModes: Record<string, PythonIdeMode> = {
+	"intro-to-swift-app-development": "swift",
 	"web-development-foundations": "web",
 	"rust-systems-security": "rust",
 	"linux-systems": "linux",
@@ -365,6 +375,7 @@ export function normalizePythonIdeMode(
 		value === "assembly" ||
 		value === "web" ||
 		value === "rust" ||
+		value === "swift" ||
 		value === "linux" ||
 		value === "c" ||
 		value === "cpp" ||
@@ -419,6 +430,8 @@ export function isKnownCourseWorksheetResource(url: string) {
 export function pythonIdeModeForCourseResource(courseId: string, url: string) {
 	const resource = parseGitHubResource(url);
 	if (!resource || isKnownCourseWorksheetResource(url)) return null;
+	if (courseId === "intro-to-swift-app-development")
+		return swiftCourseResource(url) ? "swift" : null;
 	if (courseId === "web-development-foundations")
 		return webCourseResource(url) ? "web" : null;
 	if (resource.mode === "blob" && !CODE_EXTENSION_RE.test(resource.path))
@@ -2269,6 +2282,7 @@ plt.tight_layout()
 `;
 
 export function getPythonIdeModeLabel(mode: PythonIdeMode) {
+	if (mode === "swift") return "SwiftUI";
 	if (mode === "web") return "Web";
 	if (mode === "rust") return "Rust";
 	if (mode === "linux") return "Linux";
@@ -2317,6 +2331,7 @@ export function getPythonIdeProjectKindLabel(
 }
 
 function getDemoStarterCode(mode: PythonIdeMode) {
+	if (mode === "swift") return swiftStarterCode;
 	if (mode === "rust") return rustStarterCode;
 	if (mode === "linux") return linuxStarterCode;
 	if (mode === "assembly") return assemblyStarterCode;
@@ -2339,6 +2354,7 @@ function clonePythonIdeFiles(files: PythonIdeFile[]) {
 }
 
 function getBlankStarterFiles(mode: PythonIdeMode): PythonIdeFile[] {
+	if (mode === "swift") return swiftStarterFiles();
 	if (mode === "rust") return rustStarterFiles();
 	if (mode === "linux") return linuxStarterFiles();
 	if (mode === "assembly") return assemblyStarterFiles();
@@ -2375,6 +2391,7 @@ function getBlankStarterFiles(mode: PythonIdeMode): PythonIdeFile[] {
 }
 
 function getCourseStarterFiles(mode: PythonIdeMode): PythonIdeFile[] {
+	if (mode === "swift") return swiftStarterFiles();
 	if (mode === "rust") return rustStarterFiles();
 	if (mode === "linux") return linuxStarterFiles();
 	if (mode === "assembly") return assemblyStarterFiles();
@@ -2462,6 +2479,7 @@ function getDemoStarterFiles(mode: PythonIdeMode): PythonIdeFile[] {
 }
 
 function getOutlineStarterFiles(mode: PythonIdeMode): PythonIdeFile[] {
+	if (mode === "swift") return swiftStarterFiles();
 	if (mode === "rust") return rustStarterFiles();
 	if (mode === "linux") return linuxStarterFiles();
 	if (mode === "assembly") return assemblyStarterFiles();
@@ -2653,6 +2671,7 @@ function getStarterFilesForTemplate(
 	template: PythonIdeProjectTemplate
 ) {
 	if (mode === "web") return webStarterFiles();
+	if (mode === "swift") return swiftStarterFiles();
 	if (mode === "rust") return rustStarterFiles();
 	if (mode === "linux") return linuxStarterFiles();
 	if (
@@ -2731,6 +2750,7 @@ function projectTitleForMode(
 	mode: PythonIdeMode,
 	template: PythonIdeProjectTemplate = "blank"
 ) {
+	if (mode === "swift") return "SwiftUI Project";
 	if (mode === "web") return "Web Project";
 	if (mode === "rust") return "Rust Project";
 	if (mode === "linux") return "Linux Project";
@@ -2805,22 +2825,28 @@ export function createPythonIdeProject(
 		files,
 		activeFileName: resolvePythonIdeActiveFileName(
 			files,
-			mode === "web"
-				? "index.html"
-				: mode === "rust"
-					? rustSource
-						? `${rustSource.role}/observations.md`
-						: "src/main.rs"
-					: mode === "linux"
-						? linuxSource
-							? `${linuxSource.role}/${linuxSource.definition.roleFiles[0]}`
-							: files.find(file => /\.sh$/i.test(file.name))?.name
-						: mode === "assembly"
-							? assemblySource
-								? `${assemblySource.role}/${assemblySource.definition.roleFiles[0]}`
-								: files.find(file => /\.s$/i.test(file.name))
+			mode === "swift"
+				? files.find(file =>
+						/(?:^|\/)ContentView\.swift$/.test(file.name)
+					)?.name
+				: mode === "web"
+					? "index.html"
+					: mode === "rust"
+						? rustSource
+							? `${rustSource.role}/observations.md`
+							: "src/main.rs"
+						: mode === "linux"
+							? linuxSource
+								? `${linuxSource.role}/${linuxSource.definition.roleFiles[0]}`
+								: files.find(file => /\.sh$/i.test(file.name))
 										?.name
-							: undefined
+							: mode === "assembly"
+								? assemblySource
+									? `${assemblySource.role}/${assemblySource.definition.roleFiles[0]}`
+									: files.find(file =>
+											/\.s$/i.test(file.name)
+										)?.name
+								: undefined
 		),
 		courseID: options.courseID,
 		courseProjectKey: options.courseProjectKey,
@@ -2935,6 +2961,7 @@ export function isValidPythonFileName(
 	}
 
 	if (isPythonIdeRuntimeReservedPath(value)) return false;
+	if (mode === "swift") return isSwiftProjectTextPath(value);
 	if (mode === "web") return isWebProjectTextPath(value);
 
 	if (
@@ -2965,6 +2992,7 @@ export function isPythonIdeRunnableFile(
 	value: string,
 	mode: PythonIdeMode = "python"
 ) {
+	if (mode === "swift") return /\.swift$/i.test(value);
 	if (mode === "web") return isWebProjectSourcePath(value);
 	if (mode === "linux") return false;
 	if (mode === "rust") return /\.rs$/i.test(value);
@@ -2978,6 +3006,7 @@ export function isPythonIdeRunnableFile(
 
 export function isPythonIdeTextFile(value: string) {
 	return (
+		isSwiftProjectTextPath(value) ||
 		isWebProjectTextPath(value) ||
 		isRustProjectTextPath(value) ||
 		isLinuxProjectTextPath(value) ||
@@ -2998,13 +3027,15 @@ export function normalizeImportedPythonIdeFileName(
 	const baseName = value.split(/[\\/]/).pop() ?? value;
 	const normalized = normalizePythonFileName(
 		baseName,
-		mode === "web"
-			? ".html"
-			: mode === "rust"
-				? ".rs"
-				: mode === "linux"
-					? ".sh"
-					: ".py",
+		mode === "swift"
+			? ".swift"
+			: mode === "web"
+				? ".html"
+				: mode === "rust"
+					? ".rs"
+					: mode === "linux"
+						? ".sh"
+						: ".py",
 		mode
 	);
 	if (IMAGE_EXTENSION_RE.test(normalized)) return `images/${normalized}`;
@@ -3038,6 +3069,7 @@ export function getPythonIdeAssetDataUrl(file: PythonIdeFile) {
 }
 
 export function getPythonIdeFileKindLabel(value: string) {
+	if (/\.swift$/i.test(value)) return "Swift";
 	if (/\.rs$/i.test(value)) return "Rust";
 	if (/(?:^|\/)Cargo\.(?:toml|lock)$/.test(value)) return "Cargo build file";
 	if (/^makefile$/i.test(value) || baseName(value) === "CMakeLists.txt")
@@ -3070,6 +3102,8 @@ export function getPythonIdeDefaultFileContent(
 	fileName: string,
 	mode?: PythonIdeMode
 ) {
+	if (mode === "swift")
+		return /\.swift$/i.test(fileName) ? "import SwiftUI\n\n" : "";
 	if (mode === "web") return fileName === "index.html" ? webStarterCode : "";
 	if (/^makefile$/i.test(fileName) || baseName(fileName) === "CMakeLists.txt")
 		return "";
@@ -3167,6 +3201,7 @@ export async function loadPythonIdeStarterFilesFromGitHub(
 	}
 
 	if (
+		mode === "swift" ||
 		mode === "web" ||
 		mode === "rust" ||
 		mode === "c" ||
@@ -3174,16 +3209,18 @@ export async function loadPythonIdeStarterFilesFromGitHub(
 		mode === "linux"
 	) {
 		const selected =
-			mode === "web"
-				? webImportFiles(starterUrl)
-				: mode === "rust"
-					? rustImportFiles(starterUrl)
-					: mode === "linux"
-						? (linuxImportFiles(starterUrl) ??
-							networkImportFiles(starterUrl))
-						: mode === "assembly"
-							? assemblyImportFiles(starterUrl)
-							: c17ImportFiles(starterUrl);
+			mode === "swift"
+				? swiftImportFiles(starterUrl)
+				: mode === "web"
+					? webImportFiles(starterUrl)
+					: mode === "rust"
+						? rustImportFiles(starterUrl)
+						: mode === "linux"
+							? (linuxImportFiles(starterUrl) ??
+								networkImportFiles(starterUrl))
+							: mode === "assembly"
+								? assemblyImportFiles(starterUrl)
+								: c17ImportFiles(starterUrl);
 		if (!selected) {
 			throw new Error(
 				`${getPythonIdeModeLabel(mode)} source has no verified site import. Use its documented native workflow.`

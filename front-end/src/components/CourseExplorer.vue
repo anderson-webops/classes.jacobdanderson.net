@@ -50,6 +50,10 @@ import {
 	isScratchProjectUrl
 } from "@/modules/resourceUrls";
 import { rustCourseProjectKey } from "@/modules/rustProjectResources";
+import {
+	swiftCourseProjectKey,
+	swiftCourseResourceUrl
+} from "@/modules/swiftProjectResources";
 import { bronzeRequiredProjectKey } from "@/modules/usacoBronzeRequiredPacks";
 import { goldHistoricalProjectKey } from "@/modules/usacoHistoricalPacks";
 import { silverJavaProjectKey } from "@/modules/usacoSilverJavaPacks";
@@ -1598,36 +1602,42 @@ function ideStarterHref(item: CourseModuleItem, resource: ResourceLink) {
 	if (!mode) return "";
 
 	const starterUrl =
-		mode === "web"
-			? (webCourseResourceUrl(resource.url) ?? resource.url)
-			: resource.url;
+		mode === "swift"
+			? (swiftCourseResourceUrl(resource.url) ?? resource.url)
+			: mode === "web"
+				? (webCourseResourceUrl(resource.url) ?? resource.url)
+				: resource.url;
 	const params = new URLSearchParams({
 		course: selectedCourse.value.id,
 		mode,
-		projectKey: (mode === "web"
-			? webCourseProjectKey
-			: ["pygames", "pygames-classroom"].includes(selectedCourse.value.id)
-				? pyGamesCourseProjectKey
-				: selectedCourse.value.id === "rust-systems-security"
-					? rustCourseProjectKey
-					: selectedCourse.value.id === "network-systems"
-						? networkCourseProjectKey
-						: selectedCourse.value.id === "linux-systems"
-							? linuxCourseProjectKey
-							: selectedCourse.value.id === "assembly"
-								? assemblyCourseProjectKey
-								: selectedCourse.value.id ===
-									  "c-systems-engineering"
-									? c17CourseProjectKey
+		projectKey: (mode === "swift"
+			? swiftCourseProjectKey
+			: mode === "web"
+				? webCourseProjectKey
+				: ["pygames", "pygames-classroom"].includes(
+							selectedCourse.value.id
+					  )
+					? pyGamesCourseProjectKey
+					: selectedCourse.value.id === "rust-systems-security"
+						? rustCourseProjectKey
+						: selectedCourse.value.id === "network-systems"
+							? networkCourseProjectKey
+							: selectedCourse.value.id === "linux-systems"
+								? linuxCourseProjectKey
+								: selectedCourse.value.id === "assembly"
+									? assemblyCourseProjectKey
 									: selectedCourse.value.id ===
-												"usaco-bronze" ||
-										  selectedCourse.value.id ===
-												"usaco-bronze-on-demand"
-										? bronzeRequiredProjectKey
+										  "c-systems-engineering"
+										? c17CourseProjectKey
 										: selectedCourse.value.id ===
-											  "usaco-silver"
-											? silverJavaProjectKey
-											: goldHistoricalProjectKey)(
+													"usaco-bronze" ||
+											  selectedCourse.value.id ===
+													"usaco-bronze-on-demand"
+											? bronzeRequiredProjectKey
+											: selectedCourse.value.id ===
+												  "usaco-silver"
+												? silverJavaProjectKey
+												: goldHistoricalProjectKey)(
 			selectedCourse.value.id,
 			item.id,
 			resource.kind === "solution" ? "reference" : "starter",

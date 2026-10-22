@@ -1139,6 +1139,23 @@ jobs:
                   if-no-files-found: error
                   retention-days: 7
 
+            - name: Verify Swift profile consent, saved roles and source ZIP exports
+              env:
+                  SWIFT_WELCOME_BROWSER_DIR: output/swift-welcome-browser
+                  COURSE_IMPORT_SCREENSHOT_DIR: output/swift-welcome-screenshots
+              run: node --test test/swift-welcome-course-browser.test.mjs
+
+            - name: Retain Swift profile browser and exported source evidence
+              if: always()
+              uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+              with:
+                  name: swift-welcome-workflows
+                  path: |
+                      output/swift-welcome-browser/
+                      output/swift-welcome-screenshots/
+                  if-no-files-found: error
+                  retention-days: 7
+
             - name: Verify Network Systems foundation imports and notebook reuse
               env:
                   NETWORK_BROWSER_EXPORT_PROOF_DIR: output/network-exports

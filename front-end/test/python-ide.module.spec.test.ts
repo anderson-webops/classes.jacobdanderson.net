@@ -4996,7 +4996,7 @@ else:
 		).toHaveLength(10);
 		expect(
 			ideStarters.filter(item => item.category === "Templates")
-		).toHaveLength(10);
+		).toHaveLength(11);
 		expect(pageSource).toContain("requestedClassroomProject");
 		expect(pageSource).toContain(
 			"addPythonIdeClassroomSections(loadedFiles)"

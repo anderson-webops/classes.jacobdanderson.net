@@ -112,6 +112,7 @@ import {
 	unchangedRunFiles
 } from "@/modules/pythonSandbox";
 import { rustBuildInstructions } from "@/modules/rustBuildInstructions";
+import { swiftBuildInstructions } from "@/modules/swiftBuildInstructions";
 import {
 	assertTurtleStepAvailable,
 	createTurtleAnimationBudget,
@@ -1151,6 +1152,7 @@ const usesNativeSourceWorkspace = computed(
 		selectedProject.value?.mode === "assembly" ||
 		selectedProject.value?.mode === "c" ||
 		selectedProject.value?.mode === "cpp" ||
+		selectedProject.value?.mode === "swift" ||
 		selectedProject.value?.mode === "rust"
 );
 const webProjectRequirement = computed(() => {
@@ -1161,20 +1163,23 @@ const webProjectRequirement = computed(() => {
 		: "Requires Node.js 24 and the complete source repository's lockfile.";
 });
 const nativeSourceLanguage = computed(() =>
-	selectedProject.value?.mode === "web"
-		? "Web"
-		: selectedProject.value?.mode === "rust"
-			? "Rust"
-			: selectedProject.value?.mode === "linux"
-				? "Linux"
-				: selectedProject.value?.mode === "assembly"
-					? "Assembly (Linux x86-64)"
-					: selectedProject.value?.mode === "c"
-						? "C17"
-						: "C++"
+	selectedProject.value?.mode === "swift"
+		? "SwiftUI"
+		: selectedProject.value?.mode === "web"
+			? "Web"
+			: selectedProject.value?.mode === "rust"
+				? "Rust"
+				: selectedProject.value?.mode === "linux"
+					? "Linux"
+					: selectedProject.value?.mode === "assembly"
+						? "Assembly (Linux x86-64)"
+						: selectedProject.value?.mode === "c"
+							? "C17"
+							: "C++"
 );
 const mobileWorkspaceViews = computed(() =>
 	selectedProject.value?.mode === "web" ||
+	selectedProject.value?.mode === "swift" ||
 	selectedProject.value?.mode === "rust" ||
 	selectedProject.value?.mode === "linux" ||
 	selectedProject.value?.mode === "c" ||
@@ -1187,6 +1192,7 @@ watch(
 	mode => {
 		if (
 			(mode === "web" ||
+				mode === "swift" ||
 				mode === "rust" ||
 				mode === "linux" ||
 				mode === "c" ||
@@ -1198,6 +1204,8 @@ watch(
 	}
 );
 const newFileNamePlaceholder = computed(() => {
+	if (selectedProject.value?.mode === "swift")
+		return "ContentView.swift, Views/ProfileView.swift or notes.md";
 	if (selectedProject.value?.mode === "web")
 		return "index.html, main.js or styles.css";
 	if (selectedProject.value?.mode === "rust")
@@ -3580,21 +3588,23 @@ function addFile() {
 	if (!selectedProject.value) return;
 	const fileName = normalizePythonFileName(
 		newFileName.value,
-		selectedProject.value.mode === "web"
-			? ".html"
-			: selectedProject.value.mode === "rust"
-				? ".rs"
-				: selectedProject.value.mode === "linux"
-					? ".sh"
-					: selectedProject.value.mode === "assembly"
-						? ".S"
-						: selectedProject.value.mode === "c"
-							? ".c"
-							: selectedProject.value.mode === "cpp"
-								? ".cpp"
-								: isJavaIdeMode(selectedProject.value.mode)
-									? ".java"
-									: ".py",
+		selectedProject.value.mode === "swift"
+			? ".swift"
+			: selectedProject.value.mode === "web"
+				? ".html"
+				: selectedProject.value.mode === "rust"
+					? ".rs"
+					: selectedProject.value.mode === "linux"
+						? ".sh"
+						: selectedProject.value.mode === "assembly"
+							? ".S"
+							: selectedProject.value.mode === "c"
+								? ".c"
+								: selectedProject.value.mode === "cpp"
+									? ".cpp"
+									: isJavaIdeMode(selectedProject.value.mode)
+										? ".java"
+										: ".py",
 		selectedProject.value.mode
 	);
 	if (!isValidPythonFileName(fileName, selectedProject.value.mode)) {
@@ -6906,6 +6916,13 @@ async function runCurrentProject() {
 		turtleAnimationBudget = createTurtleAnimationBudget();
 
 	clearOutput();
+	if (project.mode === "swift") {
+		for (const line of swiftBuildInstructions(project.files))
+			appendOutput("system", line);
+		runMessage.value = "Xcode build instructions";
+		diagnosticStage.value = "completed";
+		return;
+	}
 	if (project.mode === "web") {
 		for (const line of webBuildInstructions(project.starterUrl))
 			appendOutput("system", line);
@@ -8587,6 +8604,10 @@ defineExpose({ stop: stopCurrentProject, runIsolated, releaseIsolatedPointer });
 					<p v-else-if="selectedProject?.mode === 'web'">
 						{{ webProjectRequirement }}
 					</p>
+					<p v-else-if="selectedProject?.mode === 'swift'">
+						Requires macOS and Xcode with an installed iOS simulator
+						runtime.
+					</p>
 					<p v-else-if="selectedProject?.mode === 'rust'">
 						Requires a native Rust toolchain.
 					</p>
@@ -8730,6 +8751,7 @@ defineExpose({ stop: stopCurrentProject, runIsolated, releaseIsolatedPointer });
 								: view === "canvas"
 									? "Canvas"
 									: selectedProject?.mode === "web" ||
+										  selectedProject?.mode === "swift" ||
 										  selectedProject?.mode === "rust" ||
 										  selectedProject?.mode === "c" ||
 										  selectedProject?.mode ===
@@ -8863,6 +8885,7 @@ defineExpose({ stop: stopCurrentProject, runIsolated, releaseIsolatedPointer });
 						<div class="panel-header">
 							<span>{{
 								selectedProject?.mode === "web" ||
+								selectedProject?.mode === "swift" ||
 								selectedProject?.mode === "rust" ||
 								selectedProject?.mode === "c" ||
 								selectedProject?.mode === "assembly" ||

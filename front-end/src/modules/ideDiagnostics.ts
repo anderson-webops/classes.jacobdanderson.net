@@ -17,6 +17,7 @@ export type IdeCategory =
 	"none" | "student-code" | "ide-runtime" | "needs-review";
 export type IdeMode =
 	| "web"
+	| "swift"
 	| "rust"
 	| "linux"
 	| "assembly"
