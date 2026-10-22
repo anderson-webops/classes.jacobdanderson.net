@@ -687,7 +687,27 @@ function escapePythonString(value: string) {
 	return JSON.stringify(value);
 }
 
-function createInputBootstrap(inputText: string, mode: PythonIdeMode) {
+export function createTrustedPythonImportPrelude(projectRoot = PROJECT_ROOT) {
+	return `
+import os
+import sys
+__classes_project_root_path = os.path.realpath(${escapePythonString(projectRoot)})
+sys.path[:] = [
+    entry for entry in sys.path
+    if entry and not (
+        os.path.realpath(entry) == __classes_project_root_path
+        or os.path.realpath(entry).startswith(__classes_project_root_path + os.sep)
+    )
+]
+os.chdir(os.path.dirname(__classes_project_root_path))
+`;
+}
+
+export function createInputBootstrap(
+	inputText: string,
+	mode: PythonIdeMode,
+	projectRoot = PROJECT_ROOT
+) {
 	const inputLines = inputText.replaceAll("\r\n", "\n").split("\n");
 	return `
 def _classes_reset_main_namespace():
@@ -723,7 +743,7 @@ from pathlib import Path as __ClassesPath
 __classes_input_values = iter(__import__("json").loads(${escapePythonString(JSON.stringify(inputLines))}))
 __classes_python_ide_mode = ${escapePythonString(mode)}
 __classes_runtime_bootstrap_version = ${escapePythonString(PYTHON_IDE_RUNTIME_BOOTSTRAP_VERSION)}
-__classes_project_root = __ClassesPath(${escapePythonString(PROJECT_ROOT)})
+__classes_project_root = __ClassesPath(${escapePythonString(projectRoot)})
 __classes_project_root_resolved = __classes_project_root.resolve()
 __classes_reserved_import_roots = set(
     __import__("json").loads(${escapePythonString(JSON.stringify(PYTHON_IDE_RUNTIME_MODULES))})
@@ -1035,7 +1055,7 @@ def _classes_is_project_path(path):
         return False
 
 class __ClassesProjectSourceLoader(importlib.machinery.SourceFileLoader):
-    def source_to_code(self, data, path, *, _optimize=-1):
+    def source_to_code(self, data, path, _fullname=None, *, _optimize=-1):
         source = data.decode("utf-8") if isinstance(data, (bytes, bytearray)) else str(data)
         return _classes_compile_student_source(source, path)
 _ClassesProjectSourceLoader = __ClassesProjectSourceLoader
@@ -5449,6 +5469,7 @@ export async function runPythonProject(options: RunPythonProjectOptions) {
 
 	const pyodide = await loadRuntime();
 	throwIfRunStopped(options);
+	pyodide.runPython(createTrustedPythonImportPrelude());
 	options.onPythonVersion?.(
 		String(pyodide.runPython('__import__("sys").version.split()[0]'))
 	);
@@ -5516,12 +5537,13 @@ export async function runPythonProject(options: RunPythonProjectOptions) {
 	pyodide.runPython(`
 import os
 import sys
-os.chdir(${escapePythonString(PROJECT_ROOT)})
-if ${escapePythonString(PROJECT_ROOT)} not in sys.path:
-    sys.path.insert(0, ${escapePythonString(PROJECT_ROOT)})
 for __classes_module_name in __import__("json").loads(${escapePythonString(JSON.stringify(projectModuleNames))}):
     sys.modules.pop(__classes_module_name, None)
 ${createInputBootstrap(options.inputText, options.mode)}
+import os as __classes_os
+__classes_os.chdir(${escapePythonString(PROJECT_ROOT)})
+if ${escapePythonString(PROJECT_ROOT)} not in __classes_sys.path:
+    __classes_sys.path.insert(0, ${escapePythonString(PROJECT_ROOT)})
 if ${options.mode === "pgzero" ? "True" : "False"}:
     import _classes_pgzero
     _classes_pgzero.install_builtins()

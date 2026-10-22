@@ -2,8 +2,16 @@ import { ideStarters } from "../src/modules/ideStarterCatalog";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { python } from "@codemirror/lang-python";
 import { EditorState } from "@codemirror/state";
-import { existsSync, readFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { spawnSync } from "node:child_process";
+import {
+	existsSync,
+	mkdtempSync,
+	readFileSync,
+	rmSync,
+	writeFileSync
+} from "node:fs";
+import { tmpdir } from "node:os";
+import { join, resolve } from "node:path";
 import { strFromU8, strToU8, unzipSync, zipSync } from "fflate";
 import {
 	blueJProjectArchiveName,
@@ -95,6 +103,8 @@ import {
 	resetPythonIdeCourseAssetPackCache
 } from "../src/modules/pythonIdeCourseAssets";
 import {
+	createInputBootstrap,
+	createTrustedPythonImportPrelude,
 	pythonIdeImportedTopLevelModules,
 	pythonIdeProjectModuleNames,
 	warmPythonRuntime
@@ -4242,6 +4252,81 @@ pgzrun.go()
 		expect(runtimeSource).toContain(
 			"builtins.__classes_schedule_turtle_loop = __classes_schedule_turtle_loop"
 		);
+	});
+
+	it.each(["ast", "pathlib"])(
+		"loads trusted %s before making project imports visible",
+		moduleName => {
+			const projectRoot = mkdtempSync(
+				join(tmpdir(), "classes-python-import-")
+			);
+			try {
+				writeFileSync(
+					join(projectRoot, `${moduleName}.py`),
+					'throwaway = 1\nraise RuntimeError("untrusted import")\n'
+				);
+				writeFileSync(
+					join(projectRoot, "helper.py"),
+					"while True:\n    pass\n"
+				);
+				const pythonSource = `
+import os
+import sys
+os.chdir(${JSON.stringify(projectRoot)})
+sys.path.insert(0, ${JSON.stringify(projectRoot)})
+sys.modules.pop(${JSON.stringify(moduleName)}, None)
+${createTrustedPythonImportPrelude(projectRoot)}
+${createInputBootstrap("", "turtle", projectRoot)}
+import os as __classes_os
+__classes_os.chdir(${JSON.stringify(projectRoot)})
+__classes_sys.path.insert(0, ${JSON.stringify(projectRoot)})
+try:
+    import helper
+except RuntimeError as error:
+    if "Stopped a long-running while loop" not in str(error):
+        raise
+    print("guarded")
+else:
+    raise AssertionError("Project helper ran without a loop guard")
+`;
+				const pythonExecutables = ["python3"];
+				if (spawnSync("python3.14", ["--version"]).status === 0)
+					pythonExecutables.push("python3.14");
+				for (const pythonExecutable of pythonExecutables) {
+					const result = spawnSync(
+						pythonExecutable,
+						["-I", "-c", pythonSource],
+						{
+							encoding: "utf8",
+							timeout: 10000
+						}
+					);
+					expect(result.status, result.stderr).toBe(0);
+					expect(result.stdout).toContain("guarded");
+					expect(result.stderr).not.toContain("untrusted import");
+				}
+			} finally {
+				rmSync(projectRoot, { recursive: true, force: true });
+			}
+		}
+	);
+
+	it("isolates project imports before runtime preparation and after trusted bootstrap", () => {
+		const runtimeSource = readFileSync(
+			resolve(__dirname, "../src/modules/pythonIdeRuntime.ts"),
+			"utf8"
+		);
+		const runSource = runtimeSource.slice(
+			runtimeSource.indexOf("export async function runPythonProject")
+		);
+		expect(
+			runSource.indexOf("createTrustedPythonImportPrelude()")
+		).toBeLessThan(
+			runSource.indexOf("releaseRuntimeCallbackRegistries(pyodide)")
+		);
+		expect(
+			runSource.indexOf("createInputBootstrap(options.inputText")
+		).toBeLessThan(runSource.indexOf("__classes_os.chdir("));
 	});
 
 	it("avoids double-underscore global reads inside generated Python classes", () => {
