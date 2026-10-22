@@ -2358,6 +2358,17 @@ pgzrun.go()
 			"extent_degrees = self._angle_to_degrees(extent)"
 		);
 		expect(circleSource).toContain("steps = 1 + int(");
+		expect(runtimeSource).toContain("_max_circle_steps = 360");
+		expect(circleSource).toContain(
+			"if steps < 1 or steps > _max_circle_steps:"
+		);
+		expect(
+			circleSource.indexOf("if steps < 1 or steps > _max_circle_steps:")
+		).toBeLessThan(
+			circleSource.indexOf(
+				"self._push_undo(steps if self._pen_down else 0)"
+			)
+		);
 		expect(circleSource).toContain("turn = extent_degrees / steps");
 		expect(circleSource).toContain("half_turn = turn * 0.5");
 		expect(circleSource).toContain(

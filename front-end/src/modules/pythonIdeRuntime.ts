@@ -1148,6 +1148,7 @@ _screen_width = 640
 _tracer_value = 1.0
 _timer_counter = 0
 _turtle_counter = 0
+_max_circle_steps = 360
 _world_coordinates = None
 _builtin_shapes = {"arrow", "blank", "circle", "classic", "fancy", "square", "triangle", "turtle"}
 _registered_shapes = {name: {"kind": "builtin"} for name in _builtin_shapes}
@@ -2138,6 +2139,8 @@ class Turtle:
             steps = 1 + int(min(11 + abs(radius) / 6.0, 59.0) * fraction)
         else:
             steps = int(steps)
+        if steps < 1 or steps > _max_circle_steps:
+            raise ValueError("circle steps must be between 1 and {}".format(_max_circle_steps))
 
         self._push_undo(steps if self._pen_down else 0)
         self._suspend_undo += 1
