@@ -2397,6 +2397,10 @@ pgzrun.go()
 		);
 
 		expect(runtimeSource).toContain("def _looks_like_color(value):");
+		expect(runtimeSource).toContain("from itertools import islice");
+		expect(
+			runtimeSource.match(/sequence = list\(islice\(value, 3\)\)/g)
+		).toHaveLength(2);
 		expect(runtimeSource).toContain(
 			"return len(sequence) >= 3 and all(_is_number(part) for part in sequence[:3])"
 		);

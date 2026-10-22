@@ -1127,6 +1127,7 @@ builtins.__classes_schedule_turtle_loop = __classes_schedule_turtle_loop
 
 const turtleShim = `
 from contextlib import contextmanager
+from itertools import islice
 import json
 import math
 from pathlib import Path
@@ -1201,7 +1202,7 @@ def _normalize_color(*values):
         if isinstance(value, str):
             return value.replace(" ", "")
         try:
-            sequence = list(value)
+            sequence = list(islice(value, 3))
         except TypeError:
             return str(value)
         if len(sequence) >= 3 and all(_is_number(part) for part in sequence[:3]):
@@ -1247,7 +1248,7 @@ def _looks_like_color(value):
     if isinstance(value, str):
         return True
     try:
-        sequence = list(value)
+        sequence = list(islice(value, 3))
     except TypeError:
         return False
     return len(sequence) >= 3 and all(_is_number(part) for part in sequence[:3])
