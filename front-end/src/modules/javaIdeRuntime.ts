@@ -1108,15 +1108,15 @@ function evaluateBoundedJavaExpression(
 	);
 	if (booleanValue) return booleanValue;
 
-	const numericValue = evaluateNumericExpression(trimmed, context, output);
-	if (numericValue !== null) return { type: "number", value: numericValue };
-
 	const mixedAdditionValue = evaluateJavaMixedAdditionExpression(
 		trimmed,
 		context,
 		output
 	);
 	if (mixedAdditionValue) return mixedAdditionValue;
+
+	const numericValue = evaluateNumericExpression(trimmed, context, output);
+	if (numericValue !== null) return { type: "number", value: numericValue };
 
 	if (/^"(?:\\.|[^"\\])*"$/.test(trimmed)) {
 		return {
@@ -1912,7 +1912,7 @@ function applyDeclaredJavaType(
 		if (value.type === "char") return value;
 		return {
 			type: "char",
-			value: String.fromCodePoint(Math.trunc(javaValueToNumber(value)))
+			value: String.fromCharCode(Math.trunc(javaValueToNumber(value)))
 		};
 	}
 	if (value.type !== "array" || !/\[\s*\]/.test(declaredType)) return value;
@@ -2116,7 +2116,7 @@ function evaluateJavaCastExpression(
 		)
 	);
 	if (castType === "char") {
-		return { type: "char", value: String.fromCodePoint(Math.trunc(value)) };
+		return { type: "char", value: String.fromCharCode(Math.trunc(value)) };
 	}
 	return {
 		type: "number",

@@ -698,6 +698,71 @@ public class Main {
 		]);
 	});
 
+	it("concatenates String and char values without re-evaluating input", () => {
+		const result = runJavaIdeProject({
+			activeFileName: "Main.java",
+			files: [
+				{
+					name: "Main.java",
+					content: `import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        String label = "A";
+        char letter = 'B';
+        int count = 2;
+        Scanner input = new Scanner(System.in);
+        System.out.println(label + letter);
+        System.out.println(letter + label);
+        System.out.println(count + letter);
+        System.out.println(label + count + letter);
+        System.out.println(letter + count + label);
+        System.out.println(input.nextInt() + label);
+        System.out.println(input.nextInt());
+    }
+}`
+				}
+			],
+			inputText: "7 9",
+			mode: "java"
+		});
+
+		expect(result.stderr).toEqual([]);
+		expect(result.stdout).toEqual([
+			"AB",
+			"BA",
+			"68",
+			"A2B",
+			"68A",
+			"7A",
+			"9"
+		]);
+	});
+
+	it("narrows large and negative Java char casts to 16 bits", () => {
+		const result = runJavaIdeProject({
+			activeFileName: "Main.java",
+			files: [
+				{
+					name: "Main.java",
+					content: `public class Main {
+    public static void main(String[] args) {
+        char wrapped = (char) 1114112;
+        char negative = (char) -1;
+        System.out.println((int) wrapped);
+        System.out.println((int) negative);
+        System.out.println((int) (char) 70000);
+    }
+}`
+				}
+			],
+			mode: "java"
+		});
+
+		expect(result.stderr).toEqual([]);
+		expect(result.stdout).toEqual(["0", "65535", "4464"]);
+	});
+
 	it("previews beginner java.util.Random expressions in the browser subset", () => {
 		const result = runJavaIdeProject({
 			activeFileName: "Main.java",
