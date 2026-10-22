@@ -6405,6 +6405,19 @@ pgzrun.go()
 
 		project.files = [
 			{
+				name: "Helper.java",
+				content: `public class Helper {
+    public void main(String[] args) {}
+    void call() { main(new String[0]); }
+}`
+			},
+			project.files[1]!
+		];
+		project.activeFileName = "Helper.java";
+		expect(getPythonIdeRunnableFile(project)?.name).toBe("App.java");
+
+		project.files = [
+			{
 				name: "Notes.java",
 				content: `public class Notes {
     // public static void main(String[] args) belongs in App.java.
@@ -6447,7 +6460,21 @@ pgzrun.go()
 
 		expect(getPythonIdeRunnableFile(project)?.name).toBe("MyProgram.java");
 
-		project.files[2] = {
+		project.files = [
+			{
+				name: "Helper.java",
+				content: `public class Helper {
+    void call(MyProgram program) { program.run(); }
+    public void run() {}
+}`
+			},
+			project.files[0]!,
+			{ name: "world.txt", content: karelStarterWorld }
+		];
+		project.activeFileName = "Helper.java";
+		expect(getPythonIdeRunnableFile(project)?.name).toBe("MyProgram.java");
+
+		project.files[0] = {
 			name: "Helper.java",
 			content: `public class Helper {
     // public void run() stays in MyProgram.java.

@@ -106,7 +106,10 @@ server-side compilation, `javac`, Docker, or long-running execution services.
   conventional filename. Java projects use an active `main(...)` file, then a
   `Main.java` with `main(...)`, then another `main(...)` file. Karel projects
   similarly prefer detected `run()` or `main(...)` entry files, with
-  `MyProgram.java` and `Algo.java` as fallbacks when no entry is detected.
+  `MyProgram.java` and `Algo.java` as fallbacks when no entry is detected. A
+  Java entry is a public static `void main(String[] args)` declaration, and a
+  Karel `run()` entry belongs to a class extending Karel or SuperKarel; calls
+  and unrelated helper methods do not select a driver.
 
 ## Teaching and Runtime References
 
