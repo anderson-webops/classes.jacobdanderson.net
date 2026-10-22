@@ -223,7 +223,7 @@ const JAVA_PRINT_RE =
 const JAVA_SCANNER_METHOD_RE =
 	/^([A-Z_]\w*)\.(next(?:Line|Int|Double|Boolean)?|hasNext(?:Line|Int|Double|Boolean)?)\s*\(\s*\)$/i;
 const JAVA_VARIABLE_DECLARATION_START_RE =
-	/^((?:[A-Z_]\w*\.)*[A-Z_]\w*(?:\s*<[^>;]+>)?(?:\s*\[\s*\])*)\s+([A-Z_]\w*)\s*=/i;
+	/^(?:final\s+)?((?:[A-Z_]\w*\.)*[A-Z_]\w*(?:\s*<[^>;]+>)?(?:\s*\[\s*\])*)\s+([A-Z_]\w*)\s*=/i;
 const JAVA_VARIABLE_ASSIGNMENT_START_RE = /^([A-Z_]\w*)\s*=/i;
 const JAVA_COMPOUND_ASSIGNMENT_START_RE = /^([A-Z_]\w*)\s*(\+=|-=|\*=|\/=|%=)/i;
 const JAVA_INDEXED_ASSIGNMENT_START_RE =
@@ -453,9 +453,51 @@ function seedJavaLiteralConstants(
 ) {
 	const constantLeftSidePattern =
 		/^(?:(?:public|private|protected|static|final)\s+)*(?:String|int|long|double|float|boolean|char)\s+([A-Z_]\w*)$/i;
+	const typeDeclarationPattern =
+		/\b(?:class|enum|interface|record)\s+[A-Z_]\w*\b/i;
+	let braceDepth = 0;
+	let inTopLevelType = false;
+	let topLevelPrefix = "";
+	let quote: '"' | "'" | null = null;
+	let escaped = false;
 
 	for (const rawLine of source.split(/\r?\n/)) {
 		activeBudget.step();
+		const atFieldScope =
+			braceDepth === 0 || (braceDepth === 1 && inTopLevelType);
+		for (const character of rawLine) {
+			if (quote) {
+				if (escaped) escaped = false;
+				else if (character === "\\") escaped = true;
+				else if (character === quote) quote = null;
+				continue;
+			}
+			if (character === '"' || character === "'") {
+				quote = character;
+				continue;
+			}
+			if (character === "{") {
+				if (braceDepth === 0) {
+					inTopLevelType =
+						typeDeclarationPattern.test(topLevelPrefix);
+					topLevelPrefix = "";
+				}
+				braceDepth += 1;
+			} else if (character === "}") {
+				braceDepth = Math.max(0, braceDepth - 1);
+				if (braceDepth === 0) {
+					inTopLevelType = false;
+					topLevelPrefix = "";
+				}
+			} else if (braceDepth === 0) {
+				topLevelPrefix =
+					character === ";"
+						? ""
+						: `${topLevelPrefix}${character}`.slice(-256);
+			}
+		}
+		if (braceDepth === 0) topLevelPrefix = `${topLevelPrefix} `.slice(-256);
+		if (!atFieldScope) continue;
 		const line = rawLine.trim();
 		if (
 			!line.includes("final") ||

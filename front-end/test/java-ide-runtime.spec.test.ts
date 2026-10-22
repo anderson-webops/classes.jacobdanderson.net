@@ -888,6 +888,37 @@ public class Main {
 		expect(result.stdout).toEqual(["Score: 10", "Main: Local 99"]);
 	});
 
+	it("does not seed method-local finals as class constants", () => {
+		const result = runJavaIdeProject({
+			activeFileName: "Main.java",
+			files: [
+				{
+					name: "Main.java",
+					content: `public class Main {
+    private static final int LIMIT = 4;
+
+    public static void main(String[] args) {
+        String brace = "{";
+        final int LIMIT = 99;
+        showLimit();
+        System.out.println(LIMIT);
+    }
+
+    static void showLimit() {
+        final int LOCAL = 2;
+        System.out.println(LIMIT);
+        System.out.println(LOCAL);
+    }
+}`
+				}
+			],
+			mode: "java"
+		});
+
+		expect(result.stderr).toEqual([]);
+		expect(result.stdout).toEqual(["4", "2", "99"]);
+	});
+
 	it("previews recursive Java return methods with a browser call-depth cap", () => {
 		const result = runJavaIdeProject({
 			activeFileName: "Main.java",
@@ -1776,6 +1807,10 @@ public class Algo implements Directions {
     private static final int START_INDEX = 0;
     private static final int MOVE_COUNT = 4;
     private static final int STEP_AMOUNT = 2;
+
+    public void unusedHelper() {
+        final int MOVE_COUNT = 10;
+    }
 
     public void run() {
         for (int step = START_INDEX; step < MOVE_COUNT; step += STEP_AMOUNT) {
