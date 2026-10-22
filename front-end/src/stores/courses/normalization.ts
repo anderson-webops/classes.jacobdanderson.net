@@ -1404,25 +1404,39 @@ function groupConceptLessons(
 	module: RawCourseModule,
 	items: RawCourseModuleItem[]
 ) {
-	if (items.length <= 4) {
-		return [
-			{
-				title: conceptGroupTitle(course, module, "Core Concepts"),
-				content: lessonArcContent(items)
-			}
+	const groupedItem = (
+		label: "Core Concepts" | "Application Check",
+		lessons: RawCourseModuleItem[]
+	) => {
+		const title = conceptGroupTitle(course, module, label);
+		const aliases = [
+			...new Set(
+				(module.aliases ?? [])
+					.filter(alias => /\s/.test(alias))
+					.map(alias =>
+						conceptGroupTitle(
+							course,
+							{ ...module, title: alias },
+							label
+						)
+					)
+					.filter(alias => alias !== title)
+			)
 		];
+		return {
+			title,
+			...(aliases.length ? { aliases } : {}),
+			content: lessonArcContent(lessons)
+		};
+	};
+	if (items.length <= 4) {
+		return [groupedItem("Core Concepts", items)];
 	}
 
 	const midpoint = Math.ceil(items.length / 2);
 	return [
-		{
-			title: conceptGroupTitle(course, module, "Core Concepts"),
-			content: lessonArcContent(items.slice(0, midpoint))
-		},
-		{
-			title: conceptGroupTitle(course, module, "Application Check"),
-			content: lessonArcContent(items.slice(midpoint))
-		}
+		groupedItem("Core Concepts", items.slice(0, midpoint)),
+		groupedItem("Application Check", items.slice(midpoint))
 	];
 }
 
