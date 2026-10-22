@@ -82,6 +82,31 @@ describe("saved course progress identities", () => {
 		);
 	});
 
+	it("retains the original Unity checkpoint completion ID without alias collisions", async () => {
+		setActivePinia(createPinia());
+		const store = useCoursesStore();
+		const course = await store.loadCourseById("unity-game-development");
+		const module = course?.modules.find(
+			entry => entry.title === "UGD8 Full-Project Starter and Review Repository Plan"
+		);
+		const item = module?.curriculum.find(
+			entry => entry.title === "Checkpoint Workflow"
+		);
+		const previousId =
+			"unity-game-development-ugd8-full-project-starter-and-review-repository-plan-curriculum-session-workflow";
+
+		expect(item?.id).toBe(
+			"unity-game-development-ugd8-full-project-starter-and-review-repository-plan-curriculum-checkpoint-workflow"
+		);
+		expect(item?.aliases).toContain(previousId);
+		const owners = course?.modules.flatMap(entry =>
+			[...entry.curriculum, ...entry.supplementalProjects].filter(
+				candidate => candidate.id === previousId || candidate.aliases?.includes(previousId)
+			)
+		);
+		expect(owners).toEqual([item]);
+	});
+
 	it("retains the intermediate Machine Learning sequence ID", async () => {
 		setActivePinia(createPinia());
 		const store = useCoursesStore();
