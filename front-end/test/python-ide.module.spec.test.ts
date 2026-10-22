@@ -1706,6 +1706,8 @@ pgzrun.go()
 		expect(pythonIdeModeForCourseId("java-level-2")).toBe("java");
 		expect(pythonIdeModeForCourseId("ap-computer-science-a")).toBe("java");
 		expect(pythonIdeModeForCourseId("scratch-level-1")).toBeNull();
+		for (const courseId of ["constructor", "toString", "__proto__"])
+			expect(pythonIdeModeForCourseId(courseId)).toBeNull();
 		expect(normalizePythonIdeMode("pgzero", "turtle")).toBe("pgzero");
 		expect(normalizePythonIdeMode("java", "turtle")).toBe("java");
 		expect(normalizePythonIdeMode("karel", "python")).toBe("karel");

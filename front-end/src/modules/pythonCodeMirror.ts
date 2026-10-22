@@ -2615,11 +2615,20 @@ export function javaIdeCompletionsForMode(
 	receiver?: string
 ) {
 	if (receiver) {
-		const normalizedReceiver =
-			javaStaticMemberCompletionAliases[receiver] ?? receiver;
-		const specificOptions =
-			javaMemberCompletions[normalizedReceiver] ??
-			karelMemberCompletions[normalizedReceiver];
+		const normalizedReceiver = Object.hasOwn(
+			javaStaticMemberCompletionAliases,
+			receiver
+		)
+			? javaStaticMemberCompletionAliases[receiver]
+			: receiver;
+		const specificOptions = Object.hasOwn(
+			javaMemberCompletions,
+			normalizedReceiver
+		)
+			? javaMemberCompletions[normalizedReceiver]
+			: Object.hasOwn(karelMemberCompletions, normalizedReceiver)
+				? karelMemberCompletions[normalizedReceiver]
+				: null;
 		if (specificOptions) return specificOptions;
 		if (mode === "java" && isLikelyJavaRandomReceiver(receiver))
 			return javaRandomMemberCompletions;

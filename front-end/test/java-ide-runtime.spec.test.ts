@@ -1173,6 +1173,27 @@ public class Main {
 		expect(result.stdout.at(-1)).toContain("(avenue: 4)");
 	});
 
+	it("ignores inherited object names as bare Karel commands", () => {
+		const result = runJavaIdeProject({
+			activeFileName: "Algo.java",
+			files: [
+				{
+					name: "Algo.java",
+					content: karelStarterCode.replace(
+						"// Turn Sam around before moving west",
+						"toString();\n        constructor();\n\n        // Turn Sam around before moving west"
+					)
+				},
+				{ name: "world.txt", content: karelStarterWorld }
+			],
+			mode: "karel"
+		});
+
+		expect(result.stderr).toEqual([]);
+		expect(result.karelWorld?.robot).toMatchObject({ avenue: 4 });
+		expect(result.karelWorldSteps).toHaveLength(6);
+	});
+
 	it("reports Karel boundary collisions without moving through them", () => {
 		const result = runJavaIdeProject({
 			activeFileName: "Algo.java",

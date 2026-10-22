@@ -4121,10 +4121,9 @@ function addKarelWarning(plan: KarelCommandPlan, warning: string) {
 }
 
 function karelCommandForName(name: string): KarelCommand | null {
-	return (
-		KAREL_COMMAND_ALIASES[name as (typeof KAREL_SIMPLE_COMMANDS)[number]] ??
-		null
-	);
+	return Object.hasOwn(KAREL_COMMAND_ALIASES, name)
+		? KAREL_COMMAND_ALIASES[name as (typeof KAREL_SIMPLE_COMMANDS)[number]]
+		: null;
 }
 
 function applyKarelCommand(

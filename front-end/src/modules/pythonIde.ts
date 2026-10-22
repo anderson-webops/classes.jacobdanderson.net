@@ -380,7 +380,9 @@ export function normalizePythonIdeMode(
 }
 
 export function pythonIdeModeForCourseId(courseId: string | null | undefined) {
-	return courseId ? (pythonIdeCourseModes[courseId] ?? null) : null;
+	return courseId && Object.hasOwn(pythonIdeCourseModes, courseId)
+		? pythonIdeCourseModes[courseId]
+		: null;
 }
 
 export function isKnownCourseWorksheetResource(url: string) {

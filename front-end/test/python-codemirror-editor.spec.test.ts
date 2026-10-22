@@ -645,6 +645,12 @@ describe("python IDE CodeMirror editor", () => {
 				"toString"
 			])
 		);
+		for (const receiver of ["constructor", "toString", "__proto__"]) {
+			expect(
+				javaIdeCompletionsForMode("java", receiver),
+				receiver
+			).toEqual(expect.any(Array));
+		}
 
 		const commented = runStateCommand(selectedBodyLines, toggleComment);
 		expect(commented.result).toBe(true);
