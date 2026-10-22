@@ -1032,6 +1032,71 @@ public class Main {
 		]);
 	});
 
+	it("evaluates ArrayList mutation arguments once in Java order", () => {
+		const result = runJavaIdeProject({
+			activeFileName: "Main.java",
+			files: [
+				{
+					name: "Main.java",
+					content: `import java.util.ArrayList;
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+        ArrayList<Integer> numbers = new ArrayList<>();
+        numbers.add(10);
+        numbers.add(30);
+        numbers.add(input.nextInt(), input.nextInt());
+        numbers.remove(input.nextInt());
+        System.out.println(numbers.get(0) + ":" + numbers.get(1));
+        System.out.println(input.nextInt());
+    }
+}`
+				}
+			],
+			inputText: "1 20 2 99",
+			mode: "java"
+		});
+
+		expect(result.stderr).toEqual([]);
+		expect(result.stdout).toEqual(["10:20", "99"]);
+	});
+
+	it("rejects invalid ArrayList insertion and removal indexes", () => {
+		for (const mutation of [
+			"numbers.add(-1, 20)",
+			"numbers.add(2, 20)",
+			"numbers.remove(-1)",
+			"numbers.remove(1)"
+		]) {
+			const result = runJavaIdeProject({
+				activeFileName: "Main.java",
+				files: [
+					{
+						name: "Main.java",
+						content: `import java.util.ArrayList;
+
+public class Main {
+    public static void main(String[] args) {
+        ArrayList<Integer> numbers = new ArrayList<>();
+        numbers.add(10);
+        ${mutation};
+        System.out.println(numbers.size());
+    }
+}`
+					}
+				],
+				mode: "java"
+			});
+
+			expect(result.stderr).toEqual([
+				"Java preview stopped at an invalid collection index."
+			]);
+			expect(result.stdout).toEqual([]);
+		}
+	});
+
 	it("previews beginner Java maps with core map methods and entry iteration", () => {
 		const result = runJavaIdeProject({
 			activeFileName: "Main.java",

@@ -795,17 +795,14 @@ function executeJavaCollectionMutationStatement(
 	const args = splitJavaArguments(match[3] ?? "");
 	const method = match[2].toLowerCase();
 	if (method === "add") {
+		const index =
+			args.length >= 2
+				? javaExpressionToIndex(args[0] ?? "0", context, output)
+				: collection.value.length;
 		const item = evaluateJavaExpression(args.at(-1) ?? "", context, output);
+		checkJavaCollectionIndex(index, collection.value.length + 1);
 		activeBudget.allocateValues(1);
-		if (args.length >= 2) {
-			collection.value.splice(
-				javaExpressionToIndex(args[0] ?? "0", context, output),
-				0,
-				item
-			);
-		} else {
-			collection.value.push(item);
-		}
+		collection.value.splice(index, 0, item);
 		return true;
 	}
 	if (method === "set") {
@@ -822,10 +819,9 @@ function executeJavaCollectionMutationStatement(
 		const rawArgument = args[0] ?? "";
 		const argument = evaluateJavaExpression(rawArgument, context, output);
 		if (argument.type === "number") {
-			collection.value.splice(
-				javaExpressionToIndex(rawArgument, context, output),
-				1
-			);
+			const index = Math.trunc(javaValueToNumber(argument));
+			checkJavaCollectionIndex(index, collection.value.length);
+			collection.value.splice(index, 1);
 		} else {
 			const index = collection.value.findIndex(value =>
 				javaValuesAreEqual(value, argument)
