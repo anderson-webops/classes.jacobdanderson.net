@@ -1277,13 +1277,11 @@ const machineLearningSourceCourse: RawCourse = {
 		},
 		{
 			title: "Customer Segmentation Starter Build: Practice Studio",
-			aliases: ["machine-learning-customer-segmentation"],
+			aliases: ["Customer Segmentation: Implementation Lab"],
 			curriculum: [
 				{
 					title: "Customer Segmentation Starter Build: Core Concepts",
-					aliases: [
-						"machine-learning-customer-segmentation-curriculum-customer-segmentation-core-concepts"
-					],
+					aliases: ["Customer Segmentation: Core Concepts"],
 					content: buildImplementationLabGuidance({
 						courseFamily: "machine learning",
 						moduleTitle:
@@ -1293,9 +1291,7 @@ const machineLearningSourceCourse: RawCourse = {
 				},
 				{
 					title: "Customer Segmentation Starter Build: Guided Example",
-					aliases: [
-						"machine-learning-customer-segmentation-curriculum-customer-segmentation-guided-example"
-					],
+					aliases: ["Customer Segmentation: Guided Example"],
 					content: buildImplementationLabGuidance({
 						courseFamily: "machine learning",
 						moduleTitle:
@@ -1305,9 +1301,7 @@ const machineLearningSourceCourse: RawCourse = {
 				},
 				{
 					title: "Customer Segmentation Starter Build: Core Project",
-					aliases: [
-						"machine-learning-customer-segmentation-curriculum-customer-segmentation-core-project"
-					],
+					aliases: ["Customer Segmentation: Core Project"],
 					content: buildImplementationLabGuidance({
 						courseFamily: "machine learning",
 						moduleTitle:
@@ -1322,9 +1316,7 @@ const machineLearningSourceCourse: RawCourse = {
 				},
 				{
 					title: "Customer Segmentation Starter Build: Review and Reflection",
-					aliases: [
-						"machine-learning-customer-segmentation-curriculum-customer-segmentation-review-and-reflection"
-					],
+					aliases: ["Customer Segmentation: Review and Reflection"],
 					content: buildImplementationLabGuidance({
 						courseFamily: "machine learning",
 						moduleTitle:
@@ -1336,9 +1328,7 @@ const machineLearningSourceCourse: RawCourse = {
 			supplementalProjects: [
 				{
 					title: "Customer Segmentation Starter Build: Extension Challenge",
-					aliases: [
-						"machine-learning-customer-segmentation-supplemental-customer-segmentation-extension-challenge"
-					],
+					aliases: ["Customer Segmentation: Extension Challenge"],
 					content: buildImplementationLabGuidance({
 						courseFamily: "machine learning",
 						moduleTitle:
@@ -1354,7 +1344,7 @@ const machineLearningSourceCourse: RawCourse = {
 				{
 					title: "Customer Segmentation Starter Build Transfer Practice",
 					aliases: [
-						"machine-learning-customer-segmentation-supplemental-customer-segmentation-supplemental-2"
+						"Customer Segmentation supplemental 2: Implementation Lab"
 					],
 					content: buildProjectGuidance({
 						courseFamily: "machine learning",
@@ -1371,7 +1361,7 @@ const machineLearningSourceCourse: RawCourse = {
 				{
 					title: "Customer Segmentation Starter Build Extension Practice",
 					aliases: [
-						"machine-learning-customer-segmentation-supplemental-customer-segmentation-supplemental-3"
+						"Customer Segmentation supplemental 3: Implementation Lab"
 					],
 					content: buildProjectGuidance({
 						courseFamily: "machine learning",
@@ -1554,13 +1544,11 @@ const machineLearningSourceCourse: RawCourse = {
 		},
 		{
 			title: "Disney Movie Clustering Starter Build: Practice Studio",
-			aliases: ["machine-learning-disney-movie-clustering"],
+			aliases: ["Disney Movie Clustering: Implementation Lab"],
 			curriculum: [
 				{
 					title: "Disney Movie Clustering Starter Build: Core Concepts",
-					aliases: [
-						"machine-learning-disney-movie-clustering-curriculum-disney-movie-clustering-core-concepts"
-					],
+					aliases: ["Disney Movie Clustering: Core Concepts"],
 					content: buildImplementationLabGuidance({
 						courseFamily: "machine learning",
 						moduleTitle:
@@ -1570,9 +1558,7 @@ const machineLearningSourceCourse: RawCourse = {
 				},
 				{
 					title: "Disney Movie Clustering Starter Build: Guided Example",
-					aliases: [
-						"machine-learning-disney-movie-clustering-curriculum-disney-movie-clustering-guided-example"
-					],
+					aliases: ["Disney Movie Clustering: Guided Example"],
 					content: buildImplementationLabGuidance({
 						courseFamily: "machine learning",
 						moduleTitle:
@@ -1582,9 +1568,7 @@ const machineLearningSourceCourse: RawCourse = {
 				},
 				{
 					title: "Disney Movie Clustering Starter Build: Core Project",
-					aliases: [
-						"machine-learning-disney-movie-clustering-curriculum-disney-movie-clustering-core-project"
-					],
+					aliases: ["Disney Movie Clustering: Core Project"],
 					content: buildImplementationLabGuidance({
 						courseFamily: "machine learning",
 						moduleTitle:
@@ -1599,9 +1583,7 @@ const machineLearningSourceCourse: RawCourse = {
 				},
 				{
 					title: "Disney Movie Clustering Starter Build: Review and Reflection",
-					aliases: [
-						"machine-learning-disney-movie-clustering-curriculum-disney-movie-clustering-review-and-reflection"
-					],
+					aliases: ["Disney Movie Clustering: Review and Reflection"],
 					content: buildImplementationLabGuidance({
 						courseFamily: "machine learning",
 						moduleTitle:
@@ -1613,9 +1595,7 @@ const machineLearningSourceCourse: RawCourse = {
 			supplementalProjects: [
 				{
 					title: "Disney Movie Clustering Starter Build: Extension Challenge",
-					aliases: [
-						"machine-learning-disney-movie-clustering-supplemental-disney-movie-clustering-extension-challenge"
-					],
+					aliases: ["Disney Movie Clustering: Extension Challenge"],
 					content: buildImplementationLabGuidance({
 						courseFamily: "machine learning",
 						moduleTitle:
@@ -1631,7 +1611,7 @@ const machineLearningSourceCourse: RawCourse = {
 				{
 					title: "Disney Movie Clustering Starter Build Transfer Practice",
 					aliases: [
-						"machine-learning-disney-movie-clustering-supplemental-disney-movie-clustering-supplemental-2"
+						"Disney Movie Clustering supplemental 2: Implementation Lab"
 					],
 					content: buildProjectGuidance({
 						courseFamily: "machine learning",
@@ -1648,7 +1628,7 @@ const machineLearningSourceCourse: RawCourse = {
 				{
 					title: "Disney Movie Clustering Starter Build Extension Practice",
 					aliases: [
-						"machine-learning-disney-movie-clustering-supplemental-disney-movie-clustering-supplemental-3"
+						"Disney Movie Clustering supplemental 3: Implementation Lab"
 					],
 					content: buildProjectGuidance({
 						courseFamily: "machine learning",

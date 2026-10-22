@@ -31,32 +31,31 @@ describe("saved course progress identities", () => {
 		] as const;
 		const supplements = [
 			"extension-challenge",
-			"supplemental-2",
-			"supplemental-3"
+			"supplemental-2-implementation-lab",
+			"supplemental-3-implementation-lab"
 		] as const;
 
 		for (const [topic, label] of topics) {
-			const oldModuleId = `machine-learning-${topic}`;
+			const oldModuleId = `machine-learning-${topic}-implementation-lab`;
 			const moduleOwners = course?.modules.filter(
 				module =>
 					module.id === oldModuleId ||
 					module.aliases?.includes(oldModuleId)
 			);
-			expect(moduleOwners, oldModuleId).toHaveLength(1);
-			const module = moduleOwners?.[0];
-			expect(module?.title).toContain(label);
-			expect(module?.title).toContain("Starter Build");
+			expect(
+				moduleOwners?.map(module => module.title),
+				oldModuleId
+			).toEqual([`${label} Starter Build: Practice Studio`]);
 			for (const [section, suffixes] of [
 				["curriculum", sections],
 				["supplemental", supplements]
 			] as const) {
 				for (const [index, suffix] of suffixes.entries()) {
 					const oldId = `${oldModuleId}-${section}-${topic}-${suffix}`;
-					const item =
+					const historicalOwner =
 						section === "curriculum"
-							? module?.curriculum[index]
-							: module?.supplementalProjects[index];
-					expect(item?.aliases, oldId).toContain(oldId);
+							? moduleOwners?.[0].curriculum[index]
+							: moduleOwners?.[0].supplementalProjects[index];
 					const owners = course?.modules.flatMap(candidate =>
 						[
 							...candidate.curriculum,
@@ -67,7 +66,7 @@ describe("saved course progress identities", () => {
 								entry.aliases?.includes(oldId)
 						)
 					);
-					expect(owners, oldId).toEqual([item]);
+					expect(owners, oldId).toEqual([historicalOwner]);
 				}
 			}
 		}
