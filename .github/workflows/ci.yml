@@ -1096,6 +1096,49 @@ jobs:
                   if-no-files-found: error
                   retention-days: 7
 
+            - name: Verify live chat readings and saved role exports
+              env:
+                  WEB_CHAT_EXPORT_DIR: output/web-live-chat-exports
+              run: npm exec -w front-end -- vitest run test/web-live-chat-workspace.spec.test.ts --no-file-parallelism --maxWorkers=1
+
+            - name: Verify live chat consent, separate fixture work and saved source
+              env:
+                  COURSE_IMPORT_SCREENSHOT_DIR: output/web-live-chat-screenshots
+              run: node --test test/web-live-chat-course-browser.test.mjs
+
+            - name: Fetch the maintained live chat source
+              uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+              with:
+                  repository: instruction-material/Web-Development-Foundations
+                  ref: b179a9e0e523a95fc5c71de3434322a7f7840579
+                  path: output/web-live-chat-native-source
+                  persist-credentials: false
+
+            - name: Reuse the identical maintained chat dependencies
+              run: |
+                  for input in package.json package-lock.json WDF4-Realtime-Chat-App/starter/package.json WDF4-Realtime-Chat-App/solution/package.json; do
+                    cmp "output/web-notes-native-source/$input" "output/web-live-chat-native-source/$input"
+                  done
+                  test -d output/web-notes-native-source/node_modules
+                  test ! -e output/web-live-chat-native-source/node_modules
+                  ln -s ../web-notes-native-source/node_modules output/web-live-chat-native-source/node_modules
+
+            - name: Run saved and browser-edited chat exports with two actual clients
+              run: node test/web-live-chat-exported-contracts.mjs --source output/web-live-chat-native-source --exports front-end/output/web-live-chat-exports --browser output/web-live-chat-browser --proof output/web-live-chat-native/proof.json
+
+            - name: Retain live chat import and native recovery evidence
+              if: always()
+              uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+              with:
+                  name: web-live-chat-workflows
+                  path: |
+                      front-end/output/web-live-chat-exports/
+                      output/web-live-chat-browser/
+                      output/web-live-chat-native/
+                      output/web-live-chat-screenshots/
+                  if-no-files-found: error
+                  retention-days: 7
+
             - name: Verify Network Systems foundation imports and notebook reuse
               env:
                   NETWORK_BROWSER_EXPORT_PROOF_DIR: output/network-exports
