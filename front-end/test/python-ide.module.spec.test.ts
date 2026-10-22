@@ -4288,6 +4288,20 @@ except RuntimeError as error:
     print("guarded")
 else:
     raise AssertionError("Project helper ran without a loop guard")
+${createTrustedPythonImportPrelude(projectRoot)}
+sys.modules.pop(${JSON.stringify(moduleName)}, None)
+${createInputBootstrap("", "turtle", projectRoot)}
+import os as __classes_os
+__classes_os.chdir(${JSON.stringify(projectRoot)})
+__classes_sys.path.insert(0, ${JSON.stringify(projectRoot)})
+try:
+    import helper
+except RuntimeError as error:
+    if "Stopped a long-running while loop" not in str(error):
+        raise
+    print("guarded")
+else:
+    raise AssertionError("Project helper ran without a loop guard")
 `;
 				const pythonExecutables = ["python3"];
 				if (spawnSync("python3.14", ["--version"]).status === 0)
@@ -4302,7 +4316,10 @@ else:
 						}
 					);
 					expect(result.status, result.stderr).toBe(0);
-					expect(result.stdout).toContain("guarded");
+					expect(result.stdout.trim().split("\n")).toEqual([
+						"guarded",
+						"guarded"
+					]);
 					expect(result.stderr).not.toContain("untrusted import");
 				}
 			} finally {
