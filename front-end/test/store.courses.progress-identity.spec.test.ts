@@ -87,7 +87,9 @@ describe("saved course progress identities", () => {
 		const store = useCoursesStore();
 		const course = await store.loadCourseById("unity-game-development");
 		const module = course?.modules.find(
-			entry => entry.title === "UGD8 Full-Project Starter and Review Repository Plan"
+			entry =>
+				entry.title ===
+				"UGD8 Full-Project Starter and Review Repository Plan"
 		);
 		const item = module?.curriculum.find(
 			entry => entry.title === "Checkpoint Workflow"
@@ -101,10 +103,164 @@ describe("saved course progress identities", () => {
 		expect(item?.aliases).toContain(previousId);
 		const owners = course?.modules.flatMap(entry =>
 			[...entry.curriculum, ...entry.supplementalProjects].filter(
-				candidate => candidate.id === previousId || candidate.aliases?.includes(previousId)
+				candidate =>
+					candidate.id === previousId ||
+					candidate.aliases?.includes(previousId)
 			)
 		);
 		expect(owners).toEqual([item]);
+	});
+
+	it("retains the ten original Algebra project-brief completion IDs", async () => {
+		setActivePinia(createPinia());
+		const store = useCoursesStore();
+		const cases = [
+			[
+				"algebra-1a",
+				"algebra-1a-aa3-module-project-movie-star-status-with-maddie-van-beek",
+				"Movie Star Status Project Brief",
+				"project-brief"
+			],
+			[
+				"algebra-1a",
+				"algebra-1a-aa5-module-project-free-swag-with-amisha-sisodiya",
+				"Free Swag Project Brief",
+				"project-brief"
+			],
+			[
+				"algebra-1a",
+				"algebra-1a-aa7-module-project-community-data-analysis-with-davin-lee",
+				"Community Data Analysis Project Brief",
+				"project-brief"
+			],
+			[
+				"algebra-1a",
+				"algebra-1a-aa11-module-project-predicting-avalanches-with-ruby-lee",
+				"Avalanche Prediction Project Brief",
+				"project-brief"
+			],
+			[
+				"algebra-1a",
+				"algebra-1a-aa15-module-project-cytogenetics-quest-with-dr-renu-bajaj",
+				"Cytogenetics Quest Project Brief",
+				"project-brief"
+			],
+			[
+				"algebra-1a",
+				"algebra-1a-aa16-module-project-battle-of-the-publications-with-konstantin-kaganovsky",
+				"Battle of the Publications Project Brief",
+				"project-brief"
+			],
+			[
+				"algebra-1b",
+				"algebra-1b-ab4-module-project-smart-and-elegant-with-amy-katz",
+				"Smart and Elegant Project Brief",
+				"project-brief"
+			],
+			[
+				"algebra-1b",
+				"algebra-1b-ab16-module-project-j-t-phone-home",
+				"J.T. Phone Home Project Brief",
+				"project-brief"
+			],
+			[
+				"algebra-1b",
+				"algebra-1b-ab20-module-project-the-mysteries-of-light-with-blake-eaton",
+				"Mysteries of Light Project Brief",
+				"project-brief"
+			],
+			[
+				"algebra-1b",
+				"algebra-1b-ab21-module-project-radiofungi-with-sunanda-sharma",
+				"Radiofungi Project Brief and Answers",
+				"project-brief-and-cleaned-answers"
+			]
+		] as const;
+
+		for (const [courseId, moduleId, title, previousSuffix] of cases) {
+			const course = await store.loadCourseById(courseId);
+			const item = course?.modules
+				.find(module => module.id === moduleId)
+				?.curriculum.find(entry => entry.title === title);
+			const previousId = `${moduleId}-curriculum-${previousSuffix}`;
+			expect(item, previousId).toBeDefined();
+			expect(item?.id).not.toBe(previousId);
+			expect(item?.aliases, previousId).toContain(previousId);
+		}
+	});
+
+	it("retains the twenty original Physics representation and reflection IDs", async () => {
+		setActivePinia(createPinia());
+		const store = useCoursesStore();
+		const course = await store.loadCourseById("intro-to-physics");
+		const cases = [
+			[
+				"intro-to-physics-phy8-momentum-impulse-and-collisions",
+				"Momentum Graph and Data Exercise",
+				"Momentum Transfer Reflection"
+			],
+			[
+				"intro-to-physics-phy9-rotational-motion-and-torque-basics",
+				"Torque Diagram and Data Exercise",
+				"Torque Transfer Reflection"
+			],
+			[
+				"intro-to-physics-phy10-fluids-pressure-and-buoyancy",
+				"Fluids Data Representation",
+				"Fluids Transfer Reflection"
+			],
+			[
+				"intro-to-physics-phy11-heat-temperature-and-thermal-energy",
+				"Thermal Graph and Data Exercise",
+				"Thermal Design Transfer Reflection"
+			],
+			[
+				"intro-to-physics-phy12-optics-mirrors-lenses-and-images",
+				"Optics Ray-Diagram Exercise",
+				"Optics Transfer Reflection"
+			],
+			[
+				"intro-to-physics-phy13-magnetism-and-electromagnetic-induction",
+				"Electromagnetic Device Diagram",
+				"Electromagnetism Transfer Reflection"
+			],
+			[
+				"intro-to-physics-phy14-simple-harmonic-motion-and-resonance",
+				"Oscillation Graph Exercise",
+				"Resonance Transfer Reflection"
+			],
+			[
+				"intro-to-physics-phy15-astronomy-gravity-and-orbits",
+				"Orbit Data and Diagram Exercise",
+				"Orbit Transfer Reflection"
+			],
+			[
+				"intro-to-physics-phy16-modern-physics-and-model-limits",
+				"Modern Physics Evidence Diagram",
+				"Model-Limit Transfer Reflection"
+			],
+			[
+				"intro-to-physics-phy17-engineering-design-and-physics-portfolio",
+				"Portfolio Evidence Representation",
+				"Portfolio Transfer Reflection"
+			]
+		] as const;
+
+		for (const [moduleId, representationTitle, reflectionTitle] of cases) {
+			const module = course?.modules.find(entry => entry.id === moduleId);
+			for (const [title, suffix] of [
+				[representationTitle, "graph-diagram-or-data-exercise"],
+				[reflectionTitle, "reflection-and-transfer-practice"]
+			] as const) {
+				const item = module?.curriculum.find(
+					entry => entry.title === title
+				);
+				const previousId = `${moduleId}-curriculum-${suffix}`;
+				expect(item, previousId).toBeDefined();
+				expect(item?.id).not.toBe(previousId);
+				expect(item?.aliases, previousId).toContain(previousId);
+			}
+		}
 	});
 
 	it("retains the intermediate Machine Learning sequence ID", async () => {
