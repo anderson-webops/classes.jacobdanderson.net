@@ -1012,9 +1012,11 @@ const webDevelopmentFoundationsSourceCourse: RawCourse = {
 		},
 		{
 			title: "Full Stack Web Lab 14: Feature Slice Studio",
+			aliases: ["Full Stack Web Lab 14: Implementation Lab"],
 			curriculum: [
 				{
 					title: "Feature Slice Studio: Core Concepts",
+					aliases: ["Full Stack Web Lab 14: Core Concepts"],
 					content: buildImplementationLabGuidance({
 						courseFamily: "web development",
 						moduleTitle:
@@ -1024,6 +1026,7 @@ const webDevelopmentFoundationsSourceCourse: RawCourse = {
 				},
 				{
 					title: "Feature Slice Studio: Guided Example",
+					aliases: ["Full Stack Web Lab 14: Guided Example"],
 					content: buildImplementationLabGuidance({
 						courseFamily: "web development",
 						moduleTitle:
@@ -1033,6 +1036,7 @@ const webDevelopmentFoundationsSourceCourse: RawCourse = {
 				},
 				{
 					title: "Feature Slice Studio: Core Project",
+					aliases: ["Full Stack Web Lab 14: Core Project"],
 					content: buildImplementationLabGuidance({
 						courseFamily: "web development",
 						moduleTitle:
@@ -1046,6 +1050,7 @@ const webDevelopmentFoundationsSourceCourse: RawCourse = {
 				},
 				{
 					title: "Feature Slice Studio: Review",
+					aliases: ["Full Stack Web Lab 14: Review and Reflection"],
 					content: buildImplementationLabGuidance({
 						courseFamily: "web development",
 						moduleTitle:
@@ -1057,6 +1062,7 @@ const webDevelopmentFoundationsSourceCourse: RawCourse = {
 			supplementalProjects: [
 				{
 					title: "Feature Slice Studio: Extension Challenge",
+					aliases: ["Full Stack Web Lab 14: Extension Challenge"],
 					content: buildImplementationLabGuidance({
 						courseFamily: "web development",
 						moduleTitle:
@@ -1070,6 +1076,7 @@ const webDevelopmentFoundationsSourceCourse: RawCourse = {
 				},
 				{
 					title: "Feature Slice Transfer Practice",
+					aliases: ["Full Stack Web Lab 14 Transfer Practice"],
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle:
@@ -1084,6 +1091,7 @@ const webDevelopmentFoundationsSourceCourse: RawCourse = {
 				},
 				{
 					title: "Feature Slice Extension Practice",
+					aliases: ["Full Stack Web Lab 14 Extension Practice"],
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle:
@@ -1100,9 +1108,11 @@ const webDevelopmentFoundationsSourceCourse: RawCourse = {
 		},
 		{
 			title: "Full Stack Web Lab 15: API Integration Studio",
+			aliases: ["Full Stack Web Lab 15: Implementation Lab"],
 			curriculum: [
 				{
 					title: "API Integration Studio: Core Concepts",
+					aliases: ["Full Stack Web Lab 15: Core Concepts"],
 					content: buildImplementationLabGuidance({
 						courseFamily: "web development",
 						moduleTitle:
@@ -1112,6 +1122,7 @@ const webDevelopmentFoundationsSourceCourse: RawCourse = {
 				},
 				{
 					title: "API Integration Studio: Guided Example",
+					aliases: ["Full Stack Web Lab 15: Guided Example"],
 					content: buildImplementationLabGuidance({
 						courseFamily: "web development",
 						moduleTitle:
@@ -1121,6 +1132,7 @@ const webDevelopmentFoundationsSourceCourse: RawCourse = {
 				},
 				{
 					title: "API Integration Studio: Core Project",
+					aliases: ["Full Stack Web Lab 15: Core Project"],
 					content: buildImplementationLabGuidance({
 						courseFamily: "web development",
 						moduleTitle:
@@ -1134,6 +1146,7 @@ const webDevelopmentFoundationsSourceCourse: RawCourse = {
 				},
 				{
 					title: "API Integration Studio: Review",
+					aliases: ["Full Stack Web Lab 15: Review and Reflection"],
 					content: buildImplementationLabGuidance({
 						courseFamily: "web development",
 						moduleTitle:
@@ -1145,6 +1158,7 @@ const webDevelopmentFoundationsSourceCourse: RawCourse = {
 			supplementalProjects: [
 				{
 					title: "API Integration Studio: Extension Challenge",
+					aliases: ["Full Stack Web Lab 15: Extension Challenge"],
 					content: buildImplementationLabGuidance({
 						courseFamily: "web development",
 						moduleTitle:
@@ -1158,6 +1172,7 @@ const webDevelopmentFoundationsSourceCourse: RawCourse = {
 				},
 				{
 					title: "API Integration Transfer Practice",
+					aliases: ["Full Stack Web Lab 15 Transfer Practice"],
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle:
@@ -1172,6 +1187,7 @@ const webDevelopmentFoundationsSourceCourse: RawCourse = {
 				},
 				{
 					title: "API Integration Extension Practice",
+					aliases: ["Full Stack Web Lab 15 Extension Practice"],
 					content: buildProjectGuidance({
 						courseFamily: "web development",
 						moduleTitle:

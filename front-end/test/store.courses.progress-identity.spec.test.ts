@@ -263,6 +263,103 @@ describe("saved course progress identities", () => {
 		}
 	});
 
+	it("retains both original Web Development lab progress identities", async () => {
+		setActivePinia(createPinia());
+		const store = useCoursesStore();
+		const course = await store.loadCourseById(
+			"web-development-foundations"
+		);
+		const labs = [
+			{
+				number: 14,
+				current: "Feature Slice Studio",
+				curriculum: [
+					["Core Concepts", "Core Concepts"],
+					["Guided Example", "Guided Example"],
+					["Core Project", "Core Project"],
+					["Review", "Review and Reflection"]
+				],
+				supplemental: [
+					["Extension Challenge", "Extension Challenge"],
+					[
+						"Feature Slice Transfer Practice",
+						"Full Stack Web Lab 14 Transfer Practice"
+					],
+					[
+						"Feature Slice Extension Practice",
+						"Full Stack Web Lab 14 Extension Practice"
+					]
+				]
+			},
+			{
+				number: 15,
+				current: "API Integration Studio",
+				curriculum: [
+					["Core Concepts", "Core Concepts"],
+					["Guided Example", "Guided Example"],
+					["Core Project", "Core Project"],
+					["Review", "Review and Reflection"]
+				],
+				supplemental: [
+					["Extension Challenge", "Extension Challenge"],
+					[
+						"API Integration Transfer Practice",
+						"Full Stack Web Lab 15 Transfer Practice"
+					],
+					[
+						"API Integration Extension Practice",
+						"Full Stack Web Lab 15 Extension Practice"
+					]
+				]
+			}
+		] as const;
+
+		for (const lab of labs) {
+			const oldModuleId = historicalId(
+				`web-development-foundations-Full Stack Web Lab ${lab.number}: Implementation Lab`
+			);
+			const module = course?.modules.find(entry =>
+				entry.aliases?.includes(oldModuleId)
+			);
+			expect(module, oldModuleId).toBeDefined();
+			expect(module?.title).toContain(lab.current);
+			expect(module?.aliases, oldModuleId).toContain(oldModuleId);
+
+			for (const [section, entries] of [
+				["curriculum", lab.curriculum],
+				["supplemental", lab.supplemental]
+			] as const) {
+				for (const [currentTitle, oldTitle] of entries) {
+					const oldFullTitle = oldTitle.startsWith("Full Stack")
+						? oldTitle
+						: `Full Stack Web Lab ${lab.number}: ${oldTitle}`;
+					const oldItemId = historicalId(
+						`${oldModuleId}-${section}-${oldFullTitle}`
+					);
+					const sectionItems =
+						section === "curriculum"
+							? module?.curriculum
+							: module?.supplementalProjects;
+					const item = sectionItems?.find(entry =>
+						entry.aliases?.includes(oldItemId)
+					);
+					expect(item, `${currentTitle}: ${oldItemId}`).toBeDefined();
+					const owners = course?.modules.flatMap(entry =>
+						[
+							...entry.curriculum,
+							...entry.supplementalProjects
+						].filter(
+							candidate =>
+								candidate.id === oldItemId ||
+								candidate.aliases?.includes(oldItemId)
+						)
+					);
+					expect(owners, oldItemId).toEqual([item]);
+				}
+			}
+		}
+	});
+
 	it("retains the intermediate Machine Learning sequence ID", async () => {
 		setActivePinia(createPinia());
 		const store = useCoursesStore();
