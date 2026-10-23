@@ -1193,7 +1193,7 @@ jobs:
               uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
               with:
                   repository: instruction-material/Web-Development-Foundations
-                  ref: b179a9e0e523a95fc5c71de3434322a7f7840579
+                  ref: 75c676e07f06b82a1e4deb214fb83a69517b0e58
                   path: output/web-live-chat-native-source
                   persist-credentials: false
 
