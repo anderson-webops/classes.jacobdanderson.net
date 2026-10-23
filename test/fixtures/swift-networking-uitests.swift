@@ -32,18 +32,25 @@ final class NetworkingUITests: XCTestCase {
             search.typeText("  hTtP  ")
             XCTAssertTrue(row("Check an HTTP response", in: app).waitForExistence(timeout: 5))
             XCTAssertFalse(row("Keep state predictable", in: app).exists)
-            search.tap()
-            let current = search.value as? String ?? ""
-            search.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: current.count))
+            let clearSearch = search.buttons["Clear text"]
+            XCTAssertTrue(clearSearch.waitForExistence(timeout: 5))
+            XCTAssertTrue(clearSearch.isHittable)
+            clearSearch.tap()
+            XCTAssertTrue(row(firstTitle, in: app).waitForExistence(timeout: 5))
             search.typeText("zz-no-reference-match-zz")
             XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH %@", "No Results")).firstMatch.waitForExistence(timeout: 5))
             XCTAssertFalse(row("Check an HTTP response", in: app).exists)
-            search.tap()
-            let unmatched = search.value as? String ?? ""
-            search.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: unmatched.count))
-            let cancel = app.buttons["Cancel"]
-            XCTAssertTrue(cancel.waitForExistence(timeout: 5))
-            cancel.tap()
+            XCTAssertTrue(clearSearch.waitForExistence(timeout: 5))
+            XCTAssertTrue(clearSearch.isHittable)
+            clearSearch.tap()
+            XCTAssertTrue(row(firstTitle, in: app).waitForExistence(timeout: 5))
+            XCTAssertTrue(row("Check an HTTP response", in: app).exists)
+            let dismissSearch = app.buttons.matching(
+                NSPredicate(format: "label == %@ OR label == %@", "Cancel", "close")
+            ).firstMatch
+            XCTAssertTrue(dismissSearch.waitForExistence(timeout: 5))
+            XCTAssertTrue(dismissSearch.isHittable)
+            dismissSearch.tap()
             XCTAssertTrue(row(firstTitle, in: app).waitForExistence(timeout: 5))
             XCTAssertTrue(row("Check an HTTP response", in: app).exists)
         }
