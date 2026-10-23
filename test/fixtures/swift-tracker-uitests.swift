@@ -13,14 +13,9 @@ final class TrackerUITests: XCTestCase {
     @MainActor
     private func replace(_ field: XCUIElement, with value: String) {
         field.tap()
-        field.press(forDuration: 1.2)
-        let app = XCUIApplication()
-        let menu = app.menuItems["Select All"]
-        let button = app.buttons["Select All"]
-        XCTAssertTrue(menu.waitForExistence(timeout: 2) || button.waitForExistence(timeout: 2))
-        if menu.exists { menu.tap() } else { button.tap() }
+        field.typeKey("a", modifierFlags: .command)
         field.typeText(XCUIKeyboardKey.delete.rawValue + value)
-
+        if !value.isEmpty { XCTAssertEqual(field.value as? String, value) }
     }
 
     @MainActor
