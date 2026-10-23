@@ -1319,6 +1319,9 @@ jobs:
                   COURSE_IMPORT_SCREENSHOT_DIR: output/swift-welcome-screenshots
               run: node --test test/swift-welcome-course-browser.test.mjs
 
+            - name: Verify isolated native tracker variant identities
+              run: python3 test/swift-tracker-project-identity.py
+
             - name: Verify Swift networking consent, saved roles and seven-file exports
               env:
                   SWIFT_NETWORKING_BROWSER_DIR: output/swift-networking-browser

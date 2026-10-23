@@ -16,7 +16,8 @@ def generate(browser, output, course, variant):
     template = (ROOT / "test/fixtures/swift-tracker-uitests.swift").read_text() + "\n" + (ROOT / "test/fixtures/swift-tracker-storage-uitests.swift").read_text()
     template = template.replace("OPEN_FAILURE", "true" if variant == "open-failure" else "false").replace("READ_ONLY", "true" if variant == "read-only" else "false")
     template = template.replace("SWIFT_DATA", "true" if course == "swiftdata" else "false").replace("LONG_TEXT", "true" if variant == "long-text" else "false")
-    result = builder.generate(browser, output, kind=course, source_files=files, shared_files=shared, ui_template=template)
+    result = builder.generate(browser, output, kind=course, source_files=files, shared_files=shared,
+                              ui_template=template, bundle_suffix=variant)
     if variant in ("open-failure", "read-only"):
         assert course == "swiftdata"
         for profile in result["profiles"]:

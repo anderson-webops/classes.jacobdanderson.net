@@ -6,6 +6,7 @@ import json
 import os
 from pathlib import Path, PurePosixPath
 import platform
+import plistlib
 import re
 import signal
 import subprocess
@@ -188,6 +189,8 @@ for variant in variants:
             "SWIFT_VERSION=6.0", "IPHONEOS_DEPLOYMENT_TARGET=17.0", "CODE_SIGNING_ALLOWED=NO"
         ], timeout=600)
 record["appInputs"] = inputs
+assert len({profile["bundleIdentifier"] for profile in inputs["profiles"]}) == len(inputs["profiles"])
+record["installedApps"] = []
 args.proof.write_text(json.dumps(record, indent=2) + "\n")
 runtimes = json.loads(run("runtimes", ["/usr/bin/xcrun", "simctl", "list", "runtimes", "--json"]))["runtimes"]
 available = [x for x in runtimes if x.get("isAvailable") and x["identifier"].startswith("com.apple.CoreSimulator.SimRuntime.iOS-")
@@ -219,6 +222,31 @@ for size, model in [("small", small), ("large", large)]:
                 observed = run("get-content-size-" + label, ["/usr/bin/xcrun", "simctl", "ui", device, "content_size"]).decode().strip()
                 assert observed == content_size, (label, observed, content_size)
             result = RESULTS / (label + ".xcresult")
+            product = Path(profile["derivedData"]) / "Build/Products/Debug-iphonesimulator" / (profile["scheme"] + ".app")
+            bundle_id = profile["bundleIdentifier"]
+            info = plistlib.loads((product / "Info.plist").read_bytes())
+            assert info["CFBundleIdentifier"] == bundle_id
+            run("install-" + label, ["/usr/bin/xcrun", "simctl", "install", device, str(product)])
+            installed = Path(run("installed-app-" + label, [
+                "/usr/bin/xcrun", "simctl", "get_app_container", device, bundle_id, "app"
+            ]).decode().strip())
+            assert plistlib.loads((installed / "Info.plist").read_bytes())["CFBundleIdentifier"] == bundle_id
+            binary_names = [info["CFBundleExecutable"]]
+            debug_library = profile["scheme"] + ".debug.dylib"
+            if (product / debug_library).is_file():
+                binary_names.append(debug_library)
+            binary_hashes = {}
+            for name in binary_names:
+                expected = hashlib.sha256((product / name).read_bytes()).hexdigest()
+                actual = hashlib.sha256((installed / name).read_bytes()).hexdigest()
+                assert actual == expected, (label, name, expected, actual)
+                binary_hashes[name] = actual
+            record["installedApps"].append(dict(
+                case=label, device=device, bundleIdentifier=bundle_id,
+                builtApp=str(product), installedApp=str(installed),
+                binaryHashes=binary_hashes, builtAndInstalledBytesMatch=True
+            ))
+            args.proof.write_text(json.dumps(record, indent=2) + "\n")
             status, stdout, stderr = run("ui-" + label, [
                 "/usr/bin/xcrun", "xcodebuild", "test-without-building", "-project", profile["project"],
                 "-scheme", profile["scheme"], "-configuration", "Debug", "-jobs", "1",
