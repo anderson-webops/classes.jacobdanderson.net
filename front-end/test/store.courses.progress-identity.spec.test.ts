@@ -15,6 +15,74 @@ function historicalId(value: string) {
 }
 
 describe("saved course progress identities", () => {
+	it("retains JavaScript Level 2 practice completions from before label changes", async () => {
+		setActivePinia(createPinia());
+		const course = await useCoursesStore().loadCourseById(
+			"javascript-level-2-javascript-master"
+		);
+		const previousTopics = [
+			["JSM1 Fundamentals Review", "Fundamentals Review"],
+			["JSM3 Complex Conditionals", "Complex Conditionals"],
+			["JSM4 Canvas", "Canvas"],
+			["JSM5 Arrays and Iterators", "Arrays and Iterators"],
+			["JSM6 Objects and Properties", "Objects and Properties"],
+			["Check-In #1", "Check-In 1"],
+			[
+				"JSM7 Helper Functions and Event Listeners",
+				"Helper Functions and Event Listeners"
+			],
+			["JSM8 Collisions and Controls", "Collisions and Controls"],
+			["JSM9 Games in the Canvas", "Games in the Canvas"],
+			["JSM10 APIs and Requests", "APIs and Requests"],
+			["JSM12 NoSQL and CRUD", "NoSQL and CRUD"],
+			["Check-In #2", "Check-In 2"],
+			["JSM13 Message Board", "Message Board"],
+			["JSM14 Quiz Game", "Quiz Game"],
+			["JSM15 Master Project", "JavaScript Level 2: JavaScript Master"]
+		] as const;
+		const extensionOnly = new Set([
+			"JSM4 Canvas",
+			"JSM5 Arrays and Iterators",
+			"JSM6 Objects and Properties",
+			"JSM7 Helper Functions and Event Listeners"
+		]);
+		const allItems = course?.modules.flatMap(module => [
+			...module.curriculum,
+			...module.supplementalProjects
+		]);
+		let checkedIds = 0;
+
+		for (const [moduleTitle, topic] of previousTopics) {
+			const module = course?.modules.find(
+				entry => entry.title === moduleTitle
+			);
+			expect(module, moduleTitle).toBeDefined();
+			const practices = extensionOnly.has(moduleTitle)
+				? ["Extension Practice"]
+				: ["Transfer Practice", "Extension Practice"];
+			for (const practice of practices) {
+				const previousId = historicalId(
+					`${module?.id}-supplemental-${practice}: ${topic}`
+				);
+				const owner = module?.supplementalProjects.find(item =>
+					item.title.endsWith(practice)
+				);
+				expect(owner?.aliases, previousId).toContain(previousId);
+				expect(owner?.id, previousId).not.toBe(previousId);
+				expect(
+					allItems?.filter(
+						item =>
+							item.id === previousId ||
+							item.aliases?.includes(previousId)
+					),
+					previousId
+				).toEqual([owner]);
+				checkedIds++;
+			}
+		}
+		expect(checkedIds).toBe(26);
+	});
+
 	it("retains Pythonic practice completions from before the label reorder", async () => {
 		setActivePinia(createPinia());
 		const course = await useCoursesStore().loadCourseById(
