@@ -5,6 +5,7 @@ import { unmatchedCourseProgress } from "@/modules/courseProgressHistory";
 import { courseCatalog } from "@/stores/courses/index";
 import { webDevelopmentFoundationsCourse } from "@/stores/courses/web-development-foundations";
 import { researchBackedExpansionCourseIds } from "@/stores/courses/research-expansions";
+import generatedProjectHistory from "./fixtures/generated-project-history.json";
 
 function historicalId(value: string) {
 	return value
@@ -1865,6 +1866,43 @@ describe("saved course progress identities", () => {
 				completedItemIds: [retiredId]
 			})
 		).toEqual([{ id: retiredId, kind: "item" }]);
+	});
+
+	it("retains all changed generated-project IDs as current aliases or exact archived history", async () => {
+		setActivePinia(createPinia());
+		const store = useCoursesStore();
+		expect(generatedProjectHistory).toHaveLength(72);
+
+		for (const {
+			course: courseId,
+			oldId,
+			newId
+		} of generatedProjectHistory) {
+			const course = await store.loadCourseById(courseId);
+			const items =
+				course?.modules.flatMap(
+					module => module.supplementalProjects
+				) ?? [];
+			const oldOwners = items.filter(
+				item => item.id === oldId || item.aliases?.includes(oldId)
+			);
+			const newOwners = items.filter(
+				item => item.id === newId || item.aliases?.includes(newId)
+			);
+			expect(oldOwners.length, oldId).toBeLessThanOrEqual(1);
+			expect(newOwners.length, newId).toBeLessThanOrEqual(1);
+			if (newOwners.length) {
+				expect(oldOwners, oldId).toEqual(newOwners);
+			} else if (!oldOwners.length) {
+				expect(
+					unmatchedCourseProgress(course, {
+						courseId,
+						completedModuleIds: [],
+						completedItemIds: [oldId]
+					})
+				).toEqual([{ id: oldId, kind: "item" }]);
+			}
+		}
 	});
 
 	it("does not claim the same scoped ID for different modules or items", async () => {
