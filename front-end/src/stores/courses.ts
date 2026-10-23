@@ -15,6 +15,7 @@ import { useAppStore } from "./app";
 import algebraProgressHistory from "./courses/algebra-progress-history.json";
 import apcsaProgressHistory from "./courses/apcsa-progress-history.json";
 import assemblyProgressHistory from "./courses/assembly-progress-history.json";
+import broadTitleProgressHistory from "./courses/broad-title-progress-history.json";
 import cppAlgorithmsProgressHistory from "./courses/cpp-algorithms-progress-history.json";
 import cppDesignPatternsProgressHistory from "./courses/cpp-design-patterns-progress-history.json";
 import designPatternsPart2ProgressHistory from "./courses/design-patterns-part-2-progress-history.json";
@@ -58,7 +59,7 @@ function mergeCourseHistoricalAliases(
 	return merged;
 }
 
-const historicalModuleAliases: Record<string, Record<string, string[]>> = {
+const historicalModuleAliasesBase: Record<string, Record<string, string[]>> = {
 	"linux-systems": linuxProgressHistory.modules,
 	"low-level-security": lowLevelSecurityProgressHistory.modules,
 	"usaco-bronze": usacoBronzeLegacyProgressHistory.modules,
@@ -85,6 +86,10 @@ const historicalModuleAliases: Record<string, Record<string, string[]>> = {
 			["python-to-java-and-cpp-bridge-language-bridge-lab-17"]
 	}
 };
+const historicalModuleAliases = mergeCourseHistoricalAliases(
+	historicalModuleAliasesBase,
+	broadTitleProgressHistory.modules
+);
 const historicalItemAliasesBase: Record<string, Record<string, string[]>> = {
 	...algebraProgressHistory,
 	...assemblyProgressHistory,
@@ -107,8 +112,11 @@ const historicalItemAliasesBase: Record<string, Record<string, string[]>> = {
 	...networkSystemsProgressHistory
 };
 const historicalItemAliases = mergeCourseHistoricalAliases(
-	historicalItemAliasesBase,
-	generatedTitleProgressHistory
+	mergeCourseHistoricalAliases(
+		historicalItemAliasesBase,
+		generatedTitleProgressHistory
+	),
+	broadTitleProgressHistory.items
 );
 
 const COMBINING_MARKS_RE = /[\u0300-\u036F]/g;

@@ -10,6 +10,10 @@ import { webDevelopmentFoundationsCourse } from "@/stores/courses/web-developmen
 import { researchBackedExpansionCourseIds } from "@/stores/courses/research-expansions";
 import generatedProjectHistory from "./fixtures/generated-project-history.json";
 import generatedTitleCourseHistory from "./fixtures/generated-title-course-history.json";
+import broadTitle17b6History from "./fixtures/broad-title-17b6-history.json";
+import broadTitle509cHistory from "./fixtures/broad-title-509c-history.json";
+import broadTitleAfd19History from "./fixtures/broad-title-afd19-history.json";
+import broadTitleEebbHistory from "./fixtures/broad-title-eebb-history.json";
 import usacoStudioHistory from "./fixtures/usaco-studio-history.json";
 import apcsaCourseHistory from "./fixtures/apcsa-course-history.json";
 import machineLearningCourseHistory from "./fixtures/machine-learning-course-history.json";
@@ -2576,6 +2580,79 @@ describe("saved course progress identities", () => {
 							catalogIds
 						)
 					).toHaveLength(1);
+				}
+			}
+		}
+	});
+
+	it("keeps broad historical title and lab progress on verified lessons or in visible history", async () => {
+		setActivePinia(createPinia());
+		const store = useCoursesStore();
+		const catalogIds = new Set(courseCatalog.map(entry => entry.id));
+		for (const [history, expectedCount, expectedOwned] of [
+			[broadTitle17b6History, 534, 339],
+			[broadTitle509cHistory, 1468, 487],
+			[broadTitleAfd19History, 1024, 97],
+			[broadTitleEebbHistory, 489, 254]
+		] as const) {
+			expect(history).toHaveLength(expectedCount);
+			expect(history.filter(entry => entry.currentId)).toHaveLength(
+				expectedOwned
+			);
+			for (const [courseId, entries] of Map.groupBy(
+				history,
+				entry => entry.courseId
+			)) {
+				const course = await store.loadCourseById(courseId);
+				for (const { kind, oldId, currentId } of entries) {
+					const owners =
+						kind === "module"
+							? course?.modules.filter(
+									module =>
+										module.id === oldId ||
+										module.aliases?.includes(oldId)
+								)
+							: course?.modules.flatMap(module =>
+									[
+										...module.curriculum,
+										...module.supplementalProjects
+									].filter(
+										item =>
+											item.id === oldId ||
+											item.aliases?.includes(oldId)
+									)
+								);
+					if (currentId) {
+						expect(
+							owners?.map(owner => owner.id),
+							oldId
+						).toEqual([currentId]);
+					} else if (course) {
+						expect(owners, oldId).toEqual([]);
+						expect(
+							unmatchedCourseProgress(course, {
+								courseId,
+								completedModuleIds:
+									kind === "module" ? [oldId] : [],
+								completedItemIds: kind === "item" ? [oldId] : []
+							})
+						).toEqual([{ id: oldId, kind }]);
+					} else {
+						expect(
+							nonCatalogCourseProgress(
+								[
+									{
+										courseId,
+										completedModuleIds:
+											kind === "module" ? [oldId] : [],
+										completedItemIds:
+											kind === "item" ? [oldId] : []
+									}
+								],
+								catalogIds
+							)
+						).toHaveLength(1);
+					}
 				}
 			}
 		}
