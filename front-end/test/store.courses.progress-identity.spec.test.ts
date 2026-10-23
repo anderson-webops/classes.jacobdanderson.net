@@ -11,6 +11,7 @@ import apcsaCourseHistory from "./fixtures/apcsa-course-history.json";
 import machineLearningCourseHistory from "./fixtures/machine-learning-course-history.json";
 import designPatternsPart2History from "./fixtures/design-patterns-part-2-history.json";
 import linuxCourseHistory from "./fixtures/linux-course-history.json";
+import assemblyCourseHistory from "./fixtures/assembly-course-history.json";
 
 function historicalId(value: string) {
 	return value
@@ -2097,6 +2098,43 @@ describe("saved course progress identities", () => {
 				expect(
 					unmatchedCourseProgress(course, {
 						courseId: "linux-systems",
+						completedModuleIds: [oldId],
+						completedItemIds: []
+					})
+				).toEqual([{ id: oldId, kind }]);
+			}
+		}
+	});
+
+	it("preserves Assembly progress through lesson relabeling and studio consolidation", async () => {
+		setActivePinia(createPinia());
+		const course = await useCoursesStore().loadCourseById("assembly");
+		const modules = course?.modules ?? [];
+		const items = modules.flatMap(module => [
+			...module.curriculum,
+			...module.supplementalProjects
+		]);
+		expect(assemblyCourseHistory).toHaveLength(52);
+		expect(
+			assemblyCourseHistory.filter(entry => !entry.currentId)
+		).toHaveLength(3);
+
+		for (const { kind, oldId, currentId } of assemblyCourseHistory) {
+			const entities = kind === "module" ? modules : items;
+			const owners = entities.filter(
+				entity => entity.id === oldId || entity.aliases?.includes(oldId)
+			);
+			if (currentId) {
+				expect(
+					owners.map(entity => entity.id),
+					oldId
+				).toEqual([currentId]);
+			} else {
+				expect(kind).toBe("module");
+				expect(owners, oldId).toEqual([]);
+				expect(
+					unmatchedCourseProgress(course, {
+						courseId: "assembly",
 						completedModuleIds: [oldId],
 						completedItemIds: []
 					})
