@@ -17,6 +17,7 @@ import cppAlgorithmsCourseHistory from "./fixtures/cpp-algorithms-course-history
 import cppDesignPatternsCourseHistory from "./fixtures/cpp-design-patterns-progress-history.json";
 import lowLevelSecurityPart2CourseHistory from "./fixtures/low-level-security-part-2-progress-history.json";
 import networkSystemsCourseHistory from "./fixtures/network-systems-progress-history.json";
+import javaLevel1CourseHistory from "./fixtures/java-level-1-course-history.json";
 import javaLevel2CourseHistory from "./fixtures/java-level-2-course-history.json";
 
 function historicalId(value: string) {
@@ -2321,6 +2322,53 @@ describe("saved course progress identities", () => {
 			newId,
 			currentId
 		} of javaLevel2CourseHistory) {
+			const entities = kind === "module" ? modules : items;
+			for (const previousId of [oldId, newId]) {
+				const owners = entities.filter(
+					entity =>
+						entity.id === previousId ||
+						entity.aliases?.includes(previousId)
+				);
+				if (currentId) {
+					expect(
+						owners.map(entity => entity.id),
+						previousId
+					).toEqual([currentId]);
+				} else {
+					expect(kind).toBe("module");
+					expect(owners, previousId).toEqual([]);
+					expect(
+						unmatchedCourseProgress(course, {
+							courseId,
+							completedModuleIds: [previousId],
+							completedItemIds: []
+						})
+					).toEqual([{ id: previousId, kind: "module" }]);
+				}
+			}
+		}
+	});
+
+	it("preserves Java Level 1 practice progress without merging retired studios", async () => {
+		setActivePinia(createPinia());
+		const courseId = "java-level-1";
+		const course = await useCoursesStore().loadCourseById(courseId);
+		const modules = course?.modules ?? [];
+		const items = modules.flatMap(module => [
+			...module.curriculum,
+			...module.supplementalProjects
+		]);
+		expect(javaLevel1CourseHistory).toHaveLength(58);
+		expect(
+			javaLevel1CourseHistory.filter(entry => !entry.currentId)
+		).toHaveLength(6);
+
+		for (const {
+			kind,
+			oldId,
+			newId,
+			currentId
+		} of javaLevel1CourseHistory) {
 			const entities = kind === "module" ? modules : items;
 			for (const previousId of [oldId, newId]) {
 				const owners = entities.filter(
