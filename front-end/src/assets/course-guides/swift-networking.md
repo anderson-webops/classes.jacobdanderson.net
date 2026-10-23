@@ -18,7 +18,7 @@ folder names. Add only the selected role's app files to the Xcode target;
 `tests/ReferenceContracts.swift` is a separate command-line test entry point.
 Do not add that test entry point to the app target.
 
-Both roles start with three local sample entries. Sample mode passes embedded
+Both roles initially display three local sample entries. Sample mode passes embedded
 JSON through the same status-checking and decoding code as the live route,
 without opening a network connection. The reference also offers **Live data**,
 which reads the public JSONPlaceholder `/posts` endpoint. No key or account is
@@ -135,7 +135,7 @@ These checks verify the client and store contract. Build the selected role in Xc
 and verify the source selector, search, detail navigation, retry, small-screen
 layout and larger text separately; a client test cannot prove view behavior.
 
-For an instructor walkthrough, pause before the status guard, before decoding
+Pause before the status guard, before decoding
 and before publishing state. Predict which visible state follows HTTP 503 with
 `[]`, HTTP 200 with `[]`, malformed JSON, cancellation and a late old response,
 then run the matching checks.

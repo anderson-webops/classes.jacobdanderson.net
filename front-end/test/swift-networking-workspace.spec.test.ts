@@ -37,7 +37,7 @@ afterEach(async () => {
 });
 
 describe("Swift networking workspace", () => {
-	it("embeds the maintained project reading and keeps its published identity", async () => {
+	it("adapts the maintained reading to neutral course copy and keeps its published identity", async () => {
 		setActivePinia(createPinia());
 		const course = (await useCoursesStore().loadCourseById(
 			"intro-to-swift-app-development"
@@ -52,7 +52,13 @@ describe("Swift networking workspace", () => {
 			module.id + "-curriculum-project-api-powered-reference-app"
 		);
 		expect(project.content).toBe(
-			fixture.files[fixture.pack + "/README.md"].content.trim()
+			fixture.files[fixture.pack + "/README.md"].content
+				.trim()
+				.replace(
+					"Both roles start with",
+					"Both roles initially display"
+				)
+				.replace("For an instructor walkthrough, pause", "Pause")
 		);
 		expect(project.ideImport).toBe(true);
 		expect(project.learningPath).toBe("core");
