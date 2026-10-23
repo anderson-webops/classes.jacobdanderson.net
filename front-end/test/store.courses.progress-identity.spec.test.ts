@@ -6,6 +6,7 @@ import { courseCatalog } from "@/stores/courses/index";
 import { webDevelopmentFoundationsCourse } from "@/stores/courses/web-development-foundations";
 import { researchBackedExpansionCourseIds } from "@/stores/courses/research-expansions";
 import generatedProjectHistory from "./fixtures/generated-project-history.json";
+import usacoStudioHistory from "./fixtures/usaco-studio-history.json";
 
 function historicalId(value: string) {
 	return value
@@ -1901,6 +1902,50 @@ describe("saved course progress identities", () => {
 						completedItemIds: [oldId]
 					})
 				).toEqual([{ id: oldId, kind: "item" }]);
+			}
+		}
+	});
+
+	it("keeps USACO studio completions on the same moved lessons", async () => {
+		setActivePinia(createPinia());
+		const store = useCoursesStore();
+		expect(usacoStudioHistory).toHaveLength(216);
+		expect(
+			usacoStudioHistory.filter(entry => entry.currentId)
+		).toHaveLength(188);
+
+		for (const {
+			course: courseId,
+			kind,
+			oldId,
+			newId,
+			currentId
+		} of usacoStudioHistory) {
+			const course = await store.loadCourseById(courseId);
+			const modules = course?.modules ?? [];
+			const items = modules.flatMap(module => [
+				...module.curriculum,
+				...module.supplementalProjects
+			]);
+			if (currentId) {
+				const currentItem = items.find(item => item.id === currentId);
+				expect(currentItem, currentId).toBeDefined();
+				expect(currentItem?.aliases, oldId).toContain(oldId);
+				expect(
+					currentId.split(/-(?:curriculum|supplemental)-/).at(-1),
+					currentId
+				).toBe(newId.split(/-(?:curriculum|supplemental)-/).at(-1));
+			} else {
+				expect(kind === "module" || oldId.endsWith("-stacks")).toBe(
+					true
+				);
+				expect(
+					unmatchedCourseProgress(course, {
+						courseId,
+						completedModuleIds: kind === "module" ? [oldId] : [],
+						completedItemIds: kind === "item" ? [oldId] : []
+					})
+				).toEqual([{ id: oldId, kind }]);
 			}
 		}
 	});

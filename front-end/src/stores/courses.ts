@@ -14,6 +14,12 @@ import {
 import { useAppStore } from "./app";
 import { courseCatalog, loadRawCourse } from "./courses/index";
 import { isJuniScratchProjectTitle } from "./courses/juniScratchProjects";
+import usacoProgressHistory from "./courses/usaco-progress-history.json";
+
+const usacoHistoricalItemAliases: Record<
+	string,
+	Record<string, string[]>
+> = usacoProgressHistory;
 
 const COMBINING_MARKS_RE = /[\u0300-\u036F]/g;
 const NON_ALPHANUMERIC_RE = /[^a-z0-9]+/g;
@@ -579,6 +585,9 @@ function normalizeCourse(
 					];
 					const itemAliases = [
 						...new Set([
+							...(usacoHistoricalItemAliases[courseId]?.[
+								itemId
+							] ?? []),
 							...courseEntityAliases(
 								item.stableId,
 								generatedItemId,
