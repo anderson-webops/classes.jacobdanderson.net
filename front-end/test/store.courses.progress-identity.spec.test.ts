@@ -15,6 +15,72 @@ function historicalId(value: string) {
 }
 
 describe("saved course progress identities", () => {
+	it("retains Java Level 3 practice completions across relabeling and archiving", async () => {
+		setActivePinia(createPinia());
+		const course = await useCoursesStore().loadCourseById("java-level-3");
+		const previousModules = [
+			[
+				"AJ1 Review: Variables, Strings, and Input",
+				"Variables, Strings, and Input"
+			],
+			["AJ3 Review: Objects and Classes", "Objects and Classes"],
+			["AJ4 Recursion", "Recursion"],
+			[
+				"AJ5 Linear Search and Big-O Notation",
+				"Linear Search and Big-O Notation"
+			],
+			["AJ6 Binary Search", "Binary Search"],
+			["Check-In #1", "Check-In #1"],
+			[
+				"AJ7 Selection and Insertion Sort",
+				"Selection and Insertion Sort"
+			],
+			["AJ8 Bubble Sort", "Bubble Sort"],
+			["AJ9 Merge Sort", "Merge Sort"],
+			["Check-In #2", "Check-In #2"],
+			["AJ10 Sustainable Programming", "Sustainable Programming"],
+			["AJ11 Linked Lists", "Linked Lists"],
+			["AJ13 Priority Queues and Maps", "Priority Queues and Maps"],
+			["Check-In #3", "Check-In #3"],
+			["AJ14 Binary Search Trees", "Binary Search Trees"],
+			["AJ15 Hash Tables", "Hash Tables"],
+			["AJ16 Graphs", "Graphs"],
+			["Check-In #4", "Check-In #4"],
+			["AJ17 Master Project: Google Maps", "Master Project: Google Maps"]
+		] as const;
+		let checkedIds = 0;
+
+		for (const [moduleTitle, previousTopic] of previousModules) {
+			const previousModuleId = historicalId(
+				`java-level-3-${moduleTitle}`
+			);
+			for (const [purpose, practiceNumber] of [
+				["Transfer", "2"],
+				["Extension", "3"]
+			] as const) {
+				const previousId = historicalId(
+					`${previousModuleId}-supplemental-${purpose} Practice: ${previousTopic}`
+				);
+				const owners = course?.modules.flatMap(module =>
+					module.supplementalProjects.filter(
+						item =>
+							item.id === previousId ||
+							item.aliases?.includes(previousId)
+					)
+				);
+				expect(owners, previousId).toHaveLength(1);
+				expect(owners?.[0].projectLink, previousId).toMatch(
+					new RegExp(
+						`-${previousModuleId.slice("java-level-3-".length)}-supplemental-${practiceNumber}/starter$`,
+						"u"
+					)
+				);
+				checkedIds++;
+			}
+		}
+		expect(checkedIds).toBe(38);
+	});
+
 	it("retains AI practice-studio completions after the module rename", async () => {
 		setActivePinia(createPinia());
 		const course = await useCoursesStore().loadCourseById("ai-level-1");
