@@ -21,6 +21,7 @@ import javaLevel1CourseHistory from "./fixtures/java-level-1-course-history.json
 import javaLevel2CourseHistory from "./fixtures/java-level-2-course-history.json";
 import languageBridgeCourseHistory from "./fixtures/language-bridge-course-history.json";
 import lowLevelSecurityCourseHistory from "./fixtures/low-level-security-course-history.json";
+import usacoBronzeCourseHistory from "./fixtures/usaco-bronze-course-history.json";
 
 function historicalId(value: string) {
 	return value
@@ -2465,6 +2466,43 @@ describe("saved course progress identities", () => {
 			oldId,
 			currentId
 		} of lowLevelSecurityCourseHistory) {
+			const entities = kind === "module" ? modules : items;
+			const owners = entities.filter(
+				entity => entity.id === oldId || entity.aliases?.includes(oldId)
+			);
+			if (currentId) {
+				expect(
+					owners.map(entity => entity.id),
+					oldId
+				).toEqual([currentId]);
+			} else {
+				expect(owners, oldId).toEqual([]);
+				expect(
+					unmatchedCourseProgress(course, {
+						courseId,
+						completedModuleIds: kind === "module" ? [oldId] : [],
+						completedItemIds: kind === "item" ? [oldId] : []
+					})
+				).toEqual([{ id: oldId, kind }]);
+			}
+		}
+	});
+
+	it("preserves USACO Bronze items without crediting consolidated studios", async () => {
+		setActivePinia(createPinia());
+		const courseId = "usaco-bronze";
+		const course = await useCoursesStore().loadCourseById(courseId);
+		const modules = course?.modules ?? [];
+		const items = modules.flatMap(module => [
+			...module.curriculum,
+			...module.supplementalProjects
+		]);
+		expect(usacoBronzeCourseHistory).toHaveLength(72);
+		expect(
+			usacoBronzeCourseHistory.filter(entry => !entry.currentId)
+		).toHaveLength(6);
+
+		for (const { kind, oldId, currentId } of usacoBronzeCourseHistory) {
 			const entities = kind === "module" ? modules : items;
 			const owners = entities.filter(
 				entity => entity.id === oldId || entity.aliases?.includes(oldId)

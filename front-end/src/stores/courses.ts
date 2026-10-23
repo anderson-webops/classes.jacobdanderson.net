@@ -28,11 +28,25 @@ import lowLevelSecurityPart2ProgressHistory from "./courses/low-level-security-p
 import lowLevelSecurityProgressHistory from "./courses/low-level-security-progress-history.json";
 import machineLearningProgressHistory from "./courses/machine-learning-progress-history.json";
 import networkSystemsProgressHistory from "./courses/network-systems-progress-history.json";
+import usacoBronzeLegacyProgressHistory from "./courses/usaco-bronze-legacy-progress-history.json";
 import usacoProgressHistory from "./courses/usaco-progress-history.json";
+
+function mergeHistoricalAliasMaps(
+	...maps: Record<string, string[]>[]
+): Record<string, string[]> {
+	const merged: Record<string, string[]> = {};
+	for (const map of maps) {
+		for (const [currentId, previousIds] of Object.entries(map)) {
+			merged[currentId] = [...(merged[currentId] ?? []), ...previousIds];
+		}
+	}
+	return merged;
+}
 
 const historicalModuleAliases: Record<string, Record<string, string[]>> = {
 	"linux-systems": linuxProgressHistory.modules,
 	"low-level-security": lowLevelSecurityProgressHistory.modules,
+	"usaco-bronze": usacoBronzeLegacyProgressHistory.modules,
 	"low-level-security-part-2": {
 		"low-level-security-part-2-low-level-security-lab-13-exploitability-triage-studio":
 			["low-level-security-part-2-low-level-security-lab-13"],
@@ -62,6 +76,10 @@ const historicalItemAliases: Record<string, Record<string, string[]>> = {
 	...cppAlgorithmsProgressHistory,
 	...cppDesignPatternsProgressHistory,
 	...usacoProgressHistory,
+	"usaco-bronze": mergeHistoricalAliasMaps(
+		usacoProgressHistory["usaco-bronze"],
+		usacoBronzeLegacyProgressHistory.items
+	),
 	...apcsaProgressHistory,
 	...designPatternsPart2ProgressHistory,
 	...javaLevel1ProgressHistory,
