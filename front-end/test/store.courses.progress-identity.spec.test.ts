@@ -15,6 +15,147 @@ function historicalId(value: string) {
 }
 
 describe("saved course progress identities", () => {
+	it("keeps original IDs through shared display-title transforms", async () => {
+		setActivePinia(createPinia());
+		for (const [courseId, previousId] of [
+			[
+				"scratch-level-1",
+				"scratch-level-1-gs14-mini-game-polish-studio-curriculum-core-concepts"
+			],
+			[
+				"scratch-level-1",
+				"scratch-level-1-gs13-master-project-supplemental-gs13-master-project-extension-challenge"
+			],
+			[
+				"ai-level-1",
+				"ai-level-1-ai-search-lab-13-curriculum-ai-search-lab-13-review-and-reflection"
+			]
+		] as const) {
+			const course = await useCoursesStore().loadCourseById(courseId);
+			const owners = course?.modules.flatMap(module =>
+				[...module.curriculum, ...module.supplementalProjects].filter(
+					item =>
+						item.id === previousId ||
+						item.aliases?.includes(previousId)
+				)
+			);
+			expect(owners, previousId).toHaveLength(1);
+		}
+	});
+
+	it("retains design-pattern practice and studio completions after relabeling", async () => {
+		setActivePinia(createPinia());
+		const course = await useCoursesStore().loadCourseById(
+			"design-patterns-in-java"
+		);
+		const subjects = [
+			"What Patterns Are and What They Are Not",
+			"Java Design Foundations",
+			"Creational Patterns I",
+			"Creational Patterns II and Boundary Patterns",
+			"Structural Patterns in Depth",
+			"Behavioral Patterns I",
+			"Behavioral Patterns II",
+			"Modern Extensions and Architecture Level Patterns",
+			"Pattern Selection and Refactoring Judgment",
+			"Capstone Refactor"
+		];
+		let checkedIds = 0;
+		for (const [index, subject] of subjects.entries()) {
+			const moduleId = historicalId(
+				`design-patterns-in-java-dpj${index + 1}-${subject}`
+			);
+			for (const [purpose, number] of [
+				["Transfer", 2],
+				["Extension", 3]
+			] as const) {
+				const previousId = historicalId(
+					`${moduleId}-supplemental-${purpose} Practice: ${subject}`
+				);
+				const owners = course?.modules.flatMap(module =>
+					module.supplementalProjects.filter(
+						item =>
+							item.id === previousId ||
+							item.aliases?.includes(previousId)
+					)
+				);
+				expect(owners, previousId).toHaveLength(1);
+				expect(owners?.[0].projectLink, previousId).toMatch(
+					new RegExp(
+						`-dpj${index + 1}-${historicalId(subject)}-supplemental-${number}/starter$`,
+						"u"
+					)
+				);
+				checkedIds++;
+			}
+		}
+		for (const [subject, moduleNumber, labNumber] of [
+			["Strategy Selection Refactor", 11, 15],
+			["Structural Wrapper Refactor", 12, 16],
+			["Architecture Judgment Capstone", 13, 17]
+		] as const) {
+			const previousModuleId = `design-patterns-in-java-pattern-lab-${moduleNumber}`;
+			const archive = course?.modules.find(
+				module =>
+					module.title === "Optional Applied Java Pattern Studios"
+			);
+			expect(archive).toBeDefined();
+			for (const [section, previousTitle, currentTitle] of [
+				[
+					"curriculum",
+					`Pattern Lab ${labNumber}: Core Concepts`,
+					`${subject}: Core Concepts`
+				],
+				[
+					"curriculum",
+					`Pattern Lab ${labNumber}: Guided Example`,
+					`${subject}: Guided Example`
+				],
+				[
+					"curriculum",
+					`Core Project: Pattern Lab ${labNumber}`,
+					`Core Project: ${subject}`
+				],
+				[
+					"curriculum",
+					`Review: Pattern Lab ${labNumber}`,
+					`Review: ${subject}`
+				],
+				[
+					"supplemental",
+					`Extension Challenge: Pattern Lab ${labNumber}`,
+					`Extension Challenge: ${subject}`
+				],
+				[
+					"supplemental",
+					`Pattern Lab ${labNumber} Transfer Practice`,
+					`${subject} Transfer Practice`
+				],
+				[
+					"supplemental",
+					`Pattern Lab ${labNumber} Extension Practice`,
+					`${subject} Extension Practice`
+				]
+			] as const) {
+				const previousId = historicalId(
+					`${previousModuleId}-${section}-${previousTitle}`
+				);
+				const owners = course?.modules.flatMap(entry =>
+					[...entry.curriculum, ...entry.supplementalProjects].filter(
+						item =>
+							item.id === previousId ||
+							item.aliases?.includes(previousId)
+					)
+				);
+				expect(owners, previousId).toHaveLength(1);
+				expect(archive?.supplementalProjects).toContain(owners?.[0]);
+				expect(owners?.[0].title, previousId).toBe(currentTitle);
+				checkedIds++;
+			}
+		}
+		expect(checkedIds).toBe(41);
+	});
+
 	it("retains math reference-archive progress from the source-activity labels", async () => {
 		setActivePinia(createPinia());
 		const archiveItemsByCourse: Record<string, string[]> = {

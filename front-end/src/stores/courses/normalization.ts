@@ -857,18 +857,30 @@ function preserveExtensionProjectAliases(course: RawCourse, courseId: string) {
 	}
 }
 
+function setProgressSafeTitle(
+	entity: RawCourseModule | RawCourseModuleItem,
+	title: string
+) {
+	if (entity.title === title) return;
+	entity.aliases = [...new Set([...(entity.aliases ?? []), entity.title])];
+	entity.title = title;
+}
+
 function normalizeDisplayTitles(course: RawCourse) {
 	for (const module of course.modules) {
-		module.title = cleanDisplayTitle(module.title);
+		setProgressSafeTitle(module, cleanDisplayTitle(module.title));
 		for (const item of [
 			...module.curriculum,
 			...module.supplementalProjects
 		]) {
-			item.title = cleanDisplayTitle(item.title);
-			item.title = contextualizeGenericItemTitle(
-				course.name,
-				module.title,
-				item.title
+			setProgressSafeTitle(item, cleanDisplayTitle(item.title));
+			setProgressSafeTitle(
+				item,
+				contextualizeGenericItemTitle(
+					course.name,
+					module.title,
+					item.title
+				)
 			);
 		}
 	}
@@ -948,19 +960,25 @@ function contextualizeGenericDisplayTitles(course: RawCourse) {
 		]) {
 			const standaloneSupplemental = conciseGenericItemTitle(item.title);
 			if (standaloneSupplemental) {
-				item.title = contextualGenericTitle(
-					course.name,
-					module.title,
-					standaloneSupplemental
+				setProgressSafeTitle(
+					item,
+					contextualGenericTitle(
+						course.name,
+						module.title,
+						standaloneSupplemental
+					)
 				);
 				continue;
 			}
 
 			if (genericTitles.has(item.title)) {
-				item.title = contextualGenericTitle(
-					course.name,
-					module.title,
-					item.title
+				setProgressSafeTitle(
+					item,
+					contextualGenericTitle(
+						course.name,
+						module.title,
+						item.title
+					)
 				);
 				continue;
 			}
@@ -968,11 +986,14 @@ function contextualizeGenericDisplayTitles(course: RawCourse) {
 			const colonSuffix = conciseGenericColonTitle(item.title);
 			if (!colonSuffix) continue;
 
-			item.title = contextualGenericTitle(
-				course.name,
-				module.title,
-				colonSuffix,
-				item.title
+			setProgressSafeTitle(
+				item,
+				contextualGenericTitle(
+					course.name,
+					module.title,
+					colonSuffix,
+					item.title
+				)
 			);
 		}
 	}
@@ -984,22 +1005,14 @@ function compactGeneratedDisplayTitles(course: RawCourse) {
 			...module.curriculum,
 			...module.supplementalProjects
 		]) {
-			const previousTitle = item.title;
-			item.title = compactGeneratedDisplayTitle(
-				course.name,
-				module.title,
-				item.title
-			);
-			if (
-				item.title !== previousTitle &&
-				/^Check-In\s+#?\d+:\s+Additional Practice Project$/i.test(
-					previousTitle
+			setProgressSafeTitle(
+				item,
+				compactGeneratedDisplayTitle(
+					course.name,
+					module.title,
+					item.title
 				)
-			) {
-				item.aliases = [
-					...new Set([...(item.aliases ?? []), previousTitle])
-				];
-			}
+			);
 		}
 	}
 }
@@ -1022,10 +1035,16 @@ function normalizeGeneratedSupplementalLabel(text: string) {
 
 function normalizeGeneratedSupplementalLabels(course: RawCourse) {
 	for (const module of course.modules) {
-		module.title = normalizeGeneratedSupplementalLabel(module.title);
+		setProgressSafeTitle(
+			module,
+			normalizeGeneratedSupplementalLabel(module.title)
+		);
 		for (const section of ["curriculum", "supplementalProjects"] as const) {
 			for (const item of module[section]) {
-				item.title = normalizeGeneratedSupplementalLabel(item.title);
+				setProgressSafeTitle(
+					item,
+					normalizeGeneratedSupplementalLabel(item.title)
+				);
 				item.content = normalizeGeneratedSupplementalLabel(
 					item.content
 				);
@@ -1178,10 +1197,9 @@ function normalizeContextualItemTitles(course: RawCourse) {
 			...module.curriculum,
 			...module.supplementalProjects
 		]) {
-			item.title = removeRedundantItemTitleContext(
-				course,
-				module,
-				item.title
+			setProgressSafeTitle(
+				item,
+				removeRedundantItemTitleContext(course, module, item.title)
 			);
 		}
 	}
@@ -1490,7 +1508,7 @@ function groupConceptLessons(
 		];
 		return {
 			title,
-			...(aliases.length ? { aliases } : {}),
+			aliases: [...new Set([label, ...aliases])],
 			content: lessonArcContent(lessons)
 		};
 	};
@@ -9582,7 +9600,7 @@ const priorMathArchiveCourses = new Set([
 	"pre-calculus-b"
 ]);
 
-function priorMathArchiveId(value: string) {
+function historicalCourseProgressId(value: string) {
 	return value
 		.toLowerCase()
 		.normalize("NFKD")
@@ -9610,7 +9628,7 @@ function preserveMathArchiveProgress(course: RawCourse, courseId: string) {
 		section: "curriculum" | "supplemental",
 		previousTitle: string
 	) => {
-		const previousId = priorMathArchiveId(
+		const previousId = historicalCourseProgressId(
 			`${moduleId}-${section}-${previousTitle}`
 		);
 		item.aliases = [...new Set([...(item.aliases ?? []), previousId])];
@@ -9659,6 +9677,109 @@ function preserveMathArchiveProgress(course: RawCourse, courseId: string) {
 				"curriculum",
 				"Source Activity Anchors: Pre-Algebra A Capstone"
 			);
+		}
+	}
+}
+
+function preserveDesignPatternsJavaProgress(
+	course: RawCourse,
+	courseId: string
+) {
+	if (courseId !== "design-patterns-in-java") return;
+	const addAlias = (
+		entity: RawCourseModule | RawCourseModuleItem,
+		previousId: string
+	) => {
+		entity.aliases = [...new Set([...(entity.aliases ?? []), previousId])];
+	};
+
+	for (const module of course.modules) {
+		const baseModule = module.title.match(/^DPJ\d+ (.+)$/u);
+		if (!baseModule) continue;
+		const moduleId = historicalCourseProgressId(
+			`${courseId}-${module.title}`
+		);
+		const subject = baseModule[1].replace(
+			"Architecture-Level",
+			"Architecture Level"
+		);
+		for (const [purpose, title] of [
+			["Transfer", `${subject} Transfer Practice`],
+			["Extension", `${subject} Extension Practice`]
+		] as const) {
+			const item = module.supplementalProjects.find(
+				candidate => candidate.title === title
+			);
+			if (item) {
+				addAlias(
+					item,
+					historicalCourseProgressId(
+						`${moduleId}-supplemental-${purpose} Practice: ${subject}`
+					)
+				);
+			}
+		}
+	}
+
+	const studios = [
+		["Strategy Selection Refactor", 11, 15],
+		["Structural Wrapper Refactor", 12, 16],
+		["Architecture Judgment Capstone", 13, 17]
+	] as const;
+	const archive = course.modules.find(
+		module => module.title === "Optional Applied Java Pattern Studios"
+	);
+	if (!archive) return;
+	for (const [subject, moduleNumber, labNumber] of studios) {
+		const moduleId = `${courseId}-pattern-lab-${moduleNumber}`;
+		for (const [section, previousTitle, currentTitle] of [
+			[
+				"curriculum",
+				`Pattern Lab ${labNumber}: Core Concepts`,
+				`${subject}: Core Concepts`
+			],
+			[
+				"curriculum",
+				`Pattern Lab ${labNumber}: Guided Example`,
+				`${subject}: Guided Example`
+			],
+			[
+				"curriculum",
+				`Core Project: Pattern Lab ${labNumber}`,
+				`Core Project: ${subject}`
+			],
+			[
+				"curriculum",
+				`Review: Pattern Lab ${labNumber}`,
+				`Review: ${subject}`
+			],
+			[
+				"supplemental",
+				`Extension Challenge: Pattern Lab ${labNumber}`,
+				`Extension Challenge: ${subject}`
+			],
+			[
+				"supplemental",
+				`Pattern Lab ${labNumber} Transfer Practice`,
+				`${subject} Transfer Practice`
+			],
+			[
+				"supplemental",
+				`Pattern Lab ${labNumber} Extension Practice`,
+				`${subject} Extension Practice`
+			]
+		] as const) {
+			const item = archive.supplementalProjects.find(
+				candidate => candidate.title === currentTitle
+			);
+			if (item) {
+				addAlias(
+					item,
+					historicalCourseProgressId(
+						`${moduleId}-${section}-${previousTitle}`
+					)
+				);
+			}
 		}
 	}
 }
@@ -9724,5 +9845,6 @@ export function normalizeRawCourse(id: string, rawCourse: RawCourse) {
 	applyWebNotesWorkflow(course, id);
 	applyWebDeploymentWorkflow(course, id);
 	preserveMathArchiveProgress(course, id);
+	preserveDesignPatternsJavaProgress(course, id);
 	return course;
 }
