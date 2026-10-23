@@ -16,16 +16,19 @@ import apcsaProgressHistory from "./courses/apcsa-progress-history.json";
 import designPatternsPart2ProgressHistory from "./courses/design-patterns-part-2-progress-history.json";
 import { courseCatalog, loadRawCourse } from "./courses/index";
 import { isJuniScratchProjectTitle } from "./courses/juniScratchProjects";
+import linuxProgressHistory from "./courses/linux-progress-history.json";
 import machineLearningProgressHistory from "./courses/machine-learning-progress-history.json";
 import usacoProgressHistory from "./courses/usaco-progress-history.json";
 
 const historicalModuleAliases: Record<string, Record<string, string[]>> = {
+	"linux-systems": linuxProgressHistory.modules,
 	"machine-learning": machineLearningProgressHistory.modules
 };
 const historicalItemAliases: Record<string, Record<string, string[]>> = {
 	...usacoProgressHistory,
 	...apcsaProgressHistory,
 	...designPatternsPart2ProgressHistory,
+	"linux-systems": linuxProgressHistory.items,
 	"machine-learning": machineLearningProgressHistory.items
 };
 
