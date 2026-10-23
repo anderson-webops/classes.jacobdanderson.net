@@ -22,6 +22,7 @@ import { courseCatalog, loadRawCourse } from "./courses/index";
 import javaLevel1ProgressHistory from "./courses/java-level-1-progress-history.json";
 import javaLevel2ProgressHistory from "./courses/java-level-2-progress-history.json";
 import { isJuniScratchProjectTitle } from "./courses/juniScratchProjects";
+import languageBridgeProgressHistory from "./courses/language-bridge-progress-history.json";
 import linuxProgressHistory from "./courses/linux-progress-history.json";
 import lowLevelSecurityPart2ProgressHistory from "./courses/low-level-security-part-2-progress-history.json";
 import machineLearningProgressHistory from "./courses/machine-learning-progress-history.json";
@@ -47,6 +48,10 @@ const historicalModuleAliases: Record<string, Record<string, string[]>> = {
 		"network-systems-network-systems-lab-17-operations-capstone-studio": [
 			"network-systems-network-systems-lab-17"
 		]
+	},
+	"python-to-java-and-cpp-bridge": {
+		"python-to-java-and-cpp-bridge-language-bridge-lab-17-bridge-capstone-port-studio":
+			["python-to-java-and-cpp-bridge-language-bridge-lab-17"]
 	}
 };
 const historicalItemAliases: Record<string, Record<string, string[]>> = {
@@ -59,6 +64,7 @@ const historicalItemAliases: Record<string, Record<string, string[]>> = {
 	...designPatternsPart2ProgressHistory,
 	...javaLevel1ProgressHistory,
 	...javaLevel2ProgressHistory,
+	...languageBridgeProgressHistory,
 	"linux-systems": linuxProgressHistory.items,
 	...lowLevelSecurityPart2ProgressHistory,
 	"machine-learning": machineLearningProgressHistory.items,

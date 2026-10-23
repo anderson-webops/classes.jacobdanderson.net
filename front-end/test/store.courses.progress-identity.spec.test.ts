@@ -19,6 +19,7 @@ import lowLevelSecurityPart2CourseHistory from "./fixtures/low-level-security-pa
 import networkSystemsCourseHistory from "./fixtures/network-systems-progress-history.json";
 import javaLevel1CourseHistory from "./fixtures/java-level-1-course-history.json";
 import javaLevel2CourseHistory from "./fixtures/java-level-2-course-history.json";
+import languageBridgeCourseHistory from "./fixtures/language-bridge-course-history.json";
 
 function historicalId(value: string) {
 	return value
@@ -2391,6 +2392,54 @@ describe("saved course progress identities", () => {
 							completedItemIds: []
 						})
 					).toEqual([{ id: previousId, kind: "module" }]);
+				}
+			}
+		}
+	});
+
+	it("preserves bridge-course progress without crediting removed studios", async () => {
+		setActivePinia(createPinia());
+		const courseId = "python-to-java-and-cpp-bridge";
+		const course = await useCoursesStore().loadCourseById(courseId);
+		const modules = course?.modules ?? [];
+		const items = modules.flatMap(module => [
+			...module.curriculum,
+			...module.supplementalProjects
+		]);
+		expect(languageBridgeCourseHistory).toHaveLength(99);
+		expect(
+			languageBridgeCourseHistory.filter(entry => !entry.currentId)
+		).toHaveLength(87);
+
+		for (const {
+			kind,
+			oldId,
+			newId,
+			currentId
+		} of languageBridgeCourseHistory) {
+			const entities = kind === "module" ? modules : items;
+			for (const previousId of [oldId, newId]) {
+				const owners = entities.filter(
+					entity =>
+						entity.id === previousId ||
+						entity.aliases?.includes(previousId)
+				);
+				if (currentId) {
+					expect(
+						owners.map(entity => entity.id),
+						previousId
+					).toEqual([currentId]);
+				} else {
+					expect(owners, previousId).toEqual([]);
+					expect(
+						unmatchedCourseProgress(course, {
+							courseId,
+							completedModuleIds:
+								kind === "module" ? [previousId] : [],
+							completedItemIds:
+								kind === "item" ? [previousId] : []
+						})
+					).toEqual([{ id: previousId, kind }]);
 				}
 			}
 		}
