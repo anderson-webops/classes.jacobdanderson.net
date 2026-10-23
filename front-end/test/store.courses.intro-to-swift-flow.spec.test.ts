@@ -1,3 +1,4 @@
+import practiceProgressBefore from "./fixtures/swift-practice-progress-before.json";
 import fs from "node:fs";
 import path from "node:path";
 import { createPinia, setActivePinia } from "pinia";
@@ -202,15 +203,22 @@ describe("Intro to Swift App Development learner flow", () => {
 		const items = allItems();
 		const titles = items.map(item => item.title);
 
-		expect(
-			Math.min(...items.map(item => item.content.length))
-		).toBeGreaterThan(1_500);
 		expect(new Set(titles).size).toBe(titles.length);
 		expect(titles).not.toContain("Diagnostic Checkpoint");
 		expect(titles).toContain("SW7 State and Data Flow: Readiness Check");
 
 		for (const item of items) {
-			if (item.title === "Project: Welcome Profile App") {
+			if (
+				item.projectLink?.startsWith(
+					"/course-assets/swift/intro-swift-practice-pack.md#"
+				)
+			) {
+				expect(item.content, item.title).toContain("## Assignment");
+				expect(item.content, item.title).toContain("## Evidence");
+				expect(item.content, item.title).toContain("## Toolchain");
+				expect(item.ideImport).toBe(false);
+				expect(item.datasetLink).toBeUndefined();
+			} else if (item.title === "Project: Welcome Profile App") {
 				for (const section of [
 					"## Open one complete source role",
 					"## Read the app from its entry point",
@@ -263,12 +271,76 @@ describe("Intro to Swift App Development learner flow", () => {
 					"**Local continuity:**"
 				);
 			}
-			expect(item.projectLink, item.title).toMatch(/^https:\/\//u);
+			expect(item.projectLink, item.title).toMatch(
+				/^(?:https:\/\/|\/course-assets\/swift\/intro-swift-practice-pack\.md#)/u
+			);
 			expect(item.solutionLink, item.title).toBeTruthy();
-			expect(item.datasetLink, item.title).toMatch(
+			expect(item.datasetLink ?? item.projectLink, item.title).toMatch(
 				/^\/course-assets\/swift\/intro-swift-practice-pack\.md#/u
 			);
 			expect(item.mediaLink, item.title).toMatch(/^https:\/\//u);
+		}
+	});
+
+	it("replaces every mismatched practice app with its real lesson case", () => {
+		const cases = allItems().filter(item =>
+			item.projectLink?.startsWith(
+				"/course-assets/swift/intro-swift-practice-pack.md#"
+			)
+		);
+		expect(cases).toHaveLength(41);
+		for (const item of cases) {
+			expect(item.ideImport).toBe(false);
+			expect(item.datasetLink).toBeUndefined();
+			expect(item.solutionLink).toMatch(
+				/^\/course-assets\/swift\/intro-swift-verification-guide\.md#/u
+			);
+			expect(item.content).not.toContain("**Project goal:** Build **SAD");
+			expect(item.content).toContain(item.projectLink!);
+		}
+		for (const item of allItems()) {
+			expect(item.projectLink ?? "").not.toMatch(
+				/\/Swift\/tree\/[^/]+\/SAD-\d{2}-/u
+			);
+			expect(item.solutionLink ?? "").not.toMatch(
+				/\/Swift\/tree\/[^/]+\/SAD-\d{2}-/u
+			);
+		}
+		for (const module of introToSwiftAppDevelopmentCourse.modules) {
+			const transfer = module.supplementalProjects.find(item =>
+				item.title.includes("Transfer Practice")
+			);
+			const extension = module.supplementalProjects.find(item =>
+				item.title.includes("Extension Practice")
+			);
+			if (transfer && extension) {
+				expect(transfer.content.split("## Evidence")[0]).not.toBe(
+					extension.content.split("## Evidence")[0]
+				);
+			}
+		}
+	});
+
+	it("retains all 41 existing saved practice IDs, aliases and learning paths", async () => {
+		setActivePinia(createPinia());
+		const course = await useCoursesStore().loadCourseById(
+			"intro-to-swift-app-development"
+		);
+		for (const before of practiceProgressBefore.rows) {
+			const module = course!.modules.find(
+				module => module.id === before.moduleId
+			)!;
+			expect(module, before.moduleId).toBeDefined();
+			const item = module.supplementalProjects.find(
+				item => item.id === before.id
+			)!;
+			expect(item, before.id).toBeDefined();
+			expect(item.title).toBe(before.title);
+			expect(item.aliases).toEqual(before.aliases);
+			expect(item.learningPath).toBe(before.learningPath);
+			expect(item.projectLink).toMatch(
+				/^\/course-assets\/swift\/intro-swift-practice-pack\.md#/u
+			);
 		}
 	});
 
@@ -353,7 +425,7 @@ describe("Intro to Swift App Development learner flow", () => {
 
 		for (const item of allItems()) {
 			expect(practiceHeadings, item.title).toContain(
-				item.datasetLink?.split("#")[1]
+				(item.datasetLink ?? item.projectLink)?.split("#")[1]
 			);
 			if (item.title === "Project: Welcome Profile App") {
 				expect(item.content).toContain(

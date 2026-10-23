@@ -1355,6 +1355,20 @@ jobs:
                   if-no-files-found: error
                   retention-days: 7
 
+            - name: Verify all Swift practice cases and saved lesson links
+              env:
+                  SWIFT_PRACTICE_BROWSER_DIR: output/swift-practice-cases
+              run: node --test test/swift-practice-case-browser.test.mjs
+
+            - name: Retain Swift practice case browser evidence
+              if: always()
+              uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+              with:
+                  name: swift-practice-cases
+                  path: output/swift-practice-cases/
+                  if-no-files-found: error
+                  retention-days: 7
+
             - name: Retain Swift profile browser and exported source evidence
               if: always()
               uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a

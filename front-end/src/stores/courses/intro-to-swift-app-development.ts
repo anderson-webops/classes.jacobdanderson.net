@@ -2273,6 +2273,11 @@ function contextualizeSwiftItem(
 	const practiceMatch = isSupplemental
 		? item.title.match(/^(.+?) (Transfer|Extension) Practice$/u)
 		: null;
+	const suppliedCasePractice =
+		Boolean(practiceMatch) &&
+		/\/Swift\/tree\/[^/]+\/SAD-\d{2}-[^/]+\/starter$/u.test(
+			item.projectLink ?? ""
+		);
 	const previousPracticeTitle = practiceMatch
 		? `${practiceMatch[2]} Practice: ${practiceMatch[1]}`
 		: null;
@@ -2285,6 +2290,47 @@ function contextualizeSwiftItem(
 	const completionRoute = isSupplemental
 		? `**Completion route:** Core: ${flow.projectCore} Stretch: ${flow.projectStretch}`
 		: `**Practice route:** Core: ${flow.coreRoute} Stretch: ${flow.stretchRoute}`;
+	const caseToolchain: Record<string, string> = {
+		"networking-and-data-loading-case":
+			"Use bundled nonpersonal JSON for the core case. Optional public HTTPS endpoints must support read-only requests without credentials.",
+		"signing-teams-and-bundle-ids-case":
+			"Use the supplied signing failures to identify the required team role. Live account changes require authorization from that account's owner.",
+		"shapes-and-legacy-reference-case":
+			"Shapes Studio is optional enrichment after the core projects. Legacy Mod* examples support code comparison."
+	};
+	const practiceTask = (
+		item.title.includes("Extension")
+			? flow.projectStretch
+			: flow.projectCore
+	).replace(
+		"when an instructor or account holder must perform the action",
+		"which account role is authorized to perform the action"
+	);
+	const practiceToolchain =
+		caseToolchain[flow.materialSection] ?? flow.boundary;
+	const suppliedCaseReading = `## Assignment
+
+${flow.focus}
+
+${practiceTask}
+
+Use the [supplied ${flow.title} case](${practiceLink}) for its initial data, project map or observed failure.
+
+## Evidence
+
+${flow.verification}
+
+Record the initial condition, expected result, observed result and the evidence supporting the conclusion. A written case analysis records predictions separately from an executed app check.
+
+## Reference
+
+After the attempt, compare the baseline reasoning with the [verification guide](${verificationLink}) and explain how the task changes the expected evidence.
+
+## Toolchain
+
+${practiceToolchain}
+
+[Primary reference](${flow.referenceLink})`;
 	const legacyNote = `The visible ${flow.title} sequence is the active learner order. The source-pack label ${flow.sourceTitle} remains as an alias so established starter, solution, and archive links stay traceable.`;
 
 	return {
@@ -2299,13 +2345,22 @@ function contextualizeSwiftItem(
 				...(priorTitle ? [priorTitle] : [])
 			])
 		],
-		ideImport: welcomeProject || workspaceRoot ? true : item.ideImport,
-		preserveInstructions: projectReading ? true : item.preserveInstructions,
-		content: welcomeProject
-			? swiftWelcomeReading.trim()
-			: projectReading
-				? projectReading.trim()
-				: `${item.content.trim()}
+		ideImport: suppliedCasePractice
+			? false
+			: welcomeProject || workspaceRoot
+				? true
+				: item.ideImport,
+		preserveInstructions:
+			suppliedCasePractice || projectReading
+				? true
+				: item.preserveInstructions,
+		content: suppliedCasePractice
+			? suppliedCaseReading
+			: welcomeProject
+				? swiftWelcomeReading.trim()
+				: projectReading
+					? projectReading.trim()
+					: `${item.content.trim()}
 
 **Course position:** ${flow.stage}. ${legacyNote}
 
@@ -2327,13 +2382,17 @@ ${completionRoute}
 				: isExtension
 					? "choice"
 					: "core",
-		projectLink: workspaceRoot
-			? `${workspaceRoot}/starter`
-			: (item.projectLink ?? flow.referenceLink),
-		solutionLink: workspaceRoot
-			? `${workspaceRoot}/solution`
-			: (item.solutionLink ?? verificationLink),
-		datasetLink: practiceLink,
+		projectLink: suppliedCasePractice
+			? practiceLink
+			: workspaceRoot
+				? `${workspaceRoot}/starter`
+				: (item.projectLink ?? flow.referenceLink),
+		solutionLink: suppliedCasePractice
+			? verificationLink
+			: workspaceRoot
+				? `${workspaceRoot}/solution`
+				: (item.solutionLink ?? verificationLink),
+		datasetLink: suppliedCasePractice ? undefined : practiceLink,
 		mediaLink: item.mediaLink ?? flow.referenceLink
 	};
 }
