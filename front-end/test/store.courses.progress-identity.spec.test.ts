@@ -1829,6 +1829,44 @@ describe("saved course progress identities", () => {
 		}
 	});
 
+	it("retains generated applied-challenge completions after transfer-project renaming", async () => {
+		setActivePinia(createPinia());
+		const store = useCoursesStore();
+		const historicalIds = [
+			[
+				"python-level-1",
+				"python-level-1-check-in-1-supplemental-applied-challenge"
+			],
+			[
+				"python-level-3",
+				"python-level-3-am7-binary-search-supplemental-applied-challenge"
+			]
+		] as const;
+
+		for (const [courseId, historicalId] of historicalIds) {
+			const course = await store.loadCourseById(courseId);
+			const owners = course?.modules.flatMap(module =>
+				module.supplementalProjects.filter(
+					item =>
+						item.id === historicalId ||
+						item.aliases?.includes(historicalId)
+				)
+			);
+			expect(owners, historicalId).toHaveLength(1);
+		}
+
+		const retiredCourse = await store.loadCourseById("cpp-level-2");
+		const retiredId =
+			"cpp-level-2-cppm1-pointers-and-addresses-supplemental-applied-challenge";
+		expect(
+			unmatchedCourseProgress(retiredCourse, {
+				courseId: "cpp-level-2",
+				completedModuleIds: [],
+				completedItemIds: [retiredId]
+			})
+		).toEqual([{ id: retiredId, kind: "item" }]);
+	});
+
 	it("does not claim the same scoped ID for different modules or items", async () => {
 		setActivePinia(createPinia());
 		const store = useCoursesStore();
