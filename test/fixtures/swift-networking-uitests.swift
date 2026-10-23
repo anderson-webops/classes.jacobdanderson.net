@@ -44,7 +44,6 @@ final class NetworkingUITests: XCTestCase {
             XCTAssertTrue(clearSearch.isHittable)
             clearSearch.tap()
             XCTAssertTrue(row(firstTitle, in: app).waitForExistence(timeout: 5))
-            XCTAssertTrue(row("Check an HTTP response", in: app).exists)
             let dismissSearch = app.buttons.matching(
                 NSPredicate(format: "label == %@ OR label == %@", "Cancel", "close")
             ).firstMatch
@@ -52,7 +51,18 @@ final class NetworkingUITests: XCTestCase {
             XCTAssertTrue(dismissSearch.isHittable)
             dismissSearch.tap()
             XCTAssertTrue(row(firstTitle, in: app).waitForExistence(timeout: 5))
-            XCTAssertTrue(row("Check an HTTP response", in: app).exists)
+            let second = row("Check an HTTP response", in: app)
+            for _ in 0..<24 {
+                if second.exists && second.isHittable { break }
+                app.swipeUp()
+            }
+            XCTAssertTrue(second.isHittable)
+            let first = row(firstTitle, in: app)
+            for _ in 0..<24 {
+                if first.exists && first.isHittable { break }
+                app.swipeDown()
+            }
+            XCTAssertTrue(first.isHittable)
         }
         let list = XCTAttachment(screenshot: app.screenshot())
         list.name = longData ? "Long titles at largest text" : "Reference list"
