@@ -984,11 +984,22 @@ function compactGeneratedDisplayTitles(course: RawCourse) {
 			...module.curriculum,
 			...module.supplementalProjects
 		]) {
+			const previousTitle = item.title;
 			item.title = compactGeneratedDisplayTitle(
 				course.name,
 				module.title,
 				item.title
 			);
+			if (
+				item.title !== previousTitle &&
+				/^Check-In\s+#?\d+:\s+Additional Practice Project$/i.test(
+					previousTitle
+				)
+			) {
+				item.aliases = [
+					...new Set([...(item.aliases ?? []), previousTitle])
+				];
+			}
 		}
 	}
 }

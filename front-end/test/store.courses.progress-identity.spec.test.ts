@@ -15,6 +15,60 @@ function historicalId(value: string) {
 }
 
 describe("saved course progress identities", () => {
+	it("retains check-in practice completions after contextual title changes", async () => {
+		setActivePinia(createPinia());
+		const historicalModules: Record<string, string[]> = {
+			"scratch-level-2": ["check-in-1", "check-in-2"],
+			"python-level-1": ["check-in-1", "check-in-2", "check-in-3"],
+			pygames: [
+				"check-in-1-actors-events-zrects-collectibles",
+				"check-in-2-gravity-friction-platforms",
+				"check-in-3-system-control-projectiles-enemy-ai"
+			],
+			"python-level-2": ["check-in-1", "check-in-2"],
+			"python-level-3": ["check-in-1", "check-in-2", "check-in-3"],
+			"java-level-1": ["check-in-1", "check-in-2"],
+			"java-level-2": ["check-in-1", "check-in-2"],
+			"java-level-3": [
+				"check-in-1",
+				"check-in-2",
+				"check-in-3",
+				"check-in-4"
+			],
+			"javascript-level-1-javascript-superstar": [
+				"check-in-1",
+				"check-in-2"
+			],
+			"javascript-level-2-javascript-master": ["check-in-1", "check-in-2"]
+		};
+		let checkedIds = 0;
+
+		for (const [courseId, moduleSuffixes] of Object.entries(
+			historicalModules
+		)) {
+			const course = await useCoursesStore().loadCourseById(courseId);
+			for (const suffix of moduleSuffixes) {
+				const checkInNumber = suffix.match(/check-in-(\d+)/u)?.[1];
+				const previousId = `${courseId}-${suffix}-curriculum-check-in-${checkInNumber}-additional-practice-project`;
+				const owners = course?.modules.flatMap(module =>
+					module.curriculum
+						.filter(
+							item =>
+								item.id === previousId ||
+								item.aliases?.includes(previousId)
+						)
+						.map(item => ({ module, item }))
+				);
+				expect(owners, previousId).toHaveLength(1);
+				expect(owners?.[0].item.title, previousId).toContain(
+					"Practice Project"
+				);
+				checkedIds++;
+			}
+		}
+		expect(checkedIds).toBe(25);
+	});
+
 	it("retains physics check completions from before descriptive titles", async () => {
 		setActivePinia(createPinia());
 		const historicalModules = {
