@@ -1240,6 +1240,23 @@ jobs:
                   COURSE_IMPORT_SCREENSHOT_DIR: output/swift-welcome-screenshots
               run: node --test test/swift-welcome-course-browser.test.mjs
 
+            - name: Verify Swift networking consent, saved roles and seven-file exports
+              env:
+                  SWIFT_NETWORKING_BROWSER_DIR: output/swift-networking-browser
+                  COURSE_IMPORT_SCREENSHOT_DIR: output/swift-networking-screenshots
+              run: node --test test/swift-networking-course-browser.test.mjs
+
+            - name: Retain Swift networking browser and exported source evidence
+              if: always()
+              uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+              with:
+                  name: swift-networking-workflows
+                  path: |
+                      output/swift-networking-browser/
+                      output/swift-networking-screenshots/
+                  if-no-files-found: error
+                  retention-days: 7
+
             - name: Retain Swift profile browser and exported source evidence
               if: always()
               uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
