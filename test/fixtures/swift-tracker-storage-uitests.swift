@@ -36,7 +36,7 @@ private extension TrackerUITests {
             reveal(edit, in: app)
             edit.tap()
             XCTAssertTrue(app.navigationBars["Edit item"].waitForExistence(timeout: 5))
-            replace(app.textFields["Item title"], with: "Unsaved edited title")
+            replace(app.textFields["Item title"], with: "Unsaved edited title", in: app)
             button("Save", in: app).tap()
             XCTAssertTrue(failure.waitForExistence(timeout: 5))
             failure.buttons["OK"].tap()

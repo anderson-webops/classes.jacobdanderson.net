@@ -1,3 +1,4 @@
+import CoreGraphics
 import XCTest
 
 final class TrackerUITests: XCTestCase {
@@ -7,19 +8,47 @@ final class TrackerUITests: XCTestCase {
     }
     @MainActor
     private func reveal(_ element: XCUIElement, in app: XCUIApplication) {
-        for _ in 0..<20 {
-            if element.exists && element.isHittable { return }
-            app.collectionViews.firstMatch.swipeUp()
+        let list = app.collectionViews.firstMatch
+        for attempt in 0..<20 {
+            let present = element.exists
+            if present && element.isHittable { return }
+            let viewport = list.frame
+            let target = present ? element.frame : .zero
+            let direction: CGFloat = present && !target.isEmpty
+                ? (target.midY < viewport.midY ? 1 : -1)
+                : (attempt < 10 ? -1 : 1)
+            let distance = max(12, min(200, viewport.height * 0.35))
+            let start = list.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+            start.press(forDuration: 0.05, thenDragTo: start.withOffset(CGVector(dx: 0, dy: direction * distance)))
         }
         XCTAssertTrue(element.isHittable)
     }
 
     @MainActor
-    private func replace(_ field: XCUIElement, with value: String) {
+    private func replace(_ field: XCUIElement, with value: String, in app: XCUIApplication) {
         field.tap()
         field.typeKey("a", modifierFlags: .command)
-        field.typeText(XCUIKeyboardKey.delete.rawValue + value)
-        if !value.isEmpty { XCTAssertEqual(field.value as? String, value) }
+        field.typeText(XCUIKeyboardKey.delete.rawValue)
+        let isCleared = {
+            let text = field.value as? String ?? ""
+            return text.isEmpty || text == field.placeholderValue
+        }
+        if !isCleared() {
+            field.press(forDuration: 1)
+            let menuItem = app.menuItems["Select All"]
+            let menuButton = app.buttons["Select All"]
+            if menuItem.waitForExistence(timeout: 2) { menuItem.tap() }
+            else {
+                XCTAssertTrue(menuButton.waitForExistence(timeout: 2), app.debugDescription)
+                menuButton.tap()
+            }
+            field.typeText(XCUIKeyboardKey.delete.rawValue)
+        }
+        XCTAssertTrue(isCleared(), "The existing edit text must be cleared through the native editor")
+        if !value.isEmpty {
+            field.typeText(value)
+            XCTAssertEqual(field.value as? String, value)
+        }
     }
 
     @MainActor
@@ -63,7 +92,7 @@ final class TrackerUITests: XCTestCase {
             XCTAssertTrue(app.navigationBars["Edit item"].waitForExistence(timeout: 5))
             let editor = app.textFields["Item title"]
             XCTAssertEqual(editor.value as? String, title)
-            replace(editor, with: "")
+            replace(editor, with: "", in: app)
             XCTAssertFalse(button("Save", in: app).isEnabled)
             savedTitle = title + " revised"
             editor.typeText(savedTitle)
@@ -75,7 +104,7 @@ final class TrackerUITests: XCTestCase {
             reveal(updated, in: app)
             updated.tap()
             XCTAssertTrue(app.navigationBars["Edit item"].waitForExistence(timeout: 5))
-            replace(app.textFields["Item title"], with: "Discard this draft")
+            replace(app.textFields["Item title"], with: "Discard this draft", in: app)
             XCTAssertTrue(button("Cancel", in: app).isHittable)
             button("Cancel", in: app).tap()
             XCTAssertTrue(button("Edit " + savedTitle, in: app).waitForExistence(timeout: 5))
