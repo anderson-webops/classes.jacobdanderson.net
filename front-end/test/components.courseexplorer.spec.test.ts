@@ -2004,7 +2004,9 @@ describe("CourseExplorer.vue", () => {
 		const history = wrapper.get(".historical-progress");
 		expect(history.text()).toContain(retiredItemId);
 		expect(history.text()).not.toContain(currentItemId);
-		await history.get("button").trigger("click");
+		await history
+			.get('button[aria-label^="Remove earlier"]')
+			.trigger("click");
 		await vi.advanceTimersByTimeAsync(701);
 		await flushPromises();
 		expect(api.put).toHaveBeenCalledWith(

@@ -2,6 +2,7 @@ import type { RawCourse, RawCourseModuleItem } from "./types";
 import swiftWelcomeReading from "@/assets/course-guides/swift-welcome-profile.md?raw";
 import { buildProjectGuidance } from "./projectGuidance";
 import { buildSupportSectionGuidance } from "./supportSectionGuidance";
+import swiftPriorTitles from "./swift-title-progress-history.json";
 
 const introToSwiftAppDevelopmentSourceCourse: RawCourse = {
 	name: "Intro to Swift App Development",
@@ -2224,13 +2225,7 @@ function contextualizeSwiftItem(
 					`Understanding Check: ${sourceTopic}`
 				]
 			: [];
-	const priorTitles: Record<string, string> = {
-		"First Blank SwiftUI App Studio": "Mini Lab: First Blank SwiftUI App",
-		"First Launch Troubleshooting Studio":
-			"Mini Lab: First Launch Troubleshooting",
-		"Reflection Question: Stable App Structure":
-			"Reflection Question: Which Part of an App Should Change Most Slowly?"
-	};
+	const priorTitles: Record<string, string> = swiftPriorTitles;
 	const priorTitle = priorTitles[item.title];
 	const practiceMatch = isSupplemental
 		? item.title.match(/^(.+?) (Transfer|Extension) Practice$/u)
