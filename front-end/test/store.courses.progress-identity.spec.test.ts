@@ -266,6 +266,53 @@ describe("saved course progress identities", () => {
 		}
 	});
 
+	it("retains extension progress after specific project titles", async () => {
+		setActivePinia(createPinia());
+		const courseHistory = {
+			"intro-to-physics": {
+				module: /^intro-to-physics-phy(?:[89]|1[0-7])-/u,
+				count: 10
+			},
+			"physics-level-2": {
+				module: /^physics-level-2-phy(?:1[7-9]|2[0-4])-/u,
+				count: 8
+			},
+			"scratch-level-1": {
+				module: /^scratch-level-1-gs1[4-7]-/u,
+				count: 4
+			},
+			"scratch-level-2": {
+				module: /^scratch-level-2-gm1[2-5]-/u,
+				count: 4
+			}
+		} as const;
+		let checkedIds = 0;
+
+		for (const [courseId, history] of Object.entries(courseHistory)) {
+			const course = await useCoursesStore().loadCourseById(courseId);
+			const allItems = course?.modules.flatMap(module => [
+				...module.curriculum,
+				...module.supplementalProjects
+			]);
+			const modules = course?.modules.filter(module =>
+				history.module.test(module.id)
+			);
+			expect(modules, courseId).toHaveLength(history.count);
+			for (const module of modules ?? []) {
+				const previousId = `${module.id}-supplemental-extension-project`;
+				const owners = allItems?.filter(item =>
+					item.aliases?.includes(previousId)
+				);
+				expect(owners, previousId).toHaveLength(1);
+				expect(module.supplementalProjects, previousId).toContain(
+					owners?.[0]
+				);
+				checkedIds++;
+			}
+		}
+		expect(checkedIds).toBe(26);
+	});
+
 	it("retains JavaScript Level 2 practice completions from before label changes", async () => {
 		setActivePinia(createPinia());
 		const course = await useCoursesStore().loadCourseById(

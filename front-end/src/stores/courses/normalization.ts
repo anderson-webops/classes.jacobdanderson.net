@@ -829,6 +829,34 @@ function preserveDiagnosticCheckpointAliases(course: RawCourse) {
 	}
 }
 
+function preserveExtensionProjectAliases(course: RawCourse, courseId: string) {
+	const modulePatterns: Record<string, RegExp> = {
+		"intro-to-physics": /(?:^|-)phy(?:[89]|1[0-7])[- ]/u,
+		"physics-level-2": /(?:^|-)phy(?:1[7-9]|2[0-4])[- ]/u,
+		"scratch-level-1": /(?:^|-)gs1[4-7][- ]/u,
+		"scratch-level-2": /(?:^|-)gm1[2-5][- ]/u
+	};
+	const modulePattern = modulePatterns[courseId];
+	if (!modulePattern) return;
+
+	for (const module of course.modules) {
+		if (
+			![module.id, module.title].some(
+				identity =>
+					identity && modulePattern.test(identity.toLowerCase())
+			)
+		) {
+			continue;
+		}
+		for (const item of module.supplementalProjects) {
+			if (!item.title.startsWith("Extension Project:")) continue;
+			item.aliases = [
+				...new Set([...(item.aliases ?? []), "Extension Project"])
+			];
+		}
+	}
+}
+
 function normalizeDisplayTitles(course: RawCourse) {
 	for (const module of course.modules) {
 		module.title = cleanDisplayTitle(module.title);
@@ -9532,6 +9560,7 @@ const normalizers: Record<string, (course: RawCourse) => void> = {
 
 export function normalizeRawCourse(id: string, rawCourse: RawCourse) {
 	const course = cloneCourse(rawCourse);
+	preserveExtensionProjectAliases(course, id);
 	if (
 		id === "design-patterns-in-java" ||
 		id === "design-patterns-in-java-part-2"
