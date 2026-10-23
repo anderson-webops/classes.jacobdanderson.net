@@ -19,6 +19,7 @@ import cppAlgorithmsProgressHistory from "./courses/cpp-algorithms-progress-hist
 import cppDesignPatternsProgressHistory from "./courses/cpp-design-patterns-progress-history.json";
 import designPatternsPart2ProgressHistory from "./courses/design-patterns-part-2-progress-history.json";
 import { courseCatalog, loadRawCourse } from "./courses/index";
+import javaLevel2ProgressHistory from "./courses/java-level-2-progress-history.json";
 import { isJuniScratchProjectTitle } from "./courses/juniScratchProjects";
 import linuxProgressHistory from "./courses/linux-progress-history.json";
 import lowLevelSecurityPart2ProgressHistory from "./courses/low-level-security-part-2-progress-history.json";
@@ -55,6 +56,7 @@ const historicalItemAliases: Record<string, Record<string, string[]>> = {
 	...usacoProgressHistory,
 	...apcsaProgressHistory,
 	...designPatternsPart2ProgressHistory,
+	...javaLevel2ProgressHistory,
 	"linux-systems": linuxProgressHistory.items,
 	...lowLevelSecurityPart2ProgressHistory,
 	"machine-learning": machineLearningProgressHistory.items,
