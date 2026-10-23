@@ -51,4 +51,21 @@ describe("HistoricalCourseProgress", () => {
 		await wrapper.find("button").trigger("click");
 		expect(wrapper.findAll("li")).toHaveLength(51);
 	});
+
+	it("shows saved IDs for a course no longer in the catalog", () => {
+		const oldId = "java-without-graphics-old-item";
+		const wrapper = mount(HistoricalCourseProgress, {
+			props: {
+				course: null,
+				progress: {
+					courseId: "java-without-graphics",
+					completedModuleIds: [],
+					completedItemIds: [oldId]
+				}
+			}
+		});
+
+		expect(wrapper.find("code").text()).toBe(oldId);
+		expect(wrapper.find("button").exists()).toBe(false);
+	});
 });

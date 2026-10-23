@@ -1,5 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { unmatchedCourseProgress } from "@/modules/courseProgressHistory";
+import {
+	nonCatalogCourseProgress,
+	unmatchedCourseProgress
+} from "@/modules/courseProgressHistory";
 
 const course = {
 	id: "pre-algebra-b",
@@ -50,5 +53,33 @@ describe("unmatched course progress", () => {
 		]);
 		const wrongCourse = { ...progress, courseId: "pre-algebra-a" };
 		expect(unmatchedCourseProgress(course, wrongCourse)).toEqual([]);
+	});
+
+	it("keeps a removed course's exact completions without restoring access", () => {
+		const removed = {
+			courseId: "java-without-graphics",
+			completedModuleIds: ["java-without-graphics-old-module"],
+			completedItemIds: ["java-without-graphics-old-item"]
+		};
+		const current = {
+			courseId: "python-level-1",
+			completedModuleIds: ["python-level-1-module"],
+			completedItemIds: []
+		};
+
+		expect(
+			nonCatalogCourseProgress(
+				[
+					removed,
+					current,
+					{ ...removed, completedModuleIds: [], completedItemIds: [] }
+				],
+				new Set(["python-level-1"])
+			)
+		).toEqual([removed]);
+		expect(unmatchedCourseProgress(null, removed)).toEqual([
+			{ id: "java-without-graphics-old-module", kind: "module" },
+			{ id: "java-without-graphics-old-item", kind: "item" }
+		]);
 	});
 });

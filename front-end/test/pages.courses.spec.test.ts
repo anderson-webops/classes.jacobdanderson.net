@@ -148,6 +148,41 @@ describe("courses page access gate", () => {
 		expect(wrapper.text()).toContain("classes@jacobdanderson.net");
 	});
 
+	it("shows only the signed-in learner's saved progress from retired courses", async () => {
+		const pinia = createPinia();
+		setActivePinia(pinia);
+		const oldId = "java-without-graphics-old-item";
+		useAppStore().setCurrentUser({
+			_id: "learner-with-history",
+			name: "Learner",
+			email: "learner@example.invalid",
+			age: 14,
+			state: "GA",
+			courseAccess: [],
+			courseProgress: [
+				{
+					courseId: "java-without-graphics",
+					completedModuleIds: [],
+					completedItemIds: [oldId]
+				}
+			],
+			editUsers: false,
+			saveEdit: "Save"
+		});
+
+		const wrapper = mount(CoursesPage, {
+			global: { plugins: [pinia], stubs: { RouterLink: true } }
+		});
+		await flushPromises();
+
+		expect(wrapper.text()).toContain("Earlier course progress");
+		expect(wrapper.get(".historical-progress code").text()).toBe(oldId);
+		expect(wrapper.find(".historical-progress button").exists()).toBe(
+			false
+		);
+		wrapper.unmount();
+	});
+
 	it("keeps booking calls out of the assigned-course view", async () => {
 		const pinia = createPinia();
 		setActivePinia(pinia);

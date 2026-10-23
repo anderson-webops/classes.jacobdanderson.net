@@ -12,23 +12,24 @@ export function unmatchedCourseProgress(
 	course: CourseDefinition | null,
 	progress: CourseProgress | null
 ): HistoricalProgressEntry[] {
-	if (!course || !progress || course.id !== progress.courseId) return [];
+	if (!progress || (course && course.id !== progress.courseId)) return [];
+	const coursePrefix = course ? `${course.id}-` : null;
 
 	const knownModules = new Set(
-		course.modules.flatMap(module => [
+		(course?.modules ?? []).flatMap(module => [
 			module.id,
-			...(module.aliases ?? []).filter(alias =>
-				alias.startsWith(`${course.id}-`)
+			...(module.aliases ?? []).filter(
+				alias => coursePrefix && alias.startsWith(coursePrefix)
 			)
 		])
 	);
 	const knownItems = new Set(
-		course.modules.flatMap(module =>
+		(course?.modules ?? []).flatMap(module =>
 			[...module.curriculum, ...module.supplementalProjects].flatMap(
 				item => [
 					item.id,
-					...(item.aliases ?? []).filter(alias =>
-						alias.startsWith(`${course.id}-`)
+					...(item.aliases ?? []).filter(
+						alias => coursePrefix && alias.startsWith(coursePrefix)
 					)
 				]
 			)
@@ -43,4 +44,16 @@ export function unmatchedCourseProgress(
 			.filter(id => !knownItems.has(id))
 			.map(id => ({ id, kind: "item" as const }))
 	];
+}
+
+export function nonCatalogCourseProgress(
+	progress: CourseProgress[] | undefined,
+	catalogIds: ReadonlySet<string>
+): CourseProgress[] {
+	return (progress ?? []).filter(
+		entry =>
+			!catalogIds.has(entry.courseId) &&
+			((entry.completedModuleIds?.length ?? 0) > 0 ||
+				(entry.completedItemIds?.length ?? 0) > 0)
+	);
 }

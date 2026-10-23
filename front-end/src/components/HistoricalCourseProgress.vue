@@ -7,7 +7,7 @@ import { unmatchedCourseProgress } from "@/modules/courseProgressHistory";
 
 const props = withDefaults(
 	defineProps<{
-		course: CourseDefinition;
+		course: CourseDefinition | null;
 		editable?: boolean;
 		progress: CourseProgress;
 	}>(),
@@ -31,7 +31,6 @@ const visibleEntries = computed(() =>
 <template>
 	<details v-if="entries.length" class="historical-progress">
 		<summary>Earlier completions ({{ entries.length }})</summary>
-		<p>These saved entries no longer match this course outline.</p>
 		<ul>
 			<li
 				v-for="entry in visibleEntries"
