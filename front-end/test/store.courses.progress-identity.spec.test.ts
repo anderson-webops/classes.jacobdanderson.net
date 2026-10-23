@@ -14,6 +14,9 @@ import linuxCourseHistory from "./fixtures/linux-course-history.json";
 import algebraCourseHistory from "./fixtures/algebra-course-history.json";
 import assemblyCourseHistory from "./fixtures/assembly-course-history.json";
 import cppAlgorithmsCourseHistory from "./fixtures/cpp-algorithms-course-history.json";
+import cppDesignPatternsCourseHistory from "./fixtures/cpp-design-patterns-progress-history.json";
+import lowLevelSecurityPart2CourseHistory from "./fixtures/low-level-security-part-2-progress-history.json";
+import networkSystemsCourseHistory from "./fixtures/network-systems-progress-history.json";
 
 function historicalId(value: string) {
 	return value
@@ -2234,6 +2237,64 @@ describe("saved course progress identities", () => {
 							completedItemIds: []
 						})
 					).toEqual([{ id: previousId, kind: "module" }]);
+				}
+			}
+		}
+	});
+
+	it("preserves systems and C++ pattern progress through studio regrouping", async () => {
+		setActivePinia(createPinia());
+		const store = useCoursesStore();
+		for (const { courseId, history, retired } of [
+			{
+				courseId: "network-systems",
+				history: networkSystemsCourseHistory,
+				retired: 2
+			},
+			{
+				courseId: "low-level-security-part-2",
+				history: lowLevelSecurityPart2CourseHistory,
+				retired: 0
+			},
+			{
+				courseId: "design-patterns-in-cpp",
+				history: cppDesignPatternsCourseHistory,
+				retired: 4
+			}
+		]) {
+			const course = await store.loadCourseById(courseId);
+			const modules = course?.modules ?? [];
+			const items = modules.flatMap(module => [
+				...module.curriculum,
+				...module.supplementalProjects
+			]);
+			expect(history.filter(entry => !entry.currentId)).toHaveLength(
+				retired
+			);
+			for (const { kind, oldId, newId, currentId } of history) {
+				const entities = kind === "module" ? modules : items;
+				for (const previousId of [oldId, newId]) {
+					const owners = entities.filter(
+						entity =>
+							entity.id === previousId ||
+							entity.aliases?.includes(previousId)
+					);
+					if (currentId) {
+						expect(
+							owners.map(entity => entity.id),
+							previousId
+						).toEqual([currentId]);
+					} else {
+						expect(kind).toBe("module");
+						expect(owners, previousId).toEqual([]);
+						expect(
+							unmatchedCourseProgress(course, {
+								courseId,
+								completedModuleIds: [previousId],
+								completedItemIds: []
+							})
+						).toEqual([{ id: previousId, kind: "module" }]);
+					}
 				}
 			}
 		}

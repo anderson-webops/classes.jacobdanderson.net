@@ -16,26 +16,49 @@ import algebraProgressHistory from "./courses/algebra-progress-history.json";
 import apcsaProgressHistory from "./courses/apcsa-progress-history.json";
 import assemblyProgressHistory from "./courses/assembly-progress-history.json";
 import cppAlgorithmsProgressHistory from "./courses/cpp-algorithms-progress-history.json";
+import cppDesignPatternsProgressHistory from "./courses/cpp-design-patterns-progress-history.json";
 import designPatternsPart2ProgressHistory from "./courses/design-patterns-part-2-progress-history.json";
 import { courseCatalog, loadRawCourse } from "./courses/index";
 import { isJuniScratchProjectTitle } from "./courses/juniScratchProjects";
 import linuxProgressHistory from "./courses/linux-progress-history.json";
+import lowLevelSecurityPart2ProgressHistory from "./courses/low-level-security-part-2-progress-history.json";
 import machineLearningProgressHistory from "./courses/machine-learning-progress-history.json";
+import networkSystemsProgressHistory from "./courses/network-systems-progress-history.json";
 import usacoProgressHistory from "./courses/usaco-progress-history.json";
 
 const historicalModuleAliases: Record<string, Record<string, string[]>> = {
 	"linux-systems": linuxProgressHistory.modules,
-	"machine-learning": machineLearningProgressHistory.modules
+	"low-level-security-part-2": {
+		"low-level-security-part-2-low-level-security-lab-13-exploitability-triage-studio":
+			["low-level-security-part-2-low-level-security-lab-13"],
+		"low-level-security-part-2-low-level-security-lab-14-stack-corruption-hardening-studio":
+			["low-level-security-part-2-low-level-security-lab-14"],
+		"low-level-security-part-2-low-level-security-lab-15-heap-lifetime-audit-studio":
+			["low-level-security-part-2-low-level-security-lab-15"],
+		"low-level-security-part-2-low-level-security-lab-16-disclosure-boundary-hardening-studio":
+			["low-level-security-part-2-low-level-security-lab-16"],
+		"low-level-security-part-2-low-level-security-lab-17-defensive-audit-capstone-studio":
+			["low-level-security-part-2-low-level-security-lab-17"]
+	},
+	"machine-learning": machineLearningProgressHistory.modules,
+	"network-systems": {
+		"network-systems-network-systems-lab-17-operations-capstone-studio": [
+			"network-systems-network-systems-lab-17"
+		]
+	}
 };
 const historicalItemAliases: Record<string, Record<string, string[]>> = {
 	...algebraProgressHistory,
 	...assemblyProgressHistory,
 	...cppAlgorithmsProgressHistory,
+	...cppDesignPatternsProgressHistory,
 	...usacoProgressHistory,
 	...apcsaProgressHistory,
 	...designPatternsPart2ProgressHistory,
 	"linux-systems": linuxProgressHistory.items,
-	"machine-learning": machineLearningProgressHistory.items
+	...lowLevelSecurityPart2ProgressHistory,
+	"machine-learning": machineLearningProgressHistory.items,
+	...networkSystemsProgressHistory
 };
 
 const COMBINING_MARKS_RE = /[\u0300-\u036F]/g;
