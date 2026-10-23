@@ -15,6 +15,98 @@ function historicalId(value: string) {
 }
 
 describe("saved course progress identities", () => {
+	it("retains math reference-archive progress from the source-activity labels", async () => {
+		setActivePinia(createPinia());
+		const archiveItemsByCourse: Record<string, string[]> = {
+			"algebra-1a": [
+				"curriculum-project-scenario-and-context-links",
+				"curriculum-pending-static-asset-placeholders",
+				"supplemental-standards-practice-set-source-activity-archive",
+				"supplemental-modeling-or-error-analysis-source-activity-archive"
+			],
+			"algebra-1b": [
+				"curriculum-project-scenario-and-context-links",
+				"curriculum-pending-static-asset-placeholders",
+				"supplemental-standards-practice-set-source-activity-archive",
+				"supplemental-modeling-or-error-analysis-source-activity-archive"
+			],
+			"algebra-2a": [
+				"curriculum-project-scenario-and-context-links",
+				"curriculum-pending-static-asset-placeholders",
+				"supplemental-standards-practice-set-source-activity-archive",
+				"supplemental-modeling-or-error-analysis-source-activity-archive"
+			],
+			"algebra-2b": [
+				"curriculum-source-activity-anchors-algebra-2b",
+				"curriculum-pending-static-asset-placeholders",
+				"supplemental-standards-practice-set-source-activity-archive",
+				"supplemental-modeling-or-error-analysis-source-activity-archive"
+			],
+			"geometry-a": ["curriculum-source-activity-anchors-geometry-a"],
+			"geometry-b": ["curriculum-source-activity-anchors-geometry-b"],
+			"pre-algebra-a": ["curriculum-pre-algebra-a-source-anchors"],
+			"pre-algebra-b": ["curriculum-pre-algebra-b-source-anchors"],
+			"pre-calculus-a": [
+				"curriculum-source-activity-anchors-pre-calculus-a"
+			],
+			"pre-calculus-b": [
+				"curriculum-source-activity-anchors-pre-calculus-b"
+			]
+		};
+		let checkedIds = 0;
+
+		for (const [courseId, itemSuffixes] of Object.entries(
+			archiveItemsByCourse
+		)) {
+			const course = await useCoursesStore().loadCourseById(courseId);
+			const previousModuleId = `${courseId}-source-activity-archive`;
+			const archiveOwners = course?.modules.filter(
+				module =>
+					module.id === previousModuleId ||
+					module.aliases?.includes(previousModuleId)
+			);
+			expect(archiveOwners, previousModuleId).toHaveLength(1);
+			const archive = archiveOwners?.[0];
+			expect(archive?.title).toContain("Reference Archive");
+			checkedIds++;
+
+			for (const suffix of itemSuffixes) {
+				const previousId = `${previousModuleId}-${suffix}`;
+				const owners = course?.modules.flatMap(module =>
+					[
+						...module.curriculum,
+						...module.supplementalProjects
+					].filter(
+						item =>
+							item.id === previousId ||
+							item.aliases?.includes(previousId)
+					)
+				);
+				expect(owners, previousId).toHaveLength(1);
+				expect(
+					archive?.curriculum.concat(archive.supplementalProjects)
+				).toContain(owners?.[0]);
+				checkedIds++;
+			}
+		}
+
+		const preAlgebra =
+			await useCoursesStore().loadCourseById("pre-algebra-a");
+		const capstoneId =
+			"pre-algebra-a-check-in-2-and-capstone-curriculum-source-activity-anchors-pre-algebra-a-capstone";
+		const capstoneOwners = preAlgebra?.modules.flatMap(module =>
+			module.curriculum.filter(
+				item =>
+					item.id === capstoneId || item.aliases?.includes(capstoneId)
+			)
+		);
+		expect(capstoneOwners, capstoneId).toHaveLength(1);
+		expect(capstoneOwners?.[0].title).toBe(
+			"Pre-Algebra A Capstone Reference Map"
+		);
+		expect(checkedIds + 1).toBe(33);
+	});
+
 	it("retains Java Level 3 practice completions across relabeling and archiving", async () => {
 		setActivePinia(createPinia());
 		const course = await useCoursesStore().loadCourseById("java-level-3");
