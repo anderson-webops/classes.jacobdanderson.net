@@ -3,6 +3,33 @@ import { ref } from "vue";
 import { useLearnerCourseProgress } from "@/composables/useLearnerCourseProgress";
 
 describe("useLearnerCourseProgress", () => {
+	it("retains read-only staff visibility for progress after course access is removed", () => {
+		const saved = {
+			courseId: "java-without-graphics",
+			completedModuleIds: ["java-without-graphics-standards-map"],
+			completedItemIds: []
+		};
+		const users = ref([
+			{
+				_id: "learner-1",
+				name: "Learner",
+				email: "learner@example.com",
+				age: 12,
+				state: "GA",
+				courseAccess: [],
+				courseProgress: [saved],
+				editUsers: false,
+				saveEdit: "Save"
+			}
+		]);
+		const progress = useLearnerCourseProgress(users, vi.fn(), vi.fn());
+
+		expect(progress.assignedCourseIds("learner-1")).toEqual([]);
+		expect(progress.unassignedProgressForUser("learner-1")).toEqual([
+			saved
+		]);
+	});
+
 	it("removes only the selected retired completion after loading its course", async () => {
 		const oldModuleId = "swift-retired-module";
 		const oldItemId = "swift-retired-item";

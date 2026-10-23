@@ -114,6 +114,16 @@ export function useLearnerCourseProgress(
 		);
 	}
 
+	function unassignedProgressForUser(userID: string) {
+		const assigned = new Set(assignedCourseIds(userID));
+		return (progressDrafts.value[userID] ?? []).filter(
+			progress =>
+				!assigned.has(progress.courseId) &&
+				(progress.completedModuleIds.length > 0 ||
+					progress.completedItemIds.length > 0)
+		);
+	}
+
 	function ensureDraft(userID: string, courseId: string): CourseProgress {
 		const existing = progressDrafts.value[userID]?.find(
 			progress => progress.courseId === courseId
@@ -318,6 +328,7 @@ export function useLearnerCourseProgress(
 	return {
 		assignedCourseGroups,
 		assignedCourseIds,
+		unassignedProgressForUser,
 		isItemComplete,
 		isModuleComplete,
 		isProgressCourseLoading,

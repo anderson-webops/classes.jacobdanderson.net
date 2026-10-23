@@ -27,6 +27,9 @@ const selectedCourseId = computed(() =>
 const selectedCourse = computed(() =>
 	props.progress.progressCourseForUser(props.userId)
 );
+const unassignedProgress = computed(() =>
+	props.progress.unassignedProgressForUser(props.userId)
+);
 const isLoading = computed(() =>
 	props.progress.isProgressCourseLoading(props.userId)
 );
@@ -172,6 +175,11 @@ function toggleItem(item: CourseModuleItem, event: Event) {
 					)
 				"
 			/>
+			<HistoricalCourseProgress
+				v-else-if="!isLoading && selectedCourseId"
+				:course="null"
+				:progress="progress.progressForUser(userId, selectedCourseId)"
+			/>
 
 			<div class="progress-actions">
 				<button
@@ -190,6 +198,13 @@ function toggleItem(item: CourseModuleItem, event: Event) {
 				</button>
 			</div>
 		</template>
+		<section v-if="unassignedProgress.length" class="progress-archive">
+			<p class="progress-title">Earlier course progress</p>
+			<div v-for="saved in unassignedProgress" :key="saved.courseId">
+				<code>{{ saved.courseId }}</code>
+				<HistoricalCourseProgress :course="null" :progress="saved" />
+			</div>
+		</section>
 	</section>
 </template>
 
