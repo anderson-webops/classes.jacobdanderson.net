@@ -12,14 +12,15 @@ import {
 	scratchProjectEmbedUrl
 } from "@/modules/resourceUrls";
 import { useAppStore } from "./app";
+import apcsaProgressHistory from "./courses/apcsa-progress-history.json";
 import { courseCatalog, loadRawCourse } from "./courses/index";
 import { isJuniScratchProjectTitle } from "./courses/juniScratchProjects";
 import usacoProgressHistory from "./courses/usaco-progress-history.json";
 
-const usacoHistoricalItemAliases: Record<
-	string,
-	Record<string, string[]>
-> = usacoProgressHistory;
+const historicalItemAliases: Record<string, Record<string, string[]>> = {
+	...usacoProgressHistory,
+	...apcsaProgressHistory
+};
 
 const COMBINING_MARKS_RE = /[\u0300-\u036F]/g;
 const NON_ALPHANUMERIC_RE = /[^a-z0-9]+/g;
@@ -585,9 +586,8 @@ function normalizeCourse(
 					];
 					const itemAliases = [
 						...new Set([
-							...(usacoHistoricalItemAliases[courseId]?.[
-								itemId
-							] ?? []),
+							...(historicalItemAliases[courseId]?.[itemId] ??
+								[]),
 							...courseEntityAliases(
 								item.stableId,
 								generatedItemId,
