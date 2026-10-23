@@ -2215,6 +2215,29 @@ function contextualizeSwiftItem(
 	const welcomeProject =
 		flow.title === "SW3 SwiftUI Views, Layout, and Modifiers" &&
 		item.title === "Project: Welcome Profile App";
+	const sourceTopic = flow.sourceTitle.replace(/^SAD\d+\s+/u, "");
+	const diagnosticAliases =
+		item.title === "Diagnostic Checkpoint" &&
+		sourceTopic !== flow.sourceTitle
+			? [
+					`Diagnostic Checkpoint: ${sourceTopic}`,
+					`Understanding Check: ${sourceTopic}`
+				]
+			: [];
+	const priorTitles: Record<string, string> = {
+		"First Blank SwiftUI App Studio": "Mini Lab: First Blank SwiftUI App",
+		"First Launch Troubleshooting Studio":
+			"Mini Lab: First Launch Troubleshooting",
+		"Reflection Question: Stable App Structure":
+			"Reflection Question: Which Part of an App Should Change Most Slowly?"
+	};
+	const priorTitle = priorTitles[item.title];
+	const practiceMatch = isSupplemental
+		? item.title.match(/^(.+?) (Transfer|Extension) Practice$/u)
+		: null;
+	const previousPracticeTitle = practiceMatch
+		? `${practiceMatch[2]} Practice: ${practiceMatch[1]}`
+		: null;
 	const practiceLink = swiftPracticePack(flow.materialSection);
 	const verificationLink = swiftVerificationGuide(flow.answerSection);
 	const isExtension =
@@ -2229,7 +2252,15 @@ function contextualizeSwiftItem(
 	return {
 		...item,
 		title: contextualSwiftTitle(item, flow),
-		aliases: [...new Set([...(item.aliases ?? []), item.title])],
+		aliases: [
+			...new Set([
+				...(item.aliases ?? []),
+				item.title,
+				...diagnosticAliases,
+				...(previousPracticeTitle ? [previousPracticeTitle] : []),
+				...(priorTitle ? [priorTitle] : [])
+			])
+		],
 		ideImport: welcomeProject ? true : item.ideImport,
 		content: welcomeProject
 			? swiftWelcomeReading.trim()
