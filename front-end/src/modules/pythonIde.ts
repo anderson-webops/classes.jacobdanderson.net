@@ -2861,6 +2861,18 @@ export function pythonIdeStorageKey(userID?: string | null) {
 	return `${pythonIdeStorageNamespace}:${userID || "anonymous"}`;
 }
 
+export function canDiscardLocalPythonProjectSnapshot(
+	projects: readonly PythonIdeProject[],
+	unsyncedProjectIDs: ReadonlySet<string>,
+	pendingSaveProjectIDs: ReadonlySet<string>
+) {
+	return (
+		unsyncedProjectIDs.size === 0 &&
+		pendingSaveProjectIDs.size === 0 &&
+		projects.every(project => !project._id.startsWith("local-"))
+	);
+}
+
 export function normalizePythonFileName(
 	value: string,
 	defaultExtension = ".py",

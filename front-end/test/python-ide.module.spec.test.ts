@@ -30,6 +30,7 @@ import {
 	blueJMainStarterCode,
 	blueJReadmeStarterText,
 	blueJStudentStarterCode,
+	canDiscardLocalPythonProjectSnapshot,
 	clearLocalPythonProjects,
 	clearLocalPythonProjectsAsync,
 	createPythonIdeProject,
@@ -1613,6 +1614,72 @@ pgzrun.go()
 		expect(
 			window.localStorage.getItem(pythonIdeStorageKey("student-b"))
 		).toContain(secondProject.title);
+	});
+
+	it("retains an unsynced local project after unrelated remote operations", async () => {
+		const localProject = createPythonIdeProject("python");
+		const remoteProject = createPythonIdeProject("python");
+		remoteProject._id = "remote-1";
+		const secondRemoteProject = createPythonIdeProject("python");
+		secondRemoteProject._id = "remote-2";
+		const emptyIDs = new Set<string>();
+
+		for (const projects of [
+			[localProject, remoteProject],
+			[localProject, remoteProject, secondRemoteProject],
+			[localProject]
+		]) {
+			await saveLocalPythonProjectsAsync(projects, "student-a");
+			if (
+				canDiscardLocalPythonProjectSnapshot(
+					projects,
+					emptyIDs,
+					emptyIDs
+				)
+			)
+				await clearLocalPythonProjectsAsync("student-a");
+			expect(
+				(await loadLocalPythonProjectsAsync("student-a")).some(
+					project => project._id === localProject._id
+				)
+			).toBe(true);
+		}
+
+		expect(
+			canDiscardLocalPythonProjectSnapshot(
+				[remoteProject],
+				emptyIDs,
+				emptyIDs
+			)
+		).toBe(true);
+	});
+
+	it("keeps backups while a remote project still has pending or failed edits", () => {
+		const remoteProject = createPythonIdeProject("python");
+		remoteProject._id = "remote-1";
+		const emptyIDs = new Set<string>();
+
+		expect(
+			canDiscardLocalPythonProjectSnapshot(
+				[remoteProject],
+				new Set([remoteProject._id]),
+				emptyIDs
+			)
+		).toBe(false);
+		expect(
+			canDiscardLocalPythonProjectSnapshot(
+				[remoteProject],
+				emptyIDs,
+				new Set([remoteProject._id])
+			)
+		).toBe(false);
+		const pageSource = readFileSync(
+			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
+			"utf8"
+		);
+		expect(
+			pageSource.match(/canDiscardLocalPythonProjectSnapshot\(/g)
+		).toHaveLength(2);
 	});
 
 	it("uses localStorage fallback when IndexedDB is unavailable", async () => {

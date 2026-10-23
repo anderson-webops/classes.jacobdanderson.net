@@ -57,6 +57,7 @@ import { createKarelWorldPlaybackController } from "@/modules/karelWorldPlayback
 import { linuxBuildInstructions } from "@/modules/linuxBuildInstructions";
 import {
 	addPythonIdeClassroomSections,
+	canDiscardLocalPythonProjectSnapshot,
 	clearLocalPythonProjectsAsync,
 	createPythonIdeProject,
 	createRemotePythonIdeProject,
@@ -2346,7 +2347,15 @@ async function discardLocalProjectSnapshot() {
 }
 
 async function discardLocalProjectSnapshotIfSafe() {
-	if (unsyncedProjectIDs.size) return;
+	if (
+		!canDiscardLocalPythonProjectSnapshot(
+			projects.value,
+			unsyncedProjectIDs,
+			pendingSaveProjectIDs
+		)
+	) {
+		return;
+	}
 	await discardLocalProjectSnapshot();
 }
 
@@ -2818,7 +2827,11 @@ async function savePendingProjects(options: SaveProjectOptions = {}) {
 		if (
 			canSyncToAccount.value &&
 			!remoteSyncFailed &&
-			!unsyncedProjectIDs.size
+			canDiscardLocalPythonProjectSnapshot(
+				projects.value,
+				unsyncedProjectIDs,
+				pendingSaveProjectIDs
+			)
 		) {
 			await discardLocalProjectSnapshot();
 			saveMessage.value = syncedSaveMessage.value;
