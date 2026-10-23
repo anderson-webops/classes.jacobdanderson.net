@@ -2154,7 +2154,7 @@ pgzrun.go()
 		expect(runtimeSource).toContain("def _release_all_callbacks():");
 		expect(runtimeSource).toContain("releaseRuntimeCallbackRegistries");
 		expect(runtimeSource).toContain("releasePythonIdeRuntimeCallbacks");
-		expect(pageSource).toContain("scheduleTimer(delayMs: number");
+		expect(pageSource).toContain("scheduleTimer(\n");
 		expect(pageSource).toContain("clearTurtleTimers()");
 		expect(pageSource).toContain("let turtleTimerGeneration = 0;");
 		expect(pageSource).toContain("turtleTimerGeneration += 1;");
@@ -2163,9 +2163,12 @@ pgzrun.go()
 		expect(pageSource).toContain(
 			"if (timerGeneration !== turtleTimerGeneration) return;"
 		);
-		expect(pageSource).toContain(
-			"void runTurtleTimerCallback(callback, timerGeneration).finally("
+		expect(pageSource).toContain("turtleTimerRegistry.schedule(");
+		expect(pageSource).toContain("turtleTimerRegistry.clear()");
+		expect(runtimeSource).toContain(
+			"_bridge.scheduleTimer(float(t), callback, callback)"
 		);
+		expect(runtimeSource).not.toContain('storage_key = ("timer"');
 		expect(pageSource).toContain("releaseIdlePythonRuntimeCallbacks()");
 	});
 
@@ -2619,9 +2622,7 @@ pgzrun.go()
 			"const PYTHON_IDE_RUNTIME_BOOTSTRAP_VERSION"
 		);
 		expect(runtimeSource).toContain("__classes_runtime_bootstrap_version");
-		expect(runtimeSource).toContain(
-			"2026-10-22-turtle-loop-classification"
-		);
+		expect(runtimeSource).toContain("2026-10-22-turtle-timer-ownership");
 		expect(runtimeSource).toContain("const WHILE_LOOP_ITERATION_LIMIT");
 		expect(runtimeSource).toContain(
 			"const TURTLE_COOPERATIVE_WHILE_LOOP_ITERATION_LIMIT"
@@ -4664,19 +4665,18 @@ else:
 		);
 	});
 
-	it("clears stale local account fallback after successful remote syncs", () => {
+	it("retains unrelated recovery drafts after remote syncs", () => {
 		const pageSource = readFileSync(
 			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
 			"utf8"
 		);
 
-		expect(pageSource).toContain("await clearLocalPythonProjectsAsync(");
-		expect(pageSource).toContain("async function syncProjectsToAccount");
+		expect(pageSource).not.toContain("await clearLocalPythonProjectsAsync(");
+		expect(pageSource).not.toContain("async function syncProjectsToAccount");
+		expect(pageSource).toContain("loadPythonIdeRecoveryDrafts(");
+		expect(pageSource).toContain("acknowledgePythonIdeRecoveryDraft(");
 		expect(pageSource).toContain(
-			'saveMessage.value = "Synced recovered local edits";'
-		);
-		expect(pageSource).toContain(
-			'saveMessage.value = "Recovered local edits";'
+			'saveMessage.value = "Recovered local copies; Save to sync";'
 		);
 		expect(pageSource).toContain("Saved locally after sync issue");
 		expect(pageSource).toContain("const isRemoteProject =");
@@ -4817,20 +4817,15 @@ else:
 		expect(pageSource).toContain(
 			"async function persistLocalProjectSnapshot"
 		);
-		expect(pageSource).toContain(
-			"async function discardLocalProjectSnapshot"
-		);
-		expect(pageSource).toContain(
-			"async function discardLocalProjectSnapshotIfSafe"
-		);
-		expect(pageSource).toContain("await localSnapshotInFlight;");
-		expect(pageSource).toContain("unsyncedProjectIDs.clear();");
+		expect(pageSource).toContain("savePythonIdeRecoveryDraft(");
+		expect(pageSource).toContain("acknowledgePythonIdeRecoveryDraft(");
+		expect(pageSource).not.toContain("async function discardLocalProjectSnapshot");
+		expect(pageSource).not.toContain("unsyncedProjectIDs.clear();");
 		expect(pageSource).toContain("function scheduleLocalProjectSnapshot");
 		expect(pageSource).toContain("scheduleLocalProjectSnapshot();");
-		expect(pageSource).toContain("await discardLocalProjectSnapshot();");
 		expect(pageSource).toContain("if (!autoSaveEnabled.value)");
 		expect(pageSource).toContain(
-			"await persistLocalProjects({ quiet: true });"
+			"const savedDraft = await savePythonIdeRecoveryDraft(project, owner);"
 		);
 		expect(pageSource).toContain(
 			'message: "Saved locally after sync issue"'
@@ -5422,11 +5417,12 @@ else:
 		expect(pageSource).toContain("async function saveProjectOnce");
 		expect(pageSource).toContain("async function savePendingProjects");
 		expect(pageSource).toContain("const pendingSaveProjectIDs");
-		expect(pageSource).toContain("const startedUpdatedAt");
+		expect(pageSource).toContain("const savedDraft = await savePythonIdeRecoveryDraft(project, owner);");
 		expect(pageSource).toContain(
 			"? await createRemotePythonIdeProject(payload, accountScope)"
 		);
 		expect(pageSource).toContain("const projectChangedDuringSave");
+		expect(pageSource).toContain("JSON.stringify(pythonIdeProjectToPayload(currentProject))");
 		expect(pageSource).toContain("saveQueued = true");
 		expect(pageSource).toContain(
 			"} while (saveQueued || pendingSaveProjectIDs.size);"

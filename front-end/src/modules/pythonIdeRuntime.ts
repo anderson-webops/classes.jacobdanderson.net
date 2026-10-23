@@ -21,7 +21,7 @@ export { pythonIdeImportedTopLevelModules } from "@/modules/pythonImportScanner"
 
 const PROJECT_ROOT = "/home/pyodide/classes_project";
 const PYTHON_IDE_RUNTIME_BOOTSTRAP_VERSION =
-	"2026-10-22-turtle-loop-classification";
+	"2026-10-22-turtle-timer-ownership";
 const PYTHON_EXTENSION_RE = /\.py$/i;
 const FOR_LOOP_ITERATION_LIMIT = 500000;
 const WHILE_LOOP_ITERATION_LIMIT = 25000;
@@ -270,7 +270,11 @@ export interface TurtleBridge {
 		button: string,
 		callback: ((x: number, y: number) => void) | null
 	) => void;
-	scheduleTimer: (delayMs: number, callback: (() => void) | null) => void;
+	scheduleTimer: (
+		delayMs: number,
+		callback: (() => void) | null,
+		ownedCallback?: (() => void) | null
+	) => void;
 	listen: () => void;
 	registerShape: (name: string, definitionJson: string) => void;
 	setShape: (shape: string) => void;
@@ -1348,7 +1352,6 @@ _screen_mode = "standard"
 _screen_title = ""
 _screen_width = 640
 _tracer_value = 1.0
-_timer_counter = 0
 _turtle_counter = 0
 _max_circle_steps = 360
 _world_coordinates = None
@@ -1597,22 +1600,9 @@ def _stored_callback(kind, key, function, add=None):
     return proxy
 
 def _timer_callback(function):
-    global _timer_counter
     if function is None:
         return None
-
-    _timer_counter += 1
-    storage_key = ("timer", str(_timer_counter))
-
-    def run_timer():
-        try:
-            function()
-        finally:
-            _release_proxy(_callback_proxies.pop(storage_key, None))
-
-    proxy = create_proxy(run_timer)
-    _callback_proxies[storage_key] = proxy
-    return proxy
+    return create_proxy(function)
 
 def _release_all_callbacks():
     for proxy in list(_callback_proxies.values()):
@@ -1727,7 +1717,8 @@ class _Screen:
         )
 
     def ontimer(self, function, t=0):
-        _bridge.scheduleTimer(float(t), _timer_callback(function))
+        callback = _timer_callback(function)
+        _bridge.scheduleTimer(float(t), callback, callback)
 
     def onclick(self, function, btn=1, add=None):
         _bridge.registerClick(

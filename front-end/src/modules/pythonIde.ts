@@ -161,6 +161,7 @@ export interface PythonIdeFile {
 
 export interface PythonIdeProject {
 	_id: string;
+	revision?: number;
 	title: string;
 	mode: PythonIdeMode;
 	files: PythonIdeFile[];
@@ -252,6 +253,7 @@ function nextPythonIdePageOffset(
 }
 
 export interface PythonIdeProjectPayload {
+	expectedRevision?: number;
 	title?: string;
 	mode?: PythonIdeMode;
 	files?: PythonIdeFile[];
@@ -3461,6 +3463,24 @@ function queueLocalProjectStorage<Result>(
 export async function loadLocalPythonProjectsAsync(userID?: string | null) {
 	return queueLocalProjectStorage(pythonIdeStorageKey(userID), () => {
 		return readLocalPythonProjects(userID);
+	});
+}
+
+export async function loadLegacyLocalPythonProjectCopiesAsync(userID: string) {
+	return queueLocalProjectStorage(pythonIdeStorageKey(userID), async () => {
+		const key = pythonIdeStorageKey(userID);
+		const indexed = await readIndexedDbPythonProjects(key);
+		const mirror = loadLocalPythonProjects(userID);
+		const copies = [indexed ?? [], mirror].filter(
+			projects => projects.length
+		);
+		return copies.filter(
+			(projects, index) =>
+				copies.findIndex(
+					candidate =>
+						JSON.stringify(candidate) === JSON.stringify(projects)
+				) === index
+		);
 	});
 }
 
