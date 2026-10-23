@@ -35,13 +35,25 @@ final class TrackerUITests: XCTestCase {
         }
         if !isCleared() {
             field.press(forDuration: 1)
-            let menuItem = app.menuItems["Select All"]
-            let menuButton = app.buttons["Select All"]
-            if menuItem.waitForExistence(timeout: 2) { menuItem.tap() }
-            else {
-                XCTAssertTrue(menuButton.waitForExistence(timeout: 2), app.debugDescription)
-                menuButton.tap()
+            var selectedAll = false
+            for _ in 0..<6 {
+                let menuItem = app.menuItems["Select All"].firstMatch
+                let menuButton = app.buttons["Select All"].firstMatch
+                if menuItem.waitForExistence(timeout: 1) && menuItem.isHittable {
+                    menuItem.tap()
+                    selectedAll = true
+                    break
+                }
+                if menuButton.exists && menuButton.isHittable {
+                    menuButton.tap()
+                    selectedAll = true
+                    break
+                }
+                let nextPage = app.buttons["Forward"].firstMatch
+                if !nextPage.exists || !nextPage.isHittable { break }
+                nextPage.tap()
             }
+            XCTAssertTrue(selectedAll, app.debugDescription)
             field.typeText(XCUIKeyboardKey.delete.rawValue)
         }
         XCTAssertTrue(isCleared(), "The existing edit text must be cleared through the native editor")
