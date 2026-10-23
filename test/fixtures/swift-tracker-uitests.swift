@@ -2,6 +2,10 @@ import XCTest
 
 final class TrackerUITests: XCTestCase {
     @MainActor
+    private func button(_ label: String, in app: XCUIApplication) -> XCUIElement {
+        app.buttons.matching(NSPredicate(format: "label == %@", label)).firstMatch
+    }
+    @MainActor
     private func reveal(_ element: XCUIElement, in app: XCUIApplication) {
         for _ in 0..<20 {
             if element.exists && element.isHittable { return }
@@ -36,7 +40,7 @@ final class TrackerUITests: XCTestCase {
         }
         XCTAssertTrue(app.navigationBars["Tracker"].waitForExistence(timeout: 15))
         if persistence { XCTAssertTrue(app.staticTexts["No items"].exists) }
-        let addButton = app.buttons["Add"]
+        let addButton = button("Add", in: app)
         let field = app.textFields["New tracker item"]
         XCTAssertTrue(field.isHittable)
         XCTAssertFalse(addButton.isEnabled)
@@ -47,64 +51,64 @@ final class TrackerUITests: XCTestCase {
         field.typeText("  " + title + "  ")
         XCTAssertTrue(addButton.isEnabled)
         addButton.tap()
-        let toggle = app.buttons["Mark " + title + " complete"]
+        let toggle = button("Mark " + title + " complete", in: app)
         XCTAssertTrue(toggle.waitForExistence(timeout: 5))
         reveal(toggle, in: app)
         toggle.tap()
-        XCTAssertTrue(app.buttons["Mark " + title + " incomplete"].exists)
+        XCTAssertTrue(button("Mark " + title + " incomplete", in: app).exists)
         var savedTitle = title
         if reference {
-            let edit = app.buttons["Edit " + title]
+            let edit = button("Edit " + title, in: app)
             reveal(edit, in: app)
             edit.tap()
             XCTAssertTrue(app.navigationBars["Edit item"].waitForExistence(timeout: 5))
             let editor = app.textFields["Item title"]
             XCTAssertEqual(editor.value as? String, title)
             replace(editor, with: "")
-            XCTAssertFalse(app.buttons["Save"].isEnabled)
+            XCTAssertFalse(button("Save", in: app).isEnabled)
             savedTitle = title + " revised"
             editor.typeText(savedTitle)
-            XCTAssertTrue(app.buttons["Save"].isEnabled)
-            app.buttons["Save"].tap()
+            XCTAssertTrue(button("Save", in: app).isEnabled)
+            button("Save", in: app).tap()
             XCTAssertTrue(app.navigationBars["Tracker"].waitForExistence(timeout: 5))
-            XCTAssertTrue(app.buttons["Mark " + savedTitle + " incomplete"].exists)
-            let updated = app.buttons["Edit " + savedTitle]
+            XCTAssertTrue(button("Mark " + savedTitle + " incomplete", in: app).exists)
+            let updated = button("Edit " + savedTitle, in: app)
             reveal(updated, in: app)
             updated.tap()
             XCTAssertTrue(app.navigationBars["Edit item"].waitForExistence(timeout: 5))
             replace(app.textFields["Item title"], with: "Discard this draft")
-            XCTAssertTrue(app.buttons["Cancel"].isHittable)
-            app.buttons["Cancel"].tap()
-            XCTAssertTrue(app.buttons["Edit " + savedTitle].waitForExistence(timeout: 5))
-            XCTAssertFalse(app.buttons["Edit Discard this draft"].exists)
+            XCTAssertTrue(button("Cancel", in: app).isHittable)
+            button("Cancel", in: app).tap()
+            XCTAssertTrue(button("Edit " + savedTitle, in: app).waitForExistence(timeout: 5))
+            XCTAssertFalse(button("Edit Discard this draft", in: app).exists)
             if persistence {
                 app.terminate()
                 app.launch()
                 XCTAssertTrue(app.navigationBars["Tracker"].waitForExistence(timeout: 15))
-                XCTAssertTrue(app.buttons["Edit " + savedTitle].waitForExistence(timeout: 5))
-                XCTAssertTrue(app.buttons["Mark " + savedTitle + " incomplete"].exists)
+                XCTAssertTrue(button("Edit " + savedTitle, in: app).waitForExistence(timeout: 5))
+                XCTAssertTrue(button("Mark " + savedTitle + " incomplete", in: app).exists)
             }
         } else {
-            XCTAssertFalse(app.buttons["Edit " + title].exists)
+            XCTAssertFalse(button("Edit " + title, in: app).exists)
         }
         let list = XCTAttachment(screenshot: app.screenshot())
         list.name = longText ? "Tracker long title at largest text" : "Tracker saved state"
         list.lifetime = .keepAlways
         add(list)
         if reference {
-            let row = app.buttons["Edit " + savedTitle]
+            let row = button("Edit " + savedTitle, in: app)
             reveal(row, in: app)
             row.swipeLeft()
-            let delete = app.buttons["Delete"]
+            let delete = button("Delete", in: app)
             if delete.waitForExistence(timeout: 2) { delete.tap() }
-            XCTAssertFalse(app.buttons["Edit " + savedTitle].exists)
+            XCTAssertFalse(button("Edit " + savedTitle, in: app).exists)
             if persistence { XCTAssertTrue(app.staticTexts["No items"].waitForExistence(timeout: 5)) }
         }
         app.terminate()
         app.launch()
         XCTAssertTrue(app.navigationBars["Tracker"].waitForExistence(timeout: 15))
-        XCTAssertFalse(app.buttons["Mark " + savedTitle + " incomplete"].exists)
-        XCTAssertFalse(app.buttons["Edit " + savedTitle].exists)
+        XCTAssertFalse(button("Mark " + savedTitle + " incomplete", in: app).exists)
+        XCTAssertFalse(button("Edit " + savedTitle, in: app).exists)
         if persistence { XCTAssertTrue(app.staticTexts["No items"].waitForExistence(timeout: 5)) }
         let fresh = XCTAttachment(screenshot: app.screenshot())
         fresh.name = "Tracker after controlled relaunch"
