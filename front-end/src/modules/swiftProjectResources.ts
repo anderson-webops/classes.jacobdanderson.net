@@ -13,6 +13,12 @@ export const swiftNetworkingRevision =
 export const swiftNetworkingPack = "SAD6-API-Reference-App";
 export const swiftNetworkingRoot = `https://github.com/instruction-material/Swift/tree/${swiftNetworkingRevision}/${swiftNetworkingPack}`;
 
+export const swiftTrackerRevision = "23e1cae59dd989b6f97d8d13ebb5f4718223424d";
+export const swiftTrackerPack = "SAD5-Simple-Tracker-App";
+export const swiftTrackerRoot = `https://github.com/instruction-material/Swift/tree/${swiftTrackerRevision}/${swiftTrackerPack}`;
+export const swiftDataTrackerPack = "SAD5-SwiftData-Tracker-App";
+export const swiftDataTrackerRoot = `https://github.com/instruction-material/Swift/tree/${swiftTrackerRevision}/${swiftDataTrackerPack}`;
+
 const swiftPacks = [
 	{
 		pack: swiftWelcomePack,
@@ -20,6 +26,40 @@ const swiftPacks = [
 		projectKey: "welcome-profile",
 		roleFiles: swiftWelcomeRoleFiles,
 		sharedFiles: ["README.md"]
+	},
+	{
+		pack: swiftTrackerPack,
+		revision: swiftTrackerRevision,
+		projectKey: "simple-tracker",
+		roleFiles: [
+			"ContentView.swift",
+			"SimpleTrackerApp.swift",
+			"TrackerItem.swift",
+			"TrackerStore.swift"
+		],
+		sharedFiles: [
+			"README.md",
+			"verify-tracker.py",
+			"tests/TrackerContracts.swift"
+		]
+	},
+	{
+		pack: swiftDataTrackerPack,
+		revision: swiftTrackerRevision,
+		projectKey: "swiftdata-tracker",
+		roleFiles: [
+			"ContentView.swift",
+			"PersistentTrackerApp.swift",
+			"TrackerRecord.swift",
+			"TrackerPersistence.swift"
+		],
+		sharedFiles: [
+			"README.md",
+			"verify-persistence.py",
+			"tests/PersistenceContracts.swift",
+			"Package.swift",
+			"tests/PersistenceTests.swift"
+		]
 	},
 	{
 		pack: swiftNetworkingPack,

@@ -2,7 +2,10 @@ import fs from "node:fs";
 import path from "node:path";
 import { createPinia, setActivePinia } from "pinia";
 import { describe, expect, it } from "vitest";
-import { swiftNetworkingRoot } from "@/modules/swiftProjectResources";
+import {
+	swiftNetworkingRoot,
+	swiftTrackerRoot
+} from "@/modules/swiftProjectResources";
 import { useCoursesStore } from "@/stores/courses";
 import { loadRawCourse } from "@/stores/courses/index";
 import { introToSwiftAppDevelopmentCourse } from "@/stores/courses/intro-to-swift-app-development";
@@ -188,7 +191,9 @@ describe("Intro to Swift App Development learner flow", () => {
 			expect(text, folder).toContain(
 				folder === "SAD6-API-Reference-App"
 					? swiftNetworkingRoot
-					: `https://github.com/instruction-material/Swift/tree/main/${folder}`
+					: folder === "SAD5-Simple-Tracker-App"
+						? swiftTrackerRoot
+						: `https://github.com/instruction-material/Swift/tree/main/${folder}`
 			);
 		}
 	});
@@ -229,6 +234,20 @@ describe("Intro to Swift App Development learner flow", () => {
 				expect(item.content).toContain("HTTP 503");
 				expect(item.content).toContain("HTTP 200");
 				expect(item.content).toContain("B's result remains visible");
+			} else if (
+				[
+					"Project: Simple Tracker App",
+					"Project Pass: Persist the Simple Tracker App"
+				].includes(item.title)
+			) {
+				for (const section of [
+					"## Project",
+					"## Run",
+					"## Work sequence",
+					"## Verification"
+				])
+					expect(item.content).toContain(section);
+				expect(item.content).toContain("iOS 17");
 			} else {
 				expect(item.content, item.title).toContain(
 					"**Course position:**"
@@ -349,6 +368,16 @@ describe("Intro to Swift App Development learner flow", () => {
 				expect(item.content).toContain(
 					"without needing the other role"
 				);
+			} else if (item.title === "Project: Simple Tracker App") {
+				expect(item.content).toContain("python3 verify-tracker.py");
+				expect(item.content).toContain("tests/TrackerContracts.swift");
+				expect(item.content).toContain("iOS 17");
+			} else if (
+				item.title === "Project Pass: Persist the Simple Tracker App"
+			) {
+				expect(item.content).toContain("python3 verify-persistence.py");
+				expect(item.content).toContain("swift test");
+				expect(item.content).toContain("separate processes");
 			} else {
 				expect(item.content, item.title).toContain(
 					"/course-assets/swift/intro-swift-verification-guide.md#"
@@ -487,7 +516,9 @@ describe("Intro to Swift App Development learner flow", () => {
 			.join("\n");
 		const titles = allItems().map(item => item.title);
 
-		expect(visibleText).not.toMatch(/\bshould\b/iu);
+		expect(visibleText).not.toMatch(
+			/\b(?:students|learners|instructors) should\b/iu
+		);
 		expect(visibleText).not.toMatch(/\bMini Lab\b/iu);
 		expect(visibleText).not.toMatch(/\bsupplemental [23]\b/iu);
 		expect(titles).not.toContain("Diagnostic Checkpoint");

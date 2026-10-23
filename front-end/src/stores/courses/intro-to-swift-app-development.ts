@@ -1,7 +1,13 @@
 import type { RawCourse, RawCourseModuleItem } from "./types";
 import swiftNetworkingReading from "@/assets/course-guides/swift-networking.md?raw";
+import swiftDataTrackerReading from "@/assets/course-guides/swift-swiftdata.md?raw";
+import swiftTrackerReading from "@/assets/course-guides/swift-tracker.md?raw";
 import swiftWelcomeReading from "@/assets/course-guides/swift-welcome-profile.md?raw";
-import { swiftNetworkingRoot } from "@/modules/swiftProjectResources";
+import {
+	swiftDataTrackerRoot,
+	swiftNetworkingRoot,
+	swiftTrackerRoot
+} from "@/modules/swiftProjectResources";
 import { buildProjectGuidance } from "./projectGuidance";
 import { buildSupportSectionGuidance } from "./supportSectionGuidance";
 import swiftPriorTitles from "./swift-title-progress-history.json";
@@ -2225,6 +2231,34 @@ function contextualizeSwiftItem(
 		networkingProject ||
 		(flow.title === "SW12 Networking and Data Loading" &&
 			item.title === "Diagnostic Checkpoint");
+	const trackerProject =
+		flow.title === "SW10 Lists, Forms, and CRUD" &&
+		item.title === "Project: Simple Tracker App";
+	const persistenceProject =
+		flow.title === "SW11 Persistence with SwiftData" &&
+		item.title === "Project Pass: Persist the Simple Tracker App";
+	const trackerWorkspace =
+		trackerProject ||
+		(flow.title === "SW10 Lists, Forms, and CRUD" &&
+			item.title === "Diagnostic Checkpoint");
+	const persistenceWorkspace =
+		persistenceProject ||
+		(flow.title === "SW11 Persistence with SwiftData" &&
+			item.title === "Diagnostic Checkpoint");
+	const workspaceRoot = trackerWorkspace
+		? swiftTrackerRoot
+		: persistenceWorkspace
+			? swiftDataTrackerRoot
+			: networkingWorkspace
+				? swiftNetworkingRoot
+				: null;
+	const projectReading = trackerProject
+		? swiftTrackerReading
+		: persistenceProject
+			? swiftDataTrackerReading
+			: networkingProject
+				? swiftNetworkingReading
+				: null;
 	const sourceTopic = flow.sourceTitle.replace(/^SAD\d+\s+/u, "");
 	const diagnosticAliases =
 		item.title === "Diagnostic Checkpoint" &&
@@ -2265,15 +2299,12 @@ function contextualizeSwiftItem(
 				...(priorTitle ? [priorTitle] : [])
 			])
 		],
-		ideImport:
-			welcomeProject || networkingWorkspace ? true : item.ideImport,
-		preserveInstructions: networkingProject
-			? true
-			: item.preserveInstructions,
+		ideImport: welcomeProject || workspaceRoot ? true : item.ideImport,
+		preserveInstructions: projectReading ? true : item.preserveInstructions,
 		content: welcomeProject
 			? swiftWelcomeReading.trim()
-			: networkingProject
-				? swiftNetworkingReading.trim()
+			: projectReading
+				? projectReading.trim()
 				: `${item.content.trim()}
 
 **Course position:** ${flow.stage}. ${legacyNote}
@@ -2296,11 +2327,11 @@ ${completionRoute}
 				: isExtension
 					? "choice"
 					: "core",
-		projectLink: networkingWorkspace
-			? `${swiftNetworkingRoot}/starter`
+		projectLink: workspaceRoot
+			? `${workspaceRoot}/starter`
 			: (item.projectLink ?? flow.referenceLink),
-		solutionLink: networkingWorkspace
-			? `${swiftNetworkingRoot}/solution`
+		solutionLink: workspaceRoot
+			? `${workspaceRoot}/solution`
 			: (item.solutionLink ?? verificationLink),
 		datasetLink: practiceLink,
 		mediaLink: item.mediaLink ?? flow.referenceLink
