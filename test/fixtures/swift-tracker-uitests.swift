@@ -9,7 +9,7 @@ final class TrackerUITests: XCTestCase {
     private func reveal(_ element: XCUIElement, in app: XCUIApplication) {
         for _ in 0..<20 {
             if element.exists && element.isHittable { return }
-            app.swipeUp()
+            app.collectionViews.firstMatch.swipeUp()
         }
         XCTAssertTrue(element.isHittable)
     }
@@ -52,7 +52,6 @@ final class TrackerUITests: XCTestCase {
         XCTAssertTrue(addButton.isEnabled)
         addButton.tap()
         let toggle = button("Mark " + title + " complete", in: app)
-        XCTAssertTrue(toggle.waitForExistence(timeout: 5))
         reveal(toggle, in: app)
         toggle.tap()
         XCTAssertTrue(button("Mark " + title + " incomplete", in: app).exists)
