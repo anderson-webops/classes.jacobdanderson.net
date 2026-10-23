@@ -4338,6 +4338,53 @@ print("guarded")
 		);
 	});
 
+	it.each(["turtle", "pgzero", "data"] as const)(
+		"tolerates non-string search entries before the next %s bootstrap",
+		mode => {
+			const projectRoot = mkdtempSync(join(tmpdir(), "classes-path-reset-"));
+			try {
+				const source = `
+import os
+import sys
+class IgnoredPath:
+    def __fspath__(self):
+        raise AssertionError("An ignored path entry was evaluated")
+os.chdir(${JSON.stringify(projectRoot)})
+sys.path.insert(0, ${JSON.stringify(projectRoot)})
+sys.path.extend([1, None, ["not a path"], b"ignored", IgnoredPath()])
+str = "student variable"
+isinstance = 7
+${createTrustedPythonImportPrelude(projectRoot)}
+assert all(__classes_import_builtins.isinstance(entry, __classes_import_builtins.str) for entry in sys.path)
+assert ${JSON.stringify(projectRoot)} not in sys.path
+${createInputBootstrap("", mode, projectRoot)}
+import json
+import os
+import sys
+assert json.loads('{"ready": true}')["ready"] is True
+os.chdir(${JSON.stringify(projectRoot)})
+sys.path.insert(0, ${JSON.stringify(projectRoot + "/nested")})
+sys.path.extend([{}, 3, None])
+${createTrustedPythonImportPrelude(projectRoot)}
+assert all(__classes_import_builtins.isinstance(entry, __classes_import_builtins.str) for entry in sys.path)
+assert not any(entry.startswith(${JSON.stringify(projectRoot)}) for entry in sys.path)
+${createInputBootstrap("", mode, projectRoot)}
+import json
+assert json.loads('[1, 2]') == [1, 2]
+print("second run ready")
+`;
+				const result = spawnSync("python3", ["-I", "-c", source], {
+					encoding: "utf8",
+					timeout: 10000
+				});
+				expect(result.status, result.stderr).toBe(0);
+				expect(result.stdout.trim()).toBe("second run ready");
+			} finally {
+				rmSync(projectRoot, { recursive: true, force: true });
+			}
+		}
+	);
+
 	it.each(["ast", "pathlib"])(
 		"loads trusted %s before making project imports visible",
 		moduleName => {
@@ -6679,6 +6726,36 @@ else:
 			project.files[1]!
 		];
 		expect(getPythonIdeRunnableFile(project)?.name).toBe("App.java");
+	});
+
+	it.each([
+		["String[] args", "Exception"],
+		["String args[]", "java.io.IOException, RuntimeException"],
+		["String... args", "Exception"]
+	])("selects Java main with throws clauses for %s", (parameters, exceptions) => {
+		const project = createPythonIdeProject("java");
+		project.files = [
+			{ name: "Main.java", content: "public class Main { void help() {} }" },
+			{ name: "Helper.java", content: "public class Helper {}" },
+			{
+				name: "App.java",
+				content: `public class App {
+    public static void main(${parameters}) throws ${exceptions} {
+        System.out.println(total(2, 3));
+    }
+    static int total(int left, int right) throws java.io.IOException {
+        return left + right;
+    }
+}`
+			}
+		];
+		for (const activeFileName of ["Helper.java", "Main.java", "App.java"]) {
+			project.activeFileName = activeFileName;
+			expect(getPythonIdeRunnableFile(project)?.name).toBe("App.java");
+			const result = runJavaIdeProject(project);
+			expect(result.stdout).toEqual(["5"]);
+			expect(result.stderr).toEqual([]);
+		}
 	});
 
 	it("runs Karel driver files instead of active helper classes", () => {
