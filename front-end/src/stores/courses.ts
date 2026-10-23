@@ -18,6 +18,7 @@ import assemblyProgressHistory from "./courses/assembly-progress-history.json";
 import cppAlgorithmsProgressHistory from "./courses/cpp-algorithms-progress-history.json";
 import cppDesignPatternsProgressHistory from "./courses/cpp-design-patterns-progress-history.json";
 import designPatternsPart2ProgressHistory from "./courses/design-patterns-part-2-progress-history.json";
+import generatedTitleProgressHistory from "./courses/generated-title-progress-history.json";
 import { courseCatalog, loadRawCourse } from "./courses/index";
 import javaLevel1ProgressHistory from "./courses/java-level-1-progress-history.json";
 import javaLevel2ProgressHistory from "./courses/java-level-2-progress-history.json";
@@ -39,6 +40,20 @@ function mergeHistoricalAliasMaps(
 		for (const [currentId, previousIds] of Object.entries(map)) {
 			merged[currentId] = [...(merged[currentId] ?? []), ...previousIds];
 		}
+	}
+	return merged;
+}
+
+function mergeCourseHistoricalAliases(
+	base: Record<string, Record<string, string[]>>,
+	additional: Record<string, Record<string, string[]>>
+): Record<string, Record<string, string[]>> {
+	const merged = { ...base };
+	for (const [courseId, aliases] of Object.entries(additional)) {
+		merged[courseId] = mergeHistoricalAliasMaps(
+			base[courseId] ?? {},
+			aliases
+		);
 	}
 	return merged;
 }
@@ -70,7 +85,7 @@ const historicalModuleAliases: Record<string, Record<string, string[]>> = {
 			["python-to-java-and-cpp-bridge-language-bridge-lab-17"]
 	}
 };
-const historicalItemAliases: Record<string, Record<string, string[]>> = {
+const historicalItemAliasesBase: Record<string, Record<string, string[]>> = {
 	...algebraProgressHistory,
 	...assemblyProgressHistory,
 	...cppAlgorithmsProgressHistory,
@@ -91,6 +106,10 @@ const historicalItemAliases: Record<string, Record<string, string[]>> = {
 	"machine-learning": machineLearningProgressHistory.items,
 	...networkSystemsProgressHistory
 };
+const historicalItemAliases = mergeCourseHistoricalAliases(
+	historicalItemAliasesBase,
+	generatedTitleProgressHistory
+);
 
 const COMBINING_MARKS_RE = /[\u0300-\u036F]/g;
 const NON_ALPHANUMERIC_RE = /[^a-z0-9]+/g;

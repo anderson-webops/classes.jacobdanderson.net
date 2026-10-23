@@ -1,11 +1,15 @@
 import { createPinia, setActivePinia } from "pinia";
 import { describe, expect, it } from "vitest";
 import { useCoursesStore } from "@/stores/courses";
-import { unmatchedCourseProgress } from "@/modules/courseProgressHistory";
+import {
+	nonCatalogCourseProgress,
+	unmatchedCourseProgress
+} from "@/modules/courseProgressHistory";
 import { courseCatalog } from "@/stores/courses/index";
 import { webDevelopmentFoundationsCourse } from "@/stores/courses/web-development-foundations";
 import { researchBackedExpansionCourseIds } from "@/stores/courses/research-expansions";
 import generatedProjectHistory from "./fixtures/generated-project-history.json";
+import generatedTitleCourseHistory from "./fixtures/generated-title-course-history.json";
 import usacoStudioHistory from "./fixtures/usaco-studio-history.json";
 import apcsaCourseHistory from "./fixtures/apcsa-course-history.json";
 import machineLearningCourseHistory from "./fixtures/machine-learning-course-history.json";
@@ -2521,6 +2525,58 @@ describe("saved course progress identities", () => {
 						completedItemIds: kind === "item" ? [oldId] : []
 					})
 				).toEqual([{ id: oldId, kind }]);
+			}
+		}
+	});
+
+	it("retains contextualized generated-title progress without assigning retired work", async () => {
+		setActivePinia(createPinia());
+		const store = useCoursesStore();
+		const catalogIds = new Set(courseCatalog.map(entry => entry.id));
+		expect(generatedTitleCourseHistory).toHaveLength(1966);
+		const byCourse = Map.groupBy(
+			generatedTitleCourseHistory,
+			entry => entry.courseId
+		);
+
+		for (const [courseId, history] of byCourse) {
+			const course = await store.loadCourseById(courseId);
+			const items = course?.modules.flatMap(module => [
+				...module.curriculum,
+				...module.supplementalProjects
+			]);
+			for (const { oldId, currentId } of history) {
+				const owners = items?.filter(
+					item => item.id === oldId || item.aliases?.includes(oldId)
+				);
+				if (currentId) {
+					expect(
+						owners?.map(item => item.id),
+						oldId
+					).toEqual([currentId]);
+				} else if (course) {
+					expect(owners, oldId).toEqual([]);
+					expect(
+						unmatchedCourseProgress(course, {
+							courseId,
+							completedModuleIds: [],
+							completedItemIds: [oldId]
+						})
+					).toEqual([{ id: oldId, kind: "item" }]);
+				} else {
+					expect(
+						nonCatalogCourseProgress(
+							[
+								{
+									courseId,
+									completedModuleIds: [],
+									completedItemIds: [oldId]
+								}
+							],
+							catalogIds
+						)
+					).toHaveLength(1);
+				}
 			}
 		}
 	});
