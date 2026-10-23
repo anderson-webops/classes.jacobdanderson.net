@@ -8,10 +8,10 @@ import zipfile
 
 def generate(browser: Path, root: Path, *, kind="welcome", source_files=None,
              shared_files=("README.md",), ui_template=None):
-    assert kind in ("welcome", "networking")
+    assert kind in ("welcome", "networking", "tracker", "swiftdata")
     assert kind == "welcome" or ui_template is not None
     source_files = source_files or ("ContentView.swift", "WelcomeProfileApp.swift")
-    prefix = "Welcome" if kind == "welcome" else "Networking"
+    prefix = {"welcome": "Welcome", "networking": "Networking", "tracker": "Tracker", "swiftdata": "SwiftDataTracker"}[kind]
     B = browser.resolve()
     proof = json.loads((B / f"swift-swift-{kind}-course-proof.json").read_text())
     assert len(proof["profiles"]) == 4
@@ -180,7 +180,7 @@ def generate(browser: Path, root: Path, *, kind="welcome", source_files=None,
     '''.replace("ROLE", "true" if role == "solution" else "false")
         if ui_template is not None:
             code = ui_template.replace("ROLE", "true" if role == "solution" else "false")
-        test_file = role_dir / ("WelcomeProfileUITests.swift" if kind == "welcome" else "NetworkingUITests.swift")
+        test_file = role_dir / ("WelcomeProfileUITests.swift" if kind == "welcome" else prefix + "UITests.swift")
         test_file.write_text(code)
         test_ref = obj(role + "TestSource", "PBXFileReference", lastKnownFileType="sourcecode.swift",
                        path=str(test_file.relative_to(root)), sourceTree="<group>")

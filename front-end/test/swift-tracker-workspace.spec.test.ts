@@ -16,6 +16,7 @@ import { swiftBuildInstructions } from "@/modules/swiftBuildInstructions";
 import {
 	swiftCourseProjectKey,
 	swiftCourseResource,
+	swiftImportFiles,
 	swiftDataTrackerRoot,
 	swiftTrackerRoot,
 	swiftWelcomeRoot
@@ -224,6 +225,38 @@ for (const definition of definitions) {
 				}
 			}
 		);
+		it("keeps earlier pinned links complete and resumes the same saved role", () => {
+			const earlier = "23e1cae59dd989b6f97d8d13ebb5f4718223424d";
+			const oldRoot = definition.root.replace(fixture.revision, earlier);
+			for (const role of ["starter", "solution"] as const) {
+				const url = oldRoot + "/" + role;
+				expect(swiftCourseResource(url)?.resource.ref).toBe(earlier);
+				expect(swiftCourseResource(url)?.revision).toBe(earlier);
+				const files = swiftImportFiles(url)!;
+				expect(files).toHaveLength(definition.shared.length + 4);
+				expect(
+					files.every(file =>
+						file.file.rawUrl.includes("/" + earlier + "/")
+					)
+				).toBe(true);
+				const keyRole = role === "starter" ? "starter" : "reference";
+				expect(
+					swiftCourseProjectKey(
+						"intro-to-swift-app-development",
+						"core",
+						keyRole,
+						url
+					)
+				).toBe(
+					swiftCourseProjectKey(
+						"intro-to-swift-app-development",
+						"core",
+						keyRole,
+						definition.root + "/" + role
+					)
+				);
+			}
+		});
 		it("pins only its own source and accepts no arbitrary Python helper", () => {
 			expect(
 				swiftCourseResource(

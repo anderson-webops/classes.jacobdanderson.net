@@ -1502,6 +1502,80 @@ jobs:
                   if-no-files-found: error
                   retention-days: 7
 
+    swift-tracker-ui:
+        strategy:
+            fail-fast: false
+            matrix:
+                course: [tracker, swiftdata]
+        needs: swift-browser
+        runs-on: macos-26
+        timeout-minutes: 60
+        permissions:
+            contents: read
+            actions: read
+        env:
+            CLASSES_FAMILY_TASK_ID: swift-tracker-ui-${{ matrix.course }}
+            TRACKER_COURSE: ${{ matrix.course }}
+            CLASSES_FAMILY_MIN_DISK_GB: 8
+            CLASSES_FAMILY_HEAVY_TIMEOUT_MS: 3300000
+        steps:
+            - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+              with:
+                  persist-credentials: false
+
+            - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+              with:
+                  node-version: 24.18.0
+
+            - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+              with:
+                  name: swift-tracker-workflows
+                  path: output/swift-tracker-workflows
+
+            - name: Wait for the hosted Mac to settle within the native load limit
+              run: |
+                  python3 - <<'PY'
+                  import datetime
+                  import json
+                  import os
+                  from pathlib import Path
+                  import time
+
+                  proof = Path(os.environ["RUNNER_TEMP"]) / "swift-tracker-ui/runner-readiness.json"
+                  proof.parent.mkdir(parents=True, exist_ok=True)
+                  samples = []
+                  deadline = time.monotonic() + 300
+                  while True:
+                      load = os.getloadavg()[0]
+                      samples.append({"at": datetime.datetime.now(datetime.timezone.utc).isoformat(), "load": load})
+                      ready = load <= 8
+                      proof.write_text(json.dumps({"ready": ready, "maximumLoad": 8, "samples": samples}, indent=2) + "\n")
+                      print(f"Hosted Mac load: {load:.2f}; required maximum: 8", flush=True)
+                      if ready:
+                          break
+                      if time.monotonic() >= deadline:
+                          raise SystemExit("Hosted Mac did not settle within five minutes; native checks have not run")
+                      time.sleep(10)
+                  PY
+
+            - name: Exercise actual exported tracker apps on two iPhone sizes
+              run: node scripts/classes-family-heavy-task.mjs -- python3 test/swift-tracker-exported-ios.py --course "$TRACKER_COURSE" --browser "output/swift-tracker-workflows/swift-${TRACKER_COURSE}-browser" --proof "$RUNNER_TEMP/swift-tracker-ui/$TRACKER_COURSE/proof.json"
+
+            - name: Retain original tracker app inputs, versions, process logs and UI results
+              if: always()
+              uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+              with:
+                  name: swift-tracker-ui-${{ matrix.course }}
+                  path: |
+                      ${{ runner.temp }}/swift-tracker-ui/runner-readiness.json
+                      ${{ runner.temp }}/swift-tracker-ui/**/proof.json
+                      ${{ runner.temp }}/swift-tracker-ui/**/processes.jsonl
+                      ${{ runner.temp }}/swift-tracker-ui/**/logs/
+                      ${{ runner.temp }}/swift-tracker-ui/**/results/
+                      ${{ runner.temp }}/swift-tracker-ui/**/inputs.json
+                  if-no-files-found: error
+                  retention-days: 7
+
     usaco-workflows:
         needs: test-e2e
         runs-on: ubuntu-24.04
