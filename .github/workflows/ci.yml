@@ -1067,7 +1067,7 @@ jobs:
               uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
               with:
                   repository: instruction-material/Web-Development-Foundations
-                  ref: 781eba647bbdcb3f89aa0417011dabe2fca30d53
+                  ref: 962d1be3da0d954ad774390b78cb044395a12262
                   path: output/web-deployment-native-source
                   persist-credentials: false
 
