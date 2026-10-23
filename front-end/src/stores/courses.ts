@@ -15,6 +15,7 @@ import { useAppStore } from "./app";
 import algebraProgressHistory from "./courses/algebra-progress-history.json";
 import apcsaProgressHistory from "./courses/apcsa-progress-history.json";
 import assemblyProgressHistory from "./courses/assembly-progress-history.json";
+import cppAlgorithmsProgressHistory from "./courses/cpp-algorithms-progress-history.json";
 import designPatternsPart2ProgressHistory from "./courses/design-patterns-part-2-progress-history.json";
 import { courseCatalog, loadRawCourse } from "./courses/index";
 import { isJuniScratchProjectTitle } from "./courses/juniScratchProjects";
@@ -29,6 +30,7 @@ const historicalModuleAliases: Record<string, Record<string, string[]>> = {
 const historicalItemAliases: Record<string, Record<string, string[]>> = {
 	...algebraProgressHistory,
 	...assemblyProgressHistory,
+	...cppAlgorithmsProgressHistory,
 	...usacoProgressHistory,
 	...apcsaProgressHistory,
 	...designPatternsPart2ProgressHistory,

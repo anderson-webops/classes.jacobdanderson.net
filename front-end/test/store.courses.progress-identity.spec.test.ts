@@ -13,6 +13,7 @@ import designPatternsPart2History from "./fixtures/design-patterns-part-2-histor
 import linuxCourseHistory from "./fixtures/linux-course-history.json";
 import algebraCourseHistory from "./fixtures/algebra-course-history.json";
 import assemblyCourseHistory from "./fixtures/assembly-course-history.json";
+import cppAlgorithmsCourseHistory from "./fixtures/cpp-algorithms-course-history.json";
 
 function historicalId(value: string) {
 	return value
@@ -2186,6 +2187,53 @@ describe("saved course progress identities", () => {
 							completedItemIds: [previousId]
 						})
 					).toEqual([{ id: previousId, kind: "item" }]);
+				}
+			}
+		}
+	});
+
+	it("preserves C++ algorithm progress without merging retired lab completions", async () => {
+		setActivePinia(createPinia());
+		const courseId = "data-structures-and-algorithms-in-cpp";
+		const course = await useCoursesStore().loadCourseById(courseId);
+		const modules = course?.modules ?? [];
+		const items = modules.flatMap(module => [
+			...module.curriculum,
+			...module.supplementalProjects
+		]);
+		expect(cppAlgorithmsCourseHistory).toHaveLength(76);
+		expect(
+			cppAlgorithmsCourseHistory.filter(entry => !entry.currentId)
+		).toHaveLength(7);
+
+		for (const {
+			kind,
+			oldId,
+			newId,
+			currentId
+		} of cppAlgorithmsCourseHistory) {
+			const entities = kind === "module" ? modules : items;
+			for (const previousId of [oldId, newId]) {
+				const owners = entities.filter(
+					entity =>
+						entity.id === previousId ||
+						entity.aliases?.includes(previousId)
+				);
+				if (currentId) {
+					expect(
+						owners.map(entity => entity.id),
+						previousId
+					).toEqual([currentId]);
+				} else {
+					expect(kind).toBe("module");
+					expect(owners, previousId).toEqual([]);
+					expect(
+						unmatchedCourseProgress(course, {
+							courseId,
+							completedModuleIds: [previousId],
+							completedItemIds: []
+						})
+					).toEqual([{ id: previousId, kind: "module" }]);
 				}
 			}
 		}
