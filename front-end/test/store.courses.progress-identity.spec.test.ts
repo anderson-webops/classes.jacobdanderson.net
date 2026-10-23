@@ -153,6 +153,47 @@ describe("saved course progress identities", () => {
 		expect(checkedIds).toBe(74);
 	});
 
+	it("retains Swift lesson progress from before the first label refinement", async () => {
+		setActivePinia(createPinia());
+		const course = await useCoursesStore().loadCourseById(
+			"intro-to-swift-app-development"
+		);
+		const historicalItems = [
+			[
+				"sad2-mac-setup-and-project-tooling-curriculum-mini-lab-first-blank-swiftui-app",
+				"First Blank SwiftUI App Studio"
+			],
+			[
+				"sad2-mac-setup-and-project-tooling-supplemental-understanding-check-mac-setup-and-project-tooling",
+				"SW1 Mac Setup and First Launch: Readiness Check"
+			],
+			[
+				"sad4-running-on-simulator-and-device-curriculum-mini-lab-first-launch-troubleshooting",
+				"First Launch Troubleshooting Studio"
+			],
+			[
+				"sad4-running-on-simulator-and-device-supplemental-understanding-check-running-on-simulator-and-device",
+				"SW15 Simulator and Device Validation: Readiness Check"
+			],
+			[
+				"sad6-what-an-app-is-structurally-curriculum-reflection-question-which-part-of-an-app-should-change-most-slowly",
+				"Reflection Question: Stable App Structure"
+			]
+		] as const;
+		const allItems = course?.modules.flatMap(module => [
+			...module.curriculum,
+			...module.supplementalProjects
+		]);
+		for (const [suffix, currentTitle] of historicalItems) {
+			const previousId = `intro-to-swift-app-development-${suffix}`;
+			const owners = allItems?.filter(item =>
+				item.aliases?.includes(previousId)
+			);
+			expect(owners, previousId).toHaveLength(1);
+			expect(owners?.[0].title, previousId).toBe(currentTitle);
+		}
+	});
+
 	it("retains JavaScript Level 2 practice completions from before label changes", async () => {
 		setActivePinia(createPinia());
 		const course = await useCoursesStore().loadCourseById(

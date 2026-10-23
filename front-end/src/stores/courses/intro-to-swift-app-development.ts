@@ -2212,11 +2212,22 @@ function contextualizeSwiftItem(
 	isSupplemental: boolean
 ): RawCourseModuleItem {
 	const sourceTopic = flow.sourceTitle.replace(/^SAD\d+\s+/u, "");
-	const diagnosticAlias =
+	const diagnosticAliases =
 		item.title === "Diagnostic Checkpoint" &&
 		sourceTopic !== flow.sourceTitle
-			? [`Diagnostic Checkpoint: ${sourceTopic}`]
+			? [
+					`Diagnostic Checkpoint: ${sourceTopic}`,
+					`Understanding Check: ${sourceTopic}`
+				]
 			: [];
+	const priorTitles: Record<string, string> = {
+		"First Blank SwiftUI App Studio": "Mini Lab: First Blank SwiftUI App",
+		"First Launch Troubleshooting Studio":
+			"Mini Lab: First Launch Troubleshooting",
+		"Reflection Question: Stable App Structure":
+			"Reflection Question: Which Part of an App Should Change Most Slowly?"
+	};
+	const priorTitle = priorTitles[item.title];
 	const practiceLink = swiftPracticePack(flow.materialSection);
 	const verificationLink = swiftVerificationGuide(flow.answerSection);
 	const isExtension =
@@ -2235,7 +2246,8 @@ function contextualizeSwiftItem(
 			...new Set([
 				...(item.aliases ?? []),
 				item.title,
-				...diagnosticAlias
+				...diagnosticAliases,
+				...(priorTitle ? [priorTitle] : [])
 			])
 		],
 		content: `${item.content.trim()}
