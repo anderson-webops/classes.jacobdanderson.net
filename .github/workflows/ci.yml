@@ -1271,14 +1271,14 @@ jobs:
     swift-ios:
         needs: swift-browser
         runs-on: macos-26
-        timeout-minutes: 45
+        timeout-minutes: 60
         permissions:
             contents: read
             actions: read
         env:
             CLASSES_FAMILY_TASK_ID: swift-welcome-ios
             CLASSES_FAMILY_MIN_DISK_GB: 8
-            CLASSES_FAMILY_HEAVY_TIMEOUT_MS: 2400000
+            CLASSES_FAMILY_HEAVY_TIMEOUT_MS: 3300000
         steps:
             - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
               with:

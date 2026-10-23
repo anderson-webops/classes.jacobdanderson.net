@@ -93,18 +93,19 @@ def run(label, command, timeout=180, check=True):
 def wait_for_native_host(label):
     samples = []
     ready_samples = 0
-    deadline = time.monotonic() + 300
+    deadline = time.monotonic() + 900
     while True:
         load = os.getloadavg()[0]
         samples.append(dict(at=now(), load=load))
         ready_samples = ready_samples + 1 if load <= 8 else 0
         record.setdefault("postBootReadiness", {})[label] = dict(
-            ready=ready_samples >= 3, maximumLoad=8, samples=samples
+            ready=ready_samples >= 3, maximumLoad=8, timeoutSeconds=900, samples=samples
         )
         args.proof.write_text(json.dumps(record, indent=2) + "\n")
+        print(f"Simulator {label} host load: {load:.2f}; required maximum: 8", flush=True)
         if ready_samples >= 3:
             return
-        assert time.monotonic() < deadline, "The booted simulator host did not settle below load8"
+        assert time.monotonic() < deadline, "The booted simulator host did not settle below load8 within fifteen minutes"
         time.sleep(10)
 
 
