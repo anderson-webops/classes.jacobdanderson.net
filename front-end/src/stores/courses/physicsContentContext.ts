@@ -89,7 +89,8 @@ function applyPhysicsSupplementOverrides(course: RawCourse) {
 			if (item.title === "Diagnostic Checkpoint") {
 				item.aliases = [
 					...(item.aliases ?? []),
-					`Understanding Check: ${topic}`
+					`Understanding Check: ${topic}`,
+					`Diagnostic Checkpoint: ${topic}`
 				];
 				item.title = `${topic} Readiness Check`;
 				item.content =

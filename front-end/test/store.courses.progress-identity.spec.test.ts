@@ -99,6 +99,60 @@ describe("saved course progress identities", () => {
 		expect(checkedIds).toBe(68);
 	});
 
+	it("retains diagnostic checkpoint progress after the label rename", async () => {
+		setActivePinia(createPinia());
+		const courseHistory = {
+			"design-patterns-in-java": { prefix: "dpj", count: 10 },
+			"design-patterns-in-java-part-2": { prefix: "dpr", count: 10 },
+			"intro-to-physics": { prefix: "phy", count: 17 },
+			"physics-level-2": { prefix: "phy", count: 17 },
+			"intro-to-swift-app-development": { prefix: "sad", count: 20 }
+		} as const;
+		let checkedIds = 0;
+
+		for (const [courseId, history] of Object.entries(courseHistory)) {
+			const course = await useCoursesStore().loadCourseById(courseId);
+			const allItems = course?.modules.flatMap(module => [
+				...module.curriculum,
+				...module.supplementalProjects
+			]);
+			let courseChecks = 0;
+			for (const module of course?.modules ?? []) {
+				const previousModuleId =
+					courseId === "intro-to-swift-app-development"
+						? module.aliases?.find(alias =>
+								/^intro-to-swift-app-development-sad\d+-/u.test(
+									alias
+								)
+							)
+						: module.id;
+				if (
+					!previousModuleId ||
+					!new RegExp(
+						`^${courseId}-${history.prefix}\\d+-`,
+						"u"
+					).test(previousModuleId)
+				)
+					continue;
+				const previousTopic = previousModuleId
+					.slice(courseId.length + 1)
+					.replace(/^[a-z]+\d+-/u, "");
+				const previousId = `${previousModuleId}-supplemental-diagnostic-checkpoint-${previousTopic}`;
+				const owners = allItems?.filter(
+					item =>
+						item.id === previousId ||
+						item.aliases?.includes(previousId)
+				);
+				expect(owners, previousId).toHaveLength(1);
+				expect(owners?.[0].id, previousId).not.toBe(previousId);
+				courseChecks++;
+			}
+			expect(courseChecks, courseId).toBe(history.count);
+			checkedIds += courseChecks;
+		}
+		expect(checkedIds).toBe(74);
+	});
+
 	it("retains JavaScript Level 2 practice completions from before label changes", async () => {
 		setActivePinia(createPinia());
 		const course = await useCoursesStore().loadCourseById(

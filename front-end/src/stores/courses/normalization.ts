@@ -808,6 +808,27 @@ function contextualizeGenericItemTitle(
 	return contextualGenericTitle(courseTitle, moduleTitle, label, baseTitle);
 }
 
+function preserveDiagnosticCheckpointAliases(course: RawCourse) {
+	for (const module of course.modules) {
+		for (const item of [
+			...module.curriculum,
+			...module.supplementalProjects
+		]) {
+			if (item.title !== "Diagnostic Checkpoint") continue;
+			item.aliases = [
+				...new Set([
+					...(item.aliases ?? []),
+					contextualGenericTitle(
+						course.name,
+						module.title,
+						"Diagnostic Checkpoint"
+					)
+				])
+			];
+		}
+	}
+}
+
 function normalizeDisplayTitles(course: RawCourse) {
 	for (const module of course.modules) {
 		module.title = cleanDisplayTitle(module.title);
@@ -9511,6 +9532,12 @@ const normalizers: Record<string, (course: RawCourse) => void> = {
 
 export function normalizeRawCourse(id: string, rawCourse: RawCourse) {
 	const course = cloneCourse(rawCourse);
+	if (
+		id === "design-patterns-in-java" ||
+		id === "design-patterns-in-java-part-2"
+	) {
+		preserveDiagnosticCheckpointAliases(course);
+	}
 	const preservedScratchInstructions = preserveScratchProjectInstructions(
 		id,
 		course

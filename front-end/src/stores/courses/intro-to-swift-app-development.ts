@@ -2211,6 +2211,12 @@ function contextualizeSwiftItem(
 	flow: SwiftCourseModuleFlow,
 	isSupplemental: boolean
 ): RawCourseModuleItem {
+	const sourceTopic = flow.sourceTitle.replace(/^SAD\d+\s+/u, "");
+	const diagnosticAlias =
+		item.title === "Diagnostic Checkpoint" &&
+		sourceTopic !== flow.sourceTitle
+			? [`Diagnostic Checkpoint: ${sourceTopic}`]
+			: [];
 	const practiceLink = swiftPracticePack(flow.materialSection);
 	const verificationLink = swiftVerificationGuide(flow.answerSection);
 	const isExtension =
@@ -2225,7 +2231,13 @@ function contextualizeSwiftItem(
 	return {
 		...item,
 		title: contextualSwiftTitle(item, flow),
-		aliases: [...new Set([...(item.aliases ?? []), item.title])],
+		aliases: [
+			...new Set([
+				...(item.aliases ?? []),
+				item.title,
+				...diagnosticAlias
+			])
+		],
 		content: `${item.content.trim()}
 
 **Course position:** ${flow.stage}. ${legacyNote}
