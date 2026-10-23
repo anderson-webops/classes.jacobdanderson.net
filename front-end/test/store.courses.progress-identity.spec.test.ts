@@ -248,6 +248,41 @@ describe("saved course progress identities", () => {
 		}
 	});
 
+	it("retains Swift practice progress from before the label order changed", async () => {
+		setActivePinia(createPinia());
+		const courseId = "intro-to-swift-app-development";
+		const course = await useCoursesStore().loadCourseById(courseId);
+		let checkedIds = 0;
+
+		for (const module of course?.modules ?? []) {
+			const previousModuleId = module.aliases?.find(alias =>
+				/^intro-to-swift-app-development-sad(?:\d+|x)-/u.test(alias)
+			);
+			if (!previousModuleId) continue;
+			const moduleSuffix = previousModuleId.slice(courseId.length + 1);
+			const topicSuffix = moduleSuffix.replace(/^sad\d+-/u, "");
+			const labels = moduleSuffix.startsWith("sad1-")
+				? ["extension"]
+				: ["transfer", "extension"];
+			for (const label of labels) {
+				const previousId = `${previousModuleId}-supplemental-${label}-practice-${topicSuffix}`;
+				const owners = course?.modules.flatMap(entry =>
+					entry.supplementalProjects.filter(
+						item =>
+							item.id === previousId ||
+							item.aliases?.includes(previousId)
+					)
+				);
+				expect(owners, previousId).toHaveLength(1);
+				expect(module.supplementalProjects, previousId).toContain(
+					owners?.[0]
+				);
+				checkedIds++;
+			}
+		}
+		expect(checkedIds).toBe(41);
+	});
+
 	it("retains Java pattern lesson progress after studio labels and grouping", async () => {
 		setActivePinia(createPinia());
 		const historicalLessons = [

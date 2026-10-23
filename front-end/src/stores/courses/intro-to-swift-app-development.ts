@@ -2228,6 +2228,12 @@ function contextualizeSwiftItem(
 			"Reflection Question: Which Part of an App Should Change Most Slowly?"
 	};
 	const priorTitle = priorTitles[item.title];
+	const practiceMatch = isSupplemental
+		? item.title.match(/^(.+?) (Transfer|Extension) Practice$/u)
+		: null;
+	const previousPracticeTitle = practiceMatch
+		? `${practiceMatch[2]} Practice: ${practiceMatch[1]}`
+		: null;
 	const practiceLink = swiftPracticePack(flow.materialSection);
 	const verificationLink = swiftVerificationGuide(flow.answerSection);
 	const isExtension =
@@ -2247,6 +2253,7 @@ function contextualizeSwiftItem(
 				...(item.aliases ?? []),
 				item.title,
 				...diagnosticAliases,
+				...(previousPracticeTitle ? [previousPracticeTitle] : []),
 				...(priorTitle ? [priorTitle] : [])
 			])
 		],
