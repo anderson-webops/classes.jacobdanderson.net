@@ -1,4 +1,5 @@
 import type { Ref } from "vue";
+import type { HistoricalProgressEntry } from "@/modules/courseProgressHistory";
 import type { CourseProgress, User } from "@/stores/app";
 import type {
 	CourseDefinition,
@@ -8,6 +9,7 @@ import type {
 import { ref, watch } from "vue";
 import { api } from "@/api";
 import { groupCoursesByLearnerStatus } from "@/modules/courseAccess";
+import { unmatchedCourseProgress } from "@/modules/courseProgressHistory";
 
 type RefreshUsers = () => Promise<void> | void;
 type LoadCourse = (courseId: string) => Promise<CourseDefinition | null>;
@@ -203,6 +205,43 @@ export function useLearnerCourseProgress(
 		return !!courseId && !!progressCourseLoading.value[courseId];
 	}
 
+	function progressForUser(userID: string, courseId: string) {
+		return ensureDraft(userID, courseId);
+	}
+
+	function removeHistoricalProgress(
+		userID: string,
+		courseId: string,
+		entry: HistoricalProgressEntry
+	) {
+		if (!assignedCourseIds(userID).includes(courseId)) return;
+		const course = progressCourseCache.value[courseId] ?? null;
+		const draft = ensureDraft(userID, courseId);
+		if (
+			!unmatchedCourseProgress(course, draft).some(
+				candidate =>
+					candidate.id === entry.id && candidate.kind === entry.kind
+			)
+		) {
+			return;
+		}
+
+		updateDraft(userID, courseId, current => ({
+			...current,
+			...(entry.kind === "module"
+				? {
+						completedModuleIds: current.completedModuleIds.filter(
+							id => id !== entry.id
+						)
+					}
+				: {
+						completedItemIds: current.completedItemIds.filter(
+							id => id !== entry.id
+						)
+					})
+		}));
+	}
+
 	function isModuleComplete(
 		userID: string,
 		courseId: string,
@@ -284,7 +323,9 @@ export function useLearnerCourseProgress(
 		isProgressCourseLoading,
 		loadSelectedProgressCourse,
 		progressCourseForUser,
+		progressForUser,
 		progressSummary,
+		removeHistoricalProgress,
 		saveProgress,
 		selectProgressCourse,
 		selectedProgressCourseId,

@@ -2,6 +2,7 @@
 import type { LearnerCourseProgressController } from "@/composables/useLearnerCourseProgress";
 import type { CourseModule, CourseModuleItem } from "@/stores/courses";
 import { computed } from "vue";
+import HistoricalCourseProgress from "@/components/HistoricalCourseProgress.vue";
 import WorkspaceDisclosure from "@/components/WorkspaceDisclosure.vue";
 
 const props = defineProps<{
@@ -157,6 +158,20 @@ function toggleItem(item: CourseModuleItem, event: Event) {
 					</div>
 				</WorkspaceDisclosure>
 			</div>
+			<HistoricalCourseProgress
+				v-if="selectedCourse"
+				:key="selectedCourseId"
+				:course="selectedCourse"
+				:progress="progress.progressForUser(userId, selectedCourseId)"
+				editable
+				@remove="
+					progress.removeHistoricalProgress(
+						userId,
+						selectedCourseId,
+						$event
+					)
+				"
+			/>
 
 			<div class="progress-actions">
 				<button

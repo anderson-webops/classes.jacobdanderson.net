@@ -34,6 +34,12 @@ const progress = {
 			}
 		]
 	})),
+	progressForUser: vi.fn(() => ({
+		courseId: "python-1",
+		completedModuleIds: [],
+		completedItemIds: []
+	})),
+	removeHistoricalProgress: vi.fn(),
 	selectProgressCourse: vi.fn(),
 	selectedProgressCourseId: vi.fn(() => "python-1"),
 	toggleItem: vi.fn(),
@@ -50,7 +56,9 @@ describe("LearnerCourseProgressEditor", () => {
 			}
 		});
 
-		expect(wrapper.find(".workspace-disclosure__trigger input").exists()).toBe(false);
+		expect(
+			wrapper.find(".workspace-disclosure__trigger input").exists()
+		).toBe(false);
 		expect(
 			wrapper
 				.find("input[aria-label='Mark module Variables complete']")

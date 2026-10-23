@@ -3,6 +3,72 @@ import { ref } from "vue";
 import { useLearnerCourseProgress } from "@/composables/useLearnerCourseProgress";
 
 describe("useLearnerCourseProgress", () => {
+	it("removes only the selected retired completion after loading its course", async () => {
+		const oldModuleId = "swift-retired-module";
+		const oldItemId = "swift-retired-item";
+		const users = ref([
+			{
+				_id: "learner-1",
+				name: "Learner",
+				email: "learner@example.com",
+				age: 12,
+				state: "GA",
+				courseAccess: ["swift"],
+				courseProgress: [
+					{
+						courseId: "swift",
+						completedModuleIds: [oldModuleId],
+						completedItemIds: [oldItemId, "swift-current-item"]
+					}
+				],
+				editUsers: false,
+				saveEdit: "Save"
+			}
+		]);
+		const loadCourse = vi.fn(async () => ({
+			id: "swift",
+			name: "Swift",
+			modules: [
+				{
+					id: "swift-current-module",
+					title: "Current",
+					curriculum: [
+						{
+							id: "swift-current-item",
+							title: "Current item",
+							content: ""
+						}
+					],
+					supplementalProjects: []
+				}
+			]
+		}));
+		const progress = useLearnerCourseProgress(users, loadCourse, vi.fn());
+		await progress.loadSelectedProgressCourse("learner-1");
+		progress.removeHistoricalProgress("learner-1", "swift", {
+			id: "swift-current-item",
+			kind: "item"
+		});
+		progress.removeHistoricalProgress("learner-1", "swift", {
+			id: oldItemId,
+			kind: "item"
+		});
+
+		expect(progress.progressForUser("learner-1", "swift")).toEqual({
+			courseId: "swift",
+			completedModuleIds: [oldModuleId],
+			completedItemIds: ["swift-current-item"]
+		});
+		progress.removeHistoricalProgress("learner-1", "swift", {
+			id: oldModuleId,
+			kind: "module"
+		});
+		expect(progress.progressSummary("learner-1", "swift")).toEqual({
+			completedModuleCount: 0,
+			completedItemCount: 1
+		});
+	});
+
 	it("does not treat an unscoped title shared by lessons as progress", () => {
 		const users = ref([
 			{

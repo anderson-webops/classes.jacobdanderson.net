@@ -1,6 +1,7 @@
 import { createPinia, setActivePinia } from "pinia";
 import { describe, expect, it } from "vitest";
 import { useCoursesStore } from "@/stores/courses";
+import { unmatchedCourseProgress } from "@/modules/courseProgressHistory";
 import { courseCatalog } from "@/stores/courses/index";
 import { webDevelopmentFoundationsCourse } from "@/stores/courses/web-development-foundations";
 import { researchBackedExpansionCourseIds } from "@/stores/courses/research-expansions";
@@ -15,6 +16,24 @@ function historicalId(value: string) {
 }
 
 describe("saved course progress identities", () => {
+	it("keeps retired Pre-Algebra B archive completions visible without reassignment", async () => {
+		setActivePinia(createPinia());
+		const course = await useCoursesStore().loadCourseById("pre-algebra-b");
+		const previousArchiveId = "pre-algebra-b-source-activity-archive";
+		const retiredIds = [
+			"pre-algebra-b-source-activity-archive-supplemental-checkpoint-source-activity-archive",
+			"pre-algebra-b-source-activity-archive-supplemental-transfer-practice-source-activity-archive"
+		];
+
+		expect(
+			unmatchedCourseProgress(course, {
+				courseId: "pre-algebra-b",
+				completedModuleIds: [previousArchiveId],
+				completedItemIds: retiredIds
+			})
+		).toEqual(retiredIds.map(id => ({ id, kind: "item" })));
+	});
+
 	it("keeps original IDs through shared display-title transforms", async () => {
 		setActivePinia(createPinia());
 		for (const [courseId, previousId] of [
