@@ -9,6 +9,7 @@ import generatedProjectHistory from "./fixtures/generated-project-history.json";
 import usacoStudioHistory from "./fixtures/usaco-studio-history.json";
 import apcsaCourseHistory from "./fixtures/apcsa-course-history.json";
 import machineLearningCourseHistory from "./fixtures/machine-learning-course-history.json";
+import designPatternsPart2History from "./fixtures/design-patterns-part-2-history.json";
 
 function historicalId(value: string) {
 	return value
@@ -2021,6 +2022,45 @@ describe("saved course progress identities", () => {
 						courseId: "machine-learning",
 						completedModuleIds: kind === "module" ? [oldId] : [],
 						completedItemIds: kind === "item" ? [oldId] : []
+					})
+				).toEqual([{ id: oldId, kind }]);
+			}
+		}
+	});
+
+	it("preserves Design Patterns Part 2 progress through clinic relabeling and consolidation", async () => {
+		setActivePinia(createPinia());
+		const course = await useCoursesStore().loadCourseById(
+			"design-patterns-in-java-part-2"
+		);
+		const modules = course?.modules ?? [];
+		const items = modules.flatMap(module => [
+			...module.curriculum,
+			...module.supplementalProjects
+		]);
+		expect(designPatternsPart2History).toHaveLength(76);
+		expect(
+			designPatternsPart2History.filter(entry => !entry.currentId)
+		).toHaveLength(7);
+
+		for (const { kind, oldId, currentId } of designPatternsPart2History) {
+			const entities = kind === "module" ? modules : items;
+			const owners = entities.filter(
+				entity => entity.id === oldId || entity.aliases?.includes(oldId)
+			);
+			if (currentId) {
+				expect(
+					owners.map(entity => entity.id),
+					oldId
+				).toEqual([currentId]);
+			} else {
+				expect(kind).toBe("module");
+				expect(owners, oldId).toEqual([]);
+				expect(
+					unmatchedCourseProgress(course, {
+						courseId: "design-patterns-in-java-part-2",
+						completedModuleIds: [oldId],
+						completedItemIds: []
 					})
 				).toEqual([{ id: oldId, kind }]);
 			}

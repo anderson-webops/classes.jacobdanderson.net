@@ -13,6 +13,7 @@ import {
 } from "@/modules/resourceUrls";
 import { useAppStore } from "./app";
 import apcsaProgressHistory from "./courses/apcsa-progress-history.json";
+import designPatternsPart2ProgressHistory from "./courses/design-patterns-part-2-progress-history.json";
 import { courseCatalog, loadRawCourse } from "./courses/index";
 import { isJuniScratchProjectTitle } from "./courses/juniScratchProjects";
 import machineLearningProgressHistory from "./courses/machine-learning-progress-history.json";
@@ -24,6 +25,7 @@ const historicalModuleAliases: Record<string, Record<string, string[]>> = {
 const historicalItemAliases: Record<string, Record<string, string[]>> = {
 	...usacoProgressHistory,
 	...apcsaProgressHistory,
+	...designPatternsPart2ProgressHistory,
 	"machine-learning": machineLearningProgressHistory.items
 };
 
