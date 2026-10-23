@@ -1358,6 +1358,29 @@ jobs:
                   if-no-files-found: error
                   retention-days: 7
 
+            - name: Verify all canonical Swift app imports and saved roles
+              env:
+                  SWIFT_GALLERY_BROWSER_DIR: output/swift-gallery-browser
+                  SWIFT_HOBBY_BROWSER_DIR: output/swift-hobby-browser
+                  SWIFT_MAP_BROWSER_DIR: output/swift-map-browser
+                  SWIFT_CAPSTONE_BROWSER_DIR: output/swift-capstone-browser
+                  COURSE_IMPORT_SCREENSHOT_DIR: output/swift-canonical-screenshots
+              run: node --test test/swift-canonical-course-browser.test.mjs
+
+            - name: Retain canonical Swift app browser and export evidence
+              if: always()
+              uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+              with:
+                  name: swift-canonical-workflows
+                  path: |
+                      output/swift-gallery-browser/
+                      output/swift-hobby-browser/
+                      output/swift-map-browser/
+                      output/swift-capstone-browser/
+                      output/swift-canonical-screenshots/
+                  if-no-files-found: error
+                  retention-days: 7
+
             - name: Verify all Swift practice cases and saved lesson links
               env:
                   SWIFT_PRACTICE_BROWSER_DIR: output/swift-practice-cases

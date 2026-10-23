@@ -1,16 +1,48 @@
 import type { RawCourse, RawCourseModuleItem } from "./types";
+import swiftCapstoneReading from "@/assets/course-guides/swift-capstone.md?raw";
+import swiftGalleryReading from "@/assets/course-guides/swift-gallery.md?raw";
+import swiftHobbyReading from "@/assets/course-guides/swift-hobby.md?raw";
+import swiftMapReading from "@/assets/course-guides/swift-map.md?raw";
 import swiftNetworkingReading from "@/assets/course-guides/swift-networking.md?raw";
 import swiftDataTrackerReading from "@/assets/course-guides/swift-swiftdata.md?raw";
 import swiftTrackerReading from "@/assets/course-guides/swift-tracker.md?raw";
 import swiftWelcomeReading from "@/assets/course-guides/swift-welcome-profile.md?raw";
 import {
+	swiftCapstoneRoot,
+	swiftCourseResource,
 	swiftDataTrackerRoot,
+	swiftGalleryRoot,
+	swiftHobbyRoot,
+	swiftMapRoot,
 	swiftNetworkingRoot,
 	swiftTrackerRoot
 } from "@/modules/swiftProjectResources";
 import { buildProjectGuidance } from "./projectGuidance";
 import { buildSupportSectionGuidance } from "./supportSectionGuidance";
 import swiftPriorTitles from "./swift-title-progress-history.json";
+
+const swiftCanonicalWorkspaces = [
+	{
+		pack: "SAD2-Media-Gallery-App",
+		root: swiftGalleryRoot,
+		reading: swiftGalleryReading
+	},
+	{
+		pack: "SAD3-Multi-Tab-Hobby-App",
+		root: swiftHobbyRoot,
+		reading: swiftHobbyReading
+	},
+	{
+		pack: "SAD4-Map-Places-App",
+		root: swiftMapRoot,
+		reading: swiftMapReading
+	},
+	{
+		pack: "SAD7-Publish-Ready-Capstone",
+		root: swiftCapstoneRoot,
+		reading: swiftCapstoneReading
+	}
+];
 
 const introToSwiftAppDevelopmentSourceCourse: RawCourse = {
 	name: "Intro to Swift App Development",
@@ -2221,6 +2253,11 @@ function contextualizeSwiftItem(
 	flow: SwiftCourseModuleFlow,
 	isSupplemental: boolean
 ): RawCourseModuleItem {
+	const canonicalWorkspace = swiftCanonicalWorkspaces.find(workspace =>
+		[item.projectLink, item.solutionLink].some(
+			link => link && swiftCourseResource(link)?.pack === workspace.pack
+		)
+	);
 	const welcomeProject =
 		flow.title === "SW3 SwiftUI Views, Layout, and Modifiers" &&
 		item.title === "Project: Welcome Profile App";
@@ -2251,14 +2288,16 @@ function contextualizeSwiftItem(
 			? swiftDataTrackerRoot
 			: networkingWorkspace
 				? swiftNetworkingRoot
-				: null;
+				: (canonicalWorkspace?.root ?? null);
 	const projectReading = trackerProject
 		? swiftTrackerReading
 		: persistenceProject
 			? swiftDataTrackerReading
 			: networkingProject
 				? swiftNetworkingReading
-				: null;
+				: item.title.startsWith("Project:")
+					? (canonicalWorkspace?.reading ?? null)
+					: null;
 	const sourceTopic = flow.sourceTitle.replace(/^SAD\d+\s+/u, "");
 	const diagnosticAliases =
 		item.title === "Diagnostic Checkpoint" &&
