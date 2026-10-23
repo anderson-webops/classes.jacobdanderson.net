@@ -25,12 +25,14 @@ import { isJuniScratchProjectTitle } from "./courses/juniScratchProjects";
 import languageBridgeProgressHistory from "./courses/language-bridge-progress-history.json";
 import linuxProgressHistory from "./courses/linux-progress-history.json";
 import lowLevelSecurityPart2ProgressHistory from "./courses/low-level-security-part-2-progress-history.json";
+import lowLevelSecurityProgressHistory from "./courses/low-level-security-progress-history.json";
 import machineLearningProgressHistory from "./courses/machine-learning-progress-history.json";
 import networkSystemsProgressHistory from "./courses/network-systems-progress-history.json";
 import usacoProgressHistory from "./courses/usaco-progress-history.json";
 
 const historicalModuleAliases: Record<string, Record<string, string[]>> = {
 	"linux-systems": linuxProgressHistory.modules,
+	"low-level-security": lowLevelSecurityProgressHistory.modules,
 	"low-level-security-part-2": {
 		"low-level-security-part-2-low-level-security-lab-13-exploitability-triage-studio":
 			["low-level-security-part-2-low-level-security-lab-13"],
@@ -66,6 +68,7 @@ const historicalItemAliases: Record<string, Record<string, string[]>> = {
 	...javaLevel2ProgressHistory,
 	...languageBridgeProgressHistory,
 	"linux-systems": linuxProgressHistory.items,
+	"low-level-security": lowLevelSecurityProgressHistory.items,
 	...lowLevelSecurityPart2ProgressHistory,
 	"machine-learning": machineLearningProgressHistory.items,
 	...networkSystemsProgressHistory

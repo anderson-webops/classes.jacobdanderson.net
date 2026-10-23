@@ -20,6 +20,7 @@ import networkSystemsCourseHistory from "./fixtures/network-systems-progress-his
 import javaLevel1CourseHistory from "./fixtures/java-level-1-course-history.json";
 import javaLevel2CourseHistory from "./fixtures/java-level-2-course-history.json";
 import languageBridgeCourseHistory from "./fixtures/language-bridge-course-history.json";
+import lowLevelSecurityCourseHistory from "./fixtures/low-level-security-course-history.json";
 
 function historicalId(value: string) {
 	return value
@@ -2441,6 +2442,47 @@ describe("saved course progress identities", () => {
 						})
 					).toEqual([{ id: previousId, kind }]);
 				}
+			}
+		}
+	});
+
+	it("preserves low-level security lab progress by lab number, not insertion order", async () => {
+		setActivePinia(createPinia());
+		const courseId = "low-level-security";
+		const course = await useCoursesStore().loadCourseById(courseId);
+		const modules = course?.modules ?? [];
+		const items = modules.flatMap(module => [
+			...module.curriculum,
+			...module.supplementalProjects
+		]);
+		expect(lowLevelSecurityCourseHistory).toHaveLength(102);
+		expect(
+			lowLevelSecurityCourseHistory.filter(entry => !entry.currentId)
+		).toHaveLength(2);
+
+		for (const {
+			kind,
+			oldId,
+			currentId
+		} of lowLevelSecurityCourseHistory) {
+			const entities = kind === "module" ? modules : items;
+			const owners = entities.filter(
+				entity => entity.id === oldId || entity.aliases?.includes(oldId)
+			);
+			if (currentId) {
+				expect(
+					owners.map(entity => entity.id),
+					oldId
+				).toEqual([currentId]);
+			} else {
+				expect(owners, oldId).toEqual([]);
+				expect(
+					unmatchedCourseProgress(course, {
+						courseId,
+						completedModuleIds: kind === "module" ? [oldId] : [],
+						completedItemIds: kind === "item" ? [oldId] : []
+					})
+				).toEqual([{ id: oldId, kind }]);
 			}
 		}
 	});
