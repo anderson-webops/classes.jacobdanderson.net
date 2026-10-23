@@ -190,7 +190,7 @@ describe("Intro to Swift App Development learner flow", () => {
 		}
 	});
 
-	it("turns every lesson and project into a substantial linked practice card", () => {
+	it("provides substantial project reading or linked practice for every activity", () => {
 		const items = allItems();
 		const titles = items.map(item => item.title);
 
@@ -202,15 +202,28 @@ describe("Intro to Swift App Development learner flow", () => {
 		expect(titles).toContain("SW7 State and Data Flow: Readiness Check");
 
 		for (const item of items) {
-			expect(item.content, item.title).toContain("**Course position:**");
-			expect(item.content, item.title).toContain("**Build focus:**");
-			expect(item.content, item.title).toContain(
-				"**Verification gate:**"
-			);
-			expect(item.content, item.title).toContain(
-				"**Toolchain and access boundary:**"
-			);
-			expect(item.content, item.title).toContain("**Local continuity:**");
+			if (item.title === "Project: Welcome Profile App") {
+				for (const section of [
+					"## Open one complete source role",
+					"## Read the app from its entry point",
+					"## Follow the data into both screens",
+					"## Work through modifier order",
+					"## Core project",
+					"## Read the reference after an attempt",
+					"## Distinct follow-up work"
+				])
+					expect(item.content).toContain(section);
+			} else {
+				expect(item.content, item.title).toContain("**Course position:**");
+				expect(item.content, item.title).toContain("**Build focus:**");
+				expect(item.content, item.title).toContain(
+					"**Verification gate:**"
+				);
+				expect(item.content, item.title).toContain(
+					"**Toolchain and access boundary:**"
+				);
+				expect(item.content, item.title).toContain("**Local continuity:**");
+			}
 			expect(item.projectLink, item.title).toMatch(/^https:\/\//u);
 			expect(item.solutionLink, item.title).toBeTruthy();
 			expect(item.datasetLink, item.title).toMatch(
@@ -303,9 +316,14 @@ describe("Intro to Swift App Development learner flow", () => {
 			expect(practiceHeadings, item.title).toContain(
 				item.datasetLink?.split("#")[1]
 			);
-			expect(item.content, item.title).toContain(
-				"/course-assets/swift/intro-swift-verification-guide.md#"
-			);
+			if (item.title === "Project: Welcome Profile App") {
+				expect(item.content).toContain("expected result, observed result");
+				expect(item.content).toContain("two simulator sizes");
+			} else {
+				expect(item.content, item.title).toContain(
+					"/course-assets/swift/intro-swift-verification-guide.md#"
+				);
+			}
 		}
 
 		expect(practice).toContain("Canonical project spine");

@@ -133,7 +133,11 @@ describe("LearnerCourseProgressEditor", () => {
 		expect(
 			wrapper.get(".progress-archive .historical-progress code").text()
 		).toBe(oldId);
-		expect(wrapper.find(".progress-archive button").exists()).toBe(false);
+		expect(
+			wrapper
+				.find('.progress-archive button[aria-label^="Remove earlier"]')
+				.exists()
+		).toBe(false);
 	});
 
 	it("shows assigned retired course progress when its outline is unavailable", () => {
@@ -165,8 +169,12 @@ describe("LearnerCourseProgressEditor", () => {
 		});
 
 		expect(wrapper.get(".historical-progress code").text()).toBe(oldId);
-		expect(wrapper.find(".historical-progress button").exists()).toBe(
-			false
-		);
+		expect(
+			wrapper
+				.find(
+					'.historical-progress button[aria-label^="Remove earlier"]'
+				)
+				.exists()
+		).toBe(false);
 	});
 });

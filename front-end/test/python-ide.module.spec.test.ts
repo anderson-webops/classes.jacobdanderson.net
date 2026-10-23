@@ -5,6 +5,7 @@ import { EditorState } from "@codemirror/state";
 import { spawnSync } from "node:child_process";
 import {
 	existsSync,
+	mkdirSync,
 	mkdtempSync,
 	readFileSync,
 	rmSync,
@@ -2622,7 +2623,7 @@ pgzrun.go()
 			"const PYTHON_IDE_RUNTIME_BOOTSTRAP_VERSION"
 		);
 		expect(runtimeSource).toContain("__classes_runtime_bootstrap_version");
-		expect(runtimeSource).toContain("2026-10-22-turtle-timer-ownership");
+		expect(runtimeSource).toContain("2026-10-23-conditional-turtle-loops");
 		expect(runtimeSource).toContain("const WHILE_LOOP_ITERATION_LIMIT");
 		expect(runtimeSource).toContain(
 			"const TURTLE_COOPERATIVE_WHILE_LOOP_ITERATION_LIMIT"
@@ -2715,6 +2716,17 @@ pgzrun.go()
 				"import turtle\ndef change():\n    global turtle\n    turtle = object()\nwhile True:\n    turtle.forward(1)\n",
 				"import turtle\ndef step():\n    turtle.forward(1)\ndef change():\n    global step\n    step = lambda: None\nwhile True:\n    step()\n"
 			];
+			sources.push(
+				"import turtle\nadvance = True\nwhile True:\n    if advance:\n        turtle.forward(1)\n",
+				"import turtle\nadvance = True\nwhile True:\n    if advance:\n        pass\n    else:\n        turtle.forward(1)\n",
+				"import turtle\nwhile True:\n    if True:\n        pass\n    else:\n        turtle.forward(1)\n",
+				"import turtle\nwhile True:\n    def unused():\n        turtle.forward(1)\n",
+				"class Cache:\n    def update(self):\n        pass\ncache = Cache()\nadvance = True\nwhile True:\n    if advance:\n        cache.update()\n",
+				readFileSync(
+					resolve(__dirname, "../../test/fixtures/turtle-orbit.py"),
+					"utf8"
+				)
+			);
 			const pythonSource = `
 ${createTrustedPythonImportPrelude(projectRoot)}
 ${createInputBootstrap("", "turtle", projectRoot)}
@@ -2758,7 +2770,7 @@ print("guarded")
 			});
 			expect(result.status, result.stderr).toBe(0);
 			expect(result.stdout.trim().split("\n")).toEqual([
-				"[false, false, false, false, false, false, false, false, false, false, true, true, true, true, true, false, true, true, true, false, false, false, false]",
+				"[false, false, false, false, false, false, false, false, false, false, true, true, true, true, true, false, true, true, true, false, false, false, false, true, true, false, false, false, true]",
 				"false",
 				"guarded"
 			]);
@@ -4339,6 +4351,107 @@ print("guarded")
 		);
 	});
 
+	it.each(["turtle", "pgzero", "data"] as const)(
+		"tolerates non-string search entries before the next %s bootstrap",
+		mode => {
+			const projectRoot = mkdtempSync(join(tmpdir(), "classes-path-reset-"));
+			try {
+				const source = `
+import os
+import sys
+class IgnoredPath:
+    def __fspath__(self):
+        raise AssertionError("An ignored path entry was evaluated")
+os.chdir(${JSON.stringify(projectRoot)})
+sys.path.insert(0, ${JSON.stringify(projectRoot)})
+sys.path.extend([1, None, ["not a path"], b"ignored", IgnoredPath()])
+str = "student variable"
+isinstance = 7
+${createTrustedPythonImportPrelude(projectRoot)}
+assert all(__classes_import_builtins.isinstance(entry, __classes_import_builtins.str) for entry in sys.path)
+assert ${JSON.stringify(projectRoot)} not in sys.path
+${createInputBootstrap("", mode, projectRoot)}
+import json
+import os
+import sys
+assert json.loads('{"ready": true}')["ready"] is True
+os.chdir(${JSON.stringify(projectRoot)})
+sys.path.insert(0, ${JSON.stringify(projectRoot + "/nested")})
+sys.path.extend([{}, 3, None])
+${createTrustedPythonImportPrelude(projectRoot)}
+assert all(__classes_import_builtins.isinstance(entry, __classes_import_builtins.str) for entry in sys.path)
+assert not any(entry.startswith(${JSON.stringify(projectRoot)}) for entry in sys.path)
+${createInputBootstrap("", mode, projectRoot)}
+import json
+assert json.loads('[1, 2]') == [1, 2]
+print("second run ready")
+`;
+				const result = spawnSync("python3", ["-I", "-c", source], {
+					encoding: "utf8",
+					timeout: 10000
+				});
+				expect(result.status, result.stderr).toBe(0);
+				expect(result.stdout.trim()).toBe("second run ready");
+			} finally {
+				rmSync(projectRoot, { recursive: true, force: true });
+			}
+		}
+	);
+
+	it.each(["turtle", "pgzero", "data"] as const)(
+		"restores mutated path helpers before the next %s bootstrap",
+		mode => {
+			const projectRoot = mkdtempSync(join(tmpdir(), "classes-path-helpers-"));
+			try {
+				const source = `
+import os
+os.makedirs(${JSON.stringify(projectRoot)}, exist_ok=True)
+for name in ("posixpath", "genericpath", "importlib"):
+    with open(${JSON.stringify(projectRoot)} + "/" + name + ".py", "w") as file:
+        file.write('raise AssertionError("Project path helpers were imported")\\n')
+${createTrustedPythonImportPrelude(projectRoot)}
+${createInputBootstrap("", mode, projectRoot)}
+import os
+import sys
+os.chdir(${JSON.stringify(projectRoot)})
+sys.path.insert(0, ${JSON.stringify(projectRoot)})
+sys.modules.pop("genericpath", None)
+os.path.realpath = None
+os.path.dirname = None
+str = "student variable"
+getattr = None
+${createTrustedPythonImportPrelude(projectRoot)}
+assert __classes_import_builtins.callable(os.path.realpath)
+assert not any(entry.startswith(${JSON.stringify(projectRoot)}) for entry in sys.path)
+${createInputBootstrap("", mode, projectRoot)}
+import os
+import sys
+import json
+assert json.loads('[1, 2]') == [1, 2]
+os.chdir(${JSON.stringify(projectRoot)})
+sys.path.insert(0, ${JSON.stringify(projectRoot + "/nested")})
+os.path.realpath = lambda value: ${JSON.stringify(projectRoot + "/wrong")}
+${createTrustedPythonImportPrelude(projectRoot)}
+assert not any(entry.startswith(${JSON.stringify(projectRoot)}) for entry in sys.path)
+${createInputBootstrap("", mode, projectRoot)}
+import os
+assert os.path.realpath("/") == "/"
+print("path helpers ready")
+`;
+				const proofDirectory = process.env.PYTHON_PATH_RECOVERY_PROOF_DIR;
+				if (proofDirectory) {
+					mkdirSync(proofDirectory, { recursive: true });
+					writeFileSync(join(proofDirectory, `${mode}-path-recovery.py`), source);
+				}
+				const result = spawnSync("python3", ["-I", "-c", source], { encoding: "utf8", timeout: 10000 });
+				expect(result.status, result.stderr).toBe(0);
+				expect(result.stdout.trim()).toBe("path helpers ready");
+			} finally {
+				rmSync(projectRoot, { recursive: true, force: true });
+			}
+		}
+	);
+
 	it.each(["ast", "pathlib"])(
 		"loads trusted %s before making project imports visible",
 		moduleName => {
@@ -4991,7 +5104,7 @@ else:
 		).toHaveLength(10);
 		expect(
 			ideStarters.filter(item => item.category === "Templates")
-		).toHaveLength(10);
+		).toHaveLength(11);
 		expect(pageSource).toContain("requestedClassroomProject");
 		expect(pageSource).toContain(
 			"addPythonIdeClassroomSections(loadedFiles)"
@@ -6676,6 +6789,86 @@ else:
 		];
 		expect(getPythonIdeRunnableFile(project)?.name).toBe("App.java");
 	});
+
+	it.each([
+		["String[] args", "Exception"],
+		["String args[]", "java.io.IOException, RuntimeException"],
+		["String... args", "Exception"]
+	])("selects Java main with throws clauses for %s", (parameters, exceptions) => {
+		const project = createPythonIdeProject("java");
+		project.files = [
+			{ name: "Main.java", content: "public class Main { void help() {} }" },
+			{ name: "Helper.java", content: "public class Helper {}" },
+			{
+				name: "App.java",
+				content: `public class App {
+    public static void main(${parameters}) throws ${exceptions} {
+        System.out.println(total(2, 3));
+    }
+    static int total(int left, int right) throws java.io.IOException {
+        return left + right;
+    }
+}`
+			}
+		];
+		for (const activeFileName of ["Helper.java", "Main.java", "App.java"]) {
+			project.activeFileName = activeFileName;
+			expect(getPythonIdeRunnableFile(project)?.name).toBe("App.java");
+			const result = runJavaIdeProject(project);
+			expect(result.stdout).toEqual(["5"]);
+			expect(result.stderr).toEqual([]);
+		}
+	});
+
+	it.each([
+		"public static final",
+		"public static synchronized",
+		"synchronized static public final",
+		"public strictfp static",
+		"static final public"
+	])("selects and runs Java main with %s modifiers", modifiers => {
+		const project = createPythonIdeProject("java");
+		project.files = [
+			{ name: "Main.java", content: "public class Main { void help() {} }" },
+			{ name: "Helper.java", content: "public class Helper {}" },
+			{ name: "App.java", content: `public class App {
+    ${modifiers} void main(String[] args) { System.out.println(total(2, 3)); }
+    static int total(int left, int right) { return left + right; }
+}` }
+		];
+		for (const activeFileName of ["Helper.java", "Main.java"]) {
+			project.activeFileName = activeFileName;
+			expect(getPythonIdeRunnableFile(project)?.name).toBe("App.java");
+			expect(runJavaIdeProject(project)).toMatchObject({ stdout: ["5"], stderr: [] });
+		}
+	});
+
+	it.each(["private static", "public", "static"])(
+		"does not select a non-launcher Java method with %s modifiers",
+		modifiers => {
+			const project = createPythonIdeProject("java");
+			project.files = [
+				{ name: "Helper.java", content: `class Helper { ${modifiers} void main(String[] args) {} }` },
+				{ name: "App.java", content: "class App { public static void main(String[] args) { System.out.println(5); } }" }
+			];
+			project.activeFileName = "Helper.java";
+			expect(getPythonIdeRunnableFile(project)?.name).toBe("App.java");
+		}
+	);
+
+	it.each(["// Example shape: {", "/* Example shape: } */"])(
+		"keeps Java field scope across comment braces: %s",
+		comment => {
+			const project = createPythonIdeProject("java");
+			project.files = [{ name: "Main.java", content: `public class Main {
+    ${comment}
+    static final int BASE = 7;
+    public static void main(String[] args) { System.out.println(total()); }
+    static int total() { return BASE + 5; }
+}` }];
+			expect(runJavaIdeProject(project)).toMatchObject({ stdout: ["12"], stderr: [] });
+		}
+	);
 
 	it("runs Karel driver files instead of active helper classes", () => {
 		const project = createPythonIdeProject("karel", {

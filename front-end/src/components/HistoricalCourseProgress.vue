@@ -3,6 +3,7 @@ import type { HistoricalProgressEntry } from "@/modules/courseProgressHistory";
 import type { CourseProgress } from "@/stores/app";
 import type { CourseDefinition } from "@/stores/courses";
 import { computed, ref } from "vue";
+import WorkspaceDisclosure from "@/components/WorkspaceDisclosure.vue";
 import { unmatchedCourseProgress } from "@/modules/courseProgressHistory";
 
 const props = withDefaults(
@@ -29,8 +30,11 @@ const visibleEntries = computed(() =>
 </script>
 
 <template>
-	<details v-if="entries.length" class="historical-progress">
-		<summary>Earlier completions ({{ entries.length }})</summary>
+	<WorkspaceDisclosure
+		v-if="entries.length"
+		class="historical-progress"
+		:label="`Earlier completions (${entries.length})`"
+	>
 		<ul>
 			<li
 				v-for="entry in visibleEntries"
@@ -55,7 +59,7 @@ const visibleEntries = computed(() =>
 		>
 			Show more
 		</button>
-	</details>
+	</WorkspaceDisclosure>
 </template>
 
 <style scoped>
@@ -66,7 +70,7 @@ const visibleEntries = computed(() =>
 	color: var(--color-ink-soft);
 }
 
-.historical-progress summary {
+.historical-progress :deep(.workspace-disclosure__trigger) {
 	cursor: pointer;
 	color: var(--color-ink);
 	font-weight: 700;

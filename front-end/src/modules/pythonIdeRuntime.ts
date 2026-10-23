@@ -21,7 +21,7 @@ export { pythonIdeImportedTopLevelModules } from "@/modules/pythonImportScanner"
 
 const PROJECT_ROOT = "/home/pyodide/classes_project";
 const PYTHON_IDE_RUNTIME_BOOTSTRAP_VERSION =
-	"2026-10-22-turtle-timer-ownership";
+	"2026-10-23-conditional-turtle-loops";
 const PYTHON_EXTENSION_RE = /\.py$/i;
 const FOR_LOOP_ITERATION_LIMIT = 500000;
 const WHILE_LOOP_ITERATION_LIMIT = 25000;
@@ -693,12 +693,21 @@ function escapePythonString(value: string) {
 
 export function createTrustedPythonImportPrelude(projectRoot = PROJECT_ROOT) {
 	return `
+import builtins as __classes_import_builtins
 import os
 import sys
+sys.meta_path[:] = [
+    __classes_import_finder for __classes_import_finder in sys.meta_path
+    if not __classes_import_builtins.getattr(
+        __classes_import_finder, "__classes_python_ide_project_finder__", False
+    )
+]
+import _frozen_importlib as __classes_import_bootstrap
+__classes_import_bootstrap.FrozenImporter.exec_module(os.path)
 __classes_project_root_path = os.path.realpath(${escapePythonString(projectRoot)})
 sys.path[:] = [
     entry for entry in sys.path
-    if entry and not (
+    if __classes_import_builtins.isinstance(entry, __classes_import_builtins.str) and entry and not (
         os.path.realpath(entry) == __classes_project_root_path
         or os.path.realpath(entry).startswith(__classes_project_root_path + os.sep)
     )
@@ -1069,6 +1078,15 @@ class __ClassesLoopGuardTransformer(ast.NodeTransformer):
                         and isinstance(function.value, ast.Name)
                         and function.value.id not in blocked
                         and function.value.id in self.turtle_module_names | self.turtle_object_names
+                    ):
+                        return True
+            if not require_first and isinstance(statement, ast.If):
+                branches = [statement.body, statement.orelse]
+                if isinstance(statement.test, ast.Constant):
+                    branches = [statement.body if statement.test.value else statement.orelse]
+                for branch in branches:
+                    if self._node_uses_turtle_api(
+                        ast.Module(body=branch, type_ignores=[]), helper_names, blocked
                     ):
                         return True
             if require_first:
