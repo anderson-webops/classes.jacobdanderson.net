@@ -4618,19 +4618,18 @@ else:
 		);
 	});
 
-	it("clears stale local account fallback after successful remote syncs", () => {
+	it("retains unrelated recovery drafts after remote syncs", () => {
 		const pageSource = readFileSync(
 			resolve(__dirname, "../src/components/CodeIdeWorkspace.vue"),
 			"utf8"
 		);
 
-		expect(pageSource).toContain("await clearLocalPythonProjectsAsync(");
-		expect(pageSource).toContain("async function syncProjectsToAccount");
+		expect(pageSource).not.toContain("await clearLocalPythonProjectsAsync(");
+		expect(pageSource).not.toContain("async function syncProjectsToAccount");
+		expect(pageSource).toContain("loadPythonIdeRecoveryDrafts(");
+		expect(pageSource).toContain("acknowledgePythonIdeRecoveryDraft(");
 		expect(pageSource).toContain(
-			'saveMessage.value = "Synced recovered local edits";'
-		);
-		expect(pageSource).toContain(
-			'saveMessage.value = "Recovered local edits";'
+			'saveMessage.value = "Recovered local copies; Save to sync";'
 		);
 		expect(pageSource).toContain("Saved locally after sync issue");
 		expect(pageSource).toContain("const isRemoteProject =");
@@ -4771,20 +4770,15 @@ else:
 		expect(pageSource).toContain(
 			"async function persistLocalProjectSnapshot"
 		);
-		expect(pageSource).toContain(
-			"async function discardLocalProjectSnapshot"
-		);
-		expect(pageSource).toContain(
-			"async function discardLocalProjectSnapshotIfSafe"
-		);
-		expect(pageSource).toContain("await localSnapshotInFlight;");
-		expect(pageSource).toContain("unsyncedProjectIDs.clear();");
+		expect(pageSource).toContain("savePythonIdeRecoveryDraft(");
+		expect(pageSource).toContain("acknowledgePythonIdeRecoveryDraft(");
+		expect(pageSource).not.toContain("async function discardLocalProjectSnapshot");
+		expect(pageSource).not.toContain("unsyncedProjectIDs.clear();");
 		expect(pageSource).toContain("function scheduleLocalProjectSnapshot");
 		expect(pageSource).toContain("scheduleLocalProjectSnapshot();");
-		expect(pageSource).toContain("await discardLocalProjectSnapshot();");
 		expect(pageSource).toContain("if (!autoSaveEnabled.value)");
 		expect(pageSource).toContain(
-			"await persistLocalProjects({ quiet: true });"
+			"const savedDraft = await savePythonIdeRecoveryDraft(project, owner);"
 		);
 		expect(pageSource).toContain(
 			'message: "Saved locally after sync issue"'
@@ -5376,11 +5370,12 @@ else:
 		expect(pageSource).toContain("async function saveProjectOnce");
 		expect(pageSource).toContain("async function savePendingProjects");
 		expect(pageSource).toContain("const pendingSaveProjectIDs");
-		expect(pageSource).toContain("const startedUpdatedAt");
+		expect(pageSource).toContain("const savedDraft = await savePythonIdeRecoveryDraft(project, owner);");
 		expect(pageSource).toContain(
 			"? await createRemotePythonIdeProject(payload, accountScope)"
 		);
 		expect(pageSource).toContain("const projectChangedDuringSave");
+		expect(pageSource).toContain("JSON.stringify(pythonIdeProjectToPayload(currentProject))");
 		expect(pageSource).toContain("saveQueued = true");
 		expect(pageSource).toContain(
 			"} while (saveQueued || pendingSaveProjectIDs.size);"
