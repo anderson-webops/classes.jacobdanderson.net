@@ -2620,7 +2620,7 @@ pgzrun.go()
 		);
 		expect(runtimeSource).toContain("__classes_runtime_bootstrap_version");
 		expect(runtimeSource).toContain(
-			"2026-10-17-python-314-class-loop-guards"
+			"2026-10-22-turtle-loop-classification"
 		);
 		expect(runtimeSource).toContain("const WHILE_LOOP_ITERATION_LIMIT");
 		expect(runtimeSource).toContain(
@@ -2646,7 +2646,9 @@ pgzrun.go()
 		expect(runtimeSource).toContain("def _module_turtle_helper_names");
 		expect(runtimeSource).toContain("def _is_forever_while_loop");
 		expect(runtimeSource).toContain("node.test.value in (True, 1)");
-		expect(runtimeSource).toContain("function.id in turtle_helper_names");
+		expect(runtimeSource).toContain(
+			"function.id in self.turtle_action_names | helper_names"
+		);
 		expect(runtimeSource).toContain("def __classes_sleep(_seconds=0):");
 		expect(runtimeSource).toContain(
 			"__classes_time.sleep = __classes_sleep"
@@ -2680,6 +2682,88 @@ pgzrun.go()
 			"RuntimeError: Stopped a long-running (?:for|while) loop"
 		);
 		expect(pageSource).toContain("formatPythonRuntimeError(error)");
+	});
+
+	it("guards ordinary loops without losing verified Turtle animation", () => {
+		const projectRoot = mkdtempSync(
+			join(tmpdir(), "classes-turtle-guard-")
+		);
+		try {
+			const sources = [
+				"class Cache:\n    def update(self):\n        pass\ncache = Cache()\nwhile True:\n    cache.update()\n",
+				"import turtle\nwhile True:\n    if False:\n        turtle.forward(1)\n",
+				"while True:\n    sprite.forward(1)\n",
+				"import turtle as drawing\ndrawing = object()\nwhile True:\n    drawing.forward(1)\n",
+				"import turtle\nwhile True:\n    import other as turtle\n    turtle.forward(1)\n",
+				"from turtle import forward as move\nfrom other import move\nwhile True:\n    move(1)\n",
+				"import turtle\ndef step():\n    if False:\n        turtle.forward(1)\nwhile True:\n    step()\n",
+				"import turtle\nasync def step():\n    turtle.forward(1)\nwhile True:\n    step()\n",
+				"import turtle\ndef step():\n    turtle.forward(1)\n    yield 1\nwhile True:\n    step()\n",
+				"import turtle\n@ (lambda function: lambda: None)\ndef step():\n    turtle.forward(1)\nwhile True:\n    step()\n",
+				"import turtle\nwhile True:\n    turtle.forward(1)\n",
+				"from turtle import Turtle\nartist = Turtle()\nwhile True:\n    artist.forward(1)\n",
+				"from turtle import forward as move\nwhile True:\n    move(1)\n",
+				"from turtle import *\nwhile True:\n    forward(1)\n",
+				"import turtle\ndef step():\n    turtle.forward(1)\nwhile True:\n    step()\n",
+				"from turtle import *\nfrom math import *\nwhile True:\n    degrees(1)\n",
+				"import turtle\ndef unused():\n    turtle = None\nwhile True:\n    turtle.forward(1)\n",
+				"from turtle import Turtle\nartist = Turtle()\nalias = artist\nwhile True:\n    alias.forward(1)\n",
+				"import turtle\ndef step():\n    amount = 1\n    turtle.forward(amount)\nwhile True:\n    step()\n",
+				"import turtle\ndef step():\n    turtle = object()\n    turtle.forward(1)\nwhile True:\n    step()\n",
+				"import turtle\ndef step():\n    turtle.forward(1)\nfrom other import step\nwhile True:\n    step()\n",
+				"import turtle\ndef change():\n    global turtle\n    turtle = object()\nwhile True:\n    turtle.forward(1)\n",
+				"import turtle\ndef step():\n    turtle.forward(1)\ndef change():\n    global step\n    step = lambda: None\nwhile True:\n    step()\n"
+			];
+			const pythonSource = `
+${createTrustedPythonImportPrelude(projectRoot)}
+${createInputBootstrap("", "turtle", projectRoot)}
+import ast
+import json
+sources = json.loads(${JSON.stringify(JSON.stringify(sources))})
+
+def is_cooperative(source, allow_turtle_cooperative=True):
+    tree = __ClassesLoopGuardTransformer(
+        source, "main.py", allow_turtle_cooperative=allow_turtle_cooperative
+    ).visit(ast.parse(source))
+    last_statement = tree.body[-1]
+    return (
+        isinstance(last_statement, ast.Expr)
+        and isinstance(last_statement.value, ast.Call)
+        and isinstance(last_statement.value.func, ast.Name)
+        and last_statement.value.func.id == "__classes_schedule_turtle_loop"
+    )
+
+print(json.dumps([is_cooperative(source) for source in sources]))
+print(json.dumps(is_cooperative(
+    "import turtle\\nwhile True:\\n    turtle.forward(1)\\n", False
+)))
+__classes_loop_iteration_limits["while"] = 3
+class Cache:
+    def update(self):
+        pass
+try:
+    exec(__classes_compile_student_source(
+        "cache = Cache()\\nwhile True:\\n    cache.update()\\n", "main.py"
+    ), globals())
+except RuntimeError as error:
+    assert "Stopped a long-running while loop" in str(error), str(error)
+else:
+    raise AssertionError("Ordinary while loop escaped the guard")
+print("guarded")
+`;
+			const result = spawnSync("python3", ["-I", "-c", pythonSource], {
+				encoding: "utf8",
+				timeout: 10000
+			});
+			expect(result.status, result.stderr).toBe(0);
+			expect(result.stdout.trim().split("\n")).toEqual([
+				"[false, false, false, false, false, false, false, false, false, false, true, true, true, true, true, false, true, true, true, false, false, false, false]",
+				"false",
+				"guarded"
+			]);
+		} finally {
+			rmSync(projectRoot, { recursive: true, force: true });
+		}
 	});
 
 	it("keeps tiny Turtle animation steps responsive for continuous movement", () => {

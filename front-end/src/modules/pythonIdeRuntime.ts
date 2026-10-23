@@ -21,7 +21,7 @@ export { pythonIdeImportedTopLevelModules } from "@/modules/pythonImportScanner"
 
 const PROJECT_ROOT = "/home/pyodide/classes_project";
 const PYTHON_IDE_RUNTIME_BOOTSTRAP_VERSION =
-	"2026-10-17-python-314-class-loop-guards";
+	"2026-10-22-turtle-loop-classification";
 const PYTHON_EXTENSION_RE = /\.py$/i;
 const FOR_LOOP_ITERATION_LIMIT = 500000;
 const WHILE_LOOP_ITERATION_LIMIT = 25000;
@@ -880,10 +880,14 @@ def __classes_loop_guard__(kind):
         )
 
 class __ClassesLoopGuardTransformer(ast.NodeTransformer):
-    def __init__(self, source, filename, allow_turtle_cooperative=False):
+    def __init__(self, source, filename, allow_turtle_cooperative=None):
         self.source = source
         self.filename = filename
         self.allow_turtle_cooperative = allow_turtle_cooperative
+        self.turtle_module_names = set()
+        self.turtle_action_names = set()
+        self.turtle_object_names = set()
+        self.turtle_written_names = set()
         super().__init__()
 
     def _guard_statement(self, node, kind):
@@ -911,23 +915,166 @@ class __ClassesLoopGuardTransformer(ast.NodeTransformer):
                         return True
             if isinstance(statement, ast.ImportFrom):
                 module = statement.module or ""
-                if module == "turtle" or module.startswith("turtle."):
+                if statement.level == 0 and (module == "turtle" or module.startswith("turtle.")):
                     return True
         return False
 
-    def _node_uses_turtle_api(self, node, turtle_helper_names=None):
-        if turtle_helper_names is None:
-            turtle_helper_names = set()
-        for child in ast.walk(node):
-            if not isinstance(child, ast.Call):
+    def _module_turtle_bindings(self, node):
+        module_names = set()
+        action_names = set()
+        factory_names = set()
+        trusted_imports = {}
+        turtle_wildcard = False
+        factory_methods = {"Turtle", "RawTurtle", "Screen", "getscreen", "getturtle", "getpen"}
+        for statement in node.body:
+            if isinstance(statement, ast.Import):
+                for alias in statement.names:
+                    if alias.name == "turtle":
+                        name = alias.asname or alias.name
+                        module_names.add(name)
+                        trusted_imports[name] = trusted_imports.get(name, 0) + 1
+            elif (
+                isinstance(statement, ast.ImportFrom)
+                and statement.level == 0
+                and statement.module == "turtle"
+            ):
+                for alias in statement.names:
+                    if alias.name == "*":
+                        turtle_wildcard = True
+                    else:
+                        name = alias.asname or alias.name
+                        trusted_imports[name] = trusted_imports.get(name, 0) + 1
+                        if alias.name in _classes_turtle_animation_call_names:
+                            action_names.add(name)
+                        if alias.name in factory_methods:
+                            factory_names.add(name)
+
+        writes = {}
+        imports = {}
+        attribute_writes = set()
+        other_wildcard = False
+        definitions = {}
+        global_names = set()
+        scoped_nodes = []
+        pending = list(node.body)
+        while pending:
+            child = pending.pop()
+            scoped_nodes.append(child)
+            if isinstance(child, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+                definitions[child.name] = definitions.get(child.name, 0) + 1
+                global_names.update(
+                    name for nested in ast.walk(child)
+                    if isinstance(nested, ast.Global) for name in nested.names
+                )
                 continue
-            function = child.func
-            if isinstance(function, ast.Attribute) and function.attr in _classes_turtle_animation_call_names:
-                return True
-            if isinstance(function, ast.Name) and function.id in _classes_turtle_animation_call_names:
-                return True
-            if isinstance(function, ast.Name) and function.id in turtle_helper_names:
-                return True
+            if isinstance(child, ast.Lambda):
+                continue
+            pending.extend(ast.iter_child_nodes(child))
+        for child in scoped_nodes:
+            if isinstance(child, ast.Name) and isinstance(child.ctx, (ast.Store, ast.Del)):
+                writes[child.id] = writes.get(child.id, 0) + 1
+            elif isinstance(child, ast.Attribute) and isinstance(child.ctx, (ast.Store, ast.Del)):
+                if isinstance(child.value, ast.Name):
+                    attribute_writes.add(child.value.id)
+            elif isinstance(child, (ast.Import, ast.ImportFrom)):
+                for alias in child.names:
+                    if alias.name == "*":
+                        if not (
+                            isinstance(child, ast.ImportFrom)
+                            and child.level == 0
+                            and child.module == "turtle"
+                        ):
+                            other_wildcard = True
+                        continue
+                    name = alias.asname or alias.name.split(".", 1)[0]
+                    imports[name] = imports.get(name, 0) + 1
+        if turtle_wildcard and not other_wildcard:
+            action_names.update(_classes_turtle_animation_call_names)
+            factory_names.update(factory_methods)
+        if other_wildcard:
+            action_names.clear()
+            factory_names.clear()
+        self.turtle_written_names = set(writes) | global_names
+        self.turtle_helper_blocked_names = (
+            self.turtle_written_names | set(imports)
+            | {name for name, count in definitions.items() if count != 1}
+        )
+        import_rebindings = {
+            name for name, count in imports.items()
+            if count != trusted_imports.get(name, 0) or count > 1
+        }
+        rebound = self.turtle_written_names | set(definitions) | attribute_writes | import_rebindings
+        module_names.difference_update(rebound)
+        action_names.difference_update(rebound)
+        factory_names.difference_update(rebound)
+
+        def is_turtle_factory(value):
+            if not isinstance(value, ast.Call):
+                return False
+            function = value.func
+            if isinstance(function, ast.Name):
+                return function.id in factory_names
+            return (
+                isinstance(function, ast.Attribute)
+                and function.attr in factory_methods
+                and isinstance(function.value, ast.Name)
+                and function.value.id in module_names
+            )
+
+        object_names = set()
+        for statement in node.body:
+            if isinstance(statement, ast.Assign) and len(statement.targets) == 1:
+                target, value = statement.targets[0], statement.value
+            elif isinstance(statement, ast.AnnAssign):
+                target, value = statement.target, statement.value
+            else:
+                continue
+            if isinstance(target, ast.Name) and (
+                is_turtle_factory(value)
+                or isinstance(value, ast.Name) and value.id in object_names
+            ):
+                if (
+                    writes.get(target.id) == 1
+                    and target.id not in set(definitions) | attribute_writes | import_rebindings
+                ):
+                    object_names.add(target.id)
+
+        self.turtle_module_names = module_names
+        self.turtle_action_names = action_names
+        self.turtle_object_names = object_names
+
+    def _node_uses_turtle_api(self, node, turtle_helper_names=None, blocked_names=None, require_first=False):
+        helper_names = turtle_helper_names or set()
+        blocked = blocked_names or set()
+        for statement in node.body:
+            if isinstance(statement, ast.Expr) and isinstance(statement.value, ast.Constant):
+                if isinstance(statement.value.value, str):
+                    continue
+            if isinstance(statement, (ast.Expr, ast.Assign, ast.AnnAssign, ast.Return)):
+                call = statement.value
+            else:
+                call = None
+            if isinstance(call, ast.Call):
+                function = call.func
+                if isinstance(function, ast.Name):
+                    if function.id not in blocked and function.id in self.turtle_action_names | helper_names:
+                        return True
+                elif isinstance(function, ast.Attribute):
+                    if (
+                        function.attr in _classes_turtle_animation_call_names
+                        and isinstance(function.value, ast.Name)
+                        and function.value.id not in blocked
+                        and function.value.id in self.turtle_module_names | self.turtle_object_names
+                    ):
+                        return True
+            if require_first:
+                if (
+                    isinstance(statement, ast.Assign)
+                    and all(isinstance(target, ast.Name) for target in statement.targets)
+                    and isinstance(statement.value, (ast.Constant, ast.Name))
+                ):
+                    continue
+                return False
         return False
 
     def _module_turtle_helper_names(self, node):
@@ -936,11 +1083,38 @@ class __ClassesLoopGuardTransformer(ast.NodeTransformer):
         while changed:
             changed = False
             for statement in node.body:
-                if not isinstance(statement, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                if not isinstance(statement, ast.FunctionDef):
                     continue
-                if statement.name in helper_names:
+                if statement.name in helper_names or statement.name in self.turtle_helper_blocked_names:
                     continue
-                if self._node_uses_turtle_api(statement, helper_names):
+                if statement.decorator_list or any(
+                    isinstance(child, (ast.Yield, ast.YieldFrom, ast.Await))
+                    for child in ast.walk(statement)
+                ):
+                    continue
+                arguments = statement.args
+                blocked_names = {
+                    argument.arg for argument in (
+                        arguments.posonlyargs + arguments.args + arguments.kwonlyargs
+                    )
+                }
+                if arguments.vararg:
+                    blocked_names.add(arguments.vararg.arg)
+                if arguments.kwarg:
+                    blocked_names.add(arguments.kwarg.arg)
+                blocked_names.update(
+                    child.id for child in ast.walk(statement)
+                    if isinstance(child, ast.Name) and isinstance(child.ctx, (ast.Store, ast.Del))
+                )
+                for child in ast.walk(statement):
+                    if isinstance(child, (ast.Import, ast.ImportFrom)):
+                        blocked_names.update(
+                            alias.asname or alias.name.split(".", 1)[0]
+                            for alias in child.names if alias.name != "*"
+                        )
+                if self._node_uses_turtle_api(
+                    statement, helper_names, blocked_names, require_first=True
+                ):
                     helper_names.add(statement.name)
                     changed = True
         return helper_names
@@ -966,7 +1140,7 @@ class __ClassesLoopGuardTransformer(ast.NodeTransformer):
             ast.YieldFrom,
         )
         return (
-            (module_allows_turtle_loop or self._node_uses_turtle_api(node, turtle_helper_names))
+            module_allows_turtle_loop
             and self._node_uses_turtle_api(node, turtle_helper_names)
             and not any(isinstance(child, unsupported_nodes) for child in ast.walk(node))
         )
@@ -1007,8 +1181,10 @@ class __ClassesLoopGuardTransformer(ast.NodeTransformer):
 
     def visit_Module(self, node):
         module_allows_turtle_loop = (
-            self.allow_turtle_cooperative or self._module_imports_turtle(node)
+            self.allow_turtle_cooperative is not False
+            and (self.allow_turtle_cooperative is True or self._module_imports_turtle(node))
         )
+        self._module_turtle_bindings(node)
         turtle_helper_names = self._module_turtle_helper_names(node)
         rewritten_body = []
         for statement in node.body:
@@ -1032,8 +1208,8 @@ class __ClassesLoopGuardTransformer(ast.NodeTransformer):
         return self._guard_loop(node, "while")
 
 def __classes_compile_student_source(source, filename, allow_turtle_cooperative=None):
-    if allow_turtle_cooperative is None:
-        allow_turtle_cooperative = __classes_python_ide_mode == "turtle"
+    if allow_turtle_cooperative is None and __classes_python_ide_mode == "turtle":
+        allow_turtle_cooperative = True
     tree = ast.parse(source, filename=filename, mode="exec")
     tree = __ClassesLoopGuardTransformer(
         source,
