@@ -11,6 +11,7 @@ import apcsaCourseHistory from "./fixtures/apcsa-course-history.json";
 import machineLearningCourseHistory from "./fixtures/machine-learning-course-history.json";
 import designPatternsPart2History from "./fixtures/design-patterns-part-2-history.json";
 import linuxCourseHistory from "./fixtures/linux-course-history.json";
+import algebraCourseHistory from "./fixtures/algebra-course-history.json";
 import assemblyCourseHistory from "./fixtures/assembly-course-history.json";
 
 function historicalId(value: string) {
@@ -2139,6 +2140,53 @@ describe("saved course progress identities", () => {
 						completedItemIds: []
 					})
 				).toEqual([{ id: oldId, kind }]);
+			}
+		}
+	});
+
+	it("preserves Algebra practice progress without reassigning retired exercises", async () => {
+		setActivePinia(createPinia());
+		const store = useCoursesStore();
+		const courses = new Map();
+		expect(algebraCourseHistory).toHaveLength(142);
+		expect(
+			algebraCourseHistory.filter(entry => !entry.currentId)
+		).toHaveLength(16);
+
+		for (const {
+			courseId,
+			oldId,
+			newId,
+			currentId
+		} of algebraCourseHistory) {
+			if (!courses.has(courseId))
+				courses.set(courseId, await store.loadCourseById(courseId));
+			const course = courses.get(courseId);
+			const items = course?.modules.flatMap(module => [
+				...module.curriculum,
+				...module.supplementalProjects
+			]);
+			for (const previousId of [oldId, newId]) {
+				const owners = items?.filter(
+					item =>
+						item.id === previousId ||
+						item.aliases?.includes(previousId)
+				);
+				if (currentId) {
+					expect(
+						owners?.map(item => item.id),
+						previousId
+					).toEqual([currentId]);
+				} else {
+					expect(owners, previousId).toEqual([]);
+					expect(
+						unmatchedCourseProgress(course, {
+							courseId,
+							completedModuleIds: [],
+							completedItemIds: [previousId]
+						})
+					).toEqual([{ id: previousId, kind: "item" }]);
+				}
 			}
 		}
 	});

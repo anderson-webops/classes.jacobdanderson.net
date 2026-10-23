@@ -12,6 +12,7 @@ import {
 	scratchProjectEmbedUrl
 } from "@/modules/resourceUrls";
 import { useAppStore } from "./app";
+import algebraProgressHistory from "./courses/algebra-progress-history.json";
 import apcsaProgressHistory from "./courses/apcsa-progress-history.json";
 import assemblyProgressHistory from "./courses/assembly-progress-history.json";
 import designPatternsPart2ProgressHistory from "./courses/design-patterns-part-2-progress-history.json";
@@ -26,6 +27,7 @@ const historicalModuleAliases: Record<string, Record<string, string[]>> = {
 	"machine-learning": machineLearningProgressHistory.modules
 };
 const historicalItemAliases: Record<string, Record<string, string[]>> = {
+	...algebraProgressHistory,
 	...assemblyProgressHistory,
 	...usacoProgressHistory,
 	...apcsaProgressHistory,
