@@ -194,6 +194,78 @@ describe("saved course progress identities", () => {
 		}
 	});
 
+	it("retains Java pattern lesson progress after studio labels and grouping", async () => {
+		setActivePinia(createPinia());
+		const historicalLessons = [
+			[
+				"design-patterns-in-java-part-2",
+				"dpr1",
+				"Mini Lab: Write the Refactor Plan Before Touching Code"
+			],
+			[
+				"design-patterns-in-java-part-2",
+				"dpr2",
+				"Mini Lab: Refactor a Calculation Pipeline Safely"
+			],
+			[
+				"design-patterns-in-java-part-2",
+				"dpr3",
+				"Mini Lab: Re-home Behavior Without Breaking Clients"
+			],
+			[
+				"design-patterns-in-java-part-2",
+				"dpr5",
+				"Mini Lab: Conditional Tangle Rescue"
+			],
+			[
+				"design-patterns-in-java-part-2",
+				"dpr6",
+				"Mini Lab: Reduce Call-Site Noise in a Service Layer"
+			],
+			[
+				"design-patterns-in-java-part-2",
+				"dpr7",
+				"Mini Lab: Repair a Parallel Hierarchy"
+			],
+			[
+				"design-patterns-in-java-part-2",
+				"dpr8",
+				"Mini Lab: Refactor Until the Pattern Is Obvious"
+			],
+			[
+				"design-patterns-in-java-part-2",
+				"dpr9",
+				"Mini Lab: Characterization Test then Structural Change"
+			],
+			["design-patterns-in-java", "dpj9", "Smell-to-Pattern Mapping"],
+			["design-patterns-in-java", "dpj9", "When Not to Use the Pattern"],
+			[
+				"design-patterns-in-java",
+				"dpj9",
+				"Mini Lab: Improve a Brittle Object Model with Restraint"
+			]
+		] as const;
+
+		for (const [courseId, moduleCode, oldTitle] of historicalLessons) {
+			const course = await useCoursesStore().loadCourseById(courseId);
+			const module = course?.modules.find(entry =>
+				entry.id.startsWith(`${courseId}-${moduleCode}-`)
+			);
+			expect(module, `${courseId}-${moduleCode}`).toBeDefined();
+			const previousId = historicalId(
+				`${module?.id}-curriculum-${oldTitle}`
+			);
+			const owners = course?.modules
+				.flatMap(entry => [
+					...entry.curriculum,
+					...entry.supplementalProjects
+				])
+				.filter(item => item.aliases?.includes(previousId));
+			expect(owners, previousId).toHaveLength(1);
+			expect(module?.curriculum, previousId).toContain(owners?.[0]);
+		}
+	});
+
 	it("retains JavaScript Level 2 practice completions from before label changes", async () => {
 		setActivePinia(createPinia());
 		const course = await useCoursesStore().loadCourseById(
