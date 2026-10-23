@@ -15,11 +15,16 @@ import { useAppStore } from "./app";
 import apcsaProgressHistory from "./courses/apcsa-progress-history.json";
 import { courseCatalog, loadRawCourse } from "./courses/index";
 import { isJuniScratchProjectTitle } from "./courses/juniScratchProjects";
+import machineLearningProgressHistory from "./courses/machine-learning-progress-history.json";
 import usacoProgressHistory from "./courses/usaco-progress-history.json";
 
+const historicalModuleAliases: Record<string, Record<string, string[]>> = {
+	"machine-learning": machineLearningProgressHistory.modules
+};
 const historicalItemAliases: Record<string, Record<string, string[]>> = {
 	...usacoProgressHistory,
-	...apcsaProgressHistory
+	...apcsaProgressHistory,
+	"machine-learning": machineLearningProgressHistory.items
 };
 
 const COMBINING_MARKS_RE = /[\u0300-\u036F]/g;
@@ -466,7 +471,8 @@ function normalizeCourse(
 						generatedModuleId,
 						module.aliases
 					),
-					...legacyModuleIds
+					...legacyModuleIds,
+					...(historicalModuleAliases[courseId]?.[moduleId] ?? [])
 				])
 			].filter(alias => alias !== moduleId);
 

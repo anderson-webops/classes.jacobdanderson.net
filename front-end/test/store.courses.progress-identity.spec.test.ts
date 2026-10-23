@@ -8,6 +8,7 @@ import { researchBackedExpansionCourseIds } from "@/stores/courses/research-expa
 import generatedProjectHistory from "./fixtures/generated-project-history.json";
 import usacoStudioHistory from "./fixtures/usaco-studio-history.json";
 import apcsaCourseHistory from "./fixtures/apcsa-course-history.json";
+import machineLearningCourseHistory from "./fixtures/machine-learning-course-history.json";
 
 function historicalId(value: string) {
 	return value
@@ -1981,6 +1982,43 @@ describe("saved course progress identities", () => {
 				expect(
 					unmatchedCourseProgress(course, {
 						courseId: "ap-computer-science-a",
+						completedModuleIds: kind === "module" ? [oldId] : [],
+						completedItemIds: kind === "item" ? [oldId] : []
+					})
+				).toEqual([{ id: oldId, kind }]);
+			}
+		}
+	});
+
+	it("preserves machine-learning progress through studio title changes", async () => {
+		setActivePinia(createPinia());
+		const course =
+			await useCoursesStore().loadCourseById("machine-learning");
+		const modules = course?.modules ?? [];
+		const items = modules.flatMap(module => [
+			...module.curriculum,
+			...module.supplementalProjects
+		]);
+		expect(machineLearningCourseHistory).toHaveLength(66);
+		expect(
+			machineLearningCourseHistory.filter(entry => !entry.currentId)
+		).toHaveLength(2);
+
+		for (const { kind, oldId, currentId } of machineLearningCourseHistory) {
+			const entities = kind === "module" ? modules : items;
+			const owners = entities.filter(
+				entity => entity.id === oldId || entity.aliases?.includes(oldId)
+			);
+			if (currentId) {
+				expect(
+					owners.map(entity => entity.id),
+					oldId
+				).toEqual([currentId]);
+			} else {
+				expect(owners, oldId).toEqual([]);
+				expect(
+					unmatchedCourseProgress(course, {
+						courseId: "machine-learning",
 						completedModuleIds: kind === "module" ? [oldId] : [],
 						completedItemIds: kind === "item" ? [oldId] : []
 					})
