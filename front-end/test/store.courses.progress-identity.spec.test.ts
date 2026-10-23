@@ -15,6 +15,84 @@ function historicalId(value: string) {
 }
 
 describe("saved course progress identities", () => {
+	it("retains AI practice-studio completions after the module rename", async () => {
+		setActivePinia(createPinia());
+		const course = await useCoursesStore().loadCourseById("ai-level-1");
+		const previousTitles = [
+			"AI Search Lab 13",
+			"AI Search Lab 14",
+			"AI Search Lab 15",
+			"AI Search Lab 16",
+			"AI Search Lab 17",
+			"Unbeatable TicTacToe AI 1",
+			"The Marble Game AI"
+		];
+		let checkedIds = 0;
+
+		for (const previousTitle of previousTitles) {
+			const previousModuleId = historicalId(
+				`ai-level-1-${previousTitle}`
+			);
+			const module = course?.modules.find(
+				entry => entry.title === `${previousTitle}: Practice Studio`
+			);
+			const moduleOwners = course?.modules.filter(
+				entry =>
+					entry.id === previousModuleId ||
+					entry.aliases?.includes(previousModuleId)
+			);
+			expect(moduleOwners, previousModuleId).toEqual([module]);
+			checkedIds++;
+
+			for (const [section, previousItemTitle] of [
+				["curriculum", `${previousTitle}: Core Concepts`],
+				["curriculum", `${previousTitle}: Guided Example`],
+				["curriculum", `Core Project: ${previousTitle}`],
+				["curriculum", `Review: ${previousTitle}`],
+				["supplemental", `Extension Challenge: ${previousTitle}`],
+				["supplemental", `Transfer Practice: ${previousTitle}`],
+				["supplemental", `Extension Practice: ${previousTitle}`]
+			] as const) {
+				const previousId = historicalId(
+					`${previousModuleId}-${section}-${previousItemTitle}`
+				);
+				const owners = course?.modules.flatMap(entry =>
+					[...entry.curriculum, ...entry.supplementalProjects].filter(
+						item =>
+							item.id === previousId ||
+							item.aliases?.includes(previousId)
+					)
+				);
+				expect(owners, previousId).toHaveLength(1);
+				expect(
+					module?.curriculum.concat(module.supplementalProjects)
+				).toContain(owners?.[0]);
+				const currentItemTitle =
+					previousTitle === "Unbeatable TicTacToe AI 1" &&
+					/^(Transfer|Extension) Practice:/u.test(previousItemTitle)
+						? `${previousTitle} ${previousItemTitle.split(":")[0]}`
+						: previousItemTitle;
+				expect(owners?.[0].title, previousId).toBe(currentItemTitle);
+				checkedIds++;
+			}
+		}
+
+		const previousUnitSevenId =
+			"ai-level-1-unit-7-features-evaluation-and-responsible-ai-supplemental-extension-practice-features-evaluation-and-responsible-ai";
+		const unitSevenOwners = course?.modules.flatMap(module =>
+			module.supplementalProjects.filter(
+				item =>
+					item.id === previousUnitSevenId ||
+					item.aliases?.includes(previousUnitSevenId)
+			)
+		);
+		expect(unitSevenOwners, previousUnitSevenId).toHaveLength(1);
+		expect(unitSevenOwners?.[0].title).toBe(
+			"Extension Practice: Features, Evaluation, and Responsible AI"
+		);
+		expect(checkedIds + 1).toBe(57);
+	});
+
 	it("retains check-in practice completions after contextual title changes", async () => {
 		setActivePinia(createPinia());
 		const historicalModules: Record<string, string[]> = {
