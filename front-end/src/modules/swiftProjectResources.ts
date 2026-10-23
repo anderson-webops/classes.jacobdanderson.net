@@ -13,10 +13,11 @@ export const swiftNetworkingRevision =
 export const swiftNetworkingPack = "SAD6-API-Reference-App";
 export const swiftNetworkingRoot = `https://github.com/instruction-material/Swift/tree/${swiftNetworkingRevision}/${swiftNetworkingPack}`;
 
-export const swiftTrackerRevision = "ff14c210700f7297d69ddfcab570a0315e9ac234";
+export const swiftTrackerRevision = "a731a853e8f972314d060e9e291f43974949ffe7";
 const swiftTrackerEarlierRevisions = [
 	"23e1cae59dd989b6f97d8d13ebb5f4718223424d",
-	"73fdbeaf3f3358d4a3ce6bb8086612d52689e41a"
+	"73fdbeaf3f3358d4a3ce6bb8086612d52689e41a",
+	"ff14c210700f7297d69ddfcab570a0315e9ac234"
 ];
 export const swiftTrackerPack = "SAD5-Simple-Tracker-App";
 export const swiftTrackerRoot = `https://github.com/instruction-material/Swift/tree/${swiftTrackerRevision}/${swiftTrackerPack}`;

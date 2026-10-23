@@ -227,7 +227,8 @@ for (const definition of definitions) {
 		);
 		it.each([
 			"23e1cae59dd989b6f97d8d13ebb5f4718223424d",
-			"73fdbeaf3f3358d4a3ce6bb8086612d52689e41a"
+			"73fdbeaf3f3358d4a3ce6bb8086612d52689e41a",
+			"ff14c210700f7297d69ddfcab570a0315e9ac234"
 		])(
 			"keeps earlier %s links complete and resumes the same saved role",
 			earlier => {
