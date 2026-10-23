@@ -117,6 +117,10 @@ import {
 	createTurtleAnimationBudget,
 	reserveTurtleAnimationStep
 } from "@/modules/turtleAnimationBudget";
+import {
+	createTurtleTimerRegistry,
+	releaseTurtleTimerCallback
+} from "@/modules/turtleTimerRegistry";
 import { bronzePythonFileIoForKey } from "@/modules/usacoBronzeRequiredPacks";
 import { webBuildInstructions } from "@/modules/webBuildInstructions";
 import { webCourseResource } from "@/modules/webProjectResources";
@@ -689,7 +693,16 @@ const turtleObjectDragHandlers = new Map<
 	string,
 	(x: number, y: number) => void
 >();
-const turtleTimerHandles = new Set<ReturnType<typeof window.setTimeout>>();
+const turtleTimerRegistry = createTurtleTimerRegistry({
+	schedule: (callback, delayMs) => window.setTimeout(callback, delayMs),
+	cancel: handle => window.clearTimeout(handle),
+	onPendingChange: count => {
+		activeTurtleTimerCount.value = count;
+	},
+	onReleaseFailure: () => {
+		console.warn("Could not release a Turtle timer callback.");
+	}
+});
 const gameKeysDown = new Set<string>();
 const gameEvents: GameInputEvent[] = [];
 const gameImageCache = new Map<string, CachedGameImage>();
@@ -4748,11 +4761,7 @@ function resetActiveTurtle() {
 
 function clearTurtleTimers() {
 	turtleTimerGeneration += 1;
-	for (const handle of turtleTimerHandles) {
-		window.clearTimeout(handle);
-	}
-	turtleTimerHandles.clear();
-	activeTurtleTimerCount.value = 0;
+	turtleTimerRegistry.clear();
 	activeTurtleTimerCallbackCount.value = 0;
 }
 
@@ -6376,29 +6385,34 @@ const turtleBridge: TurtleBridge = {
 		turtleDragHandlers.set(button, callback);
 		refreshActiveTurtleEventHandlerCount();
 	},
-	scheduleTimer(delayMs: number, callback: (() => void) | null) {
-		if (!callback) return;
+	scheduleTimer(
+		delayMs: number,
+		callback: (() => void) | null,
+		ownedCallback?: (() => void) | null
+	) {
+		if (!callback) {
+			releaseTurtleTimerCallback(ownedCallback, () => {
+				console.warn("Could not release a Turtle timer callback.");
+			});
+			return;
+		}
 
 		const timerGeneration = turtleTimerGeneration;
-		const handle = window.setTimeout(
-			() => {
+		turtleTimerRegistry.schedule(
+			delayMs,
+			async () => {
 				activeTurtleTimerCallbackCount.value += 1;
-				turtleTimerHandles.delete(handle);
-				activeTurtleTimerCount.value = turtleTimerHandles.size;
-				void runTurtleTimerCallback(callback, timerGeneration).finally(
-					() => {
-						activeTurtleTimerCallbackCount.value = Math.max(
-							0,
-							activeTurtleTimerCallbackCount.value - 1
-						);
-					}
-				);
+				try {
+					await runTurtleTimerCallback(callback, timerGeneration);
+				} finally {
+					activeTurtleTimerCallbackCount.value = Math.max(
+						0,
+						activeTurtleTimerCallbackCount.value - 1
+					);
+				}
 			},
-			Math.max(0, delayMs)
+			ownedCallback
 		);
-
-		turtleTimerHandles.add(handle);
-		activeTurtleTimerCount.value = turtleTimerHandles.size;
 	},
 	listen() {
 		canvasRef.value?.focus({ preventScroll: true });
@@ -6624,12 +6638,25 @@ function createGuardedTurtleBridgeRun(): TurtleBridge {
 		) {
 			if (isActiveRun()) turtleBridge.registerDrag(button, callback);
 		},
-		scheduleTimer(delayMs: number, callback: (() => void) | null) {
-			if (!isActiveRun() || !callback) return;
+		scheduleTimer(
+			delayMs: number,
+			callback: (() => void) | null,
+			ownedCallback?: (() => void) | null
+		) {
+			if (!isActiveRun() || !callback) {
+				releaseTurtleTimerCallback(ownedCallback, () => {
+					console.warn("Could not release a Turtle timer callback.");
+				});
+				return;
+			}
 
-			turtleBridge.scheduleTimer(delayMs, () => {
-				if (isActiveRun()) callback();
-			});
+			turtleBridge.scheduleTimer(
+				delayMs,
+				() => {
+					if (isActiveRun()) callback();
+				},
+				ownedCallback
+			);
 		},
 		listen() {
 			if (isActiveRun()) turtleBridge.listen();

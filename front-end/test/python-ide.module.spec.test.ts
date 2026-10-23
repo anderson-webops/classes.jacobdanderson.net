@@ -2154,7 +2154,7 @@ pgzrun.go()
 		expect(runtimeSource).toContain("def _release_all_callbacks():");
 		expect(runtimeSource).toContain("releaseRuntimeCallbackRegistries");
 		expect(runtimeSource).toContain("releasePythonIdeRuntimeCallbacks");
-		expect(pageSource).toContain("scheduleTimer(delayMs: number");
+		expect(pageSource).toContain("scheduleTimer(\n");
 		expect(pageSource).toContain("clearTurtleTimers()");
 		expect(pageSource).toContain("let turtleTimerGeneration = 0;");
 		expect(pageSource).toContain("turtleTimerGeneration += 1;");
@@ -2163,9 +2163,12 @@ pgzrun.go()
 		expect(pageSource).toContain(
 			"if (timerGeneration !== turtleTimerGeneration) return;"
 		);
-		expect(pageSource).toContain(
-			"void runTurtleTimerCallback(callback, timerGeneration).finally("
+		expect(pageSource).toContain("turtleTimerRegistry.schedule(");
+		expect(pageSource).toContain("turtleTimerRegistry.clear()");
+		expect(runtimeSource).toContain(
+			"_bridge.scheduleTimer(float(t), callback, callback)"
 		);
+		expect(runtimeSource).not.toContain('storage_key = ("timer"');
 		expect(pageSource).toContain("releaseIdlePythonRuntimeCallbacks()");
 	});
 
@@ -2619,9 +2622,7 @@ pgzrun.go()
 			"const PYTHON_IDE_RUNTIME_BOOTSTRAP_VERSION"
 		);
 		expect(runtimeSource).toContain("__classes_runtime_bootstrap_version");
-		expect(runtimeSource).toContain(
-			"2026-10-22-turtle-loop-classification"
-		);
+		expect(runtimeSource).toContain("2026-10-22-turtle-timer-ownership");
 		expect(runtimeSource).toContain("const WHILE_LOOP_ITERATION_LIMIT");
 		expect(runtimeSource).toContain(
 			"const TURTLE_COOPERATIVE_WHILE_LOOP_ITERATION_LIMIT"
