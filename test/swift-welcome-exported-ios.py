@@ -10,7 +10,6 @@ import re
 import signal
 import subprocess
 import sys
-import time
 import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -90,23 +89,13 @@ def run(label, command, timeout=180, check=True):
     return child.returncode, stdout, stderr
 
 
-def wait_for_native_host(label):
-    samples = []
-    ready_samples = 0
-    deadline = time.monotonic() + 900
-    while True:
-        load = os.getloadavg()[0]
-        samples.append(dict(at=now(), load=load))
-        ready_samples = ready_samples + 1 if load <= 8 else 0
-        record.setdefault("postBootReadiness", {})[label] = dict(
-            ready=ready_samples >= 3, maximumLoad=8, timeoutSeconds=900, samples=samples
-        )
-        args.proof.write_text(json.dumps(record, indent=2) + "\n")
-        print(f"Simulator {label} host load: {load:.2f}; required maximum: 8", flush=True)
-        if ready_samples >= 3:
-            return
-        assert time.monotonic() < deadline, "The booted simulator host did not settle below load8 within fifteen minutes"
-        time.sleep(10)
+def record_booted_host(label):
+    # The shared wrapper admits this entire sequential job before it starts.
+    # Observe load from its running simulator without adding a second job gate.
+    load = os.getloadavg()[0]
+    record.setdefault("postBootObservation", {})[label] = dict(at=now(), load=load)
+    args.proof.write_text(json.dumps(record, indent=2) + "\n")
+    print(f"Simulator {label} host load within the admitted job: {load:.2f}", flush=True)
 
 
 def version(value):
@@ -223,7 +212,7 @@ for size, model in [("small", small), ("large", large)]:
     try:
         run("boot-" + size, ["/usr/bin/xcrun", "simctl", "boot", device])
         run("ready-" + size, ["/usr/bin/xcrun", "simctl", "bootstatus", device, "-b"], timeout=300)
-        wait_for_native_host(size)
+        record_booted_host(size)
         for profile in inputs["profiles"]:
             label = profile["role"] + "-" + size + ("-" + profile["variant"] if args.course == "networking" else "")
             if args.course == "networking":
