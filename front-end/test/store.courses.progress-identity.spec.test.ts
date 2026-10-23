@@ -16,6 +16,27 @@ function historicalId(value: string) {
 }
 
 describe("saved course progress identities", () => {
+	it("keeps retired Design Patterns studio modules distinct from the shared archive", async () => {
+		setActivePinia(createPinia());
+		const course = await useCoursesStore().loadCourseById(
+			"design-patterns-in-java"
+		);
+		const previousModuleIds = [11, 12, 13].map(
+			index => `design-patterns-in-java-pattern-lab-${index}`
+		);
+		const previousItemId = historicalId(
+			"design-patterns-in-java-pattern-lab-11-curriculum-Pattern Lab 15: Core Concepts"
+		);
+
+		expect(
+			unmatchedCourseProgress(course, {
+				courseId: "design-patterns-in-java",
+				completedModuleIds: previousModuleIds,
+				completedItemIds: [previousItemId]
+			})
+		).toEqual(previousModuleIds.map(id => ({ id, kind: "module" })));
+	});
+
 	it("keeps retired Pre-Algebra B archive completions visible without reassignment", async () => {
 		setActivePinia(createPinia());
 		const course = await useCoursesStore().loadCourseById("pre-algebra-b");
