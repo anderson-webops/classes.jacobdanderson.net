@@ -15,6 +15,90 @@ function historicalId(value: string) {
 }
 
 describe("saved course progress identities", () => {
+	it("retains physics check completions from before descriptive titles", async () => {
+		setActivePinia(createPinia());
+		const historicalModules = {
+			"intro-to-physics": [
+				"phy1-measurement-uncertainty-and-scientific-modeling",
+				"phy2-motion-graphs-and-kinematics",
+				"phy3-forces-free-body-diagrams-and-newton-s-laws",
+				"phy4-gravity-work-and-energy",
+				"phy5-electricity-and-basic-circuits",
+				"phy6-waves-sound-and-light",
+				"phy7-capstone-lab-and-scientific-communication",
+				"phy8-momentum-impulse-and-collisions",
+				"phy9-rotational-motion-and-torque-basics",
+				"phy10-fluids-pressure-and-buoyancy",
+				"phy11-heat-temperature-and-thermal-energy",
+				"phy12-optics-mirrors-lenses-and-images",
+				"phy13-magnetism-and-electromagnetic-induction",
+				"phy14-simple-harmonic-motion-and-resonance",
+				"phy15-astronomy-gravity-and-orbits",
+				"phy16-modern-physics-and-model-limits",
+				"phy17-engineering-design-and-physics-portfolio"
+			],
+			"physics-level-2": [
+				"phy8-quantitative-kinematics-and-vector-modeling",
+				"phy9-multi-force-systems-and-equilibrium",
+				"phy10-friction-inclines-and-connected-systems",
+				"phy11-momentum-impulse-and-collisions",
+				"phy12-rotational-motion-and-torque",
+				"phy13-gravitation-circular-motion-and-orbits",
+				"phy14-electricity-circuits-and-fields",
+				"phy15-thermal-physics-optics-and-modern-bridges",
+				"phy16-engineering-physics-capstone",
+				"phy17-numerical-modeling-and-simulation-checks",
+				"phy18-experimental-uncertainty-and-curve-fitting",
+				"phy19-coupled-systems-and-constraints",
+				"phy20-fluids-and-continuum-models",
+				"phy21-thermodynamics-and-engines",
+				"phy22-electromagnetic-applications-and-signals",
+				"phy23-relativity-and-reference-frames-preview",
+				"phy24-independent-physics-research-portfolio"
+			]
+		};
+		let checkedIds = 0;
+
+		for (const [courseId, suffixes] of Object.entries(historicalModules)) {
+			const course = await useCoursesStore().loadCourseById(courseId);
+			const allItems = course?.modules.flatMap(module => [
+				...module.curriculum,
+				...module.supplementalProjects
+			]);
+			for (const suffix of suffixes) {
+				const moduleId = `${courseId}-${suffix}`;
+				const module = course?.modules.find(
+					entry => entry.id === moduleId
+				);
+				expect(module, moduleId).toBeDefined();
+				const topic = module?.title.replace(/^PHY\d+\s+/u, "").trim();
+				for (const [previousTitle, currentSuffix] of [
+					[`Understanding Check: ${topic}`, "Readiness Check"],
+					["Failure Modes", "Failure Modes"]
+				]) {
+					const previousId = historicalId(
+						`${moduleId}-supplemental-${previousTitle}`
+					);
+					const owner = module?.supplementalProjects.find(item =>
+						item.title.endsWith(currentSuffix)
+					);
+					expect(owner?.aliases, previousId).toContain(previousId);
+					expect(owner?.id, previousId).not.toBe(previousId);
+					expect(
+						allItems?.filter(
+							item =>
+								item.id === previousId ||
+								item.aliases?.includes(previousId)
+						),
+						previousId
+					).toEqual([owner]);
+					checkedIds++;
+				}
+			}
+		}
+		expect(checkedIds).toBe(68);
+	});
+
 	it("retains JavaScript Level 2 practice completions from before label changes", async () => {
 		setActivePinia(createPinia());
 		const course = await useCoursesStore().loadCourseById(
