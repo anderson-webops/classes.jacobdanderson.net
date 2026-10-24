@@ -23,9 +23,9 @@ final class CanonicalCourseUITests: XCTestCase {
             if target.isEmpty {
                 movement = attempt < 12 ? -150 : 150
             } else if target.maxY > viewport.maxY {
-                movement = -min(180, max(12, target.maxY - viewport.maxY + 8))
+                movement = -min(180, max(40, target.maxY - viewport.maxY + 8))
             } else if target.minY < viewport.minY {
-                movement = min(180, max(12, viewport.minY - target.minY + 8))
+                movement = min(180, max(40, viewport.minY - target.minY + 8))
             } else {
                 movement = attempt < 12 ? -30 : 30
             }
