@@ -22,7 +22,8 @@ import { webBuildInstructions } from "@/modules/webBuildInstructions";
 import { useCoursesStore } from "@/stores/courses";
 
 const fixture = JSON.parse(readFileSync(resolve("../test/fixtures/javascript-welcome-survey-source.json"), "utf8"));
-const root = resolve("public/course-assets/javascript-level-1/welcome-survey-v1");
+const original = JSON.parse(readFileSync(resolve("../test/fixtures/javascript-welcome-survey-original-source.json"), "utf8"));
+const root = resolve("public/course-assets/javascript-level-1");
 const courseId = "javascript-level-1-javascript-superstar";
 const roleCases = ["starter", "reference"] as const;
 
@@ -30,8 +31,8 @@ function stubFiles(change?: (path: string, bytes: Uint8Array) => Uint8Array) {
 	vi.stubGlobal("crypto", webcrypto);
 	const fetcher = vi.fn(async (input: string | URL, _options?: RequestInit) => {
 		const path = String(input);
-		expect(path.startsWith("/course-assets/javascript-level-1/welcome-survey-v1/")).toBe(true);
-		const file = path.split("/welcome-survey-v1/")[1];
+		expect(path.startsWith("/course-assets/javascript-level-1/")).toBe(true);
+		const file = path.split("/course-assets/javascript-level-1/")[1];
 		const bytes = Uint8Array.from(readFileSync(resolve(root, file)));
 		return new Response(change ? change(file, bytes) : bytes);
 	});
@@ -62,14 +63,21 @@ it.each(roleCases)("imports, edits, reopens and exports complete %s source", asy
 		expect(input).not.toContain(role === "starter" ? "/reference/" : "/starter/");
 		expect(options).toMatchObject({ credentials: "omit", redirect: "error" });
 	}
-	const prior = createPythonIdeProject("python", { title: "Earlier attempt" });
+	const prior = createPythonIdeProject("web", {
+		title: "Welcome Survey v1",
+		courseID: courseId,
+		starterUrl: url,
+		courseProjectKey: `${courseId}:${fixture.itemId}:${role}:welcome-survey:v1`,
+		files: [{ name: "script.js", content: "// Earlier saved v1 work\n", encoding: "text" }]
+	});
 	const original = structuredClone(prior);
 	const project = createPythonIdeProject("web", {
 		files,
 		courseID: courseId,
-		courseProjectKey: javascriptCourseProjectKey(courseId, "welcome-survey", role, url),
+		courseProjectKey: javascriptCourseProjectKey(courseId, fixture.itemId, role, url),
 		starterUrl: url
 	});
+	expect(project.courseProjectKey).not.toBe(prior.courseProjectKey);
 	project.files.find(file => file.name === "script.js")!.content += "\n// Saved observation\n";
 	project.files.push({ name: "notes.md", content: "Saved trace", encoding: "text" });
 	project.activeFileName = "script.js";
@@ -94,10 +102,13 @@ it("keeps the published learner assignment and its unfinished starter", async ()
 	const item = course.modules.flatMap(module => module.curriculum).find(item => item.projectLink === fixture.sourceURL.starter)!;
 	expect(item.id).toBe(`${courseId}-jss1-variables-and-data-types-curriculum-jss1-project-1-welcome-survey`);
 	expect(item.solutionLink).toBeUndefined();
-	const starter = readFileSync(resolve(root, "starter/script.js.txt"));
-	expect(createHash("sha256").update(starter).digest("hex")).toBe(fixture.sourcePanelHashes.starter);
-	expect(starter.toString()).toContain("// Enter your code below this line");
-	expect(starter.toString()).not.toContain("let firstName = prompt");
+	const starter = readFileSync(resolve(root, fixture.files.starter.find((file: { name: string }) => file.name === "script.js").path), "utf8");
+	const source = original.roles.find((row: { role: string }) => row.role === "starter").panels.JavaScript;
+	expect(createHash("sha256").update(source).digest("hex")).toBe(fixture.sourcePanelHashes.starter);
+	const marker = "// DO NOT ALTER CODE WRITTEN BELOW";
+	expect(starter.split(marker)[0]).toBe(source.split(marker)[0]);
+	expect(starter).toContain("// Enter your code below this line");
+	expect(starter).not.toContain("let firstName = prompt");
 });
 
 it("uses the same reference key for its original and current shared URL", () => {
@@ -125,7 +136,7 @@ it.each([
 
 it.each(["truncated", "oversized", "changed"])("refuses %s source rather than importing a partial project", async (kind) => {
 	stubFiles((path, bytes) => {
-		if (path !== "starter/script.js.txt") return bytes;
+		if (!path.endsWith("/starter/script.js.txt")) return bytes;
 		if (kind === "truncated") return bytes.slice(0, -1);
 		if (kind === "oversized") return new Uint8Array(bytes.length + 1);
 		bytes[0] ^= 1;

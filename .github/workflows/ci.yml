@@ -1244,6 +1244,28 @@ jobs:
                   if-no-files-found: error
                   retention-days: 7
 
+            - name: Verify the remaining first JavaScript module course imports
+              env:
+                  JAVASCRIPT_FIRST_MODULE_BROWSER_DIR: output/javascript-first-module-browser
+                  COURSE_IMPORT_SCREENSHOT_DIR: output/javascript-first-module-screenshots
+              run: node --test test/javascript-first-module-course-browser.test.mjs
+
+            - name: Run first-module JavaScript exports offline
+              env:
+                  JAVASCRIPT_FIRST_MODULE_BROWSER_DIR: output/javascript-first-module-browser
+              run: node --test test/javascript-first-module-exported-browser.test.mjs
+
+            - name: Retain first-module JavaScript source and browser evidence
+              if: always()
+              uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+              with:
+                  name: javascript-first-module-workflows
+                  path: |
+                      output/javascript-first-module-browser/
+                      output/javascript-first-module-screenshots/
+                  if-no-files-found: error
+                  retention-days: 7
+
             - name: Verify Network Systems foundation imports and notebook reuse
               env:
                   NETWORK_BROWSER_EXPORT_PROOF_DIR: output/network-exports

@@ -1,9 +1,12 @@
 import type { PythonIdeFile } from "@/modules/pythonIde";
-import { welcomeSurveyFiles } from "@/modules/javascriptWelcomeSurveyFiles";
+import { javascriptFirstModuleResources } from "@/modules/javascriptFirstModuleResources";
 
 const courseId = "javascript-level-1-javascript-superstar";
-const base = "/course-assets/javascript-level-1/welcome-survey-v1/";
+const base = "/course-assets/javascript-level-1/";
 interface CourseRole {
+	project: string;
+	title: string;
+	version: number;
 	role: "starter" | "reference";
 	urls: readonly string[];
 	files: readonly {
@@ -14,21 +17,7 @@ interface CourseRole {
 	}[];
 }
 
-const roles: readonly CourseRole[] = [
-	{
-		role: "starter",
-		urls: ["https://codepen.io/junilearning/pen/OJMxyqw"],
-		files: welcomeSurveyFiles.starter
-	},
-	{
-		role: "reference",
-		urls: [
-			"https://codepen.io/junilearning/pen/1efb04d2b3e13694f1bf614fef02c22c",
-			"https://codepen.io/junilearning/pen/pojNPeO/1efb04d2b3e13694f1bf614fef02c22c"
-		],
-		files: welcomeSurveyFiles.reference
-	}
-] as const;
+const roles: readonly CourseRole[] = javascriptFirstModuleResources;
 
 export function javascriptCourseResource(value: string) {
 	let url: URL;
@@ -43,10 +32,7 @@ export function javascriptCourseResource(value: string) {
 	return selected
 		? {
 				...selected,
-				courseId,
-				project: "welcome-survey",
-				title: "Welcome Survey",
-				version: 1
+				courseId
 			}
 		: null;
 }

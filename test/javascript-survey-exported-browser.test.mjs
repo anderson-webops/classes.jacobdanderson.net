@@ -27,6 +27,8 @@ test("runs the actual exported survey roles offline and verifies the original ca
 		{ name: "integer", inputs: baseInputs, text: "Avery River", log: "The sum of your two numbers is 5.", alert: "The last letter of your favorite food is o." },
 		{ name: "decimal", inputs: ["Avery", "River", "2.5", "0.75", "mango"], text: "Avery River", log: "The sum of your two numbers is 3.25.", alert: "The last letter of your favorite food is o." },
 		{ name: "literal-text", inputs: ["<b>Avery</b>", "River", "2", "3", "mango"], text: "<b>Avery</b> River", log: "The sum of your two numbers is 5.", alert: "The last letter of your favorite food is o." },
+		{ name: "long-name", inputs: ["Avery ".repeat(40).trim(), "River", "2", "3", "mango"], text: `${"Avery ".repeat(40).trim()} River`, log: "The sum of your two numbers is 5.", alert: "The last letter of your favorite food is o." },
+		{ name: "long-word", inputs: ["A".repeat(300), "River", "2", "3", "mango"], text: `${"A".repeat(300)} River`, log: "The sum of your two numbers is 5.", alert: "The last letter of your favorite food is o." },
 		...[0, 1, 2, 3, 4].map(index => ({ name: `cancel-${index + 1}`, inputs: baseInputs.map((value, i) => i === index ? null : value), text: "", log: "Survey canceled." })),
 		{ name: "invalid-number", inputs: ["Avery", "River", "abc", "3", "mango"], text: "", log: "Enter two finite numbers." },
 		{ name: "blank-number", inputs: ["Avery", "River", "", "3", "mango"], text: "", log: "Enter two finite numbers." },
@@ -94,20 +96,28 @@ test("runs the actual exported survey roles offline and verifies the original ca
 					}
 				});
 				await page.goto(pathToFileURL(join(directory, "index.html")).href, { waitUntil: "load" });
-				if (scenario.text) await page.waitForFunction(() => document.querySelector("svg text")?.getAttribute("x") === "37.5", { timeout: 10000 });
-				const rendered = await page.evaluate(() => ({ text: document.querySelector("svg text")?.textContent ?? "", markupElements: document.querySelectorAll("b").length, noHorizontalOverflow: document.documentElement.scrollWidth <= innerWidth, fill: document.querySelector("svg text") ? getComputedStyle(document.querySelector("svg text")).fill : null }));
+				if (scenario.text) await page.waitForFunction(expected => document.querySelector(".course-output, svg text")?.textContent === expected, { timeout: 10000 }, scenario.text);
+				const rendered = await page.evaluate(() => {
+					const output = document.querySelector(".course-output, svg text");
+					const range = document.createRange();
+					if (output) range.selectNodeContents(output);
+					return { text: output?.textContent ?? "", markupElements: document.querySelectorAll("b").length, noHorizontalOverflow: document.documentElement.scrollWidth <= innerWidth, textWithinViewport: !output || [...range.getClientRects()].every(rect => rect.left >= 0 && rect.right <= innerWidth + 1), fontSize: output ? Number.parseFloat(getComputedStyle(output).fontSize) : null };
+				});
 				assert.equal(externalRequests, 0);
 				assert.equal(prompts.length, scenario.inputs.length);
 				assert.equal(rendered.text, scenario.text);
 				assert.equal(rendered.markupElements, 0);
-				assert.ok(rendered.noHorizontalOverflow);
-				if (scenario.text) assert.equal(rendered.fill, "rgb(128, 128, 128)");
+				if (!expectOriginalError) {
+					assert.ok(rendered.noHorizontalOverflow);
+					assert.ok(rendered.textWithinViewport);
+					if (scenario.text) assert.ok(rendered.fontSize >= 16);
+				}
 				if (scenario.log) assert.deepEqual(logs, [scenario.log]);
 				else assert.deepEqual(logs, []);
 				assert.deepEqual(alerts, scenario.alert ? [scenario.alert] : []);
 				if (expectOriginalError) assert.ok(errors.some(error => /null.*length|length.*null/.test(error)));
 				else assert.deepEqual(errors, []);
-				if (scenario.name === "integer" && label.includes("exact")) await page.screenshot({ path: join(output, `native-${label}.png`), fullPage: true });
+				if (["integer", "long-name", "long-word"].includes(scenario.name) && label.includes("exact")) await page.screenshot({ path: join(output, `native-${label}${scenario.name === "integer" ? "" : `-${scenario.name}`}.png`), fullPage: true });
 				return { label, scenario: scenario.name, width, passed: true, prompts: prompts.length, logs, alerts, rendered, externalRequests, errors, originalFailureExpected: expectOriginalError };
 			}
 			finally {
@@ -152,7 +162,7 @@ test("runs the actual exported survey roles offline and verifies the original ca
 			}
 		}
 		assert.equal(exports.length, 8);
-		assert.equal(results.length, 48);
+		assert.equal(results.length, 56);
 		const control = join(temporary, "original-cancellation-control");
 		await cp(controlDirectory, control, { recursive: true });
 		const originalReference = original.roles.find(role => role.role === "reference");

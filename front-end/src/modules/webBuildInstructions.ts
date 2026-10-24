@@ -7,11 +7,14 @@ import {
 } from "./webProjectResources";
 
 export function webBuildInstructions(starterUrl?: string) {
-	if (javascriptCourseResource(starterUrl ?? "")) {
+	const javascript = javascriptCourseResource(starterUrl ?? "");
+	if (javascript) {
 		return [
-			"Save and download the ZIP, then extract all six files, including vendor/d3.min.js and LICENSE-d3.txt.",
+			javascript.files.some(file => file.name === "vendor/d3.min.js")
+				? "Save and download the ZIP, then extract every file, including vendor/d3.min.js and LICENSE-d3.txt."
+				: "Save and download the ZIP, then extract every file.",
 			"Open index.html in a browser. The project runs locally without a server, package installation or network connection.",
-			"README.md contains the script.js tasks and sample page, console and alert results."
+			"README.md contains the script.js tasks and expected output."
 		];
 	}
 	const selected = webCourseResource(starterUrl ?? "");
