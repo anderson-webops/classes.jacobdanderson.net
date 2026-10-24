@@ -1310,6 +1310,28 @@ jobs:
                   if-no-files-found: error
                   retention-days: 7
 
+            - name: Verify JavaScript accumulator project imports
+              env:
+                  JAVASCRIPT_COMBINING_BROWSER_DIR: output/javascript-combining-browser
+                  COURSE_IMPORT_SCREENSHOT_DIR: output/javascript-combining-screenshots
+              run: node --test test/javascript-combining-course-browser.test.mjs
+
+            - name: Run JavaScript accumulator exports offline
+              env:
+                  JAVASCRIPT_COMBINING_BROWSER_DIR: output/javascript-combining-browser
+              run: node --test test/javascript-combining-exported-browser.test.mjs
+
+            - name: Retain JavaScript accumulator source and browser evidence
+              if: always()
+              uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+              with:
+                  name: javascript-combining-workflows
+                  path: |
+                      output/javascript-combining-browser/
+                      output/javascript-combining-screenshots/
+                  if-no-files-found: error
+                  retention-days: 7
+
             - name: Verify Network Systems foundation imports and notebook reuse
               env:
                   NETWORK_BROWSER_EXPORT_PROOF_DIR: output/network-exports

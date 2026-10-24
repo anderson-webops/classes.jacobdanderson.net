@@ -1,4 +1,5 @@
 import type { PythonIdeFile } from "@/modules/pythonIde";
+import { javascriptCombiningResources } from "@/modules/javascriptCombiningResources";
 import { javascriptFirstModuleResources } from "@/modules/javascriptFirstModuleResources";
 import { javascriptLoopsResources } from "@/modules/javascriptLoopsResources";
 import { javascriptOperatorsResources } from "@/modules/javascriptOperatorsResources";
@@ -22,7 +23,8 @@ interface CourseRole {
 const roles: readonly CourseRole[] = [
 	...javascriptFirstModuleResources,
 	...javascriptOperatorsResources,
-	...javascriptLoopsResources
+	...javascriptLoopsResources,
+	...javascriptCombiningResources
 ];
 
 export function javascriptCourseResource(value: string) {
