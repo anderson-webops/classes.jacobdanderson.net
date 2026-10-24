@@ -18,8 +18,8 @@ parser.add_argument("--browser", type=Path, required=True)
 parser.add_argument("--proof", type=Path, required=True)
 parser.add_argument("--course", choices=("welcome", "networking", "gallery", "hobby", "map", "capstone"), default="welcome")
 parser.add_argument("--extended-welcome", action="store_true")
-parser.add_argument("--diagnostic-map-case", action="store_true",
-                    help="Run only the small iPhone reference at largest text; full acceptance remains false")
+parser.add_argument("--diagnostic-map-case", nargs="?", const="small", choices=("small", "large"),
+                    help="Run only the selected iPhone reference at largest text; full acceptance remains false")
 args = parser.parse_args()
 assert not args.extended_welcome or args.course == "welcome"
 assert not args.diagnostic_map_case or (args.course == "map" and not args.extended_welcome)
@@ -126,7 +126,7 @@ canonical_courses = {"gallery": "MediaGalleryApp.swift", "hobby": "MultiTabHobby
                      "map": "MapPlacesApp.swift", "capstone": "PublishReadyCapstoneApp.swift"}
 record["course"] = args.course
 if args.diagnostic_map_case:
-    record.update(diagnosticOnly=True, fullCoverageRequired=8)
+    record.update(diagnosticOnly=True, diagnosticSize=args.diagnostic_map_case, fullCoverageRequired=8)
 variant_native = args.course in canonical_courses or args.extended_welcome
 if variant_native:
     harness = (["test/swift-welcome-exported-ios.py", "test/swift-welcome-xcode.py",
@@ -242,7 +242,9 @@ large = next((x for name in ["iPhone 17 Pro Max", "iPhone 16 Pro Max", "iPhone 1
               for x in phones if x["name"] == name), None)
 assert small and large and small["identifier"] != large["identifier"], "Two installed iPhone size profiles are required"
 record["runtime"] = dict(identifier=runtime["identifier"], version=runtime["version"])
-for size, model in ([("small", small)] if args.diagnostic_map_case else [("small", small), ("large", large)]):
+devices = ([(args.diagnostic_map_case, small if args.diagnostic_map_case == "small" else large)]
+           if args.diagnostic_map_case else [("small", small), ("large", large)])
+for size, model in devices:
     device = run("create-" + size, ["/usr/bin/xcrun", "simctl", "create", task_id + "-" + size,
                                   model["identifier"], runtime["identifier"]]).decode().strip()
     assert re.fullmatch(r"[0-9A-Fa-f-]{36}", device)

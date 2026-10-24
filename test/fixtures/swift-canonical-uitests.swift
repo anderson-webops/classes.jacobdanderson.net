@@ -1,6 +1,28 @@
 import CoreGraphics
 import XCTest
 
+private func courseScrollMovement(viewport: CGRect, target: CGRect, attempt: Int) -> CGFloat {
+    if target.isEmpty { return attempt < 12 ? -150 : 150 }
+    if target.maxY > viewport.maxY {
+        return -min(180, max(120, target.maxY - viewport.maxY + 8))
+    }
+    if target.minY < viewport.minY {
+        return min(180, max(120, viewport.minY - target.minY + 8))
+    }
+    return attempt < 12 ? -120 : 120
+}
+
+private func courseScrollStart(viewport: CGRect, target: CGRect, movement: CGFloat) -> CGPoint {
+    let visible = viewport.insetBy(dx: 16, dy: 24).intersection(target)
+    if !visible.isNull && visible.width >= 32 && visible.height >= 32 {
+        return CGPoint(x: visible.midX, y: visible.midY)
+    }
+    let inset = min(80, viewport.height / 4)
+    return CGPoint(
+        x: viewport.midX,
+        y: movement < 0 ? viewport.maxY - inset : viewport.minY + inset)
+}
+
 final class CanonicalCourseUITests: XCTestCase {
     @MainActor
     private func button(_ title: String, in app: XCUIApplication) -> XCUIElement {
@@ -19,19 +41,11 @@ final class CanonicalCourseUITests: XCTestCase {
             let target = element.exists ? element.frame : .zero
             if element.exists && element.isHittable && (!fully || viewport.contains(target)) { return }
 
-            let movement: CGFloat
-            if target.isEmpty {
-                movement = attempt < 12 ? -150 : 150
-            } else if target.maxY > viewport.maxY {
-                movement = -min(180, max(40, target.maxY - viewport.maxY + 8))
-            } else if target.minY < viewport.minY {
-                movement = min(180, max(40, viewport.minY - target.minY + 8))
-            } else {
-                movement = attempt < 12 ? -30 : 30
-            }
-            // The outer edge avoids map panning and other interactive content.
+            let movement = courseScrollMovement(viewport: viewport, target: target, attempt: attempt)
+            // Start within visible content, clear of edge controls and the map.
+            let origin = courseScrollStart(viewport: viewport, target: target, movement: movement)
             let start = app.coordinate(withNormalizedOffset: .zero).withOffset(
-                CGVector(dx: bounds.width * 0.97, dy: viewport.midY - bounds.minY))
+                CGVector(dx: origin.x - bounds.minX, dy: origin.y - bounds.minY))
             start.press(
                 forDuration: 0.05,
                 thenDragTo: start.withOffset(CGVector(dx: 0, dy: movement)),
