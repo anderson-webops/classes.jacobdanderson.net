@@ -10,8 +10,11 @@ import { javascriptLevel1Course } from "@/stores/courses/javascript-level-1";
 const courseId = "javascript-level-1-javascript-superstar";
 const moduleTitle = "JSS4 Combining Loops and Variables";
 const moduleId = `${courseId}-jss4-combining-loops-and-variables`;
-const retiredIds = ["transfer-practice", "extension-practice"].map(
-	suffix => `${moduleId}-supplemental-combining-loops-and-variables-${suffix}`
+const retiredIds = ["transfer-practice", "extension-practice"].flatMap(
+	suffix => [
+		`${moduleId}-supplemental-combining-loops-and-variables-${suffix}`,
+		`${moduleId}-supplemental-${suffix}`
+	]
 );
 const originalTitles = [
 	"JSS4 Project 1: Totaling Up",
@@ -71,11 +74,14 @@ describe("original JSS4 project set", () => {
 				expect(item.projectLink).toMatch(
 					/^https:\/\/codepen\.io\/junilearning\/pen\//u
 				);
-				if (role === "instructor")
+				if (role === "instructor") {
 					expect(item.solutionLink).toMatch(
 						/^https:\/\/codepen\.io\/junilearning\/pen\//u
 					);
-				else expect(item.solutionLink).toBeUndefined();
+				}
+				else {
+					expect(item.solutionLink).toBeUndefined();
+				}
 			}
 			expect(JSON.stringify(course)).not.toMatch(/JSS-0[56]-jss4/u);
 		});
@@ -101,12 +107,12 @@ describe("original JSS4 project set", () => {
 			const wrapper = mount(HistoricalCourseProgress, {
 				props: { course, progress }
 			});
-			expect(wrapper.text()).toContain("Earlier completions (2)");
+			expect(wrapper.text()).toContain("Earlier completions (4)");
 			expect(wrapper.findAll("code").map(node => node.text())).toEqual(
 				retiredIds
 			);
 			expect(
-				wrapper.find('button[aria-label^="Remove earlier"]').exists()
+				wrapper.find("button[aria-label^=\"Remove earlier\"]").exists()
 			).toBe(false);
 			await wrapper
 				.get(".workspace-disclosure__trigger")
