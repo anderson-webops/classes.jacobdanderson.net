@@ -16,7 +16,6 @@ import {
 } from "@/modules/pythonIde";
 import { swiftBuildInstructions } from "@/modules/swiftBuildInstructions";
 import {
-	swiftCanonicalProjectsRevision,
 	swiftCapstoneRoot,
 	swiftCourseProjectKey,
 	swiftCourseResource,
@@ -73,6 +72,14 @@ afterEach(async () => {
 });
 
 describe("canonical Swift app workspaces", () => {
+	it.each([
+		"18bb2a5055a144cf545fa416f6bde6f00e863f36",
+		"58d17abb7a09185558a74c44f0ba2e43a18f42c2"
+	])("retains the earlier Hobby source at %s", revision => {
+		const url = `https://github.com/instruction-material/Swift/tree/${revision}/SAD3-Multi-Tab-Hobby-App/solution`;
+		expect(swiftCourseResource(url)?.revision).toBe(revision);
+		expect(swiftCourseResource(`${swiftHobbyRoot}/solution`)?.revision).not.toBe(revision);
+	});
 	it.each(projects)(
 		"keeps the $name lesson's identity, source and complete instructions",
 		async (project) => {
@@ -114,7 +121,7 @@ describe("canonical Swift app workspaces", () => {
 			expect(source.content).not.toMatch(
 				/your (?:student|instructor)|Julio/i
 			);
-			expect(fixture.revision).toBe(swiftCanonicalProjectsRevision);
+			expect(fixture.revision).toBe(swiftCourseResource(`${project.root}/starter`)?.revision);
 			for (const file of Object.values(fixture.files) as {
 				content: string;
 				sha256: string;

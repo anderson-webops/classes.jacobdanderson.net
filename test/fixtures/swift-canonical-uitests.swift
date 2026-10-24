@@ -39,6 +39,25 @@ final class CanonicalCourseUITests: XCTestCase {
     }
 
     @MainActor
+    private func revealFully(_ element: XCUIElement, in app: XCUIApplication) {
+        for attempt in 0..<16 {
+            let frame = element.exists ? element.frame : .zero
+            let top = max(app.frame.minY, app.navigationBars.firstMatch.frame.maxY)
+            let bottom = min(app.frame.maxY, app.tabBars.firstMatch.frame.minY)
+            if element.isHittable && !frame.isEmpty
+                && frame.minY >= top && frame.maxY <= bottom
+                && frame.minX >= app.frame.minX && frame.maxX <= app.frame.maxX {
+                return
+            }
+            let down = !frame.isEmpty ? frame.midY < (top + bottom) / 2 : attempt >= 8
+            let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.55))
+            start.press(forDuration: 0.05, thenDragTo: start.withOffset(
+                CGVector(dx: 0, dy: down ? 150 : -150)))
+        }
+        XCTFail("The complete text or action is outside the visible content: \(element.debugDescription)")
+    }
+
+    @MainActor
     private func gallery(in app: XCUIApplication, reference: Bool) {
         XCTAssertTrue(app.navigationBars["Gallery"].waitForExistence(timeout: 15))
         let photo = app.segmentedControls.buttons["Photo"]
@@ -90,11 +109,18 @@ final class CanonicalCourseUITests: XCTestCase {
         reveal(activity, in: app)
         activity.tap()
         XCTAssertTrue(app.navigationBars["Photo Walk"].waitForExistence(timeout: 5))
-        reveal(app.staticTexts["Scout a neighborhood and collect strong compositions."], in: app)
+        revealFully(app.staticTexts["Scout a neighborhood and collect strong compositions."], in: app)
+        retain("Complete Hobby summary", in: app)
+        revealFully(app.staticTexts["Scheduled for Tuesday"], in: app)
+        retain("Complete Hobby schedule", in: app)
         let save = button("Save Favorite", in: app)
-        reveal(save, in: app)
+        revealFully(save, in: app)
+        retain("Complete Hobby save action", in: app)
         save.tap()
-        XCTAssertTrue(button("Remove Favorite", in: app).waitForExistence(timeout: 5))
+        let remove = button("Remove Favorite", in: app)
+        XCTAssertTrue(remove.waitForExistence(timeout: 5))
+        revealFully(remove, in: app)
+        retain("Complete Hobby remove action", in: app)
         retain("Hobby saved detail", in: app)
         app.navigationBars.buttons.firstMatch.tap()
         app.tabBars.buttons["Favorites"].tap()
