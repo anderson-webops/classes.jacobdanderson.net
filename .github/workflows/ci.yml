@@ -1654,6 +1654,10 @@ jobs:
                       time.sleep(10)
                   PY
 
+            - name: Verify course scroll gesture geometry
+              if: matrix.course == 'map'
+              run: node scripts/classes-family-heavy-task.mjs -- python3 test/swift-course-scroll-geometry.py
+
             - name: Test selected course roles and largest text on two iPhone sizes
               run: node scripts/classes-family-heavy-task.mjs -- python3 test/swift-welcome-exported-ios.py --course "$SWIFT_COURSE" --browser "output/swift-canonical-workflows/swift-${SWIFT_COURSE}-browser" --proof "$RUNNER_TEMP/swift-canonical-ios/$SWIFT_COURSE/proof.json"
 
@@ -1869,7 +1873,10 @@ jobs:
             - name: Verify restored USACO imports and native file I/O
               env:
                   COURSE_IMPORT_SCREENSHOT_DIR: output/playwright
-              run: JAVAC="$JAVA_HOME_21_X64/bin/javac" JAVA="$JAVA_HOME_21_X64/bin/java" node --test test/usaco-course-import-browser.test.mjs
+              run: |
+                  set -o pipefail
+                  mkdir -p output/usaco-workflow
+                  JAVAC="$JAVA_HOME_21_X64/bin/javac" JAVA="$JAVA_HOME_21_X64/bin/java" node --test test/usaco-course-import-browser.test.mjs | tee output/usaco-workflow/full.log
 
             - name: Retain USACO project workflow screenshots
               uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
@@ -1877,6 +1884,15 @@ jobs:
                   name: usaco-workspace-screenshots
                   path: output/playwright/course-import-usaco-*.png
                   if-no-files-found: error
+                  retention-days: 7
+
+            - name: Retain complete USACO workflow evidence
+              if: always()
+              uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+              with:
+                  name: usaco-workflow-logs
+                  path: output/usaco-workflow/full.log
+                  if-no-files-found: ignore
                   retention-days: 7
 
     build:
