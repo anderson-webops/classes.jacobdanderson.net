@@ -36,6 +36,9 @@ export async function downloadProjectZip(page) {
 			inline: "nearest",
 			behavior: "instant"
 		}));
+		await page.$eval("#code-ide-settings-panel", panel => {
+			panel.scrollTop = panel.scrollHeight;
+		});
 		await page.waitForFunction(() => {
 			const panel = document.querySelector("#code-ide-settings-panel");
 			const button = document.querySelector("button[aria-label='Download project ZIP']");

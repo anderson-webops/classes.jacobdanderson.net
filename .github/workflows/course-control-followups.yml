@@ -9,11 +9,14 @@ permissions:
     actions: read
 
 concurrency:
-    group: course-control-followups-${{ github.ref }}
+    group: course-control-followups-${{ github.ref }}-${{ github.sha }}
     cancel-in-progress: false
 
 jobs:
     native-controls:
+        # Finish the original native run once; ZIP-only follow-ups retain its
+        # actual head and unchanged native source/harness hashes in acceptance.
+        if: github.sha == '84c08818eccd9707e2fc21ab4de10f294c4bade5'
         strategy:
             fail-fast: false
             max-parallel: 1
