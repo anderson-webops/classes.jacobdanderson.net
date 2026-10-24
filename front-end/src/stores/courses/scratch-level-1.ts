@@ -28,6 +28,7 @@ export const scratchLevel1Course: RawCourse = {
 			curriculum: [
 				{
 					title: "Scratch basics",
+					preserveInstructions: true,
 					content: `Create a Scratch account and explore the code blocks. Learn how the stage and sprites work, and experiment with the green flag to start scripts.
 
 ${scratchCostumeEditingGuide}`

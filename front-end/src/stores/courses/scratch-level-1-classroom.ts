@@ -49,6 +49,7 @@ export const scratchLevel1ClassroomCourse: RawCourse = {
 		curriculum: [
 			{
 				id: `scratch-classroom-${index + 1}-intro`,
+				preserveInstructions: unit === "Events and movement",
 				title: `${unit}: Start Here`,
 				content: `**Concept focus:** ${introductions[unit]}\n\n**Optional planning warmup:** Play a familiar small game, name its input -> action -> feedback rule, then sketch or paper-test one variation before coding. Predict a check a partner could perform. Keep this brief; Normal and Hard still use the saved working starter.\n\n**Class routine:** Run the supplied example together, predict one change, complete **Normal**, and demonstrate the check. **Hard** extends the same project after a working checkpoint. ${unit === "Events and movement" ? `\n\n${scratchCostumeEditingGuide}` : ""}\n\nDownload a starter below or open it in the website IDE. At the end of class, download your own .sb3 file with a recognizable name. Reopen it to verify the saved copy. Use your school's approved Scratch-compatible tool when required.`
 			},
