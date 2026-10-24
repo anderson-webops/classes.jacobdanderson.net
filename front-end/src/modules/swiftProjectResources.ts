@@ -26,7 +26,7 @@ export const swiftDataTrackerPack = "SAD5-SwiftData-Tracker-App";
 export const swiftDataTrackerRoot = `https://github.com/instruction-material/Swift/tree/${swiftTrackerRevision}/${swiftDataTrackerPack}`;
 
 export const swiftCanonicalProjectsRevision =
-	"58d17abb7a09185558a74c44f0ba2e43a18f42c2";
+	"18bb2a5055a144cf545fa416f6bde6f00e863f36";
 export const swiftGalleryRoot = `https://github.com/instruction-material/Swift/tree/${swiftCanonicalProjectsRevision}/SAD2-Media-Gallery-App`;
 export const swiftHobbyRoot = `https://github.com/instruction-material/Swift/tree/${swiftCanonicalProjectsRevision}/SAD3-Multi-Tab-Hobby-App`;
 export const swiftMapRoot = `https://github.com/instruction-material/Swift/tree/${swiftCanonicalProjectsRevision}/SAD4-Map-Places-App`;
@@ -138,7 +138,9 @@ export function swiftCourseResource(url: string) {
 				...(pack.pack === swiftTrackerPack ||
 				pack.pack === swiftDataTrackerPack
 					? swiftTrackerEarlierRevisions
-					: [])
+					: pack.revision === swiftCanonicalProjectsRevision
+						? ["58d17abb7a09185558a74c44f0ba2e43a18f42c2"]
+						: [])
 			].includes(resource.ref) &&
 			[`${pack.pack}/starter`, `${pack.pack}/solution`].includes(
 				resource.path

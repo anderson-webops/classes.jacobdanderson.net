@@ -110,7 +110,7 @@ final class CanonicalCourseUITests: XCTestCase {
     @MainActor
     private func map(in app: XCUIApplication, reference: Bool) {
         XCTAssertTrue(app.navigationBars["Places"].waitForExistence(timeout: 15))
-        let cafe = app.collectionViews.buttons.matching(
+        let cafe = app.buttons.matching(
             NSPredicate(format: "label CONTAINS %@", "Neighborhood Cafe")).firstMatch
         reveal(cafe, in: app)
         cafe.tap()
@@ -120,7 +120,7 @@ final class CanonicalCourseUITests: XCTestCase {
         reveal(app.staticTexts[detail], in: app)
         retain("Selected local place", in: app)
         if reference {
-            let harbor = app.collectionViews.buttons.matching(
+            let harbor = app.buttons.matching(
                 NSPredicate(format: "label CONTAINS %@", "Harbor Overlook")).firstMatch
             reveal(harbor, in: app)
             harbor.tap()
@@ -137,7 +137,10 @@ final class CanonicalCourseUITests: XCTestCase {
             let task = app.switches["Prepare TestFlight build"]
             reveal(task, in: app)
             XCTAssertEqual(task.value as? String, "0")
-            task.tap()
+            task.coordinate(withNormalizedOffset: CGVector(dx: 0.9, dy: 0.5)).tap()
+            let checked = NSPredicate(format: "value == %@", "1")
+            expectation(for: checked, evaluatedWith: task)
+            waitForExpectations(timeout: 5)
             XCTAssertEqual(task.value as? String, "1")
         } else {
             reveal(app.staticTexts["Prepare TestFlight build"], in: app)
