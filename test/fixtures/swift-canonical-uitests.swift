@@ -167,7 +167,7 @@ final class CanonicalCourseUITests: XCTestCase {
             waitForExpectations(timeout: 5)
             XCTAssertEqual(task.value as? String, "1")
         } else {
-            reveal(app.staticTexts["Prepare TestFlight build"], in: app)
+            revealFully(app.staticTexts["Prepare TestFlight build"], in: app)
         }
         retain("Capstone checklist", in: app)
         app.tabBars.buttons["Explore"].tap()
