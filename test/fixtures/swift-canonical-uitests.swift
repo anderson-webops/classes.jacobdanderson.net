@@ -1,6 +1,17 @@
 import CoreGraphics
 import XCTest
 
+private func courseScrollStart(viewport: CGRect, target: CGRect, movement: CGFloat) -> CGPoint {
+    let visible = viewport.insetBy(dx: 16, dy: 24).intersection(target)
+    if !visible.isNull && visible.width >= 32 && visible.height >= 32 {
+        return CGPoint(x: visible.midX, y: visible.midY)
+    }
+    let inset = min(80, viewport.height / 4)
+    return CGPoint(
+        x: viewport.midX,
+        y: movement < 0 ? viewport.maxY - inset : viewport.minY + inset)
+}
+
 final class CanonicalCourseUITests: XCTestCase {
     @MainActor
     private func button(_ title: String, in app: XCUIApplication) -> XCUIElement {
@@ -29,9 +40,10 @@ final class CanonicalCourseUITests: XCTestCase {
             } else {
                 movement = attempt < 12 ? -30 : 30
             }
-            // The outer edge avoids map panning and other interactive content.
+            // Start within visible content, clear of edge controls and the map.
+            let origin = courseScrollStart(viewport: viewport, target: target, movement: movement)
             let start = app.coordinate(withNormalizedOffset: .zero).withOffset(
-                CGVector(dx: bounds.width * 0.97, dy: viewport.midY - bounds.minY))
+                CGVector(dx: origin.x - bounds.minX, dy: origin.y - bounds.minY))
             start.press(
                 forDuration: 0.05,
                 thenDragTo: start.withOffset(CGVector(dx: 0, dy: movement)),
