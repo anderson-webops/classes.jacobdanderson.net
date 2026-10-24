@@ -1461,7 +1461,7 @@ jobs:
                   PY
 
             - name: Compile downloaded Swift ZIPs and test both source roles on two iPhone sizes
-              run: node scripts/classes-family-heavy-task.mjs -- python3 test/swift-welcome-exported-ios.py --browser output/swift-welcome-workflows/swift-welcome-browser --proof output/swift-welcome-ios/proof.json
+              run: node scripts/classes-family-heavy-task.mjs -- python3 test/swift-welcome-exported-ios.py --extended-welcome --browser output/swift-welcome-workflows/swift-welcome-browser --proof output/swift-welcome-ios/proof.json
 
             - name: Retain native Swift versions, process logs and UI results
               if: always()
@@ -1474,6 +1474,7 @@ jobs:
                       output/swift-welcome-ios/processes.jsonl
                       output/swift-welcome-ios/logs/
                       output/swift-welcome-ios/results/
+                      output/swift-welcome-ios/**/inputs.json
                   if-no-files-found: error
                   retention-days: 7
 

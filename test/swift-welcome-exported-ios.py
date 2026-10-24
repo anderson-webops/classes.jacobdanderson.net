@@ -17,7 +17,9 @@ parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("--browser", type=Path, required=True)
 parser.add_argument("--proof", type=Path, required=True)
 parser.add_argument("--course", choices=("welcome", "networking", "gallery", "hobby", "map", "capstone"), default="welcome")
+parser.add_argument("--extended-welcome", action="store_true")
 args = parser.parse_args()
+assert not args.extended_welcome or args.course == "welcome"
 args.browser = args.browser.resolve()
 args.proof = args.proof.resolve()
 OUT = args.proof.parent
@@ -120,10 +122,14 @@ record = dict(at=now(), accepted=False, sourceRevision=fixture["revision"],
 canonical_courses = {"gallery": "MediaGalleryApp.swift", "hobby": "MultiTabHobbyApp.swift",
                      "map": "MapPlacesApp.swift", "capstone": "PublishReadyCapstoneApp.swift"}
 record["course"] = args.course
-if args.course in canonical_courses:
-    record["harnessSourceHashes"] = {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in [
-        "test/swift-welcome-exported-ios.py", "test/swift-welcome-xcode.py",
-        "test/swift-canonical-xcode.py", "test/fixtures/swift-canonical-uitests.swift"]}
+variant_native = args.course in canonical_courses or args.extended_welcome
+if variant_native:
+    harness = (["test/swift-welcome-exported-ios.py", "test/swift-welcome-xcode.py",
+                "test/swift-welcome-extended-xcode.py", "test/fixtures/swift-welcome-extended-uitests.swift"]
+               if args.extended_welcome else
+               ["test/swift-welcome-exported-ios.py", "test/swift-welcome-xcode.py",
+                "test/swift-canonical-xcode.py", "test/fixtures/swift-canonical-uitests.swift"])
+    record["harnessSourceHashes"] = {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in harness}
     record["installedApps"] = []
 args.proof.write_text(json.dumps(record, indent=2) + "\n")
 sdk = run("sdk-path", ["/usr/bin/xcrun", "--sdk", "iphonesimulator", "--show-sdk-path"]).decode().strip()
@@ -178,14 +184,16 @@ for profile in profiles:
         args.proof.write_text(json.dumps(record, indent=2) + "\n")
 
 inputs = {"profiles": []}
-variants = (["standard", "largest-text"] if args.course in canonical_courses else
+variants = (["standard", "long-note"] if args.extended_welcome else
+            ["standard", "largest-text"] if args.course in canonical_courses else
             ["standard"] if args.course == "welcome" else ["standard", "long-data"])
 for variant in variants:
-    project_root = WORK / ("xcode" if args.course == "welcome" else "xcode-" + variant)
-    generator = ROOT / "test" / ("swift-canonical-xcode.py" if args.course in canonical_courses else
+    project_root = WORK / ("xcode" if args.course == "welcome" and not args.extended_welcome else "xcode-" + variant)
+    generator = ROOT / "test" / ("swift-welcome-extended-xcode.py" if args.extended_welcome else
+                                 "swift-canonical-xcode.py" if args.course in canonical_courses else
                                  "swift-welcome-xcode.py" if args.course == "welcome" else "swift-networking-xcode.py")
     command = [sys.executable, str(generator), "--browser", str(args.browser), "--output", str(project_root)]
-    if args.course != "welcome":
+    if args.course != "welcome" or args.extended_welcome:
         command += ["--variant", variant]
     if args.course in canonical_courses:
         command += ["--course", args.course]
@@ -193,7 +201,7 @@ for variant in variants:
     generated = json.loads((project_root / "inputs.json").read_text())
     for profile in generated["profiles"]:
         profile.update(project=generated["project"], variant=variant,
-                       derivedData=str(WORK / "derived") if args.course == "welcome" else str(WORK / "derived" / variant))
+                       derivedData=str(WORK / "derived") if args.course == "welcome" and not args.extended_welcome else str(WORK / "derived" / variant))
         inputs["profiles"].append(profile)
         run("build-" + variant + "-" + profile["role"], [
             "/usr/bin/xcrun", "xcodebuild", "build-for-testing", "-project", profile["project"],
@@ -227,13 +235,13 @@ for size, model in [("small", small), ("large", large)]:
         run("ready-" + size, ["/usr/bin/xcrun", "simctl", "bootstatus", device, "-b"], timeout=300)
         record_booted_host(size)
         for profile in inputs["profiles"]:
-            label = profile["role"] + "-" + size + ("" if args.course == "welcome" else "-" + profile["variant"])
-            if args.course != "welcome":
+            label = profile["role"] + "-" + size + ("" if args.course == "welcome" and not args.extended_welcome else "-" + profile["variant"])
+            if args.course != "welcome" or args.extended_welcome:
                 content_size = profile["contentSize"]
                 run("set-content-size-" + label, ["/usr/bin/xcrun", "simctl", "ui", device, "content_size", content_size])
                 observed = run("get-content-size-" + label, ["/usr/bin/xcrun", "simctl", "ui", device, "content_size"]).decode().strip()
                 assert observed == content_size, (label, observed, content_size)
-            if args.course in canonical_courses:
+            if variant_native:
                 app = Path(profile["derivedData"]) / "Build/Products/Debug-iphonesimulator" / (profile["scheme"] + ".app")
                 run("install-" + label, ["/usr/bin/xcrun", "simctl", "install", device, str(app)])
                 installed = Path(run("installed-app-" + label, ["/usr/bin/xcrun", "simctl", "get_app_container", device, profile["bundleIdentifier"], "app"]).decode().strip())
@@ -279,10 +287,10 @@ for size, model in [("small", small), ("large", large)]:
         run("delete-" + size, ["/usr/bin/xcrun", "simctl", "delete", device])
         record["ownedSimulatorsDeleted"].append(device)
         args.proof.write_text(json.dumps(record, indent=2) + "\n")
-record.update(at=now(), accepted=len(record["exports"]) == 8 and len(record["simulatorTests"]) == (4 if args.course == "welcome" else 8)
+record.update(at=now(), accepted=len(record["exports"]) == 8 and len(record["simulatorTests"]) == (4 if args.course == "welcome" and not args.extended_welcome else 8)
               and all(row["passed"] for row in record["simulatorTests"])
               and len(record["ownedSimulatorsDeleted"]) == 2)
-if args.course in canonical_courses:
+if variant_native:
     record["accepted"] &= len(record["installedApps"]) == 8
 args.proof.write_text(json.dumps(record, indent=2) + "\n")
 assert record["accepted"]

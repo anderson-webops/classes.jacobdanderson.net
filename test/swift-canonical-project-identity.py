@@ -18,6 +18,33 @@ def load(name, path):
 
 
 class CanonicalProjectIdentityTests(unittest.TestCase):
+    def test_welcome_variants_keep_unmodified_roles_and_distinct_apps(self):
+        generator = load("welcome_extended", ROOT / "test/swift-welcome-extended-xcode.py")
+        fixtures = load("tracker_identity", ROOT / "test/swift-tracker-project-identity.py")
+        with tempfile.TemporaryDirectory(prefix="welcome-extended-identity-") as directory:
+            root = Path(directory)
+            browser = fixtures.browser_inputs(root, "welcome")
+            source = json.loads((ROOT / "test/fixtures/swift-welcome-source.json").read_text())
+            identifiers = set()
+            for variant in ("standard", "long-note"):
+                output = root / variant
+                result = generator.generate(browser, output, variant)
+                project = (Path(result["project"]) / "project.pbxproj").read_text()
+                current = set(re.findall(r'"PRODUCT_BUNDLE_IDENTIFIER"\s*=\s*"([^"]+)"', project))
+                self.assertEqual(len(current), 4)
+                self.assertFalse(identifiers & current)
+                identifiers.update(current)
+                for profile in result["profiles"]:
+                    role = profile["role"]
+                    for name, file in source["files"].items():
+                        relative = name.removeprefix(source["pack"] + "/")
+                        selected = relative.startswith(role + "/") or not relative.startswith(("starter/", "solution/"))
+                        path = output / role / relative
+                        self.assertEqual(path.exists(), selected)
+                        if selected:
+                            self.assertEqual(path.read_bytes(), file["content"].encode())
+            self.assertEqual(len(identifiers), 8)
+
     def test_selected_role_sources_and_installation_identities(self):
         generator = load("canonical_generator", ROOT / "test/swift-canonical-xcode.py")
         fixtures = load("tracker_identity", ROOT / "test/swift-tracker-project-identity.py")
