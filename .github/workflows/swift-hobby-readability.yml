@@ -1,4 +1,4 @@
-name: Verify Hobby readability
+name: Verify native course follow-ups
 
 on:
     pull_request:
@@ -112,6 +112,73 @@ jobs:
                       output/swift-canonical-ios/**/logs/
                       output/swift-canonical-ios/**/results/
                       output/swift-canonical-ios/**/inputs.json
+                  if-no-files-found: error
+                  retention-days: 7
+
+
+    tracker-native-edit:
+        needs: hobby-browser
+        runs-on: macos-26
+        timeout-minutes: 60
+        permissions:
+            contents: read
+            actions: read
+        env:
+            CLASSES_FAMILY_TASK_ID: tracker-native-edit
+            CLASSES_FAMILY_MIN_DISK_GB: 8
+            CLASSES_FAMILY_HEAVY_TIMEOUT_MS: 3300000
+        steps:
+            - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+              with:
+                  persist-credentials: false
+            - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+              with:
+                  node-version: 24.18.0
+            - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+              with:
+                  name: swift-tracker-workflows
+                  path: output/previous-tracker-exports
+                  github-token: ${{ github.token }}
+                  run-id: 40076001325
+            - name: Wait for the hosted Mac within the native load limit
+              run: |
+                  python3 - <<'PY'
+                  import datetime
+                  import json
+                  import os
+                  from pathlib import Path
+                  import time
+
+                  proof = Path("output/swift-tracker-ui/runner-readiness.json")
+                  proof.parent.mkdir(parents=True, exist_ok=True)
+                  samples = []
+                  deadline = time.monotonic() + 600
+                  while True:
+                      load = os.getloadavg()[0]
+                      samples.append({"at": datetime.datetime.now(datetime.timezone.utc).isoformat(), "load": load})
+                      ready = load <= 8
+                      proof.write_text(json.dumps({"ready": ready, "maximumLoad": 8, "samples": samples}, indent=2) + "\n")
+                      print(f"Hosted Mac load: {load:.2f}; required maximum: 8", flush=True)
+                      if ready:
+                          break
+                      if time.monotonic() >= deadline:
+                          raise SystemExit("Hosted Mac did not settle within ten minutes; native checks have not run")
+                      time.sleep(10)
+                  PY
+            - name: Verify native Tracker editing across both sizes and text variants
+              run: node scripts/classes-family-heavy-task.mjs -- python3 test/swift-tracker-exported-ios.py --course tracker --browser output/previous-tracker-exports/swift-tracker-browser --proof output/swift-tracker-ui/tracker/proof.json
+            - name: Retain source-bound native app and text evidence
+              if: always()
+              uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+              with:
+                  name: swift-tracker-ui-tracker
+                  path: |
+                      output/swift-tracker-ui/runner-readiness.json
+                      output/swift-tracker-ui/**/proof.json
+                      output/swift-tracker-ui/**/processes.jsonl
+                      output/swift-tracker-ui/**/logs/
+                      output/swift-tracker-ui/**/results/
+                      output/swift-tracker-ui/**/inputs.json
                   if-no-files-found: error
                   retention-days: 7
 
