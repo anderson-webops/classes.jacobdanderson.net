@@ -27,6 +27,10 @@ export async function runAssemblyCoreCourseWorkflow(t, definition) {
 	const primaryFile = definition.primaryFile ?? "routine.S";
 	const taskFile = definition.taskFile ?? "trace.md";
 	const initialFile = definition.initialFile ?? primaryFile;
+	const roles = definition.roles ?? ["starter", "solution"];
+	assert.ok(roles.length >= 1 && roles.length <= 2);
+	assert.equal(new Set(roles).size, roles.length);
+	assert.ok(roles.every(role => ["starter", "solution"].includes(role)));
 	const digest = value => createHash("sha256").update(value).digest("hex");
 	async function savedProjects(page) {
 		return page.evaluate(
@@ -150,8 +154,11 @@ export async function runAssemblyCoreCourseWorkflow(t, definition) {
 		= process.env.CLASSES_FAMILY_TASK_ID
 			?? `${mode}-${definition.kind}-course-ci`;
 	const startedAt = new Date().toISOString();
-	const output
+	const outputBase
 		= process.env[definition.outputEnv] ?? definition.defaultOutput;
+	const output = definition.outputSubdirectory
+		? join(outputBase, definition.outputSubdirectory)
+		: outputBase;
 	const screenshots = process.env.COURSE_IMPORT_SCREENSHOT_DIR;
 	const profiles = [];
 	const cleanup = async () => {
@@ -212,7 +219,7 @@ export async function runAssemblyCoreCourseWorkflow(t, definition) {
 			args: ["--no-sandbox"]
 		});
 		for (const width of [390, 1280]) {
-			for (const role of ["starter", "solution"]) {
+			for (const role of roles) {
 				const continuationIDs = definition.continuationsByRole?.[
 					role
 				]
@@ -445,6 +452,7 @@ export async function runAssemblyCoreCourseWorkflow(t, definition) {
 							]).sha256
 						);
 					}
+					const workflowEvidence = await definition.afterImport?.(page, { role, width, earlier, saved });
 					const exact = await archive(page);
 					checkArchive(exact, saved.files);
 					await writeFile(join(output, `${name}-exact.zip`), exact);
@@ -609,8 +617,15 @@ export async function runAssemblyCoreCourseWorkflow(t, definition) {
 					);
 					const old = projects.find(p => p._id === earlier._id);
 					assert.ok(old);
-					for (const [name, value] of Object.entries(earlier))
-						assert.deepEqual(old[name], value);
+					for (const [name, value] of Object.entries(earlier)) {
+						if (name === "updatedAt" && workflowEvidence?.olderVersionOpenedWithoutImport) {
+							// Opening the saved version updates recency, while its content and identity stay unchanged.
+							assert.ok(Date.parse(old[name]) >= Date.parse(value));
+						}
+						else {
+							assert.deepEqual(old[name], value);
+						}
+					}
 					assert.equal(remoteWrites, 0);
 					assert.ok(
 						await page.evaluate(
@@ -632,6 +647,7 @@ export async function runAssemblyCoreCourseWorkflow(t, definition) {
 						role,
 						width,
 						revision: fixture.revision,
+						...(workflowEvidence ? { workflowEvidence } : {}),
 						...(definition.localSource ? { sourceKind: "versioned-course-assets", revisionKind: fixture.revisionKind } : {}),
 						key,
 						coreAction: core.href,
@@ -688,7 +704,7 @@ export async function runAssemblyCoreCourseWorkflow(t, definition) {
 				}
 			}
 		}
-		assert.equal(profiles.length, 4);
+		assert.equal(profiles.length, roles.length * 2);
 		await writeFile(
 			join(output, `${mode}-${definition.kind}-course-proof.json`),
 			`${JSON.stringify({ profiles }, null, 2)}\n`

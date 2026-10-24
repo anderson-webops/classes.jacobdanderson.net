@@ -278,7 +278,7 @@ const javascriptLevel1SourceCourse: RawCourse = {
 				{
 					title: "Variables and Data Types",
 					content:
-						'Use let and const for numbers, strings, booleans, null and undefined. Assign values, use printToScreen(), explain comments, and show converting string numbers with a leading +. Compare "1" + "1" to 1 + 1.',
+						'Use `let` for a binding that can be reassigned and `const` for one that cannot. Store numbers, strings and booleans, then display them with `printToScreen()`. After `let value;`, `value` is `undefined`. `null` is a primitive value used to represent an intentional absence; `typeof null` returns "object", so test for it with `value === null`. Explain comments and convert a numeric string with a leading `+`. Compare "1" + "1" with 1 + 1.',
 					projectLink: "https://codepen.io/junilearning/pen/eYpBWWX"
 				},
 				{
