@@ -4098,7 +4098,7 @@ describe("course text quality normalization", () => {
 			expect(courseText).not.toMatch(/\bsupplemental [23]\b/i);
 			if (courseId === "javascript-level-1-javascript-superstar") {
 				expect(courseText).toContain(
-					"Combining Loops and Variables Transfer Practice"
+					"JSS4 Supplemental Project 1: Debugging Football"
 				);
 				expect(courseText).toContain(
 					"Dynamic Websites with JavaScript Extension Practice"

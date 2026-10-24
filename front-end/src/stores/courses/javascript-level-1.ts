@@ -546,32 +546,6 @@ const javascriptLevel1SourceCourse: RawCourse = {
 					projectLink: "https://codepen.io/junilearning/pen/gOPRqPr",
 					solutionLink:
 						"https://codepen.io/junilearning/pen/eb1d816cbecce4d20944284fc085ae36"
-				},
-				{
-					title: "Combining Loops and Variables Transfer Practice",
-					content: buildProjectGuidance({
-						courseFamily: "web development",
-						moduleTitle: "JSS4 Combining Loops and Variables",
-						projectKind: "extension",
-						hasReference: true
-					}),
-					projectLink:
-						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/JSS-05-jss4-combining-loops-and-variables-supplemental-2/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/JSS-05-jss4-combining-loops-and-variables-supplemental-2/solution"
-				},
-				{
-					title: "Combining Loops and Variables Extension Practice",
-					content: buildProjectGuidance({
-						courseFamily: "web development",
-						moduleTitle: "JSS4 Combining Loops and Variables",
-						projectKind: "extension",
-						hasReference: true
-					}),
-					projectLink:
-						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/JSS-06-jss4-combining-loops-and-variables-supplemental-3/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/JSS-06-jss4-combining-loops-and-variables-supplemental-3/solution"
 				}
 			]
 		},
