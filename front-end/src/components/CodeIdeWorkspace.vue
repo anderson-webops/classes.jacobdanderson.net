@@ -54,6 +54,7 @@ import {
 } from "@/modules/ideDiagnostics";
 import { startJavaPreview } from "@/modules/javaIdeWorker";
 import { javaNativeBuildInstructions } from "@/modules/javaNativeBuildInstructions";
+import { javascriptCourseResource } from "@/modules/javascriptCourseResources";
 import { createKarelWorldPlaybackController } from "@/modules/karelWorldPlayback";
 import { linuxBuildInstructions } from "@/modules/linuxBuildInstructions";
 import {
@@ -1179,6 +1180,8 @@ const usesNativeSourceWorkspace = computed(
 		selectedProject.value?.mode === "rust"
 );
 const webProjectRequirement = computed(() => {
+	if (javascriptCourseResource(selectedProject.value?.starterUrl ?? ""))
+		return "Runs from the exported index.html.";
 	const selected = webCourseResource(selectedProject.value?.starterUrl ?? "");
 	if (!selected) return "Requires a local web server.";
 	return selected.definition.workflow === "standalone"
@@ -8195,6 +8198,15 @@ defineExpose({ stop: stopCurrentProject, runIsolated, releaseIsolatedPointer });
 			</p>
 			<p v-else-if="pendingRouteProject.kind === 'share'">
 				Source: shared project link
+			</p>
+			<p
+				v-if="javascriptCourseResource(requestedStarterUrl)"
+				data-testid="ide-course-source-version"
+			>
+				Course copy:
+				{{ javascriptCourseResource(requestedStarterUrl)?.title }} v{{
+					javascriptCourseResource(requestedStarterUrl)?.version
+				}}.
 			</p>
 			<p
 				v-if="routeProjectImportError"

@@ -1222,6 +1222,28 @@ jobs:
                   if-no-files-found: error
                   retention-days: 7
 
+            - name: Verify JavaScript survey consent, saved roles and exports
+              env:
+                  JAVASCRIPT_SURVEY_BROWSER_DIR: output/javascript-survey-browser
+                  COURSE_IMPORT_SCREENSHOT_DIR: output/javascript-survey-screenshots
+              run: node --test test/javascript-welcome-survey-course-browser.test.mjs
+
+            - name: Run actual exported JavaScript survey files offline
+              env:
+                  JAVASCRIPT_SURVEY_BROWSER_DIR: output/javascript-survey-browser
+              run: node --test test/javascript-survey-exported-browser.test.mjs
+
+            - name: Retain JavaScript survey source and native browser evidence
+              if: always()
+              uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+              with:
+                  name: javascript-survey-workflows
+                  path: |
+                      output/javascript-survey-browser/
+                      output/javascript-survey-screenshots/
+                  if-no-files-found: error
+                  retention-days: 7
+
             - name: Verify Network Systems foundation imports and notebook reuse
               env:
                   NETWORK_BROWSER_EXPORT_PROOF_DIR: output/network-exports
