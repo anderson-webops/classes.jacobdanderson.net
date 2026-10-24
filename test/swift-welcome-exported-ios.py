@@ -18,8 +18,11 @@ parser.add_argument("--browser", type=Path, required=True)
 parser.add_argument("--proof", type=Path, required=True)
 parser.add_argument("--course", choices=("welcome", "networking", "gallery", "hobby", "map", "capstone"), default="welcome")
 parser.add_argument("--extended-welcome", action="store_true")
+parser.add_argument("--diagnostic-map-case", action="store_true",
+                    help="Run only the small iPhone reference at largest text; full acceptance remains false")
 args = parser.parse_args()
 assert not args.extended_welcome or args.course == "welcome"
+assert not args.diagnostic_map_case or (args.course == "map" and not args.extended_welcome)
 args.browser = args.browser.resolve()
 args.proof = args.proof.resolve()
 OUT = args.proof.parent
@@ -122,6 +125,8 @@ record = dict(at=now(), accepted=False, sourceRevision=fixture["revision"],
 canonical_courses = {"gallery": "MediaGalleryApp.swift", "hobby": "MultiTabHobbyApp.swift",
                      "map": "MapPlacesApp.swift", "capstone": "PublishReadyCapstoneApp.swift"}
 record["course"] = args.course
+if args.diagnostic_map_case:
+    record.update(diagnosticOnly=True, fullCoverageRequired=8)
 variant_native = args.course in canonical_courses or args.extended_welcome
 if variant_native:
     harness = (["test/swift-welcome-exported-ios.py", "test/swift-welcome-xcode.py",
@@ -131,7 +136,16 @@ if variant_native:
                 "test/swift-canonical-xcode.py", "test/fixtures/swift-canonical-uitests.swift"])
     record["harnessSourceHashes"] = {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in harness}
     record["installedApps"] = []
+    if args.course == "hobby":
+        recognizer_source = "test/swift-hobby-text-recognition.swift"
+        record["harnessSourceHashes"][recognizer_source] = hashlib.sha256((ROOT / recognizer_source).read_bytes()).hexdigest()
+        record["renderedTextChecks"] = []
 args.proof.write_text(json.dumps(record, indent=2) + "\n")
+recognizer = None
+if args.course == "hobby":
+    recognizer = WORK / "recognize-course-text"
+    run("build-text-recognizer", ["/usr/bin/xcrun", "swiftc", "-module-cache-path", str(WORK / "text-module-cache"),
+                                   str(ROOT / "test/swift-hobby-text-recognition.swift"), "-o", str(recognizer)])
 sdk = run("sdk-path", ["/usr/bin/xcrun", "--sdk", "iphonesimulator", "--show-sdk-path"]).decode().strip()
 sdk_version = run("sdk-version", ["/usr/bin/xcrun", "--sdk", "iphonesimulator", "--show-sdk-version"]).decode().strip()
 assert version(sdk_version) >= (17, 0, 0)
@@ -187,6 +201,8 @@ inputs = {"profiles": []}
 variants = (["standard", "long-note"] if args.extended_welcome else
             ["standard", "largest-text"] if args.course in canonical_courses else
             ["standard"] if args.course == "welcome" else ["standard", "long-data"])
+if args.diagnostic_map_case:
+    variants = ["largest-text"]
 for variant in variants:
     project_root = WORK / ("xcode" if args.course == "welcome" and not args.extended_welcome else "xcode-" + variant)
     generator = ROOT / "test" / ("swift-welcome-extended-xcode.py" if args.extended_welcome else
@@ -199,6 +215,8 @@ for variant in variants:
         command += ["--course", args.course]
     run("project-inputs-" + variant, command)
     generated = json.loads((project_root / "inputs.json").read_text())
+    if args.diagnostic_map_case:
+        generated["profiles"] = [x for x in generated["profiles"] if x["role"] == "solution"]
     for profile in generated["profiles"]:
         profile.update(project=generated["project"], variant=variant,
                        derivedData=str(WORK / "derived") if args.course == "welcome" and not args.extended_welcome else str(WORK / "derived" / variant))
@@ -224,7 +242,7 @@ large = next((x for name in ["iPhone 17 Pro Max", "iPhone 16 Pro Max", "iPhone 1
               for x in phones if x["name"] == name), None)
 assert small and large and small["identifier"] != large["identifier"], "Two installed iPhone size profiles are required"
 record["runtime"] = dict(identifier=runtime["identifier"], version=runtime["version"])
-for size, model in [("small", small), ("large", large)]:
+for size, model in ([("small", small)] if args.diagnostic_map_case else [("small", small), ("large", large)]):
     device = run("create-" + size, ["/usr/bin/xcrun", "simctl", "create", task_id + "-" + size,
                                   model["identifier"], runtime["identifier"]]).decode().strip()
     assert re.fullmatch(r"[0-9A-Fa-f-]{36}", device)
@@ -279,6 +297,33 @@ for size, model in [("small", small), ("large", large)]:
                                                 processExitCode=status, testSummary=summary))
             args.proof.write_text(json.dumps(record, indent=2) + "\n")
             assert passed, (label, status, summary)
+            if args.course == "hobby" and profile["role"] == "solution":
+                visual = WORK / "rendered-text" / label
+                run("text-attachments-" + label, ["/usr/bin/xcrun", "xcresulttool", "export", "attachments",
+                                                   "--path", str(result), "--output-path", str(visual)])
+                attachments = [a for entry in json.loads((visual / "manifest.json").read_text())
+                               for a in entry["attachments"] if a["exportedFileName"].endswith(".png")
+                               and not a["isAssociatedWithFailure"]]
+                expected_text = {
+                    "Complete Hobby summary": "Scout a neighborhood and collect strong compositions.",
+                    "Complete Hobby schedule": "Scheduled for Tuesday",
+                    "Complete Hobby save action": "Save Favorite",
+                    "Complete Hobby remove action": "Remove Favorite",
+                }
+                for name, expected in expected_text.items():
+                    chosen = [a for a in attachments if a["suggestedHumanReadableName"].startswith(name + "_")]
+                    assert len(chosen) == 1, (label, name, chosen)
+                    image = visual / chosen[0]["exportedFileName"]
+                    observations = json.loads(run("text-" + label + "-" + name.lower().replace(" ", "-"),
+                                                  [str(recognizer), str(image)]))[0]["observations"]
+                    actual = " ".join(x["text"] for x in observations)
+                    normalize = lambda value: re.sub("[^a-z0-9]", "", value.lower())
+                    matched = normalize(expected) in normalize(actual)
+                    record["renderedTextChecks"].append(dict(case=label, attachment=chosen[0]["suggestedHumanReadableName"],
+                                                            imageSha256=hashlib.sha256(image.read_bytes()).hexdigest(),
+                                                            expected=expected, observed=actual, matched=matched))
+                    args.proof.write_text(json.dumps(record, indent=2) + "\n")
+                    assert matched, (label, name, expected, actual)
     finally:
         try:
             run("shutdown-" + size, ["/usr/bin/xcrun", "simctl", "shutdown", device])
@@ -292,6 +337,15 @@ record.update(at=now(), accepted=len(record["exports"]) == 8 and len(record["sim
               and len(record["ownedSimulatorsDeleted"]) == 2)
 if variant_native:
     record["accepted"] &= len(record["installedApps"]) == 8
+if args.course == "hobby":
+    record["accepted"] &= len(record["renderedTextChecks"]) == 16 and all(x["matched"] for x in record["renderedTextChecks"])
 args.proof.write_text(json.dumps(record, indent=2) + "\n")
-assert record["accepted"]
+if args.diagnostic_map_case:
+    record["diagnosticPassed"] = not record["accepted"] and len(record["exports"]) == 8 \
+        and len(record["simulatorTests"]) == len(record["installedApps"]) == 1 \
+        and record["simulatorTests"][0]["passed"] and len(record["ownedSimulatorsDeleted"]) == 1
+    args.proof.write_text(json.dumps(record, indent=2) + "\n")
+    assert record["diagnosticPassed"]
+else:
+    assert record["accepted"]
 print(json.dumps(record, indent=2))

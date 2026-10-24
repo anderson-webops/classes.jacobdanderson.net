@@ -8,26 +8,38 @@ final class CanonicalCourseUITests: XCTestCase {
     }
 
     @MainActor
-    private func reveal(_ element: XCUIElement, in app: XCUIApplication) {
-        for attempt in 0..<16 {
-            if element.exists && element.isHittable { return }
-            let list = app.collectionViews.firstMatch
-            let scroll = list.exists ? list : app.scrollViews.firstMatch
-            let viewport = scroll.exists ? scroll.frame : app.frame
+    private func reveal(_ element: XCUIElement, in app: XCUIApplication, fully: Bool = false) {
+        for attempt in 0..<24 {
+            let bounds = app.frame
+            let navigation = app.navigationBars.firstMatch
+            let top = navigation.exists ? max(bounds.minY, navigation.frame.maxY) : bounds.minY
+            let tabs = app.tabBars.buttons.allElementsBoundByIndex.map { $0.frame }
+            let bottom = tabs.filter { !$0.isEmpty && $0.minY > top }.map { $0.minY }.min() ?? bounds.maxY
+            let viewport = CGRect(x: bounds.minX, y: top, width: bounds.width, height: max(1, bottom - top))
             let target = element.exists ? element.frame : .zero
-            let down = !target.isEmpty ? target.midY < viewport.midY : attempt >= 8
-            if scroll.exists {
-                let start = scroll.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
-                let distance = max(12, min(200, viewport.height * 0.35))
-                start.press(forDuration: 0.05, thenDragTo: start.withOffset(
-                    CGVector(dx: 0, dy: down ? distance : -distance)))
-            } else if down {
-                app.swipeDown()
+            if element.exists && element.isHittable && (!fully || viewport.contains(target)) { return }
+
+            let movement: CGFloat
+            if target.isEmpty {
+                movement = attempt < 12 ? -150 : 150
+            } else if target.maxY > viewport.maxY {
+                movement = -min(180, max(40, target.maxY - viewport.maxY + 8))
+            } else if target.minY < viewport.minY {
+                movement = min(180, max(40, viewport.minY - target.minY + 8))
             } else {
-                app.swipeUp()
+                movement = attempt < 12 ? -30 : 30
             }
+            // The outer edge avoids map panning and other interactive content.
+            let start = app.coordinate(withNormalizedOffset: .zero).withOffset(
+                CGVector(dx: bounds.width * 0.97, dy: viewport.midY - bounds.minY))
+            start.press(
+                forDuration: 0.05,
+                thenDragTo: start.withOffset(CGVector(dx: 0, dy: movement)),
+                withVelocity: .slow,
+                thenHoldForDuration: 0.4)
         }
-        XCTAssertTrue(element.isHittable, app.debugDescription)
+        retain("Unreachable course content", in: app)
+        XCTFail("The requested content is not reachable: \(element.debugDescription)")
     }
 
     @MainActor
@@ -36,6 +48,11 @@ final class CanonicalCourseUITests: XCTestCase {
         attachment.name = name
         attachment.lifetime = .keepAlways
         add(attachment)
+    }
+
+    @MainActor
+    private func revealFully(_ element: XCUIElement, in app: XCUIApplication) {
+        reveal(element, in: app, fully: true)
     }
 
     @MainActor
@@ -90,11 +107,18 @@ final class CanonicalCourseUITests: XCTestCase {
         reveal(activity, in: app)
         activity.tap()
         XCTAssertTrue(app.navigationBars["Photo Walk"].waitForExistence(timeout: 5))
-        reveal(app.staticTexts["Scout a neighborhood and collect strong compositions."], in: app)
+        revealFully(app.staticTexts["Scout a neighborhood and collect strong compositions."], in: app)
+        retain("Complete Hobby summary", in: app)
+        revealFully(app.staticTexts["Scheduled for Tuesday"], in: app)
+        retain("Complete Hobby schedule", in: app)
         let save = button("Save Favorite", in: app)
-        reveal(save, in: app)
+        revealFully(save, in: app)
+        retain("Complete Hobby save action", in: app)
         save.tap()
-        XCTAssertTrue(button("Remove Favorite", in: app).waitForExistence(timeout: 5))
+        let remove = button("Remove Favorite", in: app)
+        XCTAssertTrue(remove.waitForExistence(timeout: 5))
+        revealFully(remove, in: app)
+        retain("Complete Hobby remove action", in: app)
         retain("Hobby saved detail", in: app)
         app.navigationBars.buttons.firstMatch.tap()
         app.tabBars.buttons["Favorites"].tap()
@@ -112,19 +136,19 @@ final class CanonicalCourseUITests: XCTestCase {
         XCTAssertTrue(app.navigationBars["Places"].waitForExistence(timeout: 15))
         let cafe = app.buttons.matching(
             NSPredicate(format: "label CONTAINS %@", "Neighborhood Cafe")).firstMatch
-        reveal(cafe, in: app)
+        revealFully(cafe, in: app)
         cafe.tap()
         let detail = reference
             ? "Useful for practicing map annotations, category tags, and place metadata."
             : "TODO: Add a stronger detail card with visit notes and a callout style."
-        reveal(app.staticTexts[detail], in: app)
+        revealFully(app.staticTexts[detail], in: app)
         retain("Selected local place", in: app)
         if reference {
             let harbor = app.buttons.matching(
                 NSPredicate(format: "label CONTAINS %@", "Harbor Overlook")).firstMatch
-            reveal(harbor, in: app)
+            revealFully(harbor, in: app)
             harbor.tap()
-            reveal(app.staticTexts["This stop works well for combining a scenic map card with a compact planning note."], in: app)
+            revealFully(app.staticTexts["This stop works well for combining a scenic map card with a compact planning note."], in: app)
             XCTAssertFalse(app.staticTexts[detail].exists)
             retain("Changed selected place", in: app)
         }
@@ -143,7 +167,7 @@ final class CanonicalCourseUITests: XCTestCase {
             waitForExpectations(timeout: 5)
             XCTAssertEqual(task.value as? String, "1")
         } else {
-            reveal(app.staticTexts["Prepare TestFlight build"], in: app)
+            revealFully(app.staticTexts["Prepare TestFlight build"], in: app)
         }
         retain("Capstone checklist", in: app)
         app.tabBars.buttons["Explore"].tap()
@@ -152,7 +176,10 @@ final class CanonicalCourseUITests: XCTestCase {
         reveal(app.staticTexts[explore], in: app)
         app.tabBars.buttons["Settings"].tap()
         XCTAssertTrue(app.navigationBars["Settings"].waitForExistence(timeout: 5))
-        reveal(app.staticTexts[reference ? "Internal TestFlight" : "Settings Placeholder"], in: app)
+        let metadata = reference
+            ? app.staticTexts.matching(NSPredicate(format: "label CONTAINS %@", "Internal TestFlight")).firstMatch
+            : app.staticTexts["Settings Placeholder"]
+        revealFully(metadata, in: app)
         retain("Capstone informational metadata", in: app)
         app.tabBars.buttons["Home"].tap()
         if reference {
