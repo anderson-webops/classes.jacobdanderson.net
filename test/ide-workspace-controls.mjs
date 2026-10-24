@@ -36,7 +36,7 @@ export async function downloadProjectZip(page) {
 			inline: "nearest",
 			behavior: "instant"
 		}));
-		await page.$eval("#code-ide-settings-panel", panel => {
+		await page.$eval("#code-ide-settings-panel", (panel) => {
 			panel.scrollTop = panel.scrollHeight;
 		});
 		await page.waitForFunction(() => {

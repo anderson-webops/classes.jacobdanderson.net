@@ -31,7 +31,10 @@ let large = CGRect(x: 0, y: 189, width: 440, height: 767)
 let cafe = CGRect(x: 16, y: 753, width: 408, height: 234)
 precondition(!cafe.contains(CGPoint(x: 426.8, y: 572.5)),
              "The original failed gesture missed the visible Cafe row")
-verify("observed large-phone Cafe", large, cafe, -40, insideVisibleTarget: true)
+let cafeMovement = courseScrollMovement(viewport: large, target: cafe, attempt: 0)
+precondition(cafeMovement == -120,
+             "The observed Cafe case needs a full scroll gesture rather than repeated 40-point nudges")
+verify("observed large-phone Cafe", large, cafe, cafeMovement, insideVisibleTarget: true)
 let small = CGRect(x: 0, y: 96, width: 375, height: 571)
 verify("small partially below", small, CGRect(x: 16, y: 560, width: 343, height: 150),
        -100, insideVisibleTarget: true)
@@ -50,7 +53,19 @@ verify("offset viewport", CGRect(x: 20, y: 70, width: 320, height: 500),
        CGRect(x: 28, y: 430, width: 304, height: 200), -88, insideVisibleTarget: true)
 verify("clipped Capstone switch group", CGRect(x: 0, y: 96, width: 375, height: 504),
        CGRect(x: 16, y: 436.7, width: 343, height: 187.5), -40, insideVisibleTarget: true)
-print("Ten course scroll geometry checks passed")
+precondition(courseScrollMovement(viewport: large,
+             target: CGRect(x: 16, y: 100, width: 408, height: 100), attempt: 0) == 120)
+precondition(courseScrollMovement(viewport: small,
+             target: CGRect(x: 16, y: 1000, width: 343, height: 150), attempt: 0) == -180)
+precondition(courseScrollMovement(viewport: small,
+             target: CGRect(x: 16, y: -1000, width: 343, height: 150), attempt: 0) == 180)
+precondition(courseScrollMovement(viewport: large, target: .zero, attempt: 0) == -150)
+precondition(courseScrollMovement(viewport: large, target: .zero, attempt: 12) == 150)
+precondition(courseScrollMovement(viewport: small,
+             target: CGRect(x: 16, y: 300, width: 343, height: 100), attempt: 0) == -120)
+precondition(courseScrollMovement(viewport: small,
+             target: CGRect(x: 16, y: 300, width: 343, height: 100), attempt: 12) == 120)
+print("Eighteen course scroll geometry checks passed")
 """
 
 
@@ -89,8 +104,8 @@ with tempfile.TemporaryDirectory(prefix="classes-scroll-geometry-") as directory
     main.write_text(source + checks)
     run(["/usr/bin/xcrun", "swiftc", str(main), "-o", str(executable)])
     result = run([str(executable)])
-    assert result.strip() == "Ten course scroll geometry checks passed"
-    print(json.dumps(dict(accepted=True, checks=10,
+    assert result.strip() == "Eighteen course scroll geometry checks passed"
+    print(json.dumps(dict(accepted=True, checks=18,
                           fixtureSha256=hashlib.sha256(fixture.read_bytes()).hexdigest(),
                           scope="Actual scroll-origin function and observed failure geometry; native UI remains separately required")),
           flush=True)
