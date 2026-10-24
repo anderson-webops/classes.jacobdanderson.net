@@ -1,5 +1,6 @@
 import type { PythonIdeFile } from "@/modules/pythonIde";
 import { javascriptCombiningResources } from "@/modules/javascriptCombiningResources";
+import { javascriptConditionalsResources } from "@/modules/javascriptConditionalsResources";
 import { javascriptFirstModuleResources } from "@/modules/javascriptFirstModuleResources";
 import { javascriptLoopsResources } from "@/modules/javascriptLoopsResources";
 import { javascriptOperatorsResources } from "@/modules/javascriptOperatorsResources";
@@ -24,7 +25,8 @@ const roles: readonly CourseRole[] = [
 	...javascriptFirstModuleResources,
 	...javascriptOperatorsResources,
 	...javascriptLoopsResources,
-	...javascriptCombiningResources
+	...javascriptCombiningResources,
+	...javascriptConditionalsResources
 ];
 
 export function javascriptCourseResource(value: string) {

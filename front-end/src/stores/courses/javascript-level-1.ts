@@ -564,6 +564,7 @@ const javascriptLevel1SourceCourse: RawCourse = {
 				},
 				{
 					title: "JSS5 Project 1: A-Checker",
+					preserveInstructions: true,
 					content:
 						"Prompt for a word and check whether it contains the letter `a`. Use a loop to inspect characters one at a time and a conditional to detect a match. Print a clear result for words that contain `a` and words that do not, then test uppercase, lowercase, and empty input if the project allows it.",
 					projectLink: "https://codepen.io/junilearning/pen/QWyqrLo",
@@ -577,6 +578,7 @@ const javascriptLevel1SourceCourse: RawCourse = {
 				},
 				{
 					title: "JSS5 Project 2: What Grade Is This?",
+					preserveInstructions: true,
 					content:
 						"Given a number from 0 through 100, print the matching letter grade with an `if`/`else if`/`else` chain. Decide how boundary values such as 90, 80, 70, and invalid scores are handled before coding. Test the exact boundary values as well as one score in the middle of each grade range.",
 					projectLink: "https://codepen.io/junilearning/pen/yLezjje",
@@ -590,6 +592,7 @@ const javascriptLevel1SourceCourse: RawCourse = {
 				},
 				{
 					title: "JSS5 Project 3: Wholesome Memes",
+					preserveInstructions: true,
 					content:
 						"Convert a sentence to alternating case, such as `tHaT lOoKs LiKe ThIs`. Loop through the characters, use conditionals or index parity to decide uppercase versus lowercase, and preserve spaces or punctuation intentionally. An extension can use ASCII checks so only alphabetic characters affect the alternating pattern.",
 					projectLink: "https://codepen.io/junilearning/pen/wvMrXdG",
@@ -600,6 +603,7 @@ const javascriptLevel1SourceCourse: RawCourse = {
 			supplementalProjects: [
 				{
 					title: "JSS5 Supplemental Project 1: Login Credentials",
+					preserveInstructions: true,
 					content:
 						"Build a simple login loop that keeps prompting until the username and password match the expected credentials. Track attempts if useful, give clear failure feedback, and alert success only when both values match. Make sure the loop has a reliable stopping condition so it does not continue after a correct login.",
 					projectLink: "https://codepen.io/junilearning/pen/QWyqxqp",
@@ -608,6 +612,7 @@ const javascriptLevel1SourceCourse: RawCourse = {
 				},
 				{
 					title: "JSS5 Supplemental Project 2: Snake Eyes",
+					preserveInstructions: true,
 					content:
 						"Simulate rolling two dice until both dice show 1. Each iteration rolls both dice, counts the attempt, and decides whether the stopping condition has been met. Print the total number of rolls and enough sample roll information to verify that the loop is actually waiting for snake eyes.",
 					projectLink: "https://codepen.io/junilearning/pen/jOWGKZw",
@@ -616,6 +621,7 @@ const javascriptLevel1SourceCourse: RawCourse = {
 				},
 				{
 					title: "JSS5 Supplemental Project 3: Debugging the Favorite Fruit Guesser",
+					preserveInstructions: true,
 					content:
 						"Debug a fruit guesser that uses color and taste conditionals. First identify the intended decision tree, then check whether each condition is testing the correct variable and whether the branches are ordered correctly. Test at least one input that matches, one that almost matches, and one that falls through to the default result.",
 					projectLink: "https://codepen.io/junilearning/pen/PoZdQeW",
