@@ -1603,6 +1603,32 @@ jobs:
             - name: Verify all in-memory tracker browser exports against model contracts and the iOS SDK
               run: node scripts/classes-family-heavy-task.mjs -- python3 test/swift-tracker-exported-contracts.py --course tracker --browser output/swift-tracker-workflows/swift-tracker-browser --proof "$RUNNER_TEMP/swift-tracker-models-ios/tracker/proof.json"
 
+            - name: Wait for model-runner load to settle before SwiftData
+              run: |
+                  python3 - <<'PY'
+                  import datetime
+                  import json
+                  import os
+                  from pathlib import Path
+                  import time
+
+                  proof = Path(os.environ["RUNNER_TEMP"]) / "swift-tracker-models-ios/swiftdata-stage-readiness.json"
+                  proof.parent.mkdir(parents=True, exist_ok=True)
+                  samples = []
+                  deadline = time.monotonic() + 600
+                  while True:
+                      load = os.getloadavg()[0]
+                      samples.append({"at": datetime.datetime.now(datetime.timezone.utc).isoformat(), "load": load})
+                      ready = load <= 8
+                      proof.write_text(json.dumps({"ready": ready, "maximumLoad": 8, "samples": samples}, indent=2) + "\n")
+                      print(f"Hosted Mac load: {load:.2f}; required maximum: 8", flush=True)
+                      if ready:
+                          break
+                      if time.monotonic() >= deadline:
+                          raise SystemExit("Model runner did not settle within ten minutes; SwiftData checks have not run")
+                      time.sleep(10)
+                  PY
+
             - name: Verify SwiftData browser exports with Swift Testing and fresh-process storage contracts
               run: node scripts/classes-family-heavy-task.mjs -- python3 test/swift-tracker-exported-contracts.py --course swiftdata --browser output/swift-tracker-workflows/swift-swiftdata-browser --proof "$RUNNER_TEMP/swift-tracker-models-ios/swiftdata/proof.json"
 
@@ -1613,6 +1639,7 @@ jobs:
                   name: swift-tracker-models-ios
                   path: |
                       ${{ runner.temp }}/swift-tracker-models-ios/runner-readiness.json
+                      ${{ runner.temp }}/swift-tracker-models-ios/swiftdata-stage-readiness.json
                       ${{ runner.temp }}/swift-tracker-models-ios/**/proof.json
                       ${{ runner.temp }}/swift-tracker-models-ios/**/contracts-proof.json
                       ${{ runner.temp }}/swift-tracker-models-ios/**/processes.jsonl
