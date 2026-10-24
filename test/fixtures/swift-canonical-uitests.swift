@@ -32,7 +32,11 @@ final class CanonicalCourseUITests: XCTestCase {
             // The outer edge avoids map panning and other interactive content.
             let start = app.coordinate(withNormalizedOffset: .zero).withOffset(
                 CGVector(dx: bounds.width * 0.97, dy: viewport.midY - bounds.minY))
-            start.press(forDuration: 0.05, thenDragTo: start.withOffset(CGVector(dx: 0, dy: movement)))
+            start.press(
+                forDuration: 0.05,
+                thenDragTo: start.withOffset(CGVector(dx: 0, dy: movement)),
+                withVelocity: .slow,
+                thenHoldForDuration: 0.4)
         }
         retain("Unreachable course content", in: app)
         XCTFail("The requested content is not reachable: \(element.debugDescription)")
