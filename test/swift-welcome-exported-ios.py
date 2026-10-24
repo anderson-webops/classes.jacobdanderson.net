@@ -16,7 +16,7 @@ ROOT = Path(__file__).resolve().parents[1]
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("--browser", type=Path, required=True)
 parser.add_argument("--proof", type=Path, required=True)
-parser.add_argument("--course", choices=("welcome", "networking"), default="welcome")
+parser.add_argument("--course", choices=("welcome", "networking", "gallery", "hobby", "map", "capstone"), default="welcome")
 args = parser.parse_args()
 args.browser = args.browser.resolve()
 args.proof = args.proof.resolve()
@@ -117,6 +117,14 @@ record = dict(at=now(), accepted=False, sourceRevision=fixture["revision"],
               exports=[], simulatorTests=[], ownedSimulatorsCreated=[], ownedSimulatorsDeleted=[],
               resourcePolicy=dict(sharedLockOwner=owner, entryLoadGuardEnabled=True,
                                   buildsAndSimulatorsRunSequentially=True))
+canonical_courses = {"gallery": "MediaGalleryApp.swift", "hobby": "MultiTabHobbyApp.swift",
+                     "map": "MapPlacesApp.swift", "capstone": "PublishReadyCapstoneApp.swift"}
+record["course"] = args.course
+if args.course in canonical_courses:
+    record["harnessSourceHashes"] = {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in [
+        "test/swift-welcome-exported-ios.py", "test/swift-welcome-xcode.py",
+        "test/swift-canonical-xcode.py", "test/fixtures/swift-canonical-uitests.swift"]}
+    record["installedApps"] = []
 args.proof.write_text(json.dumps(record, indent=2) + "\n")
 sdk = run("sdk-path", ["/usr/bin/xcrun", "--sdk", "iphonesimulator", "--show-sdk-path"]).decode().strip()
 sdk_version = run("sdk-version", ["/usr/bin/xcrun", "--sdk", "iphonesimulator", "--show-sdk-version"]).decode().strip()
@@ -130,9 +138,10 @@ record.update(sdk=sdk, sdkVersion=sdk_version, target=target, languageMode="Swif
               xcodeVersion=run("xcode-version", ["/usr/bin/xcrun", "xcodebuild", "-version"]).decode().strip())
 for profile in profiles:
     role = profile["role"]
-    source_names = ("ContentView.swift", "WelcomeProfileApp.swift") if args.course == "welcome" else (
-        "APIReferenceApp.swift", "ContentView.swift", "ReferenceClient.swift", "ReferenceStore.swift")
-    shared_names = {"README.md"} if args.course == "welcome" else {"README.md", "verify-networking.py", "tests/ReferenceContracts.swift"}
+    source_names = (("ContentView.swift", canonical_courses[args.course]) if args.course in canonical_courses else
+                    ("ContentView.swift", "WelcomeProfileApp.swift") if args.course == "welcome" else
+                    ("APIReferenceApp.swift", "ContentView.swift", "ReferenceClient.swift", "ReferenceStore.swift"))
+    shared_names = {"README.md", "verify-networking.py", "tests/ReferenceContracts.swift"} if args.course == "networking" else {"README.md"}
     expected_names = {role + "/" + name for name in source_names} | shared_names
     for kind in ("exact", "edited"):
         archive = args.browser / profile[kind + "Archive"]
@@ -169,18 +178,22 @@ for profile in profiles:
         args.proof.write_text(json.dumps(record, indent=2) + "\n")
 
 inputs = {"profiles": []}
-variants = ["standard"] if args.course == "welcome" else ["standard", "long-data"]
+variants = (["standard", "largest-text"] if args.course in canonical_courses else
+            ["standard"] if args.course == "welcome" else ["standard", "long-data"])
 for variant in variants:
     project_root = WORK / ("xcode" if args.course == "welcome" else "xcode-" + variant)
-    generator = ROOT / "test" / ("swift-welcome-xcode.py" if args.course == "welcome" else "swift-networking-xcode.py")
+    generator = ROOT / "test" / ("swift-canonical-xcode.py" if args.course in canonical_courses else
+                                 "swift-welcome-xcode.py" if args.course == "welcome" else "swift-networking-xcode.py")
     command = [sys.executable, str(generator), "--browser", str(args.browser), "--output", str(project_root)]
-    if args.course == "networking":
+    if args.course != "welcome":
         command += ["--variant", variant]
+    if args.course in canonical_courses:
+        command += ["--course", args.course]
     run("project-inputs-" + variant, command)
     generated = json.loads((project_root / "inputs.json").read_text())
     for profile in generated["profiles"]:
         profile.update(project=generated["project"], variant=variant,
-                       derivedData=str(WORK / "derived" / variant) if args.course == "networking" else str(WORK / "derived"))
+                       derivedData=str(WORK / "derived") if args.course == "welcome" else str(WORK / "derived" / variant))
         inputs["profiles"].append(profile)
         run("build-" + variant + "-" + profile["role"], [
             "/usr/bin/xcrun", "xcodebuild", "build-for-testing", "-project", profile["project"],
@@ -214,12 +227,27 @@ for size, model in [("small", small), ("large", large)]:
         run("ready-" + size, ["/usr/bin/xcrun", "simctl", "bootstatus", device, "-b"], timeout=300)
         record_booted_host(size)
         for profile in inputs["profiles"]:
-            label = profile["role"] + "-" + size + ("-" + profile["variant"] if args.course == "networking" else "")
-            if args.course == "networking":
+            label = profile["role"] + "-" + size + ("" if args.course == "welcome" else "-" + profile["variant"])
+            if args.course != "welcome":
                 content_size = profile["contentSize"]
                 run("set-content-size-" + label, ["/usr/bin/xcrun", "simctl", "ui", device, "content_size", content_size])
                 observed = run("get-content-size-" + label, ["/usr/bin/xcrun", "simctl", "ui", device, "content_size"]).decode().strip()
                 assert observed == content_size, (label, observed, content_size)
+            if args.course in canonical_courses:
+                app = Path(profile["derivedData"]) / "Build/Products/Debug-iphonesimulator" / (profile["scheme"] + ".app")
+                run("install-" + label, ["/usr/bin/xcrun", "simctl", "install", device, str(app)])
+                installed = Path(run("installed-app-" + label, ["/usr/bin/xcrun", "simctl", "get_app_container", device, profile["bundleIdentifier"], "app"]).decode().strip())
+                binary_names = [profile["scheme"], profile["scheme"] + ".debug.dylib"]
+                hashes = {}
+                for name in binary_names:
+                    assert (app / name).is_file() and (installed / name).is_file()
+                    digest = hashlib.sha256((app / name).read_bytes()).hexdigest()
+                    assert hashlib.sha256((installed / name).read_bytes()).hexdigest() == digest
+                    hashes[name] = digest
+                record["installedApps"].append(dict(case=label, device=device, bundleIdentifier=profile["bundleIdentifier"],
+                                                    builtApp=str(app), installedApp=str(installed), binaryHashes=hashes,
+                                                    builtAndInstalledBytesMatch=True))
+                args.proof.write_text(json.dumps(record, indent=2) + "\n")
             result = RESULTS / (label + ".xcresult")
             status, stdout, stderr = run("ui-" + label, [
                 "/usr/bin/xcrun", "xcodebuild", "test-without-building", "-project", profile["project"],
@@ -254,6 +282,8 @@ for size, model in [("small", small), ("large", large)]:
 record.update(at=now(), accepted=len(record["exports"]) == 8 and len(record["simulatorTests"]) == (4 if args.course == "welcome" else 8)
               and all(row["passed"] for row in record["simulatorTests"])
               and len(record["ownedSimulatorsDeleted"]) == 2)
+if args.course in canonical_courses:
+    record["accepted"] &= len(record["installedApps"]) == 8
 args.proof.write_text(json.dumps(record, indent=2) + "\n")
 assert record["accepted"]
 print(json.dumps(record, indent=2))
