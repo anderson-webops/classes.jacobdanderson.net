@@ -993,7 +993,7 @@ jobs:
 
     course-workflows:
         runs-on: ubuntu-24.04
-        timeout-minutes: 55
+        timeout-minutes: 60
         steps:
             - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
               with:
@@ -1351,6 +1351,28 @@ jobs:
                   path: |
                       output/javascript-conditionals-browser/
                       output/javascript-conditionals-screenshots/
+                  if-no-files-found: error
+                  retention-days: 7
+
+            - name: Verify JavaScript advanced conditional project imports
+              env:
+                  JAVASCRIPT_ADVANCED_CONDITIONALS_BROWSER_DIR: output/javascript-advanced-conditionals-browser
+                  COURSE_IMPORT_SCREENSHOT_DIR: output/javascript-advanced-conditionals-screenshots
+              run: node --test test/javascript-advanced-conditionals-course-browser.test.mjs
+
+            - name: Run JavaScript advanced conditional exports offline
+              env:
+                  JAVASCRIPT_ADVANCED_CONDITIONALS_BROWSER_DIR: output/javascript-advanced-conditionals-browser
+              run: node --test test/javascript-advanced-conditionals-exported-browser.test.mjs
+
+            - name: Retain JavaScript advanced conditional source and browser evidence
+              if: always()
+              uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+              with:
+                  name: javascript-advanced-conditionals-workflows
+                  path: |
+                      output/javascript-advanced-conditionals-browser/
+                      output/javascript-advanced-conditionals-screenshots/
                   if-no-files-found: error
                   retention-days: 7
 

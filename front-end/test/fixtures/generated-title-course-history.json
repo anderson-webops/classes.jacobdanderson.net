@@ -10232,8 +10232,8 @@
 	{
 		"courseId": "javascript-level-1-javascript-superstar",
 		"oldId": "javascript-level-1-javascript-superstar-jss6-advanced-conditionals-supplemental-extension-practice",
-		"currentId": "javascript-level-1-javascript-superstar-jss6-advanced-conditionals-supplemental-advanced-conditionals-extension-practice",
-		"basis": "sameModuleRole"
+		"currentId": null,
+		"basis": "retiredUnrelatedPlaceholder"
 	},
 	{
 		"courseId": "javascript-level-1-javascript-superstar",

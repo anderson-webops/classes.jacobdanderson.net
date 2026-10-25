@@ -3528,7 +3528,11 @@ describe("course text quality normalization", () => {
 			},
 			{
 				title: /^JSS6 Project 2: FizzBuzz$/,
-				required: ["combined 3-and-5 condition", "too early"]
+				required: [
+					"1 through 50",
+					"combined 3-and-5 condition first",
+					"15, 30 and 45"
+				]
 			},
 			{
 				title: /^JSS7 Project 3: Pac-Man$/,

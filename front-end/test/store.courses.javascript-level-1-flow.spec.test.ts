@@ -163,11 +163,11 @@ describe("JavaScript Level 1 learner flow", () => {
 			)
 		);
 
-		expect(githubItems).toHaveLength(13);
+		expect(githubItems).toHaveLength(12);
 		const githubUrls = new Set(
 			githubItems.flatMap(item => [item.projectLink, item.solutionLink])
 		);
-		expect(githubUrls.size).toBe(26);
+		expect(githubUrls.size).toBe(24);
 		for (const item of githubItems) {
 			expect(item.projectLink, item.title).toContain("/starter");
 			expect(item.solutionLink, item.title).toContain("/solution");

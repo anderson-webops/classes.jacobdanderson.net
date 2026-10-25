@@ -640,8 +640,9 @@ const javascriptLevel1SourceCourse: RawCourse = {
 				},
 				{
 					title: "JSS6 Project 1: The Sorting Hat",
+					preserveInstructions: true,
 					content:
-						"Prompt for a preferred house and a personal quality, then use conditionals to decide whether the answers match the house rules. Print a sorting result when the combination is valid and a retry or mismatch message when it is not. Keep each house rule readable enough that the decision can be tested with several input combinations.",
+						"Prompt for a house and a quality. Use nested conditionals with these exercise rules: Gryffindor/bravery, Slytherin/cunning, Ravenclaw/wisdom, and Hufflepuff/hard work. Print the selected house for a matching pair, a mismatch message for a known house with another quality, and an unknown-house message otherwise.\n\nTest all four matching pairs, a mismatch for each house, and an unknown house. Comparisons are case-sensitive. The reference handles Cancel at either prompt before choosing a house.",
 					projectLink: "https://codepen.io/junilearning/pen/JjGrxRB",
 					solutionLink:
 						"https://codepen.io/junilearning/pen/e7c85cf84c953eb5bc630e214fe476d8"
@@ -653,8 +654,9 @@ const javascriptLevel1SourceCourse: RawCourse = {
 				},
 				{
 					title: "JSS6 Project 2: FizzBuzz",
+					preserveInstructions: true,
 					content:
-						"Print the numbers from 1 through 100, but replace multiples of 3 with `Fizz`, multiples of 5 with `Buzz`, and multiples of both with `FizzBuzz`. Check the combined 3-and-5 condition first so 15, 30, and similar values do not get caught by a simpler branch too early.",
+						"Print the numbers from 1 through 50. Replace multiples of 3 with `Fizz`, multiples of 5 with `Buzz`, and multiples of both with `FizzBuzz`. Check the combined 3-and-5 condition first.\n\nProduce exactly 50 lines. Check 1 and 2, 3 (`Fizz`), 5 (`Buzz`), 15, 30 and 45 (`FizzBuzz`), and the final value 50 (`Buzz`).",
 					projectLink: "https://codepen.io/junilearning/pen/gOPGqKa",
 					solutionLink:
 						"https://codepen.io/junilearning/pen/0b39a6e7b85b790e7cd9a276e9ee2c4f"
@@ -671,8 +673,9 @@ const javascriptLevel1SourceCourse: RawCourse = {
 				},
 				{
 					title: "JSS6 Project 3: GCF of Two Numbers",
+					preserveInstructions: true,
 					content:
-						"Find the greatest common factor of two input numbers. Iterate through possible factors, check which values divide both numbers evenly, and keep track of the largest valid factor found so far. Test pairs with a factor greater than 1, pairs whose GCF is 1, and pairs where the two inputs are equal.",
+						"Find the greatest common factor of two positive whole numbers. Test candidate factors from 1 through the smaller input, use `&&` to check that both remainders are zero, and retain the largest matching factor.\n\nCheck 36/24 → 12, 8/15 → 1, 18/18 → 18, and reversed inputs. The reference accepts positive whole inputs from 1 through 1,000,000, bounding the factor search. It handles Cancel separately and rejects blank, fractional, nonnumeric, infinite, zero, negative and larger inputs before entering the loop.",
 					projectLink: "https://codepen.io/junilearning/pen/NWxaJdX",
 					solutionLink:
 						"https://codepen.io/junilearning/pen/b418881c3e60c8c7ac8fcbc3b7d74aa0"
@@ -681,32 +684,21 @@ const javascriptLevel1SourceCourse: RawCourse = {
 			supplementalProjects: [
 				{
 					title: "JSS6 Supplemental Project 1: What Does the _ Say?",
+					preserveInstructions: true,
 					content:
-						"Use a `switch` statement to map several animal names to the sounds they make. Include a `default` case for unknown animals, check that every case ends correctly with `break`, and test at least one recognized animal plus one unrecognized input.",
+						"Use a `switch` statement with `break` to map lowercase animal names to sounds: dog/woof, cat/meow, cow/moo, bee/buzz, and frog/ribbit. The original reference also gives fox a playful response. Print `huh?` for an unknown animal.\n\nCheck each listed animal, fox, an unknown animal and a differently capitalized name. Comparisons remain case-sensitive. The reference handles Cancel separately. Every recognized switch case ends with `break`.",
 					projectLink: "https://codepen.io/junilearning/pen/NWxaJgy",
 					solutionLink:
 						"https://codepen.io/junilearning/pen/5b0bdb527344a081c9abf91138ce5f4a"
 				},
 				{
 					title: "JSS6 Supplemental Project 2: Debugging Bugging Friends",
+					preserveInstructions: true,
 					content:
-						"Debug a program that decides whether messaging frequency is too high. Identify the intended thresholds, check whether `&&` or `||` is appropriate in each condition, and verify that edge values exactly on the threshold behave as expected. The fixed version explains why each branch fires.",
+						"Debug the starter’s compound conditions using this fictional exercise’s message-rate rules: acquaintance 10, friend 25, good friend 50, and best friend 200 messages per hour. A warning requires both the matching level and a rate strictly above its threshold.\n\nThe starter intentionally uses incorrect compound conditions. Trace each level at its exact threshold and one message above it, then fix the `&&`/`||` choice. Equal rates do not warn. The reference accepts a recognized level, a nonnegative safe whole message count, and finite elapsed hours greater than zero. It handles Cancel at each prompt and reports invalid input before computing the rate.",
 					projectLink: "https://codepen.io/junilearning/pen/mdVGXLE",
 					solutionLink:
 						"https://codepen.io/junilearning/pen/67b0c29a104afde9cce553de6cacf882"
-				},
-				{
-					title: "Advanced Conditionals Extension Practice",
-					content: buildProjectGuidance({
-						courseFamily: "web development",
-						moduleTitle: "JSS6 Advanced Conditionals",
-						projectKind: "extension",
-						hasReference: true
-					}),
-					projectLink:
-						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/JSS-07-jss6-advanced-conditionals-supplemental-3/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Web-Development-Foundations/tree/main/JSS-07-jss6-advanced-conditionals-supplemental-3/solution"
 				}
 			]
 		},

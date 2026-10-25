@@ -1,4 +1,5 @@
 import type { PythonIdeFile } from "@/modules/pythonIde";
+import { javascriptAdvancedConditionalsResources } from "@/modules/javascriptAdvancedConditionalsResources";
 import { javascriptCombiningResources } from "@/modules/javascriptCombiningResources";
 import { javascriptConditionalsResources } from "@/modules/javascriptConditionalsResources";
 import { javascriptFirstModuleResources } from "@/modules/javascriptFirstModuleResources";
@@ -26,7 +27,8 @@ const roles: readonly CourseRole[] = [
 	...javascriptOperatorsResources,
 	...javascriptLoopsResources,
 	...javascriptCombiningResources,
-	...javascriptConditionalsResources
+	...javascriptConditionalsResources,
+	...javascriptAdvancedConditionalsResources
 ];
 
 export function javascriptCourseResource(value: string) {
