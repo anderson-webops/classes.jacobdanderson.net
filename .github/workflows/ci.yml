@@ -1420,6 +1420,28 @@ jobs:
                   if-no-files-found: error
                   retention-days: 7
 
+            - name: Verify JavaScript HTML/CSS project imports
+              env:
+                  JAVASCRIPT_HTML_CSS_BROWSER_DIR: output/javascript-html-css-browser
+                  COURSE_IMPORT_SCREENSHOT_DIR: output/javascript-html-css-screenshots
+              run: node --test test/javascript-html-css-course-browser.test.mjs
+
+            - name: Run JavaScript HTML/CSS exports offline
+              env:
+                  JAVASCRIPT_HTML_CSS_BROWSER_DIR: output/javascript-html-css-browser
+              run: node --test test/javascript-html-css-exported-browser.test.mjs
+
+            - name: Retain JavaScript HTML/CSS source and browser evidence
+              if: always()
+              uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+              with:
+                  name: javascript-html-css-workflows
+                  path: |
+                      output/javascript-html-css-browser/
+                      output/javascript-html-css-screenshots/
+                  if-no-files-found: error
+                  retention-days: 7
+
             - name: Verify Network Systems foundation imports and notebook reuse
               env:
                   NETWORK_BROWSER_EXPORT_PROOF_DIR: output/network-exports

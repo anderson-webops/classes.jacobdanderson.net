@@ -4,6 +4,7 @@ import { javascriptCombiningResources } from "@/modules/javascriptCombiningResou
 import { javascriptConditionalsResources } from "@/modules/javascriptConditionalsResources";
 import { javascriptDrawingResources } from "@/modules/javascriptDrawingResources";
 import { javascriptFirstModuleResources } from "@/modules/javascriptFirstModuleResources";
+import { javascriptHtmlCssResources } from "@/modules/javascriptHtmlCssResources";
 import { javascriptLoopsResources } from "@/modules/javascriptLoopsResources";
 import { javascriptNestedLoopsResources } from "@/modules/javascriptNestedLoopsResources";
 import { javascriptOperatorsResources } from "@/modules/javascriptOperatorsResources";
@@ -32,7 +33,8 @@ const roles: readonly CourseRole[] = [
 	...javascriptConditionalsResources,
 	...javascriptAdvancedConditionalsResources,
 	...javascriptDrawingResources,
-	...javascriptNestedLoopsResources
+	...javascriptNestedLoopsResources,
+	...javascriptHtmlCssResources
 ];
 
 export function javascriptCourseResource(value: string) {

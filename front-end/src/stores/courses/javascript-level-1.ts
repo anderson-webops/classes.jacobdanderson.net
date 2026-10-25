@@ -842,26 +842,30 @@ const javascriptLevel1SourceCourse: RawCourse = {
 				{
 					title: "Introduction to HTML",
 					content:
-						"A webpage's structure comes from HTML tags. Practice headings, `div`, `span`, line breaks, links, and images in CodePen, then inspect how nesting creates parent and child elements. The expected result is a readable small HTML snippet with a clear explanation of which elements contain which other elements."
+						'HTML describes page content with elements. Most elements have an opening tag, content, and a closing tag: `<div>Alan</div>`. Elements can contain children, such as `<div><span>Alan</span> <span>Turing</span></div>`. A `div` groups content as a block; a `span` groups text within a line. Headings use `h1` through `h6`. A `br` inserts a line break and an `img` embeds an image; neither has a separate closing tag.\n\n```html\n<h1>A sample page</h1>\n<div><span>Alan</span> <span>Turing</span></div>\n<a href="https://www.wikipedia.org/">Visit Wikipedia</a>\n<img src="landscape.svg" alt="Blue mountains and a gold sun">\n```\n\nAttributes give additional information: `href` is a link destination, `src` is an image path, and `alt` provides a text alternative for an image. A complete document uses `<!doctype html>`, an `html` root, a `head` for metadata and stylesheet links, and a `body` for visible content. The local project starter supplies this outer structure.'
 				},
 				{
 					title: "Document Object Model (DOM)",
 					content:
-						"The browser turns HTML into the Document Object Model, or DOM: a tree of objects that JavaScript and developer tools can inspect or change. Open the browser inspector and identify `html`, `head`, and `body`, then connect those nodes back to the original HTML source."
+						"The browser parses HTML into the Document Object Model (DOM), a tree of element and text nodes. In `<div><span>Alan</span></div>`, the `div` is the parent and the `span` is its child. The text `Alan` is a text node inside the span. Siblings share a parent; the document's `head` and `body` are siblings inside `html`.\n\nOpen a local project in a browser and inspect it with the browser's Elements or Inspector panel. Find `html`, `head`, and `body`, expand a `div` to locate its `span`, and select that span to see the CSS rules applied to it. The source file is the written markup; the inspector shows the parsed DOM, including containers the browser may insert, such as `tbody` around table rows."
 				},
 				{
-					title: "Introduction to CSS",
+					id: "javascript-level-1-javascript-superstar-jss9-introduction-to-html-css-curriculum-introduction-to-css",
+					aliases: ["Introduction to CSS"],
+					title: "JSS9 Project 1: Basics of HTML & CSS",
 					content:
-						"Page presentation comes from CSS rules. Use selectors to style text alignment, color, background color, font size, and font weight. Compare tag selectors, class selectors, and id selectors by creating a `div` with class `box`, styling it, and explaining why classes are usually better for reusable styles.",
+						'A CSS rule pairs a selector with declarations: `div { text-align: center; }` selects every `div` and centers its text. A type selector names a tag, `.name` selects a class, and `#name` selects an id. For `<div class="note" id="example">Text</div>`, `div`, `.note`, and `#example` all match that element. Classes can be reused on several elements; an id identifies one element on the page.\n\nWrite declarations as `property: value;` inside braces. Properties such as text color and font weight can pass from a parent to a child through inheritance. A rule on the child can override the inherited value: a normal-weight `span` can appear inside a bold `div`.\n\nUse a fictional first and last name for these HTML and CSS exercises:\n\n1. Put the first and last names in separate `div` elements.\n2. Put two `span` elements inside one `div`, one for each name. Compare this with the separate `div` elements.\n3. Put a `br` line break between another pair of name `div` elements.\n4. Add an `img` using the included `landscape.svg`, with alternative text describing the image. Another suitable local image can be used instead.\n5. Add an anchor (`a`) linking to `https://www.wikipedia.org/`.\n6. Select `body` in CSS and set a background color.\n7. Select `div` and center its text.\n8. Select `span` and set its font size to 20 pixels.\n9. Select `img` and set both its width and height to 200 pixels.\n10. Make `div` text bold and `span` text normal. Explain which text inherits bold weight and which rule overrides it.',
 					projectLink:
 						"https://codepen.io/junilearning/pen/a4555b19dc5183859c0a6956be1f6c0a",
 					solutionLink:
 						"https://codepen.io/junilearning/pen/d14dd0596bbb8720c359688f460c9419"
 				},
 				{
-					title: "Display Property and Table Tags",
+					id: "javascript-level-1-javascript-superstar-jss9-introduction-to-html-css-curriculum-display-property-and-table-tags",
+					aliases: ["Display Property and Table Tags"],
+					title: "JSS9 Project 2: Box Inception",
 					content:
-						"The CSS `display` property affects how elements occupy space. Compare `block`, `inline`, and `inline-block` with styled boxes, then build a small table using `table`, `thead`, `tbody`, `tr`, `th`, and `td`. Verify that the visual layout matches the document structure.",
+						"A block element starts a new line and normally fills its available width. An inline element such as `span` flows with surrounding text. `inline-block` also flows along a line, while allowing explicit width and height. A parent `div` can group several inline-block children into a row; another parent starts the next row.\n\nIn tables, `table` contains rows (`tr`) and each row contains cells (`td` for data or `th` for a heading). `thead` groups header rows and `tbody` groups body rows. Here, table cells contain colored boxes for a layout comparison.\n\nRecreate four views of the same six colors, in this order: red, orange, yellow, green, blue, purple. Each colored box is 50 by 50 pixels.\n\n- Under `Block Display`, give each box `display: block` so the six boxes form a vertical column.\n- Under `Inline Block Display`, give each box `display: inline-block` so they share a line when enough space is available.\n- Under `Grid`, use three ordinary block `div` rows containing two inline-block boxes each. This exercise uses HTML grouping, before the later CSS Grid module.\n- Under `Table`, use a table with three rows and two cells per row, with one colored box in each cell.\n\nThe paired colors in each grid and table row are red/orange, yellow/green, and blue/purple. Compare where the browser inserts line breaks in the four structures.",
 					projectLink:
 						"https://codepen.io/junilearning/pen/eca1fa811c12940c388c331a07cb0dbb",
 					solutionLink:
