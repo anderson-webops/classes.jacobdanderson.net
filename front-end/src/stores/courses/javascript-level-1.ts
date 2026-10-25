@@ -707,8 +707,9 @@ const javascriptLevel1SourceCourse: RawCourse = {
 			curriculum: [
 				{
 					title: "Introduction to D3",
+					preserveInstructions: true,
 					content:
-						"D3 can create and modify SVG elements with JavaScript. Start by adding D3 to CodePen, appending an SVG, and setting width and height attributes. Treat pixels as coordinates on the drawing surface, and keep chained calls readable by formatting each major step on its own line when the code becomes hard to scan."
+						'D3 selects elements with `d3.select(...)`, creates children with `.append(...)`, and sets SVG attributes with `.attr(...)`. The imported projects include D3 locally.\n\n```javascript\nconst svg = d3.select("body").append("svg")\n  .attr("width", 400).attr("height", 200)\n  .attr("viewBox", "0 0 400 200");\n\nsvg.append("rect")\n  .attr("x", 20).attr("y", 30)\n  .attr("width", 80).attr("height", 40)\n  .attr("fill", "purple");\n```\n\nSVG coordinates begin at the top-left: x increases to the right and y increases downward. The example rectangle starts at (20,30). Width and height set the drawing dimensions; `viewBox` defines its coordinate area. The projects scale that area to fit the screen while keeping the shape coordinates unchanged.'
 				},
 				{
 					title: "Drawing Shapes in D3",
@@ -721,8 +722,9 @@ const javascriptLevel1SourceCourse: RawCourse = {
 				},
 				{
 					title: "Drawing Arcs",
+					preserveInstructions: true,
 					content:
-						"Use `d3.arc()` to create curved shapes from `startAngle`, `endAngle`, `innerRadius`, and `outerRadius`. Angles must be in radians, so keep any degree-to-radian conversion visible. Attach the arc to a `path` through the `d` attribute and use `transform: translate(...)` to position it on the SVG canvas."
+						'`d3.arc()` generates the path data for a curved shape. Angles use radians: multiply degrees by `Math.PI / 180`. Zero points upward and positive angles turn clockwise. `innerRadius: 0` makes a filled sector; a larger inner radius leaves a hole.\n\nThis example adds a quarter-ring to the SVG created above:\n\n```javascript\nfunction degreesToRadians(degrees) {\n  return degrees * Math.PI / 180;\n}\n\nconst arcGenerator = d3.arc();\nconst pathData = arcGenerator({\n  startAngle: degreesToRadians(0),\n  endAngle: degreesToRadians(90),\n  innerRadius: 20,\n  outerRadius: 40\n});\n\nsvg.append("path")\n  .attr("d", pathData)\n  .attr("fill", "orange")\n  .attr("transform", "translate(80,80)");\n```\n\nThe `d` attribute receives the generated path. Arcs start around (0,0); `translate(80,80)` moves this arc’s center to (80,80). Change one angle or radius and predict the result before running it.'
 				},
 				{
 					title: "JSS7 Project 2: Smiley Face",

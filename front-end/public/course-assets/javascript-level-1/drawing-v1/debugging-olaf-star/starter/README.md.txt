@@ -6,7 +6,7 @@ The starter intentionally contains drawing faults. Use the console and SVG attri
 
 ## Canvas
 
-SVG positions use the original drawing coordinates. A viewBox defines that coordinate area; CSS scales the SVG to the available width without changing the shape positions. For this project, use `.attr("viewBox", "0 0 750 750")` after setting the SVG width and height.
+The SVG `viewBox` sets its coordinate area. CSS scales the drawing to the screen without changing coordinates. Use `.attr("viewBox", "0 0 750 750")` after setting the SVG width and height.
 
 ## Run
 
@@ -14,4 +14,4 @@ Open index.html in a browser. D3 and its license are included locally, so the ex
 
 ## Source
 
-Adapted from [Juni Learning’s original starter project](https://codepen.io/junilearning/pen/rNxZJdQ). The original exercise and geometry are retained. Correct mouth translation comment Correct bottom body circle comment Add explicit viewBox scaling and accessible drawing name; keep original coordinates and width/height variables.
+Adapted from [Juni Learning’s original starter project](https://codepen.io/junilearning/pen/rNxZJdQ).

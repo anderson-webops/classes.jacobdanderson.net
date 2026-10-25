@@ -27,8 +27,8 @@ export const javascriptDrawingResources = [
 			{
 				name: "README.md",
 				path: "drawing-v1/basic-shapes/starter/README.md.txt",
-				byteLength: 853,
-				sha256: "f31291afd3b2a02e8d5d066897c9ff05fd372246eadb6d77c87e01c92f5cf7dd"
+				byteLength: 667,
+				sha256: "362aff980171074045f859faad841dde8def82ad246d536aa1360067a809b234"
 			},
 			{
 				name: "vendor/d3.min.js",
@@ -75,8 +75,8 @@ export const javascriptDrawingResources = [
 			{
 				name: "README.md",
 				path: "drawing-v1/basic-shapes/reference/README.md.txt",
-				byteLength: 977,
-				sha256: "1014d622343be8ae79bf3c2870778689ca9c08e8c81870d675a0de333e80a205"
+				byteLength: 694,
+				sha256: "e55d0b414a1cfb3e7931d820190deea4add14674dfd701121e628b4df90960b9"
 			},
 			{
 				name: "vendor/d3.min.js",
@@ -120,8 +120,8 @@ export const javascriptDrawingResources = [
 			{
 				name: "README.md",
 				path: "drawing-v1/smiley-face/starter/README.md.txt",
-				byteLength: 906,
-				sha256: "c13b7975d2ff3b5fae089798a4894ad41a6c00439d91a70e3287228a5013673f"
+				byteLength: 720,
+				sha256: "4538fa54ff0f821c63358623edbfbecd679976eea120730eec016eff7027eadd"
 			},
 			{
 				name: "vendor/d3.min.js",
@@ -168,8 +168,8 @@ export const javascriptDrawingResources = [
 			{
 				name: "README.md",
 				path: "drawing-v1/smiley-face/reference/README.md.txt",
-				byteLength: 1030,
-				sha256: "cd2dad42e3085d7fe2a1a14d54c6f053547ade0cf9c9747601987af851e42e65"
+				byteLength: 747,
+				sha256: "9ad3c0d19e3f69647adff3ec450b2a4db19d83b3b4061e044315fdfae4aaa611"
 			},
 			{
 				name: "vendor/d3.min.js",
@@ -213,8 +213,8 @@ export const javascriptDrawingResources = [
 			{
 				name: "README.md",
 				path: "drawing-v1/pac-man/starter/README.md.txt",
-				byteLength: 908,
-				sha256: "5c4192c494e4314fa7405a72184402eb618c82661fad1c0607f5260800548979"
+				byteLength: 722,
+				sha256: "b38a3495248e6fd3c955e0efd19c6f6aa9f7995f9b90d73ab359516fb245e7df"
 			},
 			{
 				name: "vendor/d3.min.js",
@@ -261,8 +261,8 @@ export const javascriptDrawingResources = [
 			{
 				name: "README.md",
 				path: "drawing-v1/pac-man/reference/README.md.txt",
-				byteLength: 1032,
-				sha256: "71f84b17e767311e982b39f1b0ff9c83a697284116f339e8593f944c3917df0f"
+				byteLength: 749,
+				sha256: "a8bebf9b51aa5ded20ee86086b01a248df0d1561de5316b0c78630c9f7bfc7cd"
 			},
 			{
 				name: "vendor/d3.min.js",
@@ -306,8 +306,8 @@ export const javascriptDrawingResources = [
 			{
 				name: "README.md",
 				path: "drawing-v1/snowman/starter/README.md.txt",
-				byteLength: 991,
-				sha256: "55582f5be5d5fc8be556a617ebf17f5a7c8eaec39514cc58f1a8532415fa89c3"
+				byteLength: 741,
+				sha256: "26620a7ff152e65650d911234918f0bdb5b42a010abf9d6a9a79e8433fe60b68"
 			},
 			{
 				name: "vendor/d3.min.js",
@@ -354,8 +354,8 @@ export const javascriptDrawingResources = [
 			{
 				name: "README.md",
 				path: "drawing-v1/snowman/reference/README.md.txt",
-				byteLength: 1184,
-				sha256: "a4d7fd997cd221cb7ccb140a440b844a8dd3272a7dfb0062b0ac0835edf7240c"
+				byteLength: 768,
+				sha256: "407b2ff48a26e60fe15be95a61764a5eedc7d9c0129e980aeca19053b4a7ef43"
 			},
 			{
 				name: "vendor/d3.min.js",
@@ -399,8 +399,8 @@ export const javascriptDrawingResources = [
 			{
 				name: "README.md",
 				path: "drawing-v1/captain-america-shield/starter/README.md.txt",
-				byteLength: 959,
-				sha256: "4204fd4bdeb45752e61a27e3157600f6b3b98f34dfe178a44ed4d600b6322969"
+				byteLength: 773,
+				sha256: "6155b79a2ecac4743ceaaf3d1c2d0f3b26d6ab1c3f554020b0ce9e032715626a"
 			},
 			{
 				name: "vendor/d3.min.js",
@@ -447,8 +447,8 @@ export const javascriptDrawingResources = [
 			{
 				name: "README.md",
 				path: "drawing-v1/captain-america-shield/reference/README.md.txt",
-				byteLength: 1132,
-				sha256: "171563c23b63567b49bc18cb136dadf40d4f08fe9e524f03b5f9c5b7f2bf4df1"
+				byteLength: 800,
+				sha256: "47ebf68ba081f50d775e85b8ec20a3d4927f013d875f0ace79252d1795770884"
 			},
 			{
 				name: "vendor/d3.min.js",
@@ -492,8 +492,8 @@ export const javascriptDrawingResources = [
 			{
 				name: "README.md",
 				path: "drawing-v1/debugging-olaf-star/starter/README.md.txt",
-				byteLength: 1185,
-				sha256: "3b4fd9009de33b7a52bba13fd08e42571635f87b76b9932cf1ed5a169792ea6c"
+				byteLength: 876,
+				sha256: "0b6bce0410663a24cce42e92d147c150d4290c2f911386011ea5b00f113a9928"
 			},
 			{
 				name: "vendor/d3.min.js",
@@ -540,8 +540,8 @@ export const javascriptDrawingResources = [
 			{
 				name: "README.md",
 				path: "drawing-v1/debugging-olaf-star/reference/README.md.txt",
-				byteLength: 1103,
-				sha256: "b077f9fa0ff63bec273544fc12aaf7b6675d31bec903d7e8683dad72a39ebc64"
+				byteLength: 751,
+				sha256: "5fe47886f74310195420a0568f2eb71b577e5ef45fceae05d557f49492ab50de"
 			},
 			{
 				name: "vendor/d3.min.js",

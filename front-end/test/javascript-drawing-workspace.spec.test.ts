@@ -140,3 +140,47 @@ for (const resource of fixture.resources) {
 		}
 	});
 }
+
+for (const resource of fixture.resources) {
+	it(`preserves the original drawing behavior for ${resource.project} ${resource.role}`, () => {
+		const source = originals.resources.find((r: { project: string; role: string }) => r.project === resource.project && r.role === resource.role);
+		const script = readFileSync(resolve(root, resource.files.find((f: { name: string }) => f.name === "script.js").path), "utf8");
+		const d3 = readFileSync(resolve(root, resource.files.find((f: { name: string }) => f.name === "vendor/d3.min.js").path), "utf8");
+		const evaluate = (code: string) => {
+			document.body.replaceChildren();
+			const context = { document, setTimeout, clearTimeout, setInterval, clearInterval, performance };
+			let error: string | null = null;
+			try {
+				runInNewContext(`${d3}\n${code}`, context, { timeout: 1000 });
+			}
+			catch (caught) {
+				error = String(caught);
+			}
+			for (const svg of document.querySelectorAll("svg")) {
+				for (const attribute of ["viewBox", "role", "aria-label"]) svg.removeAttribute(attribute);
+			}
+			return { markup: document.body.innerHTML, error };
+		};
+		expect(evaluate(script)).toEqual(evaluate(source.panels.JavaScript));
+		const css = readFileSync(resolve(root, resource.files.find((f: { name: string }) => f.name === "styles.css").path), "utf8");
+		expect(css.startsWith(source.panels.CSS)).toBe(true);
+	});
+}
+
+it("provides executable D3 drawing and arc examples before the assigned projects", async () => {
+	const { javascriptLevel1Course } = await import("@/stores/courses/javascript-level-1");
+	const module = javascriptLevel1Course.modules.find(module => module.title === "JSS7 Drawing in JavaScript")!;
+	const examples = ["Introduction to D3", "Drawing Arcs"].map((title) => {
+		const lesson = module.curriculum.find(item => item.title === title)!;
+		const code = /```javascript\n([\s\S]*?)```/u.exec(lesson.content ?? "")?.[1];
+		expect(code, title).toBeTruthy();
+		return code;
+	});
+	const d3 = readFileSync(resolve(root, "first-module-shared-v1/vendor/d3.min.js.txt"), "utf8");
+	runInNewContext([d3, ...examples].join("\n"), { document, setTimeout, clearTimeout, setInterval, clearInterval, performance }, { timeout: 1000 });
+	const svg = document.querySelector("svg")!;
+	expect(svg.getAttribute("viewBox")).toBe("0 0 400 200");
+	expect(svg.querySelector("rect")?.getAttribute("fill")).toBe("purple");
+	expect(svg.querySelector("path")?.getAttribute("transform")).toBe("translate(80,80)");
+	expect(svg.querySelector("path")?.getAttribute("d")).toBeTruthy();
+});
