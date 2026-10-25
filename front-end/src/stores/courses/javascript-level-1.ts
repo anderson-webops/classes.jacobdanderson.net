@@ -781,12 +781,12 @@ const javascriptLevel1SourceCourse: RawCourse = {
 				{
 					title: "Nested Loops",
 					content:
-						"Nested loops place one loop inside another so a program can repeat groups of repeated actions. The outer loop usually controls rows, rounds, or groups; the inner loop controls the repeated work inside each group. Use `i` and `j` examples, but focus on what each counter represents rather than memorizing the variable names."
+						'A nested loop runs its inner loop completely for each outer-loop iteration. The outer counter represents a group, such as a row or round; the inner counter represents work within that group. Use a separate variable for each counter. Declare a row\'s output inside the outer loop so it starts empty for each new row.\n\n```javascript\nfor (let row = 1; row <= 2; row++) {\n  let output = "";\n  for (let column = 1; column <= 3; column++) {\n    output += "(" + row + "," + column + ") ";\n  }\n  printToScreen(output.trim());\n}\n```\n\nThis prints `(1,1) (1,2) (1,3)` and then `(2,1) (2,2) (2,3)`: two rows, three entries per row, and six inner-loop iterations. In the project starters, `printToScreen(text)` displays one line on the page. To make triangular patterns, let the inner loop\'s limit depend on the current row. For a grid, reset the horizontal position at the start of each row, advance it inside the inner loop, and advance the vertical position after the inner loop ends.'
 				},
 				{
 					title: "JSS8 Project 1: Multiplication Tables",
 					content:
-						"Use nested loops to print multiplication tables from 1 through 10. The outer loop chooses the row number and the inner loop chooses the column number. Print each product in a readable format and count how many multiplication operations occur so the connection between nested loops and total work is visible.",
+						"Use nested loops to print ten rows of products for the numbers 1 through 10. The outer loop chooses a row and the inner loop multiplies it by each column from 1 through 10. Separate products with spaces; the first row is `1 2 3 4 5 6 7 8 9 10` and the final value is `100`. Explain why ten iterations of each loop produce 100 multiplication operations.",
 					projectLink: "https://codepen.io/junilearning/pen/WNrXoBj",
 					solutionLink:
 						"https://codepen.io/junilearning/pen/431a3c1e61b0fe9d0e6fa2e16e6d37f6"
@@ -794,7 +794,7 @@ const javascriptLevel1SourceCourse: RawCourse = {
 				{
 					title: "JSS8 Project 2: Pattern Production",
 					content:
-						"Create a repeated pattern in two forms. First print a star pattern with nested loops, then recreate the same row-and-column structure with D3 Pac-Man shapes using `transform: translate(...)` for placement. The D3 version preserves the same pattern logic rather than placing each Pac-Man manually.",
+						"Print five lines containing one, two, three, four, and five stars. Use an outer loop for rows and an inner loop to build each line, then pass the line to `printToScreen()`. Recreate the same five rows as 15 yellow D3 Pac-Man shapes. Use a filled arc with radii 0 and 50, angles 120 and 430 degrees, and `transform: translate(...)` to place each shape. Start each row at x = 100, space columns by 150, and place rows at y = 150 through 750.",
 					projectLink: "https://codepen.io/junilearning/pen/pogdRva",
 					solutionLink:
 						"https://codepen.io/junilearning/pen/9b713f294e21887a1a2c9b528764bd4b"
@@ -802,7 +802,7 @@ const javascriptLevel1SourceCourse: RawCourse = {
 				{
 					title: "JSS8 Project 3: Armstrong Numbers",
 					content:
-						"Find all three-digit Armstrong numbers. For each number, separate the hundreds, tens, and ones digits, cube each digit, and compare the digit-cube sum to the original number. Use loops to check the full three-digit range and print only the values that satisfy the rule.",
+						"Find every three-digit Armstrong number from 100 through 999: its three digits cubed must add up to the number itself. For example, `153 = 1³ + 5³ + 3³`. Use `% 10` to extract the last digit and `Math.floor(value / 10)` to remove it; `Math.pow(digit, 3)` cubes it. Check each candidate with a loop over its three digits and print each match once. Alternatively, use three nested loops over the hundreds, tens, and ones digits, allowing hundreds from 1 through 9 and other digits from 0 through 9.",
 					projectLink: "https://codepen.io/junilearning/pen/eYJegdP",
 					solutionLink:
 						"https://codepen.io/junilearning/pen/e12716e0c3e1cbfc0405c9da2e245b8a"
@@ -813,7 +813,7 @@ const javascriptLevel1SourceCourse: RawCourse = {
 					title: "JSS8 Supplemental Project 1: Archery Simulator",
 					aliases: ["JSS8 Supplemental Project 1: Juni Archery"],
 					content:
-						"Simulate five rounds of archery with three arrows per round. Use nested loops so the outer loop represents rounds and the inner loop represents arrows. Each arrow has a random one-in-three chance to hit, and the program prints per-round results plus the total number of bullseyes.",
+						"Simulate five rounds of archery with three arrows per round. Use nested loops for rounds and arrows. `Math.floor(Math.random() * 3)` produces 0, 1, or 2; count exactly one of those outcomes as a hit so each arrow has a one-in-three chance. Print all 15 shots as `Round 1, arrow 1: X` for a hit or `O` for a miss, using the actual round and arrow numbers. Count the X results and print the total bullseyes after the final shot.",
 					projectLink: "https://codepen.io/junilearning/pen/xxZPgdv",
 					solutionLink:
 						"https://codepen.io/junilearning/pen/2882e6ebc5b146358627d5c4f5afd90c"
@@ -821,7 +821,7 @@ const javascriptLevel1SourceCourse: RawCourse = {
 				{
 					title: "JSS8 Supplemental Project 2: Tower of Boxes",
 					content:
-						"Print the stacked box pattern with nested loops. Decide which loop controls the height of the tower and which loop controls the symbols within each row. The finished output matches the target pattern exactly, including row lengths, spacing, and line breaks.",
+						"Print four hollow square boxes with side lengths 3, 4, 5, and 6. The top and bottom rows contain only `#`; every interior row starts and ends with `#` and contains underscores between them. For example, the size-3 box is three lines: `###`, `#_#`, `###`. Use nested loops to build the borders and repeat interior rows, with a blank line between boxes. The larger boxes need 2, 3, and 4 interior rows respectively.",
 					projectLink: "https://codepen.io/junilearning/pen/PoZOWWp",
 					solutionLink:
 						"https://codepen.io/junilearning/pen/6973a709e1c0d6932da2ed1e7650d30f"
@@ -829,7 +829,7 @@ const javascriptLevel1SourceCourse: RawCourse = {
 				{
 					title: "JSS8 Supplemental Project 3: Shield Debugging",
 					content:
-						"Debug the stacked shield pattern by checking the order of nested-loop output. The final result prints or draws each layer in the correct sequence, with loop counters controlling rows and columns clearly enough to explain why the shield stacks correctly.",
+						"Debug the D3 assembly line so it draws nine rows of Captain America's shields, containing one through nine shields for 45 shields total. Each shield has red, white, red, and blue circles of radii 110, 90, 70, and 50, plus a centered white star. Use distinct counters for the outer row loop and inner column loop. Reset each row's horizontal position, advance it by 210 after each shield, and advance the vertical position by 210 after each row. The starter intentionally contains loop and position errors; use the browser console to locate the first failure, then check the complete pattern.",
 					projectLink: "https://codepen.io/junilearning/pen/pogyeaj",
 					solutionLink:
 						"https://codepen.io/junilearning/pen/1ac928d6d9d777928c4439b4262310a3"

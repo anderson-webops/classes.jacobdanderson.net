@@ -1398,6 +1398,28 @@ jobs:
                   if-no-files-found: error
                   retention-days: 7
 
+            - name: Verify JavaScript nested-loop project imports
+              env:
+                  JAVASCRIPT_NESTED_LOOPS_BROWSER_DIR: output/javascript-nested-loops-browser
+                  COURSE_IMPORT_SCREENSHOT_DIR: output/javascript-nested-loops-screenshots
+              run: node --test test/javascript-nested-loops-course-browser.test.mjs
+
+            - name: Run JavaScript nested-loop exports offline
+              env:
+                  JAVASCRIPT_NESTED_LOOPS_BROWSER_DIR: output/javascript-nested-loops-browser
+              run: node --test test/javascript-nested-loops-exported-browser.test.mjs
+
+            - name: Retain JavaScript nested-loop source and browser evidence
+              if: always()
+              uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+              with:
+                  name: javascript-nested-loops-workflows
+                  path: |
+                      output/javascript-nested-loops-browser/
+                      output/javascript-nested-loops-screenshots/
+                  if-no-files-found: error
+                  retention-days: 7
+
             - name: Verify Network Systems foundation imports and notebook reuse
               env:
                   NETWORK_BROWSER_EXPORT_PROOF_DIR: output/network-exports
