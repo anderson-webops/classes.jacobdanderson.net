@@ -63,8 +63,8 @@ export const javascriptNestedLoopsResources = [
 			{
 				name: "script.js",
 				path: "nested-loops-v1/multiplication-tables/reference/script.js.txt",
-				byteLength: 389,
-				sha256: "d1a3330d53bb618686a7749fd26a6b2d6bdf655fac268c61f933d388c03edbc3"
+				byteLength: 394,
+				sha256: "f9847a4848c3e6802424f18f61e707e12e9c515c2ccd7f8be9cdf8f78897cfc5"
 			},
 			{
 				name: "styles.css",

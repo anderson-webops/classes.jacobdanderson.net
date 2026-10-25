@@ -89,8 +89,8 @@
         {
           "name": "script.js",
           "path": "nested-loops-v1/multiplication-tables/reference/script.js.txt",
-          "byteLength": 389,
-          "sha256": "d1a3330d53bb618686a7749fd26a6b2d6bdf655fac268c61f933d388c03edbc3"
+          "byteLength": 394,
+          "sha256": "f9847a4848c3e6802424f18f61e707e12e9c515c2ccd7f8be9cdf8f78897cfc5"
         },
         {
           "name": "styles.css",
@@ -121,9 +121,10 @@
       "originalCapture": "multiplication-tables-reference.json",
       "sourceCorrections": [
         "Replace the animated random-color SVG text helper with stable, wrapping, monospace D3 text output; keep exercise output values and order",
-        "Bundle the original D3 5.16.0 dependency for offline use"
+        "Bundle the original D3 5.16.0 dependency for offline use",
+        "Use one space between products and trim the row so all ten products remain on one phone-sized line"
       ],
-      "expectedScriptSHA256": "d1a3330d53bb618686a7749fd26a6b2d6bdf655fac268c61f933d388c03edbc3",
+      "expectedScriptSHA256": "f9847a4848c3e6802424f18f61e707e12e9c515c2ccd7f8be9cdf8f78897cfc5",
       "intentionalRuntimeError": false,
       "viewBox": null
     },

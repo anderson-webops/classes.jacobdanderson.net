@@ -105,7 +105,7 @@ function execute(project: string, role = "reference", original = false, random =
 
 it("preserves every multiplication product and every hollow box row from the originals", () => {
 	const table = execute("multiplication-tables");
-	expect(table).toEqual(execute("multiplication-tables", "reference", true));
+	expect(table).toEqual(execute("multiplication-tables", "reference", true).map(row => row.trim().replace(/\s+/gu, " ")));
 	expect(table.map(row => row.trim().split(/\s+/u).map(Number))).toEqual(Array.from({ length: 10 }, (_, row) => Array.from({ length: 10 }, (_, col) => (row + 1) * (col + 1))));
 	const boxes = execute("tower-of-boxes");
 	expect(boxes).toEqual(execute("tower-of-boxes", "reference", true));

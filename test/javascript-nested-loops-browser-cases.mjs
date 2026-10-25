@@ -50,6 +50,7 @@ export async function inspectNestedLoops(page, resource, kind) {
 	}
 	const edited = kind === "edited";
 	if (resource.project === "multiplication-tables") {
+		assert.ok(state.lineBounds.every(line => line.height <= 24.5), "All ten products must stay on one visible row");
 		assert.deepEqual(state.lines.map(line => line.trim().split(/\s+/u).map(Number)), Array.from({ length: edited ? 9 : 10 }, (_, row) => Array.from({ length: 10 }, (_, col) => (row + 1) * (col + 1))));
 	}
 	else if (resource.project === "armstrong-numbers") {
