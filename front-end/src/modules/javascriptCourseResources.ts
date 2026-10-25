@@ -5,6 +5,7 @@ import { javascriptBasicLayoutResources } from "@/modules/javascriptBasicLayoutR
 import { javascriptCombiningResources } from "@/modules/javascriptCombiningResources";
 import { javascriptConditionalsResources } from "@/modules/javascriptConditionalsResources";
 import { javascriptDrawingResources } from "@/modules/javascriptDrawingResources";
+import { javascriptDynamicComponentsResources } from "@/modules/javascriptDynamicComponentsResources";
 import { javascriptDynamicEventsResources } from "@/modules/javascriptDynamicEventsResources";
 import { javascriptFirstModuleResources } from "@/modules/javascriptFirstModuleResources";
 import { javascriptGridLayoutResources } from "@/modules/javascriptGridLayoutResources";
@@ -44,7 +45,8 @@ const roles: readonly CourseRole[] = [
 	...javascriptMoreHtmlCssResources,
 	...javascriptBasicLayoutResources,
 	...javascriptGridLayoutResources,
-	...javascriptDynamicEventsResources
+	...javascriptDynamicEventsResources,
+	...javascriptDynamicComponentsResources
 ];
 
 export function javascriptCourseResource(value: string) {

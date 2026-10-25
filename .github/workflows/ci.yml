@@ -1522,6 +1522,26 @@ jobs:
                   if-no-files-found: error
                   retention-days: 7
 
+            - name: Verify Dynamic Components project imports and saved edits
+              env:
+                  JAVASCRIPT_DYNAMIC_COMPONENTS_BROWSER_DIR: output/javascript-dynamic-components-browser
+                  COURSE_IMPORT_SCREENSHOT_DIR: output/javascript-dynamic-components-screenshots
+              run: node --test test/javascript-dynamic-components-course-browser.test.mjs
+            - name: Execute Dynamic Components exports offline
+              env:
+                  JAVASCRIPT_DYNAMIC_COMPONENTS_BROWSER_DIR: output/javascript-dynamic-components-browser
+              run: node --test test/javascript-dynamic-components-exported-browser.test.mjs
+            - name: Retain Dynamic Components original workflow evidence
+              if: always()
+              uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+              with:
+                  name: javascript-dynamic-components-workflows
+                  path: |
+                      output/javascript-dynamic-components-browser/
+                      output/javascript-dynamic-components-screenshots/
+                  if-no-files-found: error
+                  retention-days: 7
+
             - name: Verify animation project imports, consent and saved source
               env:
                   JAVASCRIPT_ANIMATION_BROWSER_DIR: output/javascript-animation-browser
