@@ -1165,17 +1165,21 @@ const javascriptLevel1SourceCourse: RawCourse = {
 				},
 				{
 					title: "JSS13 Project 1: Chessboard",
+					preserveInstructions: true,
 					content:
-						"Build an 8-by-8 chessboard with CSS Grid. Use a repeatable grid structure, alternate square colors accurately by row and column, and verify that the board stays square and readable when the browser width changes.",
+						"Build a square chessboard with eight rows and eight columns. Keep all 64 squares in row order. A CSS grid container controls its direct children: `display: grid; grid-template-columns: repeat(8, 1fr); grid-template-rows: repeat(8, 1fr)` divides its available space into equal tracks. `1fr` shares the remaining space equally; it is not a fixed pixel length.\n\nAlternate light and dark squares within each row and reverse the starting color on the next row. The parity rule is `(row + column) % 2`: adjacent squares change color, including across row boundaries. Merely coloring every second child fails at the start of an even-length row. Use explicit classes or a correct row-aware selector, then check the top-left square and all four corners.\n\nGive the board a width that fits its parent and an `aspect-ratio: 1`. A useful rule is `width: min(100%, 90vmin, 42rem)` with `box-sizing: border-box` so the border stays inside that width. `vmin` follows the smaller viewport dimension. A width based only on viewport height can overflow a portrait phone. Let the parent center the board without adding fixed side tracks.\n\nThe starter leaves the board unfinished. Retain one page heading and give the finished noninteractive board a descriptive accessible name, rather than exposing 64 meaningless controls. Check all 64 squares, 32 of each color, equal cell sizes, alternating rows, no horizontal overflow, and a square board at phone and desktop widths and 200% zoom. Save one visible color change and export every companion file.",
 					projectLink:
 						"https://codepen.io/junilearning/pen/2573f4cfc9cb525b5940f500fd22dc79",
 					solutionLink:
 						"https://codepen.io/junilearning/pen/6d8b7a81d39a66ce9536c1e700f287c0"
 				},
 				{
-					title: "Component Library Grids",
+					id: "javascript-level-1-javascript-superstar-jss13-the-grid-layout-curriculum-component-library-grids",
+					aliases: ["Component Library Grids"],
+					title: "JSS13 Project 2: The Responsive Grid",
+					preserveInstructions: true,
 					content:
-						"Materialize uses a 12-column responsive grid. Build rows with columns that change across small, medium, and large breakpoints, then resize the browser to verify when each layout rule takes effect. The page makes it clear why responsive component-library grids are different from manually placing every element.",
+						'Build the original Responsive Grid project with the supplied Materialize 1.0.0 CSS and Material Icons 3.0.1 font. A Materialize row contains columns whose widths are fractions of a 12-column grid. `col s4 m2 l1` means 4/12 of the row on small screens, 2/12 on medium screens, and 1/12 on large screens. In this version, medium begins at 601px and large at 993px; narrower rules continue to apply until a wider rule overrides them.\n\nFirst create 12 numbered cards in their original order. At large widths they form one row of 12; at medium widths they form two rows of six; at small widths they form four rows of three. Then create six information cards with `col s12 m6 l4`: three columns on large screens, two on medium screens, and one on small screens. A `row` clears the floated columns; a `container` sets a centered maximum width.\n\nThe six original icon names are favorite_border, code, language, functions, http, and share. Load `vendor/material-icons.css` and put a name inside an element with class `material-icons`; mark decorative glyphs `aria-hidden="true"` and keep the readable caption beside them. Use captions about learning, coding, remote study, mathematics, websites, and sharing. The bundled font renders without a font service.\n\nThe starter intentionally leaves both sets unfinished. Test the 600/601px and 992/993px boundaries as well as phone and desktop widths. Count all 12 numbered cards and all six information cards, verify row counts and source order, inspect a loaded icon glyph, and check readable contrast and wrapping at 200% zoom.',
 					projectLink:
 						"https://codepen.io/junilearning/pen/a3eaa0595c2a0f55991e946605e38e60",
 					solutionLink:
@@ -1183,8 +1187,9 @@ const javascriptLevel1SourceCourse: RawCourse = {
 				},
 				{
 					title: "JSS13 Project 3: Pokemon Team",
+					preserveInstructions: true,
 					content:
-						"Create a responsive Pokemon team page with images, nicknames, moveset tables, stats icons, and a navbar. Use a grid so team cards reflow cleanly across screen sizes, and keep table labels readable on mobile. Each Pokemon card uses the same component pattern with different content.",
+						"Build a six-member Pok\u00E9mon team page with a navigation landmark, a page heading, portraits, fictional nicknames, statistics, and moveset tables. Use the supplied six species, values, moves, and local image filenames from README.md, or make a complete consistent team of your own. The supplied values are sample team data from the original exercise, not species base-stat claims or a competitive-game guide.\n\nUse a repeated card structure with a heading for the species and text for its nickname. Show HP, ATK, DEF, SPA, SPD, and SPE with a readable label and a matching decorative icon. Their expanded labels are hit points, attack, defense, special attack, special defense, and speed. A `dl` associates each statistic's `dt` label with its `dd` value. Keep the text labels even when an icon is present.\n\nPut moves in a real table with a caption and row labels. Use meaningful image alternatives that name each species. Keep the local SVG image companions with the project: each contains the retained original raster, so no external image request is needed. `object-fit: contain` and a flexible width preserve the complete portrait.\n\nMaterialize's `col s12 m6 l4` makes one team card per row on small screens, two on medium screens, and three on large screens. The included reference uses an equivalent CSS grid so cards in the same row share available width without float gaps. At 600px and below use one column, from 601px use two, and from 993px use three. Long labels and moves must wrap within a card.\n\nThe starter leaves the team unfinished; the reference supplies all six fictional nicknames, the original 36 values and 24 moves. Check those counts, six loaded portraits, table captions and labels, all breakpoint transitions, keyboard navigation, and no horizontal overflow at phone widths or 200% zoom. Change one visible nickname, save, reload, and export the complete project.",
 					projectLink:
 						"https://codepen.io/junilearning/pen/ae3059e723f4f66779b4cd4e2a1fc520",
 					solutionLink:
@@ -1192,17 +1197,21 @@ const javascriptLevel1SourceCourse: RawCourse = {
 				},
 				{
 					title: "JSS13 Project 4: My JavaScript Art Part III",
+					preserveInstructions: true,
 					content:
-						"Add another D3 piece to the art portfolio and reorganize the page with CSS Grid or the Materialize grid. Use cards with descriptions, and consider an alternating layout pattern so the page has visual rhythm. Verify that the layout still works at desktop and mobile widths.",
+						"Continue the four-piece D3 portfolio and add a fifth original drawing. The supplied starter already contains Rainbow, Captain America Shield, Pac-Man, and Snowman. It leaves the new drawing and card layout unfinished. The original linked Part III reference contains only those four earlier drawings; the local reference adds an explicitly authored Constellation example to complete the assignment.\n\nLoad Materialize 1.0.0 CSS, D3 5.16.0, and then script.js in that order. Keep the earlier drawings' geometry and add a new SVG inside `#constellation`. The example uses a 400 by 260 coordinate area, six circle centers at (45,190), (105,70), (180,130), (245,45), (300,150), and (355,85), and five connecting line segments. `selectAll(...).data(points).enter().append(...)` creates one circle per record; an SVG polyline can connect the same coordinates in order. The new drawing is an example, not an additional original CodePen drawing.\n\nGive every SVG a `viewBox`, a responsive width, and an accessible description. Keep one page heading and a heading and description for each piece. Use a two-column card layout on wide screens and one column on phones; alternating the drawing and text on wide rows must still leave a sensible source order. Prefer a CSS grid on each card to fixed-width spacer columns.\n\nPreserve the seven rainbow arcs, four shield circles and star, two opposite-angle Pac-Man arcs, and the snowman's circles, smile, and arms. Convert degrees with `degrees * Math.PI / 180` before passing angles to D3 arcs. Keep all drawings inside their viewBoxes. Respect `prefers-reduced-motion: reduce` by displaying the rainbow's final state immediately; the standard version can retain its staggered reveal.\n\nCheck all five drawings in the reference, the four earlier drawings and unfinished fifth area in the starter, readable descriptions, responsive cards, both motion preferences, phone widths, and 200% zoom. Save a visible drawing change and export the HTML, CSS, JavaScript, libraries, and licenses together.",
 					projectLink:
+						"/course-assets/javascript-level-1/grid-layout-v1/my-javascript-art-part-3/starter/index.html.txt",
+					solutionLink:
 						"https://codepen.io/junilearning/pen/4735eaf3e168cfb944a3daad063e287c"
 				}
 			],
 			supplementalProjects: [
 				{
 					title: "JSS13 Supplemental Project 1: FakeTech.io",
+					preserveInstructions: true,
 					content:
-						"Build a fictional company page with employee cards. Use Materialize components such as circular images, vertical alignment wrappers, card layouts, and hoverable shadows. Each card includes consistent content fields, and the page stays readable when the cards wrap to a new row.",
+						"Create a fictional company employee page using the five supplied biographies and local illustrated portraits in README.md. Each employee needs an identity heading, role and complete biography. Keep the same content fields in the same order so readers can compare the cards. The people and company belong to this exercise.\n\nLoad Materialize 1.0.0 CSS. A `card-panel` adds padding and elevation; `z-depth-2` sets a shadow and `hoverable` changes it on pointer hover. A `valign-wrapper` uses flex alignment to center children vertically, and `circle` rounds a square portrait. These appearance helpers do not turn a card into a button. Leave these informational cards as ordinary articles.\n\nUse a grid or flex layout to put a portrait beside a biography on large screens. Alternate sides on successive wide cards if desired. At narrow widths stack the portrait and text, keep the complete biography visible, and preserve meaningful reading order. Name each person with a heading; a decorative portrait beside that heading can use an empty alternative.\n\nThe starter leaves the five cards unfinished. Check Mark, Molly, Stefan, Sara, and Janet, all five loaded local portraits, complete biographies and roles, circular crops, vertical alignment, and card shadows. Verify wrapping on phones and at 200% zoom. A visual hover effect must not be the only way to discover content. Save a visible edit and export every companion file. This supplemental project practices component styling rather than replacing the core responsive-grid work.",
 					projectLink:
 						"https://codepen.io/junilearning/pen/ca71737eccb1712a4a653a8f883c57cf",
 					solutionLink:
@@ -1210,8 +1219,9 @@ const javascriptLevel1SourceCourse: RawCourse = {
 				},
 				{
 					title: "JSS13 Supplemental Project 2: Art Gallery",
+					preserveInstructions: true,
 					content:
-						"Create an online art gallery with 12 pieces using horizontal cards, descriptions, and links. Plan how the gallery behaves on desktop, tablet, and mobile widths, then use responsive classes or grid rules to make the cards readable at each size.",
+						"Build a gallery containing all 12 supplied artworks, artists, local images, visual descriptions, and links from README.md. Put each artwork in a horizontal card with an image frame and a text area. Use a heading for the work, name its artist, and describe something visible in the image rather than repeating the title. Preserve each image's aspect ratio and use a meaningful alternative.\n\nUse CSS Grid to arrange four cards per row on desktop, three on tablets, and one on phones. Apply `grid-template-columns: repeat(4, minmax(0, 1fr))` at large widths, three tracks from 601px, and one below that. Within a card, use two flexible tracks for image and text; stack them when the available width is too small. `minmax(0, 1fr)` lets long content shrink and wrap instead of forcing page overflow.\n\nGive each image a visible frame, use `object-fit: contain`, and let the card grow to fit the complete description. Keep links underlined and provide a visible `:focus-visible` outline.\n\nThe starter leaves the artwork cards unfinished. Check all 12 headings and artist names, all 12 loaded images and complete descriptions, four/three/one-column reflow, correct destinations, keyboard focus, readable contrast, and no horizontal overflow at phone widths or 200% zoom. The gallery renders offline; following an external source link needs a connection. Save one visible framing change and export every companion file.",
 					projectLink:
 						"https://codepen.io/junilearning/pen/8a2437122b9c7eb4159c9cacccdedae8",
 					solutionLink:
