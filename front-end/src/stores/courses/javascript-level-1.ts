@@ -734,7 +734,7 @@ const javascriptLevel1SourceCourse: RawCourse = {
 				{
 					title: "JSS7 Project 3: Pac-Man",
 					content:
-						"Draw Pac-Man as an arc with a missing slice. Choose start and end angles that leave a visible mouth opening, set the inner radius to create a filled wedge, and translate the shape to the correct position. Test a wider and narrower mouth by changing only the angle values.",
+						"Draw two Pac-Men facing each other with D3 arcs. Set `innerRadius` to `0`, give the second character the same start and end angles with opposite signs, and translate the paths to separate centers. Test a wider and narrower mouth by changing the angle values.",
 					projectLink: "https://codepen.io/junilearning/pen/JjGORoK",
 					solutionLink:
 						"https://codepen.io/junilearning/pen/6df064875eb631bc08eab5c342ef98f7"
