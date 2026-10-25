@@ -233,8 +233,8 @@ it("retains the original responsive-grid identity and supplemental boundaries", 
 		module.curriculum.filter(item => item.title.startsWith("JSS13 Project"))
 	).toHaveLength(4);
 	expect(
-		module.supplementalProjects.some(item =>
-			item.title.includes("FakeTech.io")
+		module.supplementalProjects.some(
+			item => item.title === "JSS13 Supplemental Project 1: FakeTech.io"
 		)
 	).toBe(true);
 	expect(

@@ -6,9 +6,9 @@ const fixture = JSON.parse(readFileSync(new URL("./fixtures/javascript-grid-layo
 export function editedGridLayoutSource(resource, filename) {
 	const reference = fixture.resources.find(row => row.project === resource.project && row.role === "reference");
 	const source = readFileSync(new URL(`../front-end/public/course-assets/javascript-level-1/${reference.files.find(file => file.name === filename).path}`, import.meta.url), "utf8");
-	if (filename === "script.js") return source.replace('.attr("fill", "red")', '.attr("fill", "purple")');
+	if (filename === "script.js") return source.replace(".attr(\"fill\", \"red\")", ".attr(\"fill\", \"purple\")");
 	return filename === "index.html"
-		? source.replace("<title>", "<title>Saved ").replace("<h1", '<h1 data-saved-edit="true"')
+		? source.replace("<title>", "<title>Saved ").replace("<h1", "<h1 data-saved-edit=\"true\"")
 		: `${source}\nbody { border-top: 6px solid #7c3aed; }\n`;
 }
 
@@ -20,7 +20,7 @@ export async function inspectGridLayout(page, resource, kind) {
 	if (art) await page.waitForFunction(() => document.querySelectorAll("#rainbow path").length === 7 && [...document.querySelectorAll("#rainbow path")].every(node => getComputedStyle(node).opacity === "1"));
 	const state = await page.evaluate(() => {
 		const all = selector => [...document.querySelectorAll(selector)];
-		const box = node => {
+		const box = (node) => {
 			const r = node.getBoundingClientRect();
 			return { x: r.x, y: r.y, width: r.width, height: r.height, right: r.right };
 		};
@@ -32,8 +32,8 @@ export async function inspectGridLayout(page, resource, kind) {
 			headings: all("h1,h2").map(node => node.textContent.trim()),
 			board: document.querySelector(".board") ? box(document.querySelector(".board")) : null,
 			tiles: all(".tile").map(node => ({ ...box(node), dark: node.classList.contains("dark") })),
-			numbered: all('section[aria-label="Twelve numbered cards"] .card').map(node => ({ ...box(node), text: node.textContent.trim() })),
-			info: all('section[aria-label="Six learning cards"] .card').map(box),
+			numbered: all("section[aria-label=\"Twelve numbered cards\"] .card").map(node => ({ ...box(node), text: node.textContent.trim() })),
+			info: all("section[aria-label=\"Six learning cards\"] .card").map(box),
 			icons: all(".material-icons").map(node => ({ name: node.textContent.trim(), hiddenFromAT: node.getAttribute("aria-hidden") })),
 			fontLoaded: [...document.fonts].some(font => font.family.includes("Material Icons") && font.status === "loaded"),
 			images: all("img").map(node => ({ ...box(node), alt: node.getAttribute("alt"), loaded: node.complete && node.naturalWidth > 0 })),
@@ -92,7 +92,8 @@ export async function inspectGridLayout(page, resource, kind) {
 	else if (resource.project === "fake-tech") {
 		assert.deepEqual(state.employees.map(row => row.name), ["Mark", "Molly", "Stefan", "Sara", "Janet"]);
 		assert.equal(state.images.length, 5);
-		assert.ok(state.employees.every(row => row.bio.includes("FakeTech.io") && row.radius === "50%"));
+		assert.deepEqual(state.employees.map(row => row.bio), ["Mark is the CEO of FakeTech.io, he is originally from the East Coast and moved to San Francisco for college. He loves to fish and golf!", "Molly is the CTO of FakeTech.io, and she loves to code in Python and JavaScript! In her free time, she loves to play hockey and play video games!", "Stefan is the CFO of FakeTech.io, and he has known Molly since High School. He loves to dine at nice restaurants and going skiing!", "Sara is the VP of Sales of our FakeTech.io, and she is always looking for a big sale! She loves to go to concerts and run marathons!", "Janet is the VP of Marketing of FakeTech.io, and she has a pet dog named Sparky. She loves her dog and picnics!"]);
+		assert.ok(state.employees.every(row => row.radius === "50%"));
 	}
 	else if (resource.project === "art-gallery") {
 		assert.equal(state.works.length, 12);
@@ -121,7 +122,7 @@ export async function inspectGridLayout(page, resource, kind) {
 		assert.equal(state.lines, 2);
 		assert.ok(state.svgs.every(row => row.viewBox && row.role === "img" && row.labelled));
 		assert.equal(state.shield[0], kind === "edited" ? "purple" : "red");
-		if (!unfinished) assert.deepEqual(state.constellation, [[45,190,7],[105,70,7],[180,130,7],[245,45,7],[300,150,7],[355,85,7]]);
+		if (!unfinished) assert.deepEqual(state.constellation, [[45, 190, 7], [105, 70, 7], [180, 130, 7], [245, 45, 7], [300, 150, 7], [355, 85, 7]]);
 	}
 	return state;
 }
