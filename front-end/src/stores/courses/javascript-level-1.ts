@@ -1,4 +1,5 @@
 import type { RawCourse } from "./types";
+import javascriptMasterProjectReading from "@/assets/course-guides/javascript-master-project.md?raw";
 import { buildProjectGuidance } from "./projectGuidance";
 import { pendingStaticMediaNotice, staticMediaUrl } from "./staticMedia";
 import { buildSupportSectionGuidance } from "./supportSectionGuidance";
@@ -1337,8 +1338,8 @@ const javascriptLevel1SourceCourse: RawCourse = {
 			curriculum: [
 				{
 					title: "JSS15 Project 1: Master Project",
-					content:
-						"Build a splash page (business, restaurant, news, e-commerce, or other idea) showcasing course concepts with Materialize components. Plan to complete over about two weeks while moving on to the next course once the core is done.",
+					preserveInstructions: true,
+					content: javascriptMasterProjectReading,
 					projectLink:
 						"https://codepen.io/junilearning/pen/181b8577413d710bc8e669f2740d4c5b",
 					solutionLink:
