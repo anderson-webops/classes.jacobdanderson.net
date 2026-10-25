@@ -726,7 +726,7 @@ const javascriptLevel1SourceCourse: RawCourse = {
 				{
 					title: "JSS7 Project 2: Smiley Face",
 					content:
-						"Draw a smiley face with D3 by combining circles, ellipses, and an arc-based mouth. Use `degreesToRadians()` or a similar helper so the mouth angles are understandable. The final drawing places both eyes symmetrically and positions the mouth relative to the face center instead of relying on unexplained coordinates.",
+						"Draw a smiley face with D3 using two eye shapes and an arc-based mouth. Use `degreesToRadians()` or a similar helper so the mouth angles are understandable. The final drawing places both eyes symmetrically and positions the mouth relative to the face center instead of relying on unexplained coordinates.",
 					projectLink: "https://codepen.io/junilearning/pen/MWKOeRd",
 					solutionLink:
 						"https://codepen.io/junilearning/pen/593993382174caa7d510ddbd5b0009d8"
