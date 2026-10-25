@@ -667,7 +667,7 @@ const standardsOverrides: Record<string, string[]> = {
 		"WHATWG HTML Living Standard and DOM specifications for semantic structure, forms, document state, and events.",
 		"Modern CSS references for the box model, positioning, responsive layout, Grid, and source-order preservation.",
 		"WCAG 2.2 and MDN accessibility guidance for names, labels, keyboard access, focus, contrast, motion, status changes, and responsive reflow.",
-		"D3 7.9.0 and Materialize 2.2.2 documentation only where preserved course projects explicitly use those libraries."
+		"D3 documentation matching the supplied project version, and Materialize 2.2.2 documentation only where preserved course projects explicitly use those libraries."
 	],
 	"javascript-level-2-javascript-master": [
 		"ECMA-262 2026 and the MDN JavaScript Guide for function, array, object, iterator, promise, and error behavior.",

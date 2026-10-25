@@ -1,9 +1,11 @@
 import type { PythonIdeFile } from "@/modules/pythonIde";
 import { javascriptAdvancedConditionalsResources } from "@/modules/javascriptAdvancedConditionalsResources";
+import { javascriptAnimationResources } from "@/modules/javascriptAnimationResources";
 import { javascriptCombiningResources } from "@/modules/javascriptCombiningResources";
 import { javascriptConditionalsResources } from "@/modules/javascriptConditionalsResources";
 import { javascriptDrawingResources } from "@/modules/javascriptDrawingResources";
 import { javascriptFirstModuleResources } from "@/modules/javascriptFirstModuleResources";
+import { javascriptHtmlCssResources } from "@/modules/javascriptHtmlCssResources";
 import { javascriptLoopsResources } from "@/modules/javascriptLoopsResources";
 import { javascriptNestedLoopsResources } from "@/modules/javascriptNestedLoopsResources";
 import { javascriptOperatorsResources } from "@/modules/javascriptOperatorsResources";
@@ -32,7 +34,9 @@ const roles: readonly CourseRole[] = [
 	...javascriptConditionalsResources,
 	...javascriptAdvancedConditionalsResources,
 	...javascriptDrawingResources,
-	...javascriptNestedLoopsResources
+	...javascriptNestedLoopsResources,
+	...javascriptHtmlCssResources,
+	...javascriptAnimationResources
 ];
 
 export function javascriptCourseResource(value: string) {
