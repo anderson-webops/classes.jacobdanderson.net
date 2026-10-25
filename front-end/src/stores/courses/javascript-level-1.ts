@@ -712,6 +712,7 @@ const javascriptLevel1SourceCourse: RawCourse = {
 				},
 				{
 					title: "Drawing Shapes in D3",
+					preserveInstructions: true,
 					content:
 						"Draw rectangles, circles, and ellipses by appending SVG elements and setting their attributes. Use `x`, `y`, `width`, `height`, and `fill` for rectangles; `cx`, `cy`, and `r` for circles; and `rx` and `ry` for ellipses. Verify each shape by changing one coordinate or size attribute and predicting how the drawing will move.",
 					projectLink: "https://codepen.io/junilearning/pen/zYrPBYM",
@@ -725,6 +726,7 @@ const javascriptLevel1SourceCourse: RawCourse = {
 				},
 				{
 					title: "JSS7 Project 2: Smiley Face",
+					preserveInstructions: true,
 					content:
 						"Draw a smiley face with D3 using two eye shapes and an arc-based mouth. Use `degreesToRadians()` or a similar helper so the mouth angles are understandable. The final drawing places both eyes symmetrically and positions the mouth relative to the face center instead of relying on unexplained coordinates.",
 					projectLink: "https://codepen.io/junilearning/pen/MWKOeRd",
@@ -733,6 +735,7 @@ const javascriptLevel1SourceCourse: RawCourse = {
 				},
 				{
 					title: "JSS7 Project 3: Pac-Man",
+					preserveInstructions: true,
 					content:
 						"Draw two Pac-Men facing each other with D3 arcs. Set `innerRadius` to `0`, give the second character the same start and end angles with opposite signs, and translate the paths to separate centers. Test a wider and narrower mouth by changing the angle values.",
 					projectLink: "https://codepen.io/junilearning/pen/JjGORoK",
@@ -743,6 +746,7 @@ const javascriptLevel1SourceCourse: RawCourse = {
 			supplementalProjects: [
 				{
 					title: "JSS7 Supplemental Project 1: Snowman",
+					preserveInstructions: true,
 					content:
 						"Draw a snowman from multiple D3 shapes: stacked circles for the body, smaller shapes for eyes/buttons, arcs or lines for facial details, and optional lines for arms. Build the drawing from named sections so the body, face, and accessories can be adjusted independently.",
 					projectLink: "https://codepen.io/junilearning/pen/GRoOjjx",
@@ -751,6 +755,7 @@ const javascriptLevel1SourceCourse: RawCourse = {
 				},
 				{
 					title: "JSS7 Supplemental Project 2: Captain America's Shield",
+					preserveInstructions: true,
 					content:
 						"Draw Captain America's shield with concentric circular or arc shapes and a centered star. Use the D3 symbol documentation for the star, keep the center coordinates consistent across layers, and verify that later shapes do not accidentally cover the star or important ring boundaries.",
 					projectLink: "https://codepen.io/junilearning/pen/VweRVWq",
@@ -759,6 +764,7 @@ const javascriptLevel1SourceCourse: RawCourse = {
 				},
 				{
 					title: "JSS7 Supplemental Project 3: Debugging Olaf's Star",
+					preserveInstructions: true,
 					content:
 						"Repair the D3 drawing so the star appears in the intended position on the snowman. Trace the shape creation, fill/stroke settings, and transform coordinates, then confirm the final drawing still preserves the rest of the snowman while adding the missing star.",
 					projectLink: "https://codepen.io/junilearning/pen/rNxZJdQ",
