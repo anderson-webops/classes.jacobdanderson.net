@@ -1462,6 +1462,26 @@ jobs:
                   if-no-files-found: error
                   retention-days: 7
 
+            - name: Verify Basic Layout project imports and saved edits
+              env:
+                  JAVASCRIPT_BASIC_LAYOUT_BROWSER_DIR: output/javascript-basic-layout-browser
+                  COURSE_IMPORT_SCREENSHOT_DIR: output/javascript-basic-layout-screenshots
+              run: node --test test/javascript-basic-layout-course-browser.test.mjs
+            - name: Execute Basic Layout exports offline
+              env:
+                  JAVASCRIPT_BASIC_LAYOUT_BROWSER_DIR: output/javascript-basic-layout-browser
+              run: node --test test/javascript-basic-layout-exported-browser.test.mjs
+            - name: Retain Basic Layout original workflow evidence
+              if: always()
+              uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+              with:
+                  name: javascript-basic-layout-workflows
+                  path: |
+                      output/javascript-basic-layout-browser/
+                      output/javascript-basic-layout-screenshots/
+                  if-no-files-found: error
+                  retention-days: 7
+
             - name: Verify animation project imports, consent and saved source
               env:
                   JAVASCRIPT_ANIMATION_BROWSER_DIR: output/javascript-animation-browser

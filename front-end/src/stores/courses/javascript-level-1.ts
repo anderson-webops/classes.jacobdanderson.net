@@ -1063,13 +1063,15 @@ const javascriptLevel1SourceCourse: RawCourse = {
 			curriculum: [
 				{
 					title: "Component Libraries",
+					preserveInstructions: true,
 					content:
-						"Component libraries provide prebuilt CSS and JavaScript patterns. Add Materialize through CodePen settings, read the relevant documentation before copying markup, and identify which classes control layout, color, spacing, or component behavior. The library is used deliberately rather than treated as a set of magic class names."
+						"The local project packs include Materialize 1.0.0 CSS and its license. Link vendor/materialize.min.css in the document head before styles.css. Classes such as container, section, card-panel, striped, and centered apply documented styles to ordinary HTML. Inspect the element and computed styles to connect each class to width, padding, shadow, color, or alignment. These static projects do not need jQuery or Materialize JavaScript. Use semantic HTML for headings and tabular data, then compare the library styles with a small native CSS rule. The separate practice guide uses Materialize 2.2.2; record which supplied version is loaded instead of mixing their assumptions."
 				},
 				{
 					title: "JSS12 Project 1: Rainbow Sections",
+					preserveInstructions: true,
 					content:
-						"Use Materialize sections, containers, cards, and color helpers to build a rainbow-themed page. Each section has a clear color choice, readable text, and consistent spacing. Prefer Materialize spacing/layout classes where possible, and only use line breaks when they are intentionally part of the design.",
+						"Build three groups of seven colored blocks, in this order: red, orange, yellow, green, blue, indigo, and purple. The supplied reference has 21 blocks in total. Compare seven `card-panel` divs inside a `container`, seven `section` divs inside a second `container`, and seven `section` divs that span the page outside either container. Keep the groups separate so their width and spacing can be compared.\n\nLoad the included `vendor/materialize.min.css` before `styles.css`. This is Materialize 1.0.0, matching the original project. A class is an HTML attribute: `<div class=\"section red\">Red</div>` combines the section's vertical padding with a red background. Multiple classes are separated by spaces. A `container` limits the content width and centers it; it does not add a visible border. A `card-panel` adds padding, margin, and a shadow. A `section` adds vertical padding without the card's elevation.\n\nGive the page one `h1` and each comparison an `h2`. Name each color in text as well as showing its background. Choose readable foreground colors: dark text on light colors and white text on indigo or purple. Keep the seven outside sections outside the containers so they actually reach the viewport edges. The imported starter intentionally leaves these groups unfinished.\n\nRun the page at narrow and wide widths and at 200% zoom. Confirm all three seven-color groups remain in order, the containers narrow the first two groups, and the last group fills the available width. Use the inspector to compare padding, margin, width, and shadow. These static components need CSS only; jQuery and Materialize JavaScript are not required.",
 					projectLink:
 						"https://codepen.io/junilearning/pen/ed06d5371daf7472425bea1c7e65e4bf",
 					solutionLink:
@@ -1077,8 +1079,9 @@ const javascriptLevel1SourceCourse: RawCourse = {
 				},
 				{
 					title: "JSS12 Project 2: My Hobby Table",
+					preserveInstructions: true,
 					content:
-						"Build a styled table about a hobby using the Materialize table documentation. Use `thead` and `th` for column labels, keep each row consistent, and choose hover, striped, or centered table styles intentionally. The finished table is readable without relying only on color.",
+						'Create a table about a hobby with consistent columns and rows, or use the supplied historical 2019 NFL dataset in README.md. State the table\'s subject and time period in a `caption`. The reference preserves all ten players from the original 2019 AP first-team offense example; its team names describe that season, not current rosters. The spelling is Zack Martin.\n\nUse `table` for the data, `thead` for the header group, `tbody` for the data rows, and `tr` for each row. Column headings use `<th scope="col">`; each player\'s name can use `<th scope="row">`. Other cells use `td`. Put the same fields in the same order in every row. For example, a row can contain Lamar Jackson, Baltimore Ravens, and Quarterback.\n\nLoad the included Materialize 1.0.0 CSS. `class="striped centered"` adds alternate row shading and centers the table\'s cells. The table remains readable without relying only on color: row and column labels convey the data when color or styling is unavailable. Use CSS such as `overflow-wrap: anywhere` for long names and flexible widths for the surrounding container; avoid a fixed page width.\n\nVerify the ten-row reference or the chosen complete dataset, the caption, every row/column association, and readable wrapping at phone and desktop widths and 200% zoom. Compare the striped rows with an unstyled table and identify which appearance comes from the library. The page and its supplied data work offline; opening the source link requires a connection.',
 					projectLink:
 						"https://codepen.io/junilearning/pen/0214806859946640ce1654c9c3ec08f0",
 					solutionLink:
@@ -1086,13 +1089,17 @@ const javascriptLevel1SourceCourse: RawCourse = {
 				},
 				{
 					title: "Material Icons",
+					preserveInstructions: true,
 					content:
-						"Add the Material Icons dependency, place icons using the documented markup, and treat each icon as a scalable visual label rather than a bitmap image. Verify that icon names render correctly, that icon size/color can be controlled with CSS or Materialize helpers, and that surrounding text still explains the action for readability. A complete page does not rely on icons alone: buttons, headings, and links keep readable text or labels so the visual icon improves scanning without becoming the only source of meaning."
+						'The Reverse The Rainbow pack includes the original Material Icons 3.0.1 font and license inside vendor/material-icons.css. Load that CSS, then place a documented ligature name inside an element with class material-icons, such as `<i class="material-icons" aria-hidden="true">face</i>`. Materialize adds tiny, small, medium, and large size helpers and color helpers such as red-text. A font icon is a glyph, not an image file. Keep an accessible text name for an example and a readable action label for any real button or link. Check that the bundled font loads offline and that text, source order, and meaning remain available when visual styling is unavailable.'
 				},
 				{
-					title: "Mobile Wrappers",
+					id: "javascript-level-1-javascript-superstar-jss12-basic-website-layout-curriculum-mobile-wrappers",
+					aliases: ["Mobile Wrappers"],
+					title: "JSS12 Project 3: Reverse The Rainbow",
+					preserveInstructions: true,
 					content:
-						"Use Materialize responsive helper classes to show, hide, or rearrange content for small, medium, and large screens. Test the same page at multiple viewport widths and record which content remains visible, which content collapses or disappears, and why that choice improves the layout.",
+						'Build a row of seven different Material Icons in rainbow order. The original reference uses face, bug_report, fingerprint, autorenew, build, card_travel, and event_seat, colored red through purple. At large widths use Materialize\'s `large` icon size. At medium and smaller widths reverse both the order and colors and use `small` icons.\n\nLoad the included Materialize 1.0.0 CSS and `vendor/material-icons.css`. The icon CSS embeds the original Material Icons 3.0.1 font, so the page does not depend on a font service. A glyph is selected by a ligature name, for example `<i class="material-icons large red-text" aria-hidden="true">face</i>`. Keep an accessible text name for every example; icons used in real buttons or links also need a readable action label.\n\nUse two wrappers. Give the large row `row center hide-on-med-and-down` and the compact row `row center hide-on-large-only`. In this included CSS, the large row is hidden at 992px and below; the compact row is hidden at 993px and above. `large` means 6rem and `small` means 2rem. Write the compact row\'s elements in reverse DOM order so reading order agrees with what is displayed. Hidden wrappers use `display: none`, so only one set is exposed at a time.\n\nTest 992px and 993px as well as phone and wide-desktop widths. Confirm that exactly one row is visible, each row has seven loaded icon glyphs, the order reverses at the breakpoint, and icon sizes change. Let the compact row wrap at high zoom instead of clipping or hiding examples.',
 					projectLink:
 						"https://codepen.io/junilearning/pen/ab476697ba2b3957601555751bda65fb",
 					solutionLink:
@@ -1100,17 +1107,21 @@ const javascriptLevel1SourceCourse: RawCourse = {
 				},
 				{
 					title: "JSS12 Project 4: My JavaScript Art Part II",
+					preserveInstructions: true,
 					content:
-						"Add another D3 piece to the JavaScript art page and reorganize the gallery with Materialize sections or containers. The new piece includes a title and description, and the page shows clearer grouping than the first version: sections, cards, or spacing help a visitor scan the work.",
+						"Extend the three-piece JavaScript art gallery with a snowman and organize all four pieces using Materialize sections. Give the page one `h1`; Rainbow, Captain America Shield, Pac-Man, and Snowman each need an `h2`, a short description of the code, and their own container. The independently authored starter continues the supplied three-piece gallery and leaves the snowman unfinished. The original linked Part II material is a complete reference.\n\nLoad the included Materialize 1.0.0 CSS, D3 5.16.0, and then `script.js`. D3's `select` chooses a container, `append` creates an SVG element or shape, and `attr` assigns an attribute. Create the snowman's SVG inside `#snowman` with a 300 by 500 coordinate area. Give it a `viewBox` and let CSS scale its width to fit the screen.\n\nThe reference snowman has a white head centered at (150,50), radius 50; black eyes at (125,35) and (175,35), radius 5; an orange nose at (150,50), radius 5; a white middle at (150,160), radius 70; and a white lower body at (150,300), radius 100. Two brown lines form arms from (200,160) to (300,145) and (100,160) to (0,145). The smile is a black arc with inner radius 10, outer radius 15, angles 90 to 270 degrees, translated to (150,70). Convert degrees with `degrees * Math.PI / 180` before passing them to `d3.arc()`. Draw later shapes above earlier ones and keep the snowman's background dark enough to see white circles.\n\nPreserve the earlier seven-arc rainbow, four-circle shield with a star, and two Pac-Man arcs. Label each SVG with its description. For `prefers-reduced-motion: reduce`, show the rainbow's final state immediately; otherwise retain its staggered reveal. Check all four complete drawings, their descriptions, narrow-screen scaling, reduced motion, and one visible saved code change before exporting the complete project.",
 					projectLink:
+						"/course-assets/javascript-level-1/basic-layout-v1/my-javascript-art-part-2/starter/index.html.txt",
+					solutionLink:
 						"https://codepen.io/junilearning/pen/68f7db60fabe38f5ff48cf4cfa631a4c"
 				}
 			],
 			supplementalProjects: [
 				{
 					title: "JSS12 Supplemental Project 1: Table Documentation Dive",
+					preserveInstructions: true,
 					content:
-						"Extend a table using documentation-driven changes. Add hover highlighting, make selected names or entries link to credible sources, and verify that the clickable area is obvious. The project demonstrates reading documentation, applying a class or attribute, and checking the result in the browser.",
+						'Extend the My Hobby Table project, or build the supplied ten-row 2019 table from README.md. Keep the caption, column headings, row headings, and historical team labels. This is supplemental practice in reading documentation and applying a focused change; it does not replace the core table project.\n\nIn the included Materialize 1.0.0 CSS, `class="highlight centered"` highlights the row under the pointer and centers the cells. Add links to the player names with an `a` element and an appropriate absolute HTTPS `href`. The reference preserves the original ten Wikipedia destinations, including the correctly spelled Zack Martin page. Use meaningful link text so a list of links still identifies each destination.\n\nA pointer hover is not keyboard focus. Keep links underlined, add a visible `:focus-visible` outline, and use `tbody tr:focus-within` to highlight the row containing the focused link. Move through every link with Tab, confirm that only the relevant row highlights, and make sure the link target and text agree. Preserve ordinary keyboard activation instead of adding a click-only handler.\n\nThe table itself renders offline; following an external source link needs a connection. Check the ten data rows or the chosen complete dataset, pointer and keyboard highlighting, readable long names, phone and desktop widths, and 200% zoom. Record which documented class or selector produces each change.',
 					projectLink:
 						"https://codepen.io/junilearning/pen/a08f05f994009cffe397dd6dd86dbddd",
 					solutionLink:
