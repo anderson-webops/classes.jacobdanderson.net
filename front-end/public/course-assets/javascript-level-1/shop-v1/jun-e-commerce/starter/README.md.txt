@@ -4,9 +4,9 @@ Build a responsive catalog with four featured photographs, six product cards, pr
 
 ## Select a role
 
-The starter is an authored companion with an unfinished main region, local libraries, photographs, and source comments. Only a completed reference was captured for this supplemental example. The separate reference adapts that source; SOURCES.md records its exact panel hashes, original image URLs, and corrections.
+The starter is an authored companion with an unfinished main region, local libraries, photographs, and source comments. Only a completed reference was captured for this supplemental example. The separate reference adapts that source; `SOURCES.md` records its exact panel hashes, original image URLs, and corrections.
 
-Confirm the selected import in the site IDE. Edit index.html, styles.css, and script.js, with README.md as the project brief. Export the ZIP, extract every file, and open index.html in a browser. Both roles work without a server, package installation, or network connection. Documentation and original-source links need a connection.
+Confirm the selected import in the site IDE. Edit index.html, styles.css, and script.js, with `README.md` as the project brief. Export the ZIP, extract every file, and open index.html in a browser. Both roles work without a server, package installation, or network connection. Documentation and original-source links need a connection.
 
 ## Structure the catalog
 
