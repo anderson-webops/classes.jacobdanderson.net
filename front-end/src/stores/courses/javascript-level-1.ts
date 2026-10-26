@@ -1,5 +1,6 @@
 import type { RawCourse } from "./types";
 import javascriptMasterProjectReading from "@/assets/course-guides/javascript-master-project.md?raw";
+import javascriptNewsReading from "@/assets/course-guides/javascript-news.md?raw";
 import javascriptRestaurantReading from "@/assets/course-guides/javascript-restaurant.md?raw";
 import { buildProjectGuidance } from "./projectGuidance";
 import { pendingStaticMediaNotice, staticMediaUrl } from "./staticMedia";
@@ -1379,9 +1380,11 @@ const javascriptLevel1SourceCourse: RawCourse = {
 				{
 					title: "JSS15 Supplemental Project 2: News Homepage",
 					aliases: ["JSS15 Supplemental Project 2: Juni News"],
-					content:
-						"Build a news-style homepage with a headline area, story cards, categories, and a Materialize slider for featured stories. Use layout choices that make article priority clear, and include enough text hierarchy that readers can distinguish headlines, summaries, and metadata.",
+					preserveInstructions: true,
+					content: javascriptNewsReading,
 					projectLink:
+						"/course-assets/javascript-level-1/news-v1/news-homepage/starter/index.html.txt",
+					solutionLink:
 						"https://codepen.io/junilearning/pen/910d8fa54b43a581c779c8dfab792c60"
 				},
 				{

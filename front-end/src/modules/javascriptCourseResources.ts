@@ -15,6 +15,7 @@ import { javascriptMasterProjectResources } from "@/modules/javascriptMasterProj
 import { javascriptMediaParallaxResources } from "@/modules/javascriptMediaParallaxResources";
 import { javascriptMoreHtmlCssResources } from "@/modules/javascriptMoreHtmlCssResources";
 import { javascriptNestedLoopsResources } from "@/modules/javascriptNestedLoopsResources";
+import { javascriptNewsResources } from "@/modules/javascriptNewsResources";
 import { javascriptOperatorsResources } from "@/modules/javascriptOperatorsResources";
 import { javascriptRestaurantResources } from "@/modules/javascriptRestaurantResources";
 
@@ -52,7 +53,8 @@ const roles: readonly CourseRole[] = [
 	...javascriptDynamicComponentsResources,
 	...javascriptMediaParallaxResources,
 	...javascriptMasterProjectResources,
-	...javascriptRestaurantResources
+	...javascriptRestaurantResources,
+	...javascriptNewsResources
 ];
 
 export function javascriptCourseResource(value: string) {
