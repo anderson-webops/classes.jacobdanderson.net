@@ -981,6 +981,25 @@ jobs:
                   if-no-files-found: warn
                   retention-days: 7
 
+            - name: Verify JSM2 original functions imports and saved exports
+              env:
+                  JAVASCRIPT_MASTER_FUNCTIONS_BROWSER_DIR: output/javascript-master-functions-browser
+              run: node --test test/javascript-master-functions-course-browser.test.mjs
+
+            - name: Verify actual JSM2 functions exports offline
+              env:
+                  JAVASCRIPT_MASTER_FUNCTIONS_BROWSER_DIR: output/javascript-master-functions-browser
+              run: node --test test/javascript-master-functions-exported-browser.test.mjs
+
+            - name: Retain JSM2 original functions workflow evidence
+              if: always()
+              uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+              with:
+                  name: javascript-master-functions-source-workflows
+                  path: output/javascript-master-functions-browser
+                  if-no-files-found: error
+                  retention-days: 7
+
             - name: Verify shop supplemental imports and saved exports
               env:
                   JAVASCRIPT_SHOP_BROWSER_DIR: output/javascript-shop-browser

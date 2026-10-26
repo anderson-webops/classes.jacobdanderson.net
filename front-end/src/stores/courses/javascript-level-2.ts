@@ -1,4 +1,11 @@
 import type { RawCourse } from "./types";
+import javascriptDebuggingFunctionsReading from "@/assets/course-guides/javascript-master-functions/debugging-functions.md?raw";
+import javascriptFunctionsPracticeReading from "@/assets/course-guides/javascript-master-functions/functions-practice.md?raw";
+import javascriptGameOfWarReading from "@/assets/course-guides/javascript-master-functions/game-of-war.md?raw";
+import javascriptGeometryFunctionsReading from "@/assets/course-guides/javascript-master-functions/geometry-functions.md?raw";
+import javascriptPainAtThePumpReading from "@/assets/course-guides/javascript-master-functions/pain-at-the-pump.md?raw";
+import javascriptRockPaperScissorsReading from "@/assets/course-guides/javascript-master-functions/rock-paper-scissors.md?raw";
+import javascriptWhichMetrocardReading from "@/assets/course-guides/javascript-master-functions/which-metrocard.md?raw";
 import { buildProjectGuidance } from "./projectGuidance";
 import {
 	pendingStaticMediaNotice,
@@ -458,11 +465,8 @@ const javascriptLevel2SourceCourse: RawCourse = {
 				},
 				{
 					title: "JSM2 Project 1: Functions Practice",
-					content: `**Project target:** Build a small function library for arithmetic practice. Each function needs a clear contract: input values, returned value, and any assumptions about valid input.
-
-**Build path:** Implement functions for sum, difference, product of three values, average, factorial, and exponentiation. Keep printing outside the functions where possible so the same function can be reused by different callers. Include simple tests with known answers before trying random inputs.
-
-**Evidence target:** Each function returns the expected value for at least two fixed cases, factorial handles the base case correctly, and exponentiation works for powers of 0, 1, and a larger positive integer.`,
+					preserveInstructions: true,
+					content: javascriptFunctionsPracticeReading,
 					projectLink:
 						"https://codepen.io/junilearning/pen/22b54271a2ed49675c512f1034c0e749",
 					solutionLink:
@@ -470,11 +474,8 @@ const javascriptLevel2SourceCourse: RawCourse = {
 				},
 				{
 					title: "JSM2 Project 2: Which MetroCard",
-					content: `**Project target:** Compare two transit pricing plans and recommend the cheaper option for a given ride count. The project turns a real decision into a function-driven cost model.
-
-**Build path:** Store the monthly-pass cost and pay-per-ride cost as named constants. Write functions that compute each total, compare the results, and return a recommendation message. Print results for several sample ride counts, then add a prompted ride count for an interactive case.
-
-**Evidence target:** The recommendation changes at the correct break-even point, the output includes both prices rather than only the winner, and invalid ride counts are rejected or repaired before calculation.`,
+					preserveInstructions: true,
+					content: javascriptWhichMetrocardReading,
 					projectLink:
 						"https://codepen.io/junilearning/pen/7295dc0298b2f2da6af9e1287d32456a",
 					solutionLink:
@@ -482,11 +483,8 @@ const javascriptLevel2SourceCourse: RawCourse = {
 				},
 				{
 					title: "JSM2 Project 3: Rock Paper Scissors",
-					content: `**Project target:** Build a Rock Paper Scissors match that separates input, random computer choice, round comparison, and match scoring. This separation keeps the game easier to debug than one long conditional block.
-
-**Build path:** Implement \`yourTurn()\`, \`computerTurn()\`, and \`findResult()\`. Normalize player input before comparison, generate the computer choice from a fixed list, and update win counters after each round. Continue rounds until one side reaches three wins.
-
-**Evidence target:** Every pair of choices produces the correct round result, ties do not change the score, invalid input does not count as a round, and the match stops immediately when a player reaches three wins.`,
+					preserveInstructions: true,
+					content: javascriptRockPaperScissorsReading,
 					projectLink:
 						"https://codepen.io/junilearning/pen/30e42b5cf6775bbf059a3d313c96f7c5",
 					solutionLink:
@@ -498,11 +496,8 @@ const javascriptLevel2SourceCourse: RawCourse = {
 			supplementalProjects: [
 				{
 					title: "JSM2 Supplemental Project 1: Geometry Functions",
-					content: `**Project target:** Build geometry helper functions that convert formulas and classification rules into reusable JavaScript code.
-
-**Build path:** Implement circle circumference and area helpers, triangle classification helpers, and a right-triangle check. Use named parameters for side lengths and radius, then print sample results from both fixed inputs and random inputs.
-
-**Evidence target:** Formula outputs match hand-checkable cases, triangle classification handles equal sides and invalid side lengths, and the right-triangle check accounts for side order before applying the Pythagorean relationship.`,
+					preserveInstructions: true,
+					content: javascriptGeometryFunctionsReading,
 					projectLink:
 						"https://codepen.io/junilearning/pen/1f563eb4624314cf5b3673480ec18472",
 					solutionLink:
@@ -510,11 +505,8 @@ const javascriptLevel2SourceCourse: RawCourse = {
 				},
 				{
 					title: "JSM2 Supplemental Project 2: Pain at the Pump",
-					content: `**Project target:** Model fuel cost from miles driven, miles per gallon, and price per gallon. The main challenge is keeping units clear so the arithmetic matches the real-world meaning.
-
-**Build path:** Write helpers for gallons needed and total cost. Test with fixed values first, then generate random values to produce several scenarios. Format currency with \`toFixed(2)\` only at the display boundary so calculations keep full numeric precision.
-
-**Evidence target:** The output labels miles, MPG, gallons, price, and total cost; zero or negative inputs are handled deliberately; and the rounded display does not change the underlying calculation logic.`,
+					preserveInstructions: true,
+					content: javascriptPainAtThePumpReading,
 					projectLink:
 						"https://codepen.io/junilearning/pen/87b49903a68f15f9132d49b704444083",
 					solutionLink:
@@ -522,11 +514,8 @@ const javascriptLevel2SourceCourse: RawCourse = {
 				},
 				{
 					title: "JSM2 Supplemental Project 3: Game of War",
-					content: `**Project target:** Simulate a simplified Game of War where random card draws determine each round winner. The project focuses on functions, randomness, scoring state, and repeatable round output.
-
-**Build path:** Represent card ranks with numbers or named values, with Ace treated as high. Write helpers to draw a card, compare two cards, update score, and print the round summary. Run exactly 10 rounds before printing the final winner.
-
-**Evidence target:** Ties are handled consistently, scores add up to the number of non-tied rounds, Ace beats every other rank, and each printed round includes both card values plus the updated score.`,
+					preserveInstructions: true,
+					content: javascriptGameOfWarReading,
 					projectLink:
 						"https://codepen.io/junilearning/pen/06315e2ce4772499678cc4959f8e2360",
 					solutionLink:
@@ -534,11 +523,8 @@ const javascriptLevel2SourceCourse: RawCourse = {
 				},
 				{
 					title: "JSM2 Supplemental Project 4: Debugging Functions",
-					content: `**Project target:** Debug a coffee-shop profit calculator by tracing how ingredient cost, drink price, quantity, and total profit move through the functions.
-
-**Build path:** Identify the expected formula before changing code. Add temporary console logs around each function call to inspect inputs and returned values. Repair one bug at a time, then remove noisy diagnostic logs once the output is reliable.
-
-**Evidence target:** The final profit calculation matches a hand-worked example, function names match their business meaning, and the corrected code avoids duplicating the same price or ingredient formula in multiple places.`,
+					preserveInstructions: true,
+					content: javascriptDebuggingFunctionsReading,
 					projectLink:
 						"https://codepen.io/junilearning/pen/789be1560455a424d23eacd04d4ac69b",
 					solutionLink:
