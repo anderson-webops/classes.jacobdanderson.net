@@ -2,6 +2,7 @@ import type { RawCourse } from "./types";
 import javascriptMasterProjectReading from "@/assets/course-guides/javascript-master-project.md?raw";
 import javascriptNewsReading from "@/assets/course-guides/javascript-news.md?raw";
 import javascriptRestaurantReading from "@/assets/course-guides/javascript-restaurant.md?raw";
+import javascriptShopReading from "@/assets/course-guides/javascript-shop.md?raw";
 import { buildProjectGuidance } from "./projectGuidance";
 import { pendingStaticMediaNotice, staticMediaUrl } from "./staticMedia";
 import { buildSupportSectionGuidance } from "./supportSectionGuidance";
@@ -1389,9 +1390,11 @@ const javascriptLevel1SourceCourse: RawCourse = {
 				},
 				{
 					title: "JSS15 Supplemental Project 3: Jun-E-Commerce",
-					content:
-						"Build a small e-commerce landing page with featured products, prices or descriptions, and a Materialize carousel or card grid. The page makes product browsing clear, includes at least one call-to-action, and remains readable on a narrow screen.",
+					preserveInstructions: true,
+					content: javascriptShopReading,
 					projectLink:
+						"/course-assets/javascript-level-1/shop-v1/jun-e-commerce/starter/index.html.txt",
+					solutionLink:
 						"https://codepen.io/junilearning/pen/c8048a26149f2dc5c4340a2d6cdb0ce2"
 				}
 			]

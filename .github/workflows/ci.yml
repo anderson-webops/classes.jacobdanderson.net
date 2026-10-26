@@ -981,6 +981,25 @@ jobs:
                   if-no-files-found: warn
                   retention-days: 7
 
+            - name: Verify shop supplemental imports and saved exports
+              env:
+                  JAVASCRIPT_SHOP_BROWSER_DIR: output/javascript-shop-browser
+              run: node --test test/javascript-shop-course-browser.test.mjs
+
+            - name: Verify actual shop exports offline
+              env:
+                  JAVASCRIPT_SHOP_BROWSER_DIR: output/javascript-shop-browser
+              run: node --test test/javascript-shop-exported-browser.test.mjs
+
+            - name: Retain shop supplemental source workflow evidence
+              if: always()
+              uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+              with:
+                  name: javascript-shop-source-workflows
+                  path: output/javascript-shop-browser
+                  if-no-files-found: error
+                  retention-days: 7
+
             - name: Verify news supplemental imports and saved exports
               env:
                   JAVASCRIPT_NEWS_BROWSER_DIR: output/javascript-news-browser
