@@ -223,6 +223,11 @@ export async function inspectRestaurant(page, resource, kind) {
 	}
 	await page.focus(".menu-link");
 	await page.keyboard.press("Enter");
+	await page.waitForFunction(() => {
+		const heading = document.querySelector("#menu-title");
+		const top = heading?.getBoundingClientRect().top;
+		return location.hash === "#menu" && top >= 0 && top < innerHeight;
+	});
 	assert.ok(page.url().endsWith("#menu"));
 	assert.ok(
 		await page.$eval(
