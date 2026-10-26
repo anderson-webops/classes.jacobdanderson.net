@@ -1,4 +1,8 @@
 import type { RawCourse } from "./types";
+import javascriptAgeMilestonesReading from "@/assets/course-guides/javascript-master-conditionals/age-milestones.md?raw";
+import javascriptDepartmentStoreDiscountsReading from "@/assets/course-guides/javascript-master-conditionals/department-store-discounts.md?raw";
+import javascriptSpecialNumbersReading from "@/assets/course-guides/javascript-master-conditionals/special-numbers.md?raw";
+import javascriptTernaryOperatorsPracticeReading from "@/assets/course-guides/javascript-master-conditionals/ternary-operators-practice.md?raw";
 import javascriptDebuggingFunctionsReading from "@/assets/course-guides/javascript-master-functions/debugging-functions.md?raw";
 import javascriptFunctionsPracticeReading from "@/assets/course-guides/javascript-master-functions/functions-practice.md?raw";
 import javascriptGameOfWarReading from "@/assets/course-guides/javascript-master-functions/game-of-war.md?raw";
@@ -553,11 +557,8 @@ const javascriptLevel2SourceCourse: RawCourse = {
 				},
 				{
 					title: "JSM3 Project 1: Ternary Operators Practice",
-					content: `**Project target:** Convert small \`if/else\` decisions into ternary expressions while preserving behavior. The purpose is not to make every conditional shorter; the purpose is to recognize when a two-way value choice is simple enough for a ternary.
-
-**Build path:** Work one conversion at a time. Identify the condition, the true value, and the false value before writing the expression. Include examples with assignments, null checks, and default messages.
-
-**Evidence target:** Each rewritten expression produces the same output as the original version for true and false cases, and any conditional that becomes harder to read remains in standard \`if/else\` form.`,
+					preserveInstructions: true,
+					content: javascriptTernaryOperatorsPracticeReading,
 					projectLink:
 						"https://codepen.io/junilearning/pen/a7c2ad78bc62de68676af56657849a9b",
 					solutionLink:
@@ -566,11 +567,8 @@ const javascriptLevel2SourceCourse: RawCourse = {
 				{
 					title: "JSM3 Project 2: Department Store Discounts",
 					aliases: ["JSM3 Project 2: Juni Department Store"],
-					content: `**Project target:** Build a discount calculator where multiple rules can affect the final price. The project requires careful rule ordering, function boundaries, and numeric formatting.
-
-**Build path:** Store the original price, shopper category, and any special-number rule inputs. Write helper functions for percent discounts, perfect-square detection, prime detection, and final-price formatting. Apply rules in a documented order so the same cart always produces the same answer.
-
-**Evidence target:** The final output shows the original price, every applied discount, and the final price. Perfect-square and prime checks include edge cases such as 1, 2, and a larger composite number.`,
+					preserveInstructions: true,
+					content: javascriptDepartmentStoreDiscountsReading,
 					projectLink:
 						"https://codepen.io/junilearning/pen/b3de9678fa8b77aae5cc988f74bd086e",
 					solutionLink:
@@ -578,11 +576,8 @@ const javascriptLevel2SourceCourse: RawCourse = {
 				},
 				{
 					title: "JSM3 Project 3: Special Numbers",
-					content: `**Project target:** Classify numbers by writing predicate functions that return true or false. This project strengthens digit processing, loops, modular arithmetic, and range scanning.
-
-**Build path:** Implement separate functions for self-dividing numbers, perfect numbers, and palindrome numbers. Use small helper functions for digit extraction or divisor sums when that keeps the code clearer. Print the matching numbers from a chosen range for each category.
-
-**Evidence target:** Each predicate has known true and false test cases, zero and repeated digits are handled deliberately, and the range output can be checked by calling the predicate directly on a few printed values.`,
+					preserveInstructions: true,
+					content: javascriptSpecialNumbersReading,
 					projectLink:
 						"https://codepen.io/junilearning/pen/1be13919321ab5708564a8a7ca928226",
 					solutionLink:
@@ -592,11 +587,8 @@ const javascriptLevel2SourceCourse: RawCourse = {
 			supplementalProjects: [
 				{
 					title: "JSM3 Supplemental Project 1: Age Milestones",
-					content: `**Project target:** Build an age-milestone checker that reports which milestones apply to a prompted age. The project practices ternary expressions, validation, and readable output.
-
-**Build path:** Convert the prompted value to a number before comparison. Define milestone checks such as driving, voting, or other chosen age thresholds. Use ternary expressions for short eligibility messages and standard conditionals for validation or multi-step output.
-
-**Evidence target:** The program handles nonnumeric input, ages below zero, exact threshold ages, and ages above every threshold. The output distinguishes eligible, not yet eligible, and invalid cases.`,
+					preserveInstructions: true,
+					content: javascriptAgeMilestonesReading,
 					projectLink:
 						"https://codepen.io/junilearning/pen/8b95795088fd04a2a6b77fba56416332",
 					solutionLink:
