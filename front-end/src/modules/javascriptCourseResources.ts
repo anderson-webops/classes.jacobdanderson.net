@@ -16,6 +16,7 @@ import { javascriptMediaParallaxResources } from "@/modules/javascriptMediaParal
 import { javascriptMoreHtmlCssResources } from "@/modules/javascriptMoreHtmlCssResources";
 import { javascriptNestedLoopsResources } from "@/modules/javascriptNestedLoopsResources";
 import { javascriptOperatorsResources } from "@/modules/javascriptOperatorsResources";
+import { javascriptRestaurantResources } from "@/modules/javascriptRestaurantResources";
 
 const courseId = "javascript-level-1-javascript-superstar";
 const base = "/course-assets/javascript-level-1/";
@@ -50,7 +51,8 @@ const roles: readonly CourseRole[] = [
 	...javascriptDynamicEventsResources,
 	...javascriptDynamicComponentsResources,
 	...javascriptMediaParallaxResources,
-	...javascriptMasterProjectResources
+	...javascriptMasterProjectResources,
+	...javascriptRestaurantResources
 ];
 
 export function javascriptCourseResource(value: string) {

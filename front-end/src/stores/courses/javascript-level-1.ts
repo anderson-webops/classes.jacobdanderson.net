@@ -1,5 +1,6 @@
 import type { RawCourse } from "./types";
 import javascriptMasterProjectReading from "@/assets/course-guides/javascript-master-project.md?raw";
+import javascriptRestaurantReading from "@/assets/course-guides/javascript-restaurant.md?raw";
 import { buildProjectGuidance } from "./projectGuidance";
 import { pendingStaticMediaNotice, staticMediaUrl } from "./staticMedia";
 import { buildSupportSectionGuidance } from "./supportSectionGuidance";
@@ -1368,9 +1369,11 @@ const javascriptLevel1SourceCourse: RawCourse = {
 				{
 					title: "JSS15 Supplemental Project 1: Restaurant Splash Page",
 					aliases: ["JSS15 Supplemental Project 1: Juni Eatz"],
-					content:
-						"Build a restaurant splash page with a menu preview, location or hours section, and at least one Materialize parallax or card layout. The page communicates a clear restaurant identity through typography, color, images, and navigation rather than only placing empty starter sections.",
+					preserveInstructions: true,
+					content: javascriptRestaurantReading,
 					projectLink:
+						"/course-assets/javascript-level-1/restaurant-v1/restaurant-splash-page/starter/index.html.txt",
+					solutionLink:
 						"https://codepen.io/junilearning/pen/eb5dc79c245ab907ddd8f56853cb817a"
 				},
 				{
