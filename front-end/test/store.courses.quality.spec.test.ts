@@ -3477,7 +3477,7 @@ describe("course text quality normalization", () => {
 			"Functions turn a repeated process into a named operation"
 		);
 		expect(corpus).toContain(
-			"Create a landscape scene with repeated canvas shapes"
+			"Create a landscape containing repeated trees, a sun and distinct sky and ground areas"
 		);
 		expect(corpus).toContain(
 			"Helper functions keep a program understandable by giving a name to repeated or low-level work"

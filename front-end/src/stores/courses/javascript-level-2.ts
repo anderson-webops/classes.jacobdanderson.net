@@ -1,4 +1,9 @@
 import type { RawCourse } from "./types";
+import javascriptBasicShapesReading from "@/assets/course-guides/javascript-master-canvas/basic-shapes.md?raw";
+import javascriptCanvasTextReading from "@/assets/course-guides/javascript-master-canvas/canvas-text.md?raw";
+import javascriptJniStockPriceReading from "@/assets/course-guides/javascript-master-canvas/jni-stock-price.md?raw";
+import javascriptLoopyLandscapeReading from "@/assets/course-guides/javascript-master-canvas/loopy-landscape.md?raw";
+import javascriptShiningStarsReading from "@/assets/course-guides/javascript-master-canvas/shining-stars.md?raw";
 import javascriptAgeMilestonesReading from "@/assets/course-guides/javascript-master-conditionals/age-milestones.md?raw";
 import javascriptDepartmentStoreDiscountsReading from "@/assets/course-guides/javascript-master-conditionals/department-store-discounts.md?raw";
 import javascriptSpecialNumbersReading from "@/assets/course-guides/javascript-master-conditionals/special-numbers.md?raw";
@@ -635,11 +640,8 @@ const javascriptLevel2SourceCourse: RawCourse = {
 				},
 				{
 					title: "JSM4 Project 1: Basic Shapes",
-					content: `**Project target:** Draw basic canvas shapes using explicit position, size, color, and angle values. This project establishes the drawing vocabulary needed for later animation and games.
-
-**Build path:** Draw rectangles with \`fillStyle\` and \`fillRect\`. Draw circles or arcs with \`ctx.arc\` and \`fill\`, using the provided degrees-to-radians helper when angles are easier to think about in degrees. Group repeated drawing into small helper functions once the first shape works.
-
-**Evidence target:** The canvas contains at least one rectangle and one circular shape, color changes are controlled by code, and each shape's position can be predicted from its x/y coordinates.`,
+					preserveInstructions: true,
+					content: javascriptBasicShapesReading,
 					projectLink:
 						"https://codepen.io/junilearning/pen/7bdedd0b00112751b87d288e4b8120b5",
 					solutionLink:
@@ -647,11 +649,8 @@ const javascriptLevel2SourceCourse: RawCourse = {
 				},
 				{
 					title: "JSM4 Project 2: Shining Stars",
-					content: `**Project target:** Draw stars with canvas paths, then refactor the drawing into a reusable function. The key idea is that a complex shape can be described as a sequence of line segments relative to an anchor point.
-
-**Build path:** Use \`beginPath\`, \`moveTo\`, and \`lineTo\` to draw one star. Refactor the code into \`drawStar(x, y)\`, then call the function five times with different positions. Add color or size parameters as an extension if the base function is stable.
-
-**Evidence target:** The five stars appear in predictable locations, the function call controls position without duplicating path code, and one coordinate change moves only the intended star.`,
+					preserveInstructions: true,
+					content: javascriptShiningStarsReading,
 					projectLink:
 						"https://codepen.io/junilearning/pen/fa66f3594a65a54d562d3932d97e2cb7",
 					solutionLink:
@@ -659,11 +658,8 @@ const javascriptLevel2SourceCourse: RawCourse = {
 				},
 				{
 					title: "Writing Text on the Canvas",
-					content: `**Concept path:** Canvas text is drawn into pixels just like shapes, so text placement depends on the current font, fill color, alignment, and coordinates. Redrawing text requires clearing or covering the old pixels first.
-
-**Practice targets:** Set \`font\`, \`fillStyle\`, and \`textAlign\`, then place text with \`fillText\`. Draw labels near shapes so the connection between coordinate position and text baseline is visible.
-
-**Evidence target:** Text appears at the intended coordinates, alignment changes affect placement predictably, and labels remain readable against the background color.`,
+					preserveInstructions: true,
+					content: javascriptCanvasTextReading,
 					projectLink:
 						"https://codepen.io/junilearning/pen/9355a832c485b33c747b6c600f2d13ae",
 					solutionLink:
@@ -673,11 +669,8 @@ const javascriptLevel2SourceCourse: RawCourse = {
 			supplementalProjects: [
 				{
 					title: "JSM4 Supplemental Project 1: Loopy Landscape",
-					content: `**Project target:** Create a landscape scene with repeated canvas shapes. The main challenge is using loops and helper functions so the scene is structured rather than hand-coded one shape at a time.
-
-**Build path:** Choose a background, horizon, and at least three repeated elements such as stars, trees, buildings, clouds, or mountains. Store repeated element settings in arrays or generate them with loops. Use helper functions for each repeated shape family.
-
-**Evidence target:** The scene contains repeated elements created by loops, the drawing order places background shapes behind foreground shapes, and changing one helper or data value updates a visible group of shapes.`,
+					preserveInstructions: true,
+					content: javascriptLoopyLandscapeReading,
 					projectLink:
 						"https://codepen.io/junilearning/pen/7911fd2b7b0ff50be9320b0c069f0613",
 					solutionLink:
@@ -685,11 +678,8 @@ const javascriptLevel2SourceCourse: RawCourse = {
 				},
 				{
 					title: "JSM4 Supplemental Project 2: JNI Stock Price",
-					content: `**Project target:** Draw a stock-price line graph on canvas with labels and scaled data. The project connects numeric arrays to visual coordinates.
-
-**Build path:** Store stock prices in an array, calculate the minimum and maximum values, and map each price to a y-coordinate inside the graph area. Draw axes, labels, plotted points, and line segments connecting the points.
-
-**Evidence target:** The graph includes labeled axes, the highest price appears near the top of the plot area, the lowest price appears near the bottom, and changing one data value updates the plotted line correctly.`,
+					preserveInstructions: true,
+					content: javascriptJniStockPriceReading,
 					projectLink:
 						"https://codepen.io/junilearning/pen/aa96160a1e7c1d1bdac74cfe5e6a9333",
 					solutionLink:
