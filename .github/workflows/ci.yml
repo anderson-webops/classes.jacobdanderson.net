@@ -987,6 +987,20 @@ jobs:
             - name: Verify console scrolling and editor argument warnings
               run: node --test test/ide-console-browser.test.mjs
 
+            - name: Verify long filenames keep editor shortcuts reachable
+              env:
+                  IDE_FILE_HEADER_BROWSER_DIR: output/ide-file-header
+              run: node --test test/ide-file-header-browser.test.mjs
+
+            - name: Retain editor filename layout evidence
+              if: always()
+              uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+              with:
+                  name: ide-file-header-layout
+                  path: output/ide-file-header
+                  if-no-files-found: error
+                  retention-days: 7
+
             - name: Verify Turtle manual updates and editor search contrast
               run: node --test test/turtle-tracer-browser.test.mjs
 
