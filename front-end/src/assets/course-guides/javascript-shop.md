@@ -16,7 +16,7 @@ Use one h1 for the catalog name, an h2 for Shop, and an h3 for each product. Kee
 
 The Materialize grid uses col s12 m6 l4: one card per row on small screens, two on medium screens, and three on large screens. Keep the same information in the same order on every card. Place the price in readable card content rather than over a photograph. Preserve meaningful image alternative text and visible keyboard focus.
 
-The SVG companions embed the unchanged JPEG bytes from the original Unsplash URLs. Keep the images directory and LICENSE-Images.md with the export. The original unused D3 and icon-font declarations are omitted; this project uses neither.
+The SVG companions embed the unchanged JPEG bytes from the original Unsplash URLs. Keep the images directory and `LICENSE-Images.md` with the export. The original unused D3 and icon-font declarations are omitted; this project uses neither.
 
 ## Connect the carousel
 
