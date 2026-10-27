@@ -4774,9 +4774,39 @@ function diagnosticExtensionPrompt(context: CourseTextContext) {
 	]);
 }
 
+function isMathematicsCourse(context: CourseTextContext) {
+	return /^(?:(?:early|late)-elementary-[ab]-math|(?:pre-)?algebra-(?:[12][ab]|[ab])|geometry-[ab]|pre-calculus-[ab]|ap-calculus)$/.test(
+		context.courseId
+	);
+}
+
+function mathProjectExpectations(context: CourseTextContext) {
+	return variantLines(context, [
+		() => [
+			"- State the givens, target quantity, representation, and rule or theorem before solving.",
+			"- Work a typical example, then check a boundary, sign, unit, graph, or table case that could change the interpretation.",
+			"- Keep each algebraic or representational step justified so the final answer can be checked for reasonableness."
+		],
+		() => [
+			"- Identify the known values, unknown value, and representation before choosing a method.",
+			"- Test one standard case and one case involving sign, intercept, domain, unit, or graph behavior.",
+			"- Explain how the answer can be checked without simply repeating the same calculation."
+		],
+		() => [
+			"- Translate the situation into an equation, graph, table, diagram, or verbal model before solving.",
+			"- Check the result with a substitution, estimate, graph feature, boundary value, or unit/context test.",
+			"- Record why each transformation is valid so the result is auditable."
+		]
+	]);
+}
+
 function projectExpectations(context: CourseTextContext) {
 	const source = contextText(context);
 	const subject = extensionSubject(context);
+
+	if (isMathematicsCourse(context)) {
+		return mathProjectExpectations(context);
+	}
 
 	if (isPygameSource(source)) {
 		return [
@@ -5413,25 +5443,7 @@ function projectExpectations(context: CourseTextContext) {
 			]
 		]);
 	}
-	if (isMathContext(context)) {
-		return variantLines(context, [
-			() => [
-				"- State the givens, target quantity, representation, and rule or theorem before solving.",
-				"- Work a typical example, then check a boundary, sign, unit, graph, or table case that could change the interpretation.",
-				"- Keep each algebraic or representational step justified so the final answer can be checked for reasonableness."
-			],
-			() => [
-				"- Identify the known values, unknown value, and representation before choosing a method.",
-				"- Test one standard case and one case involving sign, intercept, domain, unit, or graph behavior.",
-				"- Explain how the answer can be checked without simply repeating the same calculation."
-			],
-			() => [
-				"- Translate the situation into an equation, graph, table, diagram, or verbal model before solving.",
-				"- Check the result with a substitution, estimate, graph feature, boundary value, or unit/context test.",
-				"- Record why each transformation is valid so the result is auditable."
-			]
-		]);
-	}
+	if (isMathContext(context)) return mathProjectExpectations(context);
 	if (isScienceContext(context)) {
 		return [
 			"- Use a provided image, graph, data table, short video, or simulation rather than required physical supplies.",
@@ -6427,9 +6439,13 @@ function capitalizeSentence(value: string) {
 	return `${value.slice(0, 1).toUpperCase()}${value.slice(1)}`;
 }
 
-function markdownSafeGeneratedReference(value: string) {
-	return value
-		.replace(/\s+-\s+/g, ": ")
+function markdownSafeGeneratedReference(
+	context: CourseTextContext,
+	value: string
+) {
+	return (
+		isMathematicsCourse(context) ? value : value.replace(/\s+-\s+/g, ": ")
+	)
 		.replace(/\s{2,}/g, " ")
 		.trim();
 }
@@ -6447,6 +6463,7 @@ function compactGeneratedProjectSupport(
 
 	const escapedSubject = escapeStringForRegExp(subject);
 	const reference = markdownSafeGeneratedReference(
+		context,
 		projectSupportScopedReference(context, projectSupportReference(context))
 	);
 	const capitalizedReference = capitalizeSentence(reference);
