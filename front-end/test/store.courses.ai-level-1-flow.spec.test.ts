@@ -38,10 +38,16 @@ describe("AI Level 1 learner flow", () => {
 		const course = await loadRawCourse("ai-level-1");
 		const reading = course!.modules
 			.flatMap(module => module.curriculum)
-			.find(item => item.title === "Python Environment for Search and Graph Labs");
+			.find(
+				item =>
+					item.title ===
+					"Python Environment for Search and Graph Labs"
+			);
 		expect(reading?.content).toContain("python3 -m venv .venv");
 		expect(reading?.content).toContain("py -3 -m venv .venv");
-		expect(reading?.content).toContain("python -m pip install networkx matplotlib jupyterlab");
+		expect(reading?.content).toContain(
+			"python -m pip install networkx matplotlib jupyterlab"
+		);
 		expect(reading?.content).toContain("nx.shortest_path(graph, 0, 2)");
 		expect(reading?.content).toContain("[0, 1, 2]");
 		expect(reading?.content).toContain("`graph-check.png`");
@@ -106,8 +112,7 @@ describe("AI Level 1 learner flow", () => {
 		).toBe(73);
 		expect(
 			modules.reduce(
-				(total, module) =>
-					total + module.supplementalProjects.length,
+				(total, module) => total + module.supplementalProjects.length,
 				0
 			)
 		).toBe(56);

@@ -65,7 +65,7 @@ def run(label, command):
 
 stdout = run("example", [sys.executable, str(example)])
 lines = stdout.strip().splitlines()
-assert Path(lines[0]).resolve() == Path(sys.executable).resolve()
+assert Path(lines[0]) == Path(sys.executable)
 assert lines[1:] == ["[0, 1, 2]"]
 image = out / "graph-check.png"
 raw = image.read_bytes()
