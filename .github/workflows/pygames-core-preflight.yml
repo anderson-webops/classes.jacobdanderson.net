@@ -1,6 +1,6 @@
 name: Course preflight
 
-run-name: ${{ inputs.course == 'networking' && 'Swift Networking source evidence' || 'PyGames core preflight' }}
+run-name: ${{ inputs.course == 'networking' && 'Swift Networking source evidence' || inputs.course == 'ai-setup' && 'AI setup reading' || 'PyGames core preflight' }}
 
 on:
   workflow_dispatch:
@@ -8,7 +8,7 @@ on:
       course:
         description: Course verification to run
         type: choice
-        options: [pygames, networking]
+        options: [pygames, networking, ai-setup]
         default: pygames
       browser_run_id:
         description: Networking browser export workflow run
@@ -26,7 +26,7 @@ concurrency:
 
 jobs:
   preflight:
-    if: inputs.course != 'networking'
+    if: inputs.course == 'pygames'
     runs-on: ubuntu-24.04
     timeout-minutes: 40
     env:
@@ -217,6 +217,43 @@ jobs:
             ${{ runner.temp }}/swift-networking-ios/processes.jsonl
             ${{ runner.temp }}/swift-networking-ios/logs/
             ${{ runner.temp }}/swift-networking-ios/results/
-            ${{ runner.temp }}/swift-networking-ios/contracts/
+            ${{ runner.temp }}/swift-networking-ios/contracts/proof.json
+            ${{ runner.temp }}/swift-networking-ios/contracts/processes.jsonl
+            ${{ runner.temp }}/swift-networking-ios/contracts/*.txt
+            ${{ runner.temp }}/swift-networking-ios/contracts/**/contracts-proof.json
+          if-no-files-found: error
+          retention-days: 14
+
+  ai-setup:
+    if: inputs.course == 'ai-setup'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      CLASSES_FAMILY_TASK_ID: ai-setup-reading-${{ github.run_id }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: 24.18.0
+      - name: Create an isolated lesson environment
+        run: node scripts/classes-family-heavy-task.mjs -- python3 -m venv "$RUNNER_TEMP/ai-setup-environment"
+      - name: Install the reading's graph and notebook dependencies
+        run: >-
+          node scripts/classes-family-heavy-task.mjs --
+          "$RUNNER_TEMP/ai-setup-environment/bin/python" -m pip install
+          networkx matplotlib jupyterlab
+      - name: Execute the exact reading example and verify the result
+        run: >-
+          node scripts/classes-family-heavy-task.mjs --
+          "$RUNNER_TEMP/ai-setup-environment/bin/python" test/ai-search-setup-reading.py
+          --proof output/ai-setup-reading/proof.json
+      - name: Retain the complete reading execution evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: ai-setup-reading
+          path: output/ai-setup-reading/
           if-no-files-found: error
           retention-days: 14
