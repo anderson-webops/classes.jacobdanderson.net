@@ -125,7 +125,7 @@ Create a restaurant menu with up to three choices in each category, then work th
 - Three friends ordered \`3\` main courses, \`3\` beverages, \`1\` dessert, and \`S\` sides. Their item count is modeled by \`1 + 3 + 3 + S = 5 + 4\`. Solve for \`S\`.
 - Ten people split \`$56\` of dessert evenly. What was the price per plate?
 - A side dish includes \`sqrt(9)\` pieces. How many pieces come with one order?
-- A restaurant starts with \`150\` to-go boxes and uses \`20\` per day. More boxes must be ordered once the total is under \`30\`. Solve \`150 - 20x < 30\`.
+- A restaurant starts with \`150\` to-go boxes and uses \`20\` per day. More boxes must be ordered once the total is under \`30\`. Solve \`150 - 20x < 30\`, where \`x\` is the number of completed days. Identify the first whole-number day when the order is triggered.
 
 **Answer key**
 
@@ -133,7 +133,7 @@ Create a restaurant menu with up to three choices in each category, then work th
 - Sides purchased: \`2\`
 - Dessert price per plate: \`$5.60\`
 - Pieces per side order: \`3\`
-- Inequality: \`150 - 20x < 30\`, maximum wait: \`6\` days
+- Inequality: \`x > 6\`. After \`6\` days, exactly \`30\` boxes remain; after \`7\` days, \`10\` remain. The first whole-number day below the threshold is \`7\`.
 				`.trim()
 			),
 			createLesson(
@@ -169,13 +169,31 @@ The restaurant tracks deliveries over time with a straight-line graph.
 			createLesson(
 				"Project 3: Chef's Special",
 				`
-Use systems of equations to answer the restaurant scenario questions.
+Solve three restaurant systems using graphing, substitution, and elimination. Define each variable and its units, then check the result in both original constraints.
 
-**Answer key**
+**1. Tortilla production: graphing**
 
-- Tortilla graphing problem: the two cooks match after \`5\` hours at \`65\` tortillas each.
-- Appetizer substitution problem: small appetizer = \`$1.50\`, large appetizer = \`$5.00\`
-- Chef's Special elimination problem: \`90\` adults and \`30\` children
+At the start of a shift, Cook A has \`15\` tortillas ready and prepares \`10\` more per hour. Cook B starts with none and prepares \`13\` per hour. Treat both production rates as constant.
+
+Let \`h\` be the hours since the shift began. Write each cook's tortilla total as a function of \`h\`. Graph both lines for \`0 <= h <= 6\`, with hours on the horizontal axis and tortillas on the vertical axis. When do the cooks have the same total, and how many tortillas does each have then?
+
+**2. Appetizer prices: substitution**
+
+Two small appetizers and one large appetizer cost \`$8.00\`. Three small appetizers and two large appetizers cost \`$14.50\`. Each size has a fixed price, and these totals exclude tax and tips.
+
+Let \`s\` and \`l\` be the small and large prices in dollars. Write the two purchase equations. Isolate \`l\` in the first equation, substitute into the second, and find both prices. Check both purchases using those prices.
+
+**3. Chef's Special guests: elimination**
+
+A restaurant serves its special to \`120\` guests. The adult price is \`$12\`, the child price is \`$8\`, and the total collected is \`$1,320\`, excluding tax and tips. Each guest buys exactly one special at the price for that group.
+
+Let \`a\` and \`c\` be the numbers of adults and children. Write one equation for the guest count and one for the total collected. Use elimination to find both counts. Check that the counts are nonnegative whole numbers and satisfy both equations.
+
+**Worked solutions**
+
+- Graphing: \`A(h) = 15 + 10h\` and \`B(h) = 13h\`. The lines intersect at \`(5, 65)\`: \`15 + 10(5) = 65\` and \`13(5) = 65\`. The cooks have the same total after \`5\` hours, with \`65\` tortillas each.
+- Substitution: \`2s + l = 8\` and \`3s + 2l = 14.50\`. Substitute \`l = 8 - 2s\` to obtain \`3s + 2(8 - 2s) = 14.50\`, so \`s = 1.50\` and \`l = 5.00\`. The purchase checks are \`2(1.50) + 5.00 = 8.00\` and \`3(1.50) + 2(5.00) = 14.50\`.
+- Elimination: \`a + c = 120\` and \`12a + 8c = 1320\`. Multiply the count equation by \`8\`, then subtract it from the total equation: \`4a = 360\`. Thus \`a = 90\` and \`c = 30\`. The checks are \`90 + 30 = 120\` and \`12(90) + 8(30) = 1320\`.
 				`.trim()
 			)
 		]),
@@ -664,7 +682,7 @@ This check-in focuses on moving comfortably between slope-intercept, point-slope
 **Selected answers**
 
 - \`-x/3 - 1 >= 5\` -> \`x <= -18\`
-- \`(2/3)x < (4/3)y + 6\` -> \`y > 2x - 8\`
+- \`(2/3)x < (4/3)y + 6\` -> \`y > (1/2)x - 9/2\`. Multiply by \`3\` to get \`2x < 4y + 18\`, then isolate \`y\` by subtracting \`18\` and dividing by \`4\`.
 - Selected graphed inequality: \`y <= -x + 7\`
 - Convenience-store word problem:
   - \`2 + 5 + 1.5b >= 10\`
@@ -925,7 +943,8 @@ This project connects linear models and systems of equations to research output.
 - The lab has \`30\` total papers.
 - Konstantin and Rick have \`17\` together.
 - Rick and Professor Jin have \`22\` together.
-- Determine whether each researcher meets the grant quota.
+- Let \`q\` be a nonnegative whole-number quota of papers per researcher. For this model, the lab qualifies exactly when all three researchers meet that quota.
+- Find each researcher's paper count, then determine the values of \`q\` for which each researcher and the whole lab qualify.
 				`.trim(),
 					undefined,
 					[
@@ -947,9 +966,9 @@ This project connects linear models and systems of equations to research output.
 - \`K + R = 17\`
 - \`R + D = 22\`
 - Solution: \`K = 8\`, \`R = 9\`, \`D = 13\`
-- The lab qualifies because the quota check is satisfied.
+- Konstantin meets the quota when \`q <= 8\`, Rick when \`q <= 9\`, and Professor Jin when \`q <= 13\`. All three meet it, so the lab qualifies under the stated rule, exactly when \`0 <= q <= 8\`.
 
-Check the result by substituting the three values into every relationship, not only the total equation. The competing-lab model in Mission 1 is open ended, but it must stay below \`12t + 7\` over the intended time interval. A strong explanation distinguishes exact systems of equations from modeling choices: the quota calculation has one fixed answer, while the comparison model needs a defended inequality and a clear domain.
+Check the result by substituting the three values into every relationship, not only the total equation. The competing-lab model in Mission 1 is open ended, but it must stay below \`12t + 7\` over the intended time interval. The paper counts are fixed by the system; grant eligibility depends on the quota and the stated qualification rule. The comparison model also needs a defended inequality and a clear domain.
 				`.trim()
 				)
 			]
