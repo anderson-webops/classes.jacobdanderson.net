@@ -70,7 +70,8 @@ export const aiLevel1Course: RawCourse = {
 			curriculum: [
 				{
 					title: "Python Environment for Search and Graph Labs",
-					content: aiSearchSetup
+					content: aiSearchSetup,
+					preserveInstructions: true
 				},
 				{
 					title: "Bridge Positioning between Core Python and ML",
