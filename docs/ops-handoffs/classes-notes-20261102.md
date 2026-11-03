@@ -27,12 +27,14 @@ service/lockfile digests are in
 [`session-note-drafting-20261102.json`](../acceptance/session-note-drafting-20261102.json).
 Zoom was stubbed; these checks performed no mail, note saves or database writes.
 
-Local lint, type checks, build and 795 backend tests passed. The focused editor
-suite passed 48 tests; the two Python client suites passed 25. Eight dependency
+Local lint, type checks, build, 3,671 frontend tests and 795 backend tests passed.
+The two Python client suites passed 25. Eight dependency
 regressions and ten native deployment contracts passed; Linux archive behavior
 remains covered by the native CI gates. Full and production audits reported zero
 advisories for the root and independent backend graphs after clean locked installs.
-The release requires the remaining applicable frontend and native artifact gates.
+Hosted native Nginx, lint, typecheck, build and independent backend-install gates
+also passed. Exact-tag native artifact and signature verification complete the
+release gate; the release notes identify their actual run and source revision.
 
 ## Protected activation
 
