@@ -392,6 +392,14 @@ smoke_release() {
 	require_one_header_containing "$classes_probe_prefix.ready.headers" "Content-Security-Policy" "default-src 'none'"
 	require_one_header_containing "$classes_probe_prefix.ready.headers" "Content-Security-Policy" "frame-ancestors 'none'"
 	node -e 'const b=JSON.parse(require("node:fs").readFileSync(process.argv[1], "utf8")); if (b.ready !== true || b.components?.db?.ok !== true || b.components?.db?.state !== 1) process.exit(1)' "$classes_probe_prefix.ready.body"
+	classes_status="$(capture_https /release.json "$classes_probe_prefix.release.body" "$classes_probe_prefix.release.headers")"
+	[[ "$classes_status" == "200" ]]
+	[[ "$(header_value "$classes_probe_prefix.release.headers" "Content-Type")" == application/json* ]]
+	require_one_header "$classes_probe_prefix.release.headers" "Cache-Control" "no-store"
+	node -e 'const fs=require("node:fs"); const b=JSON.parse(fs.readFileSync(process.argv[1], "utf8")); const m=JSON.parse(fs.readFileSync(process.argv[2], "utf8")); if (b.version !== m.tag.slice(1) || b.tag !== m.tag || b.commit !== m.revision) process.exit(1)' "$classes_probe_prefix.release.body" "$classes_expected_release/.classes-native-release.json"
+	if [[ -f "$classes_expected_release/front-end/dist/release.json" ]]; then
+		cmp --silent "$classes_probe_prefix.release.body" "$classes_expected_release/front-end/dist/release.json"
+	fi
 
 	for classes_path in \
 		"/404.html" \
@@ -399,7 +407,6 @@ smoke_release() {
 		"/__native-release-missing-$classes_expected_revision" \
 		"/.env" \
 		"/.vite/ssr-manifest.json" \
-		"/release.json" \
 		"/.classes-native-release.json"; do
 		classes_status="$(capture_https "$classes_path" "$classes_probe_prefix.not-found.body" "$classes_probe_prefix.not-found.headers")"
 		[[ "$classes_status" == "404" ]]

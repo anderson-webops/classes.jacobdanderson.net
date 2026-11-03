@@ -72,7 +72,7 @@ Treat this as a standing instruction for this site.
 
 - The canonical custom-host path is native Nginx plus exactly one loopback-only systemd API. Do not infer or introduce a Docker deployment.
 - Produce the native candidate through the tagged `native-release.yml` CI workflow, retain its attested archive/manifest/bundle on the immutable release, and activate the unchanged extracted artifact with `scripts/promote-native-release.sh` and an independently trusted checkout of that tag. Local `prepare-native-release.sh` outputs are validation builds, not authenticated deployment candidates. Never substitute self-reported builder hashes for CI provenance.
-- Preserve the strict static-route boundary: unknown pages use the generated branded `404.html` with status 404, unknown API paths remain JSON 404s, and neither `/release.json` nor `/api/release` is a public identity endpoint.
+- Preserve the strict static-route boundary: unknown pages use the generated branded `404.html` with status 404 and unknown API paths remain JSON 404s. Public `/release.json` contains only the verified version, tag and served commit with no-store caching; `/api/release` and the internal native manifest remain private 404s.
 - Promotion must install the same release's Nginx snippets and systemd unit, switch atomically, pass readiness and loopback TLS smoke gates, and restore the prior configuration and release on failure. Do not change DNS, TLS records, data, credentials, or backups as part of application deployment.
 
 ## Local Course Material Paths

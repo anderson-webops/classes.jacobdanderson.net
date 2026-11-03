@@ -70,35 +70,35 @@ test("native Nginx keeps static, API, and hidden-file boundaries separate", asyn
 	for (const [name, value] of Object.entries(exactSecurityHeaders)) {
 		assert.deepEqual(configuredHeaders.get(name), [name === "cross-origin-resource-policy" ? "$classes_resource_policy" : value]);
 	}
-	assert.match(policy, /error_page 404 =404 \/404[.]html;/u);
+	assert.match(policy, /error_page 404 =404 \/404\.html;/u);
 	assert.match(policy, /location = \/__central-analytics \{\s*return 404;/u);
 	assert.match(policy, /location \^~ \/__central-analytics\/ \{\s*return 404;/u);
-	assert.match(policy, /location = \/404[.]html \{\s*internal;/u);
+	assert.match(policy, /location = \/404\.html \{\s*internal;/u);
 	assert.match(policy, /location \/ \{\s*try_files \$uri \$uri\/ =404;/u);
-	assert.doesNotMatch(policy, /try_files[^;]*index[.]html/u);
-	assert.match(policy, /location = \/index[.]html \{/u);
+	assert.doesNotMatch(policy, /try_files[^;]*index\.html/u);
+	assert.match(policy, /location = \/index\.html \{/u);
 	assert.ok(policy.includes("if ($request_uri ~ ^/index[.]html"));
 	assert.match(policy, /location = \/coding_standard \{/u);
 	assert.match(policy, /location = \/coding_standard\/ \{/u);
 	assert.match(
 		policy,
-		/return 308 https:\/\/static[.]classes[.]jacobdanderson[.]net\/coding_standard[.]md\$is_args\$args;/u
+		/return 308 https:\/\/static\.classes\.jacobdanderson\.net\/coding_standard\.md\$is_args\$args;/u
 	);
 	assert.match(policy, /classes_legacy_route/u);
-	assert.match(policy, /location = \/admin\/student-management[.]html \{/u);
+	assert.match(policy, /location = \/admin\/student-management\.html \{/u);
 	assert.match(policy, /classes_direct_index_route/u);
 	assert.match(policy, /try_files \$uri =404;/u);
-	assert.match(policy, /return 308 https:\/\/classes[.]jacobdanderson[.]net/u);
-	assert.match(policy, /proxy_pass http:\/\/127[.]0[.]0[.]1:3008\//u);
+	assert.match(policy, /return 308 https:\/\/classes\.jacobdanderson\.net/u);
+	assert.match(policy, /proxy_pass http:\/\/127\.0\.0\.1:3008\//u);
 	assert.match(policy, /proxy_set_header X-Forwarded-For \$remote_addr;/u);
 	assert.doesNotMatch(policy, /proxy_intercept_errors/u);
-	assert.match(policy, /location ~ \(\^\|\/\)\\[.] \{/u);
+	assert.match(policy, /location ~ \(\^\|\/\)\\\. \{/u);
 	assert.match(policy, /access_log off;/u);
 	assert.match(host, /listen \[::\]:80;/u);
-	assert.match(host, /include \/etc\/nginx\/snippets\/classes-http-maps[.]conf;/u);
-	assert.match(unit, /Environment=HOST=127[.]0[.]0[.]1/u);
+	assert.match(host, /include \/etc\/nginx\/snippets\/classes-http-maps\.conf;/u);
+	assert.match(unit, /Environment=HOST=127\.0\.0\.1/u);
 	assert.match(unit, /Environment=PORT=3008/u);
-	assert.match(unit, /ExecStart=\/usr\/bin\/node back-end\/dist\/server[.]js/u);
+	assert.match(unit, /ExecStart=\/usr\/bin\/node back-end\/dist\/server\.js/u);
 	assert.match(unit, /ProtectSystem=strict/u);
 });
 
@@ -148,55 +148,55 @@ test("prepare and promotion scripts enforce exact provenance and rollback gates"
 		source("docs/native-production-deployment.md")
 	]);
 
-	assert.ok(prepare.includes('CLASSES_BUILD_REVISION="$classes_revision" \\'));
-	assert.ok(prepare.includes('CLASSES_BUILD_RELEASE="$classes_tag" \\'));
+	assert.ok(prepare.includes("CLASSES_BUILD_REVISION=\"$classes_revision\" \\"));
+	assert.ok(prepare.includes("CLASSES_BUILD_RELEASE=\"$classes_tag\" \\"));
 
 	assert.match(prepare, /Prepare releases as the unprivileged classes-build user/u);
-	assert.match(prepare, /verify-native-source[.]sh/u);
+	assert.match(prepare, /verify-native-source\.sh/u);
 	assert.match(prepare, /npm --prefix "\$1"/u);
 	assert.match(prepare, /run -w front-end test:unit/u);
 	assert.match(prepare, /run -w back-end test/u);
 	assert.match(prepare, /run audit/u);
 	assert.match(prepare, /classes_staging_candidate\/back-end" ci/u);
-	assert.match(prepare, /back-end\/node_modules\/[.]bin/u);
+	assert.match(prepare, /back-end\/node_modules\/\.bin/u);
 	const policyCopy = prepare.search(
-		/^\t"\$classes_build_source\/back-end\/[.]npmrc" \\$/mu
+		/^\t"\$classes_build_source\/back-end\/\.npmrc" \\$/mu
 	);
 	const runtimeInstall = prepare.search(
 		/^classes_npm "\$classes_staging_candidate\/back-end" ci \\$/mu
 	);
 	const policyRemoval = prepare.search(
-		/^rm -f -- "\$classes_staging_candidate\/back-end\/[.]npmrc"$/mu
+		/^rm -f -- "\$classes_staging_candidate\/back-end\/\.npmrc"$/mu
 	);
 	const manifestWrite = prepare.search(
-		/^node "\$classes_staging_candidate\/scripts\/verify-native-release[.]mjs" \\$/mu
+		/^node "\$classes_staging_candidate\/scripts\/verify-native-release\.mjs" \\$/mu
 	);
 	assert.ok(policyCopy >= 0 && policyCopy < runtimeInstall);
 	assert.ok(runtimeInstall < policyRemoval && policyRemoval < manifestWrite);
 	assert.match(prepare.slice(runtimeInstall, policyRemoval), /^\t--include=optional \\$/mu);
 	assert.match(prepare.slice(runtimeInstall, policyRemoval), /^\t--strict-allow-scripts$/mu);
-	assert.match(promote, /Candidate must remain inside the managed [.]candidates directory/u);
-	assert.match(promote, /verify-native-source[.]sh/u);
-	const candidateProof = 'node "$classes_source_dir/scripts/verify-native-provenance.mjs" "$classes_candidate"';
-	const finalProof = '[[ "$(native_manifest_digest "$classes_final_release/.classes-native-release.json")" == "$classes_authenticated_manifest_sha256" ]]';
+	assert.match(promote, /Candidate must remain inside the managed \.candidates directory/u);
+	assert.match(promote, /verify-native-source\.sh/u);
+	const candidateProof = "node \"$classes_source_dir/scripts/verify-native-provenance.mjs\" \"$classes_candidate\"";
+	const finalProof = "[[ \"$(native_manifest_digest \"$classes_final_release/.classes-native-release.json\")\" == \"$classes_authenticated_manifest_sha256\" ]]";
 	assert.ok(promote.indexOf(candidateProof) > promote.indexOf("snapshot-native-candidate.py"));
-	assert.ok(promote.indexOf(candidateProof) < promote.indexOf('mv -- "$classes_candidate" "$classes_final_release"'));
-	assert.ok(promote.indexOf(finalProof) > promote.indexOf('mv -- "$classes_candidate" "$classes_final_release"'));
-	assert.ok(promote.indexOf(finalProof) < promote.indexOf('atomic_link "$classes_final_release" "$classes_current_link"'));
-	assert.ok(promote.indexOf('classes_authenticated_manifest_sha256="$(native_manifest_digest "$classes_manifest")"') > promote.indexOf(candidateProof));
-	assert.equal(promote.match(/verify-native-provenance[.]mjs/gu).length, 1);
-	assert.match(promote, /restore_previous\(\) \{\s*node "\$classes_source_dir\/scripts\/verify-native-release[.]mjs" "\$classes_previous_target" \|\| return 1/u);
-	assert.doesNotMatch(promote, /verify-native-provenance[.]mjs" "\$classes_previous_target"/u);
+	assert.ok(promote.indexOf(candidateProof) < promote.indexOf("mv -- \"$classes_candidate\" \"$classes_final_release\""));
+	assert.ok(promote.indexOf(finalProof) > promote.indexOf("mv -- \"$classes_candidate\" \"$classes_final_release\""));
+	assert.ok(promote.indexOf(finalProof) < promote.indexOf("atomic_link \"$classes_final_release\" \"$classes_current_link\""));
+	assert.ok(promote.indexOf("classes_authenticated_manifest_sha256=\"$(native_manifest_digest \"$classes_manifest\")\"") > promote.indexOf(candidateProof));
+	assert.equal(promote.match(/verify-native-provenance\.mjs/gu).length, 1);
+	assert.match(promote, /restore_previous\(\) \{\s*node "\$classes_source_dir\/scripts\/verify-native-release\.mjs" "\$classes_previous_target" \|\| return 1/u);
+	assert.doesNotMatch(promote, /verify-native-provenance\.mjs" "\$classes_previous_target"/u);
 	assert.match(promote, /Promotion requires an existing current release symlink for rollback/u);
-	assert.match(promote, /snapshot-native-candidate[.]py/u);
+	assert.match(promote, /snapshot-native-candidate\.py/u);
 	assert.doesNotMatch(promote, /chown -R/u);
 	assert.ok(
 		promote.indexOf("snapshot-native-candidate.py")
-		< promote.indexOf('node "$classes_source_dir/scripts/verify-native-release.mjs" "$classes_candidate"')
+		< promote.indexOf("node \"$classes_source_dir/scripts/verify-native-release.mjs\" \"$classes_candidate\"")
 	);
 	assert.ok(
-		promote.indexOf('"$classes_source_dir/$classes_release_input" "$classes_candidate/$classes_release_input"')
-		< promote.indexOf('mv -- "$classes_candidate" "$classes_final_release"')
+		promote.indexOf("\"$classes_source_dir/$classes_release_input\" \"$classes_candidate/$classes_release_input\"")
+		< promote.indexOf("mv -- \"$classes_candidate\" \"$classes_final_release\"")
 	);
 	assert.match(promote, /nginx -t/u);
 	assert.match(promote, /verify_nginx_includes/u);
@@ -204,61 +204,61 @@ test("prepare and promotion scripts enforce exact provenance and rollback gates"
 	assert.match(promote, /atomic_link "\$classes_final_release" "\$classes_current_link"/u);
 	assert.match(promote, /restore_previous/u);
 	assert.doesNotMatch(promote, /if ! \(\s*set -e/u);
-	assert.match(promote, /classes_activation_status=\$[?]/u);
-	assert.match(promote, /classes_rollback_status=\$[?]/u);
+	assert.match(promote, /classes_activation_status=\$\?/u);
+	assert.match(promote, /classes_rollback_status=\$\?/u);
 	assert.match(promote, /if \(\( classes_rollback_status == 0 \)\); then/u);
 	assert.match(promote, /classes_previous_revision=/u);
-	assert.match(promote, /for _classes_attempt in \{1[.][.]30\}/u);
+	assert.match(promote, /for _classes_attempt in \{1\.\.30\}/u);
 	assert.match(promote, /wait_for_api_ready "\$classes_work_dir\/activation"/u);
 	assert.match(promote, /wait_for_api_ready "\$classes_work_dir\/rollback"/u);
-	assert.match(promote, /verify_nginx_includes "\$classes_work_dir\/rollback-nginx[.]dump"/u);
+	assert.match(promote, /verify_nginx_includes "\$classes_work_dir\/rollback-nginx\.dump"/u);
 	assert.match(
 		promote,
 		/smoke_release\s+\\\s+"\$classes_previous_target"\s+\\\s+"\$classes_previous_revision"\s+\\\s+"\$classes_work_dir\/rollback"/u
 	);
 	assert.match(
 		promote,
-		/cmp --silent "\$classes_probe_prefix[.]root[.]body" "\$classes_expected_release\/front-end\/dist\/index[.]html"/u
+		/cmp --silent "\$classes_probe_prefix\.root\.body" "\$classes_expected_release\/front-end\/dist\/index\.html"/u
 	);
 	assert.match(
 		promote,
-		/cmp --silent "\$classes_probe_prefix[.]not-found[.]body" "\$classes_expected_release\/front-end\/dist\/404[.]html"/u
+		/cmp --silent "\$classes_probe_prefix\.not-found\.body" "\$classes_expected_release\/front-end\/dist\/404\.html"/u
 	);
-	assert.match(promote, /capture_https \/api\/readyz "\$classes_probe_prefix[.]ready[.]body"/u);
+	assert.match(promote, /capture_https \/api\/readyz "\$classes_probe_prefix\.ready\.body"/u);
 	assert.match(promote, /__native-release-missing-\$classes_expected_revision/u);
 	assert.match(promote, /api\/__native-release-missing-\$classes_expected_revision/u);
 	assert.match(promote, /classes_preserve_work=true/u);
-	assert.match(promote, /--resolve "classes[.]jacobdanderson[.]net:443:127[.]0[.]0[.]1"/u);
-	assert.match(promote, /--resolve "classes[.]jacobdanderson[.]net:80:127[.]0[.]0[.]1"/u);
-	assert.match(promote, /https:\/\/classes[.]jacobdanderson[.]net\$classes_http_path/u);
+	assert.match(promote, /--resolve "classes\.jacobdanderson\.net:443:127\.0\.0\.1"/u);
+	assert.match(promote, /--resolve "classes\.jacobdanderson\.net:80:127\.0\.0\.1"/u);
+	assert.match(promote, /https:\/\/classes\.jacobdanderson\.net\$classes_http_path/u);
 	assert.match(promote, /capture_https \/courses\//u);
 	assert.match(
 		promote,
 		/require_coding_standard_redirect "\/coding_standard\?probe=1"/u
 	);
-	assert.match(promote, /node "\$classes_source_dir\/scripts\/native-csp-from-map[.]mjs"/u);
-	assert.match(promote, /"\$classes_expected_release\/deploy\/native\/classes-http-maps[.]conf"/u);
+	assert.match(promote, /node "\$classes_source_dir\/scripts\/native-csp-from-map\.mjs"/u);
+	assert.match(promote, /"\$classes_expected_release\/deploy\/native\/classes-http-maps\.conf"/u);
 	assert.match(promote, /"\$classes_work_dir\/activation" \\\s+true/u);
 	assert.match(promote, /"\$classes_require_analytics_denial" == "true"/u);
-	assert.match(promote, /"\/__central-analytics\/script[.]js"/u);
+	assert.match(promote, /"\/__central-analytics\/script\.js"/u);
 	assert.match(
 		promote,
-		/require_one_header\s+\\\s+"\$classes_probe_prefix[.]courses[.]headers"\s+\\\s+"Content-Security-Policy"\s+\\\s+"\$classes_course_csp"/u
+		/require_one_header\s+\\\s+"\$classes_probe_prefix\.courses\.headers"\s+\\\s+"Content-Security-Policy"\s+\\\s+"\$classes_course_csp"/u
 	);
 	assert.match(promote, /\/api\/readyz/u);
-	assert.match(promote, /"\/404[.]html"/u);
-	assert.match(promote, /"\/courses[.]html"/u);
-	assert.match(promote, /\/release[.]json/u);
+	assert.match(promote, /"\/404\.html"/u);
+	assert.match(promote, /"\/courses\.html"/u);
+	assert.match(promote, /\/release\.json/u);
 	assert.match(promote, /\/api\/release/u);
 	assert.match(promote, /\/api\/__native-release-missing-/u);
 	assert.match(promote, /index\(\$0, ":"\)/u);
 	assert.match(promote, /--noproxy '\*'/u);
-	assert.match(verifier, /front-end\/dist\/[.]vite/u);
-	assert.match(verifier, /front-end\/dist\/release[.]json/u);
+	assert.match(verifier, /front-end\/dist\/\.vite/u);
+	assert.match(verifier, /front-end\/dist\/release\.json/u);
 	assert.match(verifier, /raw static route alias/u);
 	assert.match(verifier, /unsupported entry/u);
 	assert.match(verifier, /back-end\/node_modules/u);
-	assert.match(documentation, /internal `[.]classes-native-release[.]json`/u);
+	assert.match(documentation, /internal `\.classes-native-release\.json`/u);
 	assert.match(documentation, /fetched `origin\/main`/u);
 	assert.match(documentation, /not an initial-cutover tool/u);
 	assert.match(documentation, /Any activation failure restores the prior symlink/u);
@@ -266,18 +266,25 @@ test("prepare and promotion scripts enforce exact provenance and rollback gates"
 	assert.match(documentation, /activation and rollback diagnostics remain separate/u);
 });
 
-test("native provenance rejects rehashed payloads and pins the independent signer", async t => {
+test("native provenance rejects rehashed payloads and pins the independent signer", async (t) => {
 	const temporaryRoot = await fs.mkdtemp(path.join(os.tmpdir(), "classes-provenance-"));
 	t.after(async () => fs.rm(temporaryRoot, { force: true, recursive: true }));
 	const candidate = path.join(temporaryRoot, "candidate");
 	for (const directory of [
-		"front-end/dist/python-runtime", "back-end/dist",
-		"back-end/node_modules/runtime-package", "scripts", "deploy"
+		"front-end/dist/python-runtime",
+		"back-end/dist",
+		"back-end/node_modules/runtime-package",
+		"scripts",
+		"deploy"
 	]) await fs.mkdir(path.join(candidate, directory), { recursive: true });
 	for (const relativePath of [
-		"package.json", "package-lock.json", "front-end/package.json",
-		"back-end/package.json", "back-end/package-lock.json",
-		"scripts/verify-native-source.sh", "scripts/verify-native-release.mjs"
+		"package.json",
+		"package-lock.json",
+		"front-end/package.json",
+		"back-end/package.json",
+		"back-end/package-lock.json",
+		"scripts/verify-native-source.sh",
+		"scripts/verify-native-release.mjs"
 	]) await fs.copyFile(path.join(repositoryRoot, relativePath), path.join(candidate, relativePath));
 	await fs.cp(path.join(repositoryRoot, "deploy/native"), path.join(candidate, "deploy/native"), { recursive: true });
 	const contents = {
@@ -303,13 +310,27 @@ test("native provenance rejects rehashed payloads and pins the independent signe
 	};
 	await writeManifest();
 	const trustedManifest = await fs.readFile(manifestPath);
+	const identityPath = path.join(candidate, "front-end/dist/release.json");
+	const trustedIdentity = await fs.readFile(identityPath);
 	const digest = createHash("sha256").update(trustedManifest).digest("hex");
 	const repository = "anderson-webops/classes.jacobdanderson.net";
 	const expectedArguments = [
-		"attestation", "verify", manifestPath, "--hostname", "github.com", "--repo", repository,
-		"--signer-workflow", `${repository}/.github/workflows/native-release.yml`,
-		"--source-digest", revision, "--signer-digest", revision,
-		"--source-ref", `refs/tags/${tag}`, "--deny-self-hosted-runners"
+		"attestation",
+		"verify",
+		manifestPath,
+		"--hostname",
+		"github.com",
+		"--repo",
+		repository,
+		"--signer-workflow",
+		`${repository}/.github/workflows/native-release.yml`,
+		"--source-digest",
+		revision,
+		"--signer-digest",
+		revision,
+		"--source-ref",
+		`refs/tags/${tag}`,
+		"--deny-self-hosted-runners"
 	];
 	const cli = path.join(temporaryRoot, "gh");
 	await fs.writeFile(cli, `#!${process.execPath}\nimport fs from "node:fs";\nimport crypto from "node:crypto";\nconst args = process.argv.slice(2);\nfs.writeFileSync(${JSON.stringify(path.join(temporaryRoot, "called.json"))}, JSON.stringify(args));\nif (process.env.TEST_PROVENANCE_UNAVAILABLE === "1") process.exit(1);\nif (JSON.stringify(args) !== ${JSON.stringify(JSON.stringify(expectedArguments))}) process.exit(2);\nif (crypto.createHash("sha256").update(fs.readFileSync(args[2])).digest("hex") !== ${JSON.stringify(digest)}) process.exit(3);\n`, { mode: 0o755 });
@@ -341,6 +362,7 @@ test("native provenance rejects rehashed payloads and pins the independent signe
 	await writeManifest(tag, "b".repeat(40));
 	assert.notEqual(verify().status, 0);
 	await fs.writeFile(manifestPath, trustedManifest);
+	await fs.writeFile(identityPath, trustedIdentity);
 	assert.equal(verify().status, 0);
 	await fs.rm(cli);
 	const missingCli = spawnSync(process.execPath, [guard, candidate], { encoding: "utf8", env: { ...process.env, PATH: temporaryRoot } });
@@ -479,7 +501,7 @@ test("native source provenance requires canonical fetched origin/main and an ann
 	assert.doesNotMatch(verifierSource, /git[^\n]*fetch/u);
 });
 
-test("internal manifest detects payload drift and stays out of public output", async t => {
+test("internal manifest detects payload drift and stays out of public output", async (t) => {
 	const temporaryRoot = await fs.mkdtemp(path.join(os.tmpdir(), "classes-native-test-"));
 	t.after(async () => fs.rm(temporaryRoot, { force: true, recursive: true }));
 	const candidate = path.join(temporaryRoot, "candidate");
@@ -593,7 +615,23 @@ test("internal manifest detects payload drift and stays out of public output", a
 		await fs.lstat(path.join(candidate, ".classes-native-release.json")).then(stats => stats.isFile()),
 		true
 	);
-	await assert.rejects(fs.access(path.join(candidate, "front-end/dist/release.json")));
+	const publicMetadataPath = path.join(candidate, "front-end/dist/release.json");
+	const publicMetadata = await fs.readFile(publicMetadataPath, "utf8");
+	assert.deepEqual(JSON.parse(publicMetadata), { version: "2.7.205", tag: "v2.7.205", commit: "a".repeat(40) });
+	await fs.writeFile(publicMetadataPath, JSON.stringify({ ...JSON.parse(publicMetadata), unexpected: "synthetic field" }));
+	const privateFieldResult = spawnSync(process.execPath, [verifier, candidate], { encoding: "utf8" });
+	assert.notEqual(privateFieldResult.status, 0);
+	assert.match(privateFieldResult.stderr, /only the verified version/u);
+	await fs.writeFile(publicMetadataPath, publicMetadata);
+	const originalManifest = await fs.readFile(path.join(candidate, ".classes-native-release.json"), "utf8");
+	const retainedManifest = JSON.parse(originalManifest);
+	delete retainedManifest.files["front-end/dist/release.json"];
+	await fs.rm(publicMetadataPath);
+	await fs.writeFile(path.join(candidate, ".classes-native-release.json"), JSON.stringify(retainedManifest));
+	const retainedResult = spawnSync(process.execPath, [verifier, candidate], { encoding: "utf8" });
+	assert.equal(retainedResult.status, 0, retainedResult.stderr);
+	await fs.writeFile(publicMetadataPath, publicMetadata);
+	await fs.writeFile(path.join(candidate, ".classes-native-release.json"), originalManifest);
 
 	await fs.appendFile(path.join(candidate, "back-end/dist/server.js"), "// changed\n");
 	const driftResult = spawnSync(process.execPath, [verifier, candidate], { encoding: "utf8" });

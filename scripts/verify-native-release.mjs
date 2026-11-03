@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { createHash } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import fs from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
@@ -25,7 +25,6 @@ const trackedDirectories = Object.freeze([
 ]);
 const forbiddenPublicPaths = Object.freeze([
 	"front-end/dist/.vite",
-	"front-end/dist/release.json",
 	"front-end/dist/api/release",
 	"front-end/dist/api/release.html",
 	"front-end/dist/api/release/index.html"
@@ -86,9 +85,11 @@ async function collectDirectoryFiles(candidateDirectory, relativeDirectory) {
 			}
 			if (entry.isDirectory()) {
 				await visit(entryAbsolute, entryRelative);
-			} else if (entry.isFile()) {
+			}
+			else if (entry.isFile()) {
 				files.push(entryRelative);
-			} else {
+			}
+			else {
 				fail(`Native release payload contains unsupported entry ${entryRelative}.`);
 			}
 		}
@@ -222,6 +223,16 @@ async function writeManifest(candidateDirectory, tag, revision) {
 		() => false
 	);
 	if (alreadyExists) fail(`${manifestName} already exists.`);
+	const files = await checksums(candidateDirectory);
+	const identityPath = path.join(candidateDirectory, "front-end/dist/release.json");
+	const pendingIdentityPath = path.join(candidateDirectory, "front-end/dist", `.release-${randomUUID()}.json`);
+	try {
+		await fs.writeFile(pendingIdentityPath, `${JSON.stringify({ version: tag.slice(1), tag, commit: revision })}\n`, { flag: "wx", mode: 0o644 });
+		await fs.chmod(pendingIdentityPath, 0o644);
+		await fs.rename(pendingIdentityPath, identityPath);
+	}
+	finally { await fs.rm(pendingIdentityPath, { force: true }); }
+	files["front-end/dist/release.json"] = await sha256(identityPath);
 	const manifest = {
 		schemaVersion: 1,
 		site: siteName,
@@ -229,7 +240,7 @@ async function writeManifest(candidateDirectory, tag, revision) {
 		revision,
 		releaseId,
 		generatedAt: new Date().toISOString(),
-		files: await checksums(candidateDirectory)
+		files
 	};
 	await fs.writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`, {
 		flag: "wx",
@@ -261,6 +272,20 @@ async function verifyManifest(candidateDirectory) {
 	await assertPythonRuntimeAssets(candidateDirectory, manifest.tag);
 	if (manifest.releaseId !== releaseId) fail("Native release manifest has an inconsistent release ID.");
 	if (!isPlainObject(manifest.files)) fail("Native release manifest is missing its file checksums.");
+	if (Object.hasOwn(manifest.files, "front-end/dist/release.json")) {
+		const identityPath = await regularFile(candidateDirectory, "front-end/dist/release.json");
+		let identity;
+		try {
+			identity = JSON.parse(await fs.readFile(identityPath, "utf8"));
+		}
+		catch {
+			fail("Public release metadata must be valid JSON.");
+		}
+		if (!isPlainObject(identity) || Object.keys(identity).sort().join(",") !== "commit,tag,version"
+			|| identity.version !== manifest.tag.slice(1) || identity.tag !== manifest.tag || identity.commit !== manifest.revision) {
+			fail("Public release metadata must contain only the verified version, tag and commit.");
+		}
+	}
 	if (typeof manifest.generatedAt !== "string" || !Number.isFinite(Date.parse(manifest.generatedAt))) {
 		fail("Native release manifest has an invalid generation time.");
 	}
@@ -327,7 +352,7 @@ export async function runNativeReleaseVerification(argv = process.argv.slice(2))
 
 const invokedUrl = process.argv[1] ? pathToFileURL(process.argv[1]).href : "";
 if (import.meta.url === invokedUrl) {
-	runNativeReleaseVerification().catch(error => {
+	runNativeReleaseVerification().catch((error) => {
 		console.error(error instanceof Error ? error.message : "Native release verification failed.");
 		process.exitCode = 1;
 	});

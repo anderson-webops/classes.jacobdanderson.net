@@ -30,7 +30,11 @@ configuration. Unexpected structural entries, hardlinks and every payload
 symlink are rejected. Promotion verifies a fresh protected snapshot rather than
 changing ownership of mutable builder files. The manifest is operational metadata, not a
 public endpoint.
-`/release.json` and `/api/release` intentionally remain 404.
+Public `/release.json` contains only the verified version, tag and served commit,
+with `no-store` caching. It is generated from the native candidate identity and
+covered by the signed inventory. `/api/release` and the internal native manifest
+remain private 404s. Retained releases without the static metadata file continue
+to verify; their existing host metadata bridge remains part of rollback acceptance.
 
 ## Source and host contract
 

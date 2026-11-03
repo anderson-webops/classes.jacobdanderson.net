@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "fixture": "fractions-homework-v1",
+  "status": "passed",
+  "runtime": "v24.18.0",
+  "model": "gpt-5.6-luna",
+  "schemaVariation": "without_provider_markdown_pattern",
+  "providerStatus": "completed",
+  "providerHttpStatus": 200,
+  "providerLatencyMs": 3076,
+  "applicationValidation": "passed",
+  "providerRequests": 1,
+  "contractSha256": "b80a04e21a1c21f6b6ebefc0d335ea320fe202db8d7f342577ab304bffb6e8e0",
+  "homeworkValidated": true,
+  "sharedWorkVoice": true,
+  "zoomNetworkRequests": 0,
+  "mailRequests": 0,
+  "actualProviderRequest": true,
+  "checkedAt": "2026-11-03T03:08:17.217Z",
+  "sourceServiceSha256": "d503d2608220e940b252bc3ec6f7c33c518730a17ee6eb6346044b1d95b1b1a3",
+  "rootLockSha256": "436106fa60345aeac04952ad0e4d4b35a225ea632637510dca88b45373ab887b",
+  "backendLockSha256": "464c9d8775965d76ccd77854d8ef09e9279f0cdd27f582d1a1398b7bbd474d4a"
+}

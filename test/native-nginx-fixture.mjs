@@ -78,6 +78,8 @@ async function runFixture() {
 		);
 		const configPath = path.join(temporaryRoot, "nginx.conf");
 		await fs.cp(fixtureSource, distDirectory, { recursive: true });
+		const publicIdentity = { version: "2.8.0", tag: "v2.8.0", commit: "a".repeat(40) };
+		await fs.writeFile(path.join(distDirectory, "release.json"), `${JSON.stringify(publicIdentity)}\n`);
 		for (const asset of [
 			"__central-analytics/script.js",
 			"python-runtime/runtime.js",
@@ -117,8 +119,8 @@ async function runFixture() {
 			"root /srv/classes.jacobdanderson.net/current/front-end/dist;",
 			`root ${safeNginxPath(distDirectory)};`
 		);
-		const installedHeadersPath =
-			"/etc/nginx/snippets/classes-static-headers.conf";
+		const installedHeadersPath
+			= "/etc/nginx/snippets/classes-static-headers.conf";
 		assert.ok(policy.includes(installedHeadersPath));
 		policy = policy.replaceAll(
 			installedHeadersPath,
@@ -168,7 +170,7 @@ async function runFixture() {
 		nginxProcess = spawn("nginx", [...nginxArguments, "-g", "daemon off;"]);
 		let stderr = "";
 		nginxProcess.stderr.setEncoding("utf8");
-		nginxProcess.stderr.on("data", chunk => {
+		nginxProcess.stderr.on("data", (chunk) => {
 			stderr += chunk;
 		});
 
@@ -186,7 +188,8 @@ async function runFixture() {
 					ready = true;
 					break;
 				}
-			} catch {
+			}
+			catch {
 				// Nginx may still be binding its fixture port.
 			}
 			await delay(100);
@@ -215,6 +218,12 @@ async function runFixture() {
 			);
 			assert.ok((await response.text()).includes(marker));
 		}
+
+		const publicRelease = await request("/release.json");
+		assert.equal(publicRelease.status, 200);
+		assert.match(publicRelease.headers.get("content-type"), /^application\/json/u);
+		assert.equal(publicRelease.headers.get("cache-control"), "no-store");
+		assert.deepEqual(await publicRelease.json(), publicIdentity);
 
 		for (const [requestPath, location] of [
 			["/index.html?probe=1", `${canonicalOrigin}/?probe=1`],
@@ -281,13 +290,14 @@ async function runFixture() {
 		console.log(
 			"Native Nginx fixture passed routing, CSP and public runtime asset checks."
 		);
-	} finally {
+	}
+	finally {
 		if (nginxProcess) await stopNginx(nginxProcess);
 		await fs.rm(temporaryRoot, { force: true, recursive: true });
 	}
 }
 
-runFixture().catch(error => {
+runFixture().catch((error) => {
 	console.error(
 		error instanceof Error ? error.message : "Native Nginx fixture failed."
 	);
