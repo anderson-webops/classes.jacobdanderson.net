@@ -78,7 +78,7 @@ describe("session-note drafting authorization", () => {
 		await withApi(async request => {
 			const response = await request("/settings", "GET");
 			expect(response.status).toBe(503);
-			expect(await response.json()).toEqual({ code: "DRAFT_UNAVAILABLE", message: "AI drafting is unavailable. Your notes are unchanged." });
+			expect(await response.json()).toEqual({ code: "DRAFT_UNAVAILABLE", message: "AI drafting is unavailable. Your notes are unchanged.", stage: "configuration" });
 			expect(mocks.candidates).not.toHaveBeenCalled();
 			expect(mocks.generate).not.toHaveBeenCalled();
 		});

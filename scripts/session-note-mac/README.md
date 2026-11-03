@@ -38,10 +38,14 @@ output filename rather than replacing `verification-metadata-v2.json`.
 For tracker integration, call `associate_bindings(site_records, bindings,
 verified_local_sent)` after loading a private report. Bindings contain entryId,
 studentId and scheduledSessionId, established from verified booking identity.
-The returned site association is verified only when both stable IDs match a
-verified session record. September 18 classDate cannot identify a September 19
-session. Verified local Sent timestamps remain separately sourced even when the
-site returns unknown or no record. This helper does not edit or finalize a sheet.
+The association is verified only when both stable IDs match verified site or
+separately verified local Sent evidence. Optional noteId and recordId bindings
+must also match exactly; another note from the same session is not substituted.
+A student-ID query rejects a foreign student's records and retains earlier
+completed pages as incomplete evidence. September 18 classDate cannot identify
+a September 19 session. Verified local Sent timestamps remain separately sourced
+even when the site returns unknown or no record. This helper does not edit or
+finalize a sheet.
 
 Outside-site evidence registration is an explicit, separate workflow using
 `session_notes_client.py --api <HTTPS-base>/api --token-file <private-register-token>

@@ -72,6 +72,9 @@ def verify_query(identity, from_date, to_date, limit, fetch, initial_cursor=None
         for _ in range(100):
             raw = fetch("/session-notes/verification?" + urlencode(params))
             data = project_response(raw)
+            client.verify_student_records(data["records"], identity.get("studentId"))
+            if len(data["records"]) > limit:
+                raise client.EvidenceError("Evidence page exceeds the requested limit")
             current = {key: data[key] for key in client.PAGE_FIELDS}
             if coverage is not None and coverage != current:
                 raise client.EvidenceError("Coverage changed during pagination; evidence is incomplete")
@@ -106,12 +109,15 @@ def associate_bindings(site_records, bindings, verified_local_sent=None):
     associations = []
     for binding in bindings:
         student, session = binding.get("studentId"), binding.get("scheduledSessionId")
+        note_id, record_id = binding.get("noteId"), binding.get("recordId")
         if not student or not session:
             associations.append({"entryId": binding.get("entryId"), "associationStatus": "unverified"})
             continue
-        selected = [row for row in site_records if client.matches_actual_session(row, student, session)]
-        local_selected = [row for row in local if row.get("studentId") == student and row.get("scheduledSessionId") == session]
-        associations.append({"entryId": binding.get("entryId"), "associationStatus": "verified_session" if selected else "unverified",
+        selected = [row for row in site_records if client.matches_actual_session(row, student, session, note_id, record_id)]
+        local_selected = [row for row in local if row.get("studentId") == student and row.get("scheduledSessionId") == session
+                          and (note_id is None or row.get("noteId") == note_id)
+                          and (record_id is None or row.get("recordId") == record_id)]
+        associations.append({"entryId": binding.get("entryId"), "associationStatus": "verified_session" if selected or local_selected else "unverified",
                              "siteEvidence": selected, "localSentEvidence": local_selected})
     return {**client.preserve_local_sent(site_records, local), "associations": associations}
 

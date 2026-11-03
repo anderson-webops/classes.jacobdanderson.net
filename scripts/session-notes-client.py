@@ -47,6 +47,8 @@ def request_json(base, path, token, payload=None):
 
 
 def verify_page(page):
+    if not isinstance(page, dict):
+        raise EvidenceError("Invalid evidence response")
     if page.get("schemaVersion") != SCHEMA_VERSION:
         raise EvidenceError("Unsupported evidence schema; update the client before using records")
     if not PAGE_FIELDS.issubset(page) or not isinstance(page.get("records"), list) or not isinstance(page["coverageDetails"], dict) or not isinstance(page["statusMeaning"], str):
@@ -56,6 +58,15 @@ def verify_page(page):
     for row in page["records"]:
         if not isinstance(row, dict) or not RECORD_FIELDS.issubset(row):
             raise EvidenceError("Critical record identity or evidence semantics are missing")
+        if not all(isinstance(row[field], str) and 0 < len(row[field]) <= 256 for field in ("recordId", "recordType", "evidenceStatus", "statusReason", "associationStatus")):
+            raise EvidenceError("Invalid record identity or evidence semantics")
+        if any(row[field] is not None and (not isinstance(row[field], str) or not 0 < len(row[field]) <= 256) for field in ("studentId", "noteId", "scheduledSessionId")):
+            raise EvidenceError("Invalid stable evidence identity")
+
+
+def verify_student_records(records, student_id):
+    if student_id and any(row["studentId"] not in (None, student_id) for row in records):
+        raise EvidenceError("Evidence belongs to another student; review before updating a tracker")
 
 
 def fetch_evidence(base, token, student_id, from_date, to_date, fetch=request_json):
@@ -63,9 +74,11 @@ def fetch_evidence(base, token, student_id, from_date, to_date, fetch=request_js
     records = []
     pages = []
     seen = set()
+    seen_cursors = set()
     for _ in range(100):
         page = fetch(base, "/session-notes/verification?" + urlencode(params), token)
         verify_page(page)
+        verify_student_records(page["records"], student_id)
         metadata = {field: page[field] for field in PAGE_FIELDS}
         if pages and metadata != pages[0]:
             raise EvidenceError("Coverage changed during pagination; review before updating a tracker")
@@ -78,17 +91,19 @@ def fetch_evidence(base, token, student_id, from_date, to_date, fetch=request_js
         cursor = page["nextCursor"]
         if cursor is None:
             return {"records": records, "pages": pages, "paginationComplete": True, **metadata}
-        if not isinstance(cursor, str) or not 0 < len(cursor) <= 256 or cursor in seen:
+        if not isinstance(cursor, str) or not 0 < len(cursor) <= 256 or cursor in seen_cursors:
             raise EvidenceError("Invalid or repeated cursor")
-        seen.add(cursor)
+        seen_cursors.add(cursor)
         params["cursor"] = cursor
     raise EvidenceError("Pagination bound reached; evidence is incomplete")
 
 
-def matches_actual_session(record, student_id, session_id):
-    return bool(session_id) and record["studentId"] == student_id and (
+def matches_actual_session(record, student_id, session_id, note_id=None, record_id=None):
+    return bool(student_id and session_id) and record["studentId"] == student_id and (
         record["scheduledSessionId"] == session_id
         and record["associationStatus"] == "verified_session"
+        and (note_id is None or record["noteId"] == note_id)
+        and (record_id is None or record["recordId"] == record_id)
     )
 
 

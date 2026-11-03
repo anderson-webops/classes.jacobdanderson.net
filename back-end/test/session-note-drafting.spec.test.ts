@@ -76,7 +76,7 @@ describe("session-note AI drafting", () => {
 		expect(body.tools).toBeUndefined();
 		expect(body.instructions).toContain("untrusted quoted data");
 		expect(body.text.format).toMatchObject({ type: "json_schema", strict: true, name: "session_note_draft", schema: { additionalProperties: false, required: ["markdown", "reviewWarnings"] } });
-		expect(body.text.format.schema.properties.markdown.pattern).toBe("(?:^|\\n)\\*\\*Homework\\*\\*:");
+		expect(body.text.format.schema.properties.markdown).not.toHaveProperty("pattern");
 		expect(JSON.stringify(body.input)).not.toContain("private@example.invalid");
 		expect(JSON.stringify(body.input)).not.toContain("private-code");
 		expect(JSON.stringify(body.input)).not.toContain("https://zoom.us");
@@ -167,6 +167,23 @@ describe("session-note AI drafting", () => {
 		const choice = await selected();
 		custom = url => url.includes("api.openai") ? draftResponse(value) : undefined;
 		await expect(service.generate(scope, choice)).rejects.toMatchObject({ code: "DRAFT_INCOMPLETE" });
+	});
+	it("identifies incomplete provider output without accepting or exposing partial content", async () => {
+		const choice = await selected();
+		custom = url => url.includes("api.openai") ? json({ status: "incomplete", incomplete_details: { reason: "max_output_tokens" }, output: [{ type: "message", content: [{ type: "output_text", text: "private partial draft" }] }] }) : undefined;
+		await expect(service.generate(scope, choice)).rejects.toMatchObject({ code: "DRAFT_INCOMPLETE", stage: "validation", message: expect.not.stringContaining("private") });
+	});
+	it("reports a provider transport failure at generation without leaking raw errors", async () => {
+		const choice = await selected();
+		custom = url => { if (url.includes("api.openai")) throw new Error("private credential and transcript"); return undefined; };
+		await expect(service.generate(scope, choice)).rejects.toMatchObject({ code: "DRAFT_UNAVAILABLE", stage: "generation", message: expect.not.stringContaining("private") });
+	});
+	it("expires a selection after five minutes before any provider call", async () => {
+		const choice = await selected();
+		now += 5 * 60_000;
+		request.mockClear();
+		await expect(service.generate(scope, choice)).rejects.toMatchObject({ code: "SELECTION_EXPIRED", stage: "selection", message: expect.stringContaining("5 minutes") });
+		expect(request).not.toHaveBeenCalled();
 	});
 	it("requires valid date, identity, meeting ID and explicit confirmation", () => {
 		expect(noteDraftRequest.parse({ studentId: scope.studentId, classDate: input.classDate }).meetingId).toBe("2543520025");

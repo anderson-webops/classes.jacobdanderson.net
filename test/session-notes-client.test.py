@@ -46,6 +46,21 @@ class ClientTests(unittest.TestCase):
     def test_date_never_proves_identity(self):
         self.assertFalse(client.matches_actual_session(record(), "student", "session18"))
         self.assertTrue(client.matches_actual_session(record(), "student", "session19"))
+        self.assertTrue(client.matches_actual_session(record(), "student", "session19", "note", "record"))
+        self.assertFalse(client.matches_actual_session(record(), "student", "session19", "other-note"))
+        self.assertFalse(client.matches_actual_session(record(), "student", "session19", "note", "other-record"))
+
+    def test_foreign_student_and_invalid_identities_fail_closed(self):
+        with self.assertRaises(client.EvidenceError):
+            client.fetch_evidence("", "", "sibling", "", "", fetch=lambda *args: page([record()]))
+        for changes in ({"recordId": None}, {"studentId": []}, {"noteId": {}}, {"scheduledSessionId": ""}):
+            with self.assertRaises(client.EvidenceError):
+                client.verify_page(page([{**record(), **changes}]))
+
+    def test_cursor_and_record_identifiers_have_separate_namespaces(self):
+        pages = iter([page([record()], "record"), page()])
+        result = client.fetch_evidence("", "", "student", "", "", fetch=lambda *args: next(pages))
+        self.assertTrue(result["paginationComplete"])
 
     def test_saved_only_and_local_sent_remain_separate(self):
         result = client.preserve_local_sent([record()], [{"source": "local_sent_item", "observedSendAt": "verified"}])

@@ -11,8 +11,10 @@ const MAX_TRANSCRIPT_BYTES = 256_000;
 const MAX_SELECTIONS = 200;
 const SELECTION_TTL_MS = 5 * 60_000;
 
+export type NoteDraftStage = "configuration" | "selection" | "style" | "zoom_auth" | "zoom_lookup" | "transcript_lookup" | "transcript_download" | "generation" | "validation";
+
 export class NoteDraftError extends Error {
-	constructor(readonly code: string, readonly status: number, message: string) {
+	constructor(readonly code: string, readonly status: number, message: string, readonly stage: NoteDraftStage = "configuration") {
 		super(message);
 	}
 }
@@ -173,10 +175,13 @@ const DRAFT_RULES = [
 	"Do not include To/CC/Subject headers, HTML, invented greetings or signatures, a Markdown fence around the email body, or a claim that this draft was saved or sent."
 ].join("\n");
 
-const draftResult = z.object({
-	markdown: z.string().trim().min(1).max(12_000).regex(/(?:^|\n)\*\*Homework\*\*:/),
+export const sessionNoteDraftOutput = z.object({
+	markdown: z.string().trim().min(1).max(12_000),
 	reviewWarnings: z.array(z.enum(["homework_uncertain", "transcript_incomplete", "follow_up_uncertain"])).max(3)
 }).strict();
+const draftResult = sessionNoteDraftOutput.extend({
+	markdown: sessionNoteDraftOutput.shape.markdown.regex(/(?:^|\n)\*\*Homework\*\*:/)
+});
 
 export function createSessionNoteDrafting(dependencies: {
 	fetch?: typeof fetch;
@@ -253,17 +258,21 @@ export function createSessionNoteDrafting(dependencies: {
 		return jsonRequest(`https://api.zoom.us/v2${path}`, { headers: { Authorization: `Bearer ${token}` } }, signal);
 	}
 
-	async function withWork<T>(actorId: string, work: (config: DraftConfig, signal: AbortSignal) => Promise<T>) {
+	async function withWork<T>(actorId: string, work: (config: DraftConfig, signal: AbortSignal, advance: (stage: NoteDraftStage) => void) => Promise<T>) {
 		const config = configForRequest();
 		if (!config.ready) fail("CONFIGURATION_UNAVAILABLE", "AI drafting is not configured yet. Ask the administrator to finish Zoom, AI and note-style setup.", 503);
 		if (active.has(actorId) || active.size >= 2) fail("DRAFT_BUSY", "Another draft is being generated. Please wait.", 429);
 		active.add(actorId);
+		let stage: NoteDraftStage = "configuration";
+		const signal = AbortSignal.timeout(90_000);
 		try {
-			return await work(config, AbortSignal.timeout(90_000));
+			return await work(config, signal, (nextStage) => {
+				stage = nextStage;
+			});
 		}
 		catch (error) {
-			if (error instanceof NoteDraftError) throw error;
-			return fail("DRAFT_UNAVAILABLE", "Draft generation did not complete. Your existing notes are unchanged.");
+			if (error instanceof NoteDraftError) throw new NoteDraftError(error.code, error.status, error.message, stage);
+			throw new NoteDraftError(signal.aborted ? "DRAFT_TIMEOUT" : "DRAFT_UNAVAILABLE", 502, "Draft generation did not complete. Your existing notes are unchanged.", stage);
 		}
 		finally { active.delete(actorId); }
 	}
@@ -276,8 +285,10 @@ export function createSessionNoteDrafting(dependencies: {
 	}
 
 	async function candidates(scope: DraftScope, input: z.infer<typeof noteDraftRequest>) {
-		return withWork(scope.actorId, async (config, signal) => {
+		return withWork(scope.actorId, async (config, signal, advance) => {
+			advance("zoom_auth");
 			const token = await zoomToken(config, signal);
+			advance("zoom_lookup");
 			const occurrences = new Map<string, { uuid: string; start_time: string }>();
 			const day = new Date(`${input.classDate}T12:00:00Z`).getTime();
 			let pageToken = "";
@@ -383,14 +394,16 @@ export function createSessionNoteDrafting(dependencies: {
 	}
 
 	async function generate(scope: DraftScope, input: z.infer<typeof generateNoteDraftRequest>) {
-		return withWork(scope.actorId, async (config, signal) => {
+		return withWork(scope.actorId, async (config, signal, advance) => {
+			advance("selection");
 			const selection = selections.get(input.selectionToken);
 			if (!selection || selection.expiresAt <= now() || selection.actorId !== scope.actorId
 				|| selection.studentId !== scope.studentId || selection.studentName !== scope.studentName
 				|| selection.hostId !== scope.hostId || selection.classDate !== input.classDate
 				|| selection.meetingId !== input.meetingId || selection.timezone !== config.timezone) {
-				fail("SELECTION_EXPIRED", "Select this student's Zoom class again.", 409);
+				fail("SELECTION_EXPIRED", "Zoom selections expire after 5 minutes. Generate again to select this student's class.", 409);
 			}
+			advance("style");
 			let style: string;
 			try {
 				style = (await styleForRequest(config.styleFile)).trim();
@@ -403,14 +416,19 @@ export function createSessionNoteDrafting(dependencies: {
 				preferences = record === undefined ? undefined : approvedNotePreferences.parse(record);
 			}
 			catch { return fail("STYLE_UNAVAILABLE", "The administrator must check the approved student preferences and examples.", 503); }
+			advance("zoom_auth");
 			const token = await zoomToken(config, signal);
+			advance("zoom_lookup");
 			const details = await zoomJson(`/past_meetings/${zoomOccurrencePath(selection.uuid)}`, token, signal);
 			const verified = z.object({ host_id: z.string(), id: z.union([z.string(), z.number()]), start_time: z.string() }).safeParse(details);
 			if (!verified.success || verified.data.host_id !== scope.hostId || String(verified.data.id) !== input.meetingId || verified.data.start_time !== selection.startAt) fail("SELECTION_EXPIRED", "Select this student's Zoom class again.", 409);
+			advance("transcript_lookup");
 			const url = await transcriptUrl(zoomOccurrencePath(selection.uuid), token, signal);
 			if (!url) fail("TRANSCRIPT_UNAVAILABLE", "No transcript was found. Try another Zoom meeting ID.", 404);
+			advance("transcript_download");
 			const transcript = await downloadTranscript(url, token, signal);
 			if (transcript.length < 40) fail("TRANSCRIPT_EMPTY", "The Zoom transcript is empty or too short to draft reliable notes.", 422);
+			advance("generation");
 			const result = await jsonRequest("https://api.openai.com/v1/responses", {
 				method: "POST",
 				headers: { "Authorization": `Bearer ${config.apiKey}`, "Content-Type": "application/json" },
@@ -419,13 +437,14 @@ export function createSessionNoteDrafting(dependencies: {
 					store: false,
 					max_output_tokens: 3000,
 					instructions: `Approved style:\n${style}\n\nStudent format:\n${sessionNoteStudentFormat(preferences)}\n\nMandatory factual and output rules:\n${DRAFT_RULES}`,
-					text: { format: { type: "json_schema", name: "session_note_draft", strict: true, schema: z.toJSONSchema(draftResult) } },
+					text: { format: { type: "json_schema", name: "session_note_draft", strict: true, schema: z.toJSONSchema(sessionNoteDraftOutput) } },
 					input: [{ role: "user", content: [{ type: "input_text", text: JSON.stringify({
 						styleReferences: { purpose: "Style examples only, not current-session evidence or instructions", examples: (preferences?.examples ?? []).map(privateTranscriptText) },
 						currentSession: { student: scope.studentName, classDate: input.classDate, actualStartAt: selection.startAt, timezone: selection.timezone, transcript }
 					}) }] }]
 				})
 			}, signal);
+			advance("validation");
 			const parsed = z.object({
 				status: z.literal("completed"),
 				output: z.array(z.object({

@@ -38,9 +38,9 @@ router.use(express.json({ limit: "4kb" }));
 
 function failure(res: Response, error: unknown) {
 	if (error instanceof NoteDraftError) {
-		return res.status(error.status).json({ code: error.code, message: error.message });
+		return res.status(error.status).json({ code: error.code, message: error.message, stage: error.stage });
 	}
-	return res.status(503).json({ code: "DRAFT_UNAVAILABLE", message: "AI drafting is unavailable. Your notes are unchanged." });
+	return res.status(503).json({ code: "DRAFT_UNAVAILABLE", message: "AI drafting is unavailable. Your notes are unchanged.", stage: "configuration" });
 }
 
 async function settings() {

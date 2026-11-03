@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import type { NoteDraftStage } from "@/modules/sessionNoteDraftDiagnostics";
 import { computed, onBeforeUnmount, ref, watch } from "vue";
 import { api } from "@/api";
+import { noteDraftDiagnostic } from "@/modules/sessionNoteDraftDiagnostics";
 import { useSessionNoteDraftSettings } from "@/modules/useSessionNoteDraftSettings";
 
 const props = defineProps<{
@@ -34,6 +36,8 @@ const available = computed(
 const ready = computed(() => settings.value?.ready === true);
 const busy = ref(false);
 const error = ref("");
+const diagnostic = ref<ReturnType<typeof noteDraftDiagnostic> | null>(null);
+const copyResult = ref<"copied" | "failed" | null>(null);
 const warningLabels = {
 	homework_uncertain: null,
 	transcript_incomplete: null,
@@ -81,6 +85,8 @@ function reset() {
 	confirmReplace.value = false;
 	replacementApproved = false;
 	error.value = "";
+	diagnostic.value = null;
+	copyResult.value = null;
 	reviewWarnings.value = [];
 }
 
@@ -125,9 +131,15 @@ function classLabel(candidate: Candidate) {
 async function generate() {
 	if (!available.value || settingsLoading.value || !canGenerate.value) return;
 	error.value = "";
+	diagnostic.value = null;
+	copyResult.value = null;
 	if (!ready.value) {
 		error.value =
 			"AI drafting needs Zoom and AI configuration from the administrator.";
+		diagnostic.value = noteDraftDiagnostic(
+			{ response: { data: { code: "CONFIGURATION_UNAVAILABLE" } } },
+			"configuration"
+		);
 		return;
 	}
 	if (props.markdown.trim() && !replacementApproved) {
@@ -146,6 +158,7 @@ async function generate() {
 	};
 	controller = new AbortController();
 	setBusy(true);
+	let stage: NoteDraftStage = "zoom_lookup";
 	try {
 		const input = {
 			studentId: original.studentId,
@@ -153,6 +166,7 @@ async function generate() {
 			meetingId: meetingId.value
 		};
 		const selected = candidates.value.length > 0;
+		if (selected) stage = "generation";
 		const { data } = await api.post(
 			`/session-notes/drafting/${selected ? "generate" : "candidates"}`,
 			selected
@@ -190,6 +204,7 @@ async function generate() {
 			typeof data.markdown === "string" &&
 			data.draftOnly === true
 		) {
+			stage = "validation";
 			const warnings: unknown =
 				data.reviewWarnings === undefined ? [] : data.reviewWarnings;
 			if (
@@ -214,15 +229,31 @@ async function generate() {
 		}
 	} catch (cause: any) {
 		if (version !== requestVersion || disposed) return;
+		diagnostic.value = noteDraftDiagnostic(cause, stage);
 		error.value =
 			cause.response?.data?.message ??
 			"Generation did not complete. Your existing notes are unchanged.";
 		if (cause.response?.data?.code === "SELECTION_EXPIRED") {
+			error.value =
+				"Zoom selections expire after 5 minutes. Generate again to select the class.";
 			candidates.value = [];
 			selectionToken.value = "";
+			confirmedStudent.value = false;
 		}
 	} finally {
 		if (version === requestVersion && !disposed) setBusy(false);
+	}
+}
+
+async function copyDiagnostics() {
+	if (!diagnostic.value) return;
+	try {
+		await navigator.clipboard.writeText(
+			JSON.stringify(diagnostic.value, null, 2)
+		);
+		copyResult.value = "copied";
+	} catch {
+		copyResult.value = "failed";
 	}
 }
 
@@ -289,6 +320,7 @@ function replaceDraft() {
 				/>
 				This is {{ studentName }}’s class
 			</label>
+			<span>Selections expire after 5 minutes.</span>
 		</div>
 		<label
 			v-if="available && requestMeeting"
@@ -303,6 +335,19 @@ function replaceDraft() {
 			/>
 		</label>
 		<p v-if="available && error" role="alert">{{ error }}</p>
+		<div
+			v-if="available && diagnostic"
+			class="note-generation__choice"
+			aria-label="Draft diagnostics"
+		>
+			<code>{{ diagnostic.stage }} · {{ diagnostic.code }}</code>
+			<button type="button" @click="copyDiagnostics">
+				{{ copyResult === "copied" ? "Copied" : "Copy diagnostics" }}
+			</button>
+			<span v-if="copyResult === 'failed'" role="status"
+				>Could not copy diagnostics.</span
+			>
+		</div>
 		<aside
 			v-if="available && reviewWarnings.length"
 			class="note-generation__review"

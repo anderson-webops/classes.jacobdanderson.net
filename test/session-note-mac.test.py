@@ -133,6 +133,29 @@ class MacWorkflowTests(unittest.TestCase):
             result = workflow.associate_bindings(site, [{"entryId": "actual", "studentId": "student", "scheduledSessionId": "session19"}], local)
             self.assertEqual(result["localSentEvidence"], local)
             self.assertEqual(result["associations"][0]["localSentEvidence"], local)
+            self.assertEqual(result["associations"][0]["associationStatus"], "verified_session")
+
+    def test_note_and_record_binding_cannot_choose_another_note_from_the_same_class(self):
+        rows = [record(), {**record(), "recordId": "second", "noteId": "second"}]
+        bindings = [{"entryId": "selected", "studentId": "student", "scheduledSessionId": "session19", "noteId": "second", "recordId": "second"},
+                    {"entryId": "wrong", "studentId": "student", "scheduledSessionId": "session19", "noteId": "second", "recordId": "note"}]
+        result = workflow.associate_bindings(rows, bindings)
+        self.assertEqual([row["recordId"] for row in result["associations"][0]["siteEvidence"]], ["second"])
+        self.assertEqual(result["associations"][1]["associationStatus"], "unverified")
+
+    def test_late_foreign_student_record_retains_prior_page_but_never_completes(self):
+        pages = iter([page([record()], "next"), page([{**record(), "recordId": "sibling-note", "studentId": "sibling"}])])
+        with self.assertRaises(workflow.IncompleteEvidence) as caught:
+            workflow.verify_query({"studentId": "student"}, "2026-09-01", "2026-09-30", 100, lambda _: next(pages))
+        self.assertEqual(len(caught.exception.result["pages"]), 1)
+        self.assertFalse(caught.exception.result["paginationComplete"])
+        self.assertNotIn("sibling-note", json.dumps(caught.exception.result))
+
+    def test_absent_session_identity_stays_unverified_with_mailbox_evidence_preserved(self):
+        local = [{"studentId": "student", "observedSendAt": "2026-09-20T00:00:00Z", "source": "local_sent_item"}]
+        result = workflow.associate_bindings([], [{"entryId": "no-session", "studentId": "student"}], local)
+        self.assertEqual(result["associations"][0]["associationStatus"], "unverified")
+        self.assertEqual(result["localSentEvidence"], local)
 
     def test_projection_excludes_mail_identifiers_and_private_bodies(self):
         row = {**record(), "messageId": "private@example.test", "subject": "Private subject", "markdown": "Private code"}

@@ -225,6 +225,31 @@ Responses use `store: false`, no tools, strict JSON-schema output separating the
 Markdown body from review codes, and an output budget of 3,000 tokens. The
 operator-selected model must support Responses Structured Outputs; no implicit
 model upgrade or unstructured fallback occurs.
+The provider schema describes the bounded output fields without the Homework
+regular expression. After decoding, local validation still requires
+`**Homework**:` before any draft can replace the editor. Incomplete, refused or
+invalid responses preserve the current draft.
+
+Zoom class selections expire after five minutes. The selection view states this
+limit; expiry clears only the selection and requires another lookup/confirmation.
+Drafting errors add an allowlisted `stage` alongside their bounded `code`.
+**Copy diagnostics** copies only the schema version, workflow, stage and code.
+It excludes drafts, transcripts, identities, tokens, addresses and raw errors;
+no diagnostic collection is enabled.
+
+### Synthetic provider acceptance
+
+With the dedicated Classes provider key and explicit model already loaded through
+protected operator configuration, run the exact candidate's compiled
+`back-end/dist/maintenance/sessionNoteDraftAcceptance.js` with
+`SESSION_NOTE_PROVIDER_ACCEPTANCE=synthetic-only`. It uses the same drafting
+service, one real provider request, a synthetic transcript and isolated Zoom
+fixtures. SMTP, IMAP, student records and real Zoom requests are absent.
+The content-free result records the model, request-contract digest and validation
+outcome, not the generated body or credentials. A fixture-only unit test is not
+real-provider acceptance; retain the actual operator result with the exact
+source/artifact identity before activation.
+
 This avoids stored Responses application state; it does not promise zero provider
 retention or replace an organization's retention/privacy agreement. Incomplete,
 refused, oversized and failed responses do not update the draft. No transcript,

@@ -70,6 +70,7 @@ describe("Generate session-note draft", () => {
 	it("uses the default meeting and requires a class confirmation before generating editable Markdown", async () => {
 		const wrapper = await create();
 		await choose(wrapper);
+		expect(wrapper.text()).toContain("Selections expire after 5 minutes.");
 		expect(api.post).toHaveBeenNthCalledWith(
 			1,
 			"/session-notes/drafting/candidates",
@@ -201,6 +202,8 @@ describe("Generate session-note draft", () => {
 		}
 	);
 	it("confirms replacement before touching an existing draft and preserves it on provider failure", async () => {
+		const writeText = vi.fn().mockResolvedValue(undefined);
+		vi.stubGlobal("navigator", { clipboard: { writeText } });
 		const wrapper = await create({ markdown: "Keep my existing notes" });
 		await wrapper.get("button").trigger("click");
 		expect(api.post).not.toHaveBeenCalled();
@@ -217,6 +220,46 @@ describe("Generate session-note draft", () => {
 		expect(wrapper.emitted("generated")).toBeUndefined();
 		expect(wrapper.text()).toContain("existing notes are unchanged");
 		expect(wrapper.text()).not.toContain("private raw failure");
+		await wrapper
+			.get('[aria-label="Draft diagnostics"] button')
+			.trigger("click");
+		await flushPromises();
+		expect(JSON.parse(writeText.mock.calls[0][0])).toEqual({
+			schemaVersion: 1,
+			workflow: "session-note-drafting",
+			stage: "generation",
+			code: "DRAFT_UNAVAILABLE"
+		});
+		expect(writeText.mock.calls[0][0]).not.toContain(
+			"Keep my existing notes"
+		);
+		expect(writeText.mock.calls[0][0]).not.toContain(props.studentId);
+	});
+	it("clears only the expired selection and lets the instructor select the class again", async () => {
+		const wrapper = await create();
+		await choose(wrapper);
+		vi.mocked(api.post).mockRejectedValueOnce({
+			response: {
+				data: {
+					code: "SELECTION_EXPIRED",
+					stage: "selection",
+					message: "private original error"
+				}
+			}
+		});
+		await wrapper.get("button").trigger("click");
+		await flushPromises();
+		expect(wrapper.text()).toContain("expire after 5 minutes");
+		expect(wrapper.text()).not.toContain("private original error");
+		expect(wrapper.find("select").exists()).toBe(false);
+		expect(wrapper.emitted("generated")).toBeUndefined();
+		await wrapper.get("button").trigger("click");
+		await flushPromises();
+		expect(api.post).toHaveBeenLastCalledWith(
+			"/session-notes/drafting/candidates",
+			expect.any(Object),
+			expect.any(Object)
+		);
 	});
 	it.each(["student", "date", "text", "unmount"])(
 		"does not overwrite after a pending request loses its %s context",
