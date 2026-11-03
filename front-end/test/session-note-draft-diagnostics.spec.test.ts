@@ -43,4 +43,19 @@ describe("content-free drafting diagnostics", () => {
 			code: "DRAFT_UNAVAILABLE"
 		});
 	});
+	it("copies only an opaque request ID, not arbitrary server text", () => {
+		const requestId = "12345678-1234-1234-1234-123456789abc";
+		expect(
+			noteDraftDiagnostic(
+				{ response: { data: { requestId } } },
+				"generation"
+			)
+		).toHaveProperty("requestId", requestId);
+		expect(
+			noteDraftDiagnostic(
+				{ response: { data: { requestId: "private address" } } },
+				"generation"
+			)
+		).not.toHaveProperty("requestId");
+	});
 });

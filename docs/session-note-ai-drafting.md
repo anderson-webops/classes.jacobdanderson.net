@@ -233,9 +233,10 @@ invalid responses preserve the current draft.
 Zoom class selections expire after five minutes. The selection view states this
 limit; expiry clears only the selection and requires another lookup/confirmation.
 Drafting errors add an allowlisted `stage` alongside their bounded `code`.
-**Copy diagnostics** copies only the schema version, workflow, stage and code.
-It excludes drafts, transcripts, identities, tokens, addresses and raw errors;
-no diagnostic collection is enabled.
+**Copy diagnostics** copies only the schema version, workflow, stage, code and
+opaque request ID. Failed authorized POSTs emit the same content-free operational
+fields once, within the existing mutation rate limit; settings reads do not log.
+Diagnostics exclude drafts, transcripts, identities, tokens, addresses and raw errors.
 
 ### Synthetic provider acceptance
 

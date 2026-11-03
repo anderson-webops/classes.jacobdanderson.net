@@ -13,7 +13,8 @@ describe("opt-in synthetic provider acceptance", () => {
 		});
 		const report = await acceptSyntheticNoteDraft({ apiKey: "synthetic-key", model: "configured-test-model", fetch: request });
 		expect(request).toHaveBeenCalledTimes(1);
-		expect(report).toMatchObject({ status: "passed", homeworkValidated: true, sharedWorkVoice: true, zoomNetworkRequests: 0, mailRequests: 0 });
+		expect(report).toMatchObject({ status: "passed", runtime: process.version, schemaVariation: "without_provider_markdown_pattern", providerHttpStatus: 200, providerStatus: "completed", applicationValidation: "passed", homeworkValidated: true, sharedWorkVoice: true, zoomNetworkRequests: 0, mailRequests: 0 });
+		expect(report.providerLatencyMs).toBeGreaterThanOrEqual(0);
 		expect(JSON.stringify(report)).not.toContain("synthetic-key");
 		expect(JSON.stringify(report)).not.toContain("equivalent fractions");
 	});

@@ -37,7 +37,9 @@ const codes = new Set([
 export function noteDraftDiagnostic(cause: unknown, stage: NoteDraftStage) {
 	const response = (
 		cause as {
-			response?: { data?: { code?: unknown; stage?: unknown } };
+			response?: {
+				data?: { code?: unknown; stage?: unknown; requestId?: unknown };
+			};
 		} | null
 	)?.response?.data;
 	return {
@@ -51,6 +53,10 @@ export function noteDraftDiagnostic(cause: unknown, stage: NoteDraftStage) {
 		code:
 			typeof response?.code === "string" && codes.has(response.code)
 				? response.code
-				: "DRAFT_UNAVAILABLE"
+				: "DRAFT_UNAVAILABLE",
+		...(typeof response?.requestId === "string" &&
+		/^[a-f\d]{8}(?:-[a-f\d]{4}){3}-[a-f\d]{12}$/i.test(response.requestId)
+			? { requestId: response.requestId }
+			: {})
 	};
 }

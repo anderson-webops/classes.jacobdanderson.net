@@ -14,6 +14,8 @@ export async function acceptSyntheticNoteDraft(options: { apiKey: string; model:
 	const transcript = "Teacher: We compared one-half and two-fourths using fraction diagrams. We checked together that both cover the same amount. For homework, complete exercises 1 through 3 before our next class.";
 	let providerRequests = 0;
 	let contractSha256 = "";
+	let providerHttpStatus = 0;
+	let providerLatencyMs = 0;
 	const json = (value: unknown) => new Response(JSON.stringify(value), { headers: { "Content-Type": "application/json" } });
 	const service = createSessionNoteDrafting({
 		config: () => ({
@@ -36,7 +38,11 @@ export async function acceptSyntheticNoteDraft(options: { apiKey: string; model:
 				providerRequests++;
 				if (providerRequests !== 1) throw new Error("Provider request bound reached");
 				contractSha256 = createHash("sha256").update(String(init?.body)).digest("hex");
-				return request(url, init);
+				const startedAt = performance.now();
+				const response = await request(url, init);
+				providerHttpStatus = response.status;
+				providerLatencyMs = Math.round(performance.now() - startedAt);
+				return response;
 			}
 			if (address === "https://zoom.us/oauth/token") return json({ access_token: "synthetic-token" });
 			if (address.startsWith("https://api.zoom.us/v2/users/synthetic-host/recordings?")) return json({ meetings: [meeting], next_page_token: "" });
@@ -52,7 +58,7 @@ export async function acceptSyntheticNoteDraft(options: { apiKey: string; model:
 	if (!/\bwe\b/i.test(result.markdown) || providerRequests !== 1) {
 		throw new NoteDraftError("DRAFT_INCOMPLETE", 502, "Synthetic drafting acceptance failed.", "validation");
 	}
-	return { schemaVersion: 1, fixture: "fractions-homework-v1", status: "passed", model: options.model, providerRequests, contractSha256, homeworkValidated: true, sharedWorkVoice: true, zoomNetworkRequests: 0, mailRequests: 0 };
+	return { schemaVersion: 1, fixture: "fractions-homework-v1", status: "passed", runtime: process.version, model: options.model, schemaVariation: "without_provider_markdown_pattern", providerStatus: "completed", providerHttpStatus, providerLatencyMs, applicationValidation: "passed", providerRequests, contractSha256, homeworkValidated: true, sharedWorkVoice: true, zoomNetworkRequests: 0, mailRequests: 0 };
 }
 
 async function main() {

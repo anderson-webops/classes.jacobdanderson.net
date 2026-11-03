@@ -1,5 +1,6 @@
 import type { ErrorRequestHandler, Request, Response } from "express";
 import type { DraftScope } from "../services/sessionNoteDrafting.js";
+import { randomUUID } from "node:crypto";
 import express, { Router } from "express";
 import rateLimit from "express-rate-limit";
 import { z } from "zod";
@@ -23,6 +24,10 @@ router.use((_req, res, next) => {
 	next();
 });
 router.use(createRequestOriginGuard(), validTutorOrAdminSession);
+router.use((_req, res, next) => {
+	res.locals.draftRequestId = randomUUID();
+	next();
+});
 const store = productionRateLimitStore("session-note-drafting");
 router.use(rateLimit({
 	windowMs: 60 * 60_000,
@@ -37,10 +42,18 @@ router.use(rateLimit({
 router.use(express.json({ limit: "4kb" }));
 
 function failure(res: Response, error: unknown) {
-	if (error instanceof NoteDraftError) {
-		return res.status(error.status).json({ code: error.code, message: error.message, stage: error.stage });
+	const diagnostic = {
+		code: error instanceof NoteDraftError ? error.code : "DRAFT_UNAVAILABLE",
+		stage: error instanceof NoteDraftError ? error.stage : "configuration",
+		requestId: res.locals.draftRequestId as string
+	};
+	if (res.req.method === "POST") {
+		console.warn(JSON.stringify({ event: "session_note_draft_failed", ...diagnostic }));
 	}
-	return res.status(503).json({ code: "DRAFT_UNAVAILABLE", message: "AI drafting is unavailable. Your notes are unchanged.", stage: "configuration" });
+	return res.status(error instanceof NoteDraftError ? error.status : 503).json({
+		...diagnostic,
+		message: error instanceof NoteDraftError ? error.message : "AI drafting is unavailable. Your notes are unchanged."
+	});
 }
 
 async function settings() {

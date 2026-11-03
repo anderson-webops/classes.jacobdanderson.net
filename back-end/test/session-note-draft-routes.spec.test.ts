@@ -78,7 +78,7 @@ describe("session-note drafting authorization", () => {
 		await withApi(async request => {
 			const response = await request("/settings", "GET");
 			expect(response.status).toBe(503);
-			expect(await response.json()).toEqual({ code: "DRAFT_UNAVAILABLE", message: "AI drafting is unavailable. Your notes are unchanged.", stage: "configuration" });
+			expect(await response.json()).toEqual({ code: "DRAFT_UNAVAILABLE", message: "AI drafting is unavailable. Your notes are unchanged.", stage: "configuration", requestId: expect.stringMatching(/^[a-f\d-]{36}$/) });
 			expect(mocks.candidates).not.toHaveBeenCalled();
 			expect(mocks.generate).not.toHaveBeenCalled();
 		});
@@ -149,12 +149,30 @@ describe("session-note drafting authorization", () => {
 		});
 	});
 	it("bounds unknown errors without exposing student names, provider details or credentials", async () => {
-		mocks.candidates.mockRejectedValue(new Error("raw transcript student@example.invalid secret"));
-		await withApi(async request => {
-			const response = await request("/candidates");
-			expect(response.status).toBe(503);
-			const text = await response.text();
-			expect(text).not.toMatch(/raw transcript|example.invalid|secret/);
-		});
+		const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+		mocks.candidates.mockRejectedValue(
+			new Error("raw transcript student@example.invalid secret")
+		);
+		try {
+			await withApi(async request => {
+				const response = await request("/candidates");
+				expect(response.status).toBe(503);
+				const result = await response.json();
+				expect(JSON.stringify(result)).not.toMatch(
+					/raw transcript|example.invalid|secret/
+				);
+				expect(result.requestId).toMatch(/^[a-f\d-]{36}$/);
+				expect(warn).toHaveBeenCalledExactlyOnceWith(
+					JSON.stringify({
+						event: "session_note_draft_failed",
+						code: "DRAFT_UNAVAILABLE",
+						stage: "configuration",
+						requestId: result.requestId
+					})
+				);
+			});
+		} finally {
+			warn.mockRestore();
+		}
 	});
 });
