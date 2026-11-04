@@ -165,6 +165,18 @@ describe("lesson content presentation", () => {
 		);
 	});
 
+	it("keeps an assigned concept record in Projects despite its title", () => {
+		const item = {
+			id: "grammar-concept-review",
+			title: "Parts-of-Speech Concept Review",
+			content: "**Project goal:** Create a labeled concept record."
+		};
+		expect(isLessonLearningItem(item)).toBe(true);
+		expect(
+			isLessonLearningItem({ ...item, contentKind: "assignment" })
+		).toBe(false);
+	});
+
 	it.each(["Introduction to Logarithms", "Trigonometry Basics"])(
 		"keeps Modeling or Error Analysis: %s in supplemental projects",
 		topic => {

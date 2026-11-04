@@ -5,8 +5,8 @@ export interface RawCourseModuleItem {
 	aliases?: string[];
 	title: string;
 	content: string;
-	/** Explicit informational material belongs in the Learn view. */
-	contentKind?: "reading";
+	/** Explicit content classification takes precedence over title heuristics. */
+	contentKind?: "reading" | "assignment";
 	/** Preserve structured reading and executable command blocks verbatim. */
 	preserveInstructions?: boolean;
 	/** Keep a separately assigned task out of merged support text. */

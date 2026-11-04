@@ -1,0 +1,37 @@
+[
+	{
+		"moduleId": "middle-school-c-grammar-msc1-nouns-pronouns-adjectives",
+		"id": "middle-school-c-grammar-msc1-nouns-pronouns-adjectives-curriculum-snow-day-parts-of-speech-sort",
+		"section": "core"
+	},
+	{
+		"moduleId": "middle-school-c-grammar-msc1-nouns-pronouns-adjectives",
+		"id": "middle-school-c-grammar-msc1-nouns-pronouns-adjectives-curriculum-pronoun-agreement-repair",
+		"section": "core"
+	},
+	{
+		"moduleId": "middle-school-c-grammar-msc2-verbs-adverbs-verbals",
+		"id": "middle-school-c-grammar-msc2-verbs-adverbs-verbals-curriculum-verb-and-adverb-action-sort",
+		"section": "core"
+	},
+	{
+		"moduleId": "middle-school-c-grammar-msc2-verbs-adverbs-verbals",
+		"id": "middle-school-c-grammar-msc2-verbs-adverbs-verbals-curriculum-gerund-participle-and-infinitive-identification",
+		"section": "core"
+	},
+	{
+		"moduleId": "middle-school-c-grammar-msc11-common-punctuation-errors",
+		"id": "middle-school-c-grammar-msc11-common-punctuation-errors-curriculum-comma-splice-and-run-on-repair",
+		"section": "core"
+	},
+	{
+		"moduleId": "middle-school-c-grammar-msc11-common-punctuation-errors",
+		"id": "middle-school-c-grammar-msc11-common-punctuation-errors-curriculum-coordinate-vs-cumulative-adjective-test",
+		"section": "core"
+	},
+	{
+		"moduleId": "middle-school-c-grammar-msc11-common-punctuation-errors",
+		"id": "middle-school-c-grammar-msc11-common-punctuation-errors-curriculum-common-errors-passage-edit",
+		"section": "core"
+	}
+]

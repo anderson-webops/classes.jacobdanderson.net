@@ -64,6 +64,7 @@ const learningTitle =
 
 export function isLessonLearningItem(item: CourseModuleItem) {
 	if (item.contentKind === "reading") return true;
+	if (item.contentKind === "assignment") return false;
 	return (
 		!item.projectLink &&
 		!item.ideImport &&

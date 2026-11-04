@@ -299,7 +299,7 @@ const grammarMechanicsSourceAnchors: Record<string, SourceActivityAnchor[]> = {
 	"MSC1 Nouns, Pronouns & Adjectives": [
 		{
 			title: "Snow Day Parts-of-Speech Sort",
-			prompt: "Use the snow day paragraph to identify nouns, pronouns, and adjectives. The sort separates words by job, not by where they appear in the sentence.",
+			prompt: "Use the supplied original Snow Day paragraph to identify nouns, pronouns, and adjectives. The sort separates words by job, not by where they appear in the sentence.",
 			evidence: [
 				"Five nouns, five pronouns, and five adjectives from the passage.",
 				"A one-sentence definition of each part of speech.",
@@ -308,7 +308,7 @@ const grammarMechanicsSourceAnchors: Record<string, SourceActivityAnchor[]> = {
 		},
 		{
 			title: "Pronoun Agreement Repair",
-			prompt: "Map each pronoun to its antecedent, then revise any sentence with an inappropriate shift in number or person. The corrected version keeps singular antecedents with singular pronouns and plural antecedents with plural pronouns.",
+			prompt: "Use the supplied sentence set to map each pronoun to its intended referent, then repair unclear references or unintended shifts in number or person. Preserve valid singular they and use its appropriate verb form.",
 			evidence: [
 				"An antecedent-pronoun map for each sentence.",
 				"Corrections for number shifts and person shifts.",
@@ -328,7 +328,7 @@ const grammarMechanicsSourceAnchors: Record<string, SourceActivityAnchor[]> = {
 		},
 		{
 			title: "Gerund, Participle, and Infinitive Identification",
-			prompt: "Classify verbals as gerunds, participles, or infinitives by checking the job they perform in the sentence. A gerund acts as a noun, a participle acts as an adjective, and an infinitive begins with to plus a verb.",
+			prompt: "Classify the supplied verbals by checking their sentence jobs. In these examples, gerunds act as nouns, participles as adjectives, and to-infinitives use to plus a base verb.",
 			evidence: [
 				"At least three labeled verbals.",
 				"The sentence job for each verbal.",
@@ -401,7 +401,7 @@ const grammarMechanicsSourceAnchors: Record<string, SourceActivityAnchor[]> = {
 	"MSC6 Periods, Question Marks, Exclamation Points & Quotation Marks": [
 		{
 			title: "End-Mark and Quotation Repair",
-			prompt: "Choose periods, question marks, exclamation points, and quotation marks based on sentence purpose and speaker words. Dialogue punctuation stays attached to the quoted material.",
+			prompt: "Choose periods, question marks, exclamation points, and quotation marks using the supplied sentence and dialogue set. Place question and exclamation marks according to whether they apply to the quotation or the surrounding sentence.",
 			evidence: [
 				"Three sentences with corrected end marks.",
 				"Two dialogue examples with quotation marks and punctuation placed correctly.",

@@ -1,6 +1,7 @@
 import type { RawCourse, RawCourseModule, RawCourseModuleItem } from "./types";
 import { applyCourseImplementationArtifacts } from "./course-implementation-artifacts";
 import { applyEntrepreneurshipReadings } from "./entrepreneurshipReadings";
+import { applyGrammarMechanicsReadings } from "./grammarMechanicsReadings";
 import { isJuniScratchProjectTitle } from "./juniScratchProjects";
 import { mapMarkdownProse } from "./markdownProse";
 import { applyMiddleSchoolLiteratureReadings } from "./middleSchoolLiteratureReadings";
@@ -9842,6 +9843,8 @@ export function normalizeRawCourse(id: string, rawCourse: RawCourse) {
 		applyEntrepreneurshipReadings(course, rawCourse);
 	if (id === "middle-school-a-literature")
 		applyMiddleSchoolLiteratureReadings(course, rawCourse);
+	if (id === "middle-school-c-grammar")
+		applyGrammarMechanicsReadings(course, rawCourse);
 	if (
 		id === "middle-school-b-writing" ||
 		id === "middle-school-b-writing-retake"
