@@ -6,6 +6,7 @@ import { isJuniScratchProjectTitle } from "./juniScratchProjects";
 import { mapMarkdownProse } from "./markdownProse";
 import { applyMiddleSchoolLiteratureReadings } from "./middleSchoolLiteratureReadings";
 import { applyMiddleSchoolWritingReadings } from "./middleSchoolWritingReadings";
+import { applyNovelWritingReadings } from "./novelWritingReadings";
 import { buildProjectGuidance } from "./projectGuidance";
 import { applyPyGamesCourseWorkflows } from "./pyGamesCourseWorkflows";
 import { applyResearchBackedExpansions } from "./research-expansions";
@@ -9846,6 +9847,7 @@ export function normalizeRawCourse(id: string, rawCourse: RawCourse) {
 		applyMiddleSchoolLiteratureReadings(course, rawCourse);
 	if (id === "middle-school-c-grammar")
 		applyGrammarMechanicsReadings(course, rawCourse);
+	if (id === "novel-writing") applyNovelWritingReadings(course, rawCourse);
 	if (
 		id === "middle-school-b-writing" ||
 		id === "middle-school-b-writing-retake"

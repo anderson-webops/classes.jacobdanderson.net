@@ -20,7 +20,8 @@ import {
 	grammarMechanicsCourse,
 	middleSchoolLiteratureCourse,
 	middleSchoolWritingCourse,
-	middleSchoolWritingRetakeCourse
+	middleSchoolWritingRetakeCourse,
+	novelWritingCourse
 } from "@/stores/courses/source-library-courses";
 
 const cases = [
@@ -53,6 +54,12 @@ const cases = [
 		source: grammarMechanicsCourse,
 		readings: 20,
 		additions: grammarAdditions
+	},
+	{
+		id: "novel-writing",
+		source: novelWritingCourse,
+		readings: 14,
+		additions: []
 	}
 ] as const;
 const markdown = new MarkdownIt({ breaks: true, html: false, linkify: true });
