@@ -27,6 +27,21 @@ const publishedAPModuleOrder = JSON.parse(
 	)
 ) as { moduleIds: string[] };
 
+// Keep the published baseline immutable; account for a deliberate addition
+// separately so changes to any original assignment still fail the digest.
+const addedIdentities: Record<
+	string,
+	{ moduleId: string; id: string; section: string }[]
+> = {
+	"scratch-level-1-classroom": [
+		{
+			moduleId: "scratch-classroom-6",
+			id: "educational-quiz",
+			section: "optional"
+		}
+	]
+};
+
 it("preserves published assignment identities across the complete catalog", async () => {
 	const output = process.env.COURSE_CATALOG_PROOF_DIR;
 	if (output) mkdirSync(output, { recursive: true });
@@ -65,17 +80,40 @@ it("preserves published assignment identities across the complete catalog", asyn
 				}))
 			)
 		);
-		expect(actual.length, id).toBe(identities.items);
+		const additions = addedIdentities[id] ?? [];
+		const isAddition = (item: (typeof actual)[number]) =>
+			additions.some(
+				added =>
+					added.moduleId === item.moduleId &&
+					added.id === item.id &&
+					added.section === item.section
+			);
+		for (const added of additions) {
+			expect(
+				actual.filter(
+					item =>
+						item.moduleId === added.moduleId &&
+						item.id === added.id &&
+						item.section === added.section
+				),
+				id
+			).toHaveLength(1);
+		}
+		expect(actual.length, id).toBe(identities.items + additions.length);
+		const originalIdentities = actual.filter(item => !isAddition(item));
+
 		// AP's authored progression replaces the stale display order. Reconstruct
 		// only its published module order to verify every original identity and
 		// section; the AP flow regression separately checks the corrected order.
 		const publishedIdentities =
 			id === "ap-computer-science-a"
 				? publishedAPModuleOrder.moduleIds.flatMap(moduleId =>
-						actual.filter(item => item.moduleId === moduleId)
+						originalIdentities.filter(
+							item => item.moduleId === moduleId
+						)
 					)
-				: actual;
-		expect(publishedIdentities.length, id).toBe(actual.length);
+				: originalIdentities;
+		expect(publishedIdentities.length, id).toBe(identities.items);
 		expect(
 			createHash("sha256")
 				.update(JSON.stringify(publishedIdentities))
@@ -104,23 +142,25 @@ it("preserves published assignment identities across the complete catalog", asyn
 			id
 		).toBe(true);
 		results.push({ id, items: actual.length, learnerSafe: true });
-		if (output)
+		if (output) {
 			writeFileSync(
 				resolve(output, `${id}.json`),
-				JSON.stringify({ id, staff, learner }, null, 2) + "\n"
+				`${JSON.stringify({ id, staff, learner }, null, 2)}\n`
 			);
+		}
 	}
 	expect(results).toHaveLength(77);
-	if (output)
+	if (output) {
 		writeFileSync(
 			resolve(output, "catalog-proof.json"),
-			JSON.stringify(
+			`${JSON.stringify(
 				{
 					courses: results,
 					scope: "Actual normalized staff and learner catalog; published assignment identities and hidden learner reference fields. Content completeness, source accuracy and runtime behavior require separate checks."
 				},
 				null,
 				2
-			) + "\n"
+			)}\n`
 		);
+	}
 }, 180000);
