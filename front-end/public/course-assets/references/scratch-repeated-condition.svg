@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="520" viewBox="0 0 480 520" role="img" aria-labelledby="title description">
+  <title id="title">Scratch blocks for a repeated color check</title>
+  <desc id="description">Events starts the stack. Control forever contains Motion go to mouse-pointer and Control if then. Sensing touching color fits the hexagonal condition; Looks say fits inside the if opening.</desc>
+  <rect width="480" height="520" rx="12" fill="#f6f7fb"/>
+  <g font-family="Arial, sans-serif" font-size="20" fill="#172235">
+    <text x="20" y="34" font-weight="bold">Code tab: choose a category</text>
+    <text x="20" y="66">Events · Control · Motion · Sensing · Looks</text>
+    <path d="M20 122 Q55 84 110 112 H260 V166 H20Z" fill="#ffbf00" stroke="#b87900" stroke-width="2"/>
+    <text x="34" y="145">when green flag clicked</text>
+    <path d="M20 166 H452 V214 H44 V414 H452 V450 H20Z" fill="#ffab19" stroke="#bd7400" stroke-width="2"/>
+    <text x="34" y="198">forever</text>
+    <rect x="44" y="214" width="340" height="48" rx="5" fill="#4c97ff" stroke="#2b66bd" stroke-width="2"/>
+    <text x="58" y="246">go to [mouse-pointer ▾]</text>
+    <path d="M44 262 H438 V320 H68 V374 H438 V410 H44Z" fill="#ffab19" stroke="#bd7400" stroke-width="2"/>
+    <text x="58" y="298">if</text>
+    <path d="M110 271 H343 L363 290 L343 309 H110 L90 290Z" fill="#5cb1d6" stroke="#267c9f" stroke-width="2"/>
+    <text x="110" y="297">touching color</text>
+    <rect x="290" y="279" width="22" height="22" rx="3" fill="#e54444" stroke="#fff" stroke-width="2"/>
+    <text x="375" y="298">then</text>
+    <rect x="68" y="320" width="325" height="50" rx="5" fill="#9966ff" stroke="#6940b6" stroke-width="2"/>
+    <text x="82" y="353" fill="#fff">say [I'm in red!]</text>
+    <text x="20" y="488">The if and say blocks stay inside forever.</text>
+  </g>
+</svg>

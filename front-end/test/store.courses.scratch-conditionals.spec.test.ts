@@ -45,6 +45,7 @@ describe("Scratch conditional project support", () => {
 				`${noisyLesson.title}: ${noisyLesson.content.slice(0, 250)}`
 			).toBe(true);
 			for (const requirement of [
+				"/course-assets/references/scratch-repeated-condition.svg",
 				"eyedropper",
 				"last matching check wins",
 				"grey, blue, yellow, red",
@@ -52,6 +53,20 @@ describe("Scratch conditional project support", () => {
 				"all four regions"
 			])
 				expect(dinoLesson.content).toContain(requirement);
+			const advanced = course!.modules.find(
+				item => item.title === "GS8 Advanced Conditionals"
+			)!;
+			const branches = advanced.curriculum.find(item =>
+				item.title.includes("Conditionals: if/then/else")
+			)!;
+			for (const requirement of [
+				"/course-assets/references/scratch-combined-condition.svg",
+				"exactly one result per key press",
+				"| No | Yes | Not blue |",
+				"| No | No | Not blue |",
+				"entirely inside the outer else"
+			])
+				expect(branches.content).toContain(requirement);
 			for (const requirement of [
 				"Thunder Storm",
 				"play sound",

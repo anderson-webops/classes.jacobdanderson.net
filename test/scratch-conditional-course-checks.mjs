@@ -43,6 +43,10 @@ export async function checkScratchConditionalCourse(page, origin, setRole) {
 			assert.match(colors, /eyedropper/);
 			assert.match(colors, /last matching check wins/);
 			assert.match(colors, /grey, blue, yellow, red/);
+			await page.waitForFunction(() => {
+				const image = document.querySelector("img[src$='scratch-repeated-condition.svg']");
+				return image?.complete && image.naturalWidth > 0 && image.alt.includes("Sensing");
+			});
 			const sounds = await readLesson(page, "Noisy Reactions: Conditions and Sound Order", "message broadcasting module");
 			assert.match(sounds, /different Thunder Storm recordings/);
 			assert.match(sounds, /wait until not touching Ball\?/);
@@ -63,6 +67,21 @@ export async function checkScratchConditionalCourse(page, origin, setRole) {
 			const references = await page.$$eval("a", links => links.map(link => link.href).filter(href => /scratch\.mit\.edu\/projects\/(?:291220849|291530292)\//.test(href)));
 			assert.equal(references.length, role === "instructor" ? 2 : 0);
 			console.log(`Scratch conditional guidance, optional timing and source roles verified: ${role} at ${width}px`);
+			await page.goto("about:blank");
+			await page.goto(`${origin}/courses#scratch-level-1-gs6-advanced-conditionals`, { waitUntil: "networkidle2" });
+			await page.waitForSelector(".lesson-view-toggle button");
+			await page.click(".lesson-view-toggle button:nth-child(3)");
+			const combined = await readLesson(page, "Conditionals: if/then/else", "exactly one result per key press");
+			assert.match(combined, /White alone belongs in the final else/);
+			await page.waitForFunction(() => {
+				const image = document.querySelector("img[src$='scratch-combined-condition.svg']");
+				return image?.complete && image.naturalWidth > 0 && image.alt.includes("Operators");
+			});
+			assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+			if (process.env.SCRATCH_SCREENSHOT_DIR) {
+				const image = await page.$("img[src$='scratch-combined-condition.svg']");
+				await image.screenshot({ path: join(process.env.SCRATCH_SCREENSHOT_DIR, `scratch-conditionals-combined-${role}-${width}.png`) });
+			}
 			await page.goto("about:blank");
 			await page.goto(`${origin}/courses#scratch-level-1-gs9-variables`, { waitUntil: "networkidle2" });
 			await page.waitForSelector(".lesson-view-toggle button");
