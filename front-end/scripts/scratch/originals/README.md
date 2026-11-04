@@ -16,7 +16,7 @@ CC BY-SA 2.0 license applicable to those submissions. Preserve attribution,
 license and original credits in redistributed copies. The generated project
 adds one collapsed Stage attribution comment, which survives Scratch export,
 and a `SOURCE.txt` companion. Every archive retains the byte-identical original
-definition as `SOURCE/project.json` and all original media files.
+definition as `SOURCE/original.json` and all original media files.
 
 Five project exports use two reviewed SVG compatibility corrections. The rays
 backdrop inlines its existing clipping rectangle because the editor sanitizer

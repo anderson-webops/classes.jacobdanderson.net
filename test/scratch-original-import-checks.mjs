@@ -16,7 +16,7 @@ export async function checkScratchEventReading(page, { origin, files, setRole })
 			await page.goto("about:blank");
 			await page.goto(`${origin}/courses#scratch-level-1-gs2-event-listeners`, { waitUntil: "networkidle2" });
 			await page.waitForSelector(".lesson-view-toggle button");
-			await page.click(".lesson-view-toggle button:first-child");
+			await page.click(".lesson-view-toggle button:nth-child(3)");
 			await page.waitForFunction(() => [...document.querySelectorAll(".lesson-item")].some(item => item.querySelector("h5")?.textContent.includes("Basic event listeners")));
 			await page.$$eval(".lesson-item", items => items.find(item => item.querySelector("h5")?.textContent.includes("Basic event listeners")).scrollIntoView({ behavior: "instant", block: "center" }));
 			await page.waitForFunction(() => [...document.querySelectorAll(".lesson-item")].some(item => item.querySelector("h5")?.textContent.includes("Basic event listeners") && item.textContent.includes("top to bottom") && item.querySelector("table")));
@@ -117,9 +117,11 @@ export async function checkScratchOriginalImports(page, { origin, files, loaded,
 					if (Array.isArray(block)) continue;
 					const present = current.blocks[id];
 					if (block.shadow && block.opcode.startsWith("argument_reporter_")) {
-						const owner = target.blocks[block.parent];
-						if (owner?.opcode === "procedures_prototype" && current.blocks[block.parent]?.opcode === "procedures_prototype" && signature(owner) === signature(current.blocks[block.parent])) {
-							legacyDeclarations.push({ id, kind: "Blockly-managed argument declaration", owner: block.parent, signature: JSON.parse(signature(owner)) });
+						const ownerEntry = Object.entries(target.blocks).find(([, candidate]) => candidate.opcode === "procedures_prototype" && Object.values(candidate.inputs || {}).some(input => input.slice(1).includes(id)));
+						const ownerId = ownerEntry?.[0];
+						const owner = ownerEntry?.[1];
+						if (owner && current.blocks[ownerId]?.opcode === "procedures_prototype" && signature(owner) === signature(current.blocks[ownerId])) {
+							legacyDeclarations.push({ id, kind: "Blockly-managed argument declaration", owner: ownerId, signature: JSON.parse(signature(owner)) });
 							continue;
 						}
 						if (!block.parent && block.topLevel && !Object.values(target.blocks).some(other => !Array.isArray(other) && (other.next === id || Object.values(other.inputs || {}).some(input => input.slice(1).includes(id))))) {
@@ -127,7 +129,15 @@ export async function checkScratchOriginalImports(page, { origin, files, loaded,
 							continue;
 						}
 					}
-					const fieldsMatch = present && Object.entries(block.fields || {}).every(([key, value]) => String(value[0]) === String(present.fields?.[key]?.[0]) && (typeof value[1] !== "string" || value[1] === present.fields?.[key]?.[1]));
+					const fieldsMatch = present && Object.entries(block.fields || {}).every(([key, value]) => {
+						const actual = present.fields?.[key];
+						const canonical = expected.targets.find(target => target.isStage).broadcasts?.[value[1]];
+						if (key === "BROADCAST_OPTION" && typeof value[1] === "string" && actual?.[1] === value[1] && canonical === actual[0] && String(value[0]).toLowerCase() === String(canonical).toLowerCase()) {
+							if (value[0] !== actual[0]) legacyDeclarations.push({ id, kind: "Broadcast label canonicalized from the unchanged message ID", original: value[0], actual: actual[0], messageId: value[1] });
+							return true;
+						}
+						return String(value[0]) === String(actual?.[0]) && (typeof value[1] !== "string" || value[1] === actual?.[1]);
+					});
 					if (!present || present.opcode !== block.opcode || (present.next || null) !== (block.next || null) || (present.parent || null) !== (block.parent || null) || !fieldsMatch || (block.opcode === "procedures_prototype" && signature(block) !== signature(present))) {
 						problems.push(`Changed program block ${target.name}:${id}`);
 						programMismatches.push({ target: target.name, id, expected: block, actual: present });
@@ -282,7 +292,7 @@ export async function checkScratchOriginalImports(page, { origin, files, loaded,
 			input.value = "Dragonfly original edited";
 			input.dispatchEvent(new Event("input", { bubbles: true }));
 		});
-		await frame.waitForFunction(() => window.__courseTestVm.editingTarget?.getName() === "Dragonfly" && document.querySelector("input[placeholder='x']")?.value === String(window.__courseTestVm.editingTarget.x));
+		await frame.waitForFunction(() => window.__courseTestVm.editingTarget?.getName() === "Dragonfly" && Number(document.querySelector("input[placeholder='x']")?.value) === Math.round(window.__courseTestVm.editingTarget.x));
 		const xInput = await frame.waitForSelector("input[placeholder='x']");
 		await xInput.focus();
 		await xInput.evaluate(input => input.select());

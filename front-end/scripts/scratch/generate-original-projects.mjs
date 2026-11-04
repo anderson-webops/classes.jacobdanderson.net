@@ -71,7 +71,10 @@ export async function createOriginalProject(id) {
 			`Original attribution identifier already exists: ${id}`
 		);
 	}
-	const files = { "SOURCE/project.json": raw };
+	const files = {
+		"project.json": new Uint8Array(),
+		"SOURCE/original.json": raw
+	};
 	const compatibilityChanges = new Map();
 	for (const target of project.targets) {
 		for (const asset of [...target.costumes, ...target.sounds]) {
@@ -113,7 +116,7 @@ export async function createOriginalProject(id) {
 			? `Original credits: ${provenance[id].credits}`
 			: "",
 		compatibilityChanges.size
-			? "Changes: attribution comment and SVG compatibility corrections. Original project: SOURCE/project.json; original media retained in this archive."
+			? "Changes: attribution comment and SVG compatibility corrections. The course’s supplied archive retains the unchanged original definition and media."
 			: "Changes: attribution comment added."
 	]
 		.filter(Boolean)

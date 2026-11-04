@@ -20,7 +20,9 @@ test("all original Scratch archives retain upstream bytes and only reviewed SVG 
 		const source = JSON.parse(await readFile(new URL(`../front-end/scripts/scratch/originals/projects/${original.id}.json`, import.meta.url), "utf8"));
 		const { archive } = await createOriginalProject(original.id);
 		const files = unzipSync(archive);
-		assert.equal(createHash("sha256").update(files["SOURCE/project.json"]).digest("hex"), original.sourceSHA256);
+		assert.equal(Object.keys(files)[0], "project.json", "Scratch's runnable definition is first in the archive");
+		assert.deepEqual(Object.keys(files).filter(name => /(?:^|\/)project\.json$/.test(name)), ["project.json"], "The archived source cannot shadow the runnable project");
+		assert.equal(createHash("sha256").update(files["SOURCE/original.json"]).digest("hex"), original.sourceSHA256);
 		const loaded = JSON.parse(strFromU8(files["project.json"]));
 		const stage = loaded.targets.find(target => target.isStage);
 		const attribution = stage.comments[originalAttributionId(original.id)].text;
@@ -29,7 +31,7 @@ test("all original Scratch archives retain upstream bytes and only reviewed SVG 
 		assert.ok(strFromU8(files["SOURCE.txt"]).includes(attribution));
 		delete stage.comments[originalAttributionId(original.id)];
 		if (!source.targets.find(target => target.isStage).comments) delete stage.comments;
-		const expected = new Set(["project.json", "SOURCE.txt", "SOURCE/project.json"]);
+		const expected = new Set(["project.json", "SOURCE.txt", "SOURCE/original.json"]);
 		const corrections = new Map();
 		for (const [targetIndex, target] of source.targets.entries()) {
 			assert.deepEqual(loaded.targets[targetIndex].blocks, target.blocks, `${original.id}: original program`);
