@@ -1,5 +1,6 @@
 import type { RawCourse, RawCourseModule, RawCourseModuleItem } from "./types";
 import { applyCourseImplementationArtifacts } from "./course-implementation-artifacts";
+import { applyEntrepreneurshipReadings } from "./entrepreneurshipReadings";
 import { isJuniScratchProjectTitle } from "./juniScratchProjects";
 import { mapMarkdownProse } from "./markdownProse";
 import { buildProjectGuidance } from "./projectGuidance";
@@ -9835,5 +9836,7 @@ export function normalizeRawCourse(id: string, rawCourse: RawCourse) {
 	applyWebDeploymentWorkflow(course, id);
 	preserveMathArchiveProgress(course, id);
 	preserveDesignPatternsJavaProgress(course, id);
+	if (id === "entrepreneurship-101")
+		applyEntrepreneurshipReadings(course, rawCourse);
 	return course;
 }

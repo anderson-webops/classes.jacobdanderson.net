@@ -1,4 +1,13 @@
-import { describe, expect, it } from "vitest";
+import { createHash } from "node:crypto";
+import { mount } from "@vue/test-utils";
+import { createPinia, setActivePinia } from "pinia";
+import { describe, expect, it, vi } from "vitest";
+import published from "../../test/fixtures/catalog-published-identities.json";
+import restored from "../../test/fixtures/entrepreneurship-restored-core-identities.json";
+import LazyMarkdownContent from "@/components/LazyMarkdownContent.vue";
+import { isLessonLearningItem } from "@/modules/courseLessonPresentation";
+import { useAppStore } from "@/stores/app";
+import { useCoursesStore } from "@/stores/courses";
 import { entrepreneurship101Course } from "@/stores/courses/source-library-courses";
 
 const EXPECTED_MODULE_SEQUENCE = [
@@ -23,6 +32,92 @@ function requireModule(title: string) {
 }
 
 describe("Entrepreneurship 101 learner flow", () => {
+	it.each(["learner", "instructor"])(
+		"preserves published projects and complete Learn readings for %s",
+		async role => {
+			setActivePinia(createPinia());
+			if (role === "instructor")
+				useAppStore().setCurrentTutor({
+					_id: "venture-tutor",
+					name: "Tutor",
+					email: "tutor@example.invalid",
+					age: 30,
+					state: "GA",
+					usersOfTutorLength: 0,
+					coursePermissions: ["entrepreneurship-101"],
+					editTutors: false,
+					saveEdit: "Save"
+				});
+			const course = (await useCoursesStore().loadCourseById(
+				"entrepreneurship-101"
+			))!;
+			const identities = course.modules.flatMap(module =>
+				(
+					[
+						["core", module.curriculum],
+						["optional", module.supplementalProjects]
+					] as const
+				).flatMap(([section, items]) =>
+					items.map(item => ({
+						moduleId: module.id,
+						id: item.id,
+						section
+					}))
+				)
+			);
+			const originalIdentities = identities.filter(
+				item => !restored.some(added => added.id === item.id)
+			);
+			expect(restored).toHaveLength(13);
+			expect(identities).toHaveLength(
+				published["entrepreneurship-101"].items + 13
+			);
+			for (const added of restored)
+				expect(identities.filter(item => item.id === added.id)).toEqual([
+					added
+				]);
+			expect(
+				createHash("sha256")
+					.update(JSON.stringify(originalIdentities))
+					.digest("hex")
+			).toBe(published["entrepreneurship-101"].sha256);
+			const readings = course.modules.flatMap(module =>
+				module.curriculum.filter(item => item.contentKind === "reading")
+			);
+			expect(readings).toHaveLength(10);
+			const projects = course.modules.flatMap(module =>
+				module.curriculum.filter(item =>
+					item.content.startsWith("**Project goal:**")
+				)
+			);
+			expect(projects).toHaveLength(19);
+			expect(projects.every(item => !isLessonLearningItem(item))).toBe(true);
+			for (const reading of readings) {
+				expect(isLessonLearningItem(reading), reading.title).toBe(true);
+				expect(reading.content).not.toContain("Define the important terms");
+				expect(reading.content).toContain("## Worked");
+				expect(reading.content).toContain("**Course flow:**");
+			}
+			const financial = readings.find(item =>
+				item.title.includes("Financial Feasibility")
+			)!;
+			const wrapper = mount(LazyMarkdownContent, {
+				props: { content: financial.content }
+			});
+			try {
+				await vi.waitFor(() =>
+					expect(wrapper.findAll("tbody tr")).toHaveLength(3)
+				);
+				expect(wrapper.text()).toContain("-$800");
+				expect(wrapper.text()).toContain("$5,600");
+				expect(wrapper.text()).toContain("$9,600");
+				expect(wrapper.text()).toContain("margin is undefined");
+			} finally {
+				wrapper.unmount();
+			}
+		}
+	);
+
 	it("carries one venture from assumptions through an evidence-based pitch", () => {
 		expect(
 			entrepreneurship101Course.modules.map(module => module.title)

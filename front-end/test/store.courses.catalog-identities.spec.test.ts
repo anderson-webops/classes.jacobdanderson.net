@@ -3,6 +3,7 @@ import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { createPinia, setActivePinia } from "pinia";
 import { expect, it } from "vitest";
+import restoredEntrepreneurshipProjects from "../../test/fixtures/entrepreneurship-restored-core-identities.json";
 import { useAppStore } from "@/stores/app";
 import { useCoursesStore } from "@/stores/courses";
 import { courseCatalog } from "@/stores/courses/index";
@@ -33,6 +34,7 @@ const addedIdentities: Record<
 	string,
 	{ moduleId: string; id: string; section: string }[]
 > = {
+	"entrepreneurship-101": restoredEntrepreneurshipProjects,
 	"scratch-level-1-classroom": [
 		{
 			moduleId: "scratch-classroom-6",
