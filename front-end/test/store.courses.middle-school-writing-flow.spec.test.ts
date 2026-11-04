@@ -105,14 +105,14 @@ describe("Middle School B Writing learner flow", () => {
 	it("provides accessible tools and source alternatives", () => {
 		expect(
 			requireModule("MSB4 Analyzing Evidence").curriculum[0]?.content
-		).toContain("lawful copy of Car Ride or an equivalent passage");
+		).toContain("supplied original Car Ride practice passage");
 		expect(
 			requireModule("MSB6 Color Coding & Revision").curriculum[0]?.content
 		).toContain("colors, labels, symbols, underlines, or tags");
 		expect(
 			requireModule("MSB9 Generating Conflict & Structuring Plot")
 				.curriculum[0]?.content
-		).toContain("hand-drawn, text-only, or instructor-supplied plot curve");
+		).toContain("supplied stage table or a hand-drawn plot curve");
 	});
 
 	it("keeps unavailable diagram bookkeeping out of the course", async () => {

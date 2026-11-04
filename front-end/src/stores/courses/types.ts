@@ -9,6 +9,8 @@ export interface RawCourseModuleItem {
 	contentKind?: "reading";
 	/** Preserve structured reading and executable command blocks verbatim. */
 	preserveInstructions?: boolean;
+	/** Keep a separately assigned task out of merged support text. */
+	preserveAssignment?: boolean;
 	learningPath?: CourseItemLearningPath;
 	projectLink?: string;
 	/** Offer a confirmed IDE import for this project resource, including worked lessons. */

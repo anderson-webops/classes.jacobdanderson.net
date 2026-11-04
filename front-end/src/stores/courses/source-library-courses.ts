@@ -42,7 +42,7 @@ const middleSchoolBWritingSourceAnchors: Record<
 	"MSB1 Arguments & Evidence": [
 		{
 			title: "Steph Curry Argument Parts Model",
-			prompt: "Use the Steph Curry example to separate a debatable claim, supporting reasons, and evidence. Then create argument records for the cell phones at school debate, TikTok dances as art, and the best pet comparison.",
+			prompt: "Use the supplied fictional basketball records to separate a debatable claim, supporting reasons, and evidence. A Steph Curry comparison can use separately verified statistics with a named source and date. Then create argument records for the supplied cell phones at school, TikTok dances as art, and best pet cases, identifying the criterion and assumptions.",
 			evidence: [
 				"A debatable claim that can be reasonably opposed.",
 				"Two reasons connected to the claim with because or by.",
@@ -75,7 +75,7 @@ const middleSchoolBWritingSourceAnchors: Record<
 	"MSB4 Analyzing Evidence": [
 		{
 			title: "Car Ride Evidence Analysis Paragraph",
-			prompt: "Use Car Ride to build an analytical paragraph: make a debatable inference about Kazim's mood, select textual evidence, integrate the evidence, then explain how and why the evidence supports the claim.",
+			prompt: "Use the supplied original Car Ride practice passage, or another identified passage, to build an analytical paragraph: make a debatable inference about Kazim's mood, select textual evidence, integrate it, then explain how and why it supports the claim. Keep the interpretation within the chosen text.",
 			evidence: [
 				"A claim about Kazim's mood or attitude.",
 				"Integrated textual evidence from the passage.",
@@ -137,7 +137,7 @@ const middleSchoolBWritingSourceAnchors: Record<
 	"MSB7 Character Development": [
 		{
 			title: "Character Objective Bank",
-			prompt: "Use Harry Potter, Wonder Woman, Spider-Man, and a favorite character to practice identifying character objectives. Then create an original objective bank that can support a new character.",
+			prompt: "Use the supplied original character model to identify an objective and its supporting actions. Harry Potter, Wonder Woman, Spider-Man, or a favorite character can provide another comparison when a specific story version and its evidence are available. Then create an original objective bank for a new character.",
 			evidence: [
 				"Objective statements written as what each character wants most.",
 				"Reasoning that connects background details to the objective.",
@@ -146,7 +146,7 @@ const middleSchoolBWritingSourceAnchors: Record<
 		},
 		{
 			title: "Nemo Objective-to-Qualities Flowchart",
-			prompt: "Use the Nemo chart model to connect objective, choices, thoughts, actions, speech, and character qualities. Then apply the same chain to an original character.",
+			prompt: "Use the supplied text-only character chain to connect objective, choices, thoughts, actions, speech, and character qualities. A specified Nemo story can provide an additional comparison. Apply the same chain to an original character without relying on an unavailable chart.",
 			evidence: [
 				"A flowchart from objective to choices, actions, speech, and qualities.",
 				"At least one explanation of how a choice follows from the objective.",
@@ -177,7 +177,7 @@ const middleSchoolBWritingSourceAnchors: Record<
 		},
 		{
 			title: "Plot Curve Event Map",
-			prompt: "Use the labeled plot curve and blank plot curve models to organize beginning, middle, and end events. The beginning introduces protagonist and objective, the middle develops conflict, and the end resolves the conflict.",
+			prompt: "Use the supplied stage table as a text-only plot model, or draw blank axes for story sequence and tension. Organize beginning, middle, and end events: introduce protagonist and objective, develop conflict, then resolve it through a consequential choice.",
 			evidence: [
 				"Three or more plot events placed on a beginning-middle-end structure.",
 				"One dramatic-tension note naming where investment is highest and why.",
@@ -3601,7 +3601,7 @@ const englishCourses = {
 					"quotation integration"
 				],
 				flowNote:
-					"Use a short lawful or instructor-supplied excerpt, practice both integration patterns, and check that the surrounding sentence remains grammatical and understandable."
+					"Use the supplied original excerpts to practice both quotation-integration patterns, then check that the surrounding sentence remains grammatical and understandable."
 			},
 			"MSB4 Analyzing Evidence": {
 				estimatedTime: "3 sessions · 45–55 minutes each",
@@ -3613,7 +3613,7 @@ const englishCourses = {
 					"paragraph revision"
 				],
 				flowNote:
-					"Use a lawful copy of Car Ride or an equivalent passage. Draft the main interpretation, then test it by constructing a credible opposing interpretation before revising the analysis."
+					"Use the supplied original Car Ride practice passage or another identified text. Draft the main interpretation, test a credible opposing interpretation, then revise the analysis."
 			},
 			"MSB5 Concluding Statements & Transitional Devices": {
 				estimatedTime: "2 sessions · 45–55 minutes each",
@@ -3661,7 +3661,7 @@ const englishCourses = {
 					"cause-and-effect flow"
 				],
 				flowNote:
-					"Use familiar characters only as brief models and create an original character objective. Trace the objective through choices, actions, speech, and supported qualities without relying on the missing chart image."
+					"Use the supplied text-only character chain or a specified familiar story, then create an original objective. Trace it through choices, actions, speech, and supported qualities."
 			},
 			"MSB8 Character Portraits": {
 				estimatedTime: "2 sessions · 45–55 minutes each",
@@ -3685,7 +3685,7 @@ const englishCourses = {
 					"plot revision"
 				],
 				flowNote:
-					"Generate conflict from the character objective, then use a hand-drawn, text-only, or instructor-supplied plot curve. Verify that every major event changes the objective, obstacle, or stakes."
+					"Generate conflict from the character objective, then use the supplied stage table or a hand-drawn plot curve. Verify that each major event changes the objective, obstacle, or stakes."
 			},
 			"MSB10 Manipulating Point of View": {
 				estimatedTime: "2–3 sessions · 45–55 minutes each",
@@ -3697,7 +3697,7 @@ const englishCourses = {
 					"reader effect"
 				],
 				flowNote:
-					"Use a lawful supplied excerpt or an original scene, identify narrator access, and rewrite from another point of view to compare sympathy, suspense, humor, or tone."
+					"Use the supplied original Jonah and Caleb examples or an original scene. Identify narrator access and rewrite from another point of view to compare sympathy, suspense, humor, or tone."
 			},
 			"MSB11 Writing an Original Short Story": {
 				estimatedTime: "4–6 sessions · 45–55 minutes each",

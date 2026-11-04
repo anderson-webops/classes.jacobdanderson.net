@@ -521,6 +521,7 @@ function mergeAdjacentSupportItems(
 			previousItem &&
 			!item.projectLink &&
 			!item.preserveReferenceAssignment &&
+			!item.preserveAssignment &&
 			canMerge(previousItem, item) &&
 			(MERGE_INTO_PREVIOUS_TITLE_RE.test(item.title) ||
 				(PRESENTATION_TITLE_RE.test(item.title) &&
@@ -620,6 +621,7 @@ function normalizeCourse(
 							return {
 								// A worked reference does not become a starter. Retain the
 								// assignment itself when its reference is hidden for learners.
+								preserveAssignment: item.preserveAssignment,
 								preserveReferenceAssignment:
 									!!normalizedSolutionLink &&
 									PROJECT_TITLE_RE.test(item.title) &&
@@ -716,6 +718,7 @@ function normalizeCourse(
 					const {
 						stableAliases: _stableAliases,
 						stableId: _stableId,
+						preserveAssignment: _preserveAssignment,
 						preserveReferenceAssignment:
 							_preserveReferenceAssignment,
 						...normalizedItem
