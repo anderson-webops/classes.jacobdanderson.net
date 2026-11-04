@@ -7,6 +7,7 @@ import restoredEntrepreneurshipProjects from "../../test/fixtures/entrepreneursh
 import restoredGrammarProjects from "../../test/fixtures/grammar-mechanics-restored-identities.json";
 import restoredLiteratureProjects from "../../test/fixtures/middle-school-literature-restored-identities.json";
 import restoredWritingProjects from "../../test/fixtures/middle-school-writing-restored-identities.json";
+import restoredSpeakingProjects from "../../test/fixtures/public-speaking-restored-identities.json";
 import { useAppStore } from "@/stores/app";
 import { useCoursesStore } from "@/stores/courses";
 import { courseCatalog } from "@/stores/courses/index";
@@ -40,6 +41,7 @@ const addedIdentities: Record<
 	"entrepreneurship-101": restoredEntrepreneurshipProjects,
 	"middle-school-c-grammar": restoredGrammarProjects,
 	"middle-school-a-literature": restoredLiteratureProjects,
+	"introduction-to-public-speaking": restoredSpeakingProjects,
 	...restoredWritingProjects,
 	"scratch-level-1-classroom": [
 		{

@@ -8,6 +8,7 @@ import { applyMiddleSchoolLiteratureReadings } from "./middleSchoolLiteratureRea
 import { applyMiddleSchoolWritingReadings } from "./middleSchoolWritingReadings";
 import { applyNovelWritingReadings } from "./novelWritingReadings";
 import { buildProjectGuidance } from "./projectGuidance";
+import { applyPublicSpeakingReadings } from "./publicSpeakingReadings";
 import { applyPyGamesCourseWorkflows } from "./pyGamesCourseWorkflows";
 import { applyResearchBackedExpansions } from "./research-expansions";
 import { applyRustBorrowingCourseWorkflows } from "./rustBorrowingCourseWorkflows";
@@ -9848,6 +9849,8 @@ export function normalizeRawCourse(id: string, rawCourse: RawCourse) {
 	if (id === "middle-school-c-grammar")
 		applyGrammarMechanicsReadings(course, rawCourse);
 	if (id === "novel-writing") applyNovelWritingReadings(course, rawCourse);
+	if (id === "introduction-to-public-speaking")
+		applyPublicSpeakingReadings(course, rawCourse);
 	if (
 		id === "middle-school-b-writing" ||
 		id === "middle-school-b-writing-retake"

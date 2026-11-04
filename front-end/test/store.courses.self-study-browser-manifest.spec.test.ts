@@ -11,6 +11,7 @@ import ventureAdditions from "../../test/fixtures/entrepreneurship-restored-core
 import grammarAdditions from "../../test/fixtures/grammar-mechanics-restored-identities.json";
 import literatureAdditions from "../../test/fixtures/middle-school-literature-restored-identities.json";
 import writingAdditions from "../../test/fixtures/middle-school-writing-restored-identities.json";
+import speakingAdditions from "../../test/fixtures/public-speaking-restored-identities.json";
 import { isLessonLearningItem } from "@/modules/courseLessonPresentation";
 import { normalizeInlineCourseMarkdown } from "@/modules/courseMarkdown";
 import { useAppStore } from "@/stores/app";
@@ -18,6 +19,7 @@ import { useCoursesStore } from "@/stores/courses";
 import {
 	entrepreneurship101Course,
 	grammarMechanicsCourse,
+	introductionToPublicSpeakingCourse,
 	middleSchoolLiteratureCourse,
 	middleSchoolWritingCourse,
 	middleSchoolWritingRetakeCourse,
@@ -60,6 +62,12 @@ const cases = [
 		source: novelWritingCourse,
 		readings: 14,
 		additions: []
+	},
+	{
+		id: "introduction-to-public-speaking",
+		source: introductionToPublicSpeakingCourse,
+		readings: 9,
+		additions: speakingAdditions
 	}
 ] as const;
 const markdown = new MarkdownIt({ breaks: true, html: false, linkify: true });

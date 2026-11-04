@@ -17,7 +17,8 @@ const courseIds = [
 	"middle-school-b-writing",
 	"middle-school-b-writing-retake",
 	"middle-school-c-grammar",
-	"novel-writing"
+	"novel-writing",
+	"introduction-to-public-speaking"
 ];
 const digest = value => createHash("sha256").update(value).digest("hex");
 
@@ -455,7 +456,7 @@ test(
 									module.readings.some(
 										item => item.images.length
 									) ||
-									/Financial Feasibility|Sentence Types|Analyzing Evidence|Entry Diagnostic|Exit Diagnostic|NW10 Writing Dialogue/.test(
+									/Financial Feasibility|Sentence Types|Analyzing Evidence|Entry Diagnostic|Exit Diagnostic|NW10 Writing Dialogue|MYP7 Defense Attorney|MYP9 Master Project/.test(
 										module.title
 									)
 								) {
@@ -563,13 +564,13 @@ test(
 					}
 				}
 			}
-			assert.equal(profiles.length, 24);
+			assert.equal(profiles.length, 28);
 			assert.equal(
 				profiles.reduce(
 					(total, profile) => total + profile.completeReadings.length,
 					0
 				),
-				348
+				384
 			);
 			await writeFile(
 				join(output, "browser-proof.json"),

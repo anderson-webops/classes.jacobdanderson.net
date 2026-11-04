@@ -3094,7 +3094,7 @@ const englishCourses = {
 					"copyright-safe portfolio"
 				],
 				flowNote:
-					"Create a TED-style classroom talk with no claim of TED or TED-Ed affiliation. Public posting and the unavailable release form are not required; live, private recorded, or audio-supported delivery is valid."
+					"Create a TED-style classroom talk with no claim of TED or TED-Ed affiliation. Public posting is optional; live, private recorded, or audio-supported delivery is valid."
 			}
 		},
 		sourceActivityAnchors: {

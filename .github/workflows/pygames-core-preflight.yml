@@ -319,6 +319,8 @@ jobs:
           test/store.courses.entrepreneurship-flow.spec.test.ts
           test/store.courses.novel-writing-flow.spec.test.ts
           test/store.courses.novel-writing-content.spec.test.ts
+          test/store.courses.public-speaking-flow.spec.test.ts
+          test/store.courses.public-speaking-content.spec.test.ts
           --no-file-parallelism --maxWorkers=1
       - name: Preserve legitimate course references
         run: >-
