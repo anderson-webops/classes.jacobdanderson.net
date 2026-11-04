@@ -156,11 +156,23 @@ export async function checkScratchOriginalImports(page, { origin, files, loaded,
 		await confirm();
 
 		for (const original of originalScratchProjects) {
-			await route(sourceHref(original));
-			await confirm();
-			const snapshot = await inspect(original);
+			let snapshot;
+			try {
+				await route(sourceHref(original));
+				await confirm();
+				snapshot = await inspect(original);
+			}
+			catch (error) {
+				snapshot = { problems: [`Import verification failed: ${error}`], inspectionFailed: true, stack: error.stack };
+				await page.screenshot({ path: path.join(output, `project-${original.id}-failed.png`) }).catch(() => {});
+			}
 			records.push({ id: original.id, sourceSHA256: original.sourceSHA256, ...snapshot });
 			await writeFile(path.join(output, "imports.json"), `${JSON.stringify({ complete: false, records }, null, 2)}\n`);
+			if (snapshot.inspectionFailed) {
+				await page.goto("about:blank");
+				await page.goto(`${origin}/ide?mode=scratch`, { waitUntil: "networkidle2" });
+				await page.waitForFunction(() => document.querySelector(".scratch-status")?.textContent.includes("Ready."));
+			}
 		}
 		assert.equal(records.length, 164);
 		const spinner = originalScratchProjects.find(project => project.id === "287887351");

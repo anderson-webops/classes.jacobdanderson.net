@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { existsSync } from "node:fs";
-import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 // This browser workflow runs in the native CI test runner, outside Vitest.
@@ -15,8 +15,8 @@ import {
 	lessons
 } from "../front-end/scripts/scratch/generate-projects.mjs";
 import { checkScratchConditionalCourse, scratchCourseAccount } from "./scratch-conditional-course-checks.mjs";
-import { checkScratchGameProgression } from "./scratch-game-progression-checks.mjs";
 import { checkScratchEducationalQuiz } from "./scratch-educational-quiz-checks.mjs";
+import { checkScratchGameProgression } from "./scratch-game-progression-checks.mjs";
 import { checkScratchOriginalImports } from "./scratch-original-import-checks.mjs";
 
 const root = fileURLToPath(new URL("../front-end/", import.meta.url));
@@ -82,7 +82,22 @@ nodeTest(
 			const page = await browser.newPage();
 			await page.setViewport({ width: 1440, height: 1080 });
 			const errors = [];
+			const scopeFailures = [];
 			page.on("pageerror", error => errors.push(error.message));
+			async function verifyScope(scope, verify) {
+				try {
+					await verify();
+				}
+				catch (error) {
+					const output = process.env.SCRATCH_ORIGINAL_BROWSER_PROOF_DIR || process.env.SCRATCH_SCREENSHOT_DIR || files;
+					await mkdir(output, { recursive: true });
+					const failure = { scope, error: String(error), stack: error.stack, url: page.url(), viewport: page.viewport(), pageErrors: [...errors] };
+					scopeFailures.push(failure);
+					const state = await page.evaluate(() => ({ headings: [...document.querySelectorAll("h5")].map(heading => heading.textContent), lessons: [...document.querySelectorAll(".lesson-item")].map(item => ({ title: item.querySelector("h5")?.textContent, markdown: [...item.querySelectorAll(".item-content-markdown")].map(section => section.textContent.slice(0, 300)) })) })).catch(() => null);
+					await writeFile(path.join(output, `${scope}-failure.json`), `${JSON.stringify({ ...failure, state }, null, 2)}\n`);
+					await page.screenshot({ path: path.join(output, `${scope}-failure.png`) }).catch(() => {});
+				}
+			}
 			let acceptDialogs = true;
 			page.on("dialog", dialog => acceptDialogs ? dialog.accept() : dialog.dismiss());
 			const adapter = await readFile(new URL("../front-end/public/scratch-runtime/editor.js", import.meta.url), "utf8");
@@ -421,18 +436,12 @@ nodeTest(
 			await page.screenshot({
 				path: "/tmp/scratch-classroom-editor.png"
 			});
-			await checkScratchConditionalCourse(page, "http://127.0.0.1:5198", (role) => {
-				courseRole = role;
-			});
-			await checkScratchEducationalQuiz(page, "http://127.0.0.1:5198", files, loaded, async filename => {
-				await setProjectMenuOpen(true);
-				await (await page.$(".file-control input")).uploadFile(filename);
-				await loaded();
-				await setProjectMenuOpen(false);
-			});
-			await checkScratchOriginalImports(page, {
-				origin: "http://127.0.0.1:5198", files, loaded, downloadProject,
-				openFile: async filename => {
+			await verifyScope("originals", () => checkScratchOriginalImports(page, {
+				origin: "http://127.0.0.1:5198",
+				files,
+				loaded,
+				downloadProject,
+				openFile: async (filename) => {
 					await setProjectMenuOpen(true);
 					await (await page.$(".file-control input")).uploadFile(filename);
 					await loaded();
@@ -444,9 +453,20 @@ nodeTest(
 					await loaded();
 					await setProjectMenuOpen(false);
 				},
-				setRole: role => { courseRole = role; },
-				acceptDialogs: value => { acceptDialogs = value; }
-			});
+				setRole: (role) => { courseRole = role; },
+				acceptDialogs: (value) => { acceptDialogs = value; }
+			}));
+			await verifyScope("conditional-course", () => checkScratchConditionalCourse(page, "http://127.0.0.1:5198", (role) => {
+				courseRole = role;
+			}));
+			await verifyScope("quiz", () => checkScratchEducationalQuiz(page, "http://127.0.0.1:5198", files, loaded, async (filename) => {
+				await setProjectMenuOpen(true);
+				await (await page.$(".file-control input")).uploadFile(filename);
+				await loaded();
+				await setProjectMenuOpen(false);
+			}));
+
+			assert.deepEqual(scopeFailures, [], "Every Scratch browser scope must pass");
 			assert.deepEqual(errors, []);
 		}
 		finally {
