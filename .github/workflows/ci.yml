@@ -1948,6 +1948,8 @@ jobs:
                   if-no-files-found: error
                   retention-days: 7
 
+    # Two Mac sequences retain every case without queuing all nine at once.
+    # Independent checks still run after a predecessor fails; cancellation stops them.
     swift-ios:
         needs: swift-browser
         runs-on: macos-26
@@ -2093,7 +2095,8 @@ jobs:
                   retention-days: 7
 
     swift-canonical-ios:
-        needs: swift-browser
+        needs: [swift-browser, swift-ios]
+        if: ${{ !cancelled() && needs.swift-browser.result == 'success' }}
         strategy:
             fail-fast: false
             max-parallel: 1
@@ -2172,7 +2175,8 @@ jobs:
                   retention-days: 7
 
     swift-tracker-models-ios:
-        needs: swift-browser
+        needs: [swift-browser, swift-networking-ios]
+        if: ${{ !cancelled() && needs.swift-browser.result == 'success' }}
         runs-on: macos-26
         timeout-minutes: 60
         permissions:
@@ -2273,9 +2277,11 @@ jobs:
     swift-tracker-ui:
         strategy:
             fail-fast: false
+            max-parallel: 1
             matrix:
                 course: [tracker, swiftdata]
-        needs: swift-browser
+        needs: [swift-browser, swift-tracker-models-ios]
+        if: ${{ !cancelled() && needs.swift-browser.result == 'success' }}
         runs-on: macos-26
         timeout-minutes: 60
         permissions:
