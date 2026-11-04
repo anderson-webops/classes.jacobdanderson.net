@@ -31,3 +31,6 @@ pnpm-debug.log*
 front-end/public/scratch-runtime/vendor/
 front-end/public/scratch-runtime/vendor.staging-*/
 front-end/public/python-runtime/
+
+# Reproducible original Scratch project archives
+front-end/public/scratch-originals/

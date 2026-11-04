@@ -17,11 +17,12 @@ import {
 import { checkScratchConditionalCourse, scratchCourseAccount } from "./scratch-conditional-course-checks.mjs";
 import { checkScratchGameProgression } from "./scratch-game-progression-checks.mjs";
 import { checkScratchEducationalQuiz } from "./scratch-educational-quiz-checks.mjs";
+import { checkScratchOriginalImports } from "./scratch-original-import-checks.mjs";
 
 const root = fileURLToPath(new URL("../front-end/", import.meta.url));
 nodeTest(
 	"scratch imports classroom projects, runs events and exports reusable files in isolation",
-	{ timeout: 240000 },
+	{ timeout: 900000 },
 	async () => {
 		let server, browser;
 		const previous = process.cwd();
@@ -82,7 +83,8 @@ nodeTest(
 			await page.setViewport({ width: 1440, height: 1080 });
 			const errors = [];
 			page.on("pageerror", error => errors.push(error.message));
-			page.on("dialog", dialog => dialog.accept());
+			let acceptDialogs = true;
+			page.on("dialog", dialog => acceptDialogs ? dialog.accept() : dialog.dismiss());
 			const adapter = await readFile(new URL("../front-end/public/scratch-runtime/editor.js", import.meta.url), "utf8");
 			assert.equal(adapter.split("vm = value;").length, 2);
 			const observedAdapter = adapter.replace("vm = value;", "vm = value; window.__courseTestVm = vm;");
@@ -427,6 +429,23 @@ nodeTest(
 				await (await page.$(".file-control input")).uploadFile(filename);
 				await loaded();
 				await setProjectMenuOpen(false);
+			});
+			await checkScratchOriginalImports(page, {
+				origin: "http://127.0.0.1:5198", files, loaded, downloadProject,
+				openFile: async filename => {
+					await setProjectMenuOpen(true);
+					await (await page.$(".file-control input")).uploadFile(filename);
+					await loaded();
+					await setProjectMenuOpen(false);
+				},
+				newProject: async () => {
+					await setProjectMenuOpen(true);
+					await page.locator("::-p-text(New project)").click();
+					await loaded();
+					await setProjectMenuOpen(false);
+				},
+				setRole: role => { courseRole = role; },
+				acceptDialogs: value => { acceptDialogs = value; }
 			});
 			assert.deepEqual(errors, []);
 		}

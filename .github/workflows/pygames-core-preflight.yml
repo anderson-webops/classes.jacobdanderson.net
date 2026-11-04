@@ -1,6 +1,6 @@
 name: Course preflight
 
-run-name: ${{ inputs.course == 'bootcamp' && 'Scratch Bootcamp pages' || inputs.course == 'self-study' && 'Self-study course pages' || inputs.course == 'networking' && 'Swift Networking source evidence' || inputs.course == 'ai-setup' && 'AI setup reading' || 'PyGames core preflight' }}
+run-name: ${{ inputs.course == 'scratch-originals' && 'Original Scratch imports' || inputs.course == 'bootcamp' && 'Scratch Bootcamp pages' || inputs.course == 'self-study' && 'Self-study course pages' || inputs.course == 'networking' && 'Swift Networking source evidence' || inputs.course == 'ai-setup' && 'AI setup reading' || 'PyGames core preflight' }}
 
 on:
   workflow_dispatch:
@@ -8,7 +8,7 @@ on:
       course:
         description: Course verification to run
         type: choice
-        options: [pygames, networking, ai-setup, self-study, bootcamp]
+        options: [pygames, networking, ai-setup, self-study, bootcamp, scratch-originals]
         default: pygames
       browser_run_id:
         description: Networking browser export workflow run
@@ -259,13 +259,14 @@ jobs:
           retention-days: 14
 
   self-study:
-    if: inputs.course == 'self-study' || inputs.course == 'bootcamp'
+    if: inputs.course == 'self-study' || inputs.course == 'bootcamp' || inputs.course == 'scratch-originals'
     runs-on: ubuntu-24.04
     timeout-minutes: 40
     env:
       CLASSES_FAMILY_TASK_ID: self-study-courses-${{ github.run_id }}
       SELF_STUDY_BROWSER_PROOF_DIR: ${{ github.workspace }}/output/self-study-browser
       SELF_STUDY_BROWSER_COURSES: ${{ inputs.course == 'bootcamp' && 'scratch-level-1-bootcamp' || '' }}
+      SCRATCH_ORIGINAL_BROWSER_PROOF_DIR: ${{ github.workspace }}/output/self-study-browser/scratch-originals
       COURSE_CATALOG_PROOF_DIR: ${{ github.workspace }}/output/self-study-browser/catalog
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
@@ -324,21 +325,32 @@ jobs:
           test/store.courses.public-speaking-content.spec.test.ts
           test/store.courses.scratch-bootcamp-flow.spec.test.ts
           test/store.courses.scratch-bootcamp-content.spec.test.ts
+          test/modules.scratch-originals.spec.test.ts
+          test/components.scratch-original-import.spec.test.ts
+          test/scratch.classroom.spec.test.ts
+          test/scratch.input.spec.test.ts
           --no-file-parallelism --maxWorkers=1
       - name: Preserve legitimate course references
         run: >-
           node scripts/classes-family-heavy-task.mjs --
           npm exec -w front-end -- vitest run test/components.courseexplorer.spec.test.ts
-          -t 'keeps reference appendices separate' --no-file-parallelism --maxWorkers=1
+          -t 'keeps reference appendices separate|offers original Scratch imports|offers each original Bootcamp capstone' --no-file-parallelism --maxWorkers=1
       - name: Build both workspaces
         run: node scripts/classes-family-heavy-task.mjs -- npm run build
       - name: Verify all self-study course pages in both roles and sizes
+        if: inputs.course != 'scratch-originals'
         run: node scripts/classes-family-heavy-task.mjs -- node --test test/self-study-course-browser.test.mjs
+      - name: Verify original Scratch program and media identities
+        if: inputs.course == 'scratch-originals'
+        run: node scripts/classes-family-heavy-task.mjs -- node --test --test-concurrency=1 test/scratch-projects.test.mjs test/scratch-original-projects.test.mjs
+      - name: Verify original imports and classroom workflows in the actual Scratch editor
+        if: inputs.course == 'scratch-originals'
+        run: node scripts/classes-family-heavy-task.mjs -- node --test test/scratch-browser.test.mjs
       - name: Retain self-study pages, audits and original failures
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
-          name: self-study-course-pages
+          name: ${{ inputs.course == 'scratch-originals' && 'scratch-original-imports' || 'self-study-course-pages' }}
           path: output/self-study-browser/
           if-no-files-found: error
           retention-days: 14

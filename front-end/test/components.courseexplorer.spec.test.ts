@@ -45,6 +45,136 @@ function installLocalStorageStub() {
 }
 
 describe("CourseExplorer.vue", () => {
+	it.each(["learner", "instructor"])(
+		"offers original Scratch imports with %s role visibility",
+		async role => {
+			const pinia = createPinia();
+			setActivePinia(pinia);
+			const app = useAppStore();
+			app.setCurrentUser({
+				_id: "scratch-original-learner",
+				name: "Learner",
+				email: "learner@example.invalid",
+				age: 14,
+				state: "GA",
+				courseAccess: ["scratch-level-1"],
+				courseProgress: [],
+				editUsers: false,
+				saveEdit: "Save"
+			});
+			if (role === "instructor") {
+				app.setCurrentTutor({
+					_id: "scratch-original-tutor",
+					name: "Tutor",
+					email: "tutor@example.invalid",
+					age: 30,
+					state: "GA",
+					coursePermissions: ["scratch-level-1"],
+					usersOfTutorLength: 0,
+					editTutors: false,
+					saveEdit: "Save"
+				});
+				app.setUsers([app.currentUser!]);
+				vi.mocked(api.get).mockResolvedValueOnce({
+					data: [app.currentUser!]
+				});
+			}
+			window.history.replaceState(
+				{},
+				"",
+				"/courses#scratch-level-1-gs2-event-listeners"
+			);
+			const wrapper = mount(CourseExplorer, {
+				global: { plugins: [pinia] }
+			});
+			try {
+				await flushPromises();
+				await vi.waitFor(() =>
+					expect(wrapper.find(".lesson-view-toggle").exists()).toBe(
+						true
+					)
+				);
+				await wrapper
+					.findAll(".lesson-view-toggle button")[0]
+					.trigger("click");
+				await flushPromises();
+				const card = wrapper
+					.findAll(".lesson-item")
+					.find(item =>
+						item
+							.find(
+								'a.is-project[href="https://scratch.mit.edu/projects/287707460/"]'
+							)
+							.exists()
+					)!;
+				expect(card).toBeDefined();
+				const links = card.findAll("a.is-ide-starter");
+				expect(links).toHaveLength(role === "instructor" ? 2 : 1);
+				for (const [index, link] of links.entries()) {
+					const params = new URL(
+						link.attributes("href"),
+						"https://example.invalid"
+					).searchParams;
+					expect(params.get("mode")).toBe("scratch");
+					expect(params.get("course")).toBe("scratch-level-1");
+					expect(params.get("originalProject")).toBe(
+						index === 0 ? "287707460" : "284408078"
+					);
+					expect(params.get("role")).toBe(
+						index === 0 ? "project" : "reference"
+					);
+					expect(params.get("lesson")).toContain("dragonfly-events");
+				}
+			} finally {
+				wrapper.unmount();
+			}
+		}
+	);
+
+	it("offers each original Bootcamp capstone direction as a distinct IDE import", async () => {
+		const pinia = createPinia();
+		setActivePinia(pinia);
+		useAppStore().setCurrentUser({
+			_id: "scratch-bootcamp-learner",
+			name: "Learner",
+			email: "learner@example.invalid",
+			age: 14,
+			state: "GA",
+			courseAccess: ["scratch-level-1-bootcamp"],
+			courseProgress: [],
+			editUsers: false,
+			saveEdit: "Save"
+		});
+		window.history.replaceState(
+			{},
+			"",
+			"/courses#scratch-level-1-bootcamp-gs4-master-project"
+		);
+		const wrapper = mount(CourseExplorer, { global: { plugins: [pinia] } });
+		try {
+			await flushPromises();
+			await vi.waitFor(() =>
+				expect(wrapper.find(".lesson-view-toggle").exists()).toBe(true)
+			);
+			await wrapper
+				.findAll(".lesson-view-toggle button")[0]
+				.trigger("click");
+			await flushPromises();
+			const links = wrapper.findAll("a.is-ide-starter");
+			expect(links).toHaveLength(3);
+			expect(
+				links.map(link =>
+					new URL(
+						link.attributes("href"),
+						"https://example.invalid"
+					).searchParams.get("originalProject")
+				)
+			).toEqual(["299272518", "608768681", "608770708"]);
+		} finally {
+			wrapper.unmount();
+		}
+	});
+
 	it.each(
 		["learner", "instructor"].flatMap(role =>
 			[

@@ -930,7 +930,7 @@ jobs:
             - name: Verify Scratch classroom import, execution and downloads
               env:
                   SCRATCH_SCREENSHOT_DIR: output/playwright
-              run: node --test test/scratch-projects.test.mjs test/scratch-browser.test.mjs
+              run: node --test --test-concurrency=1 test/scratch-projects.test.mjs test/scratch-original-projects.test.mjs test/scratch-browser.test.mjs
 
             - name: Retain Scratch conditional lesson screenshots
               if: always()

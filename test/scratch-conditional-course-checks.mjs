@@ -5,10 +5,11 @@ import process from "node:process";
 
 export function scratchCourseAccount(path, role) {
 	if (!role) return {};
-	const user = { _id: "scratch-course-fixture", name: "Course fixture", email: "course@example.invalid", age: 14, state: "GA", courseAccess: ["scratch-level-1", "scratch-level-1-classroom"], courseProgress: [] };
+	const courses = ["scratch-level-1", "scratch-level-2", "scratch-level-1-bootcamp", "scratch-level-1-classroom"];
+	const user = { _id: "scratch-course-fixture", name: "Course fixture", email: "course@example.invalid", age: 14, state: "GA", courseAccess: courses, courseProgress: [] };
 	if (path === "/api/accounts/me") return role === "instructor" ? { tutorID: "scratch-tutor-fixture" } : { userID: user._id };
 	if (path === "/api/users/loggedin" && role === "learner") return { currentUser: user };
-	if (path === "/api/tutors/loggedin" && role === "instructor") return { currentTutor: { _id: "scratch-tutor-fixture", name: "Course fixture", email: "course@example.invalid", age: 30, state: "GA", usersOfTutorLength: 1, coursePermissions: ["scratch-level-1", "scratch-level-1-classroom"] } };
+	if (path === "/api/tutors/loggedin" && role === "instructor") return { currentTutor: { _id: "scratch-tutor-fixture", name: "Course fixture", email: "course@example.invalid", age: 30, state: "GA", usersOfTutorLength: 1, coursePermissions: courses } };
 	if (path === "/api/users/oftutor/scratch-tutor-fixture") return [user];
 	return {};
 }

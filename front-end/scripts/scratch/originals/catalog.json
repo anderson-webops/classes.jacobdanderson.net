@@ -1,0 +1,2922 @@
+{
+	"schemaVersion": 1,
+	"license": "CC BY-SA 2.0",
+	"licenseURL": "https://creativecommons.org/licenses/by-sa/2.0/",
+	"projects": [
+		{
+			"id": "284408078",
+			"name": "Dragonfly Events - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/284408078/",
+			"sourceSHA256": "b6f435c8331c966199bed7e46cd5e2be050dc032c055b96af1f5f01784c1db01",
+			"shared": "2019-02-19T22:42:14.000Z",
+			"modified": "2021-11-03T21:14:39.000Z",
+			"providedCode": true,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "reference"
+				},
+				{
+					"courseId": "scratch-level-2",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "285312799",
+			"name": "Stencil Pencil - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/285312799/",
+			"sourceSHA256": "92bb294b42ef52b8c7703dcd4c461fd5234c3e6723b09e6aea74487ef1b56c7a",
+			"shared": "2019-02-19T22:41:15.000Z",
+			"modified": "2019-06-18T04:43:38.000Z",
+			"providedCode": true,
+			"extensions": [
+				"pen"
+			],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "287707460",
+			"name": "Dragonfly Events",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/287707460/",
+			"sourceSHA256": "df63cf9f494a685930c40385e9fb93224d82526707f66edbc4cd15694c150883",
+			"shared": "2019-02-19T22:42:20.000Z",
+			"modified": "2021-10-29T16:21:34.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "project"
+				},
+				{
+					"courseId": "scratch-level-2",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "287738652",
+			"name": "Stencil Pencil",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/287738652/",
+			"sourceSHA256": "b520faff81425ec7b42ccd6f3f71269efeb09552f6be68c01d00a26bbd147079",
+			"shared": "2019-02-19T22:42:02.000Z",
+			"modified": "2020-05-09T19:26:38.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "project"
+				},
+				{
+					"courseId": "scratch-level-1-bootcamp",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "287887351",
+			"name": "Spinner - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/287887351/",
+			"sourceSHA256": "e846a53334ae19c70d601206d93465aa37b069ff5059251a931dc5cc3847c33f",
+			"shared": "2019-02-19T22:41:09.000Z",
+			"modified": "2019-10-06T13:42:16.000Z",
+			"providedCode": true,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "287920173",
+			"name": "Spinner",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/287920173/",
+			"sourceSHA256": "6acdd0808aa93aff24ed94d7d616b6d68faa91d96f332f717af3bee0a858785d",
+			"shared": "2019-02-19T22:41:55.000Z",
+			"modified": "2020-08-08T01:11:52.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "project"
+				},
+				{
+					"courseId": "scratch-level-1-bootcamp",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "287922077",
+			"name": "Bouncy Ball Room - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/287922077/",
+			"sourceSHA256": "cd5eb6e8dfe3b0640ef68d6b1adb91a2298e10a58d26a693d531f78901ab8407",
+			"shared": "2019-02-19T22:41:47.000Z",
+			"modified": "2020-04-12T20:11:20.000Z",
+			"providedCode": true,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "287924505",
+			"name": "Bouncy Ball Room",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/287924505/",
+			"sourceSHA256": "72ecea88a1d7e53391db09736e31d0ca84d3a7fc0f3c73bb2f7af4c1da9128eb",
+			"shared": "2019-02-19T22:41:41.000Z",
+			"modified": "2020-04-12T20:11:18.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "project"
+				},
+				{
+					"courseId": "scratch-level-1-bootcamp",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "287952358",
+			"name": "Bouncy Ball with Pen - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/287952358/",
+			"sourceSHA256": "94ad41e6bab6807e2b0ca7f4c46fecc8427ae7c9b3e1a81c13d7767278f03ea0",
+			"shared": "2019-02-19T22:41:34.000Z",
+			"modified": "2019-05-26T18:44:55.000Z",
+			"providedCode": true,
+			"extensions": [
+				"pen"
+			],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "287999903",
+			"name": "Beetle Artist - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/287999903/",
+			"sourceSHA256": "cb5961c63d1b3b1fbe789c17ab3f1074eee508f8e9e800e526b7c32f973f023e",
+			"shared": "2019-02-19T22:41:21.000Z",
+			"modified": "2020-07-15T17:54:08.000Z",
+			"providedCode": true,
+			"extensions": [
+				"pen"
+			],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "288003770",
+			"name": "Beetle Artist",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/288003770/",
+			"sourceSHA256": "49edee7d54f497669e44bd11cba72d703317e56854a18c054bf80db93386c232",
+			"shared": "2019-02-19T22:41:02.000Z",
+			"modified": "2021-10-29T16:25:35.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "289445069",
+			"name": "Drawing Mouse - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/289445069/",
+			"sourceSHA256": "dc4c0f6145f2ed4d5294631530baeaa315021a6796c91ad94b6de0089ff4383a",
+			"shared": "2019-02-26T22:57:35.000Z",
+			"modified": "2021-11-15T19:47:40.000Z",
+			"providedCode": true,
+			"extensions": [
+				"pen"
+			],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "reference"
+				},
+				{
+					"courseId": "scratch-level-2",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "289744824",
+			"name": "Drawing Mouse",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/289744824/",
+			"sourceSHA256": "cacfb8fff1fec0eb1b48621ed842ea806ee34b344dcc9e890a9ca91701a82eca",
+			"shared": "2019-02-26T23:00:36.000Z",
+			"modified": "2021-11-15T19:52:18.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "project"
+				},
+				{
+					"courseId": "scratch-level-2",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "291115434",
+			"name": "Hot Cross Buns - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/291115434/",
+			"sourceSHA256": "87086d3f559715654a1c630556f5cff7a8b08e591ac14e21bae254dfcfcbc863",
+			"shared": "2019-03-04T17:32:41.000Z",
+			"modified": "2019-05-26T19:54:42.000Z",
+			"providedCode": true,
+			"extensions": [
+				"music"
+			],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "291117784",
+			"name": "Hot Cross Buns",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/291117784/",
+			"sourceSHA256": "e0c0c40629bb3415882662607138ffdf0e0e9317e88ec2547fabf4191fe58dc2",
+			"shared": "2019-03-04T17:37:34.000Z",
+			"modified": "2019-05-26T19:54:37.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "project"
+				},
+				{
+					"courseId": "scratch-level-1-bootcamp",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "291119943",
+			"name": "Elephant Effects - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/291119943/",
+			"sourceSHA256": "b0a5267084936191ee9deb2e116ed872df6594efc2d7a6b62028ab58087ccd60",
+			"shared": "2019-03-04T19:12:10.000Z",
+			"modified": "2021-05-06T00:58:07.000Z",
+			"providedCode": true,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "291122885",
+			"name": "Elephant Effects",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/291122885/",
+			"sourceSHA256": "f142c61ec18dac55f9df3cd74d42084cf289c36b319ce154019b839ee7990fe4",
+			"shared": "2019-03-04T19:12:06.000Z",
+			"modified": "2021-10-29T16:36:44.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "291220849",
+			"name": "Dino's Colors - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/291220849/",
+			"sourceSHA256": "a50997b16b5a6ef348007778257cfd6d9417541d0e30319a4eaadbe3bc5369e9",
+			"shared": "2019-03-05T01:09:36.000Z",
+			"modified": "2019-05-26T20:52:07.000Z",
+			"providedCode": true,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "291223299",
+			"name": "Dino's Colors",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/291223299/",
+			"sourceSHA256": "49d6ffade8fa07fc2b44ca35a4492e741419ff6b40cb8beaa46266bf4d606ca8",
+			"shared": "2019-03-05T01:15:29.000Z",
+			"modified": "2019-09-27T17:52:09.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "291530292",
+			"name": "Noisy Reactions - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/291530292/",
+			"sourceSHA256": "7c48e873e2438871c039723f174cc018329c27c6afa19cc51144297e8b29775a",
+			"shared": "2019-03-05T22:29:01.000Z",
+			"modified": "2019-08-19T03:45:46.000Z",
+			"providedCode": true,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "291542721",
+			"name": "Noisy Reactions",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/291542721/",
+			"sourceSHA256": "6bb71e04c79ec82208e6b3cf528f16df77a77a2492c27ddf3d2f6d29dfef1b19",
+			"shared": "2019-03-11T20:40:03.000Z",
+			"modified": "2020-07-11T15:24:33.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "293291715",
+			"name": "Hungry Dinosaur - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/293291715/",
+			"sourceSHA256": "a4d47c6947684932863f79a3e0da6f4858d6ee99d3208d00cef122e1f1d34fab",
+			"shared": "2019-03-12T17:55:15.000Z",
+			"modified": "2021-07-27T22:12:44.000Z",
+			"providedCode": true,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "293366003",
+			"name": "Advanced Conditionals - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/293366003/",
+			"sourceSHA256": "a952056bac57522f342e18734016a63eb0d3d22e55e0a2e6a64e0f426a35cfe2",
+			"shared": "2019-03-12T17:34:17.000Z",
+			"modified": "2020-01-03T21:10:26.000Z",
+			"providedCode": true,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "293372295",
+			"name": "Advanced Conditionals",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/293372295/",
+			"sourceSHA256": "36a876ea645047e07e0976d5243d30217e5615f0490b3c441d33cc2b4ac29131",
+			"shared": "2019-03-12T17:43:19.000Z",
+			"modified": "2020-01-13T22:02:37.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "293457751",
+			"name": "Hungry Dinosaur",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/293457751/",
+			"sourceSHA256": "bd97b7f51b98d9f6ca60b38d7e5c2446fae8c709ccc86543af24fe6c1641576a",
+			"shared": "2019-03-12T23:20:32.000Z",
+			"modified": "2020-05-03T17:32:03.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "293787944",
+			"name": "Dino's Colors II - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/293787944/",
+			"sourceSHA256": "11e8cd72a246e35544061eff312d1f5c480a5f76fabb5c38394ec5b4ff8625c2",
+			"shared": "2019-03-13T21:37:34.000Z",
+			"modified": "2019-05-26T21:28:34.000Z",
+			"providedCode": true,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "293788691",
+			"name": "Dino's Colors II",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/293788691/",
+			"sourceSHA256": "4087ab400e2a78c592609f999a143b861f6ddf6c362709c6679e8fd62ea1cde9",
+			"shared": "2019-03-13T21:38:48.000Z",
+			"modified": "2019-05-26T21:28:57.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "294539961",
+			"name": "Math Facts - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/294539961/",
+			"sourceSHA256": "0a260cd0305dbb3d2ed19fa8b17421a8db2fb253e69c3a5e753c8cdab816f950",
+			"shared": "2019-03-19T17:16:14.000Z",
+			"modified": "2020-01-29T16:52:19.000Z",
+			"providedCode": true,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "reference"
+				},
+				{
+					"courseId": "scratch-level-2",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "294561252",
+			"name": "Number Guesser - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/294561252/",
+			"sourceSHA256": "2b367d9bf91d6792b89447c523a1dd554921123f88da36a8d95f2344e824e77d",
+			"shared": "2019-03-19T17:20:58.000Z",
+			"modified": "2019-05-27T21:47:14.000Z",
+			"providedCode": true,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "295332936",
+			"name": "Math Facts",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/295332936/",
+			"sourceSHA256": "31f3e2441defb47c181e7f9b60ce0dccc76f97ba6471ff1d634212019bf19b90",
+			"shared": "2019-03-19T20:50:16.000Z",
+			"modified": "2020-01-29T16:52:35.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "project"
+				},
+				{
+					"courseId": "scratch-level-2",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "295334181",
+			"name": "Number Guesser",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/295334181/",
+			"sourceSHA256": "a50bdc4edaf3c58552dc15bf999c3e95567be179e55f8fba2cd34120e208a861",
+			"shared": "2019-03-19T20:54:55.000Z",
+			"modified": "2019-05-27T21:49:05.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "295339505",
+			"name": "Talent Show",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/295339505/",
+			"sourceSHA256": "c39fa7498dcff0f3ce0e5e23f9753b126514347cb9db7af239e2e03daa4cae49",
+			"shared": "2019-03-27T22:55:30.000Z",
+			"modified": "2019-05-28T04:51:36.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "295340057",
+			"name": "Talent Show - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/295340057/",
+			"sourceSHA256": "2f09e0494a2d04119830473ddea4dfdab2b6a8902c8e66d2395dadce44a2cf52",
+			"shared": "2019-03-19T21:28:46.000Z",
+			"modified": "2019-10-30T01:48:39.000Z",
+			"providedCode": true,
+			"extensions": [
+				"pen",
+				"music"
+			],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "297735619",
+			"name": "Fortune Teller - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/297735619/",
+			"sourceSHA256": "1eb34f12091d60c10cb24932704f88f0ccd4d911e9fb8eda3e510f1943a5ad13",
+			"shared": "2019-03-27T16:38:09.000Z",
+			"modified": "2019-05-27T21:35:17.000Z",
+			"providedCode": true,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "297744913",
+			"name": "Fortune Teller",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/297744913/",
+			"sourceSHA256": "541465f3ef63ea5860f4af41db156f8833dfbff8b1cae81968e0d9eeb6a8a198",
+			"shared": "2019-03-27T16:50:34.000Z",
+			"modified": "2019-05-27T21:34:19.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "297828061",
+			"name": "Bug Eater - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/297828061/",
+			"sourceSHA256": "672f2c9dd89d749d3289b12288949379f8504e0b19a6cef314ff5120e6e84a29",
+			"shared": "2019-03-27T21:31:38.000Z",
+			"modified": "2019-05-28T04:29:22.000Z",
+			"providedCode": true,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "297831461",
+			"name": "Bug Eater",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/297831461/",
+			"sourceSHA256": "920560bc2108f9c4a19963ea63ccd00b3f375350f9c764d2d2032557c06ee976",
+			"shared": "2019-03-27T22:55:12.000Z",
+			"modified": "2019-05-28T04:29:16.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "297843021",
+			"name": "Cake Chaser - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/297843021/",
+			"sourceSHA256": "bedf392a8f2c28cfa000520b4b0bf8006d84711e68a5a032d85bbb40236a1551",
+			"shared": "2019-03-27T23:03:57.000Z",
+			"modified": "2019-05-28T04:43:38.000Z",
+			"providedCode": true,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "299085513",
+			"name": "Cake Chaser",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/299085513/",
+			"sourceSHA256": "32f36061c9954011f2ab1c6daedd6e6f7acde95537bff26c3682e1e70eb04e1f",
+			"shared": "2019-04-02T02:07:49.000Z",
+			"modified": "2022-03-09T15:07:31.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "299094220",
+			"name": "Spider Smash - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/299094220/",
+			"sourceSHA256": "5ea3f1bb3b7ff837c83caac743f736847e9e7ac7f7a050540d7cf2f272a79d14",
+			"shared": "2019-04-02T15:01:00.000Z",
+			"modified": "2021-11-29T20:57:30.000Z",
+			"providedCode": true,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "299272518",
+			"name": "Spider Smash",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/299272518/",
+			"sourceSHA256": "7b6a6f21b2075bf995a02052b7e9d4b525308eb8cdceb89a18c7cffc8fbad420",
+			"shared": "2019-04-02T15:10:40.000Z",
+			"modified": "2020-05-03T17:37:45.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "project"
+				},
+				{
+					"courseId": "scratch-level-1-bootcamp",
+					"role": "capstone-direction"
+				}
+			]
+		},
+		{
+			"id": "299311602",
+			"name": "Speed Click - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/299311602/",
+			"sourceSHA256": "285913b834ba5e91e9ba841a1ece80e7cf1cb1f18a51ce89b487a5f608e50ded",
+			"shared": "2019-04-02T17:33:02.000Z",
+			"modified": "2021-11-17T21:36:37.000Z",
+			"providedCode": true,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "reference"
+				},
+				{
+					"courseId": "scratch-level-2",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "299327014",
+			"name": "Speed Click",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/299327014/",
+			"sourceSHA256": "f7cd5f2fadfabbfc9df5b5e82dc180f75a896e5c3c1764e44b64a0aad4f34bdb",
+			"shared": "2019-04-02T17:38:37.000Z",
+			"modified": "2021-10-29T16:45:03.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "project"
+				},
+				{
+					"courseId": "scratch-level-2",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "300644693",
+			"name": "Dance Off - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/300644693/",
+			"sourceSHA256": "46e5a2a8f214f84563d22dacc9ca56dde5d09b3deeb524cc6fe5750a0e85600f",
+			"shared": "2019-04-08T16:03:44.000Z",
+			"modified": "2019-05-28T05:35:46.000Z",
+			"providedCode": true,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "reference"
+				},
+				{
+					"courseId": "scratch-level-2",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "301002220",
+			"name": "Dance Off",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/301002220/",
+			"sourceSHA256": "abe9ef5039d3edc38c34b5835512e8b9eb01bb628321a8caadde12dd20caff90",
+			"shared": "2019-04-08T16:27:36.000Z",
+			"modified": "2020-05-03T17:38:10.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "project"
+				},
+				{
+					"courseId": "scratch-level-2",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "302811491",
+			"name": "Bowl Fill - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/302811491/",
+			"sourceSHA256": "e0ba59af29d66726f5742c09f3ebbaacbf2b25de43660ff77854df822949cc95",
+			"shared": "2019-04-16T13:58:47.000Z",
+			"modified": "2019-09-09T21:13:46.000Z",
+			"providedCode": true,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "302948550",
+			"name": "Asteroid Dodge - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/302948550/",
+			"sourceSHA256": "fab2b479522139bbee1c3b298f611d92f5b6c622531fd06d3deffaa8197243f6",
+			"shared": "2019-04-16T14:46:28.000Z",
+			"modified": "2021-12-03T21:54:01.000Z",
+			"providedCode": true,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "reference"
+				},
+				{
+					"courseId": "scratch-level-2",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "303001451",
+			"name": "Asteroid Dodge",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/303001451/",
+			"sourceSHA256": "98b648a40d6b38004d32d356f0a8aaea6be83351e436a0ce1df3cfe8856d09e9",
+			"shared": "2019-04-16T17:16:42.000Z",
+			"modified": "2019-06-08T19:13:53.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "project"
+				},
+				{
+					"courseId": "scratch-level-2",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "303008513",
+			"name": "Bowl Fill",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/303008513/",
+			"sourceSHA256": "b0d98e8296e94d181f3a34e28d8d90a2b4b2cae9b5f38dca975d18234a8baacf",
+			"shared": "2019-04-16T17:34:49.000Z",
+			"modified": "2021-01-04T14:42:23.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "304003593",
+			"name": "Hungry Hippo",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/304003593/",
+			"sourceSHA256": "cd61dc36ed31866af8d55f0e197bc36bff787c1e2b0c871633d2e4f173babf5e",
+			"shared": "2019-04-23T20:07:51.000Z",
+			"modified": "2019-06-24T17:23:03.000Z",
+			"providedCode": true,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "304279087",
+			"name": "Magic Wand",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/304279087/",
+			"sourceSHA256": "c08644b1321c28b5944980a5a4010ef99e5b514dbd345b926ddb8ca896b70776",
+			"shared": "2019-04-23T21:19:20.000Z",
+			"modified": "2020-09-05T21:26:30.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "304279316",
+			"name": "Magic Wand - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/304279316/",
+			"sourceSHA256": "ca42f8d013d77396a27fc6022d582157979890b3c9b7222bd403c472c1b61005",
+			"shared": "2019-04-23T21:32:25.000Z",
+			"modified": "2020-09-05T21:26:04.000Z",
+			"providedCode": true,
+			"extensions": [
+				"music"
+			],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "304551665",
+			"name": "Hedgehog Race",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/304551665/",
+			"sourceSHA256": "1f929872ff525757ef0a8507a14caa28151687f90a00d809e8e88d590125034a",
+			"shared": "2019-04-27T00:28:46.000Z",
+			"modified": "2020-01-04T03:16:45.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "project"
+				},
+				{
+					"courseId": "scratch-level-2",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "305082197",
+			"name": "Hedgehog Race - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/305082197/",
+			"sourceSHA256": "d01e4837d36e434af2a70d8390c56bee42ccf973f4357c2becbf72201b2836a7",
+			"shared": "2019-04-27T00:36:17.000Z",
+			"modified": "2021-12-03T21:53:20.000Z",
+			"providedCode": true,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "reference"
+				},
+				{
+					"courseId": "scratch-level-2",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "306391834",
+			"name": "Square Inception",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/306391834/",
+			"sourceSHA256": "ea3e123b503f64487dddbef10011d82859b0037c2d105a915acde3ea96952605",
+			"shared": "2019-05-02T19:46:50.000Z",
+			"modified": "2019-06-02T18:03:47.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "306394145",
+			"name": "Square Inception - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/306394145/",
+			"sourceSHA256": "bc546cc8cd78dc6cfc10b1f0fc47f85e83f3693f96b86579a751120da702525c",
+			"shared": "2019-05-02T20:03:49.000Z",
+			"modified": "2019-11-09T18:12:13.000Z",
+			"providedCode": true,
+			"extensions": [
+				"pen"
+			],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "306689852",
+			"name": "Color Spotter - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/306689852/",
+			"sourceSHA256": "cd388a052f65ce887ab248314f844e55efe4345274e117b1a188b4fb195113ec",
+			"shared": "2019-05-07T17:16:06.000Z",
+			"modified": "2019-10-02T23:01:31.000Z",
+			"providedCode": true,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "306694840",
+			"name": "Color Spotter",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/306694840/",
+			"sourceSHA256": "6f3b0ba9780e5ee606d07157092ee8e3770b56bb4742d58fff051883cb62a3ca",
+			"shared": "2019-05-03T20:15:52.000Z",
+			"modified": "2019-06-02T18:33:13.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "307575111",
+			"name": "Jackson Pollock - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/307575111/",
+			"sourceSHA256": "d9ee110fecaf3e8952e71f0fdfa5506508b1913387192f3d1876462553b76369",
+			"shared": "2019-05-07T17:54:15.000Z",
+			"modified": "2020-03-28T13:58:45.000Z",
+			"providedCode": true,
+			"extensions": [
+				"pen"
+			],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "307580100",
+			"name": "Jackson Pollock",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/307580100/",
+			"sourceSHA256": "0be54cb95f5c2e368ef4cc3a9ae6f77394bbf6bf086bfbedc61702d844a550fe",
+			"shared": "2019-05-07T17:54:00.000Z",
+			"modified": "2019-06-02T19:12:09.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "307629921",
+			"name": "Rainy Day - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/307629921/",
+			"sourceSHA256": "987b4c743f22037d9dd4be9e4ada7046beb94a694ab965b74ee43ba4612a6d98",
+			"shared": "2019-05-07T20:51:57.000Z",
+			"modified": "2021-04-26T00:43:48.000Z",
+			"providedCode": true,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "307634451",
+			"name": "Rainy Day",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/307634451/",
+			"sourceSHA256": "9adcc01704f5e2da8140ffa5bde9cf729a270a3320b227c4505f9fc2d0dbc79a",
+			"shared": "2019-05-07T21:54:16.000Z",
+			"modified": "2021-04-26T00:43:42.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "307918456",
+			"name": "Pyramid - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/307918456/",
+			"sourceSHA256": "cab9a23768e257bb0a4795e88c947d5c970791cee905b685e5acb8d30dd027b1",
+			"shared": "2019-05-08T17:25:23.000Z",
+			"modified": "2019-11-09T18:25:33.000Z",
+			"providedCode": true,
+			"extensions": [
+				"pen"
+			],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "307922307",
+			"name": "Pyramid",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/307922307/",
+			"sourceSHA256": "dfe8b677e611837d48d25a5eec4f5af8b0b4ad263b9efe2b373f7f5cbf92cfb7",
+			"shared": "2019-05-08T17:26:03.000Z",
+			"modified": "2019-06-02T18:04:43.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "307934264",
+			"name": "Strength Tester - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/307934264/",
+			"sourceSHA256": "540793f2b9016dd14fbeb341be3ed7d87902c354fa9f4252e7a54d7bd1f937ba",
+			"shared": "2019-05-08T18:28:42.000Z",
+			"modified": "2021-01-20T02:46:51.000Z",
+			"providedCode": true,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "307992404",
+			"name": "Strength Tester",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/307992404/",
+			"sourceSHA256": "923da855b2e0674491804505974c2ce0a32417d979d437f8e4eef16d98e47d5a",
+			"shared": "2019-05-08T21:20:46.000Z",
+			"modified": "2021-01-20T02:46:53.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "308717171",
+			"name": "Security Bot - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/308717171/",
+			"sourceSHA256": "1c6ac2e1f0e0ee047f883c7294d89a8e1b30e8afc4ee218401e357a6f64ee6cc",
+			"shared": "2019-05-10T21:48:17.000Z",
+			"modified": "2020-01-17T18:29:44.000Z",
+			"providedCode": true,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "308722400",
+			"name": "Security Bot",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/308722400/",
+			"sourceSHA256": "31cfae0ec0b0d799fff7cd3f0fc87f4c60dac768154fd6fea7e8cab22b8a4bcb",
+			"shared": "2019-05-10T21:48:47.000Z",
+			"modified": "2020-01-17T18:30:48.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "308824008",
+			"name": "Bucket List - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/308824008/",
+			"sourceSHA256": "5ef06592b8a73fa4ee4c254a0ea25532edd4a50932a71917d90be75870ece256",
+			"shared": "2019-05-11T15:19:43.000Z",
+			"modified": "2019-10-23T16:56:53.000Z",
+			"providedCode": true,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "308826506",
+			"name": "Bucket List",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/308826506/",
+			"sourceSHA256": "eb1832b784a24bfd7c92410b38b1795cfe2479cce2d1d2ab8487d7d9f276610d",
+			"shared": "2019-05-11T15:30:18.000Z",
+			"modified": "2019-06-08T15:46:09.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "309287208",
+			"name": "Talent Show 2 - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/309287208/",
+			"sourceSHA256": "db8a32ab33343cf5e1166f6ee675e9a9abb7afbc7d926248aba4dc5541bdbd2c",
+			"shared": "2019-05-13T20:28:16.000Z",
+			"modified": "2020-12-28T00:23:08.000Z",
+			"providedCode": true,
+			"extensions": [
+				"music"
+			],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "309293557",
+			"name": "Talent Show 2",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/309293557/",
+			"sourceSHA256": "b5eddbde26a2e4214542c197290ac3cb26dc03781043938d892ccb222d1a1069",
+			"shared": "2019-05-13T20:27:35.000Z",
+			"modified": "2020-12-28T00:23:12.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "309653930",
+			"name": "Music Memory - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/309653930/",
+			"sourceSHA256": "0c4f776f6c4668681e7c3c6856880019df34091c2f4324bbd387eeaaeb96c104",
+			"shared": "2019-05-14T21:36:12.000Z",
+			"modified": "2021-02-13T00:54:27.000Z",
+			"providedCode": true,
+			"extensions": [
+				"music"
+			],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "309658040",
+			"name": "Music Memory",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/309658040/",
+			"sourceSHA256": "5b6a9e2103da53d12598c0e7d6db9a14d86b66885686b461cade1eb66fb506a2",
+			"shared": "2019-05-14T21:31:45.000Z",
+			"modified": "2021-02-13T00:54:23.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "309661591",
+			"name": "Treasure Cave - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/309661591/",
+			"sourceSHA256": "db895ab4b9b7c147c895d8e0ea3748ebe00d81cc0e3f768ed9e3a25b3e2311a6",
+			"shared": "2019-06-05T18:55:24.000Z",
+			"modified": "2020-06-19T15:20:06.000Z",
+			"providedCode": true,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "313084455",
+			"name": "Bouncy Ball with Pen",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/313084455/",
+			"sourceSHA256": "5c06d0701d03e7183853d1fd9ae88a8f3516e89c2765a2ba1c08c094ba55c1eb",
+			"shared": "2019-05-26T18:33:47.000Z",
+			"modified": "2019-05-26T18:45:24.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "315051160",
+			"name": "List Practice - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/315051160/",
+			"sourceSHA256": "044883bf5f9904281cd6f3d8823068c0fb0a2e620860a4d5925a8f9e2600474b",
+			"shared": "2019-06-04T17:50:51.000Z",
+			"modified": "2019-06-08T15:52:44.000Z",
+			"providedCode": true,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "315090026",
+			"name": "List Practice",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/315090026/",
+			"sourceSHA256": "42241d71b273a74c83e4026be0730891f6e7034adc86d75982c02abb927bdbd6",
+			"shared": "2019-06-04T20:23:41.000Z",
+			"modified": "2021-07-29T16:27:20.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "315336651",
+			"name": "Treasure Cave",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/315336651/",
+			"sourceSHA256": "7895f5fc899543a186c19873e904313d891de60aa5de82a153f337211b50b011",
+			"shared": "2019-06-08T20:25:30.000Z",
+			"modified": "2020-01-04T03:34:54.000Z",
+			"providedCode": true,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "315770711",
+			"name": "My First Functions - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/315770711/",
+			"sourceSHA256": "f62af591dcd7c2bf51b9dedba199098507201ca70ca85a0fb48e674d3c885964",
+			"shared": "2019-06-07T17:13:09.000Z",
+			"modified": "2019-06-08T16:27:17.000Z",
+			"providedCode": true,
+			"extensions": [
+				"pen"
+			],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "315773207",
+			"name": "My First Functions",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/315773207/",
+			"sourceSHA256": "4d9dfb4a77c0323d84286c5a5397a2fbdf884a4045d45fd8f6ff9f4c2657b6a6",
+			"shared": "2019-06-07T17:16:05.000Z",
+			"modified": "2019-06-08T16:27:08.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "315901981",
+			"name": "Fish Food",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/315901981/",
+			"sourceSHA256": "0e21d3b2c93791c1cb0fdbb58f712bd099bb782edbddd7502f39aaad0546e1a1",
+			"shared": "2019-06-08T19:20:35.000Z",
+			"modified": "2019-06-08T19:21:15.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "326209241",
+			"name": "Camouflaging Octopus - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/326209241/",
+			"sourceSHA256": "49e0cbcb6d21f8396323bb0d2cdc224e5158059a99e82e5a93fe9c4dfeb2e526",
+			"shared": "2019-11-29T04:18:43.000Z",
+			"modified": "2019-11-29T04:18:43.000Z",
+			"providedCode": true,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "326209430",
+			"name": "Camouflaging Octopus",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/326209430/",
+			"sourceSHA256": "3db2d0cd3f92177cc48da75f98b17da69312006c09850fd0c50f8287e950130f",
+			"shared": "2019-11-29T04:18:37.000Z",
+			"modified": "2019-11-29T04:27:14.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "326211724",
+			"name": "Playing Catch - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/326211724/",
+			"sourceSHA256": "00ff57e3fc5159aa7fb4b8284b799c3509c085c46438f22fd23665003b558d5a",
+			"shared": "2019-11-29T04:22:31.000Z",
+			"modified": "2019-11-29T04:25:15.000Z",
+			"providedCode": true,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "326211768",
+			"name": "Playing Catch",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/326211768/",
+			"sourceSHA256": "d56483872d950120ab83aeeb0b560828f006ca8d6a4334e7bbdb721413af2630",
+			"shared": "2019-11-29T04:22:32.000Z",
+			"modified": "2019-11-30T16:30:38.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "327607840",
+			"name": "Lunch Money - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/327607840/",
+			"sourceSHA256": "ae1fe59525a82f4368ac188208c9a5b29a97e02e2600630793880220a94c9efc",
+			"shared": "2019-11-30T15:54:46.000Z",
+			"modified": "2020-11-09T16:23:11.000Z",
+			"providedCode": true,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "327607937",
+			"name": "Lunch Money",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/327607937/",
+			"sourceSHA256": "ab051ab94d6be698d58cb896339feac13144600f742154a79b50ec119a5658c3",
+			"shared": "2019-11-30T15:54:44.000Z",
+			"modified": "2020-11-09T16:23:06.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "327610727",
+			"name": "Hungry Crab - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/327610727/",
+			"sourceSHA256": "7f891a86f1731260d455072bf2e057892c3c62f2701d98f22de76dcc46e4bedb",
+			"shared": "2019-11-30T15:47:28.000Z",
+			"modified": "2021-11-24T20:20:40.000Z",
+			"providedCode": true,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "327610777",
+			"name": "Hungry Crab",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/327610777/",
+			"sourceSHA256": "9a6223e86e9f7d42e798811910643119daae72dc9ed08a27d142e819db40f17a",
+			"shared": "2019-11-30T15:47:26.000Z",
+			"modified": "2019-11-30T16:33:26.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "project"
+				},
+				{
+					"courseId": "scratch-level-1-bootcamp",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "327634746",
+			"name": "Counting Steps - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/327634746/",
+			"sourceSHA256": "0a9400a714fe56f169d08951699e455bc729fa3800bc8b8cf789bf75ec4a732e",
+			"shared": "2019-11-30T15:44:54.000Z",
+			"modified": "2019-11-30T15:45:43.000Z",
+			"providedCode": true,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "327635693",
+			"name": "Counting Steps",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/327635693/",
+			"sourceSHA256": "6bea013f270de1dc6aaf60c91b25f01a467fd035d353045c26e3537edb6e46d7",
+			"shared": "2019-11-30T15:45:38.000Z",
+			"modified": "2019-11-30T15:45:38.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "project"
+				},
+				{
+					"courseId": "scratch-level-1-bootcamp",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "328308418",
+			"name": "Space Cadets - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/328308418/",
+			"sourceSHA256": "6c1d61f4114805f4e093582bbcd44c476c585a92b062a8aacbb9463e468df2ff",
+			"shared": "2019-11-27T18:34:25.000Z",
+			"modified": "2020-01-10T18:59:05.000Z",
+			"providedCode": true,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "328309254",
+			"name": "Magical Quest - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/328309254/",
+			"sourceSHA256": "c3d9ecfd0ead5c892ccc36bdbe27275fa8835a84ac58280c8c2a80505a49c75a",
+			"shared": "2019-11-27T18:40:00.000Z",
+			"modified": "2019-11-30T16:14:12.000Z",
+			"providedCode": true,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "328309551",
+			"name": "Animal Crossing",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/328309551/",
+			"sourceSHA256": "43deccff0b2f23cead8dc428f19bf1ba8e97a9a143cbe50dc26a0c78c67249aa",
+			"shared": "2019-11-27T18:32:26.000Z",
+			"modified": "2019-11-30T15:10:06.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "328310531",
+			"name": "Animal Crossing - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/328310531/",
+			"sourceSHA256": "7d1bf320d4d3e540d86b7bdb58231950da748af99f6698981a71156ffbc1bdbc",
+			"shared": "2019-11-27T18:30:20.000Z",
+			"modified": "2020-03-30T15:54:01.000Z",
+			"providedCode": true,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "328310783",
+			"name": "Space Cadets",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/328310783/",
+			"sourceSHA256": "4a5764a170a40b15a6a4c739f73535457d08f062cf718430fc4ba189c31e8fa7",
+			"shared": "2019-11-27T18:36:29.000Z",
+			"modified": "2020-01-10T18:58:41.000Z",
+			"providedCode": true,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "328312475",
+			"name": "Cartoon Crash - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/328312475/",
+			"sourceSHA256": "31d3293a2d4a788d4252025c73f0e0fe93fbfea6061524ee34ceedac8cc7fb35",
+			"shared": "2019-11-27T18:42:27.000Z",
+			"modified": "2019-11-30T16:28:15.000Z",
+			"providedCode": true,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "329283944",
+			"name": "Quadrant Practice - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/329283944/",
+			"sourceSHA256": "bd274b23b2f91637656e78a1a258e790a3840e4d27e592d48e249a6140a2cd38",
+			"shared": "2019-11-30T15:32:48.000Z",
+			"modified": "2019-11-30T15:37:28.000Z",
+			"providedCode": true,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "329289426",
+			"name": "Quadrant Practice",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/329289426/",
+			"sourceSHA256": "5856ae63e3ae3ddd68d3f25dbf2739fb3b3a78f24d25de9a361e221d36ce47b4",
+			"shared": "2019-11-30T15:32:46.000Z",
+			"modified": "2019-11-30T15:37:26.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "329290359",
+			"name": "Coordinate Drawings - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/329290359/",
+			"sourceSHA256": "2c7da2a020470174b288f5b897c769cba65db01ece88c3a8957e85704f87a39f",
+			"shared": "2019-11-30T15:39:43.000Z",
+			"modified": "2019-11-30T15:39:43.000Z",
+			"providedCode": true,
+			"extensions": [
+				"pen"
+			],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "329294838",
+			"name": "Coordinate Drawings",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/329294838/",
+			"sourceSHA256": "23bc6800ed54046ec6950a882a63419af8afea611c74db194129d2aeaac3b49f",
+			"shared": "2019-11-30T15:39:39.000Z",
+			"modified": "2019-11-30T15:39:39.000Z",
+			"providedCode": true,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "330301165",
+			"name": "Magical Quest",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/330301165/",
+			"sourceSHA256": "656993938c446becfcf8d7e2a5f3a6c58f96acbeb4601f46d4d36dca24e7bc76",
+			"shared": "2019-11-27T18:41:24.000Z",
+			"modified": "2019-11-30T16:14:09.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "330302209",
+			"name": "Cartoon Crash",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/330302209/",
+			"sourceSHA256": "27b6c5851a8879631d9c834f0bf0cda59a02dc92f6614baf557af919ed81dbc4",
+			"shared": "2019-11-27T18:44:56.000Z",
+			"modified": "2020-08-20T19:17:44.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "330429172",
+			"name": "Shapify - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/330429172/",
+			"sourceSHA256": "9d67c86709380436e7772b8a30d2a1a22b2e87bfcc31cacc7400e9889723a610",
+			"shared": "2019-11-27T18:15:59.000Z",
+			"modified": "2019-11-29T04:14:42.000Z",
+			"providedCode": true,
+			"extensions": [
+				"pen"
+			],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "330468686",
+			"name": "Shapify",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/330468686/",
+			"sourceSHA256": "05d56d1d1173b748c8bf8dabbaa838d68b439d15a2b1ac66ebc4e76fccad1223",
+			"shared": "2019-11-27T18:16:18.000Z",
+			"modified": "2021-01-11T02:02:16.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "330724703",
+			"name": "Save the Wizard - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/330724703/",
+			"sourceSHA256": "753b2968182289f118d5561fee8c9729ea8114c792d6229abd2b9b7d56a8fbeb",
+			"shared": "2019-11-30T16:39:57.000Z",
+			"modified": "2020-10-07T05:21:47.000Z",
+			"providedCode": true,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "332395747",
+			"name": "Save the Wizard",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/332395747/",
+			"sourceSHA256": "a5a3cceb8f0ce92d74cdbf5a6673098a97976c50e6dd5e89bd86f2611bb7abfe",
+			"shared": "2019-11-30T16:39:57.000Z",
+			"modified": "2020-11-01T23:06:44.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "332459692",
+			"name": "Blast Off Rocketship - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/332459692/",
+			"sourceSHA256": "0dca5217ef656ee28947af10a90be1127b74c79319f93de961834e58791f60aa",
+			"shared": "2019-11-29T04:25:51.000Z",
+			"modified": "2019-11-30T16:31:10.000Z",
+			"providedCode": true,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "332463981",
+			"name": "Blast Off Rocketship",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/332463981/",
+			"sourceSHA256": "ad010a3d84433e4171e945f3d5650ed57d87e42ad5276282ec95aba447f52201",
+			"shared": "2019-11-29T04:25:50.000Z",
+			"modified": "2019-11-30T16:31:03.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "332464646",
+			"name": "Baby Fish - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/332464646/",
+			"sourceSHA256": "fc0e57afa603fefd7fe4a19c90c12adf1ead6242381155ee581d920d79a16bd7",
+			"shared": "2019-11-29T04:29:43.000Z",
+			"modified": "2019-11-29T04:29:43.000Z",
+			"providedCode": true,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "332468797",
+			"name": "Baby Fish",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/332468797/",
+			"sourceSHA256": "fcea3f543f896bb5fe2e54d05f58bc8a2f4b769cd5db45147e8547e8a9584bd0",
+			"shared": "2019-11-29T04:29:33.000Z",
+			"modified": "2019-11-29T04:30:16.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "334067890",
+			"name": "Grid - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/334067890/",
+			"sourceSHA256": "ae662c0beea13e7eab9d934341b4d1714a8a605572dd3f35959b9b5671a4ba72",
+			"shared": "2019-11-30T17:36:20.000Z",
+			"modified": "2019-11-30T17:36:20.000Z",
+			"providedCode": true,
+			"extensions": [
+				"pen"
+			],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "334073152",
+			"name": "Grid",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/334073152/",
+			"sourceSHA256": "d0e3629c8d409b8fda3a0523b90ab02661d963ba463b6d9bb255de2beb64dc22",
+			"shared": "2019-11-30T17:36:19.000Z",
+			"modified": "2019-11-30T17:36:19.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "334073245",
+			"name": "Playing Baseball - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/334073245/",
+			"sourceSHA256": "b773ef775f9808364294181d85792544d8cc17ff25103566f5c93f0c2b4ab117",
+			"shared": "2019-11-30T17:32:15.000Z",
+			"modified": "2019-11-30T17:32:53.000Z",
+			"providedCode": true,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "334075920",
+			"name": "Playing Baseball",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/334075920/",
+			"sourceSHA256": "d2b17d312f57e3b8002fc1c2857592f097929df720a8b965d1985596093679bb",
+			"shared": "2019-11-30T17:32:13.000Z",
+			"modified": "2019-11-30T17:32:40.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "335790153",
+			"name": "Baby Chick - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/335790153/",
+			"sourceSHA256": "e2ac152a6318af3b2d439ea2cca91ec2814e19ad226db5197a17c37152422b3d",
+			"shared": "2019-11-30T17:48:32.000Z",
+			"modified": "2019-11-30T17:55:28.000Z",
+			"providedCode": true,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "335794156",
+			"name": "Baby Chick",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/335794156/",
+			"sourceSHA256": "c367f392b41c15415b29f4eea55d39c27440920852339af4da776dd203c4f1b2",
+			"shared": "2019-11-30T17:48:30.000Z",
+			"modified": "2019-11-30T17:55:53.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "335794365",
+			"name": "Save the Butterfly - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/335794365/",
+			"sourceSHA256": "db909a6403e6d9127ff71b5d4246e47fde124ab363432d93678876246a564533",
+			"shared": "2019-11-30T17:57:36.000Z",
+			"modified": "2019-11-30T17:59:45.000Z",
+			"providedCode": true,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "335798048",
+			"name": "Save the Butterfly",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/335798048/",
+			"sourceSHA256": "60e69590ae8559fed1f487dcadb3847e15858c393bcf5dda5882c98950258b39",
+			"shared": "2019-11-30T17:57:35.000Z",
+			"modified": "2019-11-30T17:58:18.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "335807180",
+			"name": "Rainbow Flower - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/335807180/",
+			"sourceSHA256": "2203067efcdda7093a077273cc6a5863421711248f09f402919d760a2d855dff",
+			"shared": "2019-11-30T17:41:28.000Z",
+			"modified": "2019-11-30T17:45:14.000Z",
+			"providedCode": true,
+			"extensions": [
+				"pen"
+			],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "335808333",
+			"name": "Rainbow Flower",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/335808333/",
+			"sourceSHA256": "f897e9bfb9d6ea84b4f9e68889a887e61f25742c04996a2016bdf62dfee36032",
+			"shared": "2019-11-30T17:41:26.000Z",
+			"modified": "2019-11-30T17:45:11.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "336915372",
+			"name": "Fruity Fest",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/336915372/",
+			"sourceSHA256": "a40e3460dd34b8cf15213ae4b916b8d6bcb8db78c191d63211d9825edea3d01c",
+			"shared": "2019-11-27T18:48:49.000Z",
+			"modified": "2019-11-30T18:11:42.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "336928836",
+			"name": "Fruity Fest - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/336928836/",
+			"sourceSHA256": "84b4ab7453195748149e09bc66bba3fd503872fe7313f9e25ff8a5169087db87",
+			"shared": "2019-11-27T18:50:20.000Z",
+			"modified": "2019-11-30T18:11:49.000Z",
+			"providedCode": true,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "337817856",
+			"name": "Multiple Magic - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/337817856/",
+			"sourceSHA256": "5c6b8a3958ebe541dac8b104c23016582e58aec4cd424b467a742194f4d6eea2",
+			"shared": "2019-11-30T18:46:51.000Z",
+			"modified": "2019-11-30T18:49:56.000Z",
+			"providedCode": true,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "337820507",
+			"name": "Multiple Magic",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/337820507/",
+			"sourceSHA256": "612bf94851ef24884e446e5114c3386943ec4317101f04c0c88f8766fdf9c823",
+			"shared": "2019-11-30T18:46:52.000Z",
+			"modified": "2020-09-09T03:10:59.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "338501835",
+			"name": "Stamping with Dotty - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/338501835/",
+			"sourceSHA256": "4f201be4ea94b97025e09eaaafacc1c162e21b526f4c13d2add4cb9fd9c95c56",
+			"shared": "2019-11-30T18:37:21.000Z",
+			"modified": "2019-11-30T18:37:21.000Z",
+			"providedCode": true,
+			"extensions": [
+				"pen"
+			],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "338505545",
+			"name": "Times Tables - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/338505545/",
+			"sourceSHA256": "96bf86788683b0d543cb9d7498d05f0e49e7afea8009cbfab0c5489881a491ba",
+			"shared": "2019-11-30T18:32:43.000Z",
+			"modified": "2021-05-10T03:00:47.000Z",
+			"providedCode": true,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "338508588",
+			"name": "Times Tables",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/338508588/",
+			"sourceSHA256": "f8985928937ce9a9788836483009f6cd7181d9e9b0373054d556e72369d09820",
+			"shared": "2019-11-30T18:32:41.000Z",
+			"modified": "2019-11-30T18:34:26.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "338824789",
+			"name": "Crazy Country",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/338824789/",
+			"sourceSHA256": "31e7ec6a8cf729c20014b0c7d667df736d3cabb554ef1ea4a7a0439d5f6543b1",
+			"shared": "2019-11-27T18:51:48.000Z",
+			"modified": "2021-03-12T03:35:22.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "338828947",
+			"name": "Crazy Country - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/338828947/",
+			"sourceSHA256": "9213e72e321623e6ef4abd855b35cf1ccc632ffa74e57edd444a83c76cfb379a",
+			"shared": "2019-11-27T18:51:25.000Z",
+			"modified": "2021-03-12T03:35:25.000Z",
+			"providedCode": true,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "338829500",
+			"name": "Beary Spelly",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/338829500/",
+			"sourceSHA256": "f9d77261ec0ae1208c1b43b906bb784bfd60efc42b8d5fbb67a9fbb6c281b41a",
+			"shared": "2019-11-30T18:30:11.000Z",
+			"modified": "2020-05-09T19:29:58.000Z",
+			"providedCode": true,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "338832976",
+			"name": "Beary Spelly Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/338832976/",
+			"sourceSHA256": "6ae8f43d783a42ebbedc4bfe9903cabf5378070cf47936de76b0c2201791d76c",
+			"shared": "2019-11-27T18:54:47.000Z",
+			"modified": "2020-05-09T19:30:00.000Z",
+			"providedCode": true,
+			"extensions": [
+				"text2speech"
+			],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "339602908",
+			"name": "Extra Functions - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/339602908/",
+			"sourceSHA256": "0f89ff198bca30e1c1a7946d3378b06b117347c21f33ca0269acfc754097040a",
+			"shared": "2019-11-30T19:04:37.000Z",
+			"modified": "2020-12-07T04:53:31.000Z",
+			"providedCode": true,
+			"extensions": [
+				"pen"
+			],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "339731727",
+			"name": "Rock Paper Scissors - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/339731727/",
+			"sourceSHA256": "6df39369889107219269ab9497be3e8cc7671d014a122f7598026a0a9ed63afe",
+			"shared": "2019-11-30T19:06:55.000Z",
+			"modified": "2019-11-30T19:06:55.000Z",
+			"providedCode": true,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "339918479",
+			"name": "Extra Functions",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/339918479/",
+			"sourceSHA256": "5479e8d289a615f1d416e8ce72358e02e99b3151e353a126fc2483a902458ab4",
+			"shared": "2019-11-30T19:04:48.000Z",
+			"modified": "2020-12-07T04:54:13.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "339972570",
+			"name": "Rock Paper Scissors",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/339972570/",
+			"sourceSHA256": "445757d2e4c63a7aff89dbf8a0b224a96acf7b745acdd605c48b0ef4daf346e2",
+			"shared": "2019-11-30T19:07:53.000Z",
+			"modified": "2019-11-30T19:07:53.000Z",
+			"providedCode": true,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "340691786",
+			"name": "Wheel of Fortune",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/340691786/",
+			"sourceSHA256": "be908a2259a3a2c2b53613e0e292dca30f8c018bce956e8ab9beecedfcd29f7c",
+			"shared": "2019-11-27T18:56:04.000Z",
+			"modified": "2021-03-11T05:46:46.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "341759115",
+			"name": "Stamping with Dotty",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/341759115/",
+			"sourceSHA256": "2dc80204d8839e8ece0d2bd0ea9a868f17e75e535d39cdadebf7ae64eeb2d37a",
+			"shared": "2019-11-30T18:37:22.000Z",
+			"modified": "2019-11-30T18:37:22.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "341945558",
+			"name": "GM Check-In #1 - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/341945558/",
+			"sourceSHA256": "323190e2b8efab3293d996ef98cb919fcb44bf1ea9e8e504d7ad416f7fe1e592",
+			"shared": "2020-04-24T15:18:27.000Z",
+			"modified": "2020-04-24T15:18:27.000Z",
+			"providedCode": true,
+			"extensions": [
+				"pen"
+			],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "342643080",
+			"name": "Wheel of Fortune - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/342643080/",
+			"sourceSHA256": "4245543d92e23fefcc2441a6db3b154955339765d553df2ae92e71da65be947d",
+			"shared": "2019-11-27T18:56:01.000Z",
+			"modified": "2021-03-11T05:46:29.000Z",
+			"providedCode": true,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "342645999",
+			"name": "GM Check-In #2 - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/342645999/",
+			"sourceSHA256": "db16122f28bca6bb9e45aedb748f6bc6e85aa403535cff6eaacdfa4c142bfca2",
+			"shared": "2019-11-27T18:56:43.000Z",
+			"modified": "2020-04-24T15:46:10.000Z",
+			"providedCode": true,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "343348430",
+			"name": "Platformer Pal - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/343348430/",
+			"sourceSHA256": "04f55423bae1c7892f7507ea1cdcdb2152a4f43b524c5b527ba325894c3873a6",
+			"shared": "2019-11-30T19:12:12.000Z",
+			"modified": "2020-09-09T11:46:38.000Z",
+			"providedCode": true,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "343651574",
+			"name": "Platformer Pal",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/343651574/",
+			"sourceSHA256": "96cc5d74dd9d78755e4bb194dfbb41c0eed3e1f5683b40a6e1ad81f2fb29a246",
+			"shared": "2019-11-30T19:12:11.000Z",
+			"modified": "2020-01-13T05:25:55.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "346953687",
+			"name": "Fruit Ninja",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/346953687/",
+			"sourceSHA256": "d83ae7e63aa2e4fd77d3bc8ca7e341cc446fc0743790b20ff18d450876f4a4fd",
+			"shared": "2019-11-30T19:22:57.000Z",
+			"modified": "2020-05-17T22:23:19.000Z",
+			"providedCode": true,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "348994271",
+			"name": "Fruit Ninja - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/348994271/",
+			"sourceSHA256": "233ab4713e3a9355546c7d389f8382ff99620a2733bddfb3a82e247305f3bf56",
+			"shared": "2019-11-30T19:23:03.000Z",
+			"modified": "2020-05-17T22:23:23.000Z",
+			"providedCode": true,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "357452924",
+			"name": "Spelling Bee Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/357452924/",
+			"sourceSHA256": "7043c868dad57cc6aa66c297a037c60a2a0bd21e8569031025b25df3647adc58",
+			"shared": "2020-01-12T22:44:22.000Z",
+			"modified": "2020-08-06T16:53:43.000Z",
+			"providedCode": true,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "357452950",
+			"name": "Spelling Bee",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/357452950/",
+			"sourceSHA256": "b0eee4fbc2c6fb9f2360362212c2f4d4fc13e56a8339cb5de193bb747b5f39a1",
+			"shared": "2020-01-12T22:37:34.000Z",
+			"modified": "2020-01-12T22:45:43.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "357453067",
+			"name": "Calculator Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/357453067/",
+			"sourceSHA256": "5082b9286dbca0faaf980eed9e45237da27faa51298c7c44a38b8f97bec01fd5",
+			"shared": "2020-01-12T22:47:02.000Z",
+			"modified": "2020-01-12T22:48:19.000Z",
+			"providedCode": true,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "357453092",
+			"name": "Calculator",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/357453092/",
+			"sourceSHA256": "bd73a37412bb1f4a391a4731b47fb575e163c26c701027177737771f95fd8e04",
+			"shared": "2020-01-12T22:47:03.000Z",
+			"modified": "2020-01-12T22:47:40.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "357453140",
+			"name": "Fizzbuzz Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/357453140/",
+			"sourceSHA256": "d7a3a7453796b7e41a2fc901bcf8fb18b4a9805b6289441987bddee14a6345ff",
+			"shared": "2020-01-12T22:49:58.000Z",
+			"modified": "2020-01-12T22:50:16.000Z",
+			"providedCode": true,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "357453182",
+			"name": "Fizzbuzz",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/357453182/",
+			"sourceSHA256": "2e8e0008338e3a2656e3bad969ff6ed47ef8f7859e38e5b4bae57701f247bc68",
+			"shared": "2020-01-12T22:49:47.000Z",
+			"modified": "2020-01-12T22:49:55.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "357453262",
+			"name": "Fish Food Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/357453262/",
+			"sourceSHA256": "c4ca40da41473c6045be3b56a84e56800a57c110858fe0d6b76064d9d0fc8266",
+			"shared": "2020-01-12T22:52:41.000Z",
+			"modified": "2020-01-12T22:52:41.000Z",
+			"providedCode": true,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "386368696",
+			"name": "GM Check-In #1 (Additional Practice Project) - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/386368696/",
+			"sourceSHA256": "44efef00bb893d1ea3cf1123f134dcef89121c9cbb781497993e18068a4521d1",
+			"shared": "2020-04-18T22:58:05.000Z",
+			"modified": "2020-07-15T00:03:06.000Z",
+			"providedCode": true,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "386376803",
+			"name": "GM Check-In #2 (Additional Practice Project) - Solution",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/386376803/",
+			"sourceSHA256": "1cd19229539ced23f5a5df8e487346fd68db69a9567454bd0f5435a87789a0ca",
+			"shared": "2020-04-18T22:58:39.000Z",
+			"modified": "2020-04-18T23:00:48.000Z",
+			"providedCode": true,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "reference"
+				}
+			]
+		},
+		{
+			"id": "386649746",
+			"name": "GM Check-In #1 (Additional Practice Project)",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/386649746/",
+			"sourceSHA256": "bd8ad967cd16cf5795f8ab0d53d32fb8ec6a5d35888a61f970cd6a352e3748db",
+			"shared": "2020-04-18T22:57:52.000Z",
+			"modified": "2020-08-07T16:08:55.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "386649865",
+			"name": "GM Check-In #2 (Additional Practice Project)",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/386649865/",
+			"sourceSHA256": "b188e27f33230bd86659f7650d411b9f019305ec1a6579d0fd97261c4369b222",
+			"shared": "2020-04-18T22:59:12.000Z",
+			"modified": "2020-04-24T15:47:32.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-2",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "592006491",
+			"name": "Dragonfly Events Bootcamp",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/592006491/",
+			"sourceSHA256": "c9dc0ec66b47df6cebc942aaf97a559138309a3b20e8de1c83227b64361cf9cd",
+			"shared": "2021-10-29T16:31:18.000Z",
+			"modified": "2021-11-03T21:14:24.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1-bootcamp",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "592008620",
+			"name": "Beetle Artist Bootcamp",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/592008620/",
+			"sourceSHA256": "c75af913a4066c6eee722d6d4b02ffb9abcdaddb77446e004088cee987849b2c",
+			"shared": "2021-10-29T16:31:02.000Z",
+			"modified": "2021-11-03T21:18:03.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1-bootcamp",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "592014695",
+			"name": "Elephant Effects Bootcamp",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/592014695/",
+			"sourceSHA256": "80dd2938cac5009156b03d8d0af415fb034102d03ab53efbb0002a16d5350ed7",
+			"shared": "2021-10-29T16:37:11.000Z",
+			"modified": "2021-10-29T16:37:11.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1-bootcamp",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "592019210",
+			"name": "Speed Click Bootcamp",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/592019210/",
+			"sourceSHA256": "771e33f9b759c4509ef7f8a4c4ad63ec0f6b7fdbdf1083dd2e8224d74703e42d",
+			"shared": "2021-10-29T16:52:11.000Z",
+			"modified": "2021-10-29T16:52:11.000Z",
+			"providedCode": true,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1-bootcamp",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "601699148",
+			"name": "Drawing Mouse (Bootcamp)",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/601699148/",
+			"sourceSHA256": "9feeedbdb5d2b6616ef13786614ab774258be9cdc115aea4a0f8805c34cb37d2",
+			"shared": "2021-11-15T19:52:26.000Z",
+			"modified": "2021-11-15T19:54:08.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1-bootcamp",
+					"role": "project"
+				}
+			]
+		},
+		{
+			"id": "608768681",
+			"name": "Hungry Shark (Bootcamp)",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/608768681/",
+			"sourceSHA256": "4a7560987b415b499ae5c20c731398e9ae9c570ee2e81a4320cc761200a37216",
+			"shared": "2021-11-29T20:57:40.000Z",
+			"modified": "2021-11-29T20:57:40.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1-bootcamp",
+					"role": "capstone-direction"
+				}
+			]
+		},
+		{
+			"id": "608770708",
+			"name": "Save the Princess (Bootcamp)",
+			"author": "JuniLearningScratch",
+			"url": "https://scratch.mit.edu/projects/608770708/",
+			"sourceSHA256": "5149adb648b73b120a7774ae5b6f10f164dece7f71a79f0ffe467ca83459370e",
+			"shared": "2021-11-29T21:02:27.000Z",
+			"modified": "2021-11-29T21:02:27.000Z",
+			"providedCode": false,
+			"extensions": [],
+			"bindings": [
+				{
+					"courseId": "scratch-level-1-bootcamp",
+					"role": "capstone-direction"
+				}
+			]
+		}
+	]
+}
