@@ -240,13 +240,16 @@ used here, start a new paragraph when the speaker changes.
 >
 > "I thought I could fix it before anyone noticed."
 
-The question mark belongs to the spoken question; the following tag begins with
-lowercase asked. Mina's action is a separate sentence before her speech. Her
+The question mark belongs to the spoken question. Bo stays capitalized because
+it is a name. Mina's action is a separate sentence before her speech. Her
 first answer avoids admitting the jam, so the exchange carries subtext without
 the narrator saying "she was evasive." The final line changes what Bo knows.
 
-"I touched it," she smiled. uses a facial action as a speaking tag. In this
-convention, write "I touched it." She smiled. when the smile is a separate action.
+A facial action does not act as a speaking tag. Compare these versions:
+
+- Tag error: "I touched it," she smiled.
+- Separate action: "I touched it." She smiled.
+
 Choose beats that matter; adding one to every line can slow the exchange. Check
 your own scene for speaker clarity, useful changes and speech that fits each voice.
 `.trim(),
