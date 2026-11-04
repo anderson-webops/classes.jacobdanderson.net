@@ -422,6 +422,7 @@ Challenge: Add more sprites to the game and have the ball pass between them.`,
 			curriculum: [
 				{
 					title: "Conditionals: if/then/else",
+					contentKind: "reading",
 					content: `The "if … then … else" block allows two possible outcomes. If the condition is true, Scratch runs the first branch; otherwise, it runs the else branch. This structure is useful for choices such as correct versus incorrect, win versus lose, touching versus not touching, or enough points versus not enough points.${
 						dinoCombinedColorGuide
 					}`,

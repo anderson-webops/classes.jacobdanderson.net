@@ -59,6 +59,7 @@ describe("Scratch conditional project support", () => {
 			const branches = advanced.curriculum.find(item =>
 				item.title.includes("Conditionals: if/then/else")
 			)!;
+			expect(isLessonLearningItem(branches)).toBe(true);
 			for (const requirement of [
 				"/course-assets/references/scratch-combined-condition.svg",
 				"exactly one result per key press",
