@@ -13,14 +13,14 @@ export async function checkScratchEducationalQuiz(page, base, files, loaded, ope
 	const snapshot = () => frame.evaluate(() => {
 		const targets = window.__courseTestVm.runtime.targets;
 		return {
-			values: Object.fromEntries(Object.entries(targets.find(t => t.isStage).variables).map(([id, variable]) => [id, variable.value])),
+			values: Object.fromEntries(Object.entries(targets.find(t => t.isStage).variables).map(([id, variable]) => [id, ["score", "quizState", "question", "num1", "num2"].includes(id) ? Number(variable.value) : variable.value])),
 			scene: targets.find(t => t.isStage).currentCostume,
 			sprites: Object.fromEntries(targets.filter(t => !t.isStage).map(t => [t.sprite.name, t.visible]))
 		};
 	});
 	const waitValues = values => frame.waitForFunction((values) => {
 		const stage = window.__courseTestVm.runtime.targets.find(t => t.isStage);
-		return Object.entries(values).every(([id, value]) => stage.variables[id]?.value === value);
+		return Object.entries(values).every(([id, value]) => typeof value === "number" ? Number(stage.variables[id]?.value) === value : stage.variables[id]?.value === value);
 	}, { timeout: 5000 }, values);
 	const flag = async () => {
 		await frame.evaluate(() => window.__courseTestVm.greenFlag());
@@ -41,12 +41,21 @@ export async function checkScratchEducationalQuiz(page, base, files, loaded, ope
 		await page.mouse.click(point.x, point.y);
 		return { box, target, point };
 	};
-	await frame.evaluate(() => {
+	const observeQuestions = () => frame.evaluate(() => {
 		window.__quizQuestions = [];
-		window.__courseTestVm.runtime.on("QUESTION", (question) => {
+		window.__quizPrompts = [];
+		const runtime = window.__courseTestVm.runtime;
+		// A visible sprite puts its prompt in a speech bubble and emits a
+		// blank QUESTION to open the answer input. Observe both real events.
+		runtime.on("SAY", (target, type, message) => {
+			if (target.sprite?.name === "Quiz" && type === "say" && (message === "Choose a display name:" || message.startsWith("What is (")))
+				window.__quizPrompts.push(message);
+		});
+		runtime.on("QUESTION", (question) => {
 			if (typeof question === "string") window.__quizQuestions.push(question);
 		});
 	});
+	await observeQuestions();
 	const answer = async (value) => {
 		if (value === "") {
 			// Exercise the actual VM's empty-answer behavior even if its GUI
@@ -61,7 +70,7 @@ export async function checkScratchEducationalQuiz(page, base, files, loaded, ope
 	const start = async () => {
 		const click = await clickControl("Start");
 		try {
-			await frame.waitForFunction(() => window.__quizQuestions.at(-1) === "Choose a display name:", { timeout: 5000 });
+			await frame.waitForFunction(() => window.__quizPrompts.at(-1) === "Choose a display name:", { timeout: 5000 });
 		}
 		catch (error) {
 			console.log(JSON.stringify({ event: "quiz-start-question-failure", click, state: await snapshot(), questions: await frame.evaluate(() => window.__quizQuestions) }));
@@ -77,7 +86,7 @@ export async function checkScratchEducationalQuiz(page, base, files, loaded, ope
 	const next = async (expected) => {
 		await clickControl("Next");
 		await waitValues({ quizState: 3, question: expected });
-		await frame.waitForFunction(() => window.__quizQuestions.at(-1)?.startsWith("What is ("));
+		await frame.waitForFunction(() => window.__quizPrompts.at(-1)?.startsWith("What is ("));
 	};
 	await flag();
 	assert.deepEqual((await snapshot()).sprites, { Quiz: false, Start: true, Next: false });
@@ -129,12 +138,7 @@ export async function checkScratchEducationalQuiz(page, base, files, loaded, ope
 	const starterFrame = page.frames().find(f => f !== page.mainFrame());
 	await starterFrame.waitForFunction(() => Boolean(window.__courseTestVm));
 	frame = starterFrame;
-	await frame.evaluate(() => {
-		window.__quizQuestions = [];
-		window.__courseTestVm.runtime.on("QUESTION", (question) => {
-			if (typeof question === "string") window.__quizQuestions.push(question);
-		});
-	});
+	await observeQuestions();
 	await flag();
 	await start();
 	await next(1);
