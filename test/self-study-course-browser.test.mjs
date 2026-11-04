@@ -21,6 +21,16 @@ const courseIds = [
 	"introduction-to-public-speaking",
 	"scratch-level-1-bootcamp"
 ];
+const readingCounts = [10, 13, 14, 16, 20, 14, 9, 4];
+assert.equal(readingCounts.length, courseIds.length);
+const requestedCourses = process.env.SELF_STUDY_BROWSER_COURSES;
+const selectedCourseIds = requestedCourses ? requestedCourses.split(",") : courseIds;
+assert.ok(selectedCourseIds.length > 0);
+assert.equal(new Set(selectedCourseIds).size, selectedCourseIds.length);
+assert.ok(selectedCourseIds.every(id => courseIds.includes(id)));
+const expectedProfiles = selectedCourseIds.length * 4;
+const expectedReadingViews = selectedCourseIds.reduce((total, id) =>
+	total + readingCounts[courseIds.indexOf(id)] * 4, 0);
 const digest = value => createHash("sha256").update(value).digest("hex");
 
 function account(path, role) {
@@ -248,7 +258,7 @@ test(
 			});
 			for (const role of ["learner", "instructor"]) {
 				for (const width of [390, 1280]) {
-					for (const id of courseIds) {
+					for (const id of selectedCourseIds) {
 						const fixture = JSON.parse(
 							await readFile(
 								join(output, `${id}-${role}.json`),
@@ -565,13 +575,13 @@ test(
 					}
 				}
 			}
-			assert.equal(profiles.length, 28);
+			assert.equal(profiles.length, expectedProfiles);
 			assert.equal(
 				profiles.reduce(
 					(total, profile) => total + profile.completeReadings.length,
 					0
 				),
-				384
+				expectedReadingViews
 			);
 			await writeFile(
 				join(output, "browser-proof.json"),
@@ -579,6 +589,9 @@ test(
 					{
 						complete: true,
 						sourceCommit: profiles[0].sourceCommit,
+						selectedCourseIds,
+						expectedProfiles,
+						expectedReadingViews,
 						profiles
 					},
 					null,

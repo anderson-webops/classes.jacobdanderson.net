@@ -2,7 +2,10 @@ import { mount } from "@vue/test-utils";
 import { createPinia, setActivePinia } from "pinia";
 import { expect, it, vi } from "vitest";
 import LazyMarkdownContent from "@/components/LazyMarkdownContent.vue";
-import { isLessonLearningItem } from "@/modules/courseLessonPresentation";
+import {
+	isLessonLearningItem,
+	lessonContentSections
+} from "@/modules/courseLessonPresentation";
 import { useAppStore } from "@/stores/app";
 import { useCoursesStore } from "@/stores/courses";
 import { scratchLevel1BootcampCourse } from "@/stores/courses/source-library-courses";
@@ -75,6 +78,18 @@ it.each(["learner", "instructor"])(
 					expect(current.projectLink, project.title).toBe(
 						project.projectLink
 					);
+					const directive = project.content.match(
+						/^\*\*Project goal:\*\*\s*([\s\S]+?)\s*\*\*Completion evidence:\*\*/
+					)?.[1];
+					if (directive) {
+						const assignment = lessonContentSections(
+							current.content
+						)
+							.filter(section => section.kind === "assignment")
+							.map(section => section.content)
+							.join("\n");
+						expect(assignment, project.title).toContain(directive);
+					}
 					tasks += 1;
 					if (project.projectLink) sourceLinks += 1;
 				}

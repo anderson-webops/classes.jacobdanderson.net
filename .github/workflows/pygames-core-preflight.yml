@@ -1,6 +1,6 @@
 name: Course preflight
 
-run-name: ${{ inputs.course == 'self-study' && 'Self-study course pages' || inputs.course == 'networking' && 'Swift Networking source evidence' || inputs.course == 'ai-setup' && 'AI setup reading' || 'PyGames core preflight' }}
+run-name: ${{ inputs.course == 'bootcamp' && 'Scratch Bootcamp pages' || inputs.course == 'self-study' && 'Self-study course pages' || inputs.course == 'networking' && 'Swift Networking source evidence' || inputs.course == 'ai-setup' && 'AI setup reading' || 'PyGames core preflight' }}
 
 on:
   workflow_dispatch:
@@ -8,7 +8,7 @@ on:
       course:
         description: Course verification to run
         type: choice
-        options: [pygames, networking, ai-setup, self-study]
+        options: [pygames, networking, ai-setup, self-study, bootcamp]
         default: pygames
       browser_run_id:
         description: Networking browser export workflow run
@@ -259,12 +259,13 @@ jobs:
           retention-days: 14
 
   self-study:
-    if: inputs.course == 'self-study'
+    if: inputs.course == 'self-study' || inputs.course == 'bootcamp'
     runs-on: ubuntu-24.04
     timeout-minutes: 40
     env:
       CLASSES_FAMILY_TASK_ID: self-study-courses-${{ github.run_id }}
       SELF_STUDY_BROWSER_PROOF_DIR: ${{ github.workspace }}/output/self-study-browser
+      SELF_STUDY_BROWSER_COURSES: ${{ inputs.course == 'bootcamp' && 'scratch-level-1-bootcamp' || '' }}
       COURSE_CATALOG_PROOF_DIR: ${{ github.workspace }}/output/self-study-browser/catalog
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1

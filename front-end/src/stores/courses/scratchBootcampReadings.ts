@@ -119,7 +119,9 @@ values. Playing is a state flag: use 0 when the button is inactive and 1 while
 clicks count. A conditional, if then, runs its enclosed blocks only when its
 Boolean condition is true at that moment.
 
-On the button, a green-flag stack can establish the full round:
+The original button already has event, costume and sound blocks. Extend those
+stacks with the variables and conditional. Its green-flag stack can establish
+the full round:
 
 ~~~text
 when green flag clicked
@@ -240,7 +242,7 @@ export function applyScratchBootcampReadings(
 		const flow = original.curriculum[0]?.content.match(
 			/\*\*Course flow:\*\* [\s\S]+$/
 		)?.[0];
-		if (!item || !content || !flow) {
+		if (!module || !item || !content || !flow) {
 			throw new Error(
 				`Missing Scratch Bootcamp reading: ${original.title}`
 			);
@@ -248,5 +250,22 @@ export function applyScratchBootcampReadings(
 		item.content = formatAuthoredReading(`${content}\n\n${flow}`);
 		item.contentKind = "reading";
 		item.preserveInstructions = true;
+		for (const section of ["curriculum", "supplementalProjects"] as const) {
+			for (const project of original[section]) {
+				if (!project.content.startsWith("**Project goal:**")) continue;
+				const task = module[section].find(
+					item => item.title === project.title
+				);
+				if (!task) {
+					throw new Error(
+						`Missing Scratch Bootcamp task: ${project.title}`
+					);
+				}
+				task.content = project.content;
+				task.contentKind = "assignment";
+				task.preserveInstructions = true;
+				task.preserveAssignment = true;
+			}
+		}
 	}
 }
