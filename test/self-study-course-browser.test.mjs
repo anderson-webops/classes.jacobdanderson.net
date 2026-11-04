@@ -18,7 +18,8 @@ const courseIds = [
 	"middle-school-b-writing-retake",
 	"middle-school-c-grammar",
 	"novel-writing",
-	"introduction-to-public-speaking"
+	"introduction-to-public-speaking",
+	"scratch-level-1-bootcamp"
 ];
 const digest = value => createHash("sha256").update(value).digest("hex");
 

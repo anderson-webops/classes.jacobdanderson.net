@@ -20,6 +20,7 @@ import { applyRustOwnershipCourseWorkflows } from "./rustOwnershipCourseWorkflow
 import { applyRustStateModelsCourseWorkflows } from "./rustStateModelsCourseWorkflows";
 import { applyRustTraitPipelineCourseWorkflows } from "./rustTraitPipelineCourseWorkflows";
 import { applyRustTypedErrorsCourseWorkflows } from "./rustTypedErrorsCourseWorkflows";
+import { applyScratchBootcampReadings } from "./scratchBootcampReadings";
 import {
 	canonicalStaticMediaUrl,
 	hasPendingStaticMediaNotice,
@@ -9851,6 +9852,8 @@ export function normalizeRawCourse(id: string, rawCourse: RawCourse) {
 	if (id === "novel-writing") applyNovelWritingReadings(course, rawCourse);
 	if (id === "introduction-to-public-speaking")
 		applyPublicSpeakingReadings(course, rawCourse);
+	if (id === "scratch-level-1-bootcamp")
+		applyScratchBootcampReadings(course, rawCourse);
 	if (
 		id === "middle-school-b-writing" ||
 		id === "middle-school-b-writing-retake"

@@ -23,7 +23,8 @@ import {
 	middleSchoolLiteratureCourse,
 	middleSchoolWritingCourse,
 	middleSchoolWritingRetakeCourse,
-	novelWritingCourse
+	novelWritingCourse,
+	scratchLevel1BootcampCourse
 } from "@/stores/courses/source-library-courses";
 
 const cases = [
@@ -68,6 +69,12 @@ const cases = [
 		source: introductionToPublicSpeakingCourse,
 		readings: 9,
 		additions: speakingAdditions
+	},
+	{
+		id: "scratch-level-1-bootcamp",
+		source: scratchLevel1BootcampCourse,
+		readings: 4,
+		additions: []
 	}
 ] as const;
 const markdown = new MarkdownIt({ breaks: true, html: false, linkify: true });
