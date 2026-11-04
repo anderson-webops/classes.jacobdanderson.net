@@ -597,8 +597,7 @@ export const preAlgebraBCourse: RawCourse = {
 							"Project context: Marco Satala, immigration attorney at Corporate Immigration Partners.",
 							"Advertising choices compare Facebook, Twitter, TikTok, Instagram, and YouTube.",
 							"The client-data task uses a 20-client age list to calculate mean, median, and mode for ad targeting.",
-							"The country-audience task uses a pie chart, top-3 country selection, and timing graph for ad interaction.",
-							"Pending static asset: pab5_0.png uses the static media URL static.classes.jacobdanderson.net/pab5_0.png."
+							"The country-audience task uses a pie chart, top-3 country selection, and timing graph for ad interaction."
 						],
 						evidence: [
 							"Recommendation cites platform, audience age, country distribution, posting time, and one data limitation.",
@@ -624,7 +623,6 @@ export const preAlgebraBCourse: RawCourse = {
 						title: "Uber Internship Challenge",
 						references: [
 							"Project context: Ben Dreier and a fictional Uber Flying Taxi test in New York City.",
-							"Pending static asset: pab14_0.png uses the static media URL static.classes.jacobdanderson.net/pab14_0.png.",
 							"Mission 1 identifies the route shape as a pentagon and compares flight paths for parallel structure.",
 							"Mission 1 uses distances of 1.5 miles from Empire State Building to Union Park, 3.0 miles from Whitney Museum to Upper West Side, and 0.75 miles from Union Square to Whitney.",
 							"Mission 1 reference answers include total area about 2 square miles and total perimeter about 7 miles.",
@@ -655,7 +653,6 @@ export const preAlgebraBCourse: RawCourse = {
 							"Project context: Will Brooke from Electronic Arts and a Super Smash Bros. Melee tournament scenario.",
 							"Round-robin player table includes C9 Mang0 8 games and 6 wins, TSM Leffen 7 and 5, Liquid Hungrybox 9 and 7, Mew2King 11 and 6, Tempo Axe 12 and 9, and CJ aMSa 13 and 8.",
 							"The round-robin analysis identifies Liquid Hungrybox as 7/9, or about 78%, from the answer key.",
-							"Pending static asset: pab22_0.png uses the static media URL static.classes.jacobdanderson.net/pab22_0.png.",
 							"Bracket matchups include Mang0-Leffen 2-2, Mang0-Hungrybox 1-3, Mang0-Axe 3-1, Leffen-Hungrybox 2-2, Leffen-Axe 0-4, and Hungrybox-Axe 2-2.",
 							"Probability targets include (1/2)^5 = 1/32, (3/4)^5 = 243/1024, (1/4)^5 = 1/1024, and zero-probability outcomes from impossible Axe-Leffen win patterns."
 						],
