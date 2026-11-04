@@ -885,7 +885,6 @@ jobs:
                   retention-days: 7
 
     test-e2e:
-        needs: native-course-workflows
         runs-on: ubuntu-24.04
         timeout-minutes: 75
         steps:
@@ -2322,7 +2321,6 @@ jobs:
                   retention-days: 7
 
     usaco-workflows:
-        needs: test-e2e
         runs-on: ubuntu-24.04
         timeout-minutes: 55
         steps:
