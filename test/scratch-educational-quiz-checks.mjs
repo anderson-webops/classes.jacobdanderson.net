@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { writeFile } from "node:fs/promises";
+import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import process from "node:process";
 
@@ -29,9 +29,17 @@ export async function checkScratchEducationalQuiz(page, base, files, loaded, ope
 	const clickControl = async (name) => {
 		assert.equal((await snapshot()).sprites[name], true);
 		const canvas = await frame.$("[class*=\"stage_stage_\"] > div > canvas");
+		await canvas.evaluate(element => element.scrollIntoView({ block: "center", inline: "center" }));
+		await frame.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
 		const box = await canvas.boundingBox();
 		assert.ok(box);
-		await canvas.click({ offset: { x: box.width / 2, y: box.height * 290 / 360 } });
+		const target = await frame.evaluate((name) => {
+			const target = window.__courseTestVm.runtime.targets.find(t => t.sprite?.name === name);
+			return { x: target.x, y: target.y };
+		}, name);
+		const point = { x: box.x + box.width * (0.5 + target.x / 480), y: box.y + box.height * (0.5 - target.y / 360) };
+		await page.mouse.click(point.x, point.y);
+		return { box, target, point };
 	};
 	await frame.evaluate(() => {
 		window.__quizQuestions = [];
@@ -51,8 +59,18 @@ export async function checkScratchEducationalQuiz(page, base, files, loaded, ope
 		await input.press("Enter");
 	};
 	const start = async () => {
-		await clickControl("Start");
-		await frame.waitForFunction(() => window.__quizQuestions.at(-1) === "Choose a display name:");
+		const click = await clickControl("Start");
+		try {
+			await frame.waitForFunction(() => window.__quizQuestions.at(-1) === "Choose a display name:", { timeout: 5000 });
+		}
+		catch (error) {
+			console.log(JSON.stringify({ event: "quiz-start-question-failure", click, state: await snapshot(), questions: await frame.evaluate(() => window.__quizQuestions) }));
+			if (process.env.SCRATCH_SCREENSHOT_DIR) {
+				await mkdir(process.env.SCRATCH_SCREENSHOT_DIR, { recursive: true });
+				await page.screenshot({ path: join(process.env.SCRATCH_SCREENSHOT_DIR, "scratch-conditionals-quiz-start-failure.png") });
+			}
+			throw error;
+		}
 		await answer("Reader");
 		await waitValues({ quizState: 2 });
 	};
