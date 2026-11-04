@@ -50,6 +50,7 @@ export async function checkScratchOriginalImports(page, { origin, files, loaded,
 			const problems = [];
 			const mediaMismatches = [];
 			const vectorConversions = [];
+			const vectorDifferences = [];
 			async function pixels(bytes) {
 				const url = URL.createObjectURL(new Blob([bytes], { type: "image/svg+xml" }));
 				try {
@@ -64,7 +65,7 @@ export async function checkScratchOriginalImports(page, { origin, files, loaded,
 					canvas.height = height;
 					const context = canvas.getContext("2d");
 					context.drawImage(image, 0, 0);
-					return { width, height, data: context.getImageData(0, 0, width, height).data };
+					return { width, height, data: context.getImageData(0, 0, width, height).data, canvas };
 				}
 				finally {
 					URL.revokeObjectURL(url);
@@ -96,6 +97,16 @@ export async function checkScratchOriginalImports(page, { origin, files, loaded,
 						const after = await pixels(loaded.asset.data);
 						const identical = before.width === after.width && before.height === after.height && before.data.every((value, offset) => value === after.data[offset]);
 						vectorConversions.push({ target: target.name, name: wanted.name, original: wanted.assetId, sanitized: have.assetId, width: before.width, height: before.height, pixelIdentical: identical });
+						if (!identical) {
+							let changedChannels = 0;
+							let maximumChannelDifference = 0;
+							for (let offset = 0; offset < before.data.length; offset++) {
+								const difference = Math.abs(before.data[offset] - after.data[offset]);
+								if (difference) changedChannels++;
+								maximumChannelDifference = Math.max(maximumChannelDifference, difference);
+							}
+							vectorDifferences.push({ target: target.name, name: wanted.name, original: wanted.assetId, sanitized: have.assetId, changedChannels, maximumChannelDifference, originalSize: [before.width, before.height], sanitizedSize: [after.width, after.height], originalPNG: before.canvas.toDataURL(), sanitizedPNG: after.canvas.toDataURL(), sanitizedSVG: new TextDecoder().decode(loaded.asset.data) });
+						}
 						return identical;
 					}));
 					if (current[kind].length !== target[kind].length || checks.some(ok => !ok)) {
@@ -107,14 +118,13 @@ export async function checkScratchOriginalImports(page, { origin, files, loaded,
 			const comment = actual.targets.find(target => target.isStage).comments?.[attributionId]?.text;
 			if (!comment?.includes(original.url) || !comment.includes("CC BY-SA 2.0")) problems.push("Missing portable attribution");
 			const extensions = original.extensions.map(extension => ({ extension, loaded: vm.extensionManager.isExtensionLoaded(extension) }));
-			return { problems, mediaMismatches, vectorConversions, targets: actual.targets.length, extensions, attribution: comment };
+			if (actual.targets.length !== expected.targets.length) problems.push("Changed target count");
+			if (extensions.some(extension => !extension.loaded)) problems.push("Extension not loaded");
+			return { problems, mediaMismatches, vectorConversions, vectorDifferences, targets: actual.targets.length, extensions, attribution: comment };
 		}, { expected, vectors, original, attributionId: originalAttributionId(original.id) });
 		if (snapshot.problems.length)
 			await writeFile(path.join(output, `project-${original.id}-mismatch.json`), `${JSON.stringify(snapshot, null, 2)}\n`);
-		assert.deepEqual(snapshot.problems, [], original.id);
-		assert.equal(snapshot.targets, expected.targets.length);
-		assert.ok(snapshot.extensions.every(extension => extension.loaded), `${original.id}: extension not loaded`);
-		return snapshot;
+		return { ...snapshot, vectorDifferences: undefined };
 	}
 	try {
 		setRole("learner");
@@ -239,6 +249,8 @@ export async function checkScratchOriginalImports(page, { origin, files, loaded,
 		await page.waitForSelector(".scratch-original-import button:not([disabled])");
 		await page.screenshot({ path: path.join(output, "original-consent-390.png"), fullPage: false });
 		await confirm();
+		await writeFile(path.join(output, "workflow.json"), `${JSON.stringify({ sourceCommit: process.env.GITHUB_SHA, bothCourseRolesVerified: true, consentBeforeFetch: true, cancelBeforeFetch: true, unsavedReplacementDeclined: true, originalKeyboardEventsVerified: true, editedFileReopenedAfterBlankReset: true, portableAttributionRetained: true, speechServiceExecutionVerified: true }, null, 2)}\n`);
+		assert.deepEqual(records.filter(record => record.problems.length).map(record => ({ id: record.id, problems: record.problems })), [], "Every original must retain its program, media appearance and extensions");
 		await writeFile(path.join(output, "imports.json"), `${JSON.stringify({ complete: true, sourceCommit: process.env.GITHUB_SHA, records, bothCourseRolesVerified: true, consentBeforeFetch: true, cancelBeforeFetch: true, unsavedReplacementDeclined: true, originalKeyboardEventsVerified: true, editedFileReopenedAfterBlankReset: true, portableAttributionRetained: true, speechServiceExecutionVerified: true, wholeCourseSemanticReviewComplete: false }, null, 2)}\n`);
 	}
 	catch (error) {
