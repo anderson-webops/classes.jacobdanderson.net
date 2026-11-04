@@ -1,8 +1,10 @@
 import assert from "node:assert/strict";
 import { writeFile } from "node:fs/promises";
 import { join } from "node:path";
+import process from "node:process";
 
 export async function checkScratchEducationalQuiz(page, base, files, loaded, openFile) {
+	await page.setViewport({ width: 1440, height: 1080 });
 	await page.goto(`${base}/ide?mode=scratch&starter=educational-quiz&role=reference`, { waitUntil: "networkidle2" });
 	await loaded();
 	let frame = page.frames().find(f => f !== page.mainFrame());
@@ -91,6 +93,8 @@ export async function checkScratchEducationalQuiz(page, base, files, loaded, ope
 	assert.equal((await snapshot()).scene, 2);
 	assert.equal((await snapshot()).sprites.Next, false);
 	assert.equal((await snapshot()).sprites.Start, false);
+	if (process.env.SCRATCH_SCREENSHOT_DIR)
+		await page.screenshot({ path: join(process.env.SCRATCH_SCREENSHOT_DIR, "scratch-conditionals-educational-quiz-reference-complete.png") });
 	const bytes = await frame.evaluate(async () => Array.from(new Uint8Array(await (await window.__courseTestVm.saveProjectSb3()).arrayBuffer())));
 	const filename = join(files, "educational-quiz-reopened.sb3");
 	await writeFile(filename, new Uint8Array(bytes));
