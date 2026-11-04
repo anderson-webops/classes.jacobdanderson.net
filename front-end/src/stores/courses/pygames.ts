@@ -635,7 +635,7 @@ export const pyGamesCourse: RawCourse = hideBroadPyGamesRootPairs({
 - Place the hole near the center of the course and the flag above it.
 
 **Implementation steps:**
-- In \`draw()\`, set the background with \`screen.fill((50, 100, 50))\`, draw the stroke count, and draw the hole, flag, and ball.
+- In \`draw()\`, set the background with \`screen.fill((50, 100, 50))\`, draw the hole, flag, and ball, then draw the stroke count last so actors cannot cover it.
 - In \`update()\`, multiply the ball's speeds by friction, update its position, and bounce it off the walls.
 - In \`on_mouse_down(pos, button)\`, first ignore buttons other than \`mouse.LEFT\` and ignore clicks outside play mode. Allow a hit only when both speed components are nearly stopped: \`abs(ball.xspeed) < 0.5\` and \`abs(ball.yspeed) < 0.5\`.
 - Convert the click position into velocity, for example \`ball.xspeed = (mouseX - ball.x) / 10\` and \`ball.yspeed = (mouseY - ball.y) / 10\`.
