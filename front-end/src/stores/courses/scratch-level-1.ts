@@ -100,8 +100,36 @@ ${scratchCostumeEditingGuide}`
 			curriculum: [
 				{
 					title: "Basic event listeners",
-					content:
-						'Event listeners are blocks that wait for something to happen and then start a script. The "when green flag clicked" and "when arrow key pressed" blocks connect user actions to sprite behavior, so a project can respond when the game starts or when a specific key is pressed.'
+					content: `A script is a connected stack of blocks. An event hat, such as **when green flag clicked**, starts the blocks attached below it. The connected blocks run from top to bottom. Separate hats start separate scripts: a keypress script does not need to be attached to the green-flag script.
+
+Use the green flag for starting values, such as a sprite's initial direction or position. Use **when [key] key pressed** for a keyboard action, and **when this sprite clicked** for a click on that sprite.
+
+### Direction and movement
+
+**Point in direction** sets an absolute direction:
+
+| Direction | Value |
+| --- | ---: |
+| Up | 0 |
+| Right | 90 |
+| Down | 180 |
+| Left | -90 |
+
+**Move steps** moves the sprite along its current direction. Pointing alone does not move it. **Turn clockwise** or **turn counterclockwise** changes the current direction by an angle; it does not set a fixed direction.
+
+For example, this script faces upward before each move:
+
+\`\`\`text
+when [up arrow] key pressed
+point in direction (0)
+move (10) steps
+\`\`\`
+
+Pressing Up twice moves 20 steps upward. A script that only turns 15 degrees would instead change direction on every press. **Point towards [mouse-pointer]** uses the pointer's position when that block runs; another event is needed to point again after the pointer moves.
+
+### Appearance and sound
+
+**Next costume** changes the selected sprite's picture. **Next backdrop** changes the stage's background. **Change color effect** shifts the sprite's displayed colors without replacing its costume. **Play sound until done** waits for the sound to finish before the next connected block runs; **start sound** continues immediately.`
 				},
 				{
 					title: "Project 1 – Spinner",

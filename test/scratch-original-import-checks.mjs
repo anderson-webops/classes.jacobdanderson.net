@@ -10,6 +10,7 @@ export async function checkScratchOriginalImports(page, { origin, files, loaded,
 	await mkdir(output, { recursive: true });
 	const requests = [];
 	const records = [];
+	const eventReadingViews = [];
 	const speechResponses = [];
 	const observeSpeech = (response) => {
 		if (new URL(response.url()).hostname === "synthesis-service.scratch.mit.edu")
@@ -51,6 +52,9 @@ export async function checkScratchOriginalImports(page, { origin, files, loaded,
 			const mediaMismatches = [];
 			const vectorConversions = [];
 			const vectorDifferences = [];
+			const legacyDeclarations = [];
+			const programMismatches = [];
+			const signature = block => JSON.stringify({ code: block?.mutation?.proccode, names: JSON.parse(block?.mutation?.argumentnames || "[]").map(String), defaults: JSON.parse(block?.mutation?.argumentdefaults || "[]").map(String), warp: String(block?.mutation?.warp) === "true" });
 			async function pixels(bytes) {
 				const url = URL.createObjectURL(new Blob([bytes], { type: "image/svg+xml" }));
 				try {
@@ -80,8 +84,22 @@ export async function checkScratchOriginalImports(page, { origin, files, loaded,
 				for (const [id, block] of Object.entries(target.blocks)) {
 					if (Array.isArray(block)) continue;
 					const present = current.blocks[id];
-					if (!present || present.opcode !== block.opcode || (present.next || null) !== (block.next || null) || (present.parent || null) !== (block.parent || null))
+					if (block.shadow && block.opcode.startsWith("argument_reporter_")) {
+						const owner = target.blocks[block.parent];
+						if (owner?.opcode === "procedures_prototype" && current.blocks[block.parent]?.opcode === "procedures_prototype" && signature(owner) === signature(current.blocks[block.parent])) {
+							legacyDeclarations.push({ id, kind: "Blockly-managed argument declaration", owner: block.parent, signature: JSON.parse(signature(owner)) });
+							continue;
+						}
+						if (!block.parent && block.topLevel && !Object.values(target.blocks).some(other => !Array.isArray(other) && (other.next === id || Object.values(other.inputs || {}).some(input => input.slice(1).includes(id))))) {
+							legacyDeclarations.push({ id, kind: "Unconnected legacy shadow placeholder", opcode: block.opcode, value: block.fields.VALUE[0] });
+							continue;
+						}
+					}
+					const fieldsMatch = present && Object.entries(block.fields || {}).every(([key, value]) => String(value[0]) === String(present.fields?.[key]?.[0]) && (typeof value[1] !== "string" || value[1] === present.fields?.[key]?.[1]));
+					if (!present || present.opcode !== block.opcode || (present.next || null) !== (block.next || null) || (present.parent || null) !== (block.parent || null) || !fieldsMatch || (block.opcode === "procedures_prototype" && signature(block) !== signature(present))) {
 						problems.push(`Changed program block ${target.name}:${id}`);
+						programMismatches.push({ target: target.name, id, expected: block, actual: present });
+					}
 				}
 				for (const kind of ["costumes", "sounds"]) {
 					const runtimeTarget = vm.runtime.targets.find(item => item.getName() === target.name && item.isStage === target.isStage);
@@ -120,13 +138,40 @@ export async function checkScratchOriginalImports(page, { origin, files, loaded,
 			const extensions = original.extensions.map(extension => ({ extension, loaded: vm.extensionManager.isExtensionLoaded(extension) }));
 			if (actual.targets.length !== expected.targets.length) problems.push("Changed target count");
 			if (extensions.some(extension => !extension.loaded)) problems.push("Extension not loaded");
-			return { problems, mediaMismatches, vectorConversions, vectorDifferences, targets: actual.targets.length, extensions, attribution: comment };
+			return { problems, programMismatches, legacyDeclarations, mediaMismatches, vectorConversions, vectorDifferences, targets: actual.targets.length, extensions, attribution: comment };
 		}, { expected, vectors, original, attributionId: originalAttributionId(original.id) });
 		if (snapshot.problems.length)
 			await writeFile(path.join(output, `project-${original.id}-mismatch.json`), `${JSON.stringify(snapshot, null, 2)}\n`);
 		return { ...snapshot, vectorDifferences: undefined };
 	}
 	try {
+		for (const role of ["learner", "instructor"]) {
+			setRole(role);
+			for (const width of [390, 1280]) {
+				await page.setViewport({ width, height: 900 });
+				await page.goto("about:blank");
+				await page.goto(`${origin}/courses#scratch-level-1-gs2-event-listeners`, { waitUntil: "networkidle2" });
+				await page.waitForSelector(".lesson-view-toggle button");
+				await page.click(".lesson-view-toggle button:first-child");
+				await page.waitForFunction(() => [...document.querySelectorAll(".lesson-item")].some(item => item.querySelector("h5")?.textContent.includes("Basic event listeners")));
+				await page.$$eval(".lesson-item", items => items.find(item => item.querySelector("h5")?.textContent.includes("Basic event listeners")).scrollIntoView({ behavior: "instant", block: "center" }));
+				await page.waitForFunction(() => [...document.querySelectorAll(".lesson-item")].some(item => item.querySelector("h5")?.textContent.includes("Basic event listeners") && item.textContent.includes("top to bottom") && item.querySelector("table")));
+				const reading = await page.$$eval(".lesson-item", (items) => {
+					const item = items.find(item => item.querySelector("h5")?.textContent.includes("Basic event listeners"));
+					return { text: item.textContent, rows: [...item.querySelectorAll("tbody tr")].map(row => [...row.querySelectorAll("td")].map(cell => cell.textContent.trim())), contained: item.scrollWidth <= item.clientWidth && document.documentElement.scrollWidth <= innerWidth };
+				});
+				assert.deepEqual(reading.rows, [["Up", "0"], ["Right", "90"], ["Down", "180"], ["Left", "-90"]]);
+				assert.match(reading.text, /point in direction \(0\)/);
+				assert.match(reading.text, /move \(10\) steps/);
+				assert.match(reading.text, /another event is needed to point again/);
+				assert.match(reading.text, /start sound.*continues immediately/s);
+				assert.ok(reading.contained, `${role}/${width}: event reading overflow`);
+				await page.screenshot({ path: path.join(output, `event-reading-${role}-${width}.png`) });
+				eventReadingViews.push({ role, width, ...reading });
+				await writeFile(path.join(output, "event-reading.json"), `${JSON.stringify({ complete: false, views: eventReadingViews }, null, 2)}\n`);
+			}
+		}
+		await writeFile(path.join(output, "event-reading.json"), `${JSON.stringify({ complete: true, sourceCommit: process.env.GITHUB_SHA, views: eventReadingViews }, null, 2)}\n`);
 		setRole("learner");
 		await page.setViewport({ width: 1280, height: 900 });
 		await page.goto("about:blank");
@@ -232,10 +277,14 @@ export async function checkScratchOriginalImports(page, { origin, files, loaded,
 			input.value = "Dragonfly original edited";
 			input.dispatchEvent(new Event("input", { bubbles: true }));
 		});
+		await frame.waitForFunction(() => window.__courseTestVm.editingTarget?.getName() === "Dragonfly" && document.querySelector("input[placeholder='x']")?.value === String(window.__courseTestVm.editingTarget.x));
 		const xInput = await frame.waitForSelector("input[placeholder='x']");
-		await xInput.click({ clickCount: 3 });
+		await xInput.focus();
+		await xInput.evaluate(input => input.select());
 		await xInput.type("77");
+		await page.keyboard.press("Enter");
 		await page.keyboard.press("Tab");
+		await frame.waitForFunction(() => window.__courseTestVm.editingTarget.x === 77 && document.querySelector("input[placeholder='x']")?.value === "77");
 		await page.waitForFunction(() => document.querySelector(".scratch-status").textContent.includes("Unsaved changes."));
 		const beforeReplace = requests.length;
 		await route(sourceHref(originalScratchProjects.find(project => project.id === "287920173")));
@@ -244,6 +293,7 @@ export async function checkScratchOriginalImports(page, { origin, files, loaded,
 		acceptDialogs(true);
 		assert.equal(requests.length, beforeReplace, "Declining replacement preserves the current project");
 		assert.equal(await frame.$eval("input[placeholder='x']", input => input.value), "77");
+		assert.equal(await frame.evaluate(() => window.__courseTestVm.editingTarget.x), 77);
 		await page.click(".scratch-original-import button:nth-of-type(2)");
 		await downloadProject("Dragonfly original edited.sb3");
 		const saved = unzipSync(new Uint8Array(await readFile(path.join(files, "Dragonfly original edited.sb3"))));
@@ -253,6 +303,7 @@ export async function checkScratchOriginalImports(page, { origin, files, loaded,
 		await newProject();
 		assert.equal(await frame.evaluate(id => !!JSON.parse(window.__courseTestVm.toJSON()).targets.find(target => target.isStage).comments?.[id], originalAttributionId(dragonfly.id)), false);
 		await openFile(path.join(files, "Dragonfly original edited.sb3"));
+		await frame.waitForFunction(() => window.__courseTestVm.editingTarget.x === 77 && document.querySelector("input[placeholder='x']")?.value === "77");
 		assert.equal(await frame.$eval("input[placeholder='x']", input => input.value), "77");
 		assert.equal(await frame.evaluate(id => !!JSON.parse(window.__courseTestVm.toJSON()).targets.find(target => target.isStage).comments?.[id], originalAttributionId(dragonfly.id)), true);
 		await page.screenshot({ path: path.join(output, "original-edited-reopened-1280.png"), fullPage: false });
