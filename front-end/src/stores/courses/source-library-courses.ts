@@ -3244,7 +3244,7 @@ const englishCourses = {
 					"evidence link"
 				],
 				flowNote:
-					"Use the prank only as a fictional planning model and never carry it out. Confirm a lawful classroom copy of Kyra's Fear or use an equivalent passage, then distinguish the main idea from details that support it."
+					"Use the prank only as a fictional planning model and never carry it out. Read the supplied original Kyra's Fear practice passage, then distinguish the main idea from details that support it."
 			},
 			"MSA2 Main Ideas & Supporting Evidence II": {
 				estimatedTime: "2 sessions · 40–50 minutes each",
@@ -3256,7 +3256,7 @@ const englishCourses = {
 					"evidence comparison"
 				],
 				flowNote:
-					"Use a lawful copy of Soccer Summer or an equivalent passage. Select evidence by comparing it with weaker alternatives and explain why each chosen detail is the better support."
+					"Use the supplied original Soccer Summer practice passage. Select evidence by comparing it with weaker alternatives and explain why each chosen detail is the better support."
 			},
 			"MSA3 Making Inferences": {
 				estimatedTime: "2 sessions · 40–50 minutes each",
@@ -3268,7 +3268,7 @@ const englishCourses = {
 					"alternate inference"
 				],
 				flowNote:
-					"Use a lawful copy of Car Ride or an equivalent passage. Separate what the text states from what is inferred, cite at least two clues, and test one plausible alternative interpretation."
+					"Use the supplied original Car Ride practice passage. Separate what the text states from what is inferred, cite at least two clues, and test one plausible alternative interpretation."
 			},
 			"MSA4 Show; Don't Tell": {
 				estimatedTime: "2 sessions · 40–50 minutes each",
@@ -3292,7 +3292,7 @@ const englishCourses = {
 					"self-assessment"
 				],
 				flowNote:
-					"Use one accessible passage or original paragraph to collect separate evidence for all four skills. Assign review only for a missing or unsupported skill."
+					"Use The Missing Page to collect separate evidence for all four skills. Assign review only for a missing or unsupported skill."
 			},
 			"MSA5 Identifying Themes": {
 				estimatedTime: "2 sessions · 40–50 minutes each",
@@ -3316,7 +3316,7 @@ const englishCourses = {
 					"analysis link"
 				],
 				flowNote:
-					"Use a lawful public-domain or classroom-provided version of the model story. Trace one character choice through its consequence and explain how that pattern develops the theme."
+					"Use The Lantern Workshop. Trace one character choice through its consequence and explain how that pattern develops the theme."
 			},
 			"MSA7 Analyzing Point of View": {
 				estimatedTime: "2–3 sessions · 40–50 minutes each",
@@ -3328,7 +3328,7 @@ const englishCourses = {
 					"reader effect"
 				],
 				flowNote:
-					"Label point of view from narrator access rather than pronouns alone, then use a lawful public-domain or supplied passage to compare how a rewrite changes sympathy, suspense, humor, theme, or tone."
+					"Label point of view from narrator access rather than pronouns alone, then compare the supplied library-key scenes to explain how a rewrite changes sympathy, suspense, humor, theme, or tone."
 			},
 			"MSA8 Analyzing Words & Phrases": {
 				estimatedTime: "2 sessions · 40–50 minutes each",
@@ -3352,7 +3352,7 @@ const englishCourses = {
 					"meaning / mood"
 				],
 				flowNote:
-					"Use a short lawful or instructor-supplied text, mark only clear sound patterns, and explain what the repeated sounds emphasize rather than stopping at identification."
+					"Use the supplied original After the Storm poem, mark only clear sound patterns, and explain what the repeated sounds emphasize rather than stopping at identification."
 			},
 			"MSA10 Analyzing Figurative Language": {
 				estimatedTime: "2–3 sessions · 40–50 minutes each",
@@ -3376,7 +3376,7 @@ const englishCourses = {
 					"integrated analysis"
 				],
 				flowNote:
-					"Use one accessible passage and require an integrated analysis, not a checklist of devices. The paragraph must connect at least two craft choices to one interpretation."
+					"Use The Shared Repair for an integrated analysis. The paragraph must connect at least two craft choices to one interpretation."
 			},
 			"MSA11 Master Project": {
 				estimatedTime: "3–4 sessions · 40–50 minutes each",
@@ -3388,7 +3388,7 @@ const englishCourses = {
 					"analysis reflection"
 				],
 				flowNote:
-					"Choose an instructor-provided, original, public-domain, or otherwise copyright-safe image. Avoid claims about real people in the image; create a fictional piece, then analyze how its craft choices guide interpretation."
+					"Use The Last Platform image and its text description, or choose another original, public-domain or classroom-provided image. Create a fictional piece, then analyze how its craft choices guide interpretation."
 			}
 		},
 		sourceActivityAnchors: {
@@ -3404,7 +3404,7 @@ const englishCourses = {
 				},
 				{
 					title: "Kyra's Fear Main Idea and Evidence",
-					prompt: "Read the Kyra's Fear passage and choose a just-right main idea that is neither too broad nor too narrow. Separate the strongest main-idea sentence from evidence about the spider, the reaction to the hair movement, and Kyra's fear.",
+					prompt: "Read the supplied original Kyra's Fear practice passage and choose a just-right main idea that is neither too broad nor too narrow. Separate the strongest main-idea sentence from evidence about the spider, the reaction to the hair movement, and Kyra's fear.",
 					evidence: [
 						"One main-idea sentence about the passage as a whole.",
 						"Two or more quoted or paraphrased details connected to the main idea.",
@@ -3415,7 +3415,7 @@ const englishCourses = {
 			"MSA2 Main Ideas & Supporting Evidence II": [
 				{
 					title: "Soccer Summer Best Evidence Sort",
-					prompt: "Read Soccer Summer, write a one- or two-sentence main idea, then choose the two most impactful, detailed, and concise pieces of evidence. Compare the chosen evidence against less useful details so the final support is deliberate rather than random.",
+					prompt: "Read the supplied original Soccer Summer practice passage, write a one- or two-sentence main idea, then choose the two most impactful, detailed, and concise pieces of evidence. Compare the chosen evidence against less useful details so the final support is deliberate rather than random.",
 					evidence: [
 						"A concise main idea for the Soccer Summer passage.",
 						"Two selected quotes or paraphrases from the passage.",
@@ -3426,7 +3426,7 @@ const englishCourses = {
 			"MSA3 Making Inferences": [
 				{
 					title: "Car Ride Inference Record",
-					prompt: "Use the smoke-house example to define inference, then read Car Ride and infer Kazim's mood from textual clues such as counting Mississippi seconds, sighing, losing phone access, repeating questions, and ignoring the atlas.",
+					prompt: "Use the supplied smoke-and-grill example to define inference, then read the original Car Ride practice passage and infer Kazim's mood from textual clues such as counting Mississippi seconds, sighing, losing phone access, repeating questions, and ignoring the atlas.",
 					evidence: [
 						"An inference about Kazim's mood or attitude during the trip.",
 						"At least two textual clues that make the inference reasonable.",
@@ -3448,7 +3448,7 @@ const englishCourses = {
 			"MSA Check-In #1": [
 				{
 					title: "Reading Literature Check-In Record",
-					prompt: "Use one passage or original paragraph to demonstrate main idea, supporting evidence, inference, and showing-versus-telling. Keep the skill evidence separate from any self-assessment notes.",
+					prompt: "Use the supplied original The Missing Page passage to demonstrate main idea, supporting evidence, inference, and showing-versus-telling. Keep the skill evidence separate from any self-assessment notes.",
 					evidence: [
 						"A main idea supported by at least two specific details.",
 						"An inference supported by textual or descriptive clues.",
@@ -3470,7 +3470,7 @@ const englishCourses = {
 			"MSA6 Analyzing & Developing Themes": [
 				{
 					title: "Characters and Themes Analysis",
-					prompt: "Analyze how character actions and qualities develop a theme. Use the Cinderella contrast as a model: kindness and cruelty create different outcomes and help explain the text's larger message.",
+					prompt: "Analyze how character actions and qualities develop a theme in the supplied original The Lantern Workshop scene. Compare Neri's and Sela's choices and their consequences. A classroom edition of Cinderella may be an additional comparison when its version and evidence are identified.",
 					evidence: [
 						"A character trait or action connected to a theme.",
 						"Evidence from the plot showing the consequence of that trait or action.",
@@ -3481,7 +3481,7 @@ const englishCourses = {
 			"MSA7 Analyzing Point of View": [
 				{
 					title: "Point of View Effects Lab",
-					prompt: "Identify first person, second person, third person objective, third person limited, and third person omniscient narration. Then rewrite or compare the same plot from a different point of view, such as retelling Snow White from the queen's perspective, to observe changes in theme, suspense, humor, sympathy, or tone.",
+					prompt: "Identify first person, second person, third person objective, third person limited, and third person omniscient narration in the five supplied library-key scenes. Compare two versions, then retell the moment from Mina's first-person perspective to observe changes in theme, suspense, humor, sympathy, or tone.",
 					evidence: [
 						"Point-of-view labels with evidence from pronouns, narrator access, or knowledge limits.",
 						"A rewritten or compared passage that changes the narrator's perspective.",
@@ -3503,7 +3503,7 @@ const englishCourses = {
 			"MSA9 Analyzing Rhyme & Alliteration": [
 				{
 					title: "Sound Pattern Annotation",
-					prompt: "Read a short text aloud and listen for conspicuous rhyme and alliteration. Mark each sound pattern and explain why the author may have drawn attention to those specific words.",
+					prompt: "Read the supplied original After the Storm poem aloud and listen for conspicuous rhyme and alliteration. Mark each sound pattern and explain why the author may have drawn attention to those specific words.",
 					evidence: [
 						"Marked rhyming words and alliterative word groups.",
 						"A sentence explaining what the repeated sounds emphasize.",
@@ -3514,7 +3514,7 @@ const englishCourses = {
 			"MSA10 Analyzing Figurative Language": [
 				{
 					title: "Analysis Toolbox Paragraph",
-					prompt: "Identify similes, metaphors, and other figurative language, then combine word choice, sound-pattern, and figurative-language observations into a paragraph about meaning and tone.",
+					prompt: "Use After the Storm and its supplied simile revision to identify similes, metaphors, and other figurative language, then combine word choice, sound-pattern, and figurative-language observations into a paragraph about meaning and tone.",
 					evidence: [
 						"At least one simile, metaphor, or figurative phrase identified accurately.",
 						"Notes on word choice, sound, and figurative meaning.",
@@ -3525,7 +3525,7 @@ const englishCourses = {
 			"MSA Check-In #2": [
 				{
 					title: "Analyzing Literature Check-In Record",
-					prompt: "Use one passage to demonstrate theme, character-theme relationship, point of view, connotation, rhyme, alliteration, figurative language, and a final analysis paragraph about meaning and tone.",
+					prompt: "Use the supplied original The Shared Repair poem to demonstrate theme, character-theme relationship, point of view, connotation, rhyme, alliteration, figurative language, and a final analysis paragraph about meaning and tone.",
 					evidence: [
 						"Annotations for theme, character evidence, point of view, word choice, sound, and figurative language.",
 						"A paragraph that combines multiple craft observations instead of listing them separately.",
@@ -3536,7 +3536,7 @@ const englishCourses = {
 			"MSA11 Master Project": [
 				{
 					title: "Writing from an Image Literature Showcase",
-					prompt: "Choose an original, public-domain, instructor-provided, or otherwise copyright-safe image and write a fictional literary piece that intentionally uses point of view, theme, character action, word choice, sound, and figurative language. Do not infer facts about real people shown in an image. Add a brief analysis explaining how the craft choices shape interpretation.",
+					prompt: "Use the supplied original The Last Platform image or its text description, or choose another original, public-domain, instructor-provided, or otherwise copyright-safe image. Write a fictional literary piece that intentionally uses point of view, theme, character action, word choice, sound, and figurative language. Do not infer facts about real people shown in an image. Add a brief analysis explaining how the craft choices shape interpretation.",
 					evidence: [
 						"An original short piece inspired by an image.",
 						"Visible use of point of view, theme development, word choice, sound, or figurative language.",

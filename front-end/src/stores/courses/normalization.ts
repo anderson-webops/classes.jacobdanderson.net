@@ -3,6 +3,7 @@ import { applyCourseImplementationArtifacts } from "./course-implementation-arti
 import { applyEntrepreneurshipReadings } from "./entrepreneurshipReadings";
 import { isJuniScratchProjectTitle } from "./juniScratchProjects";
 import { mapMarkdownProse } from "./markdownProse";
+import { applyMiddleSchoolLiteratureReadings } from "./middleSchoolLiteratureReadings";
 import { applyMiddleSchoolWritingReadings } from "./middleSchoolWritingReadings";
 import { buildProjectGuidance } from "./projectGuidance";
 import { applyPyGamesCourseWorkflows } from "./pyGamesCourseWorkflows";
@@ -9839,6 +9840,8 @@ export function normalizeRawCourse(id: string, rawCourse: RawCourse) {
 	preserveDesignPatternsJavaProgress(course, id);
 	if (id === "entrepreneurship-101")
 		applyEntrepreneurshipReadings(course, rawCourse);
+	if (id === "middle-school-a-literature")
+		applyMiddleSchoolLiteratureReadings(course, rawCourse);
 	if (
 		id === "middle-school-b-writing" ||
 		id === "middle-school-b-writing-retake"
