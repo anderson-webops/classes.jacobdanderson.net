@@ -735,6 +735,7 @@ function normalizeCourse(
 				id: moduleId,
 				...(moduleAliases.length ? { aliases: moduleAliases } : {}),
 				...(module.kind ? { kind: module.kind } : {}),
+				...(module.internal ? { internal: true } : {}),
 				title: module.title,
 				...(module.estimatedTime
 					? { estimatedTime: module.estimatedTime }

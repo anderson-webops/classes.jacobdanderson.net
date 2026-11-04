@@ -305,6 +305,7 @@ function appendPendingStaticMediaInventory(
 	course.modules.push({
 		kind: "appendix",
 		title: "Pending Source Media Inventory",
+		internal: true,
 		curriculum: [
 			{
 				title: `${course.name} Pending Source Media`,

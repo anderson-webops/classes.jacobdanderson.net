@@ -14,7 +14,7 @@ const sectionKinds: Record<string, LessonContentSection["kind"]> = {
 	goal: "learn",
 	goals: "learn",
 	"learning goals": "learn",
-	"project goal": "learn",
+	"project goal": "assignment",
 	"concept focus": "learn",
 	"key distinction": "learn",
 	concept: "learn",

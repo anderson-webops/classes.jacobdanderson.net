@@ -609,7 +609,9 @@ const completedItemIdSet = computed(
 	() => new Set(selectedCourseProgress.value?.completedItemIds ?? [])
 );
 
-const courseModules = computed(() => selectedCourse.value?.modules ?? []);
+const courseModules = computed(() =>
+	(selectedCourse.value?.modules ?? []).filter(module => !module.internal)
+);
 const coreCourseModules = computed(() =>
 	courseModules.value.filter(isCoreModule)
 );

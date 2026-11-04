@@ -6,6 +6,19 @@ import {
 import { normalizeInlineCourseMarkdown } from "@/modules/courseMarkdown";
 
 describe("lesson content presentation", () => {
+	it("keeps the project directive visible beside completion evidence", () => {
+		const sections = lessonContentSections(
+			"**Project goal:** Read the supplied passage and compare two interpretations.\n**Completion evidence:**\n- Two quotations and a reasoning link."
+		);
+		const assignments = sections
+			.filter(section => section.kind === "assignment")
+			.map(section => section.content)
+			.join(" ");
+		expect(assignments).toContain(
+			"Read the supplied passage and compare two interpretations."
+		);
+		expect(assignments).toContain("Two quotations and a reasoning link.");
+	});
 	it("never absorbs required steps into a preceding learning goal", () => {
 		for (const label of ["Build steps", "Your custom task"]) {
 			const sections = lessonContentSections(

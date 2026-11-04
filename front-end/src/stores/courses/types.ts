@@ -23,6 +23,8 @@ export interface RawCourseModuleItem {
 export interface RawCourseModule {
 	id?: string;
 	aliases?: string[];
+	/** Retain maintenance records without offering them as course material. */
+	internal?: boolean;
 	kind?: "module" | "transition" | "appendix";
 	title: string;
 	estimatedTime?: string;
@@ -63,6 +65,7 @@ export interface CourseModuleItem extends RawCourseModuleItem {
 export interface CourseModule {
 	id: string;
 	aliases?: string[];
+	internal?: boolean;
 	kind?: "module" | "transition" | "appendix";
 	title: string;
 	estimatedTime?: string;
