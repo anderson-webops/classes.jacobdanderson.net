@@ -1,7 +1,7 @@
 import { parseGitHubResource } from "./codePreview";
 
 export const pyGamesSourceRevision = "abc7a6c6cb9bc991b37ca6eb239f3d418185b09f";
-const golfSourceRevision = "946c229927604dcad70e2e970263836a10df6bf7";
+const golfSourceRevision = "965e5319fb95bff5d4284bb8bc17bcb53d1085ca";
 export const pyGamesLessonSourceFiles: Record<string, string> = {
 	"pyg1 project 1: rainbow fill": "PyG1-Rainbow-Fill.py",
 	"pyg1 project 2: bouncing alien": "PyG1-Bouncing-Alien.py",
