@@ -35,6 +35,7 @@ export async function checkScratchOriginalImports(page, { origin, files, loaded,
 			const vm = window.__courseTestVm;
 			const actual = JSON.parse(vm.toJSON());
 			const problems = [];
+			const mediaMismatches = [];
 			for (const target of expected.targets) {
 				const current = actual.targets.find(item => item.name === target.name && item.isStage === target.isStage);
 				if (!current) {
@@ -50,14 +51,20 @@ export async function checkScratchOriginalImports(page, { origin, files, loaded,
 				for (const kind of ["costumes", "sounds"]) {
 					const wanted = target[kind].map(asset => `${asset.name}:${asset.assetId}`);
 					const have = current[kind].map(asset => `${asset.name}:${asset.assetId}`);
-					if (JSON.stringify(wanted) !== JSON.stringify(have)) problems.push(`Changed ${kind} in ${target.name}`);
+					if (JSON.stringify(wanted) !== JSON.stringify(have)) {
+						problems.push(`Changed ${kind} in ${target.name}`);
+						const runtimeTarget = vm.runtime.targets.find(item => item.getName() === target.name && item.isStage === target.isStage);
+						mediaMismatches.push({ target: target.name, kind, expected: target[kind], actual: current[kind], loaded: runtimeTarget.sprite[kind].map(asset => ({ name: asset.name, assetId: asset.assetId, dataFormat: asset.dataFormat, broken: asset.broken && { assetId: asset.broken.assetId, dataFormat: asset.broken.dataFormat } })) });
+					}
 				}
 			}
 			const comment = actual.targets.find(target => target.isStage).comments?.[attributionId]?.text;
 			if (!comment?.includes(original.url) || !comment.includes("CC BY-SA 2.0")) problems.push("Missing portable attribution");
 			const extensions = original.extensions.map(extension => ({ extension, loaded: vm.extensionManager.isExtensionLoaded(extension) }));
-			return { problems, targets: actual.targets.length, extensions, attribution: comment };
+			return { problems, mediaMismatches, targets: actual.targets.length, extensions, attribution: comment };
 		}, { expected, original, attributionId: originalAttributionId(original.id) });
+		if (snapshot.problems.length)
+			await writeFile(path.join(output, `project-${original.id}-mismatch.json`), `${JSON.stringify(snapshot, null, 2)}\n`);
 		assert.deepEqual(snapshot.problems, [], original.id);
 		assert.equal(snapshot.targets, expected.targets.length);
 		assert.ok(snapshot.extensions.every(extension => extension.loaded), `${original.id}: extension not loaded`);
