@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "editorVersion": "15.1.1",
+  "editorRevision": "99e4c3faa72b29b67b5e35d75ea72260737b5f6b",
+  "changes": {
+    "87e963282db9e020e8c4d075891ea12b.svg": {
+      "file": "e0be5a7d65ef3306d61bbbd6b54f1064.svg",
+      "bytes": 9981,
+      "sha256": "a0e94a79304bd94a1448d223e61d07ae83f2831fe043998125d7c52d12be8663",
+      "sourceSHA256": "d560b7c89be9c2cbcf24a09e0ab623c830a0ef85079271210a8e6f0ea47086a3",
+      "change": "Inline the existing local clipping rectangle so SVG sanitization retains the backdrop rays."
+    },
+    "1a11e772f871f1688126a4869ab83c44.svg": {
+      "file": "ce1bef6ecce8a54bdcf0d841a05aee96.svg",
+      "bytes": 13543,
+      "sha256": "52389b3dfa203f9136b7402e10bd5f60edc17ae7269bcaa3b045d2cc34c4aaa9",
+      "sourceSHA256": "9a966a383042754a8ba381e217f57f0e0d82aff4cc123d3fe205538179a328d0",
+      "change": "Normalize SVG element prefixes before sanitization, preserving the default SVG namespace and every shape."
+    }
+  }
+}

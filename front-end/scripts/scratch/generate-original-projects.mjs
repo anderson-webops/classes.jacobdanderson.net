@@ -14,6 +14,9 @@ const provenance = JSON.parse(
 const integrity = JSON.parse(
 	await readFile(new URL("asset-integrity.json", root), "utf8")
 );
+const compatibility = JSON.parse(
+	await readFile(new URL("compatibility.json", root), "utf8")
+);
 const assets = new Map();
 const sha256 = bytes => createHash("sha256").update(bytes).digest("hex");
 export const originalScratchProjects = catalog.projects;
@@ -46,7 +49,7 @@ async function originalAsset(name) {
 	return assets.get(name);
 }
 
-/** Keep the original program and media; add only a portable attribution comment. */
+/** Retain the complete upstream source beside narrowly corrected display assets. */
 export async function createOriginalProject(id) {
 	const original = originalScratchProjects.find(project => project.id === id);
 	if (!original || !/^[1-9]\d{0,11}$/.test(id))
@@ -68,6 +71,40 @@ export async function createOriginalProject(id) {
 			`Original attribution identifier already exists: ${id}`
 		);
 	}
+	const files = { "SOURCE/project.json": raw };
+	const compatibilityChanges = new Map();
+	for (const target of project.targets) {
+		for (const asset of [...target.costumes, ...target.sounds]) {
+			const name = asset.md5ext || `${asset.assetId}.${asset.dataFormat}`;
+			files[name] ??= await originalAsset(name);
+		}
+		for (const costume of target.costumes) {
+			const name =
+				costume.md5ext || `${costume.assetId}.${costume.dataFormat}`;
+			const correction = compatibility.changes[name];
+			if (!correction) continue;
+			if (!/^[a-f0-9]{32}\.svg$/.test(correction.file))
+				throw new Error("Invalid Scratch compatibility asset name");
+			const bytes = await readFile(
+				new URL(`compatibility-assets/${correction.file}`, root)
+			);
+			if (
+				sha256(files[name]) !== correction.sourceSHA256 ||
+				bytes.length !== correction.bytes ||
+				sha256(bytes) !== correction.sha256 ||
+				createHash("md5").update(bytes).digest("hex") !==
+					correction.file.split(".")[0]
+			) {
+				throw new Error(
+					`Scratch compatibility asset identity mismatch: ${name}`
+				);
+			}
+			files[correction.file] = bytes;
+			costume.assetId = correction.file.split(".")[0];
+			costume.md5ext = correction.file;
+			compatibilityChanges.set(name, { original: name, ...correction });
+		}
+	}
 	const credit = [
 		`${original.name} by ${original.author}`,
 		`Source: ${original.url}`,
@@ -75,7 +112,9 @@ export async function createOriginalProject(id) {
 		provenance[id].credits
 			? `Original credits: ${provenance[id].credits}`
 			: "",
-		"Changes: attribution comment added."
+		compatibilityChanges.size
+			? "Changes: attribution comment and SVG compatibility corrections. Original project: SOURCE/project.json; original media retained in this archive."
+			: "Changes: attribution comment added."
 	]
 		.filter(Boolean)
 		.join("\n");
@@ -89,17 +128,14 @@ export async function createOriginalProject(id) {
 		minimized: true,
 		text: credit
 	};
-	const files = {
-		"project.json": strToU8(JSON.stringify(project)),
-		"SOURCE.txt": strToU8(
-			`${credit}\n\nOriginal instructions:\n${provenance[id].instructions}\n`
-		)
-	};
-	for (const target of project.targets) {
-		for (const asset of [...target.costumes, ...target.sounds]) {
-			const name = asset.md5ext || `${asset.assetId}.${asset.dataFormat}`;
-			files[name] ??= await originalAsset(name);
-		}
+	files["project.json"] = strToU8(JSON.stringify(project));
+	files["SOURCE.txt"] = strToU8(
+		`${credit}\n\nOriginal instructions:\n${provenance[id].instructions}\n`
+	);
+	if (compatibilityChanges.size) {
+		files["SOURCE/compatibility.json"] = strToU8(
+			JSON.stringify([...compatibilityChanges.values()], null, 2)
+		);
 	}
 	const archive = zipSync(files, { level: 6, mtime: new Date(2026, 0, 1) });
 	if (archive.length > 20 * 1024 * 1024) {
