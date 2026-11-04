@@ -17,7 +17,7 @@ import {
 import { checkScratchConditionalCourse, scratchCourseAccount } from "./scratch-conditional-course-checks.mjs";
 import { checkScratchEducationalQuiz } from "./scratch-educational-quiz-checks.mjs";
 import { checkScratchGameProgression } from "./scratch-game-progression-checks.mjs";
-import { checkScratchOriginalImports } from "./scratch-original-import-checks.mjs";
+import { checkScratchEventReading, checkScratchOriginalImports } from "./scratch-original-import-checks.mjs";
 
 const root = fileURLToPath(new URL("../front-end/", import.meta.url));
 nodeTest(
@@ -436,6 +436,13 @@ nodeTest(
 			await page.screenshot({
 				path: "/tmp/scratch-classroom-editor.png"
 			});
+			await verifyScope("event-reading", () => checkScratchEventReading(page, {
+				origin: "http://127.0.0.1:5198",
+				files,
+				setRole: (role) => {
+					courseRole = role;
+				}
+			}));
 			await verifyScope("originals", () => checkScratchOriginalImports(page, {
 				origin: "http://127.0.0.1:5198",
 				files,

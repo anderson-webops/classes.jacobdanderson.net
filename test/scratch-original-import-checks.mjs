@@ -5,12 +5,44 @@ import process from "node:process";
 import { strFromU8, unzipSync } from "fflate";
 import { originalAttributionId, originalScratchProjects } from "../front-end/scripts/scratch/generate-original-projects.mjs";
 
+export async function checkScratchEventReading(page, { origin, files, setRole }) {
+	const output = process.env.SCRATCH_ORIGINAL_BROWSER_PROOF_DIR || path.join(files, "original-proof");
+	await mkdir(output, { recursive: true });
+	const eventReadingViews = [];
+	for (const role of ["learner", "instructor"]) {
+		setRole(role);
+		for (const width of [390, 1280]) {
+			await page.setViewport({ width, height: 900 });
+			await page.goto("about:blank");
+			await page.goto(`${origin}/courses#scratch-level-1-gs2-event-listeners`, { waitUntil: "networkidle2" });
+			await page.waitForSelector(".lesson-view-toggle button");
+			await page.click(".lesson-view-toggle button:first-child");
+			await page.waitForFunction(() => [...document.querySelectorAll(".lesson-item")].some(item => item.querySelector("h5")?.textContent.includes("Basic event listeners")));
+			await page.$$eval(".lesson-item", items => items.find(item => item.querySelector("h5")?.textContent.includes("Basic event listeners")).scrollIntoView({ behavior: "instant", block: "center" }));
+			await page.waitForFunction(() => [...document.querySelectorAll(".lesson-item")].some(item => item.querySelector("h5")?.textContent.includes("Basic event listeners") && item.textContent.includes("top to bottom") && item.querySelector("table")));
+			const reading = await page.$$eval(".lesson-item", (items) => {
+				const item = items.find(item => item.querySelector("h5")?.textContent.includes("Basic event listeners"));
+				return { text: item.textContent, rows: [...item.querySelectorAll("tbody tr")].map(row => [...row.querySelectorAll("td")].map(cell => cell.textContent.trim())), contained: item.scrollWidth <= item.clientWidth && document.documentElement.scrollWidth <= innerWidth };
+			});
+			assert.deepEqual(reading.rows, [["Up", "0"], ["Right", "90"], ["Down", "180"], ["Left", "-90"]]);
+			assert.match(reading.text, /point in direction \(0\)/);
+			assert.match(reading.text, /move \(10\) steps/);
+			assert.match(reading.text, /another event is needed to point again/);
+			assert.match(reading.text, /start sound.*continues immediately/s);
+			assert.ok(reading.contained, `${role}/${width}: event reading overflow`);
+			await page.screenshot({ path: path.join(output, `event-reading-${role}-${width}.png`) });
+			eventReadingViews.push({ role, width, ...reading });
+			await writeFile(path.join(output, "event-reading.json"), `${JSON.stringify({ complete: false, views: eventReadingViews }, null, 2)}\n`);
+		}
+	}
+	await writeFile(path.join(output, "event-reading.json"), `${JSON.stringify({ complete: true, sourceCommit: process.env.GITHUB_SHA, views: eventReadingViews }, null, 2)}\n`);
+}
+
 export async function checkScratchOriginalImports(page, { origin, files, loaded, downloadProject, openFile, newProject, setRole, acceptDialogs }) {
 	const output = process.env.SCRATCH_ORIGINAL_BROWSER_PROOF_DIR || path.join(files, "original-proof");
 	await mkdir(output, { recursive: true });
 	const requests = [];
 	const records = [];
-	const eventReadingViews = [];
 	const speechResponses = [];
 	const observeSpeech = (response) => {
 		if (new URL(response.url()).hostname === "synthesis-service.scratch.mit.edu")
@@ -145,33 +177,6 @@ export async function checkScratchOriginalImports(page, { origin, files, loaded,
 		return { ...snapshot, vectorDifferences: undefined };
 	}
 	try {
-		for (const role of ["learner", "instructor"]) {
-			setRole(role);
-			for (const width of [390, 1280]) {
-				await page.setViewport({ width, height: 900 });
-				await page.goto("about:blank");
-				await page.goto(`${origin}/courses#scratch-level-1-gs2-event-listeners`, { waitUntil: "networkidle2" });
-				await page.waitForSelector(".lesson-view-toggle button");
-				await page.click(".lesson-view-toggle button:first-child");
-				await page.waitForFunction(() => [...document.querySelectorAll(".lesson-item")].some(item => item.querySelector("h5")?.textContent.includes("Basic event listeners")));
-				await page.$$eval(".lesson-item", items => items.find(item => item.querySelector("h5")?.textContent.includes("Basic event listeners")).scrollIntoView({ behavior: "instant", block: "center" }));
-				await page.waitForFunction(() => [...document.querySelectorAll(".lesson-item")].some(item => item.querySelector("h5")?.textContent.includes("Basic event listeners") && item.textContent.includes("top to bottom") && item.querySelector("table")));
-				const reading = await page.$$eval(".lesson-item", (items) => {
-					const item = items.find(item => item.querySelector("h5")?.textContent.includes("Basic event listeners"));
-					return { text: item.textContent, rows: [...item.querySelectorAll("tbody tr")].map(row => [...row.querySelectorAll("td")].map(cell => cell.textContent.trim())), contained: item.scrollWidth <= item.clientWidth && document.documentElement.scrollWidth <= innerWidth };
-				});
-				assert.deepEqual(reading.rows, [["Up", "0"], ["Right", "90"], ["Down", "180"], ["Left", "-90"]]);
-				assert.match(reading.text, /point in direction \(0\)/);
-				assert.match(reading.text, /move \(10\) steps/);
-				assert.match(reading.text, /another event is needed to point again/);
-				assert.match(reading.text, /start sound.*continues immediately/s);
-				assert.ok(reading.contained, `${role}/${width}: event reading overflow`);
-				await page.screenshot({ path: path.join(output, `event-reading-${role}-${width}.png`) });
-				eventReadingViews.push({ role, width, ...reading });
-				await writeFile(path.join(output, "event-reading.json"), `${JSON.stringify({ complete: false, views: eventReadingViews }, null, 2)}\n`);
-			}
-		}
-		await writeFile(path.join(output, "event-reading.json"), `${JSON.stringify({ complete: true, sourceCommit: process.env.GITHUB_SHA, views: eventReadingViews }, null, 2)}\n`);
 		setRole("learner");
 		await page.setViewport({ width: 1280, height: 900 });
 		await page.goto("about:blank");
