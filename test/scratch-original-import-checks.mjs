@@ -36,12 +36,40 @@ export async function checkScratchOriginalImports(page, { origin, files, loaded,
 	};
 	async function inspect(original) {
 		const expected = JSON.parse(await readFile(new URL(`../front-end/scripts/scratch/originals/projects/${original.id}.json`, import.meta.url), "utf8"));
+		const vectors = {};
+		for (const target of expected.targets) {
+			for (const costume of target.costumes) {
+				if (costume.dataFormat === "svg")
+					vectors[costume.assetId] = (await readFile(new URL(`../front-end/scripts/scratch/originals/assets/${costume.assetId}.svg`, import.meta.url))).toString("base64");
+			}
+		}
 		const frame = page.frames().find(frame => frame !== page.mainFrame());
-		const snapshot = await frame.evaluate(({ expected, original, attributionId }) => {
+		const snapshot = await frame.evaluate(async ({ expected, vectors, original, attributionId }) => {
 			const vm = window.__courseTestVm;
 			const actual = JSON.parse(vm.toJSON());
 			const problems = [];
 			const mediaMismatches = [];
+			const vectorConversions = [];
+			async function pixels(bytes) {
+				const url = URL.createObjectURL(new Blob([bytes], { type: "image/svg+xml" }));
+				try {
+					const image = new Image();
+					image.src = url;
+					await image.decode();
+					const width = image.naturalWidth;
+					const height = image.naturalHeight;
+					if (width < 1 || height < 1 || width > 4096 || height > 4096) throw new Error("Unexpected original vector dimensions");
+					const canvas = document.createElement("canvas");
+					canvas.width = width;
+					canvas.height = height;
+					const context = canvas.getContext("2d");
+					context.drawImage(image, 0, 0);
+					return { width, height, data: context.getImageData(0, 0, width, height).data };
+				}
+				finally {
+					URL.revokeObjectURL(url);
+				}
+			}
 			for (const target of expected.targets) {
 				const current = actual.targets.find(item => item.name === target.name && item.isStage === target.isStage);
 				if (!current) {
@@ -55,11 +83,23 @@ export async function checkScratchOriginalImports(page, { origin, files, loaded,
 						problems.push(`Changed program block ${target.name}:${id}`);
 				}
 				for (const kind of ["costumes", "sounds"]) {
-					const wanted = target[kind].map(asset => `${asset.name}:${asset.assetId}`);
-					const have = current[kind].map(asset => `${asset.name}:${asset.assetId}`);
-					if (JSON.stringify(wanted) !== JSON.stringify(have)) {
+					const runtimeTarget = vm.runtime.targets.find(item => item.getName() === target.name && item.isStage === target.isStage);
+					const checks = await Promise.all(target[kind].map(async (wanted, index) => {
+						const have = current[kind][index];
+						const loaded = runtimeTarget.sprite[kind][index];
+						if (!have || loaded?.broken || wanted.name !== have.name || wanted.dataFormat !== have.dataFormat) return false;
+						if (kind === "costumes" && ["rotationCenterX", "rotationCenterY", "bitmapResolution"].some(key => wanted[key] !== undefined && wanted[key] !== have[key])) return false;
+						if (wanted.assetId === have.assetId) return true;
+						if (kind !== "costumes" || wanted.dataFormat !== "svg" || !loaded?.asset) return false;
+						const source = Uint8Array.from(atob(vectors[wanted.assetId]), character => character.charCodeAt(0));
+						const before = await pixels(source);
+						const after = await pixels(loaded.asset.data);
+						const identical = before.width === after.width && before.height === after.height && before.data.every((value, offset) => value === after.data[offset]);
+						vectorConversions.push({ target: target.name, name: wanted.name, original: wanted.assetId, sanitized: have.assetId, width: before.width, height: before.height, pixelIdentical: identical });
+						return identical;
+					}));
+					if (current[kind].length !== target[kind].length || checks.some(ok => !ok)) {
 						problems.push(`Changed ${kind} in ${target.name}`);
-						const runtimeTarget = vm.runtime.targets.find(item => item.getName() === target.name && item.isStage === target.isStage);
 						mediaMismatches.push({ target: target.name, kind, expected: target[kind], actual: current[kind], loaded: runtimeTarget.sprite[kind].map(asset => ({ name: asset.name, assetId: asset.assetId, dataFormat: asset.dataFormat, broken: asset.broken && { assetId: asset.broken.assetId, dataFormat: asset.broken.dataFormat } })) });
 					}
 				}
@@ -67,8 +107,8 @@ export async function checkScratchOriginalImports(page, { origin, files, loaded,
 			const comment = actual.targets.find(target => target.isStage).comments?.[attributionId]?.text;
 			if (!comment?.includes(original.url) || !comment.includes("CC BY-SA 2.0")) problems.push("Missing portable attribution");
 			const extensions = original.extensions.map(extension => ({ extension, loaded: vm.extensionManager.isExtensionLoaded(extension) }));
-			return { problems, mediaMismatches, targets: actual.targets.length, extensions, attribution: comment };
-		}, { expected, original, attributionId: originalAttributionId(original.id) });
+			return { problems, mediaMismatches, vectorConversions, targets: actual.targets.length, extensions, attribution: comment };
+		}, { expected, vectors, original, attributionId: originalAttributionId(original.id) });
 		if (snapshot.problems.length)
 			await writeFile(path.join(output, `project-${original.id}-mismatch.json`), `${JSON.stringify(snapshot, null, 2)}\n`);
 		assert.deepEqual(snapshot.problems, [], original.id);
