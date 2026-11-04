@@ -211,7 +211,7 @@ export const linuxVerifiedPacks = [
 	},
 	{
 		pack: "LS-11-unit-5-processes-and-job-control-supplemental-2",
-		revision: "f52d55e992742d51ee034a4489cf5982f6031652",
+		revision: "312d530f873ccf98e27d8a7ef8f0d3331ac16d62",
 		roleFiles: ["pipeline-notes.md", "pipeline_worker.py"],
 		coreItemId:
 			"linux-systems-unit-5-processes-and-job-control-supplemental-process-control-transfer-practice",
@@ -219,7 +219,7 @@ export const linuxVerifiedPacks = [
 	},
 	{
 		pack: "LS-12-unit-5-processes-and-job-control-supplemental-3",
-		revision: "f52d55e992742d51ee034a4489cf5982f6031652",
+		revision: "312d530f873ccf98e27d8a7ef8f0d3331ac16d62",
 		roleFiles: ["adoption-notes.md", "adoption_lab.py"],
 		coreItemId:
 			"linux-systems-unit-5-processes-and-job-control-supplemental-process-control-extension-practice",
