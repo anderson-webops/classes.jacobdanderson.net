@@ -102,7 +102,7 @@ describe("Scratch classroom", () => {
 	it("limits frame resources to the editor and public Scratch assets", () => {
 		const frame = scratchFrameDocument("https://example.test", "channel");
 		expect(frame).toContain(
-			"connect-src https://example.test/scratch-runtime/ https://assets.scratch.mit.edu;"
+			"connect-src https://example.test/scratch-runtime/ https://assets.scratch.mit.edu https://synthesis-service.scratch.mit.edu/synth;"
 		);
 		expect(frame).toContain("worker-src 'none'");
 		expect(frame).toContain("form-action 'none'");

@@ -109,3 +109,20 @@ it("loads the confirmed original and preserves unsaved work when replacement is 
 		wrapper.unmount();
 	}
 });
+
+it("discloses the original speech project's online service before import", async () => {
+	route.query = {
+		originalProject: "338832976",
+		course: "scratch-level-2",
+		role: "reference"
+	};
+	const { wrapper } = await workspace();
+	try {
+		expect(wrapper.get(".scratch-original-import").text()).toContain(
+			"Text to Speech sends spoken text to Scratch’s online speech service."
+		);
+		expect(fetchScratchOriginalArchive).not.toHaveBeenCalled();
+	} finally {
+		wrapper.unmount();
+	}
+});

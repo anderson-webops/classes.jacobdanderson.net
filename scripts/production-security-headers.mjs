@@ -81,7 +81,8 @@ const contentSecurityPolicies = Object.freeze(
 					"https://cdn.jsdelivr.net",
 					"https://pypi.org",
 					"https://files.pythonhosted.org",
-					"https://assets.scratch.mit.edu"
+					"https://assets.scratch.mit.edu",
+					"https://synthesis-service.scratch.mit.edu/synth"
 				],
 				"frame-src": ["'self'"],
 				"media-src": ["'self'", "data:", "blob:"],

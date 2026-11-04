@@ -10,11 +10,17 @@ export async function checkScratchOriginalImports(page, { origin, files, loaded,
 	await mkdir(output, { recursive: true });
 	const requests = [];
 	const records = [];
+	const speechResponses = [];
+	const observeSpeech = (response) => {
+		if (new URL(response.url()).hostname === "synthesis-service.scratch.mit.edu")
+			speechResponses.push({ url: response.url(), status: response.status(), contentType: response.headers()["content-type"] });
+	};
 	const observe = (request) => {
 		const url = new URL(request.url());
 		if (/^\/scratch-originals\/\d+\.sb3$/.test(url.pathname)) requests.push(url.pathname);
 	};
 	page.on("request", observe);
+	page.on("response", observeSpeech);
 	const route = href => page.evaluate(async (href) => {
 		await document.querySelector("#app").__vue_app__.config.globalProperties.$router.push(href);
 	}, href);
@@ -118,6 +124,44 @@ export async function checkScratchOriginalImports(page, { origin, files, loaded,
 			await page.keyboard.press(key);
 			await spinnerFrame.waitForFunction(direction => window.__courseTestVm.runtime.targets.find(target => !target.isStage).direction === direction, {}, direction);
 		}
+		const spelling = originalScratchProjects.find(project => project.id === "338832976");
+		await route(sourceHref(spelling));
+		assert.match(await page.$eval(".scratch-original-import", element => element.textContent), /Text to Speech sends spoken text/);
+		await confirm();
+		const speechFrame = page.frames().find(frame => frame !== page.mainFrame());
+		await speechFrame.evaluate(() => {
+			const engine = window.__courseTestVm.runtime.audioEngine;
+			const decode = engine.decodeSoundPlayer;
+			window.__courseRestoreSpeechDecode = () => {
+				engine.decodeSoundPlayer = decode;
+			};
+			window.__courseSpeechPlayback = [];
+			engine.decodeSoundPlayer = async function (sound) {
+				const player = await decode.call(this, sound);
+				const record = { bytes: sound.data.buffer.byteLength, played: false, stopped: false };
+				window.__courseSpeechPlayback.push(record);
+				const play = player.play;
+				player.play = function (...args) {
+					record.played = true;
+					return play.apply(this, args);
+				};
+				player.on("stop", () => {
+					record.stopped = true;
+				});
+				return player;
+			};
+		});
+		await speechFrame.locator("[class*=\"green-flag_green-flag\"]").click();
+		await speechFrame.waitForFunction(() => window.__courseSpeechPlayback.filter(record => record.played && record.stopped && record.bytes > 0).length >= 2, { timeout: 45000 });
+		await speechFrame.waitForSelector("input[class*=question], [class*=question_question-input] input", { visible: true });
+		const speechPlayback = await speechFrame.evaluate(() => {
+			window.__courseTestVm.stopAll();
+			window.__courseRestoreSpeechDecode();
+			return window.__courseSpeechPlayback;
+		});
+		assert.equal(speechResponses.length, 2);
+		assert.ok(speechResponses.every(response => response.status === 200 && response.contentType.startsWith("audio/")));
+		await writeFile(path.join(output, "speech.json"), `${JSON.stringify({ project: spelling.id, responses: speechResponses, playback: speechPlayback, originalProgramReachedLetterPrompt: true }, null, 2)}\n`);
 		const dragonfly = originalScratchProjects.find(project => project.id === "287707460");
 		await route(sourceHref(dragonfly));
 		await confirm();
@@ -155,7 +199,7 @@ export async function checkScratchOriginalImports(page, { origin, files, loaded,
 		await page.waitForSelector(".scratch-original-import button:not([disabled])");
 		await page.screenshot({ path: path.join(output, "original-consent-390.png"), fullPage: false });
 		await confirm();
-		await writeFile(path.join(output, "imports.json"), `${JSON.stringify({ complete: true, sourceCommit: process.env.GITHUB_SHA, records, bothCourseRolesVerified: true, consentBeforeFetch: true, cancelBeforeFetch: true, unsavedReplacementDeclined: true, originalKeyboardEventsVerified: true, editedFileReopenedAfterBlankReset: true, portableAttributionRetained: true, speechServiceExecutionVerified: false, wholeCourseSemanticReviewComplete: false }, null, 2)}\n`);
+		await writeFile(path.join(output, "imports.json"), `${JSON.stringify({ complete: true, sourceCommit: process.env.GITHUB_SHA, records, bothCourseRolesVerified: true, consentBeforeFetch: true, cancelBeforeFetch: true, unsavedReplacementDeclined: true, originalKeyboardEventsVerified: true, editedFileReopenedAfterBlankReset: true, portableAttributionRetained: true, speechServiceExecutionVerified: true, wholeCourseSemanticReviewComplete: false }, null, 2)}\n`);
 	}
 	catch (error) {
 		await page.screenshot({ path: path.join(output, "failed.png"), fullPage: false }).catch(() => {});
@@ -165,5 +209,6 @@ export async function checkScratchOriginalImports(page, { origin, files, loaded,
 	finally {
 		acceptDialogs(true);
 		page.off("request", observe);
+		page.off("response", observeSpeech);
 	}
 }

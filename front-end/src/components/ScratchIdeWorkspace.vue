@@ -334,6 +334,10 @@ defineExpose({ stop: () => send("stop") });
 					>{{ scratchOriginalLicense.name }}</a
 				>
 			</p>
+			<p v-if="pendingOriginal.extensions.includes('text2speech')">
+				Text to Speech sends spoken text to Scratch’s online speech
+				service.
+			</p>
 			<button :disabled="!ready || busy" @click="openOriginal">
 				Open project
 			</button>
@@ -462,6 +466,10 @@ defineExpose({ stop: () => send("stop") });
 				<strong>Normal:</strong> {{ selected.normal }}
 				<strong>Hard:</strong> {{ selected.hard }}
 				<strong>Check:</strong> {{ selected.check }}
+			</p>
+			<p>
+				Text to Speech sends spoken text to Scratch’s online speech
+				service.
 			</p>
 			<p>
 				Camera, microphone, cloud variables and external extensions are

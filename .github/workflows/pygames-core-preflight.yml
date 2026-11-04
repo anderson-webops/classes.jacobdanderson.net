@@ -329,6 +329,7 @@ jobs:
           test/components.scratch-original-import.spec.test.ts
           test/scratch.classroom.spec.test.ts
           test/scratch.input.spec.test.ts
+          test/production-security-headers.spec.test.ts
           --no-file-parallelism --maxWorkers=1
       - name: Preserve legitimate course references
         run: >-
