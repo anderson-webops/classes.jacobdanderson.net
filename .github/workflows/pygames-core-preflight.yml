@@ -308,6 +308,7 @@ jobs:
           test/store.courses.self-study-browser-manifest.spec.test.ts
           test/components.courseexplorer-inventory.spec.test.ts
           test/modules.course-lesson-presentation.spec.test.ts
+          test/modules.authored-reading.spec.test.ts
           test/store.courses.grammar-mechanics-content.spec.test.ts
           test/store.courses.grammar-mechanics-flow.spec.test.ts
           test/store.courses.middle-school-literature-content.spec.test.ts

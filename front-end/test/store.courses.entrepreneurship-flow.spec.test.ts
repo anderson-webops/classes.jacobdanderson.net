@@ -73,9 +73,9 @@ describe("Entrepreneurship 101 learner flow", () => {
 				published["entrepreneurship-101"].items + 13
 			);
 			for (const added of restored)
-				expect(identities.filter(item => item.id === added.id)).toEqual([
-					added
-				]);
+				expect(identities.filter(item => item.id === added.id)).toEqual(
+					[added]
+				);
 			expect(
 				createHash("sha256")
 					.update(JSON.stringify(originalIdentities))
@@ -91,10 +91,14 @@ describe("Entrepreneurship 101 learner flow", () => {
 				)
 			);
 			expect(projects).toHaveLength(19);
-			expect(projects.every(item => !isLessonLearningItem(item))).toBe(true);
+			expect(projects.every(item => !isLessonLearningItem(item))).toBe(
+				true
+			);
 			for (const reading of readings) {
 				expect(isLessonLearningItem(reading), reading.title).toBe(true);
-				expect(reading.content).not.toContain("Define the important terms");
+				expect(reading.content).not.toContain(
+					"Define the important terms"
+				);
 				expect(reading.content).toContain("## Worked");
 				expect(reading.content).toContain("**Course flow:**");
 			}
@@ -112,6 +116,7 @@ describe("Entrepreneurship 101 learner flow", () => {
 				expect(wrapper.text()).toContain("$5,600");
 				expect(wrapper.text()).toContain("$9,600");
 				expect(wrapper.text()).toContain("margin is undefined");
+				expect(wrapper.find("p").findAll("br")).toHaveLength(0);
 			} finally {
 				wrapper.unmount();
 			}

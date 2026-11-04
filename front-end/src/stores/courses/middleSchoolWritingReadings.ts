@@ -1,4 +1,5 @@
 import type { RawCourse } from "./types";
+import { formatAuthoredReading } from "./authoredReading";
 
 const carRide = `
 ## Original practice passage: Car Ride
@@ -430,7 +431,7 @@ export function applyMiddleSchoolWritingReadings(
 				`Missing Middle School Writing reading: ${original.title}`
 			);
 		}
-		item.content = `${content}\n\n${flow}`;
+		item.content = formatAuthoredReading(`${content}\n\n${flow}`);
 		item.contentKind = "reading";
 		item.preserveInstructions = true;
 		item.learningPath = original.curriculum[0].learningPath;

@@ -247,8 +247,8 @@ watch(
 }
 
 .item-content-markdown :deep(table) {
-	width: max-content;
-	inline-size: max-content;
+	width: 100%;
+	inline-size: 100%;
 	min-width: 100%;
 	min-inline-size: 100%;
 	max-width: none;

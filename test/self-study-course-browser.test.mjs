@@ -87,6 +87,66 @@ async function chooseView(page, position) {
 	);
 }
 
+async function checkTableLayout(page, anchor, width, stressWideTable) {
+	const result = await page.evaluate(
+		({ anchor, width, stressWideTable }) => {
+			const content = document
+				.getElementById(anchor)
+				.querySelector(".item-content-markdown");
+			const wrappers = [
+				...content.querySelectorAll(".markdown-table-scroll")
+			];
+			const compactTablesFit =
+				width < 1280 ||
+				wrappers.every(
+					wrapper =>
+						wrapper.querySelectorAll("thead th").length > 3 ||
+						wrapper.scrollWidth <= wrapper.clientWidth + 2
+				);
+			let wideTableScrolls = null;
+			if (stressWideTable && wrappers.length) {
+				const clone = content.cloneNode(true);
+				try {
+					for (const row of clone.querySelectorAll("tr"))
+						while (row.children.length < 12)
+							row.append(row.children[0].cloneNode(true));
+					content.parentElement.append(clone);
+					const wide = clone.querySelector(".markdown-table-scroll");
+					wideTableScrolls =
+						wide.scrollWidth > wide.clientWidth &&
+						document.documentElement.scrollWidth <= innerWidth;
+				} finally {
+					clone.remove();
+				}
+			}
+			return {
+				compactTablesFit,
+				wideTableScrolls,
+				forcedParagraphBreaks:
+					content.querySelectorAll(":scope > p > br").length
+			};
+		},
+		{ anchor, width, stressWideTable }
+	);
+	assert.equal(
+		result.compactTablesFit,
+		true,
+		"Compact comparison tables fit the desktop reading pane"
+	);
+	assert.equal(
+		result.forcedParagraphBreaks,
+		0,
+		"Prose wraps to the viewport instead of source-code line lengths"
+	);
+	if (stressWideTable)
+		assert.equal(
+			result.wideTableScrolls,
+			true,
+			"Genuinely wide tables keep independent scrolling"
+		);
+	return result;
+}
+
 async function checkCards(page, module, expected, optional) {
 	const rows = await page.$$eval(
 		"#course-reader-panel .lesson-list > .lesson-item",
@@ -320,6 +380,14 @@ test(
 										actual.tableRows,
 										item.tableRows
 									);
+									const tableLayout = await checkTableLayout(
+										page,
+										anchor,
+										width,
+										width === 1280 &&
+											module.title ===
+												"MSC16 Sentence Types"
+									);
 									for (const image of item.images)
 										await page.waitForFunction(
 											({ anchor, image }) =>
@@ -368,7 +436,8 @@ test(
 										contentSHA256: item.contentSHA256,
 										renderedTextSHA256: digest(actual.text),
 										tableRows: actual.tableRows,
-										imagesLoaded: item.images.length
+										imagesLoaded: item.images.length,
+										tableLayout
 									});
 								}
 								assert.equal(

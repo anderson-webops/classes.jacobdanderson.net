@@ -1,4 +1,5 @@
 import type { RawCourse } from "./types";
+import { formatAuthoredReading } from "./authoredReading";
 
 const readings: Record<string, string> = {
 	"ENT1 Design Thinking Methodology": `
@@ -369,7 +370,7 @@ export function applyEntrepreneurshipReadings(
 				`Missing Entrepreneurship reading or flow: ${title}`
 			);
 		}
-		item.content = `${content}\n\n${flow}`;
+		item.content = formatAuthoredReading(`${content}\n\n${flow}`);
 		item.contentKind = "reading";
 		item.preserveInstructions = true;
 		// Retain the published reading identity and independently assignable projects.

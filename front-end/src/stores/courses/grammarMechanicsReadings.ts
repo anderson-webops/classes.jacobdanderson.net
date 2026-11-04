@@ -1,4 +1,5 @@
 import type { RawCourse } from "./types";
+import { formatAuthoredReading } from "./authoredReading";
 
 const readings: Record<string, string> = {
 	"MSC1 Nouns, Pronouns & Adjectives": `
@@ -591,7 +592,7 @@ export function applyGrammarMechanicsReadings(
 				`Missing Grammar and Mechanics reading: ${original.title}`
 			);
 		}
-		item.content = `${content}\n\n${flow}`;
+		item.content = formatAuthoredReading(`${content}\n\n${flow}`);
 		item.contentKind = "reading";
 		item.preserveInstructions = true;
 		item.learningPath = original.curriculum[0].learningPath;
