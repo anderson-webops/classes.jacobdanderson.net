@@ -304,12 +304,16 @@ export async function checkScratchOriginalImports(page, { origin, files, loaded,
 		const beforeReplace = requests.length;
 		await route(sourceHref(originalScratchProjects.find(project => project.id === "287920173")));
 		acceptDialogs(false);
-		await page.click(".scratch-original-import button");
+		const replacementDialog = new Promise(resolve => page.once("dialog", dialog => resolve({ type: dialog.type(), message: dialog.message() })));
+		await page.locator(".scratch-original-import button").click();
+		assert.deepEqual(await replacementDialog, { type: "confirm", message: "Download your current Scratch project before replacing it. Continue without downloading?" });
 		acceptDialogs(true);
 		assert.equal(requests.length, beforeReplace, "Declining replacement preserves the current project");
 		assert.equal(await frame.$eval("input[placeholder='x']", input => input.value), "77");
 		assert.equal(await frame.evaluate(() => window.__courseTestVm.editingTarget.x), 77);
-		await page.click(".scratch-original-import button:nth-of-type(2)");
+		await page.locator(".scratch-original-import button:nth-of-type(2)").click();
+		await page.waitForSelector(".scratch-original-import", { hidden: true });
+		assert.equal(requests.length, beforeReplace, "Cancelling the source prompt never fetches a replacement");
 		await downloadProject("Dragonfly original edited.sb3");
 		const saved = unzipSync(new Uint8Array(await readFile(path.join(files, "Dragonfly original edited.sb3"))));
 		const project = JSON.parse(strFromU8(saved["project.json"]));

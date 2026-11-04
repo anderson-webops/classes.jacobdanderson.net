@@ -293,7 +293,7 @@ nodeTest(
 				"20"
 			);
 			await setProjectMenuOpen(false);
-			page.on("dialog", dialog => dialog.accept());
+			page.on("dialog", dialog => acceptDialogs ? dialog.accept() : dialog.dismiss());
 			await downloadProject("Two Arrows.sb3");
 			await page.waitForFunction(() =>
 				document
