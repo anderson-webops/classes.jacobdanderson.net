@@ -137,7 +137,8 @@ export async function checkScratchConditionalCourse(page, origin, setRole) {
 			for (const [title, id, required] of [
 				["Falling Catch: Catch or Miss", "falling-catch", "one drop from being counted as both"],
 				["Ready and Flying: A Two-State Projectile", "projectile-state", "Holding"],
-				["Three-Level Catch Game", "catch-levels", "does not demote an earned level"]
+				["Three-Level Catch Game", "catch-levels", "does not demote an earned level"],
+				["Educational Quiz: Start, Retry, Finish", "educational-quiz", "<answer = (Num1 + Num2)>"]
 			]) {
 				const content = await readLesson(page, title, id === "projectile-state" ? "Draw the states before coding" : required);
 				assert.ok(content.includes("Normal"));
@@ -148,6 +149,14 @@ export async function checkScratchConditionalCourse(page, origin, setRole) {
 					return url.pathname === "/ide" && url.searchParams.get("mode") === "scratch" && url.searchParams.get("starter") === id;
 				}), JSON.stringify(links));
 				assert.ok(links.includes(`/scratch-projects/${id}.sb3`));
+				if (id === "educational-quiz") {
+					const referenceLinks = links.filter((href) => {
+						const url = new URL(href, origin);
+						return url.pathname === "/ide" && url.searchParams.get("starter") === id && url.searchParams.get("role") === "reference";
+					});
+					assert.equal(referenceLinks.length, role === "instructor" ? 1 : 0);
+				}
+
 				const completionIsOptional = await page.$$eval(".lesson-item", (items, title) => {
 					const card = items.find(item => item.querySelector("h5")?.textContent.includes(title));
 					return [...card.querySelectorAll(".assignment-aside.is-optional")].some(section => section.textContent.includes("Download this starter") || section.textContent.includes("Explain and retain") || section.textContent.includes("Partner routine"));
@@ -160,7 +169,7 @@ export async function checkScratchConditionalCourse(page, origin, setRole) {
 					await card.dispose();
 				}
 			}
-			console.log(JSON.stringify({ event: "verified-scratch-optional-game-readings", role, width, continuations: 3, downloadAndIdeLinks: true, readableWithoutOverflow: true }));
+			console.log(JSON.stringify({ event: "verified-scratch-optional-game-readings", role, width, continuations: 4, downloadAndIdeLinks: true, readableWithoutOverflow: true }));
 		}
 	}
 }

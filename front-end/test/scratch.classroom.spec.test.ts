@@ -71,13 +71,13 @@ describe("Scratch classroom", () => {
 		expect(independent?.content).toContain("/scratch-projects/blank.sb3");
 		expect(independent?.solutionLink).toBeUndefined();
 	});
-	it("keeps the three guided game continuations optional within the six existing units", () => {
+	it("keeps the four guided game continuations optional within the six existing units", () => {
 		expect(scratchLevel1ClassroomCourse.modules.map(module => module.id)).toEqual(
 			Array.from({ length: 6 }, (_, index) => `scratch-classroom-${index + 1}`)
 		);
 		const finalUnit = scratchLevel1ClassroomCourse.modules[5];
 		const continuations = finalUnit.supplementalProjects?.filter(item => item.projectLink);
-		expect(continuations?.map(item => item.id)).toEqual(["falling-catch", "projectile-state", "catch-levels"]);
+		expect(continuations?.map(item => item.id)).toEqual(["falling-catch", "projectile-state", "catch-levels", "educational-quiz"]);
 		for (const item of continuations ?? []) {
 			expect(item.learningPath).toBe("choice");
 			expect(item.preserveInstructions).toBe(true);
@@ -95,6 +95,9 @@ describe("Scratch classroom", () => {
 		expect(continuations?.[0].content).toContain("one drop from being counted as both");
 		expect(continuations?.[1].content).toContain("Ready (0), Space pressed");
 		expect(continuations?.[2].content).toContain("does not demote an earned level");
+		expect(continuations?.[3].solutionLink).toBe("/ide?mode=scratch&starter=educational-quiz&role=reference");
+		expect(continuations?.[3].content).toContain("<answer = (Num1 + Num2)>");
+		expect(continuations?.[3].content).toContain("Score 3");
 	});
 	it("limits frame resources to the editor and public Scratch assets", () => {
 		const frame = scratchFrameDocument("https://example.test", "channel");

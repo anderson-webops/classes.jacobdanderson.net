@@ -16,6 +16,7 @@ import {
 } from "../front-end/scripts/scratch/generate-projects.mjs";
 import { checkScratchConditionalCourse, scratchCourseAccount } from "./scratch-conditional-course-checks.mjs";
 import { checkScratchGameProgression } from "./scratch-game-progression-checks.mjs";
+import { checkScratchEducationalQuiz } from "./scratch-educational-quiz-checks.mjs";
 
 const root = fileURLToPath(new URL("../front-end/", import.meta.url));
 nodeTest(
@@ -420,6 +421,12 @@ nodeTest(
 			});
 			await checkScratchConditionalCourse(page, "http://127.0.0.1:5198", (role) => {
 				courseRole = role;
+			});
+			await checkScratchEducationalQuiz(page, "http://127.0.0.1:5198", files, loaded, async filename => {
+				await setProjectMenuOpen(true);
+				await (await page.$(".file-control input")).uploadFile(filename);
+				await loaded();
+				await setProjectMenuOpen(false);
 			});
 			assert.deepEqual(errors, []);
 		}

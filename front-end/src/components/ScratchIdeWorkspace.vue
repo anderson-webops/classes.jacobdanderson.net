@@ -45,12 +45,18 @@ const selected = computed(() =>
 	starter.value === "blank"
 		? {
 				id: "blank",
+				publishReference: false,
 				name: "Independent Mini-Game",
 				normal: "",
 				hard: "",
 				check: ""
 			}
 		: catalog.find(item => item.id === starter.value)
+);
+const reference = computed(
+	() =>
+		route.query.role === "reference" &&
+		selected.value?.publishReference === true
 );
 function send(type: string, extra = {}) {
 	frame.value?.contentWindow?.postMessage(
@@ -78,16 +84,16 @@ async function loadSelectedStarter() {
 	status.value = "Opening project…";
 	try {
 		const response = await fetch(
-			`/scratch-projects/${selected.value.id}.sb3`,
+			`/scratch-projects/${selected.value.id}${reference.value ? "-solution" : ""}.sb3`,
 			{ credentials: "omit" }
 		);
 		if (!response.ok) throw new Error("Missing starter");
 		const bytes = await response.arrayBuffer();
-		title.value = selected.value.name;
+		title.value = `${selected.value.name}${reference.value ? " Reference" : ""}`;
 		send("load", { bytes });
 	} catch {
 		status.value =
-			"The starter could not be opened. Download it from the course and use Open .sb3.";
+			"The project could not be opened. Download it from the course and use Open .sb3.";
 		busy.value = false;
 	}
 }
@@ -166,8 +172,8 @@ function beforeUnload(event: BeforeUnloadEvent) {
 	}
 }
 watch(
-	() => route.query.starter,
-	value => {
+	() => [route.query.starter, route.query.role],
+	([value]) => {
 		if (
 			typeof value === "string" &&
 			(value === "blank" || catalog.some(item => item.id === value))
@@ -266,7 +272,7 @@ defineExpose({ stop: () => send("stop") });
 					</button>
 					<div class="scratch-starters">
 						<label
-							>Classroom starter
+							>Classroom project
 							<select v-model="starter">
 								<option value="">Choose a project</option>
 								<option value="blank">
@@ -285,7 +291,7 @@ defineExpose({ stop: () => send("stop") });
 							:disabled="!selected || !ready || busy"
 							@click="openStarter"
 						>
-							Open starter
+							{{ reference ? "Open reference" : "Open starter" }}
 						</button>
 					</div>
 				</div>
