@@ -339,6 +339,8 @@ jobs:
           --no-file-parallelism --maxWorkers=1
       - name: Verify complete course quality and implementation artifacts
         run: node scripts/classes-family-heavy-task.mjs -- npm run -w front-end test:course-quality
+      - name: Verify Algebra diagram coordinates and operation conditions
+        run: node scripts/classes-family-heavy-task.mjs -- node --test test/algebra2-diagram-contracts.test.mjs
       - name: Preserve legitimate course references
         run: >-
           node scripts/classes-family-heavy-task.mjs --
