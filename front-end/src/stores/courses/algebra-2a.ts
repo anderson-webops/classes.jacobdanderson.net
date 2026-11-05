@@ -4,10 +4,8 @@ import { applyAlgebra2Readings } from "./algebra2Readings";
 import { configureMathCourseFlow } from "./mathCourseFlow";
 import { pendingStaticMediaNotice, staticMediaUrl } from "./staticMedia";
 
-const MEDIA_BASE = "https://static.classes.jacobdanderson.net/algebra-2a";
-
 const media = {
-	complexPlane: `${MEDIA_BASE}/ala1-complex-plane.svg`,
+	complexPlane: "/course-assets/algebra-2a/complex-plane-v2.svg",
 	quadraticForms: "/course-assets/algebra-2a/quadratic-forms-v2.svg",
 	quadraticTransforms:
 		"/course-assets/algebra-2a/quadratic-transformations-v2.svg",

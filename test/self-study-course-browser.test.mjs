@@ -26,13 +26,17 @@ const courseIds = [
 const readingCounts = [10, 13, 14, 16, 20, 14, 9, 4, 27, 22];
 assert.equal(readingCounts.length, courseIds.length);
 const requestedCourses = process.env.SELF_STUDY_BROWSER_COURSES;
-const selectedCourseIds = requestedCourses ? requestedCourses.split(",") : courseIds;
+const selectedCourseIds = requestedCourses
+	? requestedCourses.split(",")
+	: courseIds;
 assert.ok(selectedCourseIds.length > 0);
 assert.equal(new Set(selectedCourseIds).size, selectedCourseIds.length);
 assert.ok(selectedCourseIds.every(id => courseIds.includes(id)));
 const expectedProfiles = selectedCourseIds.length * 4;
-const expectedReadingViews = selectedCourseIds.reduce((total, id) =>
-	total + readingCounts[courseIds.indexOf(id)] * 4, 0);
+const expectedReadingViews = selectedCourseIds.reduce(
+	(total, id) => total + readingCounts[courseIds.indexOf(id)] * 4,
+	0
+);
 const digest = value => createHash("sha256").update(value).digest("hex");
 
 function account(path, role) {
@@ -115,12 +119,11 @@ async function checkTableLayout(page, anchor, width, stressWideTable) {
 			const wrappers = [
 				...content.querySelectorAll(".markdown-table-scroll")
 			];
-			const compactTablesFit
-				= wrappers.every(
-					wrapper =>
-						wrapper.querySelectorAll("thead th").length > 3
-						|| wrapper.scrollWidth <= wrapper.clientWidth + 2
-				);
+			const compactTablesFit = wrappers.every(
+				wrapper =>
+					wrapper.querySelectorAll("thead th").length > 3
+					|| wrapper.scrollWidth <= wrapper.clientWidth + 2
+			);
 			let wideTableScrolls = null;
 			if (stressWideTable && wrappers.length) {
 				const clone = content.cloneNode(true);
@@ -283,7 +286,6 @@ test(
 							);
 						}
 						const name = `${id}-${role}-${width}`;
-						const originalDiagramURLs = new Set(fixture.modules.flatMap(module => module.readings.flatMap(item => item.images.map(image => image.src))).filter(src => /^https:\/\/static\.classes\.jacobdanderson\.net\/algebra-2[ab]\/.+\.svg$/.test(src)));
 						const context = await browser.createBrowserContext();
 						const page = await context.newPage();
 						let writes = 0;
@@ -300,10 +302,6 @@ test(
 								if (request.isInterceptResolutionHandled())
 									return;
 								const url = new URL(request.url());
-								if (request.method() === "GET" && request.resourceType() === "image" && originalDiagramURLs.has(request.url())) {
-									void request.continue();
-									return;
-								}
 								if (
 									url.origin !== origin
 									|| url.pathname.startsWith("/api/")
@@ -362,15 +360,49 @@ test(
 								id
 							);
 							const outline = await page.$$eval(
-								".outline-button strong",
+								".outline-button:not(.is-reference) strong",
 								items =>
 									items.map(item => item.textContent.trim())
 							);
 							assert.deepEqual(
 								outline,
 								fixture.modules.map(module => module.title),
-								"Every teaching module is reachable; maintenance records stay outside course navigation"
+								"Every teaching module is reachable in its teaching group"
 							);
+							const references = await page.$$eval(
+								".outline-button.is-reference",
+								buttons =>
+									buttons.map(button => ({
+										title: button
+											.querySelector("strong")
+											.textContent
+											.trim(),
+										group: button
+											.closest(".outline-section")
+											.querySelector(
+												".outline-section-label"
+											)
+											.textContent
+											.trim()
+									}))
+							);
+							assert.deepEqual(
+								references,
+								fixture.referenceModules.map(module => ({
+									title: module.title,
+									group: "References"
+								})),
+								"Legitimate reference appendices retain their separate navigation group"
+							);
+							for (const module of fixture.internalModules) {
+								assert.ok(
+									![
+										...outline,
+										...references.map(r => r.title)
+									].includes(module.title),
+									"Maintenance records stay outside navigation"
+								);
+							}
 							for (const [
 								index,
 								module
@@ -536,6 +568,7 @@ test(
 								assignments,
 								internalModulesExcluded:
 									fixture.internalModules,
+								referenceModulesSeparate: references,
 								pageErrors,
 								writes
 							});

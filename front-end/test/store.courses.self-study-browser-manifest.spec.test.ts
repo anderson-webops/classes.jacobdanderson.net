@@ -277,10 +277,16 @@ it.each(
 						sourceProjects: sourceProjects.length,
 						modules,
 						internalModules: course.modules
+							.filter(module => module.internal)
+							.map(module => ({
+								id: module.id,
+								title: module.title
+							})),
+						referenceModules: course.modules
 							.filter(
 								module =>
-									module.internal ||
-									(algebra && module.kind === "appendix")
+									!module.internal &&
+									module.kind === "appendix"
 							)
 							.map(module => ({
 								id: module.id,
