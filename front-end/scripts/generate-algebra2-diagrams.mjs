@@ -30,6 +30,8 @@ function plot(
 		points = [],
 		guides = [],
 		square = false,
+		xLabel = "x",
+		yLabel = "y",
 		note = ""
 	},
 	top
@@ -54,13 +56,15 @@ function plot(
 		);
 	});
 	body += `<defs><clipPath id="${clip}"><rect x="${left}" y="${y}" width="${width}" height="${height}"/></clipPath></defs>`;
-	for (const x of ticks[0]) {
+	for (const tick of ticks[0]) {
+		const [x, label] = Array.isArray(tick) ? tick : [tick, tick];
 		body += line(px(x), y, px(x), y + height);
-		body += text(px(x), y + height + 27, x, 20, "#475569", "middle");
+		body += text(px(x), y + height + 27, label, 20, "#475569", "middle");
 	}
-	for (const value of ticks[1]) {
+	for (const tick of ticks[1]) {
+		const [value, label] = Array.isArray(tick) ? tick : [tick, tick];
 		body += line(left, py(value), left + width, py(value));
-		body += text(left - 12, py(value) + 7, value, 20, "#475569", "end");
+		body += text(left - 12, py(value) + 7, label, 20, "#475569", "end");
 	}
 	if (xmin <= 0 && xmax >= 0)
 		body += line(px(0), y, px(0), y + height, "#334155");
@@ -69,10 +73,10 @@ function plot(
 	body += text(
 		left + width + 15,
 		py(Math.max(ymin, Math.min(ymax, 0))) + 7,
-		"x",
+		xLabel,
 		21
 	);
-	body += text(px(Math.max(xmin, Math.min(xmax, 0))) + 10, y - 7, "y", 21);
+	body += text(px(Math.max(xmin, Math.min(xmax, 0))) + 10, y - 7, yLabel, 21);
 	body += `<g clip-path="url(#${clip})">`;
 	for (const guide of guides) {
 		body +=
@@ -110,6 +114,11 @@ function plot(
 				)
 			) {
 				throw new Error(curve.id);
+			}
+			if (curve.discrete) {
+				for (const [x, value] of segment)
+					body += `<circle data-equation="${curve.id}" cx="${px(x)}" cy="${py(value)}" r="5" fill="${curve.color ?? colors[index]}"/>`;
+				continue;
 			}
 			body += `<polyline data-equation="${curve.id}" points="${segment.map(([x, value]) => `${px(x)},${py(value)}`).join(" ")}" stroke="${curve.color ?? colors[index]}" stroke-width="3" fill="none"/>`;
 		}
@@ -664,6 +673,330 @@ figure(
 				{ x: 24, y: 10, label: "B" }
 			],
 			note: "sin θ = 5/13; cos θ = 12/13; tan θ = 5/12."
+		}
+	]
+);
+
+figure(
+	"algebra-2a",
+	"complex-plane",
+	"Complex numbers and geometry",
+	"Complex numbers are points with real and imaginary coordinates. The distance example joins two minus four i to seven plus three i. The right triangle has vertices minus three minus two i, five plus four i and five minus two i.",
+	[
+		{
+			title: "Plot a + bi at (a, b)",
+			bounds: [-5, 5, -5, 5],
+			ticks: [
+				[-4, -2, 0, 2, 4],
+				[-4, -2, 0, 2, 4]
+			],
+			square: true,
+			xLabel: "Re",
+			yLabel: "Im",
+			points: [
+				{ x: 3, y: 2, label: "3 + 2i" },
+				{ x: -2, y: -4, label: "−2 − 4i", dx: -10, anchor: "end" },
+				{ x: 2, y: -1, label: "2 − i" },
+				{ x: 4, y: 0, label: "4" },
+				{ x: 0, y: -3, label: "−3i", dx: 10, dy: 22 },
+				{ x: 1, y: 4, label: "1 + 4i" }
+			],
+			note: "Real part = horizontal coordinate; imaginary part = vertical."
+		},
+		{
+			title: "Distance on the complex plane",
+			bounds: [0, 10, -5, 5],
+			ticks: [
+				[0, 2, 4, 6, 8, 10],
+				[-4, -2, 0, 2, 4]
+			],
+			square: true,
+			xLabel: "Re",
+			yLabel: "Im",
+			curves: [
+				curve(
+					"complex-distance",
+					"From 2 − 4i to 7 + 3i",
+					x => (7 * x) / 5 - 34 / 5,
+					[[2, 7]]
+				)
+			],
+			points: [
+				{ x: 2, y: -4, label: "2 − 4i", dx: -10, anchor: "end" },
+				{ x: 7, y: 3, label: "7 + 3i" }
+			],
+			note: "Changes (5, 7) give distance √(5² + 7²) = √74."
+		},
+		{
+			title: "A right triangle with area 24",
+			bounds: [-4, 6, -4, 6],
+			ticks: [
+				[-3, 0, 2, 5],
+				[-2, 0, 2, 4]
+			],
+			square: true,
+			xLabel: "Re",
+			yLabel: "Im",
+			curves: [
+				{
+					id: "area-triangle",
+					label: "Vertices: (−3, −2), (5, 4), (5, −2)",
+					points: [
+						[-3, -2],
+						[5, 4],
+						[5, -2],
+						[-3, -2]
+					]
+				}
+			],
+			points: [
+				{ x: -3, y: -2, label: "−3 − 2i", dx: -10, anchor: "end" },
+				{ x: 5, y: 4, label: "5 + 4i", dx: -10, anchor: "end" },
+				{ x: 5, y: -2, label: "5 − 2i", dx: -10, dy: 24, anchor: "end" }
+			],
+			note: "Perpendicular base 8 and height 6 give area 8 × 6 / 2 = 24."
+		}
+	]
+);
+const discrete = (id, label, points) => ({ id, label, points, discrete: true });
+figure(
+	"algebra-2b",
+	"arithmetic-sequences",
+	"Arithmetic sequences and sums",
+	"Sequence indices are positive integers with equal spacing. The first sequence begins with four at index one. The sum example totals ten through one hundred.",
+	[
+		{
+			title: "One term at a time",
+			bounds: [0, 6, 0, 18],
+			ticks: [
+				[0, 1, 2, 3, 4, 5, 6],
+				[0, 4, 8, 12, 16]
+			],
+			xLabel: "n",
+			yLabel: "aₙ",
+			curves: [
+				discrete(
+					"arithmetic-terms",
+					"aₙ = 4 + 3(n − 1)",
+					[1, 2, 3, 4, 5].map(n => [n, 4 + 3 * (n - 1)])
+				)
+			],
+			note: "The terms 4, 7, 10, 13, 16 have common difference 3."
+		},
+		{
+			title: "10 + 20 + … + 100",
+			bounds: [0, 11, 0, 600],
+			ticks: [
+				[0, 2, 4, 6, 8, 10],
+				[0, 100, 200, 300, 400, 500, 600]
+			],
+			xLabel: "n",
+			yLabel: "Sₙ",
+			curves: [
+				discrete(
+					"arithmetic-sums",
+					"Sₙ = n(10 + 10n) / 2",
+					[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(n => [
+						n,
+						5 * n * (n + 1)
+					])
+				)
+			],
+			note: "Five first-and-last pairs of 110 give S₁₀ = 550."
+		}
+	]
+);
+figure(
+	"algebra-2b",
+	"geometric-sequences",
+	"Geometric sequences and sums",
+	"The term index increases by one at each plotted point and each term is three times the previous term. The partial sums of successive halves approach one from below.",
+	[
+		{
+			title: "Repeated multiplication",
+			bounds: [0, 6, 0, 90],
+			ticks: [
+				[0, 1, 2, 3, 4, 5, 6],
+				[0, 20, 40, 60, 80]
+			],
+			xLabel: "n",
+			yLabel: "aₙ",
+			curves: [
+				discrete(
+					"geometric-terms",
+					"aₙ = 3^(n − 1)",
+					[1, 2, 3, 4, 5].map(n => [n, 3 ** (n - 1)])
+				)
+			],
+			note: "The terms 1, 3, 9, 27, 81 have common ratio 3."
+		},
+		{
+			title: "1/2 + 1/4 + 1/8 + …",
+			bounds: [0, 9, 0, 1.1],
+			ticks: [
+				[0, 1, 2, 3, 4, 5, 6, 7, 8],
+				[
+					[0, "0"],
+					[0.5, "1/2"],
+					[1, "1"]
+				]
+			],
+			xLabel: "n",
+			yLabel: "Sₙ",
+			curves: [
+				discrete(
+					"geometric-sums",
+					"Sₙ = 1 − (1/2)ⁿ",
+					[1, 2, 3, 4, 5, 6, 7, 8].map(n => [n, 1 - 0.5 ** n])
+				)
+			],
+			guides: [{ axis: "y", value: 1 }],
+			note: "Every finite sum is below 1; the infinite series has sum 1."
+		}
+	]
+);
+figure(
+	"algebra-2b",
+	"statistics-regression",
+	"Correlation and regression",
+	"The plotted observations are the complete datasets listed in the course. The fitted line uses ordinary least squares with an intercept. Nonlinear dependence can have zero Pearson correlation.",
+	[
+		{
+			title: "A fitted line with an intercept",
+			bounds: [0, 5, 0, 6],
+			ticks: [
+				[0, 1, 2, 3, 4, 5],
+				[0, 1, 2, 3, 4, 5, 6]
+			],
+			curves: [
+				discrete("regression-data", "Observed pairs", [
+					[1, 2],
+					[2, 4],
+					[3, 3],
+					[4, 5]
+				]),
+				curve("regression-line", "ŷ = 0.8x + 1.5", x => 0.8 * x + 1.5, [
+					[0, 5]
+				])
+			],
+			note: "For these four pairs, r = 0.8 and R² = 0.64."
+		},
+		{
+			title: "Zero linear correlation, visible pattern",
+			bounds: [-2.5, 2.5, -0.5, 5],
+			ticks: [
+				[-2, -1, 0, 1, 2],
+				[0, 1, 2, 3, 4, 5]
+			],
+			curves: [
+				discrete("nonlinear-data", "Observed pairs", [
+					[-2, 4],
+					[-1, 1],
+					[0, 0],
+					[1, 1],
+					[2, 4]
+				]),
+				curve("x2", "y = x²", x => x * x, [[-2, 2]])
+			],
+			note: "Pearson r = 0; the nonlinear relationship is still visible."
+		},
+		{
+			title: "Strong negative association",
+			bounds: [2, 11, 0, 11],
+			ticks: [
+				[3, 5, 7, 9, 10],
+				[0, 2, 4, 6, 8, 10]
+			],
+			curves: [
+				discrete(
+					"negative-data",
+					"(3,10), (5,9), (8,8), (9,5), (10,3)",
+					[
+						[3, 10],
+						[5, 9],
+						[8, 8],
+						[9, 5],
+						[10, 3]
+					]
+				)
+			],
+			note: "r = −31/34 ≈ −0.912. Association does not establish cause."
+		}
+	]
+);
+const piTicks = [
+	[0, "0"],
+	[Math.PI / 2, "π/2"],
+	[Math.PI, "π"],
+	[(3 * Math.PI) / 2, "3π/2"],
+	[2 * Math.PI, "2π"]
+];
+figure(
+	"algebra-2b",
+	"trig-graphs",
+	"Sine, cosine and tangent",
+	"Sine and cosine complete a full cycle from zero through two pi. Tangent has separate branches divided by its vertical asymptotes; no line joins across an undefined input.",
+	[
+		{
+			title: "Sine over one complete cycle",
+			bounds: [0, 2 * Math.PI, -1.3, 1.3],
+			ticks: [piTicks, [-1, 0, 1]],
+			curves: [curve("sine", "y = sin(x)", Math.sin, [[0, 2 * Math.PI]])],
+			points: [
+				{ x: 0, y: 0 },
+				{ x: Math.PI / 2, y: 1 },
+				{ x: Math.PI, y: 0 },
+				{ x: (3 * Math.PI) / 2, y: -1 },
+				{ x: 2 * Math.PI, y: 0 }
+			],
+			note: "Amplitude 1; period 2π; midline y = 0."
+		},
+		{
+			title: "Cosine over one complete cycle",
+			bounds: [0, 2 * Math.PI, -1.3, 1.3],
+			ticks: [piTicks, [-1, 0, 1]],
+			curves: [
+				curve("cosine", "y = cos(x)", Math.cos, [[0, 2 * Math.PI]])
+			],
+			points: [
+				{ x: 0, y: 1 },
+				{ x: Math.PI / 2, y: 0 },
+				{ x: Math.PI, y: -1 },
+				{ x: (3 * Math.PI) / 2, y: 0 },
+				{ x: 2 * Math.PI, y: 1 }
+			],
+			note: "Amplitude 1; period 2π; midline y = 0."
+		},
+		{
+			title: "Tangent and its asymptotes",
+			bounds: [-Math.PI, Math.PI, -4, 4],
+			ticks: [
+				[
+					[-Math.PI, "−π"],
+					[-Math.PI / 2, "−π/2"],
+					[0, "0"],
+					[Math.PI / 2, "π/2"],
+					[Math.PI, "π"]
+				],
+				[-4, -2, 0, 2, 4]
+			],
+			curves: [
+				curve("tangent", "y = tan(x)", Math.tan, [
+					[-Math.PI, -Math.PI / 2 - 0.02],
+					[-Math.PI / 2 + 0.02, Math.PI / 2 - 0.02],
+					[Math.PI / 2 + 0.02, Math.PI]
+				])
+			],
+			guides: [
+				{ axis: "x", value: -Math.PI / 2 },
+				{ axis: "x", value: Math.PI / 2 }
+			],
+			points: [
+				{ x: -Math.PI, y: 0 },
+				{ x: 0, y: 0 },
+				{ x: Math.PI, y: 0 }
+			],
+			note: "Period π; asymptotes x = π/2 + kπ for integer k."
 		}
 	]
 );

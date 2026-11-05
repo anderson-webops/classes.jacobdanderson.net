@@ -4,18 +4,18 @@ import { applyAlgebra2Readings } from "./algebra2Readings";
 import { configureMathCourseFlow } from "./mathCourseFlow";
 import { pendingStaticMediaNotice, staticMediaUrl } from "./staticMedia";
 
-const MEDIA_BASE = "https://static.classes.jacobdanderson.net/algebra-2b";
-
 const media = {
 	logReference: "/course-assets/algebra-2b/logarithms-reference-v1.svg",
 	expLogFamilies: "/course-assets/algebra-2b/exp-log-families-v2.svg",
-	arithmeticReference: `${MEDIA_BASE}/alb3-arithmetic-sequences.svg`,
-	geometricReference: `${MEDIA_BASE}/alb4-geometric-sequences.svg`,
+	arithmeticReference:
+		"/course-assets/algebra-2b/arithmetic-sequences-v2.svg",
+	geometricReference: "/course-assets/algebra-2b/geometric-sequences-v2.svg",
 	matrixWorkflow: "/course-assets/algebra-2b/matrix-operations-v2.svg",
 	probabilityTables: "/course-assets/algebra-2b/probability-tables-v2.svg",
-	statisticsRegression: `${MEDIA_BASE}/alb7-statistics-regression.svg`,
+	statisticsRegression:
+		"/course-assets/algebra-2b/statistics-regression-v2.svg",
 	unitCircleTrig: "/course-assets/algebra-2b/unit-circle-trig-v2.svg",
-	trigGraphs: `${MEDIA_BASE}/alb9-trig-graphs.svg`
+	trigGraphs: "/course-assets/algebra-2b/trig-graphs-v2.svg"
 } as const;
 
 const sourceStaticFilenames = [
