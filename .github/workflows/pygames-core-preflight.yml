@@ -1,6 +1,6 @@
 name: Course preflight
 
-run-name: ${{ inputs.course == 'course-audit' && 'Course audit follow-ups' || inputs.course == 'scratch-readings' && 'Scratch and self-study readings' || inputs.course == 'scratch-originals' && 'Original Scratch imports' || inputs.course == 'bootcamp' && 'Scratch Bootcamp pages' || inputs.course == 'self-study' && 'Self-study course pages' || inputs.course == 'networking' && 'Swift Networking source evidence' || inputs.course == 'ai-setup' && 'AI setup reading' || 'PyGames core preflight' }}
+run-name: ${{ inputs.course == 'scratch-tasks' && 'Published Scratch project tasks' || inputs.course == 'course-audit' && 'Course audit follow-ups' || inputs.course == 'scratch-readings' && 'Scratch and self-study readings' || inputs.course == 'scratch-originals' && 'Original Scratch imports' || inputs.course == 'bootcamp' && 'Scratch Bootcamp pages' || inputs.course == 'self-study' && 'Self-study course pages' || inputs.course == 'networking' && 'Swift Networking source evidence' || inputs.course == 'ai-setup' && 'AI setup reading' || 'PyGames core preflight' }}
 
 on:
   workflow_dispatch:
@@ -8,7 +8,7 @@ on:
       course:
         description: Course verification to run
         type: choice
-        options: [pygames, networking, ai-setup, self-study, bootcamp, scratch-originals, scratch-readings, course-audit]
+        options: [pygames, networking, ai-setup, self-study, bootcamp, scratch-originals, scratch-readings, course-audit, scratch-tasks]
         default: pygames
       browser_run_id:
         description: Networking browser export workflow run
@@ -259,7 +259,7 @@ jobs:
           retention-days: 14
 
   self-study:
-    if: inputs.course == 'self-study' || inputs.course == 'bootcamp' || inputs.course == 'scratch-originals' || inputs.course == 'scratch-readings' || inputs.course == 'course-audit'
+    if: inputs.course == 'self-study' || inputs.course == 'bootcamp' || inputs.course == 'scratch-originals' || inputs.course == 'scratch-readings' || inputs.course == 'course-audit' || inputs.course == 'scratch-tasks'
     runs-on: ubuntu-24.04
     timeout-minutes: 40
     env:
@@ -351,7 +351,7 @@ jobs:
       - name: Build both workspaces
         run: node scripts/classes-family-heavy-task.mjs -- npm run build
       - name: Verify all self-study course pages in both roles and sizes
-        if: inputs.course != 'scratch-originals'
+        if: inputs.course != 'scratch-originals' && inputs.course != 'scratch-tasks'
         run: node scripts/classes-family-heavy-task.mjs -- node --test test/self-study-course-browser.test.mjs
       - name: Verify original Scratch program and media identities
         if: inputs.course == 'scratch-originals' || inputs.course == 'course-audit'
@@ -359,8 +359,8 @@ jobs:
       - name: Verify original imports and classroom workflows in the actual Scratch editor
         if: inputs.course == 'scratch-originals' || inputs.course == 'course-audit'
         run: node scripts/classes-family-heavy-task.mjs -- node --test test/scratch-browser.test.mjs
-      - name: Verify Scratch event and coordinate readings in both roles and sizes
-        if: inputs.course == 'scratch-readings'
+      - name: Verify Scratch readings and published project tasks in both roles and sizes
+        if: inputs.course == 'scratch-readings' || inputs.course == 'scratch-tasks'
         env:
           SCRATCH_BROWSER_READING_ONLY: '1'
         run: node scripts/classes-family-heavy-task.mjs -- node --test test/scratch-browser.test.mjs
@@ -368,7 +368,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
-          name: ${{ inputs.course == 'course-audit' && 'course-audit-followups' || inputs.course == 'scratch-originals' && 'scratch-original-imports' || inputs.course == 'scratch-readings' && 'scratch-self-study-readings' || 'self-study-course-pages' }}
+          name: ${{ inputs.course == 'scratch-tasks' && 'scratch-published-tasks' || inputs.course == 'course-audit' && 'course-audit-followups' || inputs.course == 'scratch-originals' && 'scratch-original-imports' || inputs.course == 'scratch-readings' && 'scratch-self-study-readings' || 'self-study-course-pages' }}
           path: output/self-study-browser/
           if-no-files-found: error
           retention-days: 14
