@@ -12,6 +12,8 @@ import subprocess
 import sys
 import zipfile
 
+from swift_simulator_launch_recovery import run_with_launch_recovery
+
 ROOT = Path(__file__).resolve().parents[1]
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("--browser", type=Path, required=True)
@@ -138,6 +140,8 @@ if variant_native:
                ["test/swift-welcome-exported-ios.py", "test/swift-welcome-xcode.py",
                 "test/swift-canonical-xcode.py", "test/fixtures/swift-canonical-uitests.swift"])
     record["harnessSourceHashes"] = {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in harness}
+    recovery_source = "test/swift_simulator_launch_recovery.py"
+    record["harnessSourceHashes"][recovery_source] = hashlib.sha256((ROOT / recovery_source).read_bytes()).hexdigest()
     record["installedApps"] = []
     if args.course in ("hobby", "gallery"):
         recognizer_source = "test/swift-hobby-text-recognition.swift"
@@ -259,40 +263,72 @@ for size, model in devices:
         record_booted_host(size)
         for profile in inputs["profiles"]:
             label = profile["role"] + "-" + size + ("" if args.course == "welcome" and not args.extended_welcome else "-" + profile["variant"])
-            if args.course != "welcome" or args.extended_welcome:
-                content_size = profile["contentSize"]
-                run("set-content-size-" + label, ["/usr/bin/xcrun", "simctl", "ui", device, "content_size", content_size])
-                observed = run("get-content-size-" + label, ["/usr/bin/xcrun", "simctl", "ui", device, "content_size"]).decode().strip()
-                assert observed == content_size, (label, observed, content_size)
-            if variant_native:
-                app = Path(profile["derivedData"]) / "Build/Products/Debug-iphonesimulator" / (profile["scheme"] + ".app")
-                run("install-" + label, ["/usr/bin/xcrun", "simctl", "install", device, str(app)])
-                installed = Path(run("installed-app-" + label, ["/usr/bin/xcrun", "simctl", "get_app_container", device, profile["bundleIdentifier"], "app"]).decode().strip())
-                binary_names = [profile["scheme"], profile["scheme"] + ".debug.dylib"]
-                hashes = {}
-                for name in binary_names:
-                    assert (app / name).is_file() and (installed / name).is_file()
-                    digest = hashlib.sha256((app / name).read_bytes()).hexdigest()
-                    assert hashlib.sha256((installed / name).read_bytes()).hexdigest() == digest
-                    hashes[name] = digest
-                record["installedApps"].append(dict(case=label, device=device, bundleIdentifier=profile["bundleIdentifier"],
-                                                    builtApp=str(app), installedApp=str(installed), binaryHashes=hashes,
-                                                    builtAndInstalledBytesMatch=True))
+            def prepare_profile(case_label):
+                if args.course != "welcome" or args.extended_welcome:
+                    content_size = profile["contentSize"]
+                    run("set-content-size-" + case_label, ["/usr/bin/xcrun", "simctl", "ui", device, "content_size", content_size])
+                    observed = run("get-content-size-" + case_label, ["/usr/bin/xcrun", "simctl", "ui", device, "content_size"]).decode().strip()
+                    assert observed == content_size, (case_label, observed, content_size)
+                if variant_native:
+                    app = Path(profile["derivedData"]) / "Build/Products/Debug-iphonesimulator" / (profile["scheme"] + ".app")
+                    run("install-" + case_label, ["/usr/bin/xcrun", "simctl", "install", device, str(app)])
+                    installed = Path(run("installed-app-" + case_label, ["/usr/bin/xcrun", "simctl", "get_app_container", device, profile["bundleIdentifier"], "app"]).decode().strip())
+                    binary_names = [profile["scheme"], profile["scheme"] + ".debug.dylib"]
+                    hashes = {}
+                    for name in binary_names:
+                        assert (app / name).is_file() and (installed / name).is_file()
+                        digest = hashlib.sha256((app / name).read_bytes()).hexdigest()
+                        assert hashlib.sha256((installed / name).read_bytes()).hexdigest() == digest
+                        hashes[name] = digest
+                    return dict(case=case_label, device=device, bundleIdentifier=profile["bundleIdentifier"],
+                                                        builtApp=str(app), installedApp=str(installed), binaryHashes=hashes,
+                                                        builtAndInstalledBytesMatch=True)
+
+            installed = prepare_profile(label)
+            if installed:
+                record["installedApps"].append(installed)
                 args.proof.write_text(json.dumps(record, indent=2) + "\n")
-            result = RESULTS / (label + ".xcresult")
-            status, stdout, stderr = run("ui-" + label, [
-                "/usr/bin/xcrun", "xcodebuild", "test-without-building", "-project", profile["project"],
-                "-scheme", profile["scheme"], "-configuration", "Debug", "-jobs", "1",
-                "-destination", "platform=iOS Simulator,id=" + device, "-destination-timeout", "60",
-                "-parallel-testing-enabled", "NO", "-maximum-concurrent-test-simulator-destinations", "1",
-                "-derivedDataPath", profile["derivedData"], "-resultBundlePath", str(result),
-                "SWIFT_VERSION=6.0", "IPHONEOS_DEPLOYMENT_TARGET=17.0", "CODE_SIGNING_ALLOWED=NO"
-            ], timeout=600, check=False)
-            assert result.exists(), (label, status, stdout.decode(errors="replace")[-6000:],
-                                     stderr.decode(errors="replace")[-4000:])
-            summary = json.loads(run("summary-" + label, [
-                "/usr/bin/xcrun", "xcresulttool", "get", "test-results", "summary", "--path", str(result)
-            ]))
+            def execute_ui(attempt):
+                case_label = label + ("-launch-retry" if attempt else "")
+                result = RESULTS / (case_label + ".xcresult")
+                status, stdout, stderr = run("ui-" + case_label, [
+                    "/usr/bin/xcrun", "xcodebuild", "test-without-building", "-project", profile["project"],
+                    "-scheme", profile["scheme"], "-configuration", "Debug", "-jobs", "1",
+                    "-destination", "platform=iOS Simulator,id=" + device, "-destination-timeout", "60",
+                    "-parallel-testing-enabled", "NO", "-maximum-concurrent-test-simulator-destinations", "1",
+                    "-derivedDataPath", profile["derivedData"], "-resultBundlePath", str(result),
+                    "SWIFT_VERSION=6.0", "IPHONEOS_DEPLOYMENT_TARGET=17.0", "CODE_SIGNING_ALLOWED=NO"
+                ], timeout=600, check=False)
+                assert result.exists(), (case_label, status, stdout.decode(errors="replace")[-6000:],
+                                         stderr.decode(errors="replace")[-4000:])
+                summary = json.loads(run("summary-" + case_label, [
+                    "/usr/bin/xcrun", "xcresulttool", "get", "test-results", "summary", "--path", str(result)
+                ]))
+                return dict(status=status, summary=summary, resultBundle=str(result))
+
+            recovery = dict(case=label, device=device)
+
+            def retain_recovery(stage, outcome):
+                if stage == "beforeRecovery":
+                    record.setdefault("simulatorLaunchRecoveries", []).append(recovery)
+                recovery[stage] = outcome
+                args.proof.write_text(json.dumps(record, indent=2) + "\n")
+
+            def recover_owned_device():
+                recovery["deviceRestartStartedAt"] = now()
+                run("launch-recovery-shutdown-" + label, ["/usr/bin/xcrun", "simctl", "shutdown", device])
+                run("launch-recovery-boot-" + label, ["/usr/bin/xcrun", "simctl", "boot", device])
+                run("launch-recovery-ready-" + label, ["/usr/bin/xcrun", "simctl", "bootstatus", device, "-b"], timeout=300)
+                record_booted_host(size + "-launch-recovery")
+                recovery["reinstalledApp"] = prepare_profile(label + "-launch-retry")
+                recovery["deviceRestartReadyAt"] = now()
+                args.proof.write_text(json.dumps(record, indent=2) + "\n")
+
+            outcome = (
+                run_with_launch_recovery(execute_ui, recover_owned_device, retain_recovery, profile["bundleIdentifier"])
+                if args.course == "capstone" else execute_ui(0)
+            )
+            status, summary, result = outcome["status"], outcome["summary"], Path(outcome["resultBundle"])
             passed = status == 0 and summary.get("totalTestCount") == summary.get("passedTests") == 1 \
                 and summary.get("failedTests") == summary.get("skippedTests") == 0
             record["simulatorTests"].append(dict(role=profile["role"], size=size, model=model["name"],
