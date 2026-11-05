@@ -725,12 +725,18 @@ describe("CourseExplorer.vue", () => {
 						)!
 						.text();
 				expect(activeView()).toBe("Learn");
-				const readingList = wrapper.get(".lesson-list").element;
-				const goalPreview = wrapper.get(".learning-card").element;
-				expect(
-					readingList.compareDocumentPosition(goalPreview) &
-						Node.DOCUMENT_POSITION_FOLLOWING
-				).toBeTruthy();
+				expect(wrapper.get(".lesson-list").text()).toContain(text);
+				expect(wrapper.find(".learning-card").exists()).toBe(false);
+				await wrapper
+					.findAll(".lesson-view-toggle button")[1]
+					.trigger("click");
+				await flushPromises();
+				expect(activeView()).toBe("Supplemental Projects");
+				await vi.waitFor(() =>
+					expect(wrapper.text()).toContain(
+						"Create an error-analysis or modeling task"
+					)
+				);
 				await wrapper.get(".outline-toggle").trigger("click");
 				await wrapper
 					.findAll(".outline-button")

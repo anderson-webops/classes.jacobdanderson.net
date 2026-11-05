@@ -312,6 +312,7 @@ jobs:
           test/modules.course-lesson-presentation.spec.test.ts
           test/modules.authored-reading.spec.test.ts
           test/courseAssetPreview.spec.test.ts
+          test/components.courseexplorer.spec.test.ts
           test/store.courses.student-facing-copy.spec.test.ts
           test/store.courses.grammar-mechanics-content.spec.test.ts
           test/store.courses.grammar-mechanics-flow.spec.test.ts
@@ -335,6 +336,8 @@ jobs:
           test/scratch.input.spec.test.ts
           test/production-security-headers.spec.test.ts
           --no-file-parallelism --maxWorkers=1
+      - name: Verify complete course quality and implementation artifacts
+        run: node scripts/classes-family-heavy-task.mjs -- npm run -w front-end test:course-quality
       - name: Preserve legitimate course references
         run: >-
           node scripts/classes-family-heavy-task.mjs --
