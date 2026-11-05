@@ -7,6 +7,7 @@ import { originalAttributionId, originalScratchProjects } from "../front-end/scr
 import { applyOriginalProgramCorrection } from "../front-end/scripts/scratch/program-corrections.mjs";
 import { checkSpeedClickRound } from "./scratch-speed-click-round-check.mjs";
 import { checkRocketshipRestart } from "./scratch-rocketship-restart-check.mjs";
+import { checkSpellingBeeTraversal } from "./scratch-spelling-traversal-check.mjs";
 
 export async function checkScratchEventReading(page, { origin, files, setRole }) {
 	const output = process.env.SCRATCH_ORIGINAL_BROWSER_PROOF_DIR || path.join(files, "original-proof");
@@ -322,6 +323,30 @@ export async function checkScratchOriginalImports(page, { origin, files, loaded,
 		assert.deepEqual((await inspect(rocketship)).problems, []);
 		rocketRestart.exportReopenedWithCorrectionAndAttribution = true;
 		await writeFile(path.join(output, "rocketship-restart.json"), `${JSON.stringify(rocketRestart, null, 2)}\n`);
+
+  const spellingBee = originalScratchProjects.find(project => project.id === "357452924");
+  await route(sourceHref(spellingBee));
+  assert.match(await page.$eval(".scratch-original-import", element => element.textContent), /Reference correction: spelling stops after the last selected letter/);
+  await confirm();
+  const spellingFrame = page.frames().find(frame => frame !== page.mainFrame());
+  const traversal = await checkSpellingBeeTraversal(spellingFrame, output);
+  await page.$eval(".scratch-toolbar input[maxlength='120']", input => {
+   input.value = "Spelling Bee corrected";
+   input.dispatchEvent(new Event("input", { bubbles: true }));
+  });
+  await downloadProject("Spelling Bee corrected.sb3");
+  const savedBee = unzipSync(new Uint8Array(await readFile(path.join(files, "Spelling Bee corrected.sb3"))));
+  const savedBeeProject = JSON.parse(strFromU8(savedBee["project.json"]));
+  assert.equal(savedBeeProject.targets.find(target => target.name === "Sprite1").blocks["classes-spelling-bee-alternate-count"].fields.OPERATOR[0], "ceiling");
+  assert.match(savedBeeProject.targets.find(target => target.isStage).comments[originalAttributionId(spellingBee.id)].text, /String traversal bounds/);
+  await newProject();
+  await openFile(path.join(files, "Spelling Bee corrected.sb3"));
+  assert.deepEqual((await inspect(spellingBee)).problems, []);
+  const reopenedFrame = page.frames().find(frame => frame !== page.mainFrame());
+  const reopenedTraversal = await checkSpellingBeeTraversal(reopenedFrame, output);
+  traversal.exportReopenedWithCorrectionAndAttribution = true;
+  traversal.reopenedCases = reopenedTraversal.cases;
+  await writeFile(path.join(output, "spelling-bee-traversal.json"), JSON.stringify(traversal, null, 2) + "\n");
 
 		const spinner = originalScratchProjects.find(project => project.id === "287887351");
 		await route(sourceHref(spinner));

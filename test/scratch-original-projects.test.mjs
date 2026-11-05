@@ -51,7 +51,11 @@ function verifyAndRestoreRocketship(loaded, source) {
 		const restored = structuredClone(blocks[id]);
 		if (id === flag) restored.next = block.next;
 		if (id === show) restored.parent = block.parent;
-		assert.deepEqual(restored, block, `Only rocket reset links change: ${id}`);
+		assert.deepEqual(
+			restored,
+			block,
+			`Only rocket reset links change: ${id}`
+		);
 	}
 	blocks[flag].next = original.blocks[flag].next;
 	blocks[show].parent = original.blocks[show].parent;
@@ -124,7 +128,10 @@ function verifyAndRestoreSpeedClick(loaded, source) {
 	const guard = b[b[click].next];
 	assert.equal(guard.opcode, "control_if");
 	assert.deepEqual(guard.inputs.CONDITION, [2, `${prefix}and`]);
-	assert.deepEqual(guard.inputs.SUBSTACK, original.blocks[b[click].next].inputs.SUBSTACK);
+	assert.deepEqual(
+		guard.inputs.SUBSTACK,
+		original.blocks[b[click].next].inputs.SUBSTACK
+	);
 	const and = b[`${prefix}and`];
 	assert.equal(and.opcode, "operator_and");
 	assert.deepEqual(and.inputs.OPERAND2, [2, `${prefix}positive`]);
@@ -136,6 +143,50 @@ function verifyAndRestoreSpeedClick(loaded, source) {
 	for (const [id, block] of Object.entries(original.blocks))
 		b[id] = structuredClone(block);
 	for (const id of additions) delete b[id];
+}
+
+function verifyAndRestoreSpellingBee(loaded, source) {
+	const blocks = loaded.targets.find(
+		target => target.name === "Sprite1"
+	).blocks;
+	const original = source.targets.find(
+		target => target.name === "Sprite1"
+	).blocks;
+	const changes = new Map([
+		["C9V.33_V_Q!H5w!8v)7O", "inputs"],
+		["HLDy8|Y8t9dqT4dW{|Ej", "parent"],
+		[":BH@23MI?jB?:NVu@;`e", "inputs"],
+		["QBiOC]Cs4e]__flUyHP{", "parent"]
+	]);
+	const added = [
+		"classes-spelling-bee-skip-first-count",
+		"classes-spelling-bee-half-length",
+		"classes-spelling-bee-alternate-count"
+	];
+	assert.deepEqual(
+		Object.keys(blocks)
+			.filter(id => !original[id])
+			.sort(),
+		[...added].sort()
+	);
+	assert.equal(blocks[added[0]].opcode, "operator_subtract");
+	assert.equal(blocks[added[0]].inputs.NUM2[1][1], "1");
+	assert.equal(blocks[added[1]].opcode, "operator_divide");
+	assert.equal(blocks[added[1]].inputs.NUM2[1][1], "2");
+	assert.equal(blocks[added[2]].opcode, "operator_mathop");
+	assert.equal(blocks[added[2]].fields.OPERATOR[0], "ceiling");
+	for (const [id, before] of Object.entries(original)) {
+		const current = structuredClone(blocks[id]);
+		const key = changes.get(id);
+		if (key) current[key] = before[key];
+		assert.deepEqual(
+			current,
+			before,
+			"Only reviewed spelling bounds change: " + id
+		);
+		blocks[id] = structuredClone(before);
+	}
+	for (const id of added) delete blocks[id];
 }
 
 test("all original Scratch archives retain upstream bytes and only declared corrections", async () => {
@@ -177,11 +228,11 @@ test("all original Scratch archives retain upstream bytes and only declared corr
 		);
 		const loaded = JSON.parse(strFromU8(files["project.json"]));
 		const stage = loaded.targets.find(target => target.isStage);
-		const attribution
-			= stage.comments[originalAttributionId(original.id)].text;
+		const attribution =
+			stage.comments[originalAttributionId(original.id)].text;
 		assert.ok(
-			attribution.includes(original.author)
-			&& attribution.includes(original.url)
+			attribution.includes(original.author) &&
+				attribution.includes(original.url)
 		);
 		assert.ok(
 			attribution.includes(
@@ -222,6 +273,18 @@ test("all original Scratch archives retain upstream bytes and only declared corr
 			expected.add("SOURCE/program-correction.json");
 			programCorrections.push(original.id);
 		}
+		if (original.id === "357452924") {
+			verifyAndRestoreSpellingBee(loaded, source);
+			const correction = JSON.parse(
+				strFromU8(files["SOURCE/program-correction.json"])
+			);
+			assert.equal(correction.id, original.id);
+			assert.equal(correction.sourceSHA256, original.sourceSHA256);
+			assert.equal(correction.addedBlocks, 3);
+			assert.ok(attribution.includes("String traversal bounds"));
+			expected.add("SOURCE/program-correction.json");
+			programCorrections.push(original.id);
+		}
 		for (const [targetIndex, target] of source.targets.entries()) {
 			assert.deepEqual(
 				loaded.targets[targetIndex].blocks,
@@ -229,9 +292,9 @@ test("all original Scratch archives retain upstream bytes and only declared corr
 				`${original.id}: original program`
 			);
 			for (const [index, costume] of target.costumes.entries()) {
-				const name
-					= costume.md5ext
-						|| `${costume.assetId}.${costume.dataFormat}`;
+				const name =
+					costume.md5ext ||
+					`${costume.assetId}.${costume.dataFormat}`;
 				const correction = compatibility[name];
 				if (!correction) continue;
 				const current = loaded.targets[targetIndex].costumes[index];
@@ -277,8 +340,8 @@ test("all original Scratch archives retain upstream bytes and only declared corr
 		}
 		for (const target of source.targets) {
 			for (const asset of [...target.costumes, ...target.sounds]) {
-				const name
-					= asset.md5ext || `${asset.assetId}.${asset.dataFormat}`;
+				const name =
+					asset.md5ext || `${asset.assetId}.${asset.dataFormat}`;
 				expected.add(name);
 				assets.add(name);
 				assert.ok(files[name], `${original.id}: ${name}`);
@@ -299,7 +362,11 @@ test("all original Scratch archives retain upstream bytes and only declared corr
 	assert.equal(assets.size, 505);
 	assert.equal(correctedAssets.size, 2);
 	assert.equal(correctedProjects.size, 5);
-	assert.deepEqual(programCorrections, ["299311602", "332459692"]);
+	assert.deepEqual(programCorrections, [
+		"299311602",
+		"332459692",
+		"357452924"
+	]);
 	if (process.env.SCRATCH_ORIGINAL_BROWSER_PROOF_DIR) {
 		await mkdir(process.env.SCRATCH_ORIGINAL_BROWSER_PROOF_DIR, {
 			recursive: true
@@ -309,7 +376,7 @@ test("all original Scratch archives retain upstream bytes and only declared corr
 				process.env.SCRATCH_ORIGINAL_BROWSER_PROOF_DIR,
 				"archive-identity.json"
 			),
-			`${JSON.stringify({ projects: 164, assets: 505, originalSourceBytesRetained: true, unchangedPrograms: 162, declaredProgramCorrections: programCorrections, onlyDeclaredAttributionSvgAndProgramChanges: true, compatibilityAssets: correctedAssets.size, compatibilityProjects: correctedProjects.size, records }, null, 2)}\n`
+			`${JSON.stringify({ projects: 164, assets: 505, originalSourceBytesRetained: true, unchangedPrograms: 161, declaredProgramCorrections: programCorrections, onlyDeclaredAttributionSvgAndProgramChanges: true, compatibilityAssets: correctedAssets.size, compatibilityProjects: correctedProjects.size, records }, null, 2)}\n`
 		);
 	}
 });
@@ -325,5 +392,135 @@ test("original Scratch source identifiers cannot select arbitrary files", async 
 			createOriginalProject(value),
 			/Unknown original Scratch project/
 		);
+	}
+});
+
+test("Spelling Bee generated reference bounds produce only the selected letters", async () => {
+	const { archive } = await createOriginalProject("357452924");
+	const files = unzipSync(archive);
+	const project = JSON.parse(strFromU8(files["project.json"]));
+	const blocks = project.targets.find(
+		target => target.name === "Sprite1"
+	).blocks;
+	function run(mode, answer, program = blocks) {
+		const state = new Map();
+		const said = [];
+		function value(input) {
+			const node = input[1];
+			if (typeof node === "string") {
+				const b = program[node];
+				const arg = key => value(b.inputs[key]);
+				switch (b.opcode) {
+					case "sensing_answer":
+						return answer;
+					case "operator_length":
+						return String(arg("STRING")).length;
+					case "operator_subtract":
+						return Number(arg("NUM1")) - Number(arg("NUM2"));
+					case "operator_divide":
+						return Number(arg("NUM1")) / Number(arg("NUM2"));
+					case "operator_mathop":
+						assert.equal(b.fields.OPERATOR[0], "ceiling");
+						return Math.ceil(Number(arg("NUM")));
+					case "operator_letter_of":
+						return String(arg("STRING")).charAt(
+							Number(arg("LETTER")) - 1
+						);
+					default:
+						throw Error("Unexpected spelling reporter " + b.opcode);
+				}
+			}
+			return node[0] === 12 ? state.get(node[1]) : node[1];
+		}
+		function stack(id) {
+			while (id) {
+				const b = program[id];
+				switch (b.opcode) {
+					case "sensing_askandwait":
+						break;
+					case "data_setvariableto":
+						state.set(b.fields.VARIABLE[0], value(b.inputs.VALUE));
+						break;
+					case "data_changevariableby":
+						state.set(
+							b.fields.VARIABLE[0],
+							Number(state.get(b.fields.VARIABLE[0])) +
+								Number(value(b.inputs.VALUE))
+						);
+						break;
+					case "looks_sayforsecs":
+						said.push(value(b.inputs.MESSAGE));
+						break;
+					case "control_repeat": {
+						const count = Math.max(
+							0,
+							Math.round(Number(value(b.inputs.TIMES)))
+						);
+						for (let index = 0; index < count; index++)
+							stack(b.inputs.SUBSTACK[1]);
+						break;
+					}
+					default:
+						throw Error("Unexpected spelling command " + b.opcode);
+				}
+				id = b.next;
+			}
+		}
+		const hat = Object.values(program).find(
+			b =>
+				b.opcode === "event_whenkeypressed" &&
+				b.fields.KEY_OPTION[0] === mode
+		);
+		stack(hat.next);
+		return said;
+	}
+	const source = JSON.parse(strFromU8(files["SOURCE/original.json"]));
+	verifyAndRestoreSpellingBee(structuredClone(project), source);
+	const originalBlocks = source.targets.find(
+		target => target.name === "Sprite1"
+	).blocks;
+	assert.deepEqual(run("2", "CODING", originalBlocks), [
+		"O",
+		"D",
+		"I",
+		"N",
+		"G",
+		""
+	]);
+	assert.deepEqual(run("5", "CODING", originalBlocks), [
+		"C",
+		"D",
+		"N",
+		"",
+		"",
+		""
+	]);
+	const words = [
+		"",
+		"a",
+		"ab",
+		"abc",
+		"CODING",
+		"seventh",
+		"a b",
+		" ",
+		"  ab  "
+	];
+	for (const word of words) {
+		const letters = word.split("");
+		const expected = [
+			letters,
+			letters.slice(1),
+			letters.slice(0, -1),
+			letters.slice(1, -1),
+			letters.filter((_, index) => index % 2 === 0),
+			[...letters].reverse()
+		];
+		for (let index = 0; index < 6; index++)
+			assert.deepEqual(
+				run(String(index + 1), word),
+				expected[index],
+				JSON.stringify({ mode: index + 1, word })
+			);
 	}
 });
