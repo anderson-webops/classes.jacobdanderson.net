@@ -73,6 +73,13 @@ export async function checkScratchConceptReadings(
 									item.scrollWidth <= item.clientWidth + 1 &&
 									document.documentElement.scrollWidth <=
 										innerWidth + 1,
+								tableRows: [
+									...item.querySelectorAll("table tr")
+								].map(row =>
+									[...row.querySelectorAll("th, td")].map(
+										cell => cell.textContent.trim()
+									)
+								),
 								readingContentVisible: [
 									...item.querySelectorAll(
 										".item-content-markdown"
@@ -90,6 +97,20 @@ export async function checkScratchConceptReadings(
 						actual.contained && actual.readingContentVisible,
 						`${role}/${width}/${expected.itemId}: reading visibility or containment`
 					);
+					if (
+						expected.itemId.endsWith(
+							"-curriculum-mathematical-operators"
+						)
+					)
+						assert.deepEqual(actual.tableRows, [
+							["Operation", "Example", "Result"],
+							["Addition", "7 + 3", "10"],
+							["Subtraction", "7 - 3", "4"],
+							["Multiplication", "7 * 3", "21"],
+							["Division", "7 / 2", "3.5"],
+							["Remainder", "10 mod 3", "1"],
+							["Absolute value", "abs of -7", "7"]
+						]);
 					assert.doesNotMatch(
 						actual.text,
 						/(?:Core Concepts|Application Check) project/
@@ -134,14 +155,12 @@ export async function checkScratchConceptReadings(
 							),
 						expected.title
 					);
-					await handle
-						.asElement()
-						.screenshot({
-							path: path.join(
-								output,
-								`concept-reading-${expected.itemId}-${role}-${width}.png`
-							)
-						});
+					await handle.asElement().screenshot({
+						path: path.join(
+							output,
+							`concept-reading-${expected.itemId}-${role}-${width}.png`
+						)
+					});
 					await handle.dispose();
 					views.push({ role, width, ...expected, ...actual });
 					await writeFile(

@@ -8,6 +8,7 @@ import { applyOriginalProgramCorrection } from "../front-end/scripts/scratch/pro
 import { checkSpeedClickRound } from "./scratch-speed-click-round-check.mjs";
 import { checkRocketshipRestart } from "./scratch-rocketship-restart-check.mjs";
 import { checkSpellingBeeTraversal } from "./scratch-spelling-traversal-check.mjs";
+import { checkDottyGraph } from "./scratch-dotty-graph-check.mjs";
 
 export async function checkScratchEventReading(page, { origin, files, setRole }) {
 	const output = process.env.SCRATCH_ORIGINAL_BROWSER_PROOF_DIR || path.join(files, "original-proof");
@@ -347,6 +348,27 @@ export async function checkScratchOriginalImports(page, { origin, files, loaded,
   traversal.exportReopenedWithCorrectionAndAttribution = true;
   traversal.reopenedCases = reopenedTraversal.cases;
   await writeFile(path.join(output, "spelling-bee-traversal.json"), JSON.stringify(traversal, null, 2) + "\n");
+
+  const dotty = originalScratchProjects.find(project=>project.id==="338501835");
+  await route(sourceHref(dotty));
+  assert.match(await page.$eval(".scratch-original-import",element=>element.textContent),/Reference correction: reset the pen and finish the graph at \(180, 180\)/);
+  await confirm();
+  const dottyFrame=page.frames().find(frame=>frame!==page.mainFrame());
+  const graph=await checkDottyGraph(dottyFrame,output);
+  await page.$eval(".scratch-toolbar input[maxlength='120']",input=>{
+   input.value="Dotty corrected";input.dispatchEvent(new Event("input",{bubbles:true}));
+  });
+  await downloadProject("Dotty corrected.sb3");
+  const savedDotty=unzipSync(new Uint8Array(await readFile(path.join(files,"Dotty corrected.sb3"))));
+  const savedDottyProject=JSON.parse(strFromU8(savedDotty["project.json"]));
+  assert.equal(savedDottyProject.targets.find(target=>target.name==="Dotty").blocks["classes-dotty-reset-pen"].opcode,"pen_penUp");
+  assert.match(savedDottyProject.targets.find(target=>target.isStage).comments[originalAttributionId(dotty.id)].text,/Absolute-value trace/);
+  await newProject();await openFile(path.join(files,"Dotty corrected.sb3"));
+  assert.deepEqual((await inspect(dotty)).problems,[]);
+  const reopenedDottyFrame=page.frames().find(frame=>frame!==page.mainFrame());
+  const reopenedGraph=await checkDottyGraph(reopenedDottyFrame,output);
+  graph.exportReopenedWithCorrectionAndAttribution=true;graph.reopenedCases=reopenedGraph.cases;
+  await writeFile(path.join(output,"dotty-graph.json"),JSON.stringify(graph,null,2)+"\n");
 
 		const spinner = originalScratchProjects.find(project => project.id === "287887351");
 		await route(sourceHref(spinner));

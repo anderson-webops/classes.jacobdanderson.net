@@ -189,6 +189,60 @@ function verifyAndRestoreSpellingBee(loaded, source) {
 	for (const id of added) delete blocks[id];
 }
 
+function verifyAndRestoreDotty(loaded, source) {
+	const blocks = loaded.targets.find(
+		target => target.name === "Dotty"
+	).blocks;
+	const original = source.targets.find(
+		target => target.name === "Dotty"
+	).blocks;
+	const clear = Object.keys(original).find(
+		id => original[id].opcode === "pen_clear"
+	);
+	const questions = original[clear].next;
+	const trace = Object.keys(original).find(
+		id =>
+			original[id].opcode === "control_repeat" &&
+			Number(original[id].inputs.TIMES[1][1]) === 360
+	);
+	const go = original[trace].inputs.SUBSTACK[1];
+	const advance = original[go].next;
+	const reset = "classes-dotty-reset-pen";
+	assert.deepEqual(
+		Object.keys(blocks).filter(id => !original[id]),
+		[reset]
+	);
+	assert.equal(blocks[clear].next, reset);
+	assert.equal(blocks[reset].opcode, "pen_penUp");
+	assert.equal(blocks[reset].parent, clear);
+	assert.equal(blocks[reset].next, questions);
+	assert.equal(blocks[questions].parent, reset);
+	assert.deepEqual(blocks[trace].inputs.SUBSTACK, [2, advance]);
+	assert.equal(blocks[advance].parent, trace);
+	assert.equal(blocks[advance].next, go);
+	assert.equal(blocks[go].parent, advance);
+	assert.equal(blocks[go].next, null);
+	const changed = new Map([
+		[clear, ["next"]],
+		[questions, ["parent"]],
+		[trace, []],
+		[advance, ["parent", "next"]],
+		[go, ["parent", "next"]]
+	]);
+	for (const [id, before] of Object.entries(original)) {
+		const actual = structuredClone(blocks[id]);
+		for (const key of changed.get(id) ?? []) actual[key] = before[key];
+		if (id === trace) actual.inputs.SUBSTACK = before.inputs.SUBSTACK;
+		assert.deepEqual(
+			actual,
+			before,
+			"Only reviewed Dotty reset/trace links change: " + id
+		);
+		blocks[id] = structuredClone(before);
+	}
+	delete blocks[reset];
+}
+
 test("all original Scratch archives retain upstream bytes and only declared corrections", async () => {
 	assert.equal(originalScratchProjects.length, 164);
 	const assets = new Set();
@@ -285,6 +339,18 @@ test("all original Scratch archives retain upstream bytes and only declared corr
 			expected.add("SOURCE/program-correction.json");
 			programCorrections.push(original.id);
 		}
+		if (original.id === "338501835") {
+			verifyAndRestoreDotty(loaded, source);
+			const correction = JSON.parse(
+				strFromU8(files["SOURCE/program-correction.json"])
+			);
+			assert.equal(correction.id, original.id);
+			assert.equal(correction.sourceSHA256, original.sourceSHA256);
+			assert.equal(correction.addedBlocks, 1);
+			assert.ok(attribution.includes("Absolute-value trace"));
+			expected.add("SOURCE/program-correction.json");
+			programCorrections.push(original.id);
+		}
 		for (const [targetIndex, target] of source.targets.entries()) {
 			assert.deepEqual(
 				loaded.targets[targetIndex].blocks,
@@ -376,7 +442,7 @@ test("all original Scratch archives retain upstream bytes and only declared corr
 				process.env.SCRATCH_ORIGINAL_BROWSER_PROOF_DIR,
 				"archive-identity.json"
 			),
-			`${JSON.stringify({ projects: 164, assets: 505, originalSourceBytesRetained: true, unchangedPrograms: 161, declaredProgramCorrections: programCorrections, onlyDeclaredAttributionSvgAndProgramChanges: true, compatibilityAssets: correctedAssets.size, compatibilityProjects: correctedProjects.size, records }, null, 2)}\n`
+			`${JSON.stringify({ projects: 164, assets: 505, originalSourceBytesRetained: true, unchangedPrograms: 160, declaredProgramCorrections: programCorrections, onlyDeclaredAttributionSvgAndProgramChanges: true, compatibilityAssets: correctedAssets.size, compatibilityProjects: correctedProjects.size, records }, null, 2)}\n`
 		);
 	}
 });
@@ -522,5 +588,130 @@ test("Spelling Bee generated reference bounds produce only the selected letters"
 				expected[index],
 				JSON.stringify({ mode: index + 1, word })
 			);
+	}
+});
+
+test("Dotty generated reference stamps ten points and completes the absolute-value trace", async () => {
+	const { archive } = await createOriginalProject("338501835");
+	const files = unzipSync(archive);
+	const corrected = JSON.parse(strFromU8(files["project.json"]));
+	const source = JSON.parse(strFromU8(files["SOURCE/original.json"]));
+	verifyAndRestoreDotty(structuredClone(corrected), source);
+	const answers = [-120, -90, -30, -1, 0, 1, 30, 90, 120, 180];
+	function run(project, initialPenDown) {
+		const blocks = project.targets.find(
+			target => target.name === "Dotty"
+		).blocks;
+		const state = {
+			x: 0,
+			y: 0,
+			penDown: initialPenDown,
+			answer: 0,
+			questions: 0,
+			stamps: [],
+			trace: [],
+			inputLines: 0
+		};
+		function value(input) {
+			const key = input[1];
+			if (typeof key !== "string") return key[1];
+			const b = blocks[key];
+			const arg = name => value(b.inputs[name]);
+			switch (b.opcode) {
+				case "sensing_answer":
+					return state.answer;
+				case "motion_xposition":
+					return state.x;
+				case "motion_yposition":
+					return state.y;
+				case "operator_mathop":
+					assert.equal(b.fields.OPERATOR[0], "abs");
+					return Math.abs(Number(arg("NUM")));
+				case "operator_join":
+					return String(arg("STRING1")) + String(arg("STRING2"));
+				default:
+					throw Error("Unexpected Dotty reporter " + b.opcode);
+			}
+		}
+		function stack(id) {
+			while (id) {
+				const b = blocks[id];
+				switch (b.opcode) {
+					case "event_whenflagclicked":
+						break;
+					case "pen_clear":
+						state.trace = [];
+						break;
+					case "pen_penUp":
+						state.penDown = false;
+						break;
+					case "pen_penDown":
+						state.penDown = true;
+						state.trace.push([state.x, state.y]);
+						break;
+					case "sensing_askandwait":
+						assert.ok(state.questions < answers.length);
+						state.answer = answers[state.questions++];
+						break;
+					case "looks_say":
+					case "looks_sayforsecs":
+						break;
+					case "motion_gotoxy":
+					case "motion_glidesecstoxy": {
+						const x = Number(value(b.inputs.X)),
+							y = Number(value(b.inputs.Y));
+						state.x = x;
+						state.y = y;
+						if (state.penDown) {
+							if (state.questions < 10) state.inputLines++;
+							else state.trace.push([x, y]);
+						}
+						break;
+					}
+					case "motion_changexby":
+						state.x += Number(value(b.inputs.DX));
+						break;
+					case "pen_stamp":
+						state.stamps.push([state.x, state.y]);
+						break;
+					case "control_repeat":
+						for (
+							let index = 0,
+								count = Number(value(b.inputs.TIMES));
+							index < count;
+							index++
+						)
+							stack(b.inputs.SUBSTACK[1]);
+						break;
+					default:
+						throw Error("Unexpected Dotty command " + b.opcode);
+				}
+				id = b.next;
+			}
+		}
+		stack(
+			Object.keys(blocks).find(
+				id => blocks[id].opcode === "event_whenflagclicked"
+			)
+		);
+		return state;
+	}
+	const old = run(source, false);
+	assert.deepEqual([old.x, old.y], [180, 179]);
+	const expected = Array.from({ length: 361 }, (_, index) => [
+		index - 180,
+		Math.abs(index - 180)
+	]);
+	for (const previousPenDown of [false, true]) {
+		const actual = run(corrected, previousPenDown);
+		assert.equal(actual.questions, 10);
+		assert.equal(actual.inputLines, 0);
+		assert.deepEqual(
+			actual.stamps,
+			answers.map(x => [x, Math.abs(x)])
+		);
+		assert.deepEqual(actual.trace, expected);
+		assert.deepEqual([actual.x, actual.y], [180, 180]);
+		assert.equal(actual.penDown, false);
 	}
 });

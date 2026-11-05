@@ -591,5 +591,155 @@
 				}
 			}
 		]
+	},
+	{
+		"id": "338501835",
+		"sourceSHA256": "4f201be4ea94b97025e09eaaafacc1c162e21b526f4c13d2add4cb9fd9c95c56",
+		"target": "Dotty",
+		"summary": "Absolute-value trace: advance x before deriving y, and lift the pen before the input phase.",
+		"displaySummary": "Reference correction: reset the pen and finish the graph at (180, 180).",
+		"addedBlocks": 1,
+		"changes": [
+			{
+				"blockId": "a,z7f%=8PDP-_zMi?mY}",
+				"before": {
+					"opcode": "pen_clear",
+					"next": "JfH95Y~du-Tf1@HK3bW6",
+					"parent": "k%#upGQu|X@DR9Nqqs=U",
+					"inputs": {},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				},
+				"after": {
+					"opcode": "pen_clear",
+					"next": "classes-dotty-reset-pen",
+					"parent": "k%#upGQu|X@DR9Nqqs=U",
+					"inputs": {},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				}
+			},
+			{
+				"blockId": "JfH95Y~du-Tf1@HK3bW6",
+				"before": {
+					"opcode": "control_repeat",
+					"next": "mqiPO~0j]G,$.YXCR9}h",
+					"parent": "a,z7f%=8PDP-_zMi?mY}",
+					"inputs": {
+						"TIMES": [1, [6, "10"]],
+						"SUBSTACK": [2, "DvKA|CRb`|yxA*gi?l`J"]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				},
+				"after": {
+					"opcode": "control_repeat",
+					"next": "mqiPO~0j]G,$.YXCR9}h",
+					"parent": "classes-dotty-reset-pen",
+					"inputs": {
+						"TIMES": [1, [6, "10"]],
+						"SUBSTACK": [2, "DvKA|CRb`|yxA*gi?l`J"]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				}
+			},
+			{
+				"blockId": "1kdv#24.8BmDKKlvYcRf",
+				"before": {
+					"opcode": "control_repeat",
+					"next": "5*ZA]c.bGyK3atYnGu}S",
+					"parent": "UZVYH|@2LV5DzHE:Pq8s",
+					"inputs": {
+						"TIMES": [1, [6, "360"]],
+						"SUBSTACK": [2, "2_AOrt^kPK,1K2B//P~f"]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				},
+				"after": {
+					"opcode": "control_repeat",
+					"next": "5*ZA]c.bGyK3atYnGu}S",
+					"parent": "UZVYH|@2LV5DzHE:Pq8s",
+					"inputs": {
+						"TIMES": [1, [6, "360"]],
+						"SUBSTACK": [2, "B/t`tBQGc+Hu)U~Oj:Kq"]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				}
+			},
+			{
+				"blockId": "2_AOrt^kPK,1K2B//P~f",
+				"before": {
+					"opcode": "motion_gotoxy",
+					"next": "B/t`tBQGc+Hu)U~Oj:Kq",
+					"parent": "1kdv#24.8BmDKKlvYcRf",
+					"inputs": {
+						"X": [3, "Nl2i[2Rw4ItW[S:B?sT}", [4, "-251"]],
+						"Y": [3, "h3{i|5:NX}0Xe8n~.U]#", [4, "40"]]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				},
+				"after": {
+					"opcode": "motion_gotoxy",
+					"next": null,
+					"parent": "B/t`tBQGc+Hu)U~Oj:Kq",
+					"inputs": {
+						"X": [3, "Nl2i[2Rw4ItW[S:B?sT}", [4, "-251"]],
+						"Y": [3, "h3{i|5:NX}0Xe8n~.U]#", [4, "40"]]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				}
+			},
+			{
+				"blockId": "B/t`tBQGc+Hu)U~Oj:Kq",
+				"before": {
+					"opcode": "motion_changexby",
+					"next": null,
+					"parent": "2_AOrt^kPK,1K2B//P~f",
+					"inputs": {
+						"DX": [1, [4, "1"]]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				},
+				"after": {
+					"opcode": "motion_changexby",
+					"next": "2_AOrt^kPK,1K2B//P~f",
+					"parent": "1kdv#24.8BmDKKlvYcRf",
+					"inputs": {
+						"DX": [1, [4, "1"]]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				}
+			},
+			{
+				"blockId": "classes-dotty-reset-pen",
+				"before": null,
+				"after": {
+					"opcode": "pen_penUp",
+					"next": "JfH95Y~du-Tf1@HK3bW6",
+					"parent": "a,z7f%=8PDP-_zMi?mY}",
+					"inputs": {},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				}
+			}
+		]
 	}
 ]
