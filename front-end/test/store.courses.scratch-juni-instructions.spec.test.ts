@@ -1,5 +1,7 @@
 import { createHash } from "node:crypto";
 import sourceFixture from "./fixtures/juni-scratch-project-fidelity.json";
+import conceptReadings from "./fixtures/scratch-concept-readings.json";
+import { isLessonLearningItem } from "@/modules/courseLessonPresentation";
 import type {
 	CourseDefinition,
 	CourseModule,
@@ -253,6 +255,51 @@ describe("original Juni Scratch project instructions", () => {
 			expect(item.content).toContain("repeat 40 times");
 		}
 	);
+
+	for (const courseId of ["scratch-level-1", "scratch-level-2"]) {
+		it.each(["learner", "instructor"])(
+			courseId + " explanations stay in Learn for %s",
+			async role => {
+				if (role === "instructor")
+					useAppStore().setCurrentTutor({
+						_id: "reading-placement-tutor",
+						name: "Tutor",
+						email: "tutor@example.invalid",
+						age: 30,
+						state: "GA",
+						usersOfTutorLength: 0,
+						coursePermissions: [courseId],
+						editTutors: false,
+						saveEdit: "Save"
+					});
+				const course =
+					(await useCoursesStore().loadCourseById(courseId))!;
+				for (const expected of conceptReadings.filter(
+					row => row.courseId === courseId
+				)) {
+					const module = course.modules.find(
+						module => module.id === expected.moduleId
+					)!;
+					const item = module.curriculum.find(
+						item => item.id === expected.itemId
+					)!;
+					expect(item, expected.itemId).toBeDefined();
+					expect(item.title).toBe(expected.title);
+					expect(item.contentKind).toBe("reading");
+					expect(isLessonLearningItem(item)).toBe(true);
+					for (const originalId of expected.sourceItemIds)
+						expect([item.id, ...(item.aliases ?? [])]).toContain(
+							originalId
+						);
+					for (const text of expected.requiredText)
+						expect(item.content).toContain(text);
+					expect(item.content).not.toMatch(
+						/(?:Core Concepts|Application Check) project/
+					);
+				}
+			}
+		);
+	}
 
 	it("limits corrections to sixteen uniquely identified published starters", () => {
 		expect(juniScratchInstructionCorrections).toHaveLength(16);

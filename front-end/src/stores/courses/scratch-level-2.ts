@@ -21,6 +21,7 @@ export const scratchLevel2Course: RawCourse = {
 			curriculum: [
 				{
 					title: "Event listeners",
+					contentKind: "reading",
 					content:
 						'An event listener makes a sprite wait for a specific event and then react with a script. Common Scratch event blocks include "when green flag clicked" and "when arrow key pressed"; these blocks connect user actions or project startup to visible sprite behavior.'
 				},
@@ -40,6 +41,7 @@ View CS Training's Code`,
 				},
 				{
 					title: "Loops",
+					contentKind: "reading",
 					content:
 						'Loops repeat code without copying the same blocks over and over. They make movement, animation, drawing, and forever-running game behavior easier to build and easier to revise.\nOpen the Control blocks and compare `repeat` with `forever`. Both blocks contain a "mouth" where other blocks can be placed and repeated.\nPractice by repeating `move __ steps` and `turn ___ degrees`. Start with a fixed `repeat` count, then try the same motion inside a `forever` loop.'
 				},
@@ -56,6 +58,7 @@ View CS Training's Code`,
 				},
 				{
 					title: "Conditionals",
+					contentKind: "reading",
 					content:
 						'Conditionals let a program choose what happens based on whether something is true. A real-life conditional looks like "if it is cold, wear a jacket." In Scratch, an `if` block runs code only when its condition is true.\nAn `if...then...else` block adds a second path: one set of blocks runs when the condition is true, and another set runs when it is false. Practice with sensing blocks, comparison blocks, and user input so the program can respond to different answers or game states.'
 				},
@@ -70,6 +73,7 @@ View CS Training's Code`,
 				},
 				{
 					title: "Variables",
+					contentKind: "reading",
 					content:
 						"Variables store information that can change, such as a score, timer, answer, or level number. In Scratch, the `set __ to __` block replaces a variable's value, while `change __ by __` increases or decreases the current value.\nPractice by making the cat count from 1 to 10 with a loop. Then modify the same idea so the cat counts backward from 10 to 0 and backward from 100 to 0 by 10s."
 				},
@@ -88,6 +92,7 @@ View CS Training's Code`,
 				},
 				{
 					title: "Message Broadcasting",
+					contentKind: "reading",
 					content:
 						"Broadcasting lets sprites send messages to each other. This is useful when one sprite waits for another sprite to finish speaking, moving, or changing state before its own script begins.\nOpen the Events blocks and compare `broadcast __` with `when I receive __`. Practice by making one sprite finish a short action, broadcast a message, and trigger a second sprite to start moving only after that message is received."
 				},
@@ -161,6 +166,7 @@ Starter code is provided, but it is also fine to create a project from scratch w
 			curriculum: [
 				{
 					title: "Nested loops",
+					contentKind: "reading",
 					preserveInstructions: true,
 					content: scratchNestedLoopLesson
 				},
@@ -229,6 +235,7 @@ Finally, share the project!`,
 			curriculum: [
 				{
 					title: "Complex conditionals",
+					contentKind: "reading",
 					content:
 						"A complex conditional combines more than one condition. The `and` block requires both conditions to be true, the `or` block requires at least one condition to be true, and the `not` block reverses true and false.\nPractice by making a sprite respond differently when it touches multiple colors, either one of two colors, or none of the target colors."
 				},
@@ -308,6 +315,7 @@ Finally, share the project!`,
 			curriculum: [
 				{
 					title: "Cloning",
+					contentKind: "reading",
 					content:
 						"A clone is a temporary copy of a sprite while the project runs. This is useful when many similar objects appear on screen, such as raindrops, paint marks, enemies, stars, or collectibles.\nThe main Scratch blocks are `create clone of myself`, `when I start as a clone`, and `delete this clone`. Most clone-based projects hide the original parent sprite and show only the clones, because the clones are the objects that move, collide, and disappear."
 				},
@@ -458,6 +466,7 @@ Add a conditional so that if the mouse pointer is on the owl, it gets shy and do
 			curriculum: [
 				{
 					title: "Strings",
+					contentKind: "reading",
 					content:
 						"Programs can store different kinds of data. Earlier variables mainly held numbers for scores, timers, movement, and comparisons. Strings store text: words, letters, spaces, punctuation, and other characters.\nA string can be thought of as characters connected in order. Scratch string blocks make it possible to join text, read a specific character, and measure text length. Practice with `join __ __`, `letter __ of __`, and `length of __`. String length includes spaces and punctuation, not just letters. Good string reasoning always checks position and length: the first character, last character, an input that is too short, and an input with a space can all change the result."
 				},
@@ -535,6 +544,7 @@ Challenge: Try to accomplish step 3 using one "say" block with many "join" block
 			curriculum: [
 				{
 					title: "Mathematical Operators",
+					contentKind: "reading",
 					content:
 						"Computers can calculate, compare, and combine numbers quickly, which makes mathematical operators useful for games, quizzes, simulations, and score systems.\nCreate a new Scratch project. Open the Operators section, and experiment with how different mathematical operations can be performed with these blocks."
 				},
@@ -611,6 +621,7 @@ Challenge: Have Scratch also ask the user how many multiples the user wants to h
 			curriculum: [
 				{
 					title: "Lists",
+					contentKind: "reading",
 					content:
 						"A list stores many related values in one variable-like structure. A list can hold items such as groceries, favorite sports, places, names, scores, or words.\nIn programming, lists make it easier to store, inspect, add, remove, and count related items without creating a separate variable for each one.\nPractice by creating a list, adding elements, reading the list length, and deleting all items from the list."
 				},
@@ -697,6 +708,7 @@ Finally, share the project!`,
 			curriculum: [
 				{
 					title: "Functions",
+					contentKind: "reading",
 					content: `**Concept path:** Custom blocks in Scratch work like functions. A function is a named set of instructions that can be reused whenever a sprite needs that behavior.
 
 **Definition and call:** The My Blocks section creates custom blocks, defines what each block does, and calls those blocks from other scripts. Defining a function describes the behavior once; calling the function runs that behavior with specific input values.
