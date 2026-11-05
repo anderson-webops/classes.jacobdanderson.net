@@ -431,6 +431,7 @@ test("all original Scratch archives retain upstream bytes and only declared corr
 	assert.deepEqual(programCorrections, [
 		"299311602",
 		"332459692",
+		"338501835",
 		"357452924"
 	]);
 	if (process.env.SCRATCH_ORIGINAL_BROWSER_PROOF_DIR) {
