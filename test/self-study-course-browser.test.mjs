@@ -110,9 +110,15 @@ async function chooseView(page, position) {
 	);
 }
 
-async function checkTableLayout(page, anchor, width, stressWideTable) {
+async function checkTableLayout(
+	page,
+	anchor,
+	width,
+	stressWideTable,
+	expectedParagraphBreaks
+) {
 	const result = await page.evaluate(
-		({ anchor, stressWideTable }) => {
+		({ anchor, stressWideTable, expectedParagraphBreaks }) => {
 			const content = document
 				.getElementById(anchor)
 				.querySelector(".item-content-markdown");
@@ -145,11 +151,15 @@ async function checkTableLayout(page, anchor, width, stressWideTable) {
 			return {
 				compactTablesFit,
 				wideTableScrolls,
+				observedParagraphBreaks:
+					content.querySelectorAll(":scope > p > br").length,
+				expectedParagraphBreaks,
 				forcedParagraphBreaks:
 					content.querySelectorAll(":scope > p > br").length
+					- expectedParagraphBreaks
 			};
 		},
-		{ anchor, stressWideTable }
+		{ anchor, stressWideTable, expectedParagraphBreaks }
 	);
 	assert.equal(
 		result.compactTablesFit,
@@ -159,7 +169,7 @@ async function checkTableLayout(page, anchor, width, stressWideTable) {
 	assert.equal(
 		result.forcedParagraphBreaks,
 		0,
-		"Prose wraps to the viewport instead of source-code line lengths"
+		"Paragraph breaks match the reviewed prose and equation layout"
 	);
 	if (stressWideTable) {
 		assert.equal(
@@ -449,7 +459,8 @@ test(
 										width,
 										width === 1280
 										&& module.title
-										=== "MSC16 Sentence Types"
+										=== "MSC16 Sentence Types",
+										item.paragraphBreaks
 									);
 									for (const image of item.images) {
 										await page.waitForFunction(
