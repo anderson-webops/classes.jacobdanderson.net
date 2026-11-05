@@ -4,6 +4,8 @@ import path from "node:path";
 import process from "node:process";
 import { strFromU8, unzipSync } from "fflate";
 import { originalAttributionId, originalScratchProjects } from "../front-end/scripts/scratch/generate-original-projects.mjs";
+import { applyOriginalProgramCorrection } from "../front-end/scripts/scratch/program-corrections.mjs";
+import { checkSpeedClickRound } from "./scratch-speed-click-round-check.mjs";
 
 export async function checkScratchEventReading(page, { origin, files, setRole }) {
 	const output = process.env.SCRATCH_ORIGINAL_BROWSER_PROOF_DIR || path.join(files, "original-proof");
@@ -109,6 +111,7 @@ export async function checkScratchOriginalImports(page, { origin, files, loaded,
 	};
 	async function inspect(original) {
 		const expected = JSON.parse(await readFile(new URL(`../front-end/scripts/scratch/originals/projects/${original.id}.json`, import.meta.url), "utf8"));
+		applyOriginalProgramCorrection(expected, original);
 		const vectors = {};
 		for (const target of expected.targets) {
 			for (const costume of target.costumes) {
@@ -217,6 +220,7 @@ export async function checkScratchOriginalImports(page, { origin, files, loaded,
 			}
 			const comment = actual.targets.find(target => target.isStage).comments?.[attributionId]?.text;
 			if (!comment?.includes(original.url) || !comment.includes("CC BY-SA 2.0")) problems.push("Missing portable attribution");
+			if (original.id === "299311602" && !comment?.includes("Active-round score guard")) problems.push("Missing program correction credit");
 			const extensions = original.extensions.map(extension => ({ extension, loaded: vm.extensionManager.isExtensionLoaded(extension) }));
 			if (actual.targets.length !== expected.targets.length) problems.push("Changed target count");
 			if (extensions.some(extension => !extension.loaded)) problems.push("Extension not loaded");
@@ -275,6 +279,28 @@ export async function checkScratchOriginalImports(page, { origin, files, loaded,
 			}
 		}
 		assert.equal(records.length, 164);
+		const speedClick = originalScratchProjects.find(project => project.id === "299311602");
+		await route(sourceHref(speedClick));
+		assert.match(await page.$eval(".scratch-original-import", element => element.textContent), /Reference correction: clicks score only during an active round/);
+		await confirm();
+		const speedFrame = page.frames().find(frame => frame !== page.mainFrame());
+		const speedRound = await checkSpeedClickRound(speedFrame, output);
+		await page.$eval(".scratch-toolbar input[maxlength='120']", input => {
+			input.value = "Speed Click corrected";
+			input.dispatchEvent(new Event("input", { bubbles: true }));
+		});
+		await downloadProject("Speed Click corrected.sb3");
+		const speedSaved = unzipSync(new Uint8Array(await readFile(path.join(files, "Speed Click corrected.sb3"))));
+		const speedProject = JSON.parse(strFromU8(speedSaved["project.json"]));
+		assert.equal(speedProject.targets.find(target => target.name === "Button").blocks["classes-speed-click-round-and"].opcode, "operator_and");
+		assert.match(speedProject.targets.find(target => target.isStage).comments[originalAttributionId(speedClick.id)].text, /Active-round score guard/);
+		await newProject();
+		await openFile(path.join(files, "Speed Click corrected.sb3"));
+		const speedReopened = await inspect(speedClick);
+		assert.deepEqual(speedReopened.problems, []);
+		speedRound.exportReopenedWithCorrectionAndAttribution = true;
+		await writeFile(path.join(output, "speed-click-round.json"), `${JSON.stringify(speedRound, null, 2)}\n`);
+
 		const spinner = originalScratchProjects.find(project => project.id === "287887351");
 		await route(sourceHref(spinner));
 		await confirm();
