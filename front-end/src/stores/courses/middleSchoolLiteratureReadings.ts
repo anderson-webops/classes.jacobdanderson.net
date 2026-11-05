@@ -389,6 +389,7 @@ export function applyMiddleSchoolLiteratureReadings(
 					candidate => candidate.title === project.title
 				),
 				content: formatAuthoredAssignment(project.content),
+				contentKind: "assignment" as const,
 				preserveInstructions: true,
 				preserveAssignment: true
 			}))
