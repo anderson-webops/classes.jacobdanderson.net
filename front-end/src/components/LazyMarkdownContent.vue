@@ -280,6 +280,12 @@ watch(
 	border-right: 0;
 }
 
+.item-content-markdown :deep(table:has(th:last-child:nth-child(-n + 3)) th),
+.item-content-markdown :deep(table:has(th:last-child:nth-child(-n + 3)) td) {
+	min-width: 0;
+	min-inline-size: 0;
+}
+
 .item-content-markdown :deep(tr:last-child td) {
 	border-bottom: 0;
 }

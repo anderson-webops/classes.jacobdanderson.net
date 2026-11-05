@@ -102,7 +102,7 @@ async function chooseView(page, position) {
 
 async function checkTableLayout(page, anchor, width, stressWideTable) {
 	const result = await page.evaluate(
-		({ anchor, width, stressWideTable }) => {
+		({ anchor, stressWideTable }) => {
 			const content = document
 				.getElementById(anchor)
 				.querySelector(".item-content-markdown");
@@ -110,7 +110,6 @@ async function checkTableLayout(page, anchor, width, stressWideTable) {
 				...content.querySelectorAll(".markdown-table-scroll")
 			];
 			const compactTablesFit =
-				width < 1280 ||
 				wrappers.every(
 					wrapper =>
 						wrapper.querySelectorAll("thead th").length > 3 ||
@@ -139,12 +138,12 @@ async function checkTableLayout(page, anchor, width, stressWideTable) {
 					content.querySelectorAll(":scope > p > br").length
 			};
 		},
-		{ anchor, width, stressWideTable }
+		{ anchor, stressWideTable }
 	);
 	assert.equal(
 		result.compactTablesFit,
 		true,
-		"Compact comparison tables fit the desktop reading pane"
+		`Compact comparison tables fit the ${width}px reading pane`
 	);
 	assert.equal(
 		result.forcedParagraphBreaks,
