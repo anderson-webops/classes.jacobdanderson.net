@@ -220,8 +220,12 @@ it.each(
 					.trim()
 			};
 		};
+		const algebra = id === "algebra-2a" || id === "algebra-2b";
 		const modules = course.modules
-			.filter(module => !module.internal)
+			.filter(
+				module =>
+					!module.internal && (!algebra || module.kind !== "appendix")
+			)
 			.map(module => ({
 				id: module.id,
 				title: module.title,
@@ -237,7 +241,6 @@ it.each(
 					.map(card)
 			}));
 		expect(modules.flatMap(module => module.readings)).toHaveLength(count);
-		const algebra = id === "algebra-2a" || id === "algebra-2b";
 		if (algebra)
 			expect(modules).toHaveLength(id === "algebra-2a" ? 15 : 12);
 		else
@@ -274,7 +277,11 @@ it.each(
 						sourceProjects: sourceProjects.length,
 						modules,
 						internalModules: course.modules
-							.filter(module => module.internal)
+							.filter(
+								module =>
+									module.internal ||
+									(algebra && module.kind === "appendix")
+							)
 							.map(module => ({
 								id: module.id,
 								title: module.title
