@@ -6,6 +6,17 @@ import {
 import { normalizeInlineCourseMarkdown } from "@/modules/courseMarkdown";
 
 describe("lesson content presentation", () => {
+	it("keeps an explicitly assigned goal with the task instead of background learning", () => {
+		const content =
+			"**Goal:** Compare two designs and explain the choice.\n**Completion evidence:**\n- A comparison and one reason.";
+		const assigned = lessonContentSections(content, "assignment");
+		expect(assigned.map(section => section.kind)).toEqual(["assignment"]);
+		expect(assigned[0].content).toContain(
+			"Compare two designs and explain the choice."
+		);
+		expect(assigned[0].content).toContain("A comparison and one reason.");
+		expect(lessonContentSections(content)[0].kind).toBe("learn");
+	});
 	it("keeps the project directive visible beside completion evidence", () => {
 		const sections = lessonContentSections(
 			"**Project goal:** Read the supplied passage and compare two interpretations.\n**Completion evidence:**\n- Two quotations and a reasoning link."

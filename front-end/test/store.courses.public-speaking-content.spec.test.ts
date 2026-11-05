@@ -38,7 +38,9 @@ it.each(["learner", "instructor"])(
 				const current = module.curriculum.find(
 					item => item.title === project.title
 				)!;
-				expect(current.content, project.title).toBe(project.content);
+				expect(current.content, project.title).toBe(
+					project.content.replace(/^\*\*Project goal:\*\*\s*/, "")
+				);
 				expect(isLessonLearningItem(current), project.title).toBe(
 					false
 				);

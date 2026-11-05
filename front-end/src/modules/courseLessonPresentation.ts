@@ -74,7 +74,10 @@ export function isLessonLearningItem(item: CourseModuleItem) {
 	);
 }
 
-export function lessonContentSections(content: string): LessonContentSection[] {
+export function lessonContentSections(
+	content: string,
+	contentKind?: CourseModuleItem["contentKind"]
+): LessonContentSection[] {
 	if (/^ {0,3}\[[^\]\n]+\]:/m.test(content))
 		return [{ kind: "assignment", label: "Assignment", content }];
 	const sections: LessonContentSection[] = [];
@@ -122,9 +125,14 @@ export function lessonContentSections(content: string): LessonContentSection[] {
 		)
 			.replace(/:$/, "")
 			.trim();
-		const kind = Object.hasOwn(sectionKinds, label.toLowerCase())
+		let kind = Object.hasOwn(sectionKinds, label.toLowerCase())
 			? sectionKinds[label.toLowerCase()]
 			: undefined;
+		if (
+			contentKind === "assignment" &&
+			/^(?:project )?goals?$/i.test(label)
+		)
+			kind = "assignment";
 		if (kind) {
 			finish();
 			current = {

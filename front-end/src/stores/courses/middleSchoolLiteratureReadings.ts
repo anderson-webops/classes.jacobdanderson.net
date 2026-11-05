@@ -385,7 +385,10 @@ export function applyMiddleSchoolLiteratureReadings(
 				...module.curriculum.find(
 					candidate => candidate.title === project.title
 				),
-				content: project.content,
+				content: project.content.replace(
+					/^\*\*Project goal:\*\*\s*/,
+					""
+				),
 				preserveInstructions: true,
 				preserveAssignment: true
 			}))

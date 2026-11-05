@@ -785,9 +785,10 @@ const learningTopics = computed(() =>
 	]
 		.map(item => ({
 			item,
-			sections: lessonContentSections(item.content).filter(
-				section => section.kind === "learn"
-			)
+			sections: lessonContentSections(
+				item.content,
+				item.contentKind
+			).filter(section => section.kind === "learn")
 		}))
 		.filter(topic => topic.sections.length)
 );
@@ -2363,7 +2364,10 @@ function writeStoredValue(key: string, value: string) {
 									<CourseAssignmentContent
 										v-else-if="item.content"
 										:sections="
-											lessonContentSections(item.content)
+											lessonContentSections(
+												item.content,
+												item.contentKind
+											)
 										"
 									/>
 

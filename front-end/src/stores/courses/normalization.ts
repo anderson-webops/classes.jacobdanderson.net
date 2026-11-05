@@ -9505,7 +9505,7 @@ function cleanVisibleCourseGrammar(course: RawCourse) {
 	const vowelArticleNouns =
 		"intermediate|implementation|artifact|edge|empty|input|output|argument|example|activity|analysis|extension|optional|observable|operation|error|invalid|image|environment|experiment|investigation|idea|issue|array|object|interface";
 	const consonantArticleNouns =
-		"data|small|normal|boundary|working|valid|useful|clear|concrete|specific|single|final|first|second|third|safe|runnable|testable|repeatable|named|short|visible|focused|complete|different|same|simple";
+		"course|data|small|normal|boundary|working|valid|useful|clear|concrete|specific|single|final|first|second|third|safe|runnable|testable|repeatable|named|short|visible|focused|complete|different|same|simple";
 	const evidenceNouns =
 		"boundary|behavior|constructor|branch|method|collection operation|diagnostic|data-structure|resource|control-flow change|variable|state transition|view|model|persistence path|normal case|edge case|ordinary behavior|runtime evidence|local lab|page behavior|simulator path|insert\\/search\\/remove path|search|traceable case|sanity check|limitation|example|case|input|path|run|trace|observation";
 
