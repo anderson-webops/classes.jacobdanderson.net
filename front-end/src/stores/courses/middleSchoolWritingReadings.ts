@@ -1,5 +1,8 @@
 import type { RawCourse } from "./types";
-import { formatAuthoredReading } from "./authoredReading";
+import {
+	formatAuthoredAssignment,
+	formatAuthoredReading
+} from "./authoredReading";
 
 const carRide = `
 ## Original practice passage: Car Ride
@@ -350,7 +353,7 @@ An analytical presentation can decide the accuracy-focused practice award.
 Show the fictional records, define the criterion, explain the argument and address
 a fair counterclaim. Those records establish no facts about a real athlete.
 
-A fiction presentation can use an original story to teach objective, conflict
+A fiction presentation connects an original story to objective, conflict
 and viewpoint. Define each concept, quote a brief scene detail and explain a
 revision's effect. Car Ride is a worked reference; the portfolio includes the
 writer's own scene.
@@ -442,7 +445,8 @@ export function applyMiddleSchoolWritingReadings(
 				...module.curriculum.find(
 					candidate => candidate.title === project.title
 				),
-				content: project.content,
+				content: formatAuthoredAssignment(project.content),
+				contentKind: "assignment" as const,
 				preserveInstructions: true,
 				preserveAssignment: true
 			}))
@@ -459,7 +463,8 @@ export function applyMiddleSchoolWritingReadings(
 				...module.supplementalProjects.find(
 					candidate => candidate.title === project.title
 				),
-				content: project.content,
+				content: formatAuthoredAssignment(project.content),
+				contentKind: "assignment" as const,
 				preserveInstructions: true,
 				preserveAssignment: true
 			})),

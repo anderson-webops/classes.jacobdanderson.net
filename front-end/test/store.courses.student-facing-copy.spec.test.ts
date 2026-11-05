@@ -463,6 +463,29 @@ describe("student-facing course copy", () => {
 		).toBe(true);
 	});
 
+	it("keeps operational roles and data paragraphs distinct from instructor directions", () => {
+		for (const content of [
+			"These commands use a POSIX shell:\n\n~~~text\nmake check\n~~~\n\nThe untouched learner compiles but its checks fail.",
+			"Use these fictional observations:\n\n| Observation | Meaning |\n| --- | --- |\n| A learner carries a folder. | A storage need. |"
+		]) {
+			expect(
+				forbiddenStudentFacingPatterns.some(pattern =>
+					pattern.test(proseForCopyChecks(content))
+				),
+				content
+			).toBe(false);
+		}
+		expect(
+			forbiddenStudentFacingPatterns.some(pattern =>
+				pattern.test(
+					proseForCopyChecks(
+						"Use an example to show\nlearners how the loop works."
+					)
+				)
+			)
+		).toBe(true);
+	});
+
 	it(
 		"keeps visible catalog lessons neutral instead of instructor-facing",
 		async () => {

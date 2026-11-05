@@ -1,5 +1,8 @@
 import type { RawCourse } from "./types";
-import { formatAuthoredReading } from "./authoredReading";
+import {
+	formatAuthoredAssignment,
+	formatAuthoredReading
+} from "./authoredReading";
 
 const readings: Record<string, string> = {
 	"MYP1 Personal Introductions": `
@@ -263,10 +266,7 @@ export function applyPublicSpeakingReadings(
 				...module.curriculum.find(
 					current => current.title === project.title
 				),
-				content: project.content.replace(
-					/^\*\*Project goal:\*\*\s*/,
-					""
-				),
+				content: formatAuthoredAssignment(project.content),
 				contentKind: "assignment" as const,
 				preserveInstructions: true,
 				preserveAssignment: true
@@ -274,10 +274,7 @@ export function applyPublicSpeakingReadings(
 		];
 		for (const optional of module.supplementalProjects) {
 			optional.contentKind = "assignment";
-			optional.content = optional.content.replace(
-				/^\*\*(?:Goal|Project goal):\*\*\s*/,
-				""
-			);
+			optional.content = formatAuthoredAssignment(optional.content);
 		}
 	}
 }

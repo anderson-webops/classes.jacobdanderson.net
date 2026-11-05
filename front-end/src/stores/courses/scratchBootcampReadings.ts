@@ -1,5 +1,8 @@
 import type { RawCourse } from "./types";
-import { formatAuthoredReading } from "./authoredReading";
+import {
+	formatAuthoredAssignment,
+	formatAuthoredReading
+} from "./authoredReading";
 
 const readings: Record<string, string> = {
 	"GS1 Event Listeners and Movement": `
@@ -261,10 +264,7 @@ export function applyScratchBootcampReadings(
 						`Missing Scratch Bootcamp task: ${project.title}`
 					);
 				}
-				task.content = project.content.replace(
-					/^\*\*Project goal:\*\*\s*/,
-					""
-				);
+				task.content = formatAuthoredAssignment(project.content);
 				task.contentKind = "assignment";
 				task.preserveInstructions = true;
 				task.preserveAssignment = true;

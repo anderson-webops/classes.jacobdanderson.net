@@ -1,5 +1,8 @@
 import type { RawCourse } from "./types";
-import { formatAuthoredReading } from "./authoredReading";
+import {
+	formatAuthoredAssignment,
+	formatAuthoredReading
+} from "./authoredReading";
 
 const readings: Record<string, string> = {
 	"MSC1 Nouns, Pronouns & Adjectives": `
@@ -551,7 +554,7 @@ For a lesson on sentence boundaries, the three concepts could be independent
 clauses, coordinating conjunctions and semicolons. Show a labeled model for each,
 then create 3–5 practice questions for each concept with an answer key. Explain
 the rule in speaker notes. A text handout with labels can supply the same content
-as slides; delivery may be private or guided by an instructor.
+as slides; delivery may be private or part of a guided walkthrough.
 
 For a portfolio, begin with this original fictional draft or a chosen narrative:
 "mina found a small, wooden box, bo carried it. because the box was locked.
@@ -603,7 +606,7 @@ export function applyGrammarMechanicsReadings(
 				...module.curriculum.find(
 					candidate => candidate.title === project.title
 				),
-				content: project.content,
+				content: formatAuthoredAssignment(project.content),
 				contentKind: "assignment" as const,
 				preserveInstructions: true,
 				preserveAssignment: true
@@ -621,7 +624,7 @@ export function applyGrammarMechanicsReadings(
 				...module.supplementalProjects.find(
 					candidate => candidate.title === project.title
 				),
-				content: project.content,
+				content: formatAuthoredAssignment(project.content),
 				contentKind: "assignment" as const,
 				preserveInstructions: true,
 				preserveAssignment: true

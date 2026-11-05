@@ -1,5 +1,8 @@
 import type { RawCourse } from "./types";
-import { formatAuthoredReading } from "./authoredReading";
+import {
+	formatAuthoredAssignment,
+	formatAuthoredReading
+} from "./authoredReading";
 
 const readings: Record<string, string> = {
 	"ENT1 Design Thinking Methodology": `
@@ -340,7 +343,7 @@ For self-review, check whether each claim has a matching artifact, each number
 uses the final model, each competitor comparison uses consistent fields, and
 each unsupported statement is labeled as an assumption. Then write one concern
 about clarity, feasibility and differentiation, revise the pitch, and record why.
-An instructor or opt-in reviewer can use the same questions.
+An opt-in reviewer can use the same questions.
 
 The four fictional responses support practice in interpreting feedback; they
 are not four real customers or proof of demand. A complete private portfolio
@@ -381,8 +384,10 @@ export function applyEntrepreneurshipReadings(
 				...module.curriculum.find(
 					candidate => candidate.title === project.title
 				),
-				content: project.content,
+				content: formatAuthoredAssignment(project.content),
 				learningPath: "core" as const,
+				contentKind: "assignment" as const,
+				preserveAssignment: true,
 				preserveInstructions: true
 			}))
 		];

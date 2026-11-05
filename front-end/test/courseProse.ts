@@ -5,7 +5,8 @@ export function proseForCopyChecks(text: string) {
 		.replace(/(`{3,}|~{3,})[\s\S]*?\1/g, " ")
 		.replace(/(`+)[\s\S]*?\1/g, " ")
 		.replace(/^ {0,3}>.*$/gm, " ")
-		.replace(/"[^"]*"|“[^”]*”/g, " ");
+		.replace(/"[^"]*"|“[^”]*”/g, " ")
+		.replace(/\n\s*\n/g, "\n.\n");
 }
 
 export function rawCourseProse(source: string) {

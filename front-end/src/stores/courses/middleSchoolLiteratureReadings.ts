@@ -1,5 +1,8 @@
 import type { RawCourse } from "./types";
-import { formatAuthoredReading } from "./authoredReading";
+import {
+	formatAuthoredAssignment,
+	formatAuthoredReading
+} from "./authoredReading";
 
 const gardenPoem = `
 ## Original practice poem: After the Storm
@@ -385,10 +388,7 @@ export function applyMiddleSchoolLiteratureReadings(
 				...module.curriculum.find(
 					candidate => candidate.title === project.title
 				),
-				content: project.content.replace(
-					/^\*\*Project goal:\*\*\s*/,
-					""
-				),
+				content: formatAuthoredAssignment(project.content),
 				preserveInstructions: true,
 				preserveAssignment: true
 			}))

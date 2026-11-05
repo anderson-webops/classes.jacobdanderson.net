@@ -1,5 +1,8 @@
 import type { RawCourse } from "./types";
-import { formatAuthoredReading } from "./authoredReading";
+import {
+	formatAuthoredAssignment,
+	formatAuthoredReading
+} from "./authoredReading";
 
 const readings: Record<string, string> = {
 	"NW1 Course Overview & Goal Setting": `
@@ -315,7 +318,7 @@ dialogue paragraphs, punctuation and repeated words.
 A concrete next-pass note is "Introduce the inspection sketch before Mina uses
 it in the conflict scene." "Make it better" does not identify an editing action.
 Select a complete short-story draft or the chosen excerpt scope from NW1 and
-state what remains open. A private portfolio or instructor submission can be the
+state what remains open. A private portfolio or guided review can be the
 finished product; sharing beyond that is a separate choice.
 `.trim()
 };
@@ -351,17 +354,14 @@ export function applyNovelWritingReadings(
 					`Missing Novel Writing project: ${project.title}`
 				);
 			}
-			current.content = project.content;
+			current.content = formatAuthoredAssignment(project.content);
 			current.contentKind = "assignment";
 			current.preserveInstructions = true;
 			current.preserveAssignment = true;
 		}
 		for (const optional of module.supplementalProjects) {
 			optional.contentKind = "assignment";
-			optional.content = optional.content.replace(
-				/^\*\*Goal:\*\*/,
-				"**Project goal:**"
-			);
+			optional.content = formatAuthoredAssignment(optional.content);
 		}
 	}
 }

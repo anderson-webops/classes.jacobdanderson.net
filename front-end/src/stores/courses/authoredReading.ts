@@ -1,3 +1,8 @@
+/** Drop only the redundant lead label; preserve the task and any source code. */
+export function formatAuthoredAssignment(content: string) {
+	return content.replace(/^\*\*(?:Project )?Goal:\*\*\s*/i, "");
+}
+
 /** Join source-wrapped prose while retaining Markdown structure and hard breaks. */
 export function formatAuthoredReading(content: string) {
 	const result: string[] = [];

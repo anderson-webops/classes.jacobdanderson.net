@@ -813,7 +813,7 @@ const novelWritingSourceAnchors: Record<string, SourceActivityAnchor[]> = {
 		},
 		{
 			title: "Publication Readiness Reflection",
-			prompt: "Review the novel as a reader-facing project. The reflection checks whether the title, opening, character arc, conflict, ending, and formatting are ready for a private portfolio, instructor submission, or optional sharing. The publication readiness check does not mean the draft is perfect or that it must be posted publicly; it means the writer can explain what the story is, what revision work has already happened, and what the next realistic editing pass would address.",
+			prompt: "Review the novel as a reader-facing project. The reflection checks whether the title, opening, character arc, conflict, ending, and formatting are ready for a private portfolio, guided review, or optional sharing. The publication readiness check does not mean the draft is perfect or that it must be posted publicly; it means the writer can explain what the story is, what revision work has already happened, and what the next realistic editing pass would address.",
 			evidence: [
 				"Reader-facing summary of the novel's premise, protagonist, conflict, and ending direction.",
 				"Checklist covering title, opening clarity, character arc, conflict resolution, dialogue formatting, and remaining copyedits.",
@@ -2010,7 +2010,7 @@ const investingCourses = {
 					"privacy"
 				],
 				flowNote:
-					"Build a fictional or aggregate persona from ranges and patterns, then test assumptions with anonymous, opt-in, instructor-supplied, or simulated responses. The external coffee-shop game is an optional case with a text-table fallback."
+					"Build a fictional or aggregate persona from ranges and patterns, then test assumptions with anonymous, opt-in, supplied, or simulated responses. The external coffee-shop game is an optional case with a text-table fallback."
 			},
 			"ENT5 Iterating On Your Idea": {
 				estimatedTime: "2 sessions · 40–50 minutes each",
@@ -2098,7 +2098,7 @@ const investingCourses = {
 				},
 				{
 					title: "Ideal Wallet Design Sprint",
-					prompt: "Run a short design-thinking sprint around a wallet or small everyday object. Use an opt-in interview, an instructor-supplied fictional user, or a self-test; do not collect names, contact details, payment information, or sensitive contents. Write a point-of-view statement, sketch three possible solutions, gather feedback, and revise the strongest design.",
+					prompt: "Run a short design-thinking sprint around a wallet or small everyday object. Use an opt-in interview, a supplied fictional user, or a self-test; do not collect names, contact details, payment information, or sensitive contents. Write a point-of-view statement, sketch three possible solutions, gather feedback, and revise the strongest design.",
 					evidence: [
 						"Interview notes naming what the user stores, worries about, or wants easier access to.",
 						"Point-of-view statement in the form: user needs a way to ___ because or but ___.",
@@ -2129,7 +2129,7 @@ const investingCourses = {
 				},
 				{
 					title: "Empathy Observation Persona",
-					prompt: "With consent, observe a non-sensitive routine, use a pet or self-observation, or work from an instructor-supplied fictional routine. Record pain points, frustrations, habits, and needs without names or identifying details, then translate the evidence into a simple persona that can guide later problem selection.",
+					prompt: "With consent, observe a non-sensitive routine, use a pet or self-observation, or work from a supplied fictional routine. Record pain points, frustrations, habits, and needs without names or identifying details, then translate the evidence into a simple persona that can guide later problem selection.",
 					evidence: [
 						"Observation notes organized into story, pain points, frustrations, habits, and needs.",
 						"Persona summary with one specific problem worth solving.",
@@ -2188,7 +2188,7 @@ const investingCourses = {
 				},
 				{
 					title: "Customer Feedback Survey Draft",
-					prompt: "Write five to ten open-ended survey questions for potential customers or an instructor-supplied fictional response set. Include questions about willingness to pay, frequency of use, concerns, and desired changes without forcing yes-or-no answers or requesting identifying or sensitive information.",
+					prompt: "Write five to ten open-ended survey questions for potential customers or a supplied fictional response set. Include questions about willingness to pay, frequency of use, concerns, and desired changes without forcing yes-or-no answers or requesting identifying or sensitive information.",
 					evidence: [
 						"Survey draft with open-ended wording and no leading answer choices.",
 						"Question map showing which product assumption each question tests.",
@@ -2199,7 +2199,7 @@ const investingCourses = {
 			"ENT5 Iterating On Your Idea": [
 				{
 					title: "Feedback Interpretation and Iteration Plan",
-					prompt: "Review opt-in, anonymous, instructor-supplied, or clearly simulated prototype and persona-survey feedback. Record the response count and limitations, separate improvements, keepers, conflicting responses, and surprising results, then choose which feedback will drive the next prototype version.",
+					prompt: "Review opt-in, anonymous, supplied, or clearly simulated prototype and persona-survey feedback. Record the response count and limitations, separate improvements, keepers, conflicting responses, and surprising results, then choose which feedback will drive the next prototype version.",
 					evidence: [
 						"Feedback table grouped by improvement, keep, conflict, and surprise.",
 						"Iteration plan with specific changes and the customer evidence behind each change.",
@@ -2309,7 +2309,7 @@ const investingCourses = {
 				},
 				{
 					title: "Entrepreneur Feedback and Pitch Revision",
-					prompt: "Present the business plan privately to an opt-in entrepreneur, business owner, peer, instructor, or structured self-review checklist. Gather feedback on clarity, feasibility, differentiation, and presentation, then revise the pitch. Public posting or outreach is not required.",
+					prompt: "Present the business plan privately to an opt-in entrepreneur, business owner, peer, reviewer, or structured self-review checklist. Gather feedback on clarity, feasibility, differentiation, and presentation, then revise the pitch. Public posting or outreach is not required.",
 					evidence: [
 						"Feedback notes answering what works, what does not work, what is unclear, and what can improve.",
 						"Revision log showing what changed after feedback.",
@@ -3536,7 +3536,7 @@ const englishCourses = {
 			"MSA11 Master Project": [
 				{
 					title: "Writing from an Image Literature Showcase",
-					prompt: "Use the supplied original The Last Platform image or its text description, or choose another original, public-domain, instructor-provided, or otherwise copyright-safe image. Write a fictional literary piece that intentionally uses point of view, theme, character action, word choice, sound, and figurative language. Do not infer facts about real people shown in an image. Add a brief analysis explaining how the craft choices shape interpretation.",
+					prompt: "Use the supplied original The Last Platform image or its text description, or choose another original, public-domain, or otherwise copyright-safe image. Write a fictional literary piece that intentionally uses point of view, theme, character action, word choice, sound, and figurative language. Do not infer facts about real people shown in an image. Add a brief analysis explaining how the craft choices shape interpretation.",
 					evidence: [
 						"An original short piece inspired by an image.",
 						"Visible use of point of view, theme development, word choice, sound, or figurative language.",
@@ -3733,7 +3733,7 @@ const englishCourses = {
 					"rehearsal / revision"
 				],
 				flowNote:
-					"Complete the path-and-evidence plan, then choose one presentation. Live, private recorded, audio-supported, or instructor-only delivery is valid; public posting is not required."
+					"Complete the path-and-evidence plan, then choose one presentation. Live, private recorded, audio-supported, or one-to-one delivery is valid; public posting is not required."
 			}
 		},
 		sourceActivityAnchors: middleSchoolBWritingSourceAnchors,
@@ -3952,7 +3952,7 @@ const englishCourses = {
 					"rehearsal / revision"
 				],
 				flowNote:
-					"Use the master project only when a presentation is useful evidence for the remaining gap. Choose one path; private, recorded, audio-supported, or instructor-only delivery is valid."
+					"Use the master project only when a presentation is useful evidence for the remaining gap. Choose one path; private, recorded, audio-supported, or one-to-one delivery is valid."
 			},
 			"MSB Retake Exit Evidence": {
 				estimatedTime: "1 session · 45–55 minutes",
@@ -4232,7 +4232,7 @@ const englishCourses = {
 					"feedback check"
 				],
 				flowNote:
-					"Complete the path-and-evidence plan, then choose one project. A fictional narrative and private or instructor-only presentation are valid; personal disclosure and public posting are not required."
+					"Complete the path-and-evidence plan, then choose one project. A fictional narrative and private or one-to-one presentation are valid; personal disclosure and public posting are not required."
 			}
 		},
 		sourceActivityAnchors: grammarMechanicsSourceAnchors,
@@ -4335,7 +4335,7 @@ const englishCourses = {
 					"resolution"
 				],
 				flowNote:
-					"Map concrete story events and their causal links, then use the map to identify the next needed scene. Use a hand-drawn, text-only, or instructor-supplied arc; unavailable images are not required."
+					"Map concrete story events and their causal links, then use the map to identify the next needed scene. Use a hand-drawn or text-only arc."
 			},
 			"NW7 Character Development": {
 				estimatedTime: "2 sessions · 40–50 minutes each",
@@ -4431,7 +4431,7 @@ const englishCourses = {
 					"next-pass plan"
 				],
 				flowNote:
-					"Complete the chosen story scope, revise for continuity and craft, and assemble a polished excerpt or full draft with a readiness reflection. A private portfolio or instructor submission is complete; public posting or publication is optional and not required."
+					"Complete the chosen story scope, revise for continuity and craft, and assemble a polished excerpt or full draft with a readiness reflection. A private portfolio or guided review is complete; public posting or publication is optional and not required."
 			}
 		},
 		sourceActivityAnchors: novelWritingSourceAnchors,

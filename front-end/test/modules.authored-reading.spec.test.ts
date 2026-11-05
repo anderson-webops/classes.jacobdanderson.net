@@ -1,5 +1,16 @@
 import { expect, it } from "vitest";
-import { formatAuthoredReading } from "@/stores/courses/authoredReading";
+import {
+	formatAuthoredAssignment,
+	formatAuthoredReading
+} from "@/stores/courses/authoredReading";
+
+it("retains complete task text and literal source labels when dropping an assignment lead", () => {
+	const task =
+		"Draw two paths.\n**Completion evidence:**\n- Two labeled routes.\n\n~~~text\n**Goal:** is a literal source line\n  keep this indentation\n~~~";
+	for (const label of ["Goal", "Project goal"]) {
+		expect(formatAuthoredAssignment(`**${label}:** ${task}`)).toBe(task);
+	}
+});
 
 it("keeps source programs byte-for-byte while joining wrapped prose", () => {
 	const program =
