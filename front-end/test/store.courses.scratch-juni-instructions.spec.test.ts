@@ -218,13 +218,13 @@ describe("original Juni Scratch project instructions", () => {
 		});
 	}
 
-	it("limits corrections to thirteen uniquely identified published starters", () => {
-		expect(juniScratchInstructionCorrections).toHaveLength(13);
+	it("limits corrections to fifteen uniquely identified published starters", () => {
+		expect(juniScratchInstructionCorrections).toHaveLength(15);
 		expect(
 			new Set(
 				juniScratchInstructionCorrections.map(item => item.projectId)
 			).size
-		).toBe(13);
+		).toBe(15);
 		for (const correction of juniScratchInstructionCorrections) {
 			expect(correction.publishedInstructionsSha256).toMatch(
 				/^[a-f0-9]{64}$/
@@ -233,7 +233,7 @@ describe("original Juni Scratch project instructions", () => {
 	});
 
 	it.each(["learner", "instructor"])(
-		"retains published user-input tasks and links for %s",
+		"retains published input and coordinate tasks and links for %s",
 		async role => {
 			if (role === "instructor")
 				useAppStore().setCurrentTutor({
@@ -249,13 +249,10 @@ describe("original Juni Scratch project instructions", () => {
 				});
 			const course =
 				(await useCoursesStore().loadCourseById("scratch-level-1"))!;
-			const module = course.modules.find(
-				module => module.title === "GS9 User Input"
-			)!;
-			const items = [
+			const items = course.modules.flatMap(module => [
 				...module.curriculum,
 				...module.supplementalProjects
-			];
+			]);
 			for (const [id, solution, path, required, excluded] of [
 				[
 					"297744913",
@@ -296,6 +293,36 @@ describe("original Juni Scratch project instructions", () => {
 						"two seconds"
 					],
 					["build a shop", "plant a tree", "items collected"]
+				],
+				[
+					"329289426",
+					"329283944",
+					"choice",
+					[
+						"mouse pointer",
+						"forever",
+						"greater than 0",
+						"less than 0",
+						"top left",
+						"bottom right",
+						"bottom left",
+						"Optional:"
+					],
+					["Use the arrow keys to move", "Quadrant I"]
+				],
+				[
+					"329294838",
+					"329290359",
+					"choice",
+					[
+						"supplied grid backdrops",
+						"Pen extension",
+						"Lift the pen",
+						"go to x/y",
+						"change x/y",
+						"Optional: ask for coordinates"
+					],
+					["2. Allow the user to enter coordinates"]
 				],
 				[
 					"328310783",

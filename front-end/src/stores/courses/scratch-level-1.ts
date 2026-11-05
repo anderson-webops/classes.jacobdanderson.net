@@ -656,19 +656,17 @@ For example, start at (30, -20). Changing x by 10 gives **(40, -20)**. Changing 
 				},
 				{
 					title: "GS8 Supplemental Project 1 – Quadrant Practice",
-					content: `
-1. Use the arrow keys to move a sprite to each quadrant of the stage.
-2. When the sprite reaches a quadrant, display a message such as "I'm in Quadrant I".
-3. Challenge: Add shapes or obstacles that must be avoided.`,
+					content: correctedJuniScratchInstructions(
+						"GS8 Supplemental Project 1 – Quadrant Practice"
+					),
 					projectLink: "https://scratch.mit.edu/projects/329289426/",
 					solutionLink: "https://scratch.mit.edu/projects/329283944/"
 				},
 				{
 					title: "GS8 Supplemental Project 2 – Coordinate Drawings",
-					content: `
-1. Using the Pen extension, draw a picture by moving the sprite to various X and Y coordinates.
-2. Allow the user to enter coordinates to draw their own shapes.
-3. Encourage drawing initials or simple pictures.`,
+					content: correctedJuniScratchInstructions(
+						"GS8 Supplemental Project 2 – Coordinate Drawings"
+					),
 					projectLink: "https://scratch.mit.edu/projects/329294838/",
 					solutionLink: "https://scratch.mit.edu/projects/329290359/"
 				},
@@ -915,21 +913,22 @@ The wizard has been turned into a frog! Help him collect potions while avoiding 
 				{
 					title: "Hedgehog Race: Fluency Drill",
 					content: buildScratchFluencyDrill({
-						project: "race simulation",
-						focus: "random movement, finish-line detection, score or winner state, and clean restart behavior",
+						project: "two-player keyboard race",
+						focus: "alternating key controls, finish-line detection, per-player win counters, and clean restart behavior",
 						restartCheck:
-							"A winner is declared only once, and a new race does not preserve old positions or winner messages."
+							"Each race records one winner. Start returns both racers to the starting line while retaining the win counters; the green flag also resets both counters."
 					})
 				},
 				{
 					title: "Hedgehog Race: Open-Ended Variant",
 					content: buildScratchOpenEndedVariant({
-						project: "randomized race game",
-						coreIdea: "random movement and finish-line logic",
+						project: "two-player keyboard race",
+						coreIdea:
+							"alternating keys, finish-line detection, and per-player wins",
 						variation:
-							"the racers, track layout, random speed range, obstacle rule, or winner display",
+							"the racers, track layout, key pairs, steps per alternating press, or winner display",
 						evidence:
-							"Multiple runs can produce different outcomes, and the finish condition remains fair and easy to observe."
+							"Both players use alternating controls, each race records one winner, and Start prepares the next race while retaining the win counters."
 					})
 				}
 			]

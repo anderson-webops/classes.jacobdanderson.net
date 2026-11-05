@@ -240,6 +240,41 @@ Optional: also check whether the chosen animal matches the environment, using th
 3. Compare answer with "Earth", "Saturn" and "Star". Move Dot to sprite "3", "2" or "1", respectively.
 4. For another answer, explain that the place is unknown and stop that question script.
 5. In a separate green-flag forever loop on Spot, check whether it is touching Dot. When it is, have Spot say "Hi Dot!".`
+	},
+	{
+		courseId: "scratch-level-1",
+		title: "GS8 Supplemental Project 1 – Quadrant Practice",
+		projectId: "329289426",
+		solutionId: "329283944",
+		baselineContentSha256:
+			"b0e98ac2156c5b09bae179671f2d297e03612cc0f881392d140d4bdc4a42360b",
+		publishedInstructionsSha256:
+			"05597c7688fb56809a9a8c764258156c66fe9d5b084a35bc916f75ae4c4b5723",
+		content: `Use the grid and the signs of x and y to describe the cat's position.
+
+1. On the green flag, make Scratch the Cat follow the mouse pointer forever.
+2. In that loop, use if and operator blocks to say "I'm in the top right!" when x is greater than 0 and y is greater than 0.
+3. Add the other three cases: x less than 0 and y greater than 0 for top left; x greater than 0 and y less than 0 for bottom right; x less than 0 and y less than 0 for bottom left.
+
+Optional: try arrow-key controls or add obstacles.`
+	},
+	{
+		courseId: "scratch-level-1",
+		title: "GS8 Supplemental Project 2 – Coordinate Drawings",
+		projectId: "329294838",
+		solutionId: "329290359",
+		baselineContentSha256:
+			"61080d36adf0d0b3049e4e0e425f719fdf7eac92ba021043ff325e937bac063c",
+		publishedInstructionsSha256:
+			"9ca33d08ea39528dd6f90fad3ab77b1d641f941f05afd2fd1e3b4828304bea84",
+		content: `Recreate the drawings on the supplied grid backdrops with the Pen extension and x/y coordinates.
+
+1. Look through the backdrops and choose a drawing to reproduce.
+2. Lift the pen before placing the pencil at a starting coordinate, then lower it to begin the outline.
+3. Use go to x/y and change x/y blocks to trace the drawing's corners and lines.
+4. Try another supplied drawing and compare the result with its backdrop.
+
+Optional: ask for coordinates so the user can choose points, or draw initials.`
 	}
 ] as const;
 
