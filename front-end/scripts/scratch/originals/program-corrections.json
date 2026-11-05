@@ -348,5 +348,77 @@
 				}
 			}
 		]
+	},
+	{
+		"id": "332459692",
+		"sourceSHA256": "0dca5217ef656ee28947af10a90be1127b74c79319f93de961834e58791f60aa",
+		"target": "Rocketship",
+		"summary": "Restart position reset: green flag restores the original bottom-center launch position before showing the rocket.",
+		"displaySummary": "Reference correction: the rocket returns to its starting position on restart.",
+		"addedBlocks": 1,
+		"changes": [
+			{
+				"blockId": "?IN7_Mul_COq?Ht!V0Gt",
+				"before": {
+					"opcode": "event_whenflagclicked",
+					"next": "G#QUTrM{#?u^eJf1.Kgr",
+					"parent": null,
+					"inputs": {},
+					"fields": {},
+					"shadow": false,
+					"topLevel": true,
+					"x": 38,
+					"y": 37
+				},
+				"after": {
+					"opcode": "event_whenflagclicked",
+					"next": "classes-rocketship-reset-position",
+					"parent": null,
+					"inputs": {},
+					"fields": {},
+					"shadow": false,
+					"topLevel": true,
+					"x": 38,
+					"y": 37
+				}
+			},
+			{
+				"blockId": "G#QUTrM{#?u^eJf1.Kgr",
+				"before": {
+					"opcode": "looks_show",
+					"next": "Gmd]~6!iJ}CZ;R](t!GZ",
+					"parent": "?IN7_Mul_COq?Ht!V0Gt",
+					"inputs": {},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				},
+				"after": {
+					"opcode": "looks_show",
+					"next": "Gmd]~6!iJ}CZ;R](t!GZ",
+					"parent": "classes-rocketship-reset-position",
+					"inputs": {},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				}
+			},
+			{
+				"blockId": "classes-rocketship-reset-position",
+				"before": null,
+				"after": {
+					"opcode": "motion_gotoxy",
+					"next": "G#QUTrM{#?u^eJf1.Kgr",
+					"parent": "?IN7_Mul_COq?Ht!V0Gt",
+					"inputs": {
+						"X": [1, [4, "0"]],
+						"Y": [1, [4, "-204"]]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				}
+			}
+		]
 	}
 ]
