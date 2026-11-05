@@ -6,6 +6,7 @@ import { strFromU8, unzipSync } from "fflate";
 import { originalAttributionId, originalScratchProjects } from "../front-end/scripts/scratch/generate-original-projects.mjs";
 import { applyOriginalProgramCorrection } from "../front-end/scripts/scratch/program-corrections.mjs";
 import { checkSpeedClickRound } from "./scratch-speed-click-round-check.mjs";
+import { checkRocketshipRestart } from "./scratch-rocketship-restart-check.mjs";
 
 export async function checkScratchEventReading(page, { origin, files, setRole }) {
 	const output = process.env.SCRATCH_ORIGINAL_BROWSER_PROOF_DIR || path.join(files, "original-proof");
@@ -300,6 +301,27 @@ export async function checkScratchOriginalImports(page, { origin, files, loaded,
 		assert.deepEqual(speedReopened.problems, []);
 		speedRound.exportReopenedWithCorrectionAndAttribution = true;
 		await writeFile(path.join(output, "speed-click-round.json"), `${JSON.stringify(speedRound, null, 2)}\n`);
+
+		const rocketship = originalScratchProjects.find(project => project.id === "332459692");
+		await route(sourceHref(rocketship));
+		assert.match(await page.$eval(".scratch-original-import", element => element.textContent), /Reference correction: the rocket returns to its starting position on restart/);
+		await confirm();
+		const rocketFrame = page.frames().find(frame => frame !== page.mainFrame());
+		const rocketRestart = await checkRocketshipRestart(rocketFrame, output);
+		await page.$eval(".scratch-toolbar input[maxlength='120']", input => {
+			input.value = "Rocketship corrected";
+			input.dispatchEvent(new Event("input", { bubbles: true }));
+		});
+		await downloadProject("Rocketship corrected.sb3");
+		const rocketSaved = unzipSync(new Uint8Array(await readFile(path.join(files, "Rocketship corrected.sb3"))));
+		const rocketProject = JSON.parse(strFromU8(rocketSaved["project.json"]));
+		assert.equal(rocketProject.targets.find(target => target.name === "Rocketship").blocks["classes-rocketship-reset-position"].opcode, "motion_gotoxy");
+		assert.match(rocketProject.targets.find(target => target.isStage).comments[originalAttributionId(rocketship.id)].text, /Restart position reset/);
+		await newProject();
+		await openFile(path.join(files, "Rocketship corrected.sb3"));
+		assert.deepEqual((await inspect(rocketship)).problems, []);
+		rocketRestart.exportReopenedWithCorrectionAndAttribution = true;
+		await writeFile(path.join(output, "rocketship-restart.json"), `${JSON.stringify(rocketRestart, null, 2)}\n`);
 
 		const spinner = originalScratchProjects.find(project => project.id === "287887351");
 		await route(sourceHref(spinner));

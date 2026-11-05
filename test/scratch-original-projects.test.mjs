@@ -22,6 +22,42 @@ const compatibility = JSON.parse(
 	)
 ).changes;
 
+function verifyAndRestoreRocketship(loaded, source) {
+	const target = loaded.targets.find(t => t.name === "Rocketship");
+	const original = source.targets.find(t => t.name === "Rocketship");
+	const blocks = target.blocks;
+	const flag = Object.keys(original.blocks).find(
+		id => original.blocks[id].opcode === "event_whenflagclicked"
+	);
+	const show = original.blocks[flag].next;
+	const reset = "classes-rocketship-reset-position";
+	assert.deepEqual(
+		Object.keys(blocks).filter(id => !original.blocks[id]),
+		[reset]
+	);
+	assert.equal(blocks[flag].next, reset);
+	assert.deepEqual(blocks[reset], {
+		opcode: "motion_gotoxy",
+		next: show,
+		parent: flag,
+		inputs: { X: [1, [4, "0"]], Y: [1, [4, "-204"]] },
+		fields: {},
+		shadow: false,
+		topLevel: false
+	});
+	assert.equal(blocks[show].opcode, "looks_show");
+	assert.equal(blocks[show].parent, reset);
+	for (const [id, block] of Object.entries(original.blocks)) {
+		const restored = structuredClone(blocks[id]);
+		if (id === flag) restored.next = block.next;
+		if (id === show) restored.parent = block.parent;
+		assert.deepEqual(restored, block, `Only rocket reset links change: ${id}`);
+	}
+	blocks[flag].next = original.blocks[flag].next;
+	blocks[show].parent = original.blocks[show].parent;
+	delete blocks[reset];
+}
+
 function verifyAndRestoreSpeedClick(loaded, source) {
 	const target = loaded.targets.find(t => t.name === "Button");
 	const original = source.targets.find(t => t.name === "Button");
@@ -174,6 +210,18 @@ test("all original Scratch archives retain upstream bytes and only declared corr
 			expected.add("SOURCE/program-correction.json");
 			programCorrections.push(original.id);
 		}
+		if (original.id === "332459692") {
+			verifyAndRestoreRocketship(loaded, source);
+			const correction = JSON.parse(
+				strFromU8(files["SOURCE/program-correction.json"])
+			);
+			assert.equal(correction.id, original.id);
+			assert.equal(correction.sourceSHA256, original.sourceSHA256);
+			assert.equal(correction.addedBlocks, 1);
+			assert.ok(attribution.includes("Restart position reset"));
+			expected.add("SOURCE/program-correction.json");
+			programCorrections.push(original.id);
+		}
 		for (const [targetIndex, target] of source.targets.entries()) {
 			assert.deepEqual(
 				loaded.targets[targetIndex].blocks,
@@ -251,7 +299,7 @@ test("all original Scratch archives retain upstream bytes and only declared corr
 	assert.equal(assets.size, 505);
 	assert.equal(correctedAssets.size, 2);
 	assert.equal(correctedProjects.size, 5);
-	assert.deepEqual(programCorrections, ["299311602"]);
+	assert.deepEqual(programCorrections, ["299311602", "332459692"]);
 	if (process.env.SCRATCH_ORIGINAL_BROWSER_PROOF_DIR) {
 		await mkdir(process.env.SCRATCH_ORIGINAL_BROWSER_PROOF_DIR, {
 			recursive: true
@@ -261,7 +309,7 @@ test("all original Scratch archives retain upstream bytes and only declared corr
 				process.env.SCRATCH_ORIGINAL_BROWSER_PROOF_DIR,
 				"archive-identity.json"
 			),
-			`${JSON.stringify({ projects: 164, assets: 505, originalSourceBytesRetained: true, unchangedPrograms: 163, declaredProgramCorrections: programCorrections, onlyDeclaredAttributionSvgAndProgramChanges: true, compatibilityAssets: correctedAssets.size, compatibilityProjects: correctedProjects.size, records }, null, 2)}\n`
+			`${JSON.stringify({ projects: 164, assets: 505, originalSourceBytesRetained: true, unchangedPrograms: 162, declaredProgramCorrections: programCorrections, onlyDeclaredAttributionSvgAndProgramChanges: true, compatibilityAssets: correctedAssets.size, compatibilityProjects: correctedProjects.size, records }, null, 2)}\n`
 		);
 	}
 });
