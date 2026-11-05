@@ -131,8 +131,9 @@ export function lessonContentSections(
 		if (
 			contentKind === "assignment" &&
 			/^(?:project )?goals?$/i.test(label)
-		)
+		) {
 			kind = "assignment";
+		}
 		if (kind) {
 			finish();
 			current = {

@@ -787,7 +787,7 @@ const learningTopics = computed(() =>
 			item,
 			sections: lessonContentSections(
 				item.content,
-				item.contentKind
+				item.contentKind ?? "assignment"
 			).filter(section => section.kind === "learn")
 		}))
 		.filter(topic => topic.sections.length)
@@ -2366,7 +2366,7 @@ function writeStoredValue(key: string, value: string) {
 										:sections="
 											lessonContentSections(
 												item.content,
-												item.contentKind
+												item.contentKind ?? 'assignment'
 											)
 										"
 									/>
