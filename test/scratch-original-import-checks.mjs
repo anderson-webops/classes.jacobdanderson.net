@@ -47,9 +47,11 @@ export async function checkScratchCoordinateReading(page, { origin, files, setRo
 		for (const width of [390, 1280]) {
 			await page.setViewport({ width, height: 900 });
 			await page.goto("about:blank");
-			await page.goto(`${origin}/courses#scratch-level-1-gs3-x-y-coordinates`, { waitUntil: "networkidle2" });
+			await page.goto(`${origin}/courses#scratch-level-1-gs8-x-y-coordinates`, { waitUntil: "networkidle2" });
 			await page.waitForSelector(".lesson-view-toggle button");
 			await page.locator(".lesson-view-toggle button:nth-child(3)").click();
+			await page.waitForFunction(() => [...document.querySelectorAll(".lesson-item")].some(item => item.querySelector("h5")?.textContent.includes("Introduction to X & Y coordinates")));
+			await page.$$eval(".lesson-item", items => items.find(item => item.querySelector("h5")?.textContent.includes("Introduction to X & Y coordinates")).scrollIntoView({ behavior: "instant", block: "center" }));
 			await page.waitForFunction(() => [...document.querySelectorAll(".lesson-item")].some(item => item.querySelector("h5")?.textContent.includes("Introduction to X & Y coordinates") && item.textContent.includes("Using an answer as a coordinate") && item.querySelector("table")));
 			const reading = await page.$$eval(".lesson-item", (items) => {
 				const item = items.find(item => item.querySelector("h5")?.textContent.includes("Introduction to X & Y coordinates"));
