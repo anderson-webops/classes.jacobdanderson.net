@@ -84,7 +84,7 @@ const middleSchoolBWritingSourceAnchors: Record<
 		},
 		{
 			title: "Arguing for the Opposition",
-			prompt: "Write from the opposing side of an argument by selecting evidence that could support a different interpretation. The goal is to make the alternative position credible before evaluating it.",
+			prompt: "Write from the opposing side of an argument by selecting evidence that could support a different interpretation. Make the alternative position credible before evaluating it.",
 			evidence: [
 				"An opposing claim that is debatable and plausible.",
 				"Evidence chosen specifically for that opposing claim.",

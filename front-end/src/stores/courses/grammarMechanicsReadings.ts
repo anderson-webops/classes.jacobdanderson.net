@@ -107,8 +107,8 @@ or when introduces a dependent clause and shows a relationship between ideas.
 ## Worked contrast
 
 "Mina found the key, and Bo opened the gate" has two independent clauses.
-The comma and and join them. "Mina found the key and opened the gate" shares a
-subject and normally needs no comma between its two verb phrases.
+The comma and the conjunction **and** join them. "Mina found the key and opened
+the gate" shares a subject and normally needs no comma between its two verb phrases.
 
 "Because Mina found the key, Bo opened the gate" starts with a dependent clause,
 so a comma marks its boundary. "Bo opened the gate because Mina found the key"
