@@ -43,7 +43,7 @@ View CS Training's Code`,
 					title: "Loops",
 					contentKind: "reading",
 					content:
-						'Loops repeat code without copying the same blocks over and over. They make movement, animation, drawing, and forever-running game behavior easier to build and easier to revise.\nOpen the Control blocks and compare `repeat` with `forever`. Both blocks contain a "mouth" where other blocks can be placed and repeated.\nPractice by repeating `move __ steps` and `turn ___ degrees`. Start with a fixed `repeat` count, then try the same motion inside a `forever` loop.'
+						'A loop repeats code without copying the same blocks over and over. They make movement, animation, drawing, and forever-running game behavior easier to build and easier to revise.\nOpen the Control blocks and compare `repeat` with `forever`. Both blocks contain a "mouth" where other blocks can be placed and repeated.\nPractice by repeating `move __ steps` and `turn ___ degrees`. Start with a fixed `repeat` count, then try the same motion inside a `forever` loop.'
 				},
 				{
 					title: "GM1 Project 2: Drawing Mouse",
@@ -75,7 +75,7 @@ View CS Training's Code`,
 					title: "Variables",
 					contentKind: "reading",
 					content:
-						"Variables store information that can change, such as a score, timer, answer, or level number. In Scratch, the `set __ to __` block replaces a variable's value, while `change __ by __` increases or decreases the current value.\nPractice by making the cat count from 1 to 10 with a loop. Then modify the same idea so the cat counts backward from 10 to 0 and backward from 100 to 0 by 10s."
+						"A variable stores information that can change, such as a score, timer, answer, or level number. In Scratch, the `set __ to __` block replaces a variable's value, while `change __ by __` increases or decreases the current value.\nPractice by making the cat count from 1 to 10 with a loop. Then modify the same idea so the cat counts backward from 10 to 0 and backward from 100 to 0 by 10s."
 				},
 				{
 					title: "GM1 Project 4: Speed Click",
