@@ -126,7 +126,7 @@ describe("course asset preview utilities", () => {
 					"",
 					"| Command | Argument or unit | What it does |",
 					"| --- | --- | --- |",
-					"| `shape(\"triangle\")` | shape name | Common shapes include `turtle`, `arrow`, `circle`, `square`, and `triangle`, so this row intentionally uses enough inline code to challenge the preview width. |",
+					'| `shape("triangle")` | shape name | Common shapes include `turtle`, `arrow`, `circle`, `square`, and `triangle`, so this row intentionally uses enough inline code to challenge the preview width. |',
 					"",
 					"```python",
 					"player.forward(50)      # Move 50 pixels forward.",
@@ -182,9 +182,7 @@ describe("course asset preview utilities", () => {
 			"utf8"
 		);
 
-		expect(source).toContain(
-			"grid-template-columns: minmax(0, 1fr);"
-		);
+		expect(source).toContain("grid-template-columns: minmax(0, 1fr);");
 		expect(source).toContain("min-width: 0;");
 		expect(source).toContain("overflow-x: hidden;");
 		expect(source).toContain(
@@ -295,10 +293,16 @@ describe("course asset preview utilities", () => {
 		expect(markdownSource).toContain("contain: inline-size;");
 		expect(markdownSource).toContain("clip-path: inset(0 round 14px);");
 		expect(markdownSource).toContain("isolation: isolate;");
-		expect(markdownSource).toContain("overscroll-behavior-inline: contain;");
+		expect(markdownSource).toContain(
+			"overscroll-behavior-inline: contain;"
+		);
 		expect(markdownSource).toContain(".item-content-markdown :deep(table)");
-		expect(markdownSource).toContain("width: max-content;");
-		expect(markdownSource).toContain("inline-size: max-content;");
+		const tableStyle = markdownSource.match(
+			/\.item-content-markdown :deep\(table\) \{([^}]+)\}/
+		)?.[1];
+		expect(tableStyle).toContain("width: 100%;");
+		expect(tableStyle).toContain("inline-size: 100%;");
+		expect(tableStyle).not.toContain("max-content");
 		expect(markdownSource).toContain("min-width: 100%;");
 		expect(markdownSource).toContain("min-inline-size: 100%;");
 		expect(markdownSource).toContain("max-width: none;");

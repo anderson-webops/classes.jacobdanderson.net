@@ -159,10 +159,19 @@ it.each(
 			expect(item, project.title).toBeDefined();
 			expect(isLessonLearningItem(item), item.title).toBe(false);
 			expect(item.learningPath, item.title).toBe(project.learningPath);
+			const originalPrompt = project.content
+				.replace(/^\*\*Project goal:\*\*\s*/, "")
+				.split("**Completion evidence:**")[0]
+				.trim();
+			const displayedPrompt = item.content
+				.replace(/^\*\*Project goal:\*\*\s*/, "")
+				.split("**Completion evidence:**")[0]
+				.trim();
+			expect(displayedPrompt, project.title).toBe(originalPrompt);
 		}
 		const card = (item: CourseModuleItem) => {
 			const directive = item.content.match(
-				/^\*\*Project goal:\*\*\s*([\s\S]+?)\s*\*\*Completion evidence:\*\*/
+				/^(?:\*\*Project goal:\*\*\s*)?([\s\S]+?)\s*\*\*Completion evidence:\*\*/
 			)?.[1];
 			const container = document.createElement("div");
 			container.innerHTML = markdown.render(

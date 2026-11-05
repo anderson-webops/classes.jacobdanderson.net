@@ -263,7 +263,10 @@ export function applyPublicSpeakingReadings(
 				...module.curriculum.find(
 					current => current.title === project.title
 				),
-				content: project.content,
+				content: project.content.replace(
+					/^\*\*Project goal:\*\*\s*/,
+					""
+				),
 				contentKind: "assignment" as const,
 				preserveInstructions: true,
 				preserveAssignment: true
@@ -272,8 +275,8 @@ export function applyPublicSpeakingReadings(
 		for (const optional of module.supplementalProjects) {
 			optional.contentKind = "assignment";
 			optional.content = optional.content.replace(
-				/^\*\*Goal:\*\*/,
-				"**Project goal:**"
+				/^\*\*(?:Goal|Project goal):\*\*\s*/,
+				""
 			);
 		}
 	}

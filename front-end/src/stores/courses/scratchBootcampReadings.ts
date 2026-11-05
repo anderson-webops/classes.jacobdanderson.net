@@ -261,7 +261,10 @@ export function applyScratchBootcampReadings(
 						`Missing Scratch Bootcamp task: ${project.title}`
 					);
 				}
-				task.content = project.content;
+				task.content = project.content.replace(
+					/^\*\*Project goal:\*\*\s*/,
+					""
+				);
 				task.contentKind = "assignment";
 				task.preserveInstructions = true;
 				task.preserveAssignment = true;
