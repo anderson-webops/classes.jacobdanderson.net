@@ -1,0 +1,352 @@
+[
+	{
+		"id": "299311602",
+		"sourceSHA256": "285913b834ba5e91e9ba841a1ece80e7cf1cb1f18a51ce89b487a5f608e50ded",
+		"target": "Button",
+		"summary": "Active-round score guard: clicks count only while the countdown is running and positive.",
+		"displaySummary": "Reference correction: clicks score only during an active round.",
+		"addedBlocks": 5,
+		"changes": [
+			{
+				"blockId": "+xgmdXI1G@(/B{9]h/Uh",
+				"before": {
+					"opcode": "event_whenflagclicked",
+					"next": "~2u};p0pUpjtkC1R{[^V",
+					"parent": null,
+					"inputs": {},
+					"fields": {},
+					"shadow": false,
+					"topLevel": true,
+					"x": 47,
+					"y": 169
+				},
+				"after": {
+					"opcode": "event_whenflagclicked",
+					"next": "classes-speed-click-round-reset",
+					"parent": null,
+					"inputs": {},
+					"fields": {},
+					"shadow": false,
+					"topLevel": true,
+					"x": 47,
+					"y": 169
+				}
+			},
+			{
+				"blockId": "oPn/}#K24oTQ0){*pAAJ",
+				"before": {
+					"opcode": "event_whenthisspriteclicked",
+					"next": "){[Zk3SJuUrAP0SZNz;A",
+					"parent": null,
+					"inputs": {},
+					"fields": {},
+					"shadow": false,
+					"topLevel": true,
+					"x": 341,
+					"y": 164
+				},
+				"after": {
+					"opcode": "event_whenthisspriteclicked",
+					"next": "W.0C4`2f(t`52N(*qpd+",
+					"parent": null,
+					"inputs": {},
+					"fields": {},
+					"shadow": false,
+					"topLevel": true,
+					"x": 341,
+					"y": 164
+				}
+			},
+			{
+				"blockId": "W.0C4`2f(t`52N(*qpd+",
+				"before": {
+					"opcode": "control_if",
+					"next": null,
+					"parent": null,
+					"inputs": {
+						"CONDITION": [2, "%C$yb|/7!FMQ;-eP_=^1"],
+						"SUBSTACK": [2, "?$VY0gk~h)yu~-x)ZmEq"]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": true,
+					"x": 1172,
+					"y": 224
+				},
+				"after": {
+					"opcode": "control_if",
+					"next": null,
+					"parent": "oPn/}#K24oTQ0){*pAAJ",
+					"inputs": {
+						"CONDITION": [2, "classes-speed-click-round-and"],
+						"SUBSTACK": [2, "?$VY0gk~h)yu~-x)ZmEq"]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				}
+			},
+			{
+				"blockId": "%C$yb|/7!FMQ;-eP_=^1",
+				"before": {
+					"opcode": "operator_equals",
+					"next": null,
+					"parent": "W.0C4`2f(t`52N(*qpd+",
+					"inputs": {
+						"OPERAND1": [
+							3,
+							[12, "Timer going?", "F(O8H{G[FUC=A~@f;={O"],
+							[10, ""]
+						],
+						"OPERAND2": [1, [10, "True"]]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				},
+				"after": {
+					"opcode": "operator_equals",
+					"next": null,
+					"parent": "classes-speed-click-round-and",
+					"inputs": {
+						"OPERAND1": [
+							3,
+							[12, "Timer going?", "F(O8H{G[FUC=A~@f;={O"],
+							[10, ""]
+						],
+						"OPERAND2": [1, [10, "True"]]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				}
+			},
+			{
+				"blockId": "~2u};p0pUpjtkC1R{[^V",
+				"before": {
+					"opcode": "data_setvariableto",
+					"next": "LYs(5(%5d?13OUu3K3#m",
+					"parent": "+xgmdXI1G@(/B{9]h/Uh",
+					"inputs": {
+						"VALUE": [1, [10, "0"]]
+					},
+					"fields": {
+						"VARIABLE": ["Clicks", "?LE4(qo#T#b7#F~|b/hb"]
+					},
+					"shadow": false,
+					"topLevel": false
+				},
+				"after": {
+					"opcode": "data_setvariableto",
+					"next": "LYs(5(%5d?13OUu3K3#m",
+					"parent": "classes-speed-click-round-reset",
+					"inputs": {
+						"VALUE": [1, [10, "0"]]
+					},
+					"fields": {
+						"VARIABLE": ["Clicks", "?LE4(qo#T#b7#F~|b/hb"]
+					},
+					"shadow": false,
+					"topLevel": false
+				}
+			},
+			{
+				"blockId": "hG^=4;_pJAIaPU+~^:=e",
+				"before": {
+					"opcode": "looks_sayforsecs",
+					"next": "quv2uz-8|kxf~l,1HXOo",
+					"parent": "%LT51QuR:15$Y^lv}A3`",
+					"inputs": {
+						"MESSAGE": [1, [10, "Go!"]],
+						"SECS": [1, [4, "1"]]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				},
+				"after": {
+					"opcode": "looks_sayforsecs",
+					"next": "classes-speed-click-round-start",
+					"parent": "%LT51QuR:15$Y^lv}A3`",
+					"inputs": {
+						"MESSAGE": [1, [10, "Go!"]],
+						"SECS": [1, [4, "1"]]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				}
+			},
+			{
+				"blockId": "quv2uz-8|kxf~l,1HXOo",
+				"before": {
+					"opcode": "control_repeat",
+					"next": "?kLAjyC)`,,aPo1.)vyr",
+					"parent": "hG^=4;_pJAIaPU+~^:=e",
+					"inputs": {
+						"TIMES": [1, [6, "10"]],
+						"SUBSTACK": [2, "_snz4914i#wVGbwOCR6@"]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				},
+				"after": {
+					"opcode": "control_repeat",
+					"next": "classes-speed-click-round-finish",
+					"parent": "classes-speed-click-round-start",
+					"inputs": {
+						"TIMES": [1, [6, "10"]],
+						"SUBSTACK": [2, "_snz4914i#wVGbwOCR6@"]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				}
+			},
+			{
+				"blockId": "?kLAjyC)`,,aPo1.)vyr",
+				"before": {
+					"opcode": "looks_switchcostumeto",
+					"next": "E*[@M5J`*[kT5*fn;gXy",
+					"parent": "quv2uz-8|kxf~l,1HXOo",
+					"inputs": {
+						"COSTUME": [1, "=hL9UTTN}M6*D??j+N)!"]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				},
+				"after": {
+					"opcode": "looks_switchcostumeto",
+					"next": "E*[@M5J`*[kT5*fn;gXy",
+					"parent": "classes-speed-click-round-finish",
+					"inputs": {
+						"COSTUME": [1, "=hL9UTTN}M6*D??j+N)!"]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				}
+			},
+			{
+				"blockId": "){[Zk3SJuUrAP0SZNz;A",
+				"before": {
+					"opcode": "data_changevariableby",
+					"next": ";|n{6CN]ij}*kHhr9zUP",
+					"parent": "oPn/}#K24oTQ0){*pAAJ",
+					"inputs": {
+						"VALUE": [1, [4, "1"]]
+					},
+					"fields": {
+						"VARIABLE": ["Clicks", "?LE4(qo#T#b7#F~|b/hb"]
+					},
+					"shadow": false,
+					"topLevel": false
+				},
+				"after": {
+					"opcode": "data_changevariableby",
+					"next": ";|n{6CN]ij}*kHhr9zUP",
+					"parent": null,
+					"inputs": {
+						"VALUE": [1, [4, "1"]]
+					},
+					"fields": {
+						"VARIABLE": ["Clicks", "?LE4(qo#T#b7#F~|b/hb"]
+					},
+					"shadow": false,
+					"topLevel": true,
+					"x": 900,
+					"y": 500
+				}
+			},
+			{
+				"blockId": "classes-speed-click-round-reset",
+				"before": null,
+				"after": {
+					"opcode": "data_setvariableto",
+					"next": "~2u};p0pUpjtkC1R{[^V",
+					"parent": "+xgmdXI1G@(/B{9]h/Uh",
+					"inputs": {
+						"VALUE": [1, [10, "False"]]
+					},
+					"fields": {
+						"VARIABLE": ["Timer going?", "F(O8H{G[FUC=A~@f;={O"]
+					},
+					"shadow": false,
+					"topLevel": false
+				}
+			},
+			{
+				"blockId": "classes-speed-click-round-start",
+				"before": null,
+				"after": {
+					"opcode": "data_setvariableto",
+					"next": "quv2uz-8|kxf~l,1HXOo",
+					"parent": "hG^=4;_pJAIaPU+~^:=e",
+					"inputs": {
+						"VALUE": [1, [10, "True"]]
+					},
+					"fields": {
+						"VARIABLE": ["Timer going?", "F(O8H{G[FUC=A~@f;={O"]
+					},
+					"shadow": false,
+					"topLevel": false
+				}
+			},
+			{
+				"blockId": "classes-speed-click-round-finish",
+				"before": null,
+				"after": {
+					"opcode": "data_setvariableto",
+					"next": "?kLAjyC)`,,aPo1.)vyr",
+					"parent": "quv2uz-8|kxf~l,1HXOo",
+					"inputs": {
+						"VALUE": [1, [10, "False"]]
+					},
+					"fields": {
+						"VARIABLE": ["Timer going?", "F(O8H{G[FUC=A~@f;={O"]
+					},
+					"shadow": false,
+					"topLevel": false
+				}
+			},
+			{
+				"blockId": "classes-speed-click-round-positive",
+				"before": null,
+				"after": {
+					"opcode": "operator_gt",
+					"next": null,
+					"parent": "classes-speed-click-round-and",
+					"inputs": {
+						"OPERAND1": [
+							3,
+							[12, "Timer", "NUui0YVXH-na:*F+KRx^"],
+							[10, ""]
+						],
+						"OPERAND2": [1, [10, "0"]]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				}
+			},
+			{
+				"blockId": "classes-speed-click-round-and",
+				"before": null,
+				"after": {
+					"opcode": "operator_and",
+					"next": null,
+					"parent": "W.0C4`2f(t`52N(*qpd+",
+					"inputs": {
+						"OPERAND1": [2, "%C$yb|/7!FMQ;-eP_=^1"],
+						"OPERAND2": [2, "classes-speed-click-round-positive"]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				}
+			}
+		]
+	}
+]

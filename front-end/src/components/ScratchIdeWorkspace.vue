@@ -20,6 +20,7 @@ import {
 } from "@/modules/scratch/frame";
 import {
 	fetchScratchOriginalArchive,
+	scratchOriginalCorrection,
 	scratchOriginalLicense,
 	scratchOriginalProject
 } from "@/modules/scratch/originals";
@@ -333,6 +334,9 @@ defineExpose({ stop: () => send("stop") });
 					rel="noopener noreferrer"
 					>{{ scratchOriginalLicense.name }}</a
 				>
+			</p>
+			<p v-if="scratchOriginalCorrection(pendingOriginal)">
+				{{ scratchOriginalCorrection(pendingOriginal) }}
 			</p>
 			<p v-if="pendingOriginal.extensions.includes('text2speech')">
 				Text to Speech sends spoken text to Scratch’s online speech
