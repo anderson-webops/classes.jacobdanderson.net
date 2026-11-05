@@ -21,6 +21,7 @@ import { applyRustStateModelsCourseWorkflows } from "./rustStateModelsCourseWork
 import { applyRustTraitPipelineCourseWorkflows } from "./rustTraitPipelineCourseWorkflows";
 import { applyRustTypedErrorsCourseWorkflows } from "./rustTypedErrorsCourseWorkflows";
 import { applyScratchBootcampReadings } from "./scratchBootcampReadings";
+import { applyScratchConceptReadings } from "./scratchConceptReadings";
 import {
 	canonicalStaticMediaUrl,
 	hasPendingStaticMediaNotice,
@@ -9825,6 +9826,7 @@ export function normalizeRawCourse(id: string, rawCourse: RawCourse) {
 		applyCourseLearningPaths(course);
 	}
 	restoreScratchProjectInstructions(course, preservedScratchInstructions);
+	applyScratchConceptReadings(course, id, rawCourse);
 	applyPyGamesCourseWorkflows(course, id);
 	applyRustCargoCourseWorkflows(course, id);
 	applyRustOwnershipCourseWorkflows(course, id);

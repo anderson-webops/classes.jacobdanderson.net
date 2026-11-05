@@ -373,6 +373,7 @@ Challenge: Draw a different circle using different numbers.`,
 			curriculum: [
 				{
 					title: "Introducing conditionals",
+					contentKind: "reading",
 					content:
 						'Conditionals let a program make decisions. The "if … then" block checks a condition, and sensing blocks such as "touching mouse pointer", "key right arrow pressed", and "touching color ___" provide facts the condition can test. In games, conditionals often sit inside a `forever` loop so Scratch keeps checking for changes. A useful test describes both outcomes: what happens when the condition is true and what remains unchanged when it is false.'
 				},
@@ -527,6 +528,7 @@ Challenge: Add more sprites to the game and have the ball pass between them.`,
 			curriculum: [
 				{
 					title: "Getting user input",
+					contentKind: "reading",
 					content:
 						'Event listeners respond to button presses, but many projects also need text typed by the user. The "ask ___ and wait" block collects typed input, and the "answer" variable stores the most recent response. The equality (=) block compares the answer to a correct value, while < and > blocks compare typed numbers by size.'
 				},
@@ -689,6 +691,7 @@ For example, start at (30, -20). Changing x by 10 gives **(40, -20)**. Changing 
 			curriculum: [
 				{
 					title: "Introducing variables",
+					contentKind: "reading",
 					content:
 						'Variables store information such as scores, timers, answers, or other values that can change while a project runs. The "set [variable] to" block replaces the current value, while "change [variable] by" increases or decreases it. A counting loop can make a sprite count from 1 to 10, count backward, or count by larger steps.'
 				},
@@ -767,6 +770,7 @@ For example, start at (30, -20). Changing x by 10 gives **(40, -20)**. Changing 
 			curriculum: [
 				{
 					title: "Message broadcasting",
+					contentKind: "reading",
 					content:
 						"Broadcasting lets sprites send messages to each other. This is useful when one sprite needs to wait for another sprite to finish speaking, moving, or changing state before its own script begins.\n\nOpen the Events blocks and compare `broadcast __` with `when I receive __`. Practice by making one sprite finish a short action, broadcast a message, and trigger a second sprite to start moving only after that message is received."
 				},
