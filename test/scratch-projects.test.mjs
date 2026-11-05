@@ -2,16 +2,17 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
-import { test } from "node:test";
-import { unzipSync, strFromU8 } from "fflate";
+// eslint-disable-next-line test/no-import-node-test -- Native archive tests.
+import { test as nodeTest } from "node:test";
+import { strFromU8, unzipSync } from "fflate";
 import {
 	createProject,
 	lessons
 } from "../front-end/scripts/scratch/generate-projects.mjs";
 
-for (const lesson of lessons)
+for (const lesson of lessons) {
 	for (const solution of [false, true]) {
-		test(`${lesson.name}: ${solution ? "reference" : "starter"} is a portable Scratch 3 archive`, () => {
+		nodeTest(`${lesson.name}: ${solution ? "reference" : "starter"} is a portable Scratch 3 archive`, () => {
 			const { archive, project } = createProject(lesson.id, solution);
 			const files = unzipSync(archive);
 			assert.deepEqual(
@@ -43,7 +44,8 @@ for (const lesson of lessons)
 			}
 		});
 	}
-test("keyboard warmup is four blocks; dress-up retains an example and two student areas", () => {
+}
+nodeTest("keyboard warmup is four blocks; dress-up retains an example and two student areas", () => {
 	assert.equal(
 		Object.keys(createProject("two-arrows").project.targets[1].blocks)
 			.length,
@@ -53,14 +55,15 @@ test("keyboard warmup is four blocks; dress-up retains an example and two studen
 	assert.ok(
 		Object.keys(targets.find(t => t.name === "Hat").blocks).length > 0
 	);
-	for (const name of ["Badge", "Boots"])
+	for (const name of ["Badge", "Boots"]) {
 		assert.equal(
 			Object.keys(targets.find(t => t.name === name).blocks).length,
 			0
 		);
+	}
 });
-test("published starters match the reproducible generator and do not include solutions", async () => {
-	for (const lesson of lessons)
+nodeTest("published starters match the reproducible generator and do not include solutions", async () => {
+	for (const lesson of lessons) {
 		assert.deepEqual(
 			new Uint8Array(
 				await readFile(
@@ -72,9 +75,10 @@ test("published starters match the reproducible generator and do not include sol
 			),
 			createProject(lesson.id).archive
 		);
+	}
 });
 
-test("archives are reproducible across local time zones", () => {
+nodeTest("archives are reproducible across local time zones", () => {
 	const script = `import { createProject } from './front-end/scripts/scratch/generate-projects.mjs'; import { createHash } from 'node:crypto'; console.log(createHash('sha256').update(createProject('two-arrows').archive).digest('hex'));`;
 	const hashes = ["UTC", "America/Los_Angeles", "Asia/Tokyo"].map(TZ =>
 		execFileSync(process.execPath, ["--input-type=module", "-e", script], {
@@ -87,7 +91,7 @@ test("archives are reproducible across local time zones", () => {
 	assert.equal(new Set(hashes).size, 1);
 });
 
-test("blank independent project has portable artwork but no scripts or solutions", async () => {
+nodeTest("blank independent project has portable artwork but no scripts or solutions", async () => {
 	const { project, archive } = createProject("blank");
 	assert.equal(project.targets.length, 2);
 	for (const target of project.targets) {
@@ -96,4 +100,12 @@ test("blank independent project has portable artwork but no scripts or solutions
 	}
 	assert.deepEqual(project.monitors, []);
 	assert.deepEqual(new Uint8Array(await readFile(new URL("../front-end/public/scratch-projects/blank.sb3", import.meta.url))), archive);
+});
+
+nodeTest("published quiz reference is the completed portable archive", async () => {
+	assert.deepEqual(
+		new Uint8Array(await readFile(new URL("../front-end/public/scratch-projects/educational-quiz-solution.sb3", import.meta.url))),
+		createProject("educational-quiz", true).archive
+	);
+	assert.notDeepEqual(createProject("educational-quiz").archive, createProject("educational-quiz", true).archive);
 });

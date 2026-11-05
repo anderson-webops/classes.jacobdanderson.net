@@ -1,4 +1,6 @@
 import type { Plugin } from "vite";
+import process from "node:process";
+import { generateOriginalProjects } from "./generate-original-projects.mjs";
 import { prepareScratchEditor } from "./prepare-editor.mjs";
 
 /** Stage only public editor assets; no user code is evaluated during builds. */
@@ -6,7 +8,10 @@ export function scratchEditorPlugin(): Plugin {
 	return {
 		name: "scratch-classroom-assets",
 		async buildStart() {
-			if (!process.env.VITEST) await prepareScratchEditor();
+			if (!process.env.VITEST) {
+				await prepareScratchEditor();
+				await generateOriginalProjects();
+			}
 		},
 		configureServer(server) {
 			server.middlewares.use((request, response, next) => {

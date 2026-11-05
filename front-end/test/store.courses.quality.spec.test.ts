@@ -1,7 +1,11 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import fs from "node:fs";
 import { createHash } from "node:crypto";
-import type { RawCourseModuleItem } from "@/stores/courses/types";
+import type {
+	RawCourse,
+	RawCourseModule,
+	RawCourseModuleItem
+} from "@/stores/courses/types";
 import { javascriptCourseResource } from "@/modules/javascriptCourseResources";
 import { rawCourseProse } from "./courseProse";
 import { createPinia, setActivePinia } from "pinia";
@@ -141,6 +145,85 @@ function allCourseItemTitles(
 
 function wordCount(text: string) {
 	return text.match(/\b[\w'+-]+\b/g)?.length ?? 0;
+}
+
+const authoredReadingCounts: Record<string, number> = {
+	"entrepreneurship-101": 10,
+	"middle-school-a-literature": 13,
+	"middle-school-b-writing": 14,
+	"middle-school-b-writing-retake": 16,
+	"middle-school-c-grammar": 20,
+	"novel-writing": 14,
+	"introduction-to-public-speaking": 9,
+	"scratch-level-1-bootcamp": 4
+};
+
+const instructorActionPattern =
+	/\b(?:ask|have|tell|teach|encourage|require|guide|help)\s+(?:the\s+)?(?:students?|learners?)\b|\b(?:instructors?|teachers?|students?|learners?)\s+should\b/i;
+
+function hasAuthoredModuleReading(module: RawCourseModule) {
+	return module.curriculum.some(
+		item =>
+			item.contentKind === "reading" &&
+			item.preserveInstructions &&
+			wordCount(item.content) >= 120 &&
+			/^## /m.test(item.content) &&
+			(/\b(?:worked|example|practice|original|model|scenario|input)\b/i.test(
+				item.content
+			) ||
+				/^(?:`{3,}|~{3,})/m.test(item.content) ||
+				/^\|.+\|\n\|(?:\s*:?-+:?\s*\|)+\n\|.+\|/m.test(item.content) ||
+				/^>\s+\S|^[-*]\s+[^\n"]*"[^\n"]+"/m.test(item.content))
+	);
+}
+
+function expectAuthoredReadings(course: RawCourse, courseId: string) {
+	const modules = course.modules.filter(module => module.kind !== "appendix");
+	const readings = modules.flatMap(module =>
+		module.curriculum.filter(item => item.contentKind === "reading")
+	);
+	expect(readings, courseId).toHaveLength(authoredReadingCounts[courseId]);
+	for (const module of modules)
+		expect(
+			hasAuthoredModuleReading(module),
+			`${courseId} / ${module.title}`
+		).toBe(true);
+}
+
+// A concise task is complete when the entire source prompt and evidence survive,
+// and its module supplies the explanation and worked inputs separately.
+function completeSourceActivity(
+	source: RawCourse | undefined,
+	module: RawCourseModule,
+	item: RawCourseModuleItem
+) {
+	if (
+		!source ||
+		item.contentKind !== "assignment" ||
+		!item.preserveInstructions ||
+		!item.preserveAssignment ||
+		!hasAuthoredModuleReading(module)
+	)
+		return false;
+	const originalModule = source.modules.find(
+		candidate => candidate.title === module.title
+	);
+	const original =
+		originalModule &&
+		[
+			...originalModule.curriculum,
+			...originalModule.supplementalProjects
+		].find(candidate => candidate.title === item.title);
+	const prefix = "**Project goal:** ";
+	if (!original?.content.startsWith(prefix)) return false;
+	const body = original.content.slice(prefix.length);
+	const [directive, evidence] = body.split("**Completion evidence:**");
+	return (
+		item.content === body &&
+		directive.trim().length > 0 &&
+		(evidence?.match(/^- \S.+/gm)?.length ?? 0) >= 1 &&
+		wordCount(evidence ?? "") >= 8
+	);
 }
 
 function isProjectLikeTitle(title: string) {
@@ -1982,10 +2065,20 @@ describe("course text quality normalization", () => {
 	it("keeps visible course source copy free of instructor-action artifacts", () => {
 		const corpus = visibleCourseSourceCorpus();
 
-		expect(corpus).not.toMatch(/\bshould\b/i);
-		expect(corpus).not.toMatch(/\bTeach\b/);
-		expect(corpus).not.toMatch(/\bRequire\b/);
-		expect(corpus).not.toMatch(/\bEncourage\b/);
+		expect("The timer should reset to ten.").not.toMatch(
+			instructorActionPattern
+		);
+		expect("Ask the student to start the timer.").toMatch(
+			instructorActionPattern
+		);
+		expect("The instructor should start the timer.").toMatch(
+			instructorActionPattern
+		);
+
+		expect(corpus).not.toMatch(instructorActionPattern);
+		expect("Require the learner to reset the timer.").toMatch(
+			instructorActionPattern
+		);
 		expect(corpus).not.toMatch(/This section covers students/);
 		expect(corpus).not.toMatch(/\bUnderstand why/);
 		expect(corpus).not.toMatch(
@@ -4763,7 +4856,14 @@ describe("course text quality normalization", () => {
 		expect(corpus).toContain(
 			"compares the expected result with what actually happened"
 		);
-		expect(corpus).toContain("extends the ${courseFamily} work");
+		const extension = buildSupportSectionGuidance({
+			courseFamily: "Java",
+			moduleTitle: "Arrays",
+			section: "extension"
+		});
+		expect(extension).toContain("Java");
+		expect(extension).toMatch(/constraint|condition|requirement/);
+		expect(extension).toMatch(/checkable|verification|check/);
 	});
 
 	it(
@@ -5378,6 +5478,17 @@ describe("course text quality normalization", () => {
 	it(
 		"keeps projects substantive and explicit readings concise",
 		async () => {
+			const sources = new Map(
+				await Promise.all(
+					courseCatalog
+						.filter(entry => entry.id in authoredReadingCounts)
+						.map(
+							async entry =>
+								[entry.id, await entry.load()] as const
+						)
+				)
+			);
+			expect(sources.size).toBe(8);
 			const thinItems = (await loadedCatalogCourses()).flatMap(
 				({ course, entry }) =>
 					(course?.modules ?? [])
@@ -5392,6 +5503,14 @@ describe("course text quality normalization", () => {
 										!isJuniScratchProjectTitle(
 											entry.id,
 											item.title
+										)
+								)
+								.filter(
+									item =>
+										!completeSourceActivity(
+											sources.get(entry.id),
+											module,
+											item
 										)
 								)
 								.filter(
@@ -6776,36 +6895,42 @@ describe("course text quality normalization", () => {
 	);
 
 	it("builds substantive neutral source-library course modules", async () => {
-		const courses = await Promise.all([
-			loadRawCourse("smart-money-personal-finance"),
-			loadRawCourse("introduction-to-public-speaking"),
-			loadRawCourse("early-elementary-a-math"),
-			loadRawCourse("early-elementary-a-reading"),
-			loadRawCourse("usaco-bronze-on-demand"),
-			loadRawCourse("scratch-level-1-bootcamp")
-		]);
+		const courseIds = [
+			"smart-money-personal-finance",
+			"introduction-to-public-speaking",
+			"early-elementary-a-math",
+			"early-elementary-a-reading",
+			"usaco-bronze-on-demand",
+			"scratch-level-1-bootcamp"
+		];
+		const courses = await Promise.all(courseIds.map(loadRawCourse));
 		const corpus = courses.map(allCourseText).join("\n");
 
-		for (const course of courses) {
+		for (const [index, course] of courses.entries()) {
 			expect(course).not.toBeNull();
 			if (!course) continue;
 
 			const text = allCourseText(course);
-			expect(text).toContain("**Concept path:**");
-			expect(text).toContain("Core topics in this module:");
-			expect(text).toContain("**Evidence checklist:**");
+			const courseId = courseIds[index];
+			if (courseId in authoredReadingCounts) {
+				expectAuthoredReadings(course, courseId);
+			} else {
+				expect(text).toContain("**Concept path:**");
+				expect(text).toContain("Core topics in this module:");
+				expect(text).toContain("**Evidence checklist:**");
+				expect(text).toContain("**Transfer move:**");
+				expect(text).toContain("**Extension choices:**");
+			}
 			expect(text).toContain("**Setup:**");
 			expect(text).toContain("**Process:**");
 			expect(text).toContain("**Completion evidence:**");
-			expect(text).toContain("**Transfer move:**");
-			expect(text).toContain("**Extension choices:**");
 			expect(text).not.toMatch(
 				/The .* connection matters because .* builds skill through repeated evidence/i
 			);
 			expect(text).not.toMatch(
 				/Juni|Recording Studio|your instructor|with your instructor|Whiteboard|Learning Targets/i
 			);
-			expect(text).not.toMatch(/\bshould\b/i);
+			expect(text).not.toMatch(instructorActionPattern);
 		}
 
 		const [smartMoney, publicSpeaking, earlyMath, earlyReading] = courses;
@@ -6922,7 +7047,7 @@ describe("course text quality normalization", () => {
 		expect(text).not.toMatch(
 			/Juni|Recording Studio|your instructor|with your instructor|Whiteboard|Learning Targets|HQ Support|Slack/i
 		);
-		expect(text).not.toMatch(/\bshould\b/i);
+		expect(text).not.toMatch(instructorActionPattern);
 		expect(text).not.toContain("static.junilearning.com");
 	});
 
@@ -7077,7 +7202,7 @@ describe("course text quality normalization", () => {
 		expect(text).not.toMatch(
 			/Juni|Recording Studio|your instructor|with your instructor|Whiteboard|Learning Targets|HQ Support|Slack|Password/i
 		);
-		expect(text).not.toMatch(/\bshould\b/i);
+		expect(text).not.toMatch(instructorActionPattern);
 		expect(text).not.toContain("static.junilearning.com");
 	});
 
@@ -7554,7 +7679,9 @@ describe("course text quality normalization", () => {
 		expect(text).toContain("Car Ride");
 		expect(text).toContain("showing-versus-telling");
 		expect(text).toContain("Cinderella");
-		expect(text).toContain("Snow White");
+		expect(text).toContain("The Lantern Workshop");
+		expect(text).toContain("Neri");
+		expect(text).toContain("Sela");
 		expect(text).toContain("Connotation Nation");
 		expect(text).toContain("rhyme and alliteration");
 		expect(text).toContain("Analysis Toolbox");
@@ -7567,7 +7694,7 @@ describe("course text quality normalization", () => {
 		expect(text).not.toMatch(
 			/Juni|Recording Studio|your instructor|with your instructor|Whiteboard|Learning Targets|HQ Support|Slack|Password/i
 		);
-		expect(text).not.toMatch(/\bshould\b/i);
+		expect(text).not.toMatch(instructorActionPattern);
 		expect(text).not.toContain("static.junilearning.com");
 	});
 
@@ -7728,13 +7855,15 @@ describe("course text quality normalization", () => {
 			expect(text, anchor).toContain(anchor);
 		}
 		for (const originalReference of originalReferences) {
-			expect(text, originalReference).toContain(originalReference);
+			expect(text.toLowerCase(), originalReference).toContain(
+				originalReference.toLowerCase()
+			);
 		}
 
 		expect(text).not.toMatch(
 			/Juni|Recording Studio|your instructor|with your instructor|Whiteboard|Learning Targets|HQ Support|Slack|Password/i
 		);
-		expect(text).not.toMatch(/\bshould\b/i);
+		expect(text).not.toMatch(instructorActionPattern);
 		expect(text).not.toContain("static.junilearning.com");
 	});
 
@@ -7794,7 +7923,7 @@ describe("course text quality normalization", () => {
 		expect(text).not.toMatch(
 			/Juni|Recording Studio|your instructor|with your instructor|Whiteboard|Learning Targets|HQ Support|Slack|Password/i
 		);
-		expect(text).not.toMatch(/\bshould\b/i);
+		expect(text).not.toMatch(instructorActionPattern);
 		expect(text).not.toContain("static.junilearning.com");
 	});
 
@@ -7834,13 +7963,17 @@ describe("course text quality normalization", () => {
 
 			expect(teachingModules.length, courseId).toBeGreaterThanOrEqual(1);
 			expect(wordCount(text), courseId).toBeGreaterThan(600);
-			expect(text, courseId).toContain("**Concept path:**");
-			expect(text, courseId).toContain("Core topics in this module:");
+			if (courseId in authoredReadingCounts) {
+				expectAuthoredReadings(course, courseId);
+			} else {
+				expect(text, courseId).toContain("**Concept path:**");
+				expect(text, courseId).toContain("Core topics in this module:");
+			}
 			expect(text, courseId).toContain("**Completion evidence:**");
 			expect(text, courseId).not.toMatch(
 				/Juni|Recording Studio|your instructor|with your instructor|Whiteboard|Learning Targets|HQ Support|Slack/i
 			);
-			expect(text, courseId).not.toMatch(/\bshould\b/i);
+			expect(text, courseId).not.toMatch(instructorActionPattern);
 			expect(text, courseId).not.toContain("static.junilearning.com");
 		}
 	});

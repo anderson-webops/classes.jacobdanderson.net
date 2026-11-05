@@ -134,6 +134,15 @@ describe("production security-header policy", () => {
 			"data:",
 			"blob:"
 		]);
+		expect(contentSecurityPolicies["code-ide"]["connect-src"]).toContain(
+			"https://synthesis-service.scratch.mit.edu/synth"
+		);
+		for (const [profile, policy] of Object.entries(contentSecurityPolicies)) {
+			if (profile === "code-ide") continue;
+			expect((policy["connect-src"] ?? []).join(" ")).not.toContain(
+				"synthesis-service.scratch.mit.edu"
+			);
+		}
 		expect(contentSecurityPolicies.standard["media-src"]).not.toContain(
 			"data:"
 		);

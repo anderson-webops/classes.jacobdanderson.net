@@ -88,7 +88,7 @@ describe("Novel Writing learner flow", () => {
 	it("supports text-only plotting and a private completion path", () => {
 		expect(
 			requireModule("NW6 Structuring Plot").curriculum[0]?.content
-		).toContain("hand-drawn, text-only, or instructor-supplied arc");
+		).toContain("hand-drawn or text-only arc");
 		expect(
 			requireModule("NW13 Final Revision Portfolio").curriculum[0]
 				?.content

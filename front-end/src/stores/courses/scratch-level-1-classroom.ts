@@ -95,6 +95,9 @@ export const scratchLevel1ClassroomCourse: RawCourse = {
 					learningPath: "choice" as const,
 					preserveInstructions: true,
 					projectLink: `/ide?mode=scratch&starter=${project.id}`,
+					solutionLink: project.publishReference
+						? `/ide?mode=scratch&starter=${project.id}&role=reference`
+						: undefined,
 					content: `${scratchClassroomGameGuides[project.id]}\n\n[Download this starter (.sb3)](/scratch-projects/${project.id}.sb3). Open the downloaded file with **Open .sb3** in the site IDE or an approved Scratch-compatible editor. Save the prior game under a separate name before importing a continuation.`
 				}))
 		]

@@ -7,6 +7,10 @@ export const dinoColorsLesson: RawCourseModuleItem = {
 
 ### Follow the pointer and test a real color
 
+![Events starts a stack; Control forever contains Motion go to mouse-pointer and Control if then. Sensing touching color fits the condition; Looks say fits inside if.](/course-assets/references/scratch-repeated-condition.svg)
+
+In the **Code** tab, find the green-flag hat in **Events**, forever and if then in **Control**, go to in **Motion**, touching color? in **Sensing**, and say in **Looks**.
+
 Open the starter from the Dino's Colors project below and select **Dinosaur4**. The colored regions are part of the backdrop; they do not need to become separate sprites. Build one stack: **when green flag clicked → forever → go to mouse-pointer**. Blocks inside the forever block run repeatedly, so the dinosaur keeps following a moving pointer. Blocks underneath the forever block will never be reached.
 
 1. Drag **touching color?** from Sensing into the hexagonal condition of an **if then** block. Put the if block inside forever, after go to mouse-pointer.
@@ -32,6 +36,27 @@ In the next module, if then else can express the same decision as one nested cha
 Test the interior of all four regions, a grey/color border, a boundary between two colors, and a place matching none of the sampled colors if the backdrop provides one. Record the touched colors, predicted winner, and observed message. Repeat a boundary test after changing costume or size; the overlap may change. Stop and restart, then verify that the dinosaur follows the pointer and uses the same rule again. A walkthrough partner can predict before the driver runs each case, then swap roles.
 `
 };
+
+export const dinoCombinedColorGuide = `
+### Optional extension: distinguish two colors
+
+Keep Dino's Colors II's original arrow controls and B/R/Y prompt tasks. A key event starts its stack once: say the prompt for two seconds, then check the current position once. Movement runs in a separate green-flag forever stack during that wait. Do not put the prompt or result check in forever unless deliberately building a continuous monitor instead.
+
+For the B-key extension, sample blue and the backdrop's white region with Sensing's **touching color?** eyedropper. Put both reporters into Operators' **and**, then put that Boolean inside Control's **if then else**. Check the combined case before the broader blue case:
+
+![Control if then else checks touching blue AND white first and says Both. Inside its else, a second if then else says Blue for blue contact, otherwise Not blue. Both color reporters come from Sensing; and comes from Operators; say comes from Looks.](/course-assets/references/scratch-combined-condition.svg)
+
+The drawing abbreviates each sampled touching color? reporter as blue? or white?. The inner if then else belongs entirely inside the outer else opening. Use one B-key stack, with Looks' timed prompt followed by these branches.
+
+| Touching blue? | Touching white? | Result |
+| --- | --- | --- |
+| Yes | Yes | Both |
+| Yes | No | Blue |
+| No | Yes | Not blue |
+| No | No | Not blue |
+
+If the broad blue test came first, it would also match blue-and-white and hide that more specific result. White alone belongs in the final else: not matching both does not mean neither is touched. Test all four rows, move during the two-second prompt, and verify there is exactly one result per key press. Then adapt the extension for red and yellow. Restart and repeat a boundary case.
+`;
 
 export const noisyReactionsLesson: RawCourseModuleItem = {
 	title: "Noisy Reactions: Conditions and Sound Order",

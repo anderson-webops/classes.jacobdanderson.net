@@ -789,6 +789,253 @@ export function createProject(id, solution = false) {
 		}
 	}
 
+	if (id === "educational-quiz") {
+		const names = {
+			score: "Score",
+			quizState: "QuizState",
+			question: "Question",
+			num1: "Num1",
+			num2: "Num2",
+			playerName: "PlayerName"
+		};
+		for (const [variable, label] of Object.entries(names)) {
+			stage.variables[variable] = [
+				label,
+				variable === "playerName" ? "" : 0
+			];
+		}
+		const read = variable => ({
+			reporter: block(
+				"data_variable",
+				{},
+				{ VARIABLE: [names[variable], variable] }
+			)
+		});
+		const set = (variable, value) =>
+			block(
+				"data_setvariableto",
+				{ VALUE: value },
+				{ VARIABLE: [names[variable], variable] }
+			);
+		const compare = (left, right) => ({
+			reporter: block("operator_equals", {
+				OPERAND1: left,
+				OPERAND2: right
+			})
+		});
+		const stateIs = value => compare(read("quizState"), number(value));
+		const join = (left, right) => ({
+			reporter: block("operator_join", { STRING1: left, STRING2: right })
+		});
+		const show = () => block("looks_show");
+		const hide = () => block("looks_hide");
+		const changeScene = name =>
+			block("looks_switchbackdropto", {
+				BACKDROP: {
+					reporter: block(
+						"looks_backdrops",
+						{},
+						{ BACKDROP: [name, null] }
+					),
+					shadow: true
+				}
+			});
+		const receive = name =>
+			block(
+				"event_whenbroadcastreceived",
+				{},
+				{ BROADCAST_OPTION: [name, `quiz-${name}`] }
+			);
+		const broadcast = (name, waitForReceivers = false) =>
+			block(
+				waitForReceivers ? "event_broadcastandwait" : "event_broadcast",
+				{
+					BROADCAST_INPUT: {
+						reporter: block(
+							"event_broadcast_menu",
+							{},
+							{ BROADCAST_OPTION: [name, `quiz-${name}`] }
+						),
+						shadow: true
+					}
+				}
+			);
+		for (const name of [
+			"Introduction",
+			"Ready next",
+			"Question",
+			"Finished"
+		])
+			stage.broadcasts[`quiz-${name}`] = name;
+		const scene = (name, heading, color) =>
+			costume(
+				name,
+				`<rect width="480" height="360" fill="${color}"/><text x="240" y="60" text-anchor="middle" font-family="sans-serif" font-size="25" fill="#172b4d">${heading}</text>`,
+				480,
+				360
+			);
+		stage.costumes = [
+			scene("Start", "Signed-number quiz", "#e4f4ff"),
+			scene("Practice", "Try the same question until correct", "#f6f2d9"),
+			scene("Finished", "Quiz complete", "#d0e6ca")
+		];
+		const button = name =>
+			costume(
+				name,
+				`<rect width="160" height="60" rx="12" fill="#237ec2"/><text x="80" y="39" text-anchor="middle" font-family="sans-serif" font-size="28" fill="white">${name}</text>`,
+				160,
+				60
+			);
+		player.name = "Quiz";
+		player.visible = false;
+		player.y = 30;
+		const startButton = target("Start", false, 0, -110, [button("Start")]);
+		const nextButton = target("Next", false, 0, -110, [button("Next")]);
+		startButton.size = nextButton.size = 100;
+		nextButton.visible = false;
+		targets.push(startButton, nextButton);
+		stack(stage, [
+			flag(),
+			resetScore(),
+			set("question", number(0)),
+			set("num1", number(0)),
+			set("num2", number(0)),
+			set("playerName", text("")),
+			set("quizState", number(0)),
+			changeScene("Start"),
+			block("data_hidevariable", {}, { VARIABLE: ["Score", "score"] })
+		]);
+		stack(startButton, [flag(), show()]);
+		stack(startButton, [
+			click(),
+			ifBlock(stateIs(0), [
+				set("quizState", number(1)),
+				hide(),
+				broadcast("Introduction", true)
+			])
+		]);
+		stack(nextButton, [flag(), hide()]);
+		stack(nextButton, [
+			receive("Ready next"),
+			ifBlock(stateIs(2), [show()])
+		]);
+		stack(nextButton, [
+			click(),
+			ifBlock(stateIs(2), [
+				set("quizState", number(3)),
+				hide(),
+				broadcast("Question", true)
+			])
+		]);
+		stack(player, [flag(), hide()]);
+		stack(player, [
+			receive("Introduction"),
+			show(),
+			block("sensing_askandwait", {
+				QUESTION: text("Choose a display name:")
+			}),
+			set("playerName", { reporter: block("sensing_answer") }),
+			block("looks_sayforsecs", {
+				MESSAGE: join(text("Welcome, "), read("playerName")),
+				SECS: number(1)
+			}),
+			set("quizState", number(2)),
+			broadcast("Ready next")
+		]);
+		const prompt = () =>
+			join(
+				text("What is ("),
+				join(
+					read("num1"),
+					join(text(") + ("), join(read("num2"), text(")?")))
+				)
+			);
+		const ask = () => block("sensing_askandwait", { QUESTION: prompt() });
+		const correct = solution
+			? compare(
+					{ reporter: block("sensing_answer") },
+					{
+						reporter: block("operator_add", {
+							NUM1: read("num1"),
+							NUM2: read("num2")
+						})
+					}
+				)
+			: compare(number(0), number(1));
+		stack(player, [
+			receive("Question"),
+			changeScene("Practice"),
+			block("data_showvariable", {}, { VARIABLE: ["Score", "score"] }),
+			block(
+				"data_changevariableby",
+				{ VALUE: number(1) },
+				{ VARIABLE: ["Question", "question"] }
+			),
+			...[
+				[-3, 8],
+				[6, -9],
+				[-4, -5]
+			].map(([left, right], index) =>
+				ifBlock(compare(read("question"), number(index + 1)), [
+					set("num1", number(left)),
+					set("num2", number(right))
+				])
+			),
+			ask(),
+			block(
+				"control_repeat_until",
+				{ CONDITION: correct },
+				{},
+				{
+					SUBSTACK: [
+						block("looks_sayforsecs", {
+							MESSAGE: text("Try again."),
+							SECS: number(1)
+						}),
+						ask()
+					]
+				}
+			),
+			score(),
+			block("looks_sayforsecs", {
+				MESSAGE: text("Correct!"),
+				SECS: number(1)
+			}),
+			block(
+				"control_if_else",
+				{ CONDITION: compare(read("question"), number(3)) },
+				{},
+				{
+					SUBSTACK: [
+						set("quizState", number(4)),
+						broadcast("Finished", true)
+					],
+					SUBSTACK2: [
+						set("quizState", number(2)),
+						broadcast("Ready next")
+					]
+				}
+			)
+		]);
+		stack(player, [
+			receive("Finished"),
+			changeScene("Finished"),
+			block("looks_say", {
+				MESSAGE: join(text("Finished. Score: "), read("score"))
+			})
+		]);
+		note(
+			stage,
+			"QuizState: 0 start, 1 introduction, 2 ready for Next, 3 asking/retrying, 4 finished. Green flag restores state, score, question, operands, name, backdrop and button visibility."
+		);
+		note(
+			player,
+			solution
+				? "REFERENCE: ask before testing answer; retry without changing the operands; score once after the retry loop; allow Next only between questions."
+				: "NORMAL: In the Question receiver, replace the false <0 = 1> condition with <answer = (Num1 + Num2)>. Do not move the first ask or the score update. The untouched starter deliberately keeps retrying, even after 5."
+		);
+	}
+
 	note(
 		targets[1],
 		`${lesson.name}\n${solution ? "TEACHER REFERENCE: one possible Normal completion." : `NORMAL: ${lesson.normal}`}\nHARD: ${lesson.hard}\nCHECK: ${lesson.check}`
@@ -811,7 +1058,7 @@ export function createProject(id, solution = false) {
 						height: 0,
 						x: 5,
 						y: 5,
-						visible: true,
+						visible: id !== "educational-quiz",
 						sliderMin: 0,
 						sliderMax: 100,
 						isDiscrete: true
@@ -868,6 +1115,12 @@ export async function generateProjects(output, teachers) {
 			path.join(output, `${lesson.id}.sb3`),
 			createProject(lesson.id).archive
 		);
+		if (lesson.publishReference) {
+			await writeFile(
+				path.join(output, `${lesson.id}-solution.sb3`),
+				createProject(lesson.id, true).archive
+			);
+		}
 		if (teachers) {
 			await writeFile(
 				path.join(teachers, `${lesson.id}-solution.sb3`),

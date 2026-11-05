@@ -1,9 +1,12 @@
 import ts from "typescript";
 
-function proseForCopyChecks(text: string) {
+export function proseForCopyChecks(text: string) {
 	return text
 		.replace(/(`{3,}|~{3,})[\s\S]*?\1/g, " ")
-		.replace(/(`+)[\s\S]*?\1/g, " ");
+		.replace(/(`+)[\s\S]*?\1/g, " ")
+		.replace(/^ {0,3}>.*$/gm, " ")
+		.replace(/"[^"]*"|“[^”]*”/g, " ")
+		.replace(/\n\s*\n/g, "\n.\n");
 }
 
 export function rawCourseProse(source: string) {
@@ -52,12 +55,9 @@ export function rawCourseProse(source: string) {
 			ts.isTemplateTail(node)
 		) {
 			const prose = proseForCopyChecks(node.text);
-			if (prose !== node.text)
-				literals.push([
-					node.getStart(tree),
-					node.end,
-					JSON.stringify(prose)
-				]);
+			// This output is searched as prose, never executed as TypeScript.
+			// Preserve real newlines so word and line boundaries remain visible.
+			literals.push([node.getStart(tree), node.end, prose]);
 		}
 		ts.forEachChild(node, visit);
 	}

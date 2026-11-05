@@ -88,7 +88,7 @@ describe("Middle School A Literature learner flow", () => {
 		expect(
 			requireModule("MSA2 Main Ideas & Supporting Evidence II")
 				.curriculum[0]?.content
-		).toContain("lawful copy of Soccer Summer or an equivalent passage");
+		).toContain("supplied original Soccer Summer practice passage");
 		expect(
 			requireModule("MSA1 Main Ideas & Supporting Evidence I")
 				.curriculum[1]?.content

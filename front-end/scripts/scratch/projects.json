@@ -136,5 +136,16 @@
 		"normal": "Complete the two Stage transition areas: Level 2/FallSpeed 5 at Score >= 3, then Level 3/FallSpeed 7 at Score >= 6.",
 		"hard": "Choose different thresholds and speeds, then test just below and at each threshold.",
 		"check": "Verify scores 2/3/5/6, retained level after a miss, an ordered jump from 1 to 3, and complete green-flag reset."
+	},
+	{
+		"id": "educational-quiz",
+		"name": "Educational Quiz: Start, Retry, Finish",
+		"unit": "Variables and games",
+		"optional": true,
+		"publishReference": true,
+		"concept": "Named states coordinate buttons, typed answers, one score per question and a clean restart.",
+		"normal": "Complete the Question receiver comparison: replace <0 = 1> with <answer = (Num1 + Num2)>. Keep the first ask before the retry loop and the score change after it.",
+		"hard": "After the three fixed signed-number questions work, add a stop/end answer or choose and store two random operands once per new question.",
+		"check": "Wrong or blank input keeps the same question and score. Answers 5, -3 and -9 finish with Score 3. Extra Next clicks cannot skip a question; the flag resets every state."
 	}
 ]

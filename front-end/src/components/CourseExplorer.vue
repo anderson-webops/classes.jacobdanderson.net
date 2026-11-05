@@ -56,6 +56,7 @@ import {
 	isScratchProjectUrl
 } from "@/modules/resourceUrls";
 import { rustCourseProjectKey } from "@/modules/rustProjectResources";
+import { scratchOriginalResource } from "@/modules/scratch/originals";
 import {
 	swiftCourseProjectKey,
 	swiftCourseResourceUrl
@@ -609,7 +610,9 @@ const completedItemIdSet = computed(
 	() => new Set(selectedCourseProgress.value?.completedItemIds ?? [])
 );
 
-const courseModules = computed(() => selectedCourse.value?.modules ?? []);
+const courseModules = computed(() =>
+	(selectedCourse.value?.modules ?? []).filter(module => !module.internal)
+);
 const coreCourseModules = computed(() =>
 	courseModules.value.filter(isCoreModule)
 );
@@ -782,9 +785,10 @@ const learningTopics = computed(() =>
 	]
 		.map(item => ({
 			item,
-			sections: lessonContentSections(item.content).filter(
-				section => section.kind === "learn"
-			)
+			sections: lessonContentSections(
+				item.content,
+				item.contentKind ?? "assignment"
+			).filter(section => section.kind === "learn")
 		}))
 		.filter(topic => topic.sections.length)
 );
@@ -1613,6 +1617,31 @@ function resourceLinks(item: CourseModuleItem): ResourceLink[] {
 		});
 	}
 
+	if (selectedCourse.value) {
+		for (const match of item.content.matchAll(
+			/https:\/\/scratch\.mit\.edu\/projects\/[1-9]\d{0,11}\/?/g
+		)) {
+			const original = scratchOriginalResource(
+				match[0],
+				selectedCourse.value.id
+			);
+			if (
+				original?.bindings.some(
+					binding =>
+						binding.courseId === selectedCourse.value!.id &&
+						binding.role === "capstone-direction"
+				) &&
+				!links.some(link => sameResourceTarget(link.url, original.url))
+			) {
+				links.push({
+					kind: "project",
+					label: original.name,
+					url: original.url,
+					host: "scratch.mit.edu"
+				});
+			}
+		}
+	}
 	if (datasetUrl) {
 		links.push({
 			kind: datasetUrl.startsWith("/course-assets/")
@@ -1657,6 +1686,28 @@ function codePreviewResources(item: CourseModuleItem): CodePreviewResource[] {
 }
 
 function ideStarterHref(item: CourseModuleItem, resource: ResourceLink) {
+	if (
+		selectedCourse.value &&
+		(resource.kind === "project" || resource.kind === "solution")
+	) {
+		const role = resource.kind === "solution" ? "reference" : "project";
+		const original = scratchOriginalResource(
+			resource.url,
+			selectedCourse.value.id,
+			role
+		);
+		if (original) {
+			const params = new URLSearchParams({
+				mode: "scratch",
+				originalProject: original.id,
+
+				course: selectedCourse.value.id,
+				role,
+				lesson: itemAnchorId(activeModuleId.value, item.id)
+			});
+			return `/ide?${params.toString()}`;
+		}
+	}
 	const javascript = javascriptCourseResource(
 		resource.url,
 		selectedCourse.value?.id
@@ -2313,7 +2364,10 @@ function writeStoredValue(key: string, value: string) {
 									<CourseAssignmentContent
 										v-else-if="item.content"
 										:sections="
-											lessonContentSections(item.content)
+											lessonContentSections(
+												item.content,
+												item.contentKind ?? 'assignment'
+											)
 										"
 									/>
 
@@ -2375,7 +2429,10 @@ function writeStoredValue(key: string, value: string) {
 														resource.kind ===
 														"solution"
 															? "Open reference in IDE"
-															: "Start in IDE"
+															: resource.host ===
+																  "scratch.mit.edu"
+																? "Open in IDE"
+																: "Start in IDE"
 													}}
 												</span>
 												<small

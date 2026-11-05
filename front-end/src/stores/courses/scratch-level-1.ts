@@ -9,6 +9,7 @@ import { correctedJuniScratchInstructions } from "./juniScratchInstructionCorrec
 import { isCoreProjectTitle } from "./projectGrouping";
 import {
 	dinoColorsLesson,
+	dinoCombinedColorGuide,
 	lightningTimingChallenge,
 	noisyReactionsLesson,
 	spiderSmashDebugGuide
@@ -99,8 +100,36 @@ ${scratchCostumeEditingGuide}`
 			curriculum: [
 				{
 					title: "Basic event listeners",
-					content:
-						'Event listeners are blocks that wait for something to happen and then start a script. The "when green flag clicked" and "when arrow key pressed" blocks connect user actions to sprite behavior, so a project can respond when the game starts or when a specific key is pressed.'
+					content: `A script is a connected stack of blocks. An event hat, such as **when green flag clicked**, starts the blocks attached below it. The connected blocks run from top to bottom. Separate hats start separate scripts: a keypress script does not need to be attached to the green-flag script.
+
+Use the green flag for starting values, such as a sprite's initial direction or position. Use **when [key] key pressed** for a keyboard action, and **when this sprite clicked** for a click on that sprite.
+
+### Direction and movement
+
+**Point in direction** sets an absolute direction:
+
+| Direction | Value |
+| --- | ---: |
+| Up | 0 |
+| Right | 90 |
+| Down | 180 |
+| Left | -90 |
+
+**Move steps** moves the sprite along its current direction. Pointing alone does not move it. **Turn clockwise** or **turn counterclockwise** changes the current direction by an angle; it does not set a fixed direction.
+
+For example, this script faces upward before each move:
+
+\`\`\`text
+when [up arrow] key pressed
+point in direction (0)
+move (10) steps
+\`\`\`
+
+Pressing Up twice moves 20 steps upward. A script that only turns 15 degrees would instead change direction on every press. **Point towards [mouse-pointer]** uses the pointer's position when that block runs; another event is needed to point again after the pointer moves.
+
+### Appearance and sound
+
+**Next costume** changes the selected sprite's picture. **Next backdrop** changes the stage's background. **Change color effect** shifts the sprite's displayed colors without replacing its costume. **Play sound until done** waits for the sound to finish before the next connected block runs; **start sound** continues immediately.`
 				},
 				{
 					title: "Project 1 – Spinner",
@@ -421,8 +450,10 @@ Challenge: Add more sprites to the game and have the ball pass between them.`,
 			curriculum: [
 				{
 					title: "Conditionals: if/then/else",
-					content:
-						'The "if … then … else" block allows two possible outcomes. If the condition is true, Scratch runs the first branch; otherwise, it runs the else branch. This structure is useful for choices such as correct versus incorrect, win versus lose, touching versus not touching, or enough points versus not enough points.',
+					contentKind: "reading",
+					content: `The "if … then … else" block allows two possible outcomes. If the condition is true, Scratch runs the first branch; otherwise, it runs the else branch. This structure is useful for choices such as correct versus incorrect, win versus lose, touching versus not touching, or enough points versus not enough points.${
+						dinoCombinedColorGuide
+					}`,
 					projectLink: "https://scratch.mit.edu/projects/293372295/",
 					solutionLink: "https://scratch.mit.edu/projects/293366003/"
 				},
@@ -573,8 +604,35 @@ Challenge: Add a counter for the number of guesses and congratulate the player i
 			curriculum: [
 				{
 					title: "Introduction to X & Y coordinates",
-					content:
-						'The Scratch stage uses an X and Y coordinate plane. The X-axis moves left and right, and the Y-axis moves up and down. The "go to x: ___ y: ___" and "glide ___ secs to x: ___ y: ___" blocks place sprites at specific coordinates or move them smoothly to a target point.'
+					content: `A sprite's position is an ordered pair, **(x, y)**. The x value controls left and right; the y value controls up and down. The center is **(0, 0)**. Increasing x moves right, and decreasing x moves left. Increasing y moves up, and decreasing y moves down.
+
+### Reading the stage
+
+The stage is 480 steps wide and 360 steps high. Its edges are x = -240 on the left, x = 240 on the right, y = -180 at the bottom and y = 180 at the top.
+
+| Position | x | y |
+| --- | ---: | ---: |
+| Center | 0 | 0 |
+| Upper left | -240 | 180 |
+| Upper right | 240 | 180 |
+| Lower left | -240 | -180 |
+| Lower right | 240 | -180 |
+
+These coordinates locate the costume's rotation center. Leave room between that point and the edges when the entire costume needs to remain visible. A point with positive x and positive y is in the upper-right quadrant; negative x and positive y is upper left; both negative is lower left; positive x and negative y is lower right. A point on either axis is not in a quadrant.
+
+### Setting and changing a position
+
+**Go to x: y:** sets both coordinates immediately. **Set x to** replaces x and leaves y unchanged; **set y to** does the reverse. **Change x by** and **change y by** add to the current values. These blocks move along the stage axes regardless of the direction the sprite faces.
+
+For example, start at (30, -20). Changing x by 10 gives **(40, -20)**. Changing y by 10 next gives **(40, -10)**. Setting x to 10 instead would give **(10, -10)**. Arrow controls use +10 for right or up and -10 for left or down.
+
+**Glide seconds to x: y:** moves smoothly to the destination and waits for that movement to finish before running the next connected block. A sequence of glides can visit several chosen points in order. Place a starting position below the green flag so restarting returns the scene to that position.
+
+### Using an answer as a coordinate
+
+**Ask and wait** pauses its script until a response is submitted. The **answer** reporter contains the latest response and is shared by all sprites. Use that response before asking another question: ask for x, set x to answer, ask for y, then set y to answer. Asking both questions before setting either coordinate would use the second response twice. For a numeric example, entering 30 for x and -20 for y should place the sprite at (30, -20).
+
+**Forever** repeats the blocks inside it. It can repeat both questions; each ask still waits for its response. A separate green-flag script with its own forever loop can keep checking a **touching sprite?** condition while the question script waits. **If** runs its enclosed blocks when its condition is true; putting that check inside forever repeats the check. **Stop all** ends every running script, which can finish a chase when the sprites touch.`
 				},
 				{
 					title: "Project 1 – Bug Eater",

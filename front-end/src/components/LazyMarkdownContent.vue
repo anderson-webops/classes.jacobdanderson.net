@@ -247,8 +247,8 @@ watch(
 }
 
 .item-content-markdown :deep(table) {
-	width: max-content;
-	inline-size: max-content;
+	width: 100%;
+	inline-size: 100%;
 	min-width: 100%;
 	min-inline-size: 100%;
 	max-width: none;
@@ -278,6 +278,12 @@ watch(
 .item-content-markdown :deep(th:last-child),
 .item-content-markdown :deep(td:last-child) {
 	border-right: 0;
+}
+
+.item-content-markdown :deep(table:has(th:last-child:nth-child(-n + 3)) th),
+.item-content-markdown :deep(table:has(th:last-child:nth-child(-n + 3)) td) {
+	min-width: 0;
+	min-inline-size: 0;
 }
 
 .item-content-markdown :deep(tr:last-child td) {

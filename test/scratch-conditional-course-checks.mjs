@@ -5,10 +5,11 @@ import process from "node:process";
 
 export function scratchCourseAccount(path, role) {
 	if (!role) return {};
-	const user = { _id: "scratch-course-fixture", name: "Course fixture", email: "course@example.invalid", age: 14, state: "GA", courseAccess: ["scratch-level-1", "scratch-level-1-classroom"], courseProgress: [] };
+	const courses = ["scratch-level-1", "scratch-level-2", "scratch-level-1-bootcamp", "scratch-level-1-classroom"];
+	const user = { _id: "scratch-course-fixture", name: "Course fixture", email: "course@example.invalid", age: 14, state: "GA", courseAccess: courses, courseProgress: [] };
 	if (path === "/api/accounts/me") return role === "instructor" ? { tutorID: "scratch-tutor-fixture" } : { userID: user._id };
 	if (path === "/api/users/loggedin" && role === "learner") return { currentUser: user };
-	if (path === "/api/tutors/loggedin" && role === "instructor") return { currentTutor: { _id: "scratch-tutor-fixture", name: "Course fixture", email: "course@example.invalid", age: 30, state: "GA", usersOfTutorLength: 1, coursePermissions: ["scratch-level-1", "scratch-level-1-classroom"] } };
+	if (path === "/api/tutors/loggedin" && role === "instructor") return { currentTutor: { _id: "scratch-tutor-fixture", name: "Course fixture", email: "course@example.invalid", age: 30, state: "GA", usersOfTutorLength: 1, coursePermissions: courses } };
 	if (path === "/api/users/oftutor/scratch-tutor-fixture") return [user];
 	return {};
 }
@@ -43,6 +44,10 @@ export async function checkScratchConditionalCourse(page, origin, setRole) {
 			assert.match(colors, /eyedropper/);
 			assert.match(colors, /last matching check wins/);
 			assert.match(colors, /grey, blue, yellow, red/);
+			await page.waitForFunction(() => {
+				const image = document.querySelector("img[src$='scratch-repeated-condition.svg']");
+				return image?.complete && image.naturalWidth > 0 && image.alt.includes("Sensing");
+			});
 			const sounds = await readLesson(page, "Noisy Reactions: Conditions and Sound Order", "message broadcasting module");
 			assert.match(sounds, /different Thunder Storm recordings/);
 			assert.match(sounds, /wait until not touching Ball\?/);
@@ -63,6 +68,21 @@ export async function checkScratchConditionalCourse(page, origin, setRole) {
 			const references = await page.$$eval("a", links => links.map(link => link.href).filter(href => /scratch\.mit\.edu\/projects\/(?:291220849|291530292)\//.test(href)));
 			assert.equal(references.length, role === "instructor" ? 2 : 0);
 			console.log(`Scratch conditional guidance, optional timing and source roles verified: ${role} at ${width}px`);
+			await page.goto("about:blank");
+			await page.goto(`${origin}/courses#scratch-level-1-gs6-advanced-conditionals`, { waitUntil: "networkidle2" });
+			await page.waitForSelector(".lesson-view-toggle button");
+			await page.click(".lesson-view-toggle button:nth-child(3)");
+			const combined = await readLesson(page, "Conditionals: if/then/else", "exactly one result per key press");
+			assert.match(combined, /White alone belongs in the final else/);
+			await page.waitForFunction(() => {
+				const image = document.querySelector("img[src$='scratch-combined-condition.svg']");
+				return image?.complete && image.naturalWidth > 0 && image.alt.includes("Operators");
+			});
+			assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+			if (process.env.SCRATCH_SCREENSHOT_DIR) {
+				const image = await page.$("img[src$='scratch-combined-condition.svg']");
+				await image.screenshot({ path: join(process.env.SCRATCH_SCREENSHOT_DIR, `scratch-conditionals-combined-${role}-${width}.png`) });
+			}
 			await page.goto("about:blank");
 			await page.goto(`${origin}/courses#scratch-level-1-gs9-variables`, { waitUntil: "networkidle2" });
 			await page.waitForSelector(".lesson-view-toggle button");
@@ -137,7 +157,8 @@ export async function checkScratchConditionalCourse(page, origin, setRole) {
 			for (const [title, id, required] of [
 				["Falling Catch: Catch or Miss", "falling-catch", "one drop from being counted as both"],
 				["Ready and Flying: A Two-State Projectile", "projectile-state", "Holding"],
-				["Three-Level Catch Game", "catch-levels", "does not demote an earned level"]
+				["Three-Level Catch Game", "catch-levels", "does not demote an earned level"],
+				["Educational Quiz: Start, Retry, Finish", "educational-quiz", "<answer = (Num1 + Num2)>"]
 			]) {
 				const content = await readLesson(page, title, id === "projectile-state" ? "Draw the states before coding" : required);
 				assert.ok(content.includes("Normal"));
@@ -148,6 +169,14 @@ export async function checkScratchConditionalCourse(page, origin, setRole) {
 					return url.pathname === "/ide" && url.searchParams.get("mode") === "scratch" && url.searchParams.get("starter") === id;
 				}), JSON.stringify(links));
 				assert.ok(links.includes(`/scratch-projects/${id}.sb3`));
+				if (id === "educational-quiz") {
+					const referenceLinks = links.filter((href) => {
+						const url = new URL(href, origin);
+						return url.pathname === "/ide" && url.searchParams.get("starter") === id && url.searchParams.get("role") === "reference";
+					});
+					assert.equal(referenceLinks.length, role === "instructor" ? 1 : 0);
+				}
+
 				const completionIsOptional = await page.$$eval(".lesson-item", (items, title) => {
 					const card = items.find(item => item.querySelector("h5")?.textContent.includes(title));
 					return [...card.querySelectorAll(".assignment-aside.is-optional")].some(section => section.textContent.includes("Download this starter") || section.textContent.includes("Explain and retain") || section.textContent.includes("Partner routine"));
@@ -160,7 +189,7 @@ export async function checkScratchConditionalCourse(page, origin, setRole) {
 					await card.dispose();
 				}
 			}
-			console.log(JSON.stringify({ event: "verified-scratch-optional-game-readings", role, width, continuations: 3, downloadAndIdeLinks: true, readableWithoutOverflow: true }));
+			console.log(JSON.stringify({ event: "verified-scratch-optional-game-readings", role, width, continuations: 4, downloadAndIdeLinks: true, readableWithoutOverflow: true }));
 		}
 	}
 }

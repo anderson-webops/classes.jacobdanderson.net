@@ -9,6 +9,10 @@ on:
 permissions:
     contents: read
 
+concurrency:
+    group: ci-${{ github.event_name }}-${{ github.event.pull_request.number || github.run_id }}
+    cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
     rust-workflows:
         runs-on: ubuntu-24.04
@@ -885,7 +889,6 @@ jobs:
                   retention-days: 7
 
     test-e2e:
-        needs: native-course-workflows
         runs-on: ubuntu-24.04
         timeout-minutes: 75
         steps:
@@ -927,9 +930,10 @@ jobs:
             - name: Verify Scratch classroom import, execution and downloads
               env:
                   SCRATCH_SCREENSHOT_DIR: output/playwright
-              run: node --test test/scratch-projects.test.mjs test/scratch-browser.test.mjs
+              run: node --test --test-concurrency=1 test/scratch-projects.test.mjs test/scratch-original-projects.test.mjs test/scratch-browser.test.mjs
 
             - name: Retain Scratch conditional lesson screenshots
+              if: always()
               uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
               with:
                   name: scratch-conditional-screenshots
@@ -1137,6 +1141,25 @@ jobs:
                   path: output/playwright/signup-*.png
                   if-no-files-found: ignore
                   retention-days: 7
+
+            - name: Export self-study course page expectations
+              env:
+                  SELF_STUDY_BROWSER_PROOF_DIR: ${{ github.workspace }}/output/self-study-browser
+              run: npm exec -w front-end -- vitest run test/store.courses.self-study-browser-manifest.spec.test.ts --no-file-parallelism --maxWorkers=1
+
+            - name: Verify self-study readings and assignment pages
+              env:
+                  SELF_STUDY_BROWSER_PROOF_DIR: ${{ github.workspace }}/output/self-study-browser
+              run: node --test test/self-study-course-browser.test.mjs
+
+            - name: Retain self-study course page evidence
+              if: always()
+              uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+              with:
+                  name: self-study-course-pages
+                  path: output/self-study-browser/
+                  if-no-files-found: error
+                  retention-days: 14
 
             - name: Verify confirmed course imports and accessible errors
               env:
@@ -1925,6 +1948,8 @@ jobs:
                   if-no-files-found: error
                   retention-days: 7
 
+    # Two Mac sequences retain every case without queuing all nine at once.
+    # Independent checks still run after a predecessor fails; cancellation stops them.
     swift-ios:
         needs: swift-browser
         runs-on: macos-26
@@ -2070,7 +2095,8 @@ jobs:
                   retention-days: 7
 
     swift-canonical-ios:
-        needs: swift-browser
+        needs: [swift-browser, swift-ios]
+        if: ${{ !cancelled() && needs.swift-browser.result == 'success' }}
         strategy:
             fail-fast: false
             max-parallel: 1
@@ -2149,7 +2175,8 @@ jobs:
                   retention-days: 7
 
     swift-tracker-models-ios:
-        needs: swift-browser
+        needs: [swift-browser, swift-networking-ios]
+        if: ${{ !cancelled() && needs.swift-browser.result == 'success' }}
         runs-on: macos-26
         timeout-minutes: 60
         permissions:
@@ -2250,9 +2277,11 @@ jobs:
     swift-tracker-ui:
         strategy:
             fail-fast: false
+            max-parallel: 1
             matrix:
                 course: [tracker, swiftdata]
-        needs: swift-browser
+        needs: [swift-browser, swift-tracker-models-ios]
+        if: ${{ !cancelled() && needs.swift-browser.result == 'success' }}
         runs-on: macos-26
         timeout-minutes: 60
         permissions:
@@ -2322,7 +2351,6 @@ jobs:
                   retention-days: 7
 
     usaco-workflows:
-        needs: test-e2e
         runs-on: ubuntu-24.04
         timeout-minutes: 55
         steps:

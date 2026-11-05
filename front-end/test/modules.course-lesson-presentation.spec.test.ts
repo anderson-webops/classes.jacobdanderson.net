@@ -6,6 +6,30 @@ import {
 import { normalizeInlineCourseMarkdown } from "@/modules/courseMarkdown";
 
 describe("lesson content presentation", () => {
+	it("keeps an explicitly assigned goal with the task instead of background learning", () => {
+		const content =
+			"**Goal:** Compare two designs and explain the choice.\n**Completion evidence:**\n- A comparison and one reason.";
+		const assigned = lessonContentSections(content, "assignment");
+		expect(assigned.map(section => section.kind)).toEqual(["assignment"]);
+		expect(assigned[0].content).toContain(
+			"Compare two designs and explain the choice."
+		);
+		expect(assigned[0].content).toContain("A comparison and one reason.");
+		expect(lessonContentSections(content)[0].kind).toBe("learn");
+	});
+	it("keeps the project directive visible beside completion evidence", () => {
+		const sections = lessonContentSections(
+			"**Project goal:** Read the supplied passage and compare two interpretations.\n**Completion evidence:**\n- Two quotations and a reasoning link."
+		);
+		const assignments = sections
+			.filter(section => section.kind === "assignment")
+			.map(section => section.content)
+			.join(" ");
+		expect(assignments).toContain(
+			"Read the supplied passage and compare two interpretations."
+		);
+		expect(assignments).toContain("Two quotations and a reasoning link.");
+	});
 	it("never absorbs required steps into a preceding learning goal", () => {
 		for (const label of ["Build steps", "Your custom task"]) {
 			const sections = lessonContentSections(
@@ -163,6 +187,18 @@ describe("lesson content presentation", () => {
 		expect(isLessonLearningItem({ ...item, contentKind: "reading" })).toBe(
 			true
 		);
+	});
+
+	it("keeps an assigned concept record in Projects despite its title", () => {
+		const item = {
+			id: "grammar-concept-review",
+			title: "Parts-of-Speech Concept Review",
+			content: "**Project goal:** Create a labeled concept record."
+		};
+		expect(isLessonLearningItem(item)).toBe(true);
+		expect(
+			isLessonLearningItem({ ...item, contentKind: "assignment" })
+		).toBe(false);
 	});
 
 	it.each(["Introduction to Logarithms", "Trigonometry Basics"])(

@@ -1,4 +1,7 @@
+import { scratchEducationalQuizGuide } from "./scratchEducationalQuizGuide";
+
 export const scratchClassroomGameGuides: Record<string, string> = {
+	"educational-quiz": scratchEducationalQuizGuide,
 	"falling-catch": `## Optional transfer: a falling catch game
 
 Complete the collection game's Normal check first. This continuation adds a

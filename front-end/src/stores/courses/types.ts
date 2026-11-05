@@ -5,10 +5,12 @@ export interface RawCourseModuleItem {
 	aliases?: string[];
 	title: string;
 	content: string;
-	/** Explicit informational material belongs in the Learn view. */
-	contentKind?: "reading";
+	/** Explicit content classification takes precedence over title heuristics. */
+	contentKind?: "reading" | "assignment";
 	/** Preserve structured reading and executable command blocks verbatim. */
 	preserveInstructions?: boolean;
+	/** Keep a separately assigned task out of merged support text. */
+	preserveAssignment?: boolean;
 	learningPath?: CourseItemLearningPath;
 	projectLink?: string;
 	/** Offer a confirmed IDE import for this project resource, including worked lessons. */
@@ -21,6 +23,8 @@ export interface RawCourseModuleItem {
 export interface RawCourseModule {
 	id?: string;
 	aliases?: string[];
+	/** Retain maintenance records without offering them as course material. */
+	internal?: boolean;
 	kind?: "module" | "transition" | "appendix";
 	title: string;
 	estimatedTime?: string;
@@ -61,6 +65,7 @@ export interface CourseModuleItem extends RawCourseModuleItem {
 export interface CourseModule {
 	id: string;
 	aliases?: string[];
+	internal?: boolean;
 	kind?: "module" | "transition" | "appendix";
 	title: string;
 	estimatedTime?: string;

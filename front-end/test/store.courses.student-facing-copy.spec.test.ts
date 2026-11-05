@@ -1,7 +1,7 @@
 import { readdirSync, readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { rawCourseProse } from "./courseProse";
+import { proseForCopyChecks, rawCourseProse } from "./courseProse";
 import { describe, expect, it } from "vitest";
 import { courseCatalog, loadRawCourse } from "@/stores/courses/index";
 import { isJuniScratchProjectTitle } from "@/stores/courses/juniScratchProjects";
@@ -12,6 +12,8 @@ const repoRoot = resolve(frontEndDir, "..");
 const coursesSourceDir = resolve(frontEndDir, "src/stores/courses");
 const courseAssetsDir = resolve(frontEndDir, "public/course-assets");
 const COURSE_SWEEP_TIMEOUT = 180000;
+const instructorLeadPattern =
+	/(?:^|\n|\*\*[^*]+:\*\*\s)(?:Introduce|Teach|Cover|Set expectations)\b/;
 
 const forbiddenStudentFacingPatterns = [
 	/\bTeaching flow\b/i,
@@ -28,6 +30,7 @@ const forbiddenStudentFacingPatterns = [
 	/\bfor instructor(?:s)?\b/i,
 	/\bAsk the student\b/i,
 	/\bAsk students\b/i,
+	/\bIntroduce (?:the )?(?:students?|learners?)\b/i,
 	/\bAsk them\b/i,
 	/\bHave the student\b/i,
 	/\bHave students\b/i,
@@ -134,7 +137,7 @@ const forbiddenStudentFacingPatterns = [
 	/\bUse\b[^.]{0,140}\bto teach\b/i,
 	/\bEvidence for The\b/,
 	/This lesson arc covers these sections in sequence/i,
-	/(?:^|\n|\*\*[^*]+:\*\*\s)(?:Introduce|Teach|Cover|Set expectations)\b/,
+	instructorLeadPattern,
 	/\bwithout copying (?:the )?(?:demonstration|wording)\b/i
 ];
 
@@ -178,7 +181,7 @@ const forbiddenRawGeneratedPatterns = [
 	/\bEncourage students\b/i,
 	/\bCheck whether students can\b/i,
 	/\bAsk them\b/i,
-	/\bAsk what\b/i,
+	/\bAsk what (?:the )?(?:student|learner) (?:understands|remembers|knows)\b/i,
 	/\bCan you remember\b/i,
 	/\bCan you show me\b/i,
 	/\bTeach students to\b/i,
@@ -322,6 +325,54 @@ describe("student-facing course copy", () => {
 		expect(legacyMetadata).not.toContain("Juni legacy ID");
 	});
 
+	it("checks explanatory prose while preserving fictional dialogue and interview tasks", () => {
+		for (const content of [
+			'Practice: repair "We need: paper, glue, and string".',
+			'1. "We can go home," the aunt said.',
+			"> We can mend it ourselves.\n\nIdentify the toast's honoree.",
+			"Ask what is used now and when retrieval is difficult."
+		]) {
+			const prose = rawCourseProse(
+				`export const lesson = ${JSON.stringify(content)};`
+			);
+			expect(
+				forbiddenRawGeneratedPatterns.some(pattern =>
+					pattern.test(prose)
+				),
+				content
+			).toBe(false);
+		}
+		for (const content of [
+			"We should introduce the concept before the exercise.",
+			"Ask what the student understands about loops.",
+			"> We can mend it.\n\nWe should introduce the next lesson.",
+			'Practice: repair "We need: paper". We should explain the answer.'
+		]) {
+			const prose = rawCourseProse(
+				`export const lesson = ${JSON.stringify(content)};`
+			);
+			expect(
+				forbiddenRawGeneratedPatterns.some(pattern =>
+					pattern.test(prose)
+				),
+				content
+			).toBe(true);
+		}
+		const titlePatterns = forbiddenStudentFacingPatterns.filter(
+			pattern => pattern !== instructorLeadPattern
+		);
+		expect(
+			titlePatterns.some(pattern =>
+				pattern.test("Introduce Another Person")
+			)
+		).toBe(false);
+		expect(
+			titlePatterns.some(pattern =>
+				pattern.test("Introduce the student to loops")
+			)
+		).toBe(true);
+	});
+
 	it("keeps custom Scratch copy neutral instead of instructor-scripted", async () => {
 		const failures: string[] = [];
 
@@ -400,12 +451,37 @@ describe("student-facing course copy", () => {
 			"Start with a value of 1 and multiply by 3 until the next value reaches 5000."
 		]) {
 			expect(
-				forbiddenStudentFacingPatterns.some(pattern => pattern.test(content))
+				forbiddenStudentFacingPatterns.some(pattern =>
+					pattern.test(content)
+				)
 			).toBe(false);
 		}
 		expect(
 			forbiddenStudentFacingPatterns.some(pattern =>
 				pattern.test("Start with vocabulary")
+			)
+		).toBe(true);
+	});
+
+	it("keeps operational roles and data paragraphs distinct from instructor directions", () => {
+		for (const content of [
+			"These commands use a POSIX shell:\n\n~~~text\nmake check\n~~~\n\nThe untouched learner compiles but its checks fail.",
+			"Use these fictional observations:\n\n| Observation | Meaning |\n| --- | --- |\n| A learner carries a folder. | A storage need. |"
+		]) {
+			expect(
+				forbiddenStudentFacingPatterns.some(pattern =>
+					pattern.test(proseForCopyChecks(content))
+				),
+				content
+			).toBe(false);
+		}
+		expect(
+			forbiddenStudentFacingPatterns.some(pattern =>
+				pattern.test(
+					proseForCopyChecks(
+						"Use an example to show\nlearners how the loop works."
+					)
+				)
 			)
 		).toBe(true);
 	});
@@ -460,11 +536,17 @@ describe("student-facing course copy", () => {
 					];
 
 					for (const field of fields) {
+						const prose = proseForCopyChecks(field.value);
 						for (const pattern of forbiddenStudentFacingPatterns) {
-							if (!pattern.test(field.value)) continue;
+							if (
+								pattern === instructorLeadPattern &&
+								!field.label.includes("content")
+							)
+								continue;
+							if (!pattern.test(prose)) continue;
 
 							failures.push(
-								`${entry.id} / ${module.title} / ${field.label}: ${snippet(field.value, pattern)}`
+								`${entry.id} / ${module.title} / ${field.label} / ${pattern}: ${snippet(prose, pattern)}`
 							);
 						}
 					}

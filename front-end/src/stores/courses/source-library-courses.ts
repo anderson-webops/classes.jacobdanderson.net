@@ -42,7 +42,7 @@ const middleSchoolBWritingSourceAnchors: Record<
 	"MSB1 Arguments & Evidence": [
 		{
 			title: "Steph Curry Argument Parts Model",
-			prompt: "Use the Steph Curry example to separate a debatable claim, supporting reasons, and evidence. Then create argument records for the cell phones at school debate, TikTok dances as art, and the best pet comparison.",
+			prompt: "Use the supplied fictional basketball records to separate a debatable claim, supporting reasons, and evidence. A Steph Curry comparison can use separately verified statistics with a named source and date. Then create argument records for the supplied cell phones at school, TikTok dances as art, and best pet cases, identifying the criterion and assumptions.",
 			evidence: [
 				"A debatable claim that can be reasonably opposed.",
 				"Two reasons connected to the claim with because or by.",
@@ -75,7 +75,7 @@ const middleSchoolBWritingSourceAnchors: Record<
 	"MSB4 Analyzing Evidence": [
 		{
 			title: "Car Ride Evidence Analysis Paragraph",
-			prompt: "Use Car Ride to build an analytical paragraph: make a debatable inference about Kazim's mood, select textual evidence, integrate the evidence, then explain how and why the evidence supports the claim.",
+			prompt: "Use the supplied original Car Ride practice passage, or another identified passage, to build an analytical paragraph: make a debatable inference about Kazim's mood, select textual evidence, integrate it, then explain how and why it supports the claim. Keep the interpretation within the chosen text.",
 			evidence: [
 				"A claim about Kazim's mood or attitude.",
 				"Integrated textual evidence from the passage.",
@@ -84,7 +84,7 @@ const middleSchoolBWritingSourceAnchors: Record<
 		},
 		{
 			title: "Arguing for the Opposition",
-			prompt: "Write from the opposing side of an argument by selecting evidence that could support a different interpretation. The goal is to make the alternative position credible before evaluating it.",
+			prompt: "Write from the opposing side of an argument by selecting evidence that could support a different interpretation. Make the alternative position credible before evaluating it.",
 			evidence: [
 				"An opposing claim that is debatable and plausible.",
 				"Evidence chosen specifically for that opposing claim.",
@@ -137,7 +137,7 @@ const middleSchoolBWritingSourceAnchors: Record<
 	"MSB7 Character Development": [
 		{
 			title: "Character Objective Bank",
-			prompt: "Use Harry Potter, Wonder Woman, Spider-Man, and a favorite character to practice identifying character objectives. Then create an original objective bank that can support a new character.",
+			prompt: "Use the supplied original character model to identify an objective and its supporting actions. Harry Potter, Wonder Woman, Spider-Man, or a favorite character can provide another comparison when a specific story version and its evidence are available. Then create an original objective bank for a new character.",
 			evidence: [
 				"Objective statements written as what each character wants most.",
 				"Reasoning that connects background details to the objective.",
@@ -146,7 +146,7 @@ const middleSchoolBWritingSourceAnchors: Record<
 		},
 		{
 			title: "Nemo Objective-to-Qualities Flowchart",
-			prompt: "Use the Nemo chart model to connect objective, choices, thoughts, actions, speech, and character qualities. Then apply the same chain to an original character.",
+			prompt: "Use the supplied text-only character chain to connect objective, choices, thoughts, actions, speech, and character qualities. A specified Nemo story can provide an additional comparison. Apply the same chain to an original character without relying on an unavailable chart.",
 			evidence: [
 				"A flowchart from objective to choices, actions, speech, and qualities.",
 				"At least one explanation of how a choice follows from the objective.",
@@ -177,7 +177,7 @@ const middleSchoolBWritingSourceAnchors: Record<
 		},
 		{
 			title: "Plot Curve Event Map",
-			prompt: "Use the labeled plot curve and blank plot curve models to organize beginning, middle, and end events. The beginning introduces protagonist and objective, the middle develops conflict, and the end resolves the conflict.",
+			prompt: "Use the supplied stage table as a text-only plot model, or draw blank axes for story sequence and tension. Organize beginning, middle, and end events: introduce protagonist and objective, develop conflict, then resolve it through a consequential choice.",
 			evidence: [
 				"Three or more plot events placed on a beginning-middle-end structure.",
 				"One dramatic-tension note naming where investment is highest and why.",
@@ -299,7 +299,7 @@ const grammarMechanicsSourceAnchors: Record<string, SourceActivityAnchor[]> = {
 	"MSC1 Nouns, Pronouns & Adjectives": [
 		{
 			title: "Snow Day Parts-of-Speech Sort",
-			prompt: "Use the snow day paragraph to identify nouns, pronouns, and adjectives. The sort separates words by job, not by where they appear in the sentence.",
+			prompt: "Use the supplied original Snow Day paragraph to identify nouns, pronouns, and adjectives. The sort separates words by job, not by where they appear in the sentence.",
 			evidence: [
 				"Five nouns, five pronouns, and five adjectives from the passage.",
 				"A one-sentence definition of each part of speech.",
@@ -308,7 +308,7 @@ const grammarMechanicsSourceAnchors: Record<string, SourceActivityAnchor[]> = {
 		},
 		{
 			title: "Pronoun Agreement Repair",
-			prompt: "Map each pronoun to its antecedent, then revise any sentence with an inappropriate shift in number or person. The corrected version keeps singular antecedents with singular pronouns and plural antecedents with plural pronouns.",
+			prompt: "Use the supplied sentence set to map each pronoun to its intended referent, then repair unclear references or unintended shifts in number or person. Preserve valid singular they and use its appropriate verb form.",
 			evidence: [
 				"An antecedent-pronoun map for each sentence.",
 				"Corrections for number shifts and person shifts.",
@@ -328,7 +328,7 @@ const grammarMechanicsSourceAnchors: Record<string, SourceActivityAnchor[]> = {
 		},
 		{
 			title: "Gerund, Participle, and Infinitive Identification",
-			prompt: "Classify verbals as gerunds, participles, or infinitives by checking the job they perform in the sentence. A gerund acts as a noun, a participle acts as an adjective, and an infinitive begins with to plus a verb.",
+			prompt: "Classify the supplied verbals by checking their sentence jobs. In these examples, gerunds act as nouns, participles as adjectives, and to-infinitives use to plus a base verb.",
 			evidence: [
 				"At least three labeled verbals.",
 				"The sentence job for each verbal.",
@@ -401,7 +401,7 @@ const grammarMechanicsSourceAnchors: Record<string, SourceActivityAnchor[]> = {
 	"MSC6 Periods, Question Marks, Exclamation Points & Quotation Marks": [
 		{
 			title: "End-Mark and Quotation Repair",
-			prompt: "Choose periods, question marks, exclamation points, and quotation marks based on sentence purpose and speaker words. Dialogue punctuation stays attached to the quoted material.",
+			prompt: "Choose periods, question marks, exclamation points, and quotation marks using the supplied sentence and dialogue set. Place question and exclamation marks according to whether they apply to the quotation or the surrounding sentence.",
 			evidence: [
 				"Three sentences with corrected end marks.",
 				"Two dialogue examples with quotation marks and punctuation placed correctly.",
@@ -813,7 +813,7 @@ const novelWritingSourceAnchors: Record<string, SourceActivityAnchor[]> = {
 		},
 		{
 			title: "Publication Readiness Reflection",
-			prompt: "Review the novel as a reader-facing project. The reflection checks whether the title, opening, character arc, conflict, ending, and formatting are ready for a private portfolio, instructor submission, or optional sharing. The publication readiness check does not mean the draft is perfect or that it must be posted publicly; it means the writer can explain what the story is, what revision work has already happened, and what the next realistic editing pass would address.",
+			prompt: "Review the novel as a reader-facing project. The reflection checks whether the title, opening, character arc, conflict, ending, and formatting are ready for a private portfolio, guided review, or optional sharing. The publication readiness check does not mean the draft is perfect or that it must be posted publicly; it means the writer can explain what the story is, what revision work has already happened, and what the next realistic editing pass would address.",
 			evidence: [
 				"Reader-facing summary of the novel's premise, protagonist, conflict, and ending direction.",
 				"Checklist covering title, opening clarity, character arc, conflict resolution, dialogue formatting, and remaining copyedits.",
@@ -2010,7 +2010,7 @@ const investingCourses = {
 					"privacy"
 				],
 				flowNote:
-					"Build a fictional or aggregate persona from ranges and patterns, then test assumptions with anonymous, opt-in, instructor-supplied, or simulated responses. The external coffee-shop game is an optional case with a text-table fallback."
+					"Build a fictional or aggregate persona from ranges and patterns, then test assumptions with anonymous, opt-in, supplied, or simulated responses. The external coffee-shop game is an optional case with a text-table fallback."
 			},
 			"ENT5 Iterating On Your Idea": {
 				estimatedTime: "2 sessions · 40–50 minutes each",
@@ -2098,7 +2098,7 @@ const investingCourses = {
 				},
 				{
 					title: "Ideal Wallet Design Sprint",
-					prompt: "Run a short design-thinking sprint around a wallet or small everyday object. Use an opt-in interview, an instructor-supplied fictional user, or a self-test; do not collect names, contact details, payment information, or sensitive contents. Write a point-of-view statement, sketch three possible solutions, gather feedback, and revise the strongest design.",
+					prompt: "Run a short design-thinking sprint around a wallet or small everyday object. Use an opt-in interview, a supplied fictional user, or a self-test; do not collect names, contact details, payment information, or sensitive contents. Write a point-of-view statement, sketch three possible solutions, gather feedback, and revise the strongest design.",
 					evidence: [
 						"Interview notes naming what the user stores, worries about, or wants easier access to.",
 						"Point-of-view statement in the form: user needs a way to ___ because or but ___.",
@@ -2129,7 +2129,7 @@ const investingCourses = {
 				},
 				{
 					title: "Empathy Observation Persona",
-					prompt: "With consent, observe a non-sensitive routine, use a pet or self-observation, or work from an instructor-supplied fictional routine. Record pain points, frustrations, habits, and needs without names or identifying details, then translate the evidence into a simple persona that can guide later problem selection.",
+					prompt: "With consent, observe a non-sensitive routine, use a pet or self-observation, or work from a supplied fictional routine. Record pain points, frustrations, habits, and needs without names or identifying details, then translate the evidence into a simple persona that can guide later problem selection.",
 					evidence: [
 						"Observation notes organized into story, pain points, frustrations, habits, and needs.",
 						"Persona summary with one specific problem worth solving.",
@@ -2188,7 +2188,7 @@ const investingCourses = {
 				},
 				{
 					title: "Customer Feedback Survey Draft",
-					prompt: "Write five to ten open-ended survey questions for potential customers or an instructor-supplied fictional response set. Include questions about willingness to pay, frequency of use, concerns, and desired changes without forcing yes-or-no answers or requesting identifying or sensitive information.",
+					prompt: "Write five to ten open-ended survey questions for potential customers or a supplied fictional response set. Include questions about willingness to pay, frequency of use, concerns, and desired changes without forcing yes-or-no answers or requesting identifying or sensitive information.",
 					evidence: [
 						"Survey draft with open-ended wording and no leading answer choices.",
 						"Question map showing which product assumption each question tests.",
@@ -2199,7 +2199,7 @@ const investingCourses = {
 			"ENT5 Iterating On Your Idea": [
 				{
 					title: "Feedback Interpretation and Iteration Plan",
-					prompt: "Review opt-in, anonymous, instructor-supplied, or clearly simulated prototype and persona-survey feedback. Record the response count and limitations, separate improvements, keepers, conflicting responses, and surprising results, then choose which feedback will drive the next prototype version.",
+					prompt: "Review opt-in, anonymous, supplied, or clearly simulated prototype and persona-survey feedback. Record the response count and limitations, separate improvements, keepers, conflicting responses, and surprising results, then choose which feedback will drive the next prototype version.",
 					evidence: [
 						"Feedback table grouped by improvement, keep, conflict, and surprise.",
 						"Iteration plan with specific changes and the customer evidence behind each change.",
@@ -2309,7 +2309,7 @@ const investingCourses = {
 				},
 				{
 					title: "Entrepreneur Feedback and Pitch Revision",
-					prompt: "Present the business plan privately to an opt-in entrepreneur, business owner, peer, instructor, or structured self-review checklist. Gather feedback on clarity, feasibility, differentiation, and presentation, then revise the pitch. Public posting or outreach is not required.",
+					prompt: "Present the business plan privately to an opt-in entrepreneur, business owner, peer, reviewer, or structured self-review checklist. Gather feedback on clarity, feasibility, differentiation, and presentation, then revise the pitch. Public posting or outreach is not required.",
 					evidence: [
 						"Feedback notes answering what works, what does not work, what is unclear, and what can improve.",
 						"Revision log showing what changed after feedback.",
@@ -3094,7 +3094,7 @@ const englishCourses = {
 					"copyright-safe portfolio"
 				],
 				flowNote:
-					"Create a TED-style classroom talk with no claim of TED or TED-Ed affiliation. Public posting and the unavailable release form are not required; live, private recorded, or audio-supported delivery is valid."
+					"Create a TED-style classroom talk with no claim of TED or TED-Ed affiliation. Public posting is optional; live, private recorded, or audio-supported delivery is valid."
 			}
 		},
 		sourceActivityAnchors: {
@@ -3244,7 +3244,7 @@ const englishCourses = {
 					"evidence link"
 				],
 				flowNote:
-					"Use the prank only as a fictional planning model and never carry it out. Confirm a lawful classroom copy of Kyra's Fear or use an equivalent passage, then distinguish the main idea from details that support it."
+					"Use the prank only as a fictional planning model and never carry it out. Read the supplied original Kyra's Fear practice passage, then distinguish the main idea from details that support it."
 			},
 			"MSA2 Main Ideas & Supporting Evidence II": {
 				estimatedTime: "2 sessions · 40–50 minutes each",
@@ -3256,7 +3256,7 @@ const englishCourses = {
 					"evidence comparison"
 				],
 				flowNote:
-					"Use a lawful copy of Soccer Summer or an equivalent passage. Select evidence by comparing it with weaker alternatives and explain why each chosen detail is the better support."
+					"Use the supplied original Soccer Summer practice passage. Select evidence by comparing it with weaker alternatives and explain why each chosen detail is the better support."
 			},
 			"MSA3 Making Inferences": {
 				estimatedTime: "2 sessions · 40–50 minutes each",
@@ -3268,7 +3268,7 @@ const englishCourses = {
 					"alternate inference"
 				],
 				flowNote:
-					"Use a lawful copy of Car Ride or an equivalent passage. Separate what the text states from what is inferred, cite at least two clues, and test one plausible alternative interpretation."
+					"Use the supplied original Car Ride practice passage. Separate what the text states from what is inferred, cite at least two clues, and test one plausible alternative interpretation."
 			},
 			"MSA4 Show; Don't Tell": {
 				estimatedTime: "2 sessions · 40–50 minutes each",
@@ -3292,7 +3292,7 @@ const englishCourses = {
 					"self-assessment"
 				],
 				flowNote:
-					"Use one accessible passage or original paragraph to collect separate evidence for all four skills. Assign review only for a missing or unsupported skill."
+					"Use The Missing Page to collect separate evidence for all four skills. Assign review only for a missing or unsupported skill."
 			},
 			"MSA5 Identifying Themes": {
 				estimatedTime: "2 sessions · 40–50 minutes each",
@@ -3316,7 +3316,7 @@ const englishCourses = {
 					"analysis link"
 				],
 				flowNote:
-					"Use a lawful public-domain or classroom-provided version of the model story. Trace one character choice through its consequence and explain how that pattern develops the theme."
+					"Use The Lantern Workshop. Trace one character choice through its consequence and explain how that pattern develops the theme."
 			},
 			"MSA7 Analyzing Point of View": {
 				estimatedTime: "2–3 sessions · 40–50 minutes each",
@@ -3328,7 +3328,7 @@ const englishCourses = {
 					"reader effect"
 				],
 				flowNote:
-					"Label point of view from narrator access rather than pronouns alone, then use a lawful public-domain or supplied passage to compare how a rewrite changes sympathy, suspense, humor, theme, or tone."
+					"Label point of view from narrator access rather than pronouns alone, then compare the supplied library-key scenes to explain how a rewrite changes sympathy, suspense, humor, theme, or tone."
 			},
 			"MSA8 Analyzing Words & Phrases": {
 				estimatedTime: "2 sessions · 40–50 minutes each",
@@ -3352,7 +3352,7 @@ const englishCourses = {
 					"meaning / mood"
 				],
 				flowNote:
-					"Use a short lawful or instructor-supplied text, mark only clear sound patterns, and explain what the repeated sounds emphasize rather than stopping at identification."
+					"Use the supplied original After the Storm poem, mark only clear sound patterns, and explain what the repeated sounds emphasize rather than stopping at identification."
 			},
 			"MSA10 Analyzing Figurative Language": {
 				estimatedTime: "2–3 sessions · 40–50 minutes each",
@@ -3376,7 +3376,7 @@ const englishCourses = {
 					"integrated analysis"
 				],
 				flowNote:
-					"Use one accessible passage and require an integrated analysis, not a checklist of devices. The paragraph must connect at least two craft choices to one interpretation."
+					"Use The Shared Repair for an integrated analysis. The paragraph must connect at least two craft choices to one interpretation."
 			},
 			"MSA11 Master Project": {
 				estimatedTime: "3–4 sessions · 40–50 minutes each",
@@ -3388,7 +3388,7 @@ const englishCourses = {
 					"analysis reflection"
 				],
 				flowNote:
-					"Choose an instructor-provided, original, public-domain, or otherwise copyright-safe image. Avoid claims about real people in the image; create a fictional piece, then analyze how its craft choices guide interpretation."
+					"Use The Last Platform image and its text description, or choose another original, public-domain or classroom-provided image. Create a fictional piece, then analyze how its craft choices guide interpretation."
 			}
 		},
 		sourceActivityAnchors: {
@@ -3404,7 +3404,7 @@ const englishCourses = {
 				},
 				{
 					title: "Kyra's Fear Main Idea and Evidence",
-					prompt: "Read the Kyra's Fear passage and choose a just-right main idea that is neither too broad nor too narrow. Separate the strongest main-idea sentence from evidence about the spider, the reaction to the hair movement, and Kyra's fear.",
+					prompt: "Read the supplied original Kyra's Fear practice passage and choose a just-right main idea that is neither too broad nor too narrow. Separate the strongest main-idea sentence from evidence about the spider, the reaction to the hair movement, and Kyra's fear.",
 					evidence: [
 						"One main-idea sentence about the passage as a whole.",
 						"Two or more quoted or paraphrased details connected to the main idea.",
@@ -3415,7 +3415,7 @@ const englishCourses = {
 			"MSA2 Main Ideas & Supporting Evidence II": [
 				{
 					title: "Soccer Summer Best Evidence Sort",
-					prompt: "Read Soccer Summer, write a one- or two-sentence main idea, then choose the two most impactful, detailed, and concise pieces of evidence. Compare the chosen evidence against less useful details so the final support is deliberate rather than random.",
+					prompt: "Read the supplied original Soccer Summer practice passage, write a one- or two-sentence main idea, then choose the two most impactful, detailed, and concise pieces of evidence. Compare the chosen evidence against less useful details so the final support is deliberate rather than random.",
 					evidence: [
 						"A concise main idea for the Soccer Summer passage.",
 						"Two selected quotes or paraphrases from the passage.",
@@ -3426,7 +3426,7 @@ const englishCourses = {
 			"MSA3 Making Inferences": [
 				{
 					title: "Car Ride Inference Record",
-					prompt: "Use the smoke-house example to define inference, then read Car Ride and infer Kazim's mood from textual clues such as counting Mississippi seconds, sighing, losing phone access, repeating questions, and ignoring the atlas.",
+					prompt: "Use the supplied smoke-and-grill example to define inference, then read the original Car Ride practice passage and infer Kazim's mood from textual clues such as counting Mississippi seconds, sighing, losing phone access, repeating questions, and ignoring the atlas.",
 					evidence: [
 						"An inference about Kazim's mood or attitude during the trip.",
 						"At least two textual clues that make the inference reasonable.",
@@ -3448,7 +3448,7 @@ const englishCourses = {
 			"MSA Check-In #1": [
 				{
 					title: "Reading Literature Check-In Record",
-					prompt: "Use one passage or original paragraph to demonstrate main idea, supporting evidence, inference, and showing-versus-telling. Keep the skill evidence separate from any self-assessment notes.",
+					prompt: "Use the supplied original The Missing Page passage to demonstrate main idea, supporting evidence, inference, and showing-versus-telling. Keep the skill evidence separate from any self-assessment notes.",
 					evidence: [
 						"A main idea supported by at least two specific details.",
 						"An inference supported by textual or descriptive clues.",
@@ -3470,7 +3470,7 @@ const englishCourses = {
 			"MSA6 Analyzing & Developing Themes": [
 				{
 					title: "Characters and Themes Analysis",
-					prompt: "Analyze how character actions and qualities develop a theme. Use the Cinderella contrast as a model: kindness and cruelty create different outcomes and help explain the text's larger message.",
+					prompt: "Analyze how character actions and qualities develop a theme in the supplied original The Lantern Workshop scene. Compare Neri's and Sela's choices and their consequences. A classroom edition of Cinderella may be an additional comparison when its version and evidence are identified.",
 					evidence: [
 						"A character trait or action connected to a theme.",
 						"Evidence from the plot showing the consequence of that trait or action.",
@@ -3481,7 +3481,7 @@ const englishCourses = {
 			"MSA7 Analyzing Point of View": [
 				{
 					title: "Point of View Effects Lab",
-					prompt: "Identify first person, second person, third person objective, third person limited, and third person omniscient narration. Then rewrite or compare the same plot from a different point of view, such as retelling Snow White from the queen's perspective, to observe changes in theme, suspense, humor, sympathy, or tone.",
+					prompt: "Identify first person, second person, third person objective, third person limited, and third person omniscient narration in the five supplied library-key scenes. Compare two versions, then retell the moment from Mina's first-person perspective to observe changes in theme, suspense, humor, sympathy, or tone.",
 					evidence: [
 						"Point-of-view labels with evidence from pronouns, narrator access, or knowledge limits.",
 						"A rewritten or compared passage that changes the narrator's perspective.",
@@ -3503,7 +3503,7 @@ const englishCourses = {
 			"MSA9 Analyzing Rhyme & Alliteration": [
 				{
 					title: "Sound Pattern Annotation",
-					prompt: "Read a short text aloud and listen for conspicuous rhyme and alliteration. Mark each sound pattern and explain why the author may have drawn attention to those specific words.",
+					prompt: "Read the supplied original After the Storm poem aloud and listen for conspicuous rhyme and alliteration. Mark each sound pattern and explain why the author may have drawn attention to those specific words.",
 					evidence: [
 						"Marked rhyming words and alliterative word groups.",
 						"A sentence explaining what the repeated sounds emphasize.",
@@ -3514,7 +3514,7 @@ const englishCourses = {
 			"MSA10 Analyzing Figurative Language": [
 				{
 					title: "Analysis Toolbox Paragraph",
-					prompt: "Identify similes, metaphors, and other figurative language, then combine word choice, sound-pattern, and figurative-language observations into a paragraph about meaning and tone.",
+					prompt: "Use After the Storm and its supplied simile revision to identify similes, metaphors, and other figurative language, then combine word choice, sound-pattern, and figurative-language observations into a paragraph about meaning and tone.",
 					evidence: [
 						"At least one simile, metaphor, or figurative phrase identified accurately.",
 						"Notes on word choice, sound, and figurative meaning.",
@@ -3525,7 +3525,7 @@ const englishCourses = {
 			"MSA Check-In #2": [
 				{
 					title: "Analyzing Literature Check-In Record",
-					prompt: "Use one passage to demonstrate theme, character-theme relationship, point of view, connotation, rhyme, alliteration, figurative language, and a final analysis paragraph about meaning and tone.",
+					prompt: "Use the supplied original The Shared Repair poem to demonstrate theme, character-theme relationship, point of view, connotation, rhyme, alliteration, figurative language, and a final analysis paragraph about meaning and tone.",
 					evidence: [
 						"Annotations for theme, character evidence, point of view, word choice, sound, and figurative language.",
 						"A paragraph that combines multiple craft observations instead of listing them separately.",
@@ -3536,7 +3536,7 @@ const englishCourses = {
 			"MSA11 Master Project": [
 				{
 					title: "Writing from an Image Literature Showcase",
-					prompt: "Choose an original, public-domain, instructor-provided, or otherwise copyright-safe image and write a fictional literary piece that intentionally uses point of view, theme, character action, word choice, sound, and figurative language. Do not infer facts about real people shown in an image. Add a brief analysis explaining how the craft choices shape interpretation.",
+					prompt: "Use the supplied original The Last Platform image or its text description, or choose another original, public-domain, or otherwise copyright-safe image. Write a fictional literary piece that intentionally uses point of view, theme, character action, word choice, sound, and figurative language. Do not infer facts about real people shown in an image. Add a brief analysis explaining how the craft choices shape interpretation.",
 					evidence: [
 						"An original short piece inspired by an image.",
 						"Visible use of point of view, theme development, word choice, sound, or figurative language.",
@@ -3601,7 +3601,7 @@ const englishCourses = {
 					"quotation integration"
 				],
 				flowNote:
-					"Use a short lawful or instructor-supplied excerpt, practice both integration patterns, and check that the surrounding sentence remains grammatical and understandable."
+					"Use the supplied original excerpts to practice both quotation-integration patterns, then check that the surrounding sentence remains grammatical and understandable."
 			},
 			"MSB4 Analyzing Evidence": {
 				estimatedTime: "3 sessions · 45–55 minutes each",
@@ -3613,7 +3613,7 @@ const englishCourses = {
 					"paragraph revision"
 				],
 				flowNote:
-					"Use a lawful copy of Car Ride or an equivalent passage. Draft the main interpretation, then test it by constructing a credible opposing interpretation before revising the analysis."
+					"Use the supplied original Car Ride practice passage or another identified text. Draft the main interpretation, test a credible opposing interpretation, then revise the analysis."
 			},
 			"MSB5 Concluding Statements & Transitional Devices": {
 				estimatedTime: "2 sessions · 45–55 minutes each",
@@ -3661,7 +3661,7 @@ const englishCourses = {
 					"cause-and-effect flow"
 				],
 				flowNote:
-					"Use familiar characters only as brief models and create an original character objective. Trace the objective through choices, actions, speech, and supported qualities without relying on the missing chart image."
+					"Use the supplied text-only character chain or a specified familiar story, then create an original objective. Trace it through choices, actions, speech, and supported qualities."
 			},
 			"MSB8 Character Portraits": {
 				estimatedTime: "2 sessions · 45–55 minutes each",
@@ -3685,7 +3685,7 @@ const englishCourses = {
 					"plot revision"
 				],
 				flowNote:
-					"Generate conflict from the character objective, then use a hand-drawn, text-only, or instructor-supplied plot curve. Verify that every major event changes the objective, obstacle, or stakes."
+					"Generate conflict from the character objective, then use the supplied stage table or a hand-drawn plot curve. Verify that each major event changes the objective, obstacle, or stakes."
 			},
 			"MSB10 Manipulating Point of View": {
 				estimatedTime: "2–3 sessions · 45–55 minutes each",
@@ -3697,7 +3697,7 @@ const englishCourses = {
 					"reader effect"
 				],
 				flowNote:
-					"Use a lawful supplied excerpt or an original scene, identify narrator access, and rewrite from another point of view to compare sympathy, suspense, humor, or tone."
+					"Use the supplied original Jonah and Caleb examples or an original scene. Identify narrator access and rewrite from another point of view to compare sympathy, suspense, humor, or tone."
 			},
 			"MSB11 Writing an Original Short Story": {
 				estimatedTime: "4–6 sessions · 45–55 minutes each",
@@ -3733,7 +3733,7 @@ const englishCourses = {
 					"rehearsal / revision"
 				],
 				flowNote:
-					"Complete the path-and-evidence plan, then choose one presentation. Live, private recorded, audio-supported, or instructor-only delivery is valid; public posting is not required."
+					"Complete the path-and-evidence plan, then choose one presentation. Live, private recorded, audio-supported, or one-to-one delivery is valid; public posting is not required."
 			}
 		},
 		sourceActivityAnchors: middleSchoolBWritingSourceAnchors,
@@ -3952,7 +3952,7 @@ const englishCourses = {
 					"rehearsal / revision"
 				],
 				flowNote:
-					"Use the master project only when a presentation is useful evidence for the remaining gap. Choose one path; private, recorded, audio-supported, or instructor-only delivery is valid."
+					"Use the master project only when a presentation is useful evidence for the remaining gap. Choose one path; private, recorded, audio-supported, or one-to-one delivery is valid."
 			},
 			"MSB Retake Exit Evidence": {
 				estimatedTime: "1 session · 45–55 minutes",
@@ -4232,7 +4232,7 @@ const englishCourses = {
 					"feedback check"
 				],
 				flowNote:
-					"Complete the path-and-evidence plan, then choose one project. A fictional narrative and private or instructor-only presentation are valid; personal disclosure and public posting are not required."
+					"Complete the path-and-evidence plan, then choose one project. A fictional narrative and private or one-to-one presentation are valid; personal disclosure and public posting are not required."
 			}
 		},
 		sourceActivityAnchors: grammarMechanicsSourceAnchors,
@@ -4335,7 +4335,7 @@ const englishCourses = {
 					"resolution"
 				],
 				flowNote:
-					"Map concrete story events and their causal links, then use the map to identify the next needed scene. Use a hand-drawn, text-only, or instructor-supplied arc; unavailable images are not required."
+					"Map concrete story events and their causal links, then use the map to identify the next needed scene. Use a hand-drawn or text-only arc."
 			},
 			"NW7 Character Development": {
 				estimatedTime: "2 sessions · 40–50 minutes each",
@@ -4431,7 +4431,7 @@ const englishCourses = {
 					"next-pass plan"
 				],
 				flowNote:
-					"Complete the chosen story scope, revise for continuity and craft, and assemble a polished excerpt or full draft with a readiness reflection. A private portfolio or instructor submission is complete; public posting or publication is optional and not required."
+					"Complete the chosen story scope, revise for continuity and craft, and assemble a polished excerpt or full draft with a readiness reflection. A private portfolio or guided review is complete; public posting or publication is optional and not required."
 			}
 		},
 		sourceActivityAnchors: novelWritingSourceAnchors,

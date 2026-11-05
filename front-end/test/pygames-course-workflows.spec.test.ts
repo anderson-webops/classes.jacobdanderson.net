@@ -8,7 +8,7 @@ import { getCodeIdeProjectSubtitle } from "@/modules/codeIdeProjectLabels";
 import { createProjectArchive } from "@/modules/projectArchive";
 import {
 	pyGamesCourseProjectKey,
-	pyGamesSourceRevision
+	pyGamesPinnedSourceUrl
 } from "@/modules/pyGamesProjectResources";
 import {
 	addPythonIdeClassroomSections,
@@ -129,8 +129,8 @@ it.each(ids)(
 				url.pathname === "/ide"
 					? url.searchParams.get("starterUrl")!
 					: item.projectLink!;
-			expect(source).toContain(`/blob/${pyGamesSourceRevision}/`);
 			const file = source.split("/").at(-1)!;
+			expect(source).toBe(pyGamesPinnedSourceUrl(file));
 			expect(fixture.programs[file]?.content).toMatch(/def draw\(/);
 			expect(item.content).toContain("**Checks:**");
 			expect(item.content).toContain("**Evidence:**");

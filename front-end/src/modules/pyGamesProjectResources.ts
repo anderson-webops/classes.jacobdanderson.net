@@ -1,6 +1,7 @@
 import { parseGitHubResource } from "./codePreview";
 
 export const pyGamesSourceRevision = "abc7a6c6cb9bc991b37ca6eb239f3d418185b09f";
+const golfSourceRevision = "965e5319fb95bff5d4284bb8bc17bcb53d1085ca";
 export const pyGamesLessonSourceFiles: Record<string, string> = {
 	"pyg1 project 1: rainbow fill": "PyG1-Rainbow-Fill.py",
 	"pyg1 project 2: bouncing alien": "PyG1-Bouncing-Alien.py",
@@ -156,7 +157,8 @@ const sourceFiles = new Set([
 ]);
 
 export function pyGamesPinnedSourceUrl(file: string) {
-	const revision = pyGamesSourceRevision;
+	const revision =
+		file === "PyG5-Golf.py" ? golfSourceRevision : pyGamesSourceRevision;
 	return `https://github.com/instruction-material/PyGames/blob/${revision}/${file}`;
 }
 
@@ -166,7 +168,9 @@ export function pyGamesPinnedResourceUrl(url: string) {
 		!resource ||
 		resource.owner.toLowerCase() !== "instruction-material" ||
 		resource.repo.toLowerCase() !== "pygames" ||
-		(resource.ref !== "main" && resource.ref !== pyGamesSourceRevision) ||
+		(resource.ref !== "main" &&
+			resource.ref !== pyGamesSourceRevision &&
+			resource.ref !== golfSourceRevision) ||
 		!sourceFiles.has(resource.path)
 	) {
 		return url;

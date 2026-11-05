@@ -1,0 +1,67 @@
+[
+	{
+		"moduleId": "entrepreneurship-101-ent2-learning-what-it-takes-to-be-an-entrepreneur",
+		"id": "entrepreneurship-101-ent2-learning-what-it-takes-to-be-an-entrepreneur-curriculum-entrepreneur-strengths-and-values-sketch",
+		"section": "core"
+	},
+	{
+		"moduleId": "entrepreneurship-101-ent2-learning-what-it-takes-to-be-an-entrepreneur",
+		"id": "entrepreneurship-101-ent2-learning-what-it-takes-to-be-an-entrepreneur-curriculum-empathy-observation-persona",
+		"section": "core"
+	},
+	{
+		"moduleId": "entrepreneurship-101-ent3-solving-problems-through-entrepreneurship",
+		"id": "entrepreneurship-101-ent3-solving-problems-through-entrepreneurship-curriculum-problem-statement-and-initial-solution",
+		"section": "core"
+	},
+	{
+		"moduleId": "entrepreneurship-101-ent3-solving-problems-through-entrepreneurship",
+		"id": "entrepreneurship-101-ent3-solving-problems-through-entrepreneurship-curriculum-product-or-service-prototype",
+		"section": "core"
+	},
+	{
+		"moduleId": "entrepreneurship-101-ent3-solving-problems-through-entrepreneurship",
+		"id": "entrepreneurship-101-ent3-solving-problems-through-entrepreneurship-curriculum-name-logo-tagline-and-feedback-survey",
+		"section": "core"
+	},
+	{
+		"moduleId": "entrepreneurship-101-ent4-identifying-the-ideal-customer",
+		"id": "entrepreneurship-101-ent4-identifying-the-ideal-customer-curriculum-ideal-customer-persona-profile",
+		"section": "core"
+	},
+	{
+		"moduleId": "entrepreneurship-101-ent4-identifying-the-ideal-customer",
+		"id": "entrepreneurship-101-ent4-identifying-the-ideal-customer-curriculum-customer-feedback-survey-draft",
+		"section": "core"
+	},
+	{
+		"moduleId": "entrepreneurship-101-ent5-iterating-on-your-idea",
+		"id": "entrepreneurship-101-ent5-iterating-on-your-idea-curriculum-feedback-interpretation-and-iteration-plan",
+		"section": "core"
+	},
+	{
+		"moduleId": "entrepreneurship-101-ent5-iterating-on-your-idea",
+		"id": "entrepreneurship-101-ent5-iterating-on-your-idea-curriculum-revised-prototype-evidence-summary",
+		"section": "core"
+	},
+	{
+		"moduleId": "entrepreneurship-101-ent6-conducting-competitor-analysis",
+		"id": "entrepreneurship-101-ent6-conducting-competitor-analysis-curriculum-competitor-positioning-matrix",
+		"section": "core"
+	},
+	{
+		"moduleId": "entrepreneurship-101-ent6-conducting-competitor-analysis",
+		"id": "entrepreneurship-101-ent6-conducting-competitor-analysis-curriculum-competitor-question-research",
+		"section": "core"
+	},
+	{
+		"moduleId": "entrepreneurship-101-ent7-testing-financial-feasibility",
+		"id": "entrepreneurship-101-ent7-testing-financial-feasibility-curriculum-price-and-competitor-comparison",
+		"section": "core"
+	},
+	{
+		"moduleId": "entrepreneurship-101-ent7-testing-financial-feasibility",
+		"id": "entrepreneurship-101-ent7-testing-financial-feasibility-curriculum-production-cost-and-profit-margin-forecast",
+		"section": "core"
+	}
+]

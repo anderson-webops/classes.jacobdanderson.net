@@ -1,8 +1,14 @@
 import type { RawCourse, RawCourseModule, RawCourseModuleItem } from "./types";
 import { applyCourseImplementationArtifacts } from "./course-implementation-artifacts";
+import { applyEntrepreneurshipReadings } from "./entrepreneurshipReadings";
+import { applyGrammarMechanicsReadings } from "./grammarMechanicsReadings";
 import { isJuniScratchProjectTitle } from "./juniScratchProjects";
 import { mapMarkdownProse } from "./markdownProse";
+import { applyMiddleSchoolLiteratureReadings } from "./middleSchoolLiteratureReadings";
+import { applyMiddleSchoolWritingReadings } from "./middleSchoolWritingReadings";
+import { applyNovelWritingReadings } from "./novelWritingReadings";
 import { buildProjectGuidance } from "./projectGuidance";
+import { applyPublicSpeakingReadings } from "./publicSpeakingReadings";
 import { applyPyGamesCourseWorkflows } from "./pyGamesCourseWorkflows";
 import { applyResearchBackedExpansions } from "./research-expansions";
 import { applyRustBorrowingCourseWorkflows } from "./rustBorrowingCourseWorkflows";
@@ -14,6 +20,7 @@ import { applyRustOwnershipCourseWorkflows } from "./rustOwnershipCourseWorkflow
 import { applyRustStateModelsCourseWorkflows } from "./rustStateModelsCourseWorkflows";
 import { applyRustTraitPipelineCourseWorkflows } from "./rustTraitPipelineCourseWorkflows";
 import { applyRustTypedErrorsCourseWorkflows } from "./rustTypedErrorsCourseWorkflows";
+import { applyScratchBootcampReadings } from "./scratchBootcampReadings";
 import {
 	canonicalStaticMediaUrl,
 	hasPendingStaticMediaNotice,
@@ -301,6 +308,7 @@ function appendPendingStaticMediaInventory(
 	course.modules.push({
 		kind: "appendix",
 		title: "Pending Source Media Inventory",
+		internal: true,
 		curriculum: [
 			{
 				title: `${course.name} Pending Source Media`,
@@ -9497,7 +9505,7 @@ function cleanVisibleCourseGrammar(course: RawCourse) {
 	const vowelArticleNouns =
 		"intermediate|implementation|artifact|edge|empty|input|output|argument|example|activity|analysis|extension|optional|observable|operation|error|invalid|image|environment|experiment|investigation|idea|issue|array|object|interface";
 	const consonantArticleNouns =
-		"data|small|normal|boundary|working|valid|useful|clear|concrete|specific|single|final|first|second|third|safe|runnable|testable|repeatable|named|short|visible|focused|complete|different|same|simple";
+		"course|data|small|normal|boundary|working|valid|useful|clear|concrete|specific|single|final|first|second|third|safe|runnable|testable|repeatable|named|short|visible|focused|complete|different|same|simple";
 	const evidenceNouns =
 		"boundary|behavior|constructor|branch|method|collection operation|diagnostic|data-structure|resource|control-flow change|variable|state transition|view|model|persistence path|normal case|edge case|ordinary behavior|runtime evidence|local lab|page behavior|simulator path|insert\\/search\\/remove path|search|traceable case|sanity check|limitation|example|case|input|path|run|trace|observation";
 
@@ -9835,5 +9843,22 @@ export function normalizeRawCourse(id: string, rawCourse: RawCourse) {
 	applyWebDeploymentWorkflow(course, id);
 	preserveMathArchiveProgress(course, id);
 	preserveDesignPatternsJavaProgress(course, id);
+	if (id === "entrepreneurship-101")
+		applyEntrepreneurshipReadings(course, rawCourse);
+	if (id === "middle-school-a-literature")
+		applyMiddleSchoolLiteratureReadings(course, rawCourse);
+	if (id === "middle-school-c-grammar")
+		applyGrammarMechanicsReadings(course, rawCourse);
+	if (id === "novel-writing") applyNovelWritingReadings(course, rawCourse);
+	if (id === "introduction-to-public-speaking")
+		applyPublicSpeakingReadings(course, rawCourse);
+	if (id === "scratch-level-1-bootcamp")
+		applyScratchBootcampReadings(course, rawCourse);
+	if (
+		id === "middle-school-b-writing" ||
+		id === "middle-school-b-writing-retake"
+	) {
+		applyMiddleSchoolWritingReadings(course, rawCourse);
+	}
 	return course;
 }

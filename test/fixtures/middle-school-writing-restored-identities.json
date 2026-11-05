@@ -1,0 +1,56 @@
+{
+	"middle-school-b-writing": [
+		{
+			"moduleId": "middle-school-b-writing-msb4-analyzing-evidence",
+			"id": "middle-school-b-writing-msb4-analyzing-evidence-curriculum-car-ride-evidence-analysis-paragraph",
+			"section": "core"
+		},
+		{
+			"moduleId": "middle-school-b-writing-msb4-analyzing-evidence",
+			"id": "middle-school-b-writing-msb4-analyzing-evidence-curriculum-arguing-for-the-opposition",
+			"section": "core"
+		},
+		{
+			"moduleId": "middle-school-b-writing-msb6-color-coding-revision",
+			"id": "middle-school-b-writing-msb6-color-coding-revision-curriculum-color-coded-argument-revision",
+			"section": "core"
+		},
+		{
+			"moduleId": "middle-school-b-writing-msb6-color-coding-revision",
+			"id": "middle-school-b-writing-msb6-color-coding-revision-curriculum-opposition-paragraph-revision",
+			"section": "core"
+		},
+		{
+			"moduleId": "middle-school-b-writing-msb7-character-development",
+			"id": "middle-school-b-writing-msb7-character-development-curriculum-character-objective-bank",
+			"section": "core"
+		},
+		{
+			"moduleId": "middle-school-b-writing-msb7-character-development",
+			"id": "middle-school-b-writing-msb7-character-development-curriculum-nemo-objective-to-qualities-flowchart",
+			"section": "core"
+		},
+		{
+			"moduleId": "middle-school-b-writing-msb9-generating-conflict-structuring-plot",
+			"id": "middle-school-b-writing-msb9-generating-conflict-structuring-plot-curriculum-objective-to-conflict-generator",
+			"section": "core"
+		},
+		{
+			"moduleId": "middle-school-b-writing-msb9-generating-conflict-structuring-plot",
+			"id": "middle-school-b-writing-msb9-generating-conflict-structuring-plot-curriculum-plot-curve-event-map",
+			"section": "core"
+		}
+	],
+	"middle-school-b-writing-retake": [
+		{
+			"moduleId": "middle-school-b-writing-retake-msb12-master-project",
+			"id": "middle-school-b-writing-retake-msb12-master-project-supplemental-analytical-writing-presentation",
+			"section": "optional"
+		},
+		{
+			"moduleId": "middle-school-b-writing-retake-msb12-master-project",
+			"id": "middle-school-b-writing-retake-msb12-master-project-supplemental-fiction-writing-presentation",
+			"section": "optional"
+		}
+	]
+}

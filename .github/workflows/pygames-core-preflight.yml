@@ -1,6 +1,6 @@
 name: Course preflight
 
-run-name: ${{ inputs.course == 'networking' && 'Swift Networking source evidence' || inputs.course == 'ai-setup' && 'AI setup reading' || 'PyGames core preflight' }}
+run-name: ${{ inputs.course == 'scratch-readings' && 'Scratch and self-study readings' || inputs.course == 'scratch-originals' && 'Original Scratch imports' || inputs.course == 'bootcamp' && 'Scratch Bootcamp pages' || inputs.course == 'self-study' && 'Self-study course pages' || inputs.course == 'networking' && 'Swift Networking source evidence' || inputs.course == 'ai-setup' && 'AI setup reading' || 'PyGames core preflight' }}
 
 on:
   workflow_dispatch:
@@ -8,7 +8,7 @@ on:
       course:
         description: Course verification to run
         type: choice
-        options: [pygames, networking, ai-setup]
+        options: [pygames, networking, ai-setup, self-study, bootcamp, scratch-originals, scratch-readings]
         default: pygames
       browser_run_id:
         description: Networking browser export workflow run
@@ -255,5 +255,115 @@ jobs:
         with:
           name: ai-setup-reading
           path: output/ai-setup-reading/
+          if-no-files-found: error
+          retention-days: 14
+
+  self-study:
+    if: inputs.course == 'self-study' || inputs.course == 'bootcamp' || inputs.course == 'scratch-originals' || inputs.course == 'scratch-readings'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    env:
+      CLASSES_FAMILY_TASK_ID: self-study-courses-${{ github.run_id }}
+      SELF_STUDY_BROWSER_PROOF_DIR: ${{ github.workspace }}/output/self-study-browser
+      SELF_STUDY_BROWSER_COURSES: ${{ inputs.course == 'bootcamp' && 'scratch-level-1-bootcamp' || '' }}
+      SCRATCH_ORIGINAL_BROWSER_PROOF_DIR: ${{ github.workspace }}/output/self-study-browser/scratch-originals
+      COURSE_CATALOG_PROOF_DIR: ${{ github.workspace }}/output/self-study-browser/catalog
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: 24.18.0
+          cache: npm
+      - name: Pin the supported npm toolchain
+        run: |
+          npm install --global npm@12.0.1
+          test "$(npm --version)" = "12.0.1"
+      - name: Verify root clean install
+        run: node scripts/classes-family-heavy-task.mjs -- npm ci
+      - name: Audit all root dependencies and production dependencies
+        run: |
+          mkdir -p output/self-study-browser/audits
+          npm audit --json --audit-level=info > output/self-study-browser/audits/root-full.json
+          npm audit --omit=dev --json --audit-level=info > output/self-study-browser/audits/root-production.json
+      - name: Verify standalone backend installation policy
+        run: node --test test/standalone-backend-install-policy.test.mjs
+      - name: Verify the standalone backend locked installation
+        working-directory: back-end
+        run: node ../scripts/classes-family-heavy-task.mjs -- npm ci --include=optional --strict-allow-scripts --workspaces=false
+      - name: Audit both standalone backend dependency scopes
+        working-directory: back-end
+        run: |
+          npm ls --all --workspaces=false
+          npm audit --include=optional --workspaces=false --json --audit-level=info > "$GITHUB_WORKSPACE/output/self-study-browser/audits/backend-full.json"
+          npm audit --include=optional --omit=dev --workspaces=false --json --audit-level=info > "$GITHUB_WORKSPACE/output/self-study-browser/audits/backend-production.json"
+      - name: Lint and typecheck both workspaces
+        run: |
+          node scripts/classes-family-heavy-task.mjs -- npm run lint
+          node scripts/classes-family-heavy-task.mjs -- npm run typecheck
+      - name: Verify all catalog identities and export self-study expectations
+        run: >-
+          node scripts/classes-family-heavy-task.mjs --
+          npm exec -w front-end -- vitest run
+          test/store.courses.catalog-identities.spec.test.ts
+          test/store.courses.self-study-browser-manifest.spec.test.ts
+          test/components.courseexplorer-inventory.spec.test.ts
+          test/modules.course-lesson-presentation.spec.test.ts
+          test/modules.authored-reading.spec.test.ts
+          test/courseAssetPreview.spec.test.ts
+          test/components.courseexplorer.spec.test.ts
+          test/store.courses.student-facing-copy.spec.test.ts
+          test/store.courses.grammar-mechanics-content.spec.test.ts
+          test/store.courses.grammar-mechanics-flow.spec.test.ts
+          test/store.courses.middle-school-literature-content.spec.test.ts
+          test/store.courses.middle-school-literature-flow.spec.test.ts
+          test/store.courses.middle-school-writing-content.spec.test.ts
+          test/store.courses.middle-school-writing-flow.spec.test.ts
+          test/store.courses.middle-school-writing-retake-flow.spec.test.ts
+          test/store.courses.entrepreneurship-flow.spec.test.ts
+          test/store.courses.novel-writing-flow.spec.test.ts
+          test/store.courses.novel-writing-content.spec.test.ts
+          test/store.courses.public-speaking-flow.spec.test.ts
+          test/store.courses.public-speaking-content.spec.test.ts
+          test/store.courses.scratch-bootcamp-flow.spec.test.ts
+          test/store.courses.scratch-bootcamp-content.spec.test.ts
+          test/store.courses.scratch-level-1-flow.spec.test.ts
+          test/store.courses.scratch-juni-instructions.spec.test.ts
+          test/modules.scratch-originals.spec.test.ts
+          test/components.scratch-original-import.spec.test.ts
+          test/scratch.classroom.spec.test.ts
+          test/scratch.input.spec.test.ts
+          test/production-security-headers.spec.test.ts
+          --no-file-parallelism --maxWorkers=1
+      - name: Verify complete course quality and implementation artifacts
+        run: node scripts/classes-family-heavy-task.mjs -- npm run -w front-end test:course-quality
+      - name: Preserve legitimate course references
+        run: >-
+          node scripts/classes-family-heavy-task.mjs --
+          npm exec -w front-end -- vitest run test/components.courseexplorer.spec.test.ts
+          -t 'keeps reference appendices separate|offers original Scratch imports|offers each original Bootcamp capstone' --no-file-parallelism --maxWorkers=1
+      - name: Build both workspaces
+        run: node scripts/classes-family-heavy-task.mjs -- npm run build
+      - name: Verify all self-study course pages in both roles and sizes
+        if: inputs.course != 'scratch-originals'
+        run: node scripts/classes-family-heavy-task.mjs -- node --test test/self-study-course-browser.test.mjs
+      - name: Verify original Scratch program and media identities
+        if: inputs.course == 'scratch-originals'
+        run: node scripts/classes-family-heavy-task.mjs -- node --test --test-concurrency=1 test/scratch-projects.test.mjs test/scratch-original-projects.test.mjs
+      - name: Verify original imports and classroom workflows in the actual Scratch editor
+        if: inputs.course == 'scratch-originals'
+        run: node scripts/classes-family-heavy-task.mjs -- node --test test/scratch-browser.test.mjs
+      - name: Verify Scratch event and coordinate readings in both roles and sizes
+        if: inputs.course == 'scratch-readings'
+        env:
+          SCRATCH_BROWSER_READING_ONLY: '1'
+        run: node scripts/classes-family-heavy-task.mjs -- node --test test/scratch-browser.test.mjs
+      - name: Retain self-study pages, audits and original failures
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: ${{ inputs.course == 'scratch-originals' && 'scratch-original-imports' || inputs.course == 'scratch-readings' && 'scratch-self-study-readings' || 'self-study-course-pages' }}
+          path: output/self-study-browser/
           if-no-files-found: error
           retention-days: 14

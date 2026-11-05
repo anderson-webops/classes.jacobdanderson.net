@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { ScratchOriginalProject } from "@/modules/scratch/originals";
 import {
 	computed,
 	nextTick,
@@ -17,6 +18,11 @@ import {
 	scratchFrameDocument,
 	scratchProjectLimit
 } from "@/modules/scratch/frame";
+import {
+	fetchScratchOriginalArchive,
+	scratchOriginalLicense,
+	scratchOriginalProject
+} from "@/modules/scratch/originals";
 import catalog from "../../scripts/scratch/projects.json";
 
 const route = useRoute();
@@ -27,6 +33,10 @@ const busy = ref(false);
 const dirty = ref(false);
 const title = ref("My Scratch project");
 const starter = ref("");
+const pendingOriginal = ref<ScratchOriginalProject>();
+const activeOriginal = ref<ScratchOriginalProject>();
+let loadingOriginal: ScratchOriginalProject | undefined;
+let originalRequest: AbortController | undefined;
 const status = ref("Opening Scratch…");
 const expanded = ref(false);
 const frameViewport = ref<HTMLDivElement>();
@@ -45,6 +55,7 @@ const selected = computed(() =>
 	starter.value === "blank"
 		? {
 				id: "blank",
+				publishReference: false,
 				name: "Independent Mini-Game",
 				normal: "",
 				hard: "",
@@ -52,6 +63,61 @@ const selected = computed(() =>
 			}
 		: catalog.find(item => item.id === starter.value)
 );
+const reference = computed(
+	() =>
+		route.query.role === "reference" &&
+		!route.query.originalProject &&
+		selected.value?.publishReference === true
+);
+watch(
+	() => [route.query.originalProject, route.query.course, route.query.role],
+	() => {
+		originalRequest?.abort();
+		pendingOriginal.value = scratchOriginalProject(
+			route.query.originalProject,
+			route.query.course,
+			route.query.role
+		);
+	},
+	{ immediate: true }
+);
+async function openOriginal() {
+	const project = pendingOriginal.value;
+	if (!project || !ready.value || busy.value || !confirmReplace()) return;
+	const request = new AbortController();
+	originalRequest = request;
+	busy.value = true;
+	status.value = "Opening original project…";
+	let timedOut = false;
+	const timeout = setTimeout(() => {
+		timedOut = true;
+		request.abort();
+	}, 45000);
+	try {
+		const bytes = await fetchScratchOriginalArchive(
+			project,
+			request.signal
+		);
+		if (request.signal.aborted) return;
+		loadingOriginal = project;
+		title.value = `${project.name}${route.query.role === "reference" ? " Reference" : ""}`;
+		starter.value = "";
+		send("load", { bytes });
+	} catch {
+		if (!request.signal.aborted || timedOut) {
+			status.value =
+				"The original project could not be opened. Retry or use its Scratch source link.";
+		}
+		busy.value = false;
+	} finally {
+		clearTimeout(timeout);
+		if (originalRequest === request) originalRequest = undefined;
+	}
+}
+function dismissOriginal() {
+	pendingOriginal.value = undefined;
+	status.value = "Import cancelled.";
+}
 function send(type: string, extra = {}) {
 	frame.value?.contentWindow?.postMessage(
 		{ source: "classes-scratch-host", channel, type, ...extra },
@@ -74,20 +140,21 @@ async function openStarter() {
 }
 async function loadSelectedStarter() {
 	if (!selected.value) return;
+	loadingOriginal = undefined;
 	busy.value = true;
 	status.value = "Opening project…";
 	try {
 		const response = await fetch(
-			`/scratch-projects/${selected.value.id}.sb3`,
+			`/scratch-projects/${selected.value.id}${reference.value ? "-solution" : ""}.sb3`,
 			{ credentials: "omit" }
 		);
 		if (!response.ok) throw new Error("Missing starter");
 		const bytes = await response.arrayBuffer();
-		title.value = selected.value.name;
+		title.value = `${selected.value.name}${reference.value ? " Reference" : ""}`;
 		send("load", { bytes });
 	} catch {
 		status.value =
-			"The starter could not be opened. Download it from the course and use Open .sb3.";
+			"The project could not be opened. Download it from the course and use Open .sb3.";
 		busy.value = false;
 	}
 }
@@ -100,12 +167,13 @@ async function openFile(event: Event) {
 	const input = event.target as HTMLInputElement;
 	const file = input.files?.[0];
 	input.value = "";
-	if (!file || !confirmReplace()) return;
+	if (!file || !ready.value || busy.value || !confirmReplace()) return;
 	if (!/\.sb3$/i.test(file.name) || file.size > scratchProjectLimit) {
 		status.value = "Choose a Scratch .sb3 project smaller than 20 MB.";
 		return;
 	}
 	busy.value = true;
+	loadingOriginal = undefined;
 	status.value = "Opening project…";
 	title.value = file.name.replace(/\.sb3$/i, "");
 	try {
@@ -129,17 +197,33 @@ function receive(event: MessageEvent) {
 		ready.value = true;
 		clearTimeout(timer);
 		status.value = "Ready. Download your project to keep a copy.";
-		if (starter.value) void openStarter();
+		if (
+			route.query.originalProject &&
+			!scratchOriginalProject(
+				route.query.originalProject,
+				route.query.course,
+				route.query.role
+			)
+		) {
+			status.value =
+				"This original Scratch link is unavailable. Choose a classroom project or open a local .sb3 file.";
+		}
+		if (starter.value && !route.query.originalProject) void openStarter();
 		if (window.matchMedia?.("(max-width: 1120px)").matches)
 			void nextTick(() => showScratchView("stage"));
 	} else if (data.type === "loaded") {
 		busy.value = false;
 		dirty.value = false;
+		activeOriginal.value = loadingOriginal;
+		if (loadingOriginal?.id === pendingOriginal.value?.id)
+			pendingOriginal.value = undefined;
+		loadingOriginal = undefined;
 		status.value = "Project open. Click the green flag to run.";
 	} else if (data.type === "changed") {
 		dirty.value = true;
 	} else if (data.type === "error") {
 		busy.value = false;
+		loadingOriginal = undefined;
 		status.value =
 			"Scratch could not open the project. Try a smaller .sb3 file or reload this page.";
 	} else if (
@@ -166,8 +250,9 @@ function beforeUnload(event: BeforeUnloadEvent) {
 	}
 }
 watch(
-	() => route.query.starter,
-	value => {
+	() => [route.query.starter, route.query.role],
+	([value]) => {
+		if (route.query.originalProject) return;
 		if (
 			typeof value === "string" &&
 			(value === "blank" || catalog.some(item => item.id === value))
@@ -181,6 +266,7 @@ onMounted(() => {
 	channel = crypto.randomUUID();
 	const query = route.query.starter;
 	if (
+		!route.query.originalProject &&
 		typeof query === "string" &&
 		(query === "blank" || catalog.some(item => item.id === query))
 	) {
@@ -197,6 +283,7 @@ onMounted(() => {
 	}, 60000);
 });
 onBeforeUnmount(() => {
+	originalRequest?.abort();
 	send("stop");
 	clearTimeout(timer);
 	window.removeEventListener("message", receive);
@@ -226,6 +313,51 @@ defineExpose({ stop: () => send("stop") });
 				>Return to lesson</RouterLink
 			></WorkspaceHeader
 		>
+		<section
+			v-if="pendingOriginal"
+			class="scratch-original-import"
+			aria-label="Original Scratch import"
+		>
+			<h2>Open {{ pendingOriginal.name }} in Scratch?</h2>
+			<p>
+				<a
+					:href="pendingOriginal.url"
+					target="_blank"
+					rel="noopener noreferrer"
+					>Original project</a
+				>
+				by {{ pendingOriginal.author }} ·
+				<a
+					:href="scratchOriginalLicense.url"
+					target="_blank"
+					rel="noopener noreferrer"
+					>{{ scratchOriginalLicense.name }}</a
+				>
+			</p>
+			<p v-if="pendingOriginal.extensions.includes('text2speech')">
+				Text to Speech sends spoken text to Scratch’s online speech
+				service.
+			</p>
+			<button :disabled="!ready || busy" @click="openOriginal">
+				Open project
+			</button>
+			<button :disabled="busy" @click="dismissOriginal">Cancel</button>
+		</section>
+		<p v-if="activeOriginal" class="scratch-original-credit">
+			<a
+				:href="activeOriginal.url"
+				target="_blank"
+				rel="noopener noreferrer"
+				>{{ activeOriginal.name }}</a
+			>
+			by {{ activeOriginal.author }} ·
+			<a
+				:href="scratchOriginalLicense.url"
+				target="_blank"
+				rel="noopener noreferrer"
+				>{{ scratchOriginalLicense.name }}</a
+			>
+		</p>
 		<WorkspaceStorageStatus
 			:label="
 				dirty
@@ -266,7 +398,7 @@ defineExpose({ stop: () => send("stop") });
 					</button>
 					<div class="scratch-starters">
 						<label
-							>Classroom starter
+							>Classroom project
 							<select v-model="starter">
 								<option value="">Choose a project</option>
 								<option value="blank">
@@ -285,7 +417,7 @@ defineExpose({ stop: () => send("stop") });
 							:disabled="!selected || !ready || busy"
 							@click="openStarter"
 						>
-							Open starter
+							{{ reference ? "Open reference" : "Open starter" }}
 						</button>
 					</div>
 				</div>
@@ -336,6 +468,10 @@ defineExpose({ stop: () => send("stop") });
 				<strong>Check:</strong> {{ selected.check }}
 			</p>
 			<p>
+				Text to Speech sends spoken text to Scratch’s online speech
+				service.
+			</p>
+			<p>
 				Camera, microphone, cloud variables and external extensions are
 				unavailable in this classroom editor.
 			</p>
@@ -362,6 +498,28 @@ defineExpose({ stop: () => send("stop") });
 <style scoped>
 .scratch-small-screen {
 	display: none;
+}
+.scratch-original-import {
+	padding: 1rem;
+	border: 1px solid var(--color-border, #b7ceca);
+	border-radius: 0.75rem;
+	background: var(--color-panel, #f5fbf9);
+}
+.scratch-original-import h2 {
+	margin: 0 0 0.5rem;
+	font-size: 1.2rem;
+}
+.scratch-original-import p,
+.scratch-original-credit {
+	margin: 0.5rem 0;
+	overflow-wrap: anywhere;
+}
+.scratch-original-import button {
+	min-height: 44px;
+	margin-right: 0.5rem;
+	padding: 0.5rem 0.9rem;
+	border: 1px solid var(--color-border, #b7ceca);
+	border-radius: 0.5rem;
 }
 .scratch-save-reminder {
 	margin: 0;
