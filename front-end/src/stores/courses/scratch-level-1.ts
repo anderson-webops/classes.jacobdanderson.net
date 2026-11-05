@@ -604,8 +604,35 @@ Challenge: Add a counter for the number of guesses and congratulate the player i
 			curriculum: [
 				{
 					title: "Introduction to X & Y coordinates",
-					content:
-						'The Scratch stage uses an X and Y coordinate plane. The X-axis moves left and right, and the Y-axis moves up and down. The "go to x: ___ y: ___" and "glide ___ secs to x: ___ y: ___" blocks place sprites at specific coordinates or move them smoothly to a target point.'
+					content: `A sprite's position is an ordered pair, **(x, y)**. The x value controls left and right; the y value controls up and down. The center is **(0, 0)**. Increasing x moves right, and decreasing x moves left. Increasing y moves up, and decreasing y moves down.
+
+### Reading the stage
+
+The stage is 480 steps wide and 360 steps high. Its edges are x = -240 on the left, x = 240 on the right, y = -180 at the bottom and y = 180 at the top.
+
+| Position | x | y |
+| --- | ---: | ---: |
+| Center | 0 | 0 |
+| Upper left | -240 | 180 |
+| Upper right | 240 | 180 |
+| Lower left | -240 | -180 |
+| Lower right | 240 | -180 |
+
+These coordinates locate the costume's rotation center. Leave room between that point and the edges when the entire costume needs to remain visible. A point with positive x and positive y is in the upper-right quadrant; negative x and positive y is upper left; both negative is lower left; positive x and negative y is lower right. A point on either axis is not in a quadrant.
+
+### Setting and changing a position
+
+**Go to x: y:** sets both coordinates immediately. **Set x to** replaces x and leaves y unchanged; **set y to** does the reverse. **Change x by** and **change y by** add to the current values. These blocks move along the stage axes regardless of the direction the sprite faces.
+
+For example, start at (30, -20). Changing x by 10 gives **(40, -20)**. Changing y by 10 next gives **(40, -10)**. Setting x to 10 instead would give **(10, -10)**. Arrow controls use +10 for right or up and -10 for left or down.
+
+**Glide seconds to x: y:** moves smoothly to the destination and waits for that movement to finish before running the next connected block. A sequence of glides can visit several chosen points in order. Place a starting position below the green flag so restarting returns the scene to that position.
+
+### Using an answer as a coordinate
+
+**Ask and wait** pauses its script until a response is submitted. The **answer** reporter contains the latest response and is shared by all sprites. Use that response before asking another question: ask for x, set x to answer, ask for y, then set y to answer. Asking both questions before setting either coordinate would use the second response twice. For a numeric example, entering 30 for x and -20 for y should place the sprite at (30, -20).
+
+**Forever** repeats the blocks inside it. It can repeat both questions; each ask still waits for its response. A separate green-flag script with its own forever loop can keep checking a **touching sprite?** condition while the question script waits. **If** runs its enclosed blocks when its condition is true; putting that check inside forever repeats the check. **Stop all** ends every running script, which can finish a chase when the sprites touch.`
 				},
 				{
 					title: "Project 1 – Bug Eater",

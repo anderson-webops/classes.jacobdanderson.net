@@ -38,6 +38,39 @@ export async function checkScratchEventReading(page, { origin, files, setRole })
 	await writeFile(path.join(output, "event-reading.json"), `${JSON.stringify({ complete: true, sourceCommit: process.env.GITHUB_SHA, views: eventReadingViews }, null, 2)}\n`);
 }
 
+export async function checkScratchCoordinateReading(page, { origin, files, setRole }) {
+	const output = process.env.SCRATCH_ORIGINAL_BROWSER_PROOF_DIR || path.join(files, "original-proof");
+	await mkdir(output, { recursive: true });
+	const views = [];
+	for (const role of ["learner", "instructor"]) {
+		setRole(role);
+		for (const width of [390, 1280]) {
+			await page.setViewport({ width, height: 900 });
+			await page.goto("about:blank");
+			await page.goto(`${origin}/courses#scratch-level-1-gs3-x-y-coordinates`, { waitUntil: "networkidle2" });
+			await page.waitForSelector(".lesson-view-toggle button");
+			await page.locator(".lesson-view-toggle button:nth-child(3)").click();
+			await page.waitForFunction(() => [...document.querySelectorAll(".lesson-item")].some(item => item.querySelector("h5")?.textContent.includes("Introduction to X & Y coordinates") && item.textContent.includes("Using an answer as a coordinate") && item.querySelector("table")));
+			const reading = await page.$$eval(".lesson-item", (items) => {
+				const item = items.find(item => item.querySelector("h5")?.textContent.includes("Introduction to X & Y coordinates"));
+				return { text: item.textContent, rows: [...item.querySelectorAll("tbody tr")].map(row => [...row.querySelectorAll("td")].map(cell => cell.textContent.trim())), contained: item.scrollWidth <= item.clientWidth && document.documentElement.scrollWidth <= innerWidth };
+			});
+			assert.deepEqual(reading.rows, [["Center", "0", "0"], ["Upper left", String(-480 / 2), String(360 / 2)], ["Upper right", String(480 / 2), String(360 / 2)], ["Lower left", String(-480 / 2), String(-360 / 2)], ["Lower right", String(480 / 2), String(-360 / 2)]]);
+			assert.match(reading.text, /\(30, -20\).*\(40, -20\).*\(40, -10\).*\(10, -10\)/s);
+			assert.match(reading.text, /second response twice/);
+			assert.match(reading.text, /separate green-flag script.*while the question script waits/s);
+			assert.ok(reading.contained, `${role}/${width}: coordinate reading overflow`);
+			for (const heading of ["Reading the stage", "Setting and changing a position", "Using an answer as a coordinate"]) {
+				await page.$$eval(".lesson-item h3", (headings, title) => headings.find(item => item.textContent === title).scrollIntoView({ behavior: "instant", block: "start" }), heading);
+				await page.screenshot({ path: path.join(output, `coordinate-reading-${role}-${width}-${heading.split(" ")[0].toLowerCase()}.png`) });
+			}
+			views.push({ role, width, ...reading });
+			await writeFile(path.join(output, "coordinate-reading.json"), `${JSON.stringify({ complete: false, views }, null, 2)}\n`);
+		}
+	}
+	await writeFile(path.join(output, "coordinate-reading.json"), `${JSON.stringify({ complete: true, sourceCommit: process.env.GITHUB_SHA, views }, null, 2)}\n`);
+}
+
 export async function checkScratchOriginalImports(page, { origin, files, loaded, downloadProject, openFile, newProject, setRole, acceptDialogs }) {
 	const output = process.env.SCRATCH_ORIGINAL_BROWSER_PROOF_DIR || path.join(files, "original-proof");
 	await mkdir(output, { recursive: true });
