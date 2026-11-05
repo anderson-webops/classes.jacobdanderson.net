@@ -28,8 +28,9 @@ const groups = [
 					"decreasing y",
 					"Puffs Eaten",
 					"Chomp",
-					"Optional: add a timed round"
+					"add a timed round"
 				],
+				optional: ["add a timed round"],
 				excluded: ["3. Add a timer"]
 			},
 			{
@@ -72,9 +73,9 @@ const groups = [
 					"51",
 					"Too low!",
 					"Too high!",
-					"unchanged",
-					"Optional:"
+					"unchanged"
 				],
+				optional: ["randomly chosen target", "count guesses"],
 				excluded: ["between 1 and 20"]
 			}
 		]
@@ -151,12 +152,10 @@ export async function checkScratchPublishedTasks(
 					const selector = `a.is-ide-starter[href*="originalProject=${project.id}"]`;
 					await page.waitForSelector(selector);
 					await page.$eval(selector, link =>
-						link
-							.closest(".lesson-item")
-							.scrollIntoView({
-								behavior: "instant",
-								block: "center"
-							})
+						link.closest(".lesson-item").scrollIntoView({
+							behavior: "instant",
+							block: "center"
+						})
 					);
 					await page.waitForFunction(
 						(selector, required) => {
@@ -192,12 +191,31 @@ export async function checkScratchPublishedTasks(
 							playableReference: !!item.querySelector(
 								".is-playable-solution"
 							),
+							optionalSections: [
+								...item.querySelectorAll(
+									".assignment-aside.is-optional"
+								)
+							].map(section => ({
+								label: section
+									.querySelector("h6")
+									.textContent.trim(),
+								text: section.textContent.replace(/\s+/g, " ")
+							})),
 							contained:
 								item.scrollWidth <= item.clientWidth + 1 &&
 								document.documentElement.scrollWidth <=
 									innerWidth + 1
 						};
 					});
+					for (const text of project.optional || [])
+						assert.ok(
+							actual.optionalSections.some(
+								section =>
+									section.label.startsWith("Optional") &&
+									section.text.includes(text)
+							),
+							`${project.id}: optional section ${text}`
+						);
 					for (const text of project.required)
 						assert.ok(
 							actual.text.includes(text),
