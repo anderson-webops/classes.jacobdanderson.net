@@ -541,23 +541,17 @@ Challenge: Add more sprites to the game and have the ball pass between them.`,
 				},
 				{
 					title: "Project 2 – Fortune Teller",
-					content: `
-1. When the green flag is clicked, play an introduction and ask the user their name.
-2. Ask the user "What do you want to know? (Type Love, Money, or Friendship)".
-3. Use conditionals to give a fortune based on the user's input.
-4. Ask another question such as "Choose a number between 1 and 5" and use conditionals to provide a response.
-Challenge: Add more fortunes and questions to make the fortune teller more detailed.`,
+					content: correctedJuniScratchInstructions(
+						"Project 2 – Fortune Teller"
+					),
 					projectLink: "https://scratch.mit.edu/projects/297744913/",
 					solutionLink: "https://scratch.mit.edu/projects/297735619/"
 				},
 				{
 					title: "Project 3 – Number Guesser",
-					content: `
-1. When the green flag is clicked, have the sprite choose a random number between 1 and 20.
-2. Ask the user to guess the number.
-3. Use if/then/else blocks to tell the user if their guess is too high or too low.
-4. Allow the user to keep guessing until they get the number right.
-Challenge: Add a counter for the number of guesses and congratulate the player if they guess the number in fewer than 5 tries.`,
+					content: correctedJuniScratchInstructions(
+						"Project 3 – Number Guesser"
+					),
 					projectLink: "https://scratch.mit.edu/projects/295334181/",
 					solutionLink: "https://scratch.mit.edu/projects/294561252/"
 				}
@@ -565,23 +559,17 @@ Challenge: Add a counter for the number of guesses and congratulate the player i
 			supplementalProjects: [
 				{
 					title: "GS7 Supplemental Project 1 – Animal Crossing",
-					content: `
-1. Ask the user if they want to build a shop, plant a tree or explore the island.
-2. Use the answer to determine which event occurs.
-3. Ask the user yes/no questions to further customize the experience.
-4. Use variables to store items collected or tasks completed.
-5. Encourage the user to explore and discover secrets.`,
+					content: correctedJuniScratchInstructions(
+						"GS7 Supplemental Project 1 – Animal Crossing"
+					),
 					projectLink: "https://scratch.mit.edu/projects/328309551/",
 					solutionLink: "https://scratch.mit.edu/projects/328310531/"
 				},
 				{
 					title: "GS7 Supplemental Project 2 – Space Cadets",
-					content: `
-1. Ask the user for their name and call them "Captain".
-2. Ask which planet (Mars, Jupiter or Saturn) they want to explore.
-3. Use conditionals to set the scene for the chosen planet.
-4. Ask additional questions (e.g., "Do you want to collect rocks or search for life?") and branch the story based on the answers.
-5. Use variables to track discoveries or points.`,
+					content: correctedJuniScratchInstructions(
+						"GS7 Supplemental Project 2 – Space Cadets"
+					),
 					projectLink: "https://scratch.mit.edu/projects/328310783/",
 					solutionLink: "https://scratch.mit.edu/projects/328308418/"
 				},

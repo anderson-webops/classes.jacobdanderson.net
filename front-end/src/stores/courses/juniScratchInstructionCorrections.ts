@@ -167,10 +167,83 @@ Optional: add a timed round that ends and reports the total.`
 5. Stop when the answer is "done". If the balance reaches 0, say that the money has run out and stop.
 
 Optional: use join to show the message and remaining amount in one speech bubble.`
+	},
+	{
+		courseId: "scratch-level-1",
+		title: "Project 2 – Fortune Teller",
+		projectId: "297744913",
+		solutionId: "297735619",
+		baselineContentSha256:
+			"1d22348d99a8202af2ecaf57d50814b23bee55b1464089a60cb4748dee263c51",
+		publishedInstructionsSha256:
+			"a7bc68ec9ada8b383503e4219dad5690def817a74ffc1b742a951b176b68beaf",
+		content: `Make the wizard hat tell a different fortune for each number.
+
+1. When the hat is clicked, use ask and wait to request a number between 1 and 5.
+2. After the answer arrives, start the Magic Spell sound and make the hat spin twice. A full turn is 360 degrees.
+3. Compare answer with each number from 1 to 5 and show a different fortune for each match. Use the answer before asking another question.
+4. Show a message when the number is outside that range.
+
+Optional: add more fortunes or a second question.`
+	},
+	{
+		courseId: "scratch-level-1",
+		title: "Project 3 – Number Guesser",
+		projectId: "295334181",
+		solutionId: "294561252",
+		baselineContentSha256:
+			"2383a99d5196abfe41c08ffbb98e7efa655579785292c808e8c04cbdf2e99de1",
+		publishedInstructionsSha256:
+			"8004f5d279fa95ad406e7a30694cb9ea5e80212b6f7228a15ca95e8e5aae324a",
+		content: `Help Giga give hints until the correct number is guessed.
+
+1. Choose a target between 1 and 100. The supplied reference uses 51.
+2. On the green flag, ask for a guess using ask and wait.
+3. Compare answer with the target. If it is smaller, say "Too low!"; if it is larger, say "Too high!".
+4. After an incorrect guess, ask again. Keep the target unchanged during these retries.
+5. When the answer matches, celebrate with a costume, message and sound, then stop the game.
+
+Optional: store a randomly chosen target in a variable before the first question, or count guesses.`
+	},
+	{
+		courseId: "scratch-level-1",
+		title: "GS7 Supplemental Project 1 – Animal Crossing",
+		projectId: "328309551",
+		solutionId: "328310531",
+		baselineContentSha256:
+			"5fe7ed1f01bc2ceced3939d80a29e017e6b14f449624dc68cf7ca9a235dd1b24",
+		publishedInstructionsSha256:
+			"319ca450cc1b4d0fc676f99dda3fa04bf3b7be5d460ac1f697df0f4c51541b92",
+		content: `Choose an animal costume for a changing environment.
+
+1. The starter provides backdrops named "1", "2" and "3". Pick a random number from 1 to 3 and use it to switch the backdrop.
+2. Reset the sprite to its Abby-a costume, then ask which animal belongs there.
+3. Compare answer with "dinosaur", "jellyfish" and "giraffe". Switch to the corresponding supplied costume when a name matches.
+4. Explain when an answer is not one of the available animals.
+5. Wait two seconds, choose another random backdrop and repeat the question.
+
+Optional: also check whether the chosen animal matches the environment, using the backdrop name as a second condition.`
+	},
+	{
+		courseId: "scratch-level-1",
+		title: "GS7 Supplemental Project 2 – Space Cadets",
+		projectId: "328310783",
+		solutionId: "328308418",
+		baselineContentSha256:
+			"e7051efdaba34e980e33fe3655ec5a007756a5dfb63f092b2d6da90d00f92122",
+		publishedInstructionsSha256:
+			"b6f42f3e8603c98f6a0cc71d9425990422a067e06f30fa9d1519008f976071a2",
+		content: `Move Dot to the place named in an answer and look for Spot.
+
+1. On the green flag, send Spot randomly to one of the three destination sprites. They are named "1" for Star, "2" for Saturn and "3" for Earth. Put pick random 1 to 3 into the Motion go to input.
+2. Start Dot at (0, 0) and ask "Where is Spot?".
+3. Compare answer with "Earth", "Saturn" and "Star". Move Dot to sprite "3", "2" or "1", respectively.
+4. For another answer, explain that the place is unknown and stop that question script.
+5. In a separate green-flag forever loop on Spot, check whether it is touching Dot. When it is, have Spot say "Hi Dot!".`
 	}
 ] as const;
 
-export const juniScratchInstructionsVerifiedOn = "2026-10-04";
+export const juniScratchInstructionsVerifiedOn = "2026-11-05";
 
 export function findJuniScratchInstructionCorrection(
 	courseId: string,
