@@ -112,6 +112,40 @@ const groups = [
 				excluded: ["Captain", "Mars", "Jupiter", "discoveries"]
 			}
 		]
+	},
+	{
+		module: "scratch-level-1-gs8-x-y-coordinates",
+		tab: 2,
+		projects: [
+			{
+				id: "329289426",
+				reference: "329283944",
+				required: [
+					"mouse pointer",
+					"forever",
+					"greater than 0",
+					"less than 0",
+					"top left",
+					"bottom right",
+					"bottom left"
+				],
+				optional: ["arrow-key controls"],
+				excluded: ["Use the arrow keys to move", "Quadrant I"]
+			},
+			{
+				id: "329294838",
+				reference: "329290359",
+				required: [
+					"supplied grid backdrops",
+					"Pen extension",
+					"Lift the pen",
+					"go to x/y",
+					"change x/y"
+				],
+				optional: ["ask for coordinates"],
+				excluded: ["2. Allow the user to enter coordinates"]
+			}
+		]
 	}
 ];
 
@@ -266,7 +300,7 @@ export async function checkScratchPublishedTasks(
 			}
 		}
 	}
-	assert.equal(record.views.length, 28);
+	assert.equal(record.views.length, 36);
 	record.complete = true;
 	await retain();
 }
