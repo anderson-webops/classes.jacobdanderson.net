@@ -37,6 +37,8 @@ export async function checkSpellingBeeTraversal(frame, output) {
 			[...letters].reverse()
 		];
 		for (let index = 0; index < 6; index++) {
+			record.inProgress = { mode: index + 1, word };
+			await retain();
 			const actual = await frame.evaluate(
 				async ({ mode, word }) => {
 					const vm = window.__courseTestVm;
@@ -46,7 +48,7 @@ export async function checkSpellingBeeTraversal(frame, output) {
 					const said = [];
 					const questions = [];
 					const respond = question => {
-						if (typeof question === "string" && question) {
+						if (typeof question === "string") {
 							questions.push(question);
 							setTimeout(() => runtime.emit("ANSWER", word), 0);
 						}
@@ -65,11 +67,28 @@ export async function checkSpellingBeeTraversal(frame, output) {
 						if (threads.length !== 1)
 							throw Error("Expected one spelling key handler");
 						const limit = Date.now() + 10000;
-						while (runtime.threads.length) {
+						while (
+							threads.some(thread =>
+								runtime.isActiveThread(thread)
+							)
+						) {
 							if (Date.now() > limit)
-								throw Error(
-									"Spelling traversal did not finish"
-								);
+								return {
+									said,
+									questions,
+									actualScratchVm: true,
+									timedOut: true,
+									scriptThreads: threads.map(thread => ({
+										status: thread.status,
+										topBlock: thread.topBlock,
+										stackLength: thread.stack.length,
+										active: runtime.isActiveThread(thread)
+									})),
+									unrelatedThreadCount:
+										runtime.threads.filter(
+											thread => !threads.includes(thread)
+										).length
+								};
 							await new Promise(resolve =>
 								setTimeout(resolve, 20)
 							);
@@ -83,12 +102,6 @@ export async function checkSpellingBeeTraversal(frame, output) {
 				},
 				{ mode: String(index + 1), word }
 			);
-			assert.equal(actual.questions.length, 1);
-			assert.deepEqual(
-				actual.said,
-				expected[index],
-				JSON.stringify({ mode: index + 1, word })
-			);
 			record.cases.push({
 				mode: index + 1,
 				word,
@@ -96,9 +109,17 @@ export async function checkSpellingBeeTraversal(frame, output) {
 				...actual
 			});
 			await retain();
+			assert.ok(!actual.timedOut, JSON.stringify(actual));
+			assert.equal(actual.questions.length, 1);
+			assert.deepEqual(
+				actual.said,
+				expected[index],
+				JSON.stringify({ mode: index + 1, word })
+			);
 		}
 	}
 	assert.equal(record.cases.length, 54);
+	delete record.inProgress;
 	record.complete = true;
 	await retain();
 	return record;
