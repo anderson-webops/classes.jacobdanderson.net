@@ -94,6 +94,24 @@ const cases = [
 const markdown = new MarkdownIt({ breaks: true, html: false, linkify: true });
 const digest = (value: string) =>
 	createHash("sha256").update(value).digest("hex");
+const intentionalMathLineBreaks: Record<string, Record<string, number>> = {
+	"algebra-2a": {
+		"Applications and Parabola Geometry": 1,
+		"Graphing and Roots of Rational Functions": 3,
+		"Multiplying, Dividing, and Simplifying Rational Expressions": 2,
+		"Adding, Subtracting, and Solving Rational Equations": 2,
+		"Piecewise Models and Continuity": 2
+	},
+	"algebra-2b": {
+		"Logarithm Properties and Change of Base": 2,
+		"Arithmetic Sequences and nth Terms": 1,
+		"Arithmetic Series and Application Problems": 1,
+		"Geometric Sequences and Exponential Patterns": 1,
+		"Geometric Sums and Infinite Series": 2,
+		"Inverses and Matrix Division": 3,
+		"Sine, Cosine, and Tangent Graph Features": 1
+	}
+};
 
 function reading(item: CourseModuleItem) {
 	const container = document.createElement("div");
@@ -107,6 +125,7 @@ function reading(item: CourseModuleItem) {
 		contentSHA256: digest(item.content),
 		expectedText: container.textContent!.replace(/\s+/g, " ").trim(),
 		tableRows: container.querySelectorAll("tbody tr").length,
+		paragraphBreaks: container.querySelectorAll(":scope > p > br").length,
 		images: [
 			...[...container.querySelectorAll("img")].map(image => ({
 				src: image.getAttribute("src"),
@@ -251,11 +270,15 @@ it.each(
 			if (!algebra) expect(module.readings, module.title).toHaveLength(1);
 			else if (module.readings.length === 0)
 				expect(module.title).toMatch(/capstone/i);
-			for (const reading of module.readings)
+			for (const reading of module.readings) {
 				expect(
 					reading.expectedText.length,
 					module.title
 				).toBeGreaterThan(150);
+				expect(reading.paragraphBreaks, reading.title).toBe(
+					intentionalMathLineBreaks[id]?.[reading.title] ?? 0
+				);
+			}
 		}
 		if (process.env.SELF_STUDY_BROWSER_PROOF_DIR) {
 			const output = process.env.SELF_STUDY_BROWSER_PROOF_DIR;
