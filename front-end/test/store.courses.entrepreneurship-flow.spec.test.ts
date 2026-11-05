@@ -86,8 +86,8 @@ describe("Entrepreneurship 101 learner flow", () => {
 			);
 			expect(readings).toHaveLength(10);
 			const projects = course.modules.flatMap(module =>
-				module.curriculum.filter(item =>
-					item.content.startsWith("**Project goal:**")
+				module.curriculum.filter(
+					item => item.contentKind === "assignment"
 				)
 			);
 			expect(projects).toHaveLength(19);
@@ -195,9 +195,7 @@ describe("Entrepreneurship 101 learner flow", () => {
 		expect(
 			requireModule("ENT4 Identifying the Ideal Customer").curriculum[0]
 				?.content
-		).toContain(
-			"anonymous, opt-in, instructor-supplied, or simulated responses"
-		);
+		).toContain("anonymous, opt-in, supplied, or simulated responses");
 		expect(
 			requireModule("ENT8 Building and Testing Marketing Strategies")
 				.curriculum[0]?.content
