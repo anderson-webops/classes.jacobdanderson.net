@@ -146,6 +146,24 @@ const groups = [
 				excluded: ["2. Allow the user to enter coordinates"]
 			}
 		]
+	},
+	{
+		course: "scratch-level-2",
+		module: "scratch-level-2-gm2-nested-loops",
+		tab: 2,
+		projects: [
+			{
+				id: "335808333",
+				reference: "335807180",
+				required: [
+					"other five (six petals total)",
+					"repeat 40 times",
+					"angle starts at 0",
+					"pen color"
+				],
+				excluded: ["other six"]
+			}
+		]
 	}
 ];
 
@@ -172,6 +190,7 @@ export async function checkScratchPublishedTasks(
 		for (const width of [390, 1280]) {
 			await page.setViewport({ width, height: 900 });
 			for (const group of groups) {
+				const course = group.course || "scratch-level-1";
 				await page.goto("about:blank");
 				await page.goto(`${origin}/courses#${group.module}`, {
 					waitUntil: "networkidle2"
@@ -270,7 +289,7 @@ export async function checkScratchPublishedTasks(
 							link =>
 								link.id === project.id &&
 								link.role === "project" &&
-								link.course === "scratch-level-1"
+								link.course === course
 						)
 					);
 					if (role === "instructor")
@@ -279,7 +298,7 @@ export async function checkScratchPublishedTasks(
 								link =>
 									link.id === project.reference &&
 									link.role === "reference" &&
-									link.course === "scratch-level-1"
+									link.course === course
 							)
 						);
 					await page.screenshot({
@@ -300,7 +319,7 @@ export async function checkScratchPublishedTasks(
 			}
 		}
 	}
-	assert.equal(record.views.length, 36);
+	assert.equal(record.views.length, 40);
 	record.complete = true;
 	await retain();
 }
