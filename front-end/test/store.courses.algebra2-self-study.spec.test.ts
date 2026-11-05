@@ -13,6 +13,36 @@ import { isLessonLearningItem } from "@/modules/courseLessonPresentation";
 import { useAppStore } from "@/stores/app";
 import { useCoursesStore } from "@/stores/courses";
 
+const checkInTopics: Record<
+	string,
+	Record<string, { expected: RegExp[]; outsideScope: RegExp }>
+> = {
+	"algebra-2a": {
+		"Check-In #1": {
+			expected: [/complex/i, /quadratic/i, /transformation/i],
+			outsideScope: /logarithm|sequence|matrix|trigonometric|probability/i
+		},
+		"Check-In #2": {
+			expected: [/polynomial/i, /division/i, /multiplicit/i],
+			outsideScope: /logarithm|matrix|trigonometric|probability/i
+		},
+		"Check-In #3": {
+			expected: [/rational/i, /radical/i, /piecewise/i],
+			outsideScope: /logarithm|matrix|trigonometric|probability/i
+		}
+	},
+	"algebra-2b": {
+		"Check-In #1": {
+			expected: [/logarithm/i, /sequence/i, /matri/i],
+			outsideScope: /polynomial|trigonometric|probability|regression/i
+		},
+		"Check-In #2": {
+			expected: [/probability/i, /regression/i, /trigonometric/i],
+			outsideScope: /polynomial|logarithm|matrix|rational function/i
+		}
+	}
+};
+
 it.each(
 	published.courses.flatMap(course =>
 		["learner", "instructor"].map(role => ({ course, role }))
@@ -98,6 +128,32 @@ it.each(
 		const coreModules = course.modules.filter(
 			module => module.kind !== "appendix"
 		);
+		for (const module of coreModules.filter(module =>
+			/^Check-In #\d+$/.test(module.title)
+		)) {
+			const activities = module.supplementalProjects.filter(item =>
+				/Standards Practice Set|Modeling or Error Analysis/.test(
+					item.title
+				)
+			);
+			expect(activities, module.title).toHaveLength(
+				courseId === "algebra-2a" && module.title === "Check-In #3"
+					? 1
+					: 2
+			);
+			const text = activities.map(item => item.content).join("\n");
+			const scope = checkInTopics[courseId][module.title];
+			for (const topic of scope.expected)
+				expect(text, `${courseId} / ${module.title}`).toMatch(topic);
+			expect(text, `${courseId} / ${module.title}`).not.toMatch(
+				scope.outsideScope
+			);
+			expect(text).toContain("supplied");
+			for (const activity of activities)
+				expect(isLessonLearningItem(activity), activity.title).toBe(
+					false
+				);
+		}
 		const readings = coreModules
 			.flatMap(module => module.curriculum)
 			.filter(isLessonLearningItem);
