@@ -420,5 +420,176 @@
 				}
 			}
 		]
+	},
+	{
+		"id": "357452924",
+		"sourceSHA256": "7043c868dad57cc6aa66c297a037c60a2a0bd21e8569031025b25df3647adc58",
+		"target": "Sprite1",
+		"summary": "String traversal bounds: skip-first repeats length minus one; alternating letters repeats ceiling of half the length.",
+		"displaySummary": "Reference correction: spelling stops after the last selected letter.",
+		"addedBlocks": 3,
+		"changes": [
+			{
+				"blockId": "C9V.33_V_Q!H5w!8v)7O",
+				"before": {
+					"opcode": "control_repeat",
+					"next": null,
+					"parent": ",m*@P,RnT-Z@Lm%Q=;8]",
+					"inputs": {
+						"TIMES": [3, "HLDy8|Y8t9dqT4dW{|Ej", [6, 10]],
+						"SUBSTACK": [2, ".HmAls-r(;Ves.jDX#H@"]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				},
+				"after": {
+					"opcode": "control_repeat",
+					"next": null,
+					"parent": ",m*@P,RnT-Z@Lm%Q=;8]",
+					"inputs": {
+						"TIMES": [
+							3,
+							"classes-spelling-bee-skip-first-count",
+							[6, 10]
+						],
+						"SUBSTACK": [2, ".HmAls-r(;Ves.jDX#H@"]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				}
+			},
+			{
+				"blockId": "HLDy8|Y8t9dqT4dW{|Ej",
+				"before": {
+					"opcode": "operator_length",
+					"next": null,
+					"parent": "C9V.33_V_Q!H5w!8v)7O",
+					"inputs": {
+						"STRING": [3, "T1KB^~SFLeEHAW]H@M~|", [10, ""]]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				},
+				"after": {
+					"opcode": "operator_length",
+					"next": null,
+					"parent": "classes-spelling-bee-skip-first-count",
+					"inputs": {
+						"STRING": [3, "T1KB^~SFLeEHAW]H@M~|", [10, ""]]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				}
+			},
+			{
+				"blockId": "classes-spelling-bee-skip-first-count",
+				"before": null,
+				"after": {
+					"opcode": "operator_subtract",
+					"next": null,
+					"parent": "C9V.33_V_Q!H5w!8v)7O",
+					"inputs": {
+						"NUM1": [3, "HLDy8|Y8t9dqT4dW{|Ej", [4, "0"]],
+						"NUM2": [1, [4, "1"]]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				}
+			},
+			{
+				"blockId": ":BH@23MI?jB?:NVu@;`e",
+				"before": {
+					"opcode": "control_repeat",
+					"next": null,
+					"parent": "h]pKYS[FgXZ}[$o3]7ny",
+					"inputs": {
+						"TIMES": [3, "QBiOC]Cs4e]__flUyHP{", [6, "10"]],
+						"SUBSTACK": [2, "e;8Wd1E*TQ8!Q-z!R4`o"]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				},
+				"after": {
+					"opcode": "control_repeat",
+					"next": null,
+					"parent": "h]pKYS[FgXZ}[$o3]7ny",
+					"inputs": {
+						"TIMES": [
+							3,
+							"classes-spelling-bee-alternate-count",
+							[6, "10"]
+						],
+						"SUBSTACK": [2, "e;8Wd1E*TQ8!Q-z!R4`o"]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				}
+			},
+			{
+				"blockId": "QBiOC]Cs4e]__flUyHP{",
+				"before": {
+					"opcode": "operator_length",
+					"next": null,
+					"parent": ":BH@23MI?jB?:NVu@;`e",
+					"inputs": {
+						"STRING": [3, "2_ra]bcslI3La?jYRq_;", [10, ""]]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				},
+				"after": {
+					"opcode": "operator_length",
+					"next": null,
+					"parent": "classes-spelling-bee-half-length",
+					"inputs": {
+						"STRING": [3, "2_ra]bcslI3La?jYRq_;", [10, ""]]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				}
+			},
+			{
+				"blockId": "classes-spelling-bee-half-length",
+				"before": null,
+				"after": {
+					"opcode": "operator_divide",
+					"next": null,
+					"parent": "classes-spelling-bee-alternate-count",
+					"inputs": {
+						"NUM1": [3, "QBiOC]Cs4e]__flUyHP{", [4, "0"]],
+						"NUM2": [1, [4, "2"]]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				}
+			},
+			{
+				"blockId": "classes-spelling-bee-alternate-count",
+				"before": null,
+				"after": {
+					"opcode": "operator_mathop",
+					"next": null,
+					"parent": ":BH@23MI?jB?:NVu@;`e",
+					"inputs": {
+						"NUM": [3, "classes-spelling-bee-half-length", [4, "0"]]
+					},
+					"fields": {
+						"OPERATOR": ["ceiling", null]
+					},
+					"shadow": false,
+					"topLevel": false
+				}
+			}
+		]
 	}
 ]
