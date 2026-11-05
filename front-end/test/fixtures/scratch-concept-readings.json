@@ -53,7 +53,7 @@
 		],
 		"requiredText": [
 			"An event listener makes a sprite wait for a specific event",
-			"Loops repeat code",
+			"A loop repeats code",
 			"Conditionals let a program choose"
 		]
 	},
@@ -67,7 +67,7 @@
 			"scratch-level-2-gm1-review-events-loops-conditionals-broadcasting-curriculum-message-broadcasting"
 		],
 		"requiredText": [
-			"Variables store information",
+			"A variable stores information",
 			"Broadcasting lets sprites send messages"
 		]
 	},

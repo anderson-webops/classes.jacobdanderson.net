@@ -529,8 +529,21 @@ Challenge: Add more sprites to the game and have the ball pass between them.`,
 				{
 					title: "Getting user input",
 					contentKind: "reading",
-					content:
-						'Event listeners respond to button presses, but many projects also need text typed by the user. The "ask ___ and wait" block collects typed input, and the "answer" variable stores the most recent response. The equality (=) block compares the answer to a correct value, while < and > blocks compare typed numbers by size.'
+					content: `**Concept path:** Event listeners respond to button presses, but many projects also need text typed by the user. The "ask ___ and wait" block collects typed input, and the "answer" variable stores the most recent response. The equality (=) block compares the answer to a correct value, while < and > blocks compare typed numbers by size.
+
+**Keeping two answers:** Every completed question replaces the previous answer. Save a response in a named variable before asking another question when both values are needed:
+
+\`\`\`text
+when green flag clicked
+ask [What is your name?] and wait
+set [Name] to (answer)
+ask [What is your favorite color?] and wait
+say (join (Name) (join [ likes ] (answer)))
+\`\`\`
+
+For the responses "Ari" and "green", the final message is "Ari likes green". Reading only "answer" after the second question gives "green", so the Name variable preserves the earlier response.
+
+**Comparing a number:** In Number Guesser, compare the latest answer with the target number. A smaller answer produces the low hint, a larger answer produces the high hint, and equality finishes the guessing loop. Test a guess below the target, one above it, and the target itself; keep the same target during those retries.`
 				},
 				{
 					title: "Project 1 – Math Facts",
