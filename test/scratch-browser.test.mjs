@@ -21,7 +21,7 @@ import { checkScratchCoordinateReading, checkScratchEventReading, checkScratchOr
 
 const root = fileURLToPath(new URL("../front-end/", import.meta.url));
 nodeTest(
-	"scratch imports classroom projects, runs events and exports reusable files in isolation",
+	process.env.SCRATCH_BROWSER_READING_ONLY === "1" ? "scratch course readings work in both roles and screen sizes" : "scratch imports classroom projects, runs events and exports reusable files in isolation",
 	{ timeout: 900000 },
 	async () => {
 		let server, browser;
@@ -120,6 +120,14 @@ nodeTest(
 					void request.continue();
 				}
 			});
+			if (process.env.SCRATCH_BROWSER_READING_ONLY === "1") {
+				const readingOptions = { origin: "http://127.0.0.1:5198", files, setRole: (role) => { courseRole = role; } };
+				await verifyScope("event-reading", () => checkScratchEventReading(page, readingOptions));
+				await verifyScope("coordinate-reading", () => checkScratchCoordinateReading(page, readingOptions));
+				assert.deepEqual(scopeFailures, [], "Every requested Scratch reading scope must pass");
+				assert.deepEqual(errors, []);
+				return;
+			}
 			const client = await page.createCDPSession();
 			await client.send("Browser.setDownloadBehavior", {
 				behavior: "allow",
