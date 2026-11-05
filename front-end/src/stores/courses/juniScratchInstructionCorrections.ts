@@ -289,12 +289,13 @@ Optional: ask for coordinates so the user can choose points, or draw initials.`
 			"45ecf208549022fa7d54b5bea8f4a9489b6353cfcacbf7accfb5eb36904cc0e4",
 		publishedInstructionsSha256:
 			"b0e10aad197fc295730ac79c0cfd66825c9ac1b7a9fed7d4542eb85f2f2da0fc",
-		content: `Draw a beautiful rainbow flower!
+		content: `Draw a rainbow flower.
+
 1. When the green flag is clicked, make the pencil sprite go to the center of the screen and put the pen down.
-2. Start by programming the code for a circle and then take a look at the turn block. What would happen if we changed the amount we were turning? What would happen if we changed the amount we turned each time we turned? Try to make a variable that keeps track of the angle we turn and increase it by 1 each time we go through the loop.
-3. After you're done experimenting in step 2, set up the code so that the angle starts at 0 degrees and repeat 40 times to get a really pretty looking spiral!
-4. Now that we have one petal of our flower, can you make the other five (six petals total)? Think about how we have to start from the center of the flower and move outwards each time.
-5. Change the pen color after each petal to get a rainbow colored flower!`
+2. Start by programming a circle. Experiment with changing the turn amount and increasing it on each step. Use a variable to track the angle and increase it by 1 each time through the loop.
+3. After experimenting, set the angle to 0 degrees and repeat 40 times to draw one spiral-shaped petal.
+4. Draw the other five (six petals total), starting each petal at the center and moving outwards.
+5. Change the pen color after each petal to make a rainbow-colored flower.`
 	}
 ] as const;
 

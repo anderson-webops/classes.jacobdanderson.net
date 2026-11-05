@@ -158,7 +158,7 @@ const groups = [
 				required: [
 					"other five (six petals total)",
 					"repeat 40 times",
-					"angle starts at 0",
+					"angle to 0 degrees",
 					"pen color"
 				],
 				excluded: ["other six"]
