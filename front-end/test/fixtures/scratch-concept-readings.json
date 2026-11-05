@@ -7,7 +7,9 @@
 		"sourceItemIds": [
 			"scratch-level-1-gs9-variables-curriculum-introducing-variables"
 		],
-		"requiredText": ["Variables store information"]
+		"requiredText": [
+			"Variables store information"
+		]
 	},
 	{
 		"courseId": "scratch-level-1",
@@ -17,7 +19,9 @@
 		"sourceItemIds": [
 			"scratch-level-1-gs5-basic-conditionals-curriculum-introducing-conditionals"
 		],
-		"requiredText": ["Conditionals let a program make decisions"]
+		"requiredText": [
+			"Conditionals let a program make decisions"
+		]
 	},
 	{
 		"courseId": "scratch-level-1",
@@ -27,7 +31,9 @@
 		"sourceItemIds": [
 			"scratch-level-1-gs7-user-input-curriculum-getting-user-input"
 		],
-		"requiredText": ["many projects also need text typed by the user"]
+		"requiredText": [
+			"many projects also need text typed by the user"
+		]
 	},
 	{
 		"courseId": "scratch-level-1",
@@ -54,7 +60,7 @@
 		"requiredText": [
 			"An event listener makes a sprite wait for a specific event",
 			"A loop repeats code",
-			"Conditionals let a program choose"
+			"An if block lets a program choose"
 		]
 	},
 	{
@@ -68,7 +74,7 @@
 		],
 		"requiredText": [
 			"A variable stores information",
-			"Broadcasting lets sprites send messages"
+			"A broadcast lets sprites send messages"
 		]
 	},
 	{
@@ -79,7 +85,9 @@
 		"sourceItemIds": [
 			"scratch-level-2-gm2-nested-loops-curriculum-nested-loops"
 		],
-		"requiredText": ["Each time an outer repeat starts a new iteration"]
+		"requiredText": [
+			"Each time an outer repeat starts a new iteration"
+		]
 	},
 	{
 		"courseId": "scratch-level-2",
@@ -98,16 +106,24 @@
 		"moduleId": "scratch-level-2-gm4-cloning",
 		"itemId": "scratch-level-2-gm4-cloning-curriculum-cloning",
 		"title": "Cloning",
-		"sourceItemIds": ["scratch-level-2-gm4-cloning-curriculum-cloning"],
-		"requiredText": ["A clone is a temporary copy"]
+		"sourceItemIds": [
+			"scratch-level-2-gm4-cloning-curriculum-cloning"
+		],
+		"requiredText": [
+			"A clone is a temporary copy"
+		]
 	},
 	{
 		"courseId": "scratch-level-2",
 		"moduleId": "scratch-level-2-gm5-strings",
 		"itemId": "scratch-level-2-gm5-strings-curriculum-strings",
 		"title": "Strings",
-		"sourceItemIds": ["scratch-level-2-gm5-strings-curriculum-strings"],
-		"requiredText": ["Strings store text"]
+		"sourceItemIds": [
+			"scratch-level-2-gm5-strings-curriculum-strings"
+		],
+		"requiredText": [
+			"Strings store text"
+		]
 	},
 	{
 		"courseId": "scratch-level-2",
@@ -126,15 +142,23 @@
 		"moduleId": "scratch-level-2-gm7-lists",
 		"itemId": "scratch-level-2-gm7-lists-curriculum-lists",
 		"title": "Lists",
-		"sourceItemIds": ["scratch-level-2-gm7-lists-curriculum-lists"],
-		"requiredText": ["A list stores many related values"]
+		"sourceItemIds": [
+			"scratch-level-2-gm7-lists-curriculum-lists"
+		],
+		"requiredText": [
+			"A list stores many related values"
+		]
 	},
 	{
 		"courseId": "scratch-level-2",
 		"moduleId": "scratch-level-2-gm8-functions",
 		"itemId": "scratch-level-2-gm8-functions-curriculum-functions",
 		"title": "Functions",
-		"sourceItemIds": ["scratch-level-2-gm8-functions-curriculum-functions"],
-		"requiredText": ["A function is a named set of instructions"]
+		"sourceItemIds": [
+			"scratch-level-2-gm8-functions-curriculum-functions"
+		],
+		"requiredText": [
+			"A function is a named set of instructions"
+		]
 	}
 ]
