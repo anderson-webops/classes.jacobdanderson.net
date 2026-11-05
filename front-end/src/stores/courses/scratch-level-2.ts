@@ -60,7 +60,7 @@ View CS Training's Code`,
 					title: "Conditionals",
 					contentKind: "reading",
 					content:
-						'Conditionals let a program choose what happens based on whether something is true. A real-life conditional looks like "if it is cold, wear a jacket." In Scratch, an `if` block runs code only when its condition is true.\nAn `if...then...else` block adds a second path: one set of blocks runs when the condition is true, and another set runs when it is false. Practice with sensing blocks, comparison blocks, and user input so the program can respond to different answers or game states.'
+						'An if block lets a program choose what happens based on whether something is true. A real-life conditional looks like "if it is cold, wear a jacket." In Scratch, an `if` block runs code only when its condition is true.\nAn `if...then...else` block adds a second path: one set of blocks runs when the condition is true, and another set runs when it is false. Practice with sensing blocks, comparison blocks, and user input so the program can respond to different answers or game states.'
 				},
 				{
 					title: "GM1 Project 3: Math Facts",
@@ -94,7 +94,7 @@ View CS Training's Code`,
 					title: "Message Broadcasting",
 					contentKind: "reading",
 					content:
-						"Broadcasting lets sprites send messages to each other. This is useful when one sprite waits for another sprite to finish speaking, moving, or changing state before its own script begins.\nOpen the Events blocks and compare `broadcast __` with `when I receive __`. Practice by making one sprite finish a short action, broadcast a message, and trigger a second sprite to start moving only after that message is received."
+						"A broadcast lets sprites send messages to each other. This is useful when one sprite waits for another sprite to finish speaking, moving, or changing state before its own script begins.\nOpen the Events blocks and compare `broadcast __` with `when I receive __`. Practice by making one sprite finish a short action, broadcast a message, and trigger a second sprite to start moving only after that message is received."
 				},
 				{
 					title: "GM1 Project 5: Dance Off",
