@@ -217,19 +217,71 @@ describe("original Juni Scratch project instructions", () => {
 		});
 	}
 
-	it("limits corrections to six uniquely identified published starters", () => {
-		expect(juniScratchInstructionCorrections).toHaveLength(6);
+	it("limits corrections to nine uniquely identified published starters", () => {
+		expect(juniScratchInstructionCorrections).toHaveLength(9);
 		expect(
 			new Set(
 				juniScratchInstructionCorrections.map(item => item.projectId)
 			).size
-		).toBe(6);
+		).toBe(9);
 		for (const correction of juniScratchInstructionCorrections) {
 			expect(correction.publishedInstructionsSha256).toMatch(
 				/^[a-f0-9]{64}$/
 			);
 		}
 	});
+
+	it.each([
+		{
+			projectId: "327635693",
+			required: ["Zebra Steps", "set it to 0", "next costume", "by 1"],
+			excluded: []
+		},
+		{
+			projectId: "327610777",
+			required: [
+				"random x",
+				"pick random",
+				"decreasing y",
+				"Puffs Eaten",
+				"Chomp"
+			],
+			excluded: ["3. Add a timer"]
+		},
+		{
+			projectId: "327607937",
+			required: [
+				"donut $2",
+				"pizza $4",
+				"taco $3",
+				"apple $1",
+				"store the answer",
+				"done",
+				"unchanged",
+				"money remains"
+			],
+			excluded: ["set to 10", "sandwich", "salad"]
+		}
+	])(
+		"retains the supplied input and behavior contract for $projectId",
+		async ({ projectId, required, excluded }) => {
+			const course =
+				(await useCoursesStore().loadCourseById("scratch-level-1"))!;
+			const item = course.modules
+				.flatMap(module => module.supplementalProjects)
+				.find(
+					item =>
+						item.projectLink ===
+						`https://scratch.mit.edu/projects/${projectId}/`
+				)!;
+			expect(item).toBeDefined();
+			for (const text of required) expect(item.content).toContain(text);
+			for (const text of excluded)
+				expect(item.content).not.toContain(text);
+			if (projectId === "327610777")
+				expect(item.content).toContain("Optional: add a timed round");
+		}
+	);
 
 	for (const [title, required, excluded] of [
 		[

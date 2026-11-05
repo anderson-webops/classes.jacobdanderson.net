@@ -752,30 +752,25 @@ For example, start at (30, -20). Changing x by 10 gives **(40, -20)**. Changing 
 			supplementalProjects: [
 				{
 					title: "GS9 Supplemental Project 1 – Counting Steps",
-					content: `
-1. Use the arrow keys to move a sprite around the stage.
-2. Make a variable called "steps" that increases each time the sprite moves.
-3. Display the number of steps taken.
-4. Challenge: Add obstacles and a goal to reach.`,
+					content: correctedJuniScratchInstructions(
+						"GS9 Supplemental Project 1 – Counting Steps"
+					),
 					projectLink: "https://scratch.mit.edu/projects/327635693/",
 					solutionLink: "https://scratch.mit.edu/projects/327634746/"
 				},
 				{
 					title: "GS9 Supplemental Project 2 – Hungry Crab",
-					content: `
-1. Control a crab with the arrow keys.
-2. Create a variable called "food" and increase it each time the crab eats a piece of food.
-3. Add a timer; when time runs out, end the game and display how much food was collected.`,
+					content: correctedJuniScratchInstructions(
+						"GS9 Supplemental Project 2 – Hungry Crab"
+					),
 					projectLink: "https://scratch.mit.edu/projects/327610777/",
 					solutionLink: "https://scratch.mit.edu/projects/327610727/"
 				},
 				{
 					title: "GS9 Supplemental Project 3 – Lunch Money",
-					content: `
-1. Start with a variable "money" set to 10.
-2. Ask the user what they want to buy for lunch (e.g., pizza, sandwich or salad) and subtract the cost from the money variable.
-3. If the user can't afford an item, display a message.
-4. Allow them to continue buying until the money runs out.`,
+					content: correctedJuniScratchInstructions(
+						"GS9 Supplemental Project 3 – Lunch Money"
+					),
 					projectLink: "https://scratch.mit.edu/projects/327607937/",
 					solutionLink: "https://scratch.mit.edu/projects/327607840/"
 				}
