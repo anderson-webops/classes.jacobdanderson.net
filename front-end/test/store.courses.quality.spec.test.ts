@@ -171,7 +171,9 @@ function hasAuthoredModuleReading(module: RawCourseModule) {
 			(/\b(?:worked|example|practice|original|model|scenario|input)\b/i.test(
 				item.content
 			) ||
-				/^(?:`{3,}|~{3,})/m.test(item.content))
+				/^(?:`{3,}|~{3,})/m.test(item.content) ||
+				/^\|.+\|\n\|(?:\s*:?-+:?\s*\|)+\n\|.+\|/m.test(item.content) ||
+				/^>\s+\S|^[-*]\s+[^\n"]*"[^\n"]+"/m.test(item.content))
 	);
 }
 
