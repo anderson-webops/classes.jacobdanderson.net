@@ -4,8 +4,8 @@ import type {
 	RawCourseModule,
 	RawCourseModuleItem
 } from "./types";
-import { researchBackedExpansionProfiles } from "./research-expansions";
 import { algebra2CheckInFocus } from "./algebra2CheckInFocus";
+import { researchBackedExpansionProfiles } from "./research-expansions";
 
 const INSTRUCTION_MATERIAL_URL = "https://github.com/instruction-material";
 
