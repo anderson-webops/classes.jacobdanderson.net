@@ -16,6 +16,8 @@ import { isLessonLearningItem } from "@/modules/courseLessonPresentation";
 import { normalizeInlineCourseMarkdown } from "@/modules/courseMarkdown";
 import { useAppStore } from "@/stores/app";
 import { useCoursesStore } from "@/stores/courses";
+import { algebra2ACourse } from "@/stores/courses/algebra-2a";
+import { algebra2BCourse } from "@/stores/courses/algebra-2b";
 import {
 	entrepreneurship101Course,
 	grammarMechanicsCourse,
@@ -75,6 +77,18 @@ const cases = [
 		source: scratchLevel1BootcampCourse,
 		readings: 4,
 		additions: []
+	},
+	{
+		id: "algebra-2a",
+		source: algebra2ACourse,
+		readings: 27,
+		additions: []
+	},
+	{
+		id: "algebra-2b",
+		source: algebra2BCourse,
+		readings: 22,
+		additions: []
 	}
 ] as const;
 const markdown = new MarkdownIt({ breaks: true, html: false, linkify: true });
@@ -93,10 +107,23 @@ function reading(item: CourseModuleItem) {
 		contentSHA256: digest(item.content),
 		expectedText: container.textContent!.replace(/\s+/g, " ").trim(),
 		tableRows: container.querySelectorAll("tbody tr").length,
-		images: [...container.querySelectorAll("img")].map(image => ({
-			src: image.getAttribute("src"),
-			alt: image.alt
-		}))
+		images: [
+			...[...container.querySelectorAll("img")].map(image => ({
+				src: image.getAttribute("src"),
+				alt: image.alt
+			})),
+			...(item.mediaLink &&
+			/(?:course-assets|static\.classes\.jacobdanderson\.net)\/algebra-2[ab]\/.+\.svg$/.test(
+				item.mediaLink
+			)
+				? [
+						{
+							src: item.mediaLink,
+							alt: `Project demo media for ${item.title}`
+						}
+					]
+				: [])
+		]
 	};
 }
 
@@ -210,15 +237,22 @@ it.each(
 					.map(card)
 			}));
 		expect(modules.flatMap(module => module.readings)).toHaveLength(count);
-		expect(modules.filter(module => module.kind === "module")).toHaveLength(
-			count
-		);
-		for (const module of modules) {
-			expect(module.readings, module.title).toHaveLength(1);
+		const algebra = id === "algebra-2a" || id === "algebra-2b";
+		if (algebra)
+			expect(modules).toHaveLength(id === "algebra-2a" ? 15 : 12);
+		else
 			expect(
-				module.readings[0].expectedText.length,
-				module.title
-			).toBeGreaterThan(150);
+				modules.filter(module => module.kind === "module")
+			).toHaveLength(count);
+		for (const module of modules) {
+			if (!algebra) expect(module.readings, module.title).toHaveLength(1);
+			else if (module.readings.length === 0)
+				expect(module.title).toMatch(/capstone/i);
+			for (const reading of module.readings)
+				expect(
+					reading.expectedText.length,
+					module.title
+				).toBeGreaterThan(150);
 		}
 		if (process.env.SELF_STUDY_BROWSER_PROOF_DIR) {
 			const output = process.env.SELF_STUDY_BROWSER_PROOF_DIR;

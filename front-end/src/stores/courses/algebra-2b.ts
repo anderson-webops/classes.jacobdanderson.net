@@ -8,13 +8,13 @@ const MEDIA_BASE = "https://static.classes.jacobdanderson.net/algebra-2b";
 
 const media = {
 	logReference: "/course-assets/algebra-2b/logarithms-reference-v1.svg",
-	expLogFamilies: `${MEDIA_BASE}/alb2-exp-log-families.svg`,
+	expLogFamilies: "/course-assets/algebra-2b/exp-log-families-v2.svg",
 	arithmeticReference: `${MEDIA_BASE}/alb3-arithmetic-sequences.svg`,
 	geometricReference: `${MEDIA_BASE}/alb4-geometric-sequences.svg`,
-	matrixWorkflow: `${MEDIA_BASE}/alb5-matrix-operations.svg`,
-	probabilityTables: `${MEDIA_BASE}/alb6-probability-tables.svg`,
+	matrixWorkflow: "/course-assets/algebra-2b/matrix-operations-v2.svg",
+	probabilityTables: "/course-assets/algebra-2b/probability-tables-v2.svg",
 	statisticsRegression: `${MEDIA_BASE}/alb7-statistics-regression.svg`,
-	unitCircleTrig: `${MEDIA_BASE}/alb8-unit-circle-trig.svg`,
+	unitCircleTrig: "/course-assets/algebra-2b/unit-circle-trig-v2.svg",
 	trigGraphs: `${MEDIA_BASE}/alb9-trig-graphs.svg`
 } as const;
 
