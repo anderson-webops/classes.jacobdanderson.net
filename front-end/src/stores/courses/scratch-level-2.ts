@@ -7,6 +7,7 @@ import type {
 import { correctedJuniScratchInstructions } from "./juniScratchInstructionCorrections";
 import { isCoreProjectTitle } from "./projectGrouping";
 import { scratchNestedLoopLesson } from "./scratchNestedLoopLesson";
+import { scratchOperatorLesson } from "./scratchOperatorLesson";
 import {
 	buildScratchFluencyDrill,
 	buildScratchOpenEndedVariant
@@ -545,8 +546,8 @@ Challenge: Try to accomplish step 3 using one "say" block with many "join" block
 				{
 					title: "Mathematical Operators",
 					contentKind: "reading",
-					content:
-						"Computers can calculate, compare, and combine numbers quickly, which makes mathematical operators useful for games, quizzes, simulations, and score systems.\nCreate a new Scratch project. Open the Operators section, and experiment with how different mathematical operations can be performed with these blocks."
+					preserveInstructions: true,
+					content: scratchOperatorLesson
 				},
 				{
 					title: "GM6 Project 1: Calculator",
@@ -1407,9 +1408,8 @@ const SCRATCH_LEVEL_2_FLOW: ScratchLevel2FlowConfig[] = [
 			"pick random",
 			"comparisons"
 		],
-		challengeCurriculumTitles: ["GM6 Project 2: FizzBuzz"],
 		projectThread:
-			"Use Calculator to connect user input, operator choice, and conditional output. FizzBuzz becomes a challenge after mod and branch order can be explained."
+			"Use Calculator to connect user input, operator choice, and conditional output. Continue with FizzBuzz after mod and branch order can be explained."
 	},
 	{
 		oldTitle: "GM7 Lists",
