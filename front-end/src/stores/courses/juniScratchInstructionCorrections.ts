@@ -110,6 +110,63 @@ export const juniScratchInstructionCorrections = [
 4. Award a point only when both conditions are true: the mouse button is pressed and the spider is touching the hammer.
 5. After a successful smash, move the spider to a new random position and play the crunch sound.
 6. Add a one-minute timer and end the game when time runs out.`
+	},
+	{
+		courseId: "scratch-level-1",
+		title: "GS9 Supplemental Project 1 – Counting Steps",
+		projectId: "327635693",
+		solutionId: "327634746",
+		baselineContentSha256:
+			"1c993af3a6ee59b54095fc1b164322e4fb41ee8df2c3f10727db16014181323f",
+		publishedInstructionsSha256:
+			"700002f6be108f6db6355944adda0531d05afaa268e0883b7f2e3a1cd4324023",
+		content: `Use the zebra's movement to count steps.
+
+1. Create a variable named "Zebra Steps" and set it to 0 on the green flag.
+2. Make the right arrow point the zebra right and move it 10 steps. Make the left arrow point it left and move it 10 steps.
+3. Switch to the next costume on each movement so the zebra appears to take a step.
+4. Increase Zebra Steps by 1 for each movement and display the count on the stage.
+
+Optional: add obstacles and a goal to reach.`
+	},
+	{
+		courseId: "scratch-level-1",
+		title: "GS9 Supplemental Project 2 – Hungry Crab",
+		projectId: "327610777",
+		solutionId: "327610727",
+		baselineContentSha256:
+			"cf78095187f06ad43333dc943585b3094053328a9a14dd9da87100cf7d3ebacb",
+		publishedInstructionsSha256:
+			"32a8b5250308ab426c1614e15589d179c62c99644eeb6ee02cfe74dc129598ec",
+		content: `Help the crab catch falling cheesy puffs and count how many it eats.
+
+1. Use the left and right arrow keys to move the crab across the stage.
+2. On the green flag, place the cheesy puffs at a random x position near the top of the stage. Choose x with pick random and keep y at the chosen top position.
+3. Make the puffs fall continuously by decreasing y. A larger downward change makes them fall faster.
+4. When the puffs reach the lower part of the stage, return them to a random x at the top.
+5. Create a variable named "Puffs Eaten" and set it to 0 on the green flag. Increase it by 1 when the crab touches the puffs.
+6. Change the crab's costume and play its Chomp sound to show it eating, then restore the resting costume.
+
+Optional: add a timed round that ends and reports the total.`
+	},
+	{
+		courseId: "scratch-level-1",
+		title: "GS9 Supplemental Project 3 – Lunch Money",
+		projectId: "327607937",
+		solutionId: "327607840",
+		baselineContentSha256:
+			"e4cc1d276ffe06436686b280553dcee393c324aaeed1f6d81377730f07a46bd3",
+		publishedInstructionsSha256:
+			"85c2141cacf25ff5133406eb5ddfddf5941ed7332659070abde13cce7a32d5e0",
+		content: `Track a lunch budget while choosing items from this menu: donut $2, pizza $4, taco $3 and apple $1.
+
+1. Ask how much lunch money is available and store the answer in a variable named "Lunch Money".
+2. Repeatedly ask for one menu item or the word "done".
+3. Before each purchase, compare the balance with that item's price. If the balance is too small, show a message and leave the balance unchanged. Otherwise, subtract the price.
+4. After a purchase, report how much money remains.
+5. Stop when the answer is "done". If the balance reaches 0, say that the money has run out and stop.
+
+Optional: use join to show the message and remaining amount in one speech bubble.`
 	}
 ] as const;
 
