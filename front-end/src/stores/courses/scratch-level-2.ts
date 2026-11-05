@@ -4,7 +4,9 @@ import type {
 	RawCourseModule,
 	RawCourseModuleItem
 } from "./types";
+import { correctedJuniScratchInstructions } from "./juniScratchInstructionCorrections";
 import { isCoreProjectTitle } from "./projectGrouping";
+import { scratchNestedLoopLesson } from "./scratchNestedLoopLesson";
 import {
 	buildScratchFluencyDrill,
 	buildScratchOpenEndedVariant
@@ -159,8 +161,8 @@ Starter code is provided, but it is also fine to create a project from scratch w
 			curriculum: [
 				{
 					title: "Nested loops",
-					content:
-						"A nested-loop pattern places one loop inside another loop. The idea is similar to Russian nesting dolls: one structure sits inside another structure.\nThis pattern is useful when a repeated action itself contains another repeated action, such as drawing several rows of shapes, building grids, or repeating an animation pattern multiple times."
+					preserveInstructions: true,
+					content: scratchNestedLoopLesson
 				},
 				{
 					title: "GM2 Project 1: Square Inception",
@@ -213,12 +215,10 @@ Finally, share the project!`,
 				},
 				{
 					title: "GM2 Supplemental Project 3: Rainbow Flower",
-					content: `Draw a beautiful rainbow flower!
-1. When the green flag is clicked, make the pencil sprite go to the center of the screen and put the pen down.
-2. Start by programming the code for a circle and then take a look at the turn block. What would happen if we changed the amount we were turning? What would happen if we changed the amount we turned each time we turned? Try to make a variable that keeps track of the angle we turn and increase it by 1 each time we go through the loop.
-3. After you're done experimenting in step 2, set up the code so that the angle starts at 0 degrees and repeat 40 times to get a really pretty looking spiral!
-4. Now that we have one petal of our flower, can you make the other six? Think about how we have to start from the center of the flower and move outwards each time.
-5. Change the pen color after each petal to get a rainbow colored flower!`,
+					content: correctedJuniScratchInstructions(
+						"GM2 Supplemental Project 3: Rainbow Flower",
+						"scratch-level-2"
+					),
 					projectLink: "https://scratch.mit.edu/projects/335808333/",
 					solutionLink: "https://scratch.mit.edu/projects/335807180/"
 				}

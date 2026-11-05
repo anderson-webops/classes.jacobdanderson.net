@@ -1,5 +1,6 @@
 // Explicit corrections to the archived catalog, verified against the linked
-// JuniLearningScratch starters. Unlisted original projects remain unchanged.
+// JuniLearningScratch programs and published instructions. Unlisted projects
+// retain their archived instructions.
 export const juniScratchInstructionCorrections = [
 	{
 		courseId: "scratch-level-1",
@@ -275,6 +276,25 @@ Optional: try arrow-key controls or add obstacles.`
 4. Try another supplied drawing and compare the result with its backdrop.
 
 Optional: ask for coordinates so the user can choose points, or draw initials.`
+	},
+	{
+		courseId: "scratch-level-2",
+		title: "GM2 Supplemental Project 3: Rainbow Flower",
+		projectId: "335808333",
+		referenceSourceSha256:
+			"2203067efcdda7093a077273cc6a5863421711248f09f402919d760a2d855dff",
+		reason: "The reference repeats six petals; a seventh retraces the first orientation.",
+		solutionId: "335807180",
+		baselineContentSha256:
+			"45ecf208549022fa7d54b5bea8f4a9489b6353cfcacbf7accfb5eb36904cc0e4",
+		publishedInstructionsSha256:
+			"b0e10aad197fc295730ac79c0cfd66825c9ac1b7a9fed7d4542eb85f2f2da0fc",
+		content: `Draw a beautiful rainbow flower!
+1. When the green flag is clicked, make the pencil sprite go to the center of the screen and put the pen down.
+2. Start by programming the code for a circle and then take a look at the turn block. What would happen if we changed the amount we were turning? What would happen if we changed the amount we turned each time we turned? Try to make a variable that keeps track of the angle we turn and increase it by 1 each time we go through the loop.
+3. After you're done experimenting in step 2, set up the code so that the angle starts at 0 degrees and repeat 40 times to get a really pretty looking spiral!
+4. Now that we have one petal of our flower, can you make the other five (six petals total)? Think about how we have to start from the center of the flower and move outwards each time.
+5. Change the pen color after each petal to get a rainbow colored flower!`
 	}
 ] as const;
 
@@ -290,11 +310,11 @@ export function findJuniScratchInstructionCorrection(
 	);
 }
 
-export function correctedJuniScratchInstructions(title: string) {
-	const correction = findJuniScratchInstructionCorrection(
-		"scratch-level-1",
-		title
-	);
+export function correctedJuniScratchInstructions(
+	title: string,
+	courseId = "scratch-level-1"
+) {
+	const correction = findJuniScratchInstructionCorrection(courseId, title);
 	if (!correction)
 		throw new Error(`Missing verified Scratch instructions: ${title}`);
 	return correction.content;

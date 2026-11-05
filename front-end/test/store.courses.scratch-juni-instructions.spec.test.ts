@@ -218,13 +218,49 @@ describe("original Juni Scratch project instructions", () => {
 		});
 	}
 
-	it("limits corrections to fifteen uniquely identified published starters", () => {
-		expect(juniScratchInstructionCorrections).toHaveLength(15);
+	it.each(["learner", "instructor"])(
+		"retains the six-petal source task and reference for %s",
+		async role => {
+			if (role === "instructor")
+				useAppStore().setCurrentTutor({
+					_id: "nested-review-tutor",
+					name: "Tutor",
+					email: "tutor@example.invalid",
+					age: 30,
+					state: "GA",
+					usersOfTutorLength: 0,
+					coursePermissions: ["scratch-level-2"],
+					editTutors: false,
+					saveEdit: "Save"
+				});
+			const course =
+				(await useCoursesStore().loadCourseById("scratch-level-2"))!;
+			const module = course.modules.find(
+				module => module.title === "GM2 Nested Loops"
+			)!;
+			const item = module.supplementalProjects.find(
+				item =>
+					item.projectLink ===
+					"https://scratch.mit.edu/projects/335808333/"
+			)!;
+			expect(item).toBeDefined();
+			expect(item.learningPath).toBe("choice");
+			expect(item.playableSolutionEmbedUrl).toBe(
+				"https://scratch.mit.edu/projects/335807180/embed"
+			);
+			expect(item.content).toContain("other five (six petals total)");
+			expect(item.content).not.toContain("other six");
+			expect(item.content).toContain("repeat 40 times");
+		}
+	);
+
+	it("limits corrections to sixteen uniquely identified published starters", () => {
+		expect(juniScratchInstructionCorrections).toHaveLength(16);
 		expect(
 			new Set(
 				juniScratchInstructionCorrections.map(item => item.projectId)
 			).size
-		).toBe(15);
+		).toBe(16);
 		for (const correction of juniScratchInstructionCorrections) {
 			expect(correction.publishedInstructionsSha256).toMatch(
 				/^[a-f0-9]{64}$/
