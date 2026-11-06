@@ -330,6 +330,43 @@ describe("original Juni Scratch project instructions", () => {
 		expect(sections[0]!.content).toContain("6. When the 4 key");
 	});
 
+	it.each(["learner", "instructor"])(
+		"keeps all nine complete checkpoint assignments for %s",
+		async role => {
+			if (role === "instructor")
+				useAppStore().setCurrentTutor({
+					_id: "checkpoint-tutor",
+					name: "Tutor",
+					email: "tutor@example.invalid",
+					age: 30,
+					state: "GA",
+					usersOfTutorLength: 0,
+					coursePermissions: ["scratch-level-2"],
+					editTutors: false,
+					saveEdit: "Save"
+				});
+			const course =
+				(await useCoursesStore().loadCourseById("scratch-level-2"))!;
+			let count = 0;
+			for (const original of scratchLevel2Course.modules.filter(m =>
+				/^Check-In #[12]$/.test(m.title)
+			)) {
+				const module = matchingModule(course, original);
+				for (const item of original.curriculum) {
+					const actual = matchingItem(module.curriculum, item)!;
+					expect(actual, item.title).toBeDefined();
+					expect(actual.content, item.title).toBe(
+						item.content.trim()
+					);
+					expect(actual.contentKind).toBe("assignment");
+					expect(isLessonLearningItem(actual)).toBe(false);
+					count++;
+				}
+			}
+			expect(count).toBe(9);
+		}
+	);
+
 	it("limits corrections to nineteen uniquely identified published starters", () => {
 		expect(juniScratchInstructionCorrections).toHaveLength(19);
 		expect(

@@ -2100,5 +2100,358 @@
 				]
 			}
 		]
+	},
+	{
+		"id": "341945558",
+		"sourceSHA256": "323190e2b8efab3293d996ef98cb919fcb44bf1ea9e8e504d7ad416f7fe1e592",
+		"target": "Spider",
+		"changes": [
+			{
+				"blockId": "!F%IN]#=8Xtw$Odb;6AG",
+				"before": {
+					"opcode": "looks_show",
+					"next": "o.k}dKx99(5R./XQqFyY",
+					"parent": "375/[h`%7uf)3zxm0tFy",
+					"inputs": {},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				},
+				"after": {
+					"opcode": "looks_show",
+					"next": "classes-checkin-clone-pen-up",
+					"parent": "375/[h`%7uf)3zxm0tFy",
+					"inputs": {},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				}
+			},
+			{
+				"blockId": "o.k}dKx99(5R./XQqFyY",
+				"before": {
+					"opcode": "motion_goto",
+					"next": "|=N`%EiK{EFBP.5u_$Cd",
+					"parent": "!F%IN]#=8Xtw$Odb;6AG",
+					"inputs": {
+						"TO": [1, "]lR5y1h05$m+(]}V-9(2"]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				},
+				"after": {
+					"opcode": "motion_goto",
+					"next": "|=N`%EiK{EFBP.5u_$Cd",
+					"parent": "classes-checkin-clone-direction",
+					"inputs": {
+						"TO": [1, "]lR5y1h05$m+(]}V-9(2"]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				}
+			},
+			{
+				"blockId": "|=N`%EiK{EFBP.5u_$Cd",
+				"before": {
+					"opcode": "data_setvariableto",
+					"next": ")}mv7%/12|m~=8iCdG$E",
+					"parent": "o.k}dKx99(5R./XQqFyY",
+					"inputs": {
+						"VALUE": [1, [10, "20"]]
+					},
+					"fields": {
+						"VARIABLE": ["side length", "wH/Q,H7ypw`vP~C}4s-]"]
+					},
+					"shadow": false,
+					"topLevel": false
+				},
+				"after": {
+					"opcode": "data_setvariableto",
+					"next": ")}mv7%/12|m~=8iCdG$E",
+					"parent": "o.k}dKx99(5R./XQqFyY",
+					"inputs": {
+						"VALUE": [1, [10, "20"]]
+					},
+					"fields": {
+						"VARIABLE": [
+							"Clone Side Length",
+							"classes-checkin-clone-side"
+						]
+					},
+					"shadow": false,
+					"topLevel": false
+				}
+			},
+			{
+				"blockId": "=yOh%c7.U(w64=*EKBBF",
+				"before": {
+					"opcode": "motion_movesteps",
+					"next": "F`Ea0:wYF2,?=+nT2,~8",
+					"parent": "2:J=2F3tu[6PA^t=5M6@",
+					"inputs": {
+						"STEPS": [
+							3,
+							[12, "side length", "wH/Q,H7ypw`vP~C}4s-]"],
+							[4, "100"]
+						]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				},
+				"after": {
+					"opcode": "motion_movesteps",
+					"next": "F`Ea0:wYF2,?=+nT2,~8",
+					"parent": "2:J=2F3tu[6PA^t=5M6@",
+					"inputs": {
+						"STEPS": [
+							3,
+							[
+								12,
+								"Clone Side Length",
+								"classes-checkin-clone-side"
+							],
+							[4, "100"]
+						]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				}
+			},
+			{
+				"blockId": "=-/Y}hH~N|u#CgA6Od+`",
+				"before": {
+					"opcode": "data_changevariableby",
+					"next": null,
+					"parent": "q^1XoqJ{2)of@VZl=c}_",
+					"inputs": {
+						"VALUE": [1, [4, "20"]]
+					},
+					"fields": {
+						"VARIABLE": ["side length", "wH/Q,H7ypw`vP~C}4s-]"]
+					},
+					"shadow": false,
+					"topLevel": false
+				},
+				"after": {
+					"opcode": "data_changevariableby",
+					"next": null,
+					"parent": "q^1XoqJ{2)of@VZl=c}_",
+					"inputs": {
+						"VALUE": [1, [4, "20"]]
+					},
+					"fields": {
+						"VARIABLE": [
+							"Clone Side Length",
+							"classes-checkin-clone-side"
+						]
+					},
+					"shadow": false,
+					"topLevel": false
+				}
+			},
+			{
+				"blockId": "classes-checkin-clone-pen-up",
+				"before": null,
+				"after": {
+					"opcode": "pen_penUp",
+					"next": "classes-checkin-clone-direction",
+					"parent": "!F%IN]#=8Xtw$Odb;6AG",
+					"inputs": {},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				}
+			},
+			{
+				"blockId": "classes-checkin-clone-direction",
+				"before": null,
+				"after": {
+					"opcode": "motion_pointindirection",
+					"next": "o.k}dKx99(5R./XQqFyY",
+					"parent": "classes-checkin-clone-pen-up",
+					"inputs": {
+						"DIRECTION": [1, [8, "90"]]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				}
+			}
+		],
+		"variables": [
+			{
+				"variableId": "classes-checkin-clone-side",
+				"before": null,
+				"after": ["Clone Side Length", 0]
+			}
+		],
+		"summary": "Independent clone drawings: keep side length private and lift/reset the pen before random placement.",
+		"displaySummary": "Reference correction: each drawing clone keeps its own side length and drawing reset.",
+		"addedBlocks": 2
+	},
+	{
+		"id": "342645999",
+		"sourceSHA256": "db16122f28bca6bb9e45aedb748f6bc6e85aa403535cff6eaacdfa4c142bfca2",
+		"target": "Andie",
+		"changes": [
+			{
+				"blockId": ":`5B{;Qs2DUAAViJA;e{",
+				"before": {
+					"opcode": "looks_sayforsecs",
+					"next": "r8rsuu=)LZi9jG|yRWh$",
+					"parent": "sZ2f~Rlu-n@$CjWw`(C8",
+					"inputs": {
+						"MESSAGE": [3, "tDnCCk.iOhqjPavI]P=r", [10, "Hello!"]],
+						"SECS": [1, [4, "2"]]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				},
+				"after": {
+					"opcode": "looks_sayforsecs",
+					"next": "classes-checkin-save-random",
+					"parent": "sZ2f~Rlu-n@$CjWw`(C8",
+					"inputs": {
+						"MESSAGE": [3, "tDnCCk.iOhqjPavI]P=r", [10, "Hello!"]],
+						"SECS": [1, [4, "2"]]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				}
+			},
+			{
+				"blockId": "r8rsuu=)LZi9jG|yRWh$",
+				"before": {
+					"opcode": "control_if_else",
+					"next": "V4p@o=BN2U%P23Sev1{k",
+					"parent": ":`5B{;Qs2DUAAViJA;e{",
+					"inputs": {
+						"CONDITION": [2, "Io+sL46@E/Re~_;]VDjt"],
+						"SUBSTACK": [2, "*p39Pb.g:cs;9[Rj)nY("],
+						"SUBSTACK2": [2, "w%M,Gv@|*r1{mtD3g|cj"]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				},
+				"after": {
+					"opcode": "control_if_else",
+					"next": "V4p@o=BN2U%P23Sev1{k",
+					"parent": "classes-checkin-save-random",
+					"inputs": {
+						"CONDITION": [2, "Io+sL46@E/Re~_;]VDjt"],
+						"SUBSTACK": [2, "*p39Pb.g:cs;9[Rj)nY("],
+						"SUBSTACK2": [2, "w%M,Gv@|*r1{mtD3g|cj"]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				}
+			},
+			{
+				"blockId": "Io+sL46@E/Re~_;]VDjt",
+				"before": {
+					"opcode": "operator_lt",
+					"next": null,
+					"parent": "r8rsuu=)LZi9jG|yRWh$",
+					"inputs": {
+						"OPERAND1": [3, "o$.C@L%rJ38^J/(nD88)", [10, ""]],
+						"OPERAND2": [1, [10, "10"]]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				},
+				"after": {
+					"opcode": "operator_lt",
+					"next": null,
+					"parent": "r8rsuu=)LZi9jG|yRWh$",
+					"inputs": {
+						"OPERAND1": [
+							3,
+							[
+								12,
+								"Random Number",
+								"classes-checkin-random-number"
+							],
+							[10, ""]
+						],
+						"OPERAND2": [1, [10, "10"]]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				}
+			},
+			{
+				"blockId": "o$.C@L%rJ38^J/(nD88)",
+				"before": {
+					"opcode": "operator_random",
+					"next": null,
+					"parent": "Io+sL46@E/Re~_;]VDjt",
+					"inputs": {
+						"FROM": [1, [4, "1"]],
+						"TO": [1, [4, "20"]]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				},
+				"after": {
+					"opcode": "operator_random",
+					"next": null,
+					"parent": "classes-checkin-save-random",
+					"inputs": {
+						"FROM": [1, [4, "1"]],
+						"TO": [1, [4, "20"]]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				}
+			},
+			{
+				"blockId": "classes-checkin-save-random",
+				"before": null,
+				"after": {
+					"opcode": "data_setvariableto",
+					"next": "r8rsuu=)LZi9jG|yRWh$",
+					"parent": ":`5B{;Qs2DUAAViJA;e{",
+					"inputs": {
+						"VALUE": [3, "o$.C@L%rJ38^J/(nD88)", [10, "0"]]
+					},
+					"fields": {
+						"VARIABLE": [
+							"Random Number",
+							"classes-checkin-random-number"
+						]
+					},
+					"shadow": false,
+					"topLevel": false
+				}
+			}
+		],
+		"summary": "Stored random input: save the draw before comparing it with10, as required by the checkpoint.",
+		"displaySummary": "Reference correction: store the random number before classifying it.",
+		"addedBlocks": 1,
+		"additionalTargets": [
+			{
+				"target": "Stage",
+				"changes": [],
+				"variables": [
+					{
+						"variableId": "classes-checkin-random-number",
+						"before": null,
+						"after": ["Random Number", 0]
+					}
+				]
+			}
+		]
 	}
 ]

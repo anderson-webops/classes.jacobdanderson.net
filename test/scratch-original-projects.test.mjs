@@ -413,7 +413,15 @@ test("all original Scratch archives retain upstream bytes and only declared corr
 			programCorrections.push(original.id);
 		}
 
-		if (["343348430", "348994271", "357453262"].includes(original.id)) {
+		if (
+			[
+				"341945558",
+				"342645999",
+				"343348430",
+				"348994271",
+				"357453262"
+			].includes(original.id)
+		) {
 			verifyAndRestoreAdvancedGame(loaded, source, original.id);
 			const correction = JSON.parse(
 				strFromU8(files["SOURCE/program-correction.json"])
@@ -507,7 +515,9 @@ test("all original Scratch archives retain upstream bytes and only declared corr
 		"299311602",
 		"332459692",
 		"338501835",
+		"341945558",
 		"342643080",
+		"342645999",
 		"343348430",
 		"348994271",
 		"357452924",
@@ -522,7 +532,7 @@ test("all original Scratch archives retain upstream bytes and only declared corr
 				process.env.SCRATCH_ORIGINAL_BROWSER_PROOF_DIR,
 				"archive-identity.json"
 			),
-			`${JSON.stringify({ projects: 164, assets: 505, originalSourceBytesRetained: true, unchangedPrograms: 156, declaredProgramCorrections: programCorrections, onlyDeclaredAttributionSvgAndProgramChanges: true, compatibilityAssets: correctedAssets.size, compatibilityProjects: correctedProjects.size, records }, null, 2)}\n`
+			`${JSON.stringify({ projects: 164, assets: 505, originalSourceBytesRetained: true, unchangedPrograms: 154, declaredProgramCorrections: programCorrections, onlyDeclaredAttributionSvgAndProgramChanges: true, compatibilityAssets: correctedAssets.size, compatibilityProjects: correctedProjects.size, records }, null, 2)}\n`
 		);
 	}
 });
@@ -996,5 +1006,77 @@ test("Fruit Ninja clones keep independent kinds and countdown/misses terminate",
 		rt.variable(rt.target("Blade"), "CJg!#vP~DGeJ,CsQpWi2", misses);
 		rt.run(rt.target("Blade"), "S+GPTixnVAyz3W9WRl[y");
 		assert.equal(rt.state.stopped, misses >= 3);
+	}
+});
+
+test("Check-In drawing clones own their side lengths and reset pen entry", async () => {
+	const { corrected, source } = await reviewedGame("341945558");
+	for (const project of [source, corrected]) {
+		const rt = sourceGameRuntime(project);
+		const first = rt.clone("Spider", " A"),
+			second = rt.clone("Spider", " B");
+		const hat = "375/[h\u0060%7uf)3zxm0tFy";
+		const stopBefore = Object.keys(first.blocks).find(id => {
+			const b = first.blocks[id];
+			return (
+				b.opcode === "control_repeat" &&
+				b.inputs.TIMES[1][1] === "2" &&
+				b.parent &&
+				first.blocks[b.parent].opcode === "control_if_else"
+			);
+		});
+		assert.ok(stopBefore);
+		first.penDown = true;
+		first.direction = 30;
+		second.penDown = true;
+		second.direction = -30;
+		rt.run(first, hat, stopBefore);
+		rt.run(second, hat, stopBefore);
+		const lengthId =
+			project === corrected
+				? "classes-checkin-clone-side"
+				: "wH/Q,H7ypw\u0060vP~C}4s-]";
+		rt.variable(first, lengthId, 80);
+		assert.equal(
+			Number(rt.variable(second, lengthId)),
+			project === corrected ? 20 : 80
+		);
+		assert.equal(first.penAtRandomPlacement, project === source);
+		assert.equal(first.direction, project === corrected ? 90 : 30);
+	}
+});
+
+test("Check-In random classification stores one draw at all branch boundaries", async () => {
+	const { corrected, source } = await reviewedGame("342645999");
+	assert.equal(
+		source.targets.find(t => t.isStage).variables[
+			"classes-checkin-random-number"
+		],
+		undefined
+	);
+	for (const value of [1, 9, 10, 20]) {
+		let calls = 0;
+		const rt = sourceGameRuntime(corrected, {
+			random: (from, to) => {
+				assert.deepEqual([from, to], [1, 20]);
+				calls++;
+				return value;
+			}
+		});
+		rt.run(rt.target("Andie"), "sZ2f~Rlu-n@$CjWw\u0060(C8");
+		assert.equal(calls, 1);
+		assert.equal(
+			Number(
+				rt.variable(rt.target("Andie"), "classes-checkin-random-number")
+			),
+			value
+		);
+		assert.deepEqual(rt.state.said, [
+			"11",
+			value < 10
+				? "Wow, that's a small number!"
+				: "Whoa, that's a big number!",
+			"The remainder of dividing 11 by 2 is: 1"
+		]);
 	}
 });
