@@ -1029,9 +1029,12 @@ This project combines exponential growth with quadratic transformations.
 
 **Mission 1: Radiofungi in the Lab**
 
+Let \`t\` be the number of completed weeks and \`s\` the initial modeled fungal-cell count.
+
 - Earth model: \`f(t) = s * 7^t\`
-- To reach \`50,000,000\` bacteria after \`2\` weeks:
-  - \`s = 50,000,000 / 7^2 ≈ 1,020,408\`
+- To reach at least \`50,000,000\` modeled fungal cells after \`2\` weeks:
+  - The equation gives \`s = 50,000,000 / 7^2 ≈ 1,020,408.16\`.
+  - The smallest whole-number starting count meeting the target is \`1,020,409\`; after two weeks it gives \`1,020,409 * 49 = 50,000,041\`.
 - Space model: \`f(t) = s * 5^t\`
 - To reach the same goal in space:
   - \`s = 50,000,000 / 5^2 = 2,000,000\`
@@ -1049,7 +1052,7 @@ This project combines exponential growth with quadratic transformations.
   - \`x = 7 ± sqrt(7)\`
   - about \`4.35\` and \`9.65\`
 
-**Earth-side use cases**
+**Design ideas to investigate**
 
 - nuclear cleanup sites
 - medical or industrial radiation-shielding structures
