@@ -413,7 +413,7 @@ export const lateElementaryBMaterials: ElementaryMaterial[] = [
 	},
 	{
 		code: "check-2",
-		method: "Use units, an expression and a labeled representation for each case. Interpret remainders in context and distinguish a point from a route. Verify a pattern prediction by substituting its time value into the stated rule. A check-in answer should identify the operation and its reason.",
+		method: "Use units, an expression and a labeled representation for each case. Interpret remainders in context and distinguish a point from a route. Verify a pattern prediction by substituting its time value into the stated rule. A check-in answer identifies the operation and its reason.",
 		worked: "For a 3-by-5 rectangle on a coordinate grid, area is 15 square units even if its lower-left vertex changes. Converting 2.5 meters to 250 centimeters changes the number and unit together while preserving length.",
 		tasks: [
 			{
