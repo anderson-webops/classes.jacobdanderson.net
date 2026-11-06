@@ -1,5 +1,6 @@
 import type { RawCourse } from "./types";
 import { configureMathCourseFlow } from "./mathCourseFlow";
+import { applyAlgebra1AReadings } from "./algebra1Readings";
 import { pendingStaticMediaNotice, staticMediaUrl } from "./staticMedia";
 
 const MEDIA_BASE = "https://static.classes.jacobdanderson.net/algebra-1a";
@@ -1027,9 +1028,8 @@ The master project closes the course with a short independent explanation.
 - Explain what the concept is for.
 - Describe at least one real-world use.
 - Design and solve at least two original problems.
-- Record a short presentation that explains the explanation clearly and concisely.
+- Record a short presentation of the concept and worked solutions.
 
-	This project is a short capstone reflection rather than another worksheet.
 					`.trim()
 			)
 		]),
@@ -1437,3 +1437,5 @@ configureMathCourseFlow(algebra1ACourse, {
 	],
 	appendixTitles: ["Reference Archive: Algebra 1A"]
 });
+
+applyAlgebra1AReadings(algebra1ACourse);

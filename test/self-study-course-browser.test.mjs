@@ -30,7 +30,7 @@ const courseIds = [
 	"geometry-a",
 	"geometry-b"
 ];
-const readingCounts = [8, 7, 10, 13, 14, 16, 20, 14, 9, 4, 27, 22, 37, 38, 11, 6, 11];
+const readingCounts = [15, 7, 10, 13, 14, 16, 20, 14, 9, 4, 27, 22, 37, 38, 11, 6, 11];
 assert.equal(readingCounts.length, courseIds.length);
 const requestedCourses = process.env.SELF_STUDY_BROWSER_COURSES;
 const sourceMode = process.env.SELF_STUDY_BROWSER_SOURCE_MODE ?? "build";

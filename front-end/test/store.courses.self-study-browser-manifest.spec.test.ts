@@ -12,7 +12,10 @@ import grammarAdditions from "../../test/fixtures/grammar-mechanics-restored-ide
 import literatureAdditions from "../../test/fixtures/middle-school-literature-restored-identities.json";
 import writingAdditions from "../../test/fixtures/middle-school-writing-restored-identities.json";
 import speakingAdditions from "../../test/fixtures/public-speaking-restored-identities.json";
-import { isLessonLearningItem } from "@/modules/courseLessonPresentation";
+import {
+	isLessonLearningItem,
+	lessonContentSections
+} from "@/modules/courseLessonPresentation";
 import { normalizeInlineCourseMarkdown } from "@/modules/courseMarkdown";
 import { useAppStore } from "@/stores/app";
 import { useCoursesStore } from "@/stores/courses";
@@ -40,7 +43,7 @@ const cases = [
 	{
 		id: "algebra-1a",
 		source: algebra1ACourse,
-		readings: 8,
+		readings: 15,
 		additions: []
 	},
 	{
@@ -324,7 +327,7 @@ it.each(
 				: [];
 			// These authored labels become separate headings in assignment cards.
 			// Keep every body word while matching the displayed heading punctuation.
-			const fullAssignment = fullBlocks
+			let fullAssignment = fullBlocks
 				? item.content
 						.replace(/^\*\*(Goal|Steps):\*\*/gm, "**$1**")
 						.replace(
@@ -332,6 +335,24 @@ it.each(
 							"**Optional · Extension**"
 						)
 				: item.content;
+			if (id === "algebra-1a" || id === "algebra-1b") {
+				const sections = lessonContentSections(
+					item.content,
+					item.contentKind ?? "assignment"
+				);
+				expect(sections.some(section => section.kind === "learn")).toBe(
+					false
+				);
+				fullAssignment = sections
+					.map(section => {
+						const label =
+							section.kind === "optional" && section.label !== "Optional"
+								? `Optional · ${section.label}`
+								: section.label;
+						return `### ${label}\n\n${section.content}`;
+					})
+					.join("\n\n");
+			}
 			const directive = item.content.match(
 				/^(?:\*\*(?:Project )?goal:\*\*\s*)?([\s\S]+?)\s*\*\*Completion evidence:\*\*/i
 			)?.[1];
