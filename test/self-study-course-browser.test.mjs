@@ -639,7 +639,7 @@ test(
 							assert.equal(writes, 0);
 							if (id === "pre-algebra-a") assert.equal(resourceViews.length, 23);
 							if (id === "geometry-a") assert.equal(resourceViews.length, 17);
-							if (id === "geometry-b") assert.equal(resourceViews.length, 12);
+							if (id === "geometry-b") assert.equal(resourceViews.length, 13);
 							assert.deepEqual(pageErrors, []);
 							profiles.push({
 								id,

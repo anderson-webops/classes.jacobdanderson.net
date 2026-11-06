@@ -195,7 +195,7 @@ it.each([
 			anchors.add(section.hash);
 		}
 		expect(anchors.size).toBe(track === "a" ? 16 : 12);
-		if (track === "a") {
+		{
 			const variation = coreModules
 				.flatMap(module => module.supplementalProjects)
 				.find(item =>

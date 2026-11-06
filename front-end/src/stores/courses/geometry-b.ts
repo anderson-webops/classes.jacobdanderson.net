@@ -1,4 +1,5 @@
 import type { RawCourse } from "./types";
+import { courseAssetViewerUrl } from "@/modules/courseAssetPreview";
 import { addGeometryCases } from "./geometryCases";
 import { configureMathCourseFlow } from "./mathCourseFlow";
 import {
@@ -840,3 +841,25 @@ const pendingAssets = geometryBCourse.modules.find(
 );
 if (!pendingAssets) throw new Error("Missing Geometry B asset record");
 pendingAssets.internal = true;
+
+const capstone = geometryBCourse.modules.find(
+	module => module.title === "Check-In #2 and Geometry B Capstone"
+);
+if (!capstone) throw new Error("Missing Geometry B capstone");
+capstone.supplementalProjects.push({
+	id: "geometry-b-check-in-2-and-geometry-b-capstone-supplemental-check-in-2-and-geometry-b-capstone-changed-case-review",
+	title: "Check-In #2 and Geometry B Capstone Changed-Case Review",
+	aliases: ["Applied Challenge"],
+	learningPath: "choice",
+	contentKind: "assignment",
+	preserveInstructions: true,
+	content: [
+		"**Problems:**",
+		"1. A sign has vertices A=(0,0), B=(8,0), C=(8,6), D=(0,6). Find its diagonal length, perimeter and area. List its parallelogram-family classifications and decide whether it is a regular polygon.",
+		"2. A circular emblem has center E=(4,3) and radius 2. Find its circumference, area, and the arc length and area of a 90-degree sector. Distinguish length from area units.",
+		"3. Rotate the entire sign and emblem 90 degrees counterclockwise about the origin, then dilate the image by factor 3/2 about the origin. Give the intermediate and final coordinates of C and E, the final emblem radius, and the sign's final perimeter and area. Explain the different scale factors.",
+		"4. A closed cylindrical container has radius 2 and height 6. Find its volume and total surface area, then scale all dimensions by 3/2 and calculate both quantities again. Compare with a different change that increases only the radius to 3 while keeping height 6; explain why that change does not use the uniform volume scale factor.",
+		"**Checkpoints:** Use coordinate evidence for classification, track the order and center of transformations, name exposed surfaces, and distinguish length, area and volume scaling.",
+		`[Check answers and reasoning](${courseAssetViewerUrl("/course-assets/geometry-b/practice-checks-v1.md#design-changed-case-review", "Design self-check")})`
+	].join("\n\n")
+});
