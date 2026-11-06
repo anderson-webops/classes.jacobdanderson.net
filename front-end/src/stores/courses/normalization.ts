@@ -8,6 +8,7 @@ import { mapMarkdownProse } from "./markdownProse";
 import { applyMiddleSchoolLiteratureReadings } from "./middleSchoolLiteratureReadings";
 import { applyMiddleSchoolWritingReadings } from "./middleSchoolWritingReadings";
 import { applyNovelWritingReadings } from "./novelWritingReadings";
+import { applyPhysicsLevel2References } from "./physicsLevel2References";
 import { buildProjectGuidance } from "./projectGuidance";
 import { applyPublicSpeakingReadings } from "./publicSpeakingReadings";
 import { applyPyGamesCourseWorkflows } from "./pyGamesCourseWorkflows";
@@ -9858,6 +9859,7 @@ export function normalizeRawCourse(id: string, rawCourse: RawCourse) {
 	if (id === "scratch-level-1-bootcamp")
 		applyScratchBootcampReadings(course, rawCourse);
 	if (id === "intro-to-physics") applyIntroPhysicsReferences(course);
+	if (id === "physics-level-2") applyPhysicsLevel2References(course);
 	if (
 		id === "middle-school-b-writing" ||
 		id === "middle-school-b-writing-retake"

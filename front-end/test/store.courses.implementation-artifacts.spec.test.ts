@@ -305,7 +305,7 @@ describe("implemented course development artifacts", () => {
 				expect(text, courseId).toContain("Digital Resource Bank");
 				expect(text, courseId).toContain("PhET");
 				expect(text, courseId).toMatch(
-					/does not require (?:beakers|household materials|physical lab supplies)|No physical lab supplies are required|No required project depends|without requiring hardware kits, physical sensors, special lab supplies/i
+					/does not require (?:beakers|household materials|physical lab supplies)|No physical lab supplies are required|No required project depends|No case requires|without requiring hardware kits, physical sensors, special lab supplies/i
 				);
 				expect(
 					course.modules.some(module =>

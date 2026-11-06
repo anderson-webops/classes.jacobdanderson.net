@@ -175,6 +175,12 @@ Positive \(x\) is east and positive \(y\) is north.
 
 Build separate \(x\)- and \(y\)-momentum ledgers, compare total kinetic energy, and identify one physical energy-transfer route.
 
+### Elastic collision and recoil cases
+
+For a one-dimensional elastic collision, a 1.00 kg cart moving at +3.00 m/s strikes a stationary 2.00 kg cart. Final velocities are −1.00 m/s and +2.00 m/s. Verify momentum and kinetic-energy balances, then compare with the supplied two-dimensional inelastic collision.
+
+For an isolated recoil model, a 0.200 kg object and 2.00 kg launcher begin at rest. The object ends at +10.0 m/s. Find launcher velocity, check total momentum and identify why total kinetic energy increases. These are fictional records, with no physical launch required.
+
 ### Force-time safety records
 
 Both designs bring the same modeled object to rest.
@@ -234,6 +240,12 @@ The disk and ring roll without slipping from the same vertical drop of 1.20 m.
 
 Use energy conservation and the inertia models to compare bottom speeds. Then name rolling resistance, deformation, and slip as effects absent from the ideal result.
 
+### Lever design criteria
+
+An ideal lever supports a 300 N load 0.200 m from its pivot. Choose an effort arm of 0.500 or 0.800 m, with perpendicular forces on opposite sides. Required effort is at most 100 N and total load-arm plus effort-arm length is at most 1.00 m. Neglect lever weight for the static calculation; explain how adding its weight or a dynamic load would change the model.
+
+Compare both options with torque and vertical-force balance. A suitable response distinguishes this ideal mechanical comparison from a strength rating.
+
 ## Gravitation Circular Motion and Orbits Cases
 
 Use Earth gravitational parameter \(\mu=3.986\times10^{14}\text{ m}^3/\text{s}^2\).
@@ -263,6 +275,12 @@ State which quantities are held fixed and why \(r\) is center-to-center separati
 
 For a 500 kg satellite, compare specific or total orbital energy at low A and low B. A complete explanation distinguishes changing gravitational potential, kinetic energy, and the external work needed to transfer between circular orbits.
 
+### Vertical-loop contact case
+
+A modeled 0.500 kg cart moves inside a vertical circular track of radius 0.800 m. Its speed at the top is 3.00 m/s. Use g = 9.80 m/s², maintained contact and negligible energy loss.
+
+Calculate the top contact force. Then use the 1.600 m height change to predict bottom speed and bottom contact force. Find the minimum top speed for a nonnegative top contact force. No physical track or launch is required.
+
 ## Electricity Circuits and Fields Cases
 
 ### Source with internal resistance
@@ -290,13 +308,9 @@ A 12.0 V node connects through 6.0 Ω to unknown node \(V\). Node \(V\) connects
 
 ### Meter loading
 
-A 100 kΩ resistor divider is measured with:
+An ideal 12.0 V source drives two 100 kΩ resistors in series between its positive terminal and ground. The midpoint connects to the top of the lower resistor. A voltmeter measures that midpoint relative to ground, placing its resistance in parallel with the lower resistor.
 
-- ideal infinite-resistance voltmeter;
-- 1.0 MΩ voltmeter;
-- 100 kΩ voltmeter.
-
-Draw the equivalent circuit for each and explain why the reading changes when meter resistance is comparable to the circuit resistance.
+Compare an ideal infinite-resistance voltmeter, a 1.0 MΩ meter and a 100 kΩ meter. Draw each equivalent circuit, calculate the reading and compare it with the undisturbed midpoint voltage.
 
 ## Thermal Optics and Modern Bridges Cases
 
@@ -339,6 +353,47 @@ Calculate residuals and identify whether the pattern suggests random reading sca
 
 State the classical expectation being tested, the threshold pattern, and the limited refined idea needed to explain the data.
 
+### Heating and phase record
+
+An ideal 0.100 kg sample begins at its melting point, 0 °C. Constant input power is 100 W. Use latent heat 334,000 J/kg and liquid specific heat 4180 J/(kg·°C), with no losses.
+
+| Time (s) | Temperature (°C) |
+| ---: | ---: |
+| 0 | 0 |
+| 100 | 0 |
+| 200 | 0 |
+| 334 | 0 |
+| 375.8 | 10 |
+| 417.6 | 20 |
+
+Explain what changes during the plateau. Calculate the melting duration and the energy needed for the following 10 °C increase.
+
+### Thermal design comparison
+
+Two fictional insulated enclosures have effective heat capacity 200 J/K, start at 60 °C and cool in the same 20 °C room.
+
+| Time (s) | Design A temperature (°C) | Design B temperature (°C) |
+| ---: | ---: | ---: |
+| 0 | 60 | 60 |
+| 60 | 54 | 57 |
+| 120 | 48 | 54 |
+
+A costs 4 units; B costs 7 units. Require temperature at least 52 °C at 120 s and cost at most 8 units. Estimate each average heat-loss rate from CΔT/Δt, compare the criteria, and identify why the short record does not establish a cooling law at all temperatures.
+
+### Optional interference phase cards
+
+Two linear waves travel in opposite directions with equal 2 cm amplitudes and period 1 s. At one position their displacements are:
+
+| Time (s) | Wave A (cm) | Wave B, matching phase (cm) | Wave B, opposite phase (cm) |
+| ---: | ---: | ---: | ---: |
+| 0.00 | 0 | 0 | 0 |
+| 0.25 | 2 | 2 | -2 |
+| 0.50 | 0 | 0 | 0 |
+| 0.75 | -2 | -2 | 2 |
+| 1.00 | 0 | 0 | 0 |
+
+Use signed addition to find both total-displacement records and their amplitudes. This is an optional wave-model bridge for the optics discussion, not a prerequisite for completing the quantitative core.
+
 ## Engineering Physics Capstone Cases
 
 ### Option A: Ramp delivery system
@@ -370,7 +425,9 @@ Available evidence:
 - 1.0 Ω internal resistance;
 - load options 8 Ω, 12 Ω, and 20 Ω;
 - switch and meter models;
-- one open-failure and one short-risk case.
+- separate switches in each parallel load branch;
+- an open failure in one branch;
+- a wire bypass across one load that directly connects the two load-supply nodes, leaving only source internal resistance to limit fault current.
 
 ### Option C: Impact system
 
@@ -382,7 +439,10 @@ Available evidence:
 - object mass 4.0 kg;
 - initial speed 5.0 m/s;
 - candidate stopping times 0.05, 0.08, and 0.12 s;
-- candidate average stopping forces.
+- constant deceleration throughout each candidate stop, with force opposing motion;
+- force magnitudes and distances to calculate from those times.
+
+Compare all candidates. An infeasible result is valid evidence: identify the conflicting criteria and propose an explicit revision rather than assuming a passing design exists. Limit the conclusion to this constant-deceleration model family.
 
 ### Capstone record
 
@@ -412,15 +472,15 @@ Graph error against step size and describe convergence.
 
 ### Oscillator stability trace
 
-The same undamped oscillator is modeled with two methods.
+The undamped oscillator has m = 1.00 kg, k = 1.00 N/m, x₀ = 1.00 m, v₀ = 0 and step h = 0.0500 s. Analytic energy is 0.500 J. Explicit Euler uses xnext = x + vh and vnext = v − (k/m)xh, with both right-hand sides from the old state. Symplectic Euler updates v first and then xnext = x + vnext h.
 
-| Time | Analytic energy | Explicit Euler energy | Symplectic Euler energy |
-| ---: | --------------: | --------------------: | ----------------------: |
-|    0 |           0.500 |                 0.500 |                   0.500 |
-|    5 |           0.500 |                 0.641 |                   0.487 |
-|   10 |           0.500 |                 0.822 |                   0.519 |
-|   15 |           0.500 |                 1.054 |                   0.493 |
-|   20 |           0.500 |                 1.352 |                   0.506 |
+| Time (s) | Analytic energy (J) | Explicit Euler energy (J) | Symplectic Euler energy (J) |
+| ---: | ---: | ---: | ---: |
+| 0 | 0.500 | 0.500 | 0.500 |
+| 5 | 0.500 | 0.642 | 0.507 |
+| 10 | 0.500 | 0.824 | 0.489 |
+| 15 | 0.500 | 1.058 | 0.513 |
+| 20 | 0.500 | 1.357 | 0.491 |
 
 Identify numerical energy drift and explain why a visually oscillating result can still fail a conservation check.
 
@@ -437,6 +497,8 @@ Identify numerical energy drift and explain why a visually oscillating result ca
 ## Uncertainty and Curve Fitting Cases
 
 ### Linear calibration evidence
+
+For both datasets below, x is time in seconds and y is position in metres. For the linear record, take independent standard uncertainty u(y) = 0.20 m at every point and negligible x uncertainty. The displayed candidate model is y = (2 m/s)x + 1 m; it is not declared to be the least-squares fit.
 
 | \(x\) | Measured \(y\) | Model \(y=2x+1\) | Residual \(y-y_\text{model}\) |
 | ----: | -------------: | ---------------: | ----------------------------: |
@@ -460,7 +522,7 @@ Graph data and residuals. Decide whether residual signs look random or patterned
 |     4 |           15.9 |
 |     5 |           25.2 |
 
-Compare a linear fit with \(y=x^2\). Use residual structure rather than visual preference alone.
+Compare a linear fit with y = (1 m/s²)x². Use residual structure rather than visual preference alone.
 
 ### Bias and scatter cases
 
@@ -491,7 +553,7 @@ Masses 4.00 kg and 2.00 kg connect over a frictionless massless pulley.
 - derive the shared acceleration magnitude;
 - calculate tension;
 - check \(0<a<g\);
-- compare with a 1.0 kg pulley-inertia case using supplied acceleration 2.80 m/s².
+- compare with a fixed-axis 1.00 kg thin-ring pulley of radius R and inertia I = MR², with a massless rope, no slip and no bearing friction; derive acceleration before comparing with the supplied 2.80 m/s².
 
 ### Moving support constraint
 
@@ -569,7 +631,9 @@ Calculate \(\Delta U\) for each and explain why heat and work can depend on path
 
 ### Sensor calibration
 
-| Reference quantity | Sensor voltage (V) |
+The reference quantity q is temperature in °C for a fictional sensor. Voltage sensitivity is 0.020 V/°C over 0–40 °C and nominal zero offset is 0.50 V.
+
+| Reference temperature (°C) | Sensor voltage (V) |
 | -----------------: | -----------------: |
 |                  0 |               0.51 |
 |                 10 |               0.70 |
@@ -578,6 +642,10 @@ Calculate \(\Delta U\) for each and explain why heat and work can depend on path
 |                 40 |               1.31 |
 
 Compare the nominal calibration \(q=(V-0.50)/0.020\) with the supplied points. Calculate residuals in voltage or inferred quantity.
+
+### Induction transduction case
+
+A fixed 100-turn coil has signed magnetic flux per turn changing from 0.002 Wb to 0.005 Wb in 0.10 s. Calculate average induced emf using the stated positive-flux orientation. Compare reversing the flux change and holding flux constant. These are supplied model values, with no physical electrical apparatus required.
 
 ### Noisy time series
 
@@ -592,7 +660,7 @@ Compare the nominal calibration \(q=(V-0.50)/0.020\) with the supplied points. C
 |        6 |           1.33 |
 |        7 |           1.28 |
 
-Compare raw values with a three-point moving average. Identify the real step-like change near 5 s and explain how smoothing shifts or blurs its apparent timing.
+Compare raw values with a trailing three-point mean aligned to the current sample: mean at t uses values at t−2, t−1 and t. Leave the first two filtered values undefined. Describe the step-like rise near 5 s and how smoothing delays or blurs it; these samples alone do not establish its physical cause.
 
 ### Sampling cards
 
@@ -633,12 +701,12 @@ A moving unstable particle has proper lifetime 2.20 µs and speed 0.95c in the l
 
 ### Train-platform events
 
-Two flashes occur at the front and rear of a moving train. A platform observer records the flashes as simultaneous and equidistant from the platform midpoint.
+The train moves toward its front at constant velocity. At platform time zero its midpoint passes the platform midpoint. At that same platform time, front and rear flashes are emitted at equal distances from the platform midpoint. Both light signals travel toward the midpoints.
 
 Create:
 
 - named platform and train frames;
-- four events: front flash, rear flash, light reaches platform midpoint, light reaches train midpoint;
+- five distinct events: front emission, rear emission, the simultaneous arrival of both signals at the platform midpoint, front signal reaching the train midpoint, rear signal reaching the train midpoint;
 - a qualitative order argument for the train observer;
 - a correction to “both observers merely see different illusions.”
 

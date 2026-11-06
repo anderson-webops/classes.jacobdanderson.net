@@ -136,7 +136,16 @@ describe("research-backed course family expansions", () => {
 				);
 				expect(roadmapModule, courseId).toBeDefined();
 				const roadmapText = moduleText(roadmapModule!);
-				if (courseId === "intro-to-physics") {
+				if (courseId === "physics-level-2") {
+					for (const phrase of [
+						"PHY8 constant-acceleration equations",
+						"PHY9 free-body diagrams and PHY10 rope constraints",
+						"17 module case sections and 17 matching answer sections",
+						"/course-assets/physics/physics-level-2-materials-pack.md",
+						"/course-assets/physics/physics-level-2-rubrics-answer-key.md"
+					])
+						expect(roadmapText, courseId).toContain(phrase);
+				} else if (courseId === "intro-to-physics") {
 					expect(roadmapText, courseId).toContain(
 						"PHY2 signed velocity, PHY3 external forces and PHY4 kinetic energy before PHY8 momentum"
 					);

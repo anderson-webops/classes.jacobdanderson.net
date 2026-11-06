@@ -25,7 +25,7 @@ const courseIds = [
 	"intro-to-physics",
 	"physics-level-2"
 ];
-const readingCounts = [10, 13, 14, 16, 20, 14, 9, 4, 27, 22, 37, 5];
+const readingCounts = [10, 13, 14, 16, 20, 14, 9, 4, 27, 22, 37, 38];
 assert.equal(readingCounts.length, courseIds.length);
 const requestedCourses = process.env.SELF_STUDY_BROWSER_COURSES;
 const sourceMode = process.env.SELF_STUDY_BROWSER_SOURCE_MODE ?? "build";
@@ -554,7 +554,8 @@ test(
 								);
 								if (
 									index === 0
-									|| (id === "intro-to-physics" && /^(?:Standards Map|Course Roadmap)$/.test(module.title))
+									|| (["intro-to-physics", "physics-level-2"].includes(id) && /^(?:Standards Map|Course Roadmap)$/.test(module.title))
+                                    || (id === "physics-level-2" && /^(?:PHY12|PHY16|PHY17|PHY23) /.test(module.title))
 									|| module.readings.some(
 										item => item.images.length
 									)

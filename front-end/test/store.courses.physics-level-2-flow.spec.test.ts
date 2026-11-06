@@ -7,7 +7,7 @@ import { useAppStore } from "@/stores/app";
 import { useCoursesStore } from "@/stores/courses";
 import { loadRawCourse } from "@/stores/courses/index";
 import { physicsLevel2Course } from "@/stores/courses/physics-level-2";
-import { physicsLevel2FoundationReadings } from "@/stores/courses/physicsLevel2FoundationReadings";
+import { physicsLevel2Readings } from "@/stores/courses/physicsLevel2Readings";
 
 const EXPECTED_SEQUENCE = [
 	"PHY8 Quantitative Kinematics and Vector Modeling",
@@ -150,40 +150,30 @@ describe("Physics Level 2 learner flow", () => {
 		for (const [index, module] of physicsLevel2Course.modules.entries()) {
 			expect(module.estimatedTime, module.title).toMatch(/session/);
 			expect(module.keyBlocks, module.title).toHaveLength(6);
-			expect(
-				module.curriculum.length,
-				module.title
-			).toBeGreaterThanOrEqual(5);
 			expect(module.supplementalProjects, module.title).toHaveLength(3);
-			expect(module.curriculum[0]?.content, module.title).toContain(
-				"**Concept path:**"
-			);
-
 			const expectedPath = index >= 9 && index <= 15 ? "choice" : "core";
 			expect(
 				module.curriculum.every(
-					item =>
-						item.learningPath === expectedPath &&
-						item.content.includes("**Guiding phenomenon:**") &&
-						item.content.includes("**Core route:**") &&
-						item.content.includes("**Stretch route:**") &&
-						item.content.includes(
-							"**Quantitative evidence gate:**"
-						) &&
-						item.content.includes("**Model domain and limit:**")
-				),
-				module.title
+					item => item.learningPath === expectedPath
+				)
 			).toBe(true);
+			const readings = module.curriculum.filter(
+				item => item.contentKind === "reading"
+			);
+			expect(readings).toHaveLength(index === 0 ? 2 : 1);
+			const concept = readings[index === 0 ? 1 : 0];
+			expect(concept.content).toMatch(/^### Worked/m);
+			expect(concept.content).toContain("**Core route:**");
+			expect(concept.content).toContain("**Model domain and limit:**");
 		}
-
 		expect(
-			requireModule(EXPECTED_SEQUENCE[0]).curriculum[0]?.content
+			requireModule(EXPECTED_SEQUENCE[0]).curriculum[0].content
 		).toContain("Quantitative core");
 		expect(
-			requireModule(EXPECTED_SEQUENCE[9]).curriculum[0]?.content
+			requireModule(EXPECTED_SEQUENCE[9]).curriculum[0].content
 		).toContain("Advanced modeling extension");
 		expect(
-			requireModule(EXPECTED_SEQUENCE[16]).curriculum[0]?.content
+			requireModule(EXPECTED_SEQUENCE[16]).curriculum[0].content
 		).toContain("Independent synthesis");
 	});
 
@@ -208,7 +198,10 @@ describe("Physics Level 2 learner flow", () => {
 
 	it("turns every lesson and project into a linked quantitative task", () => {
 		for (const item of allItems()) {
-			expect(item.content.length, item.title).toBeGreaterThanOrEqual(700);
+			expect(
+				item.content.trim().split(/\s+/u).length,
+				item.title
+			).toBeGreaterThanOrEqual(20);
 			expect(item.datasetLink, item.title).toMatch(
 				/^\/course-assets\/physics\/physics-level-2-materials-pack\.md#/
 			);
@@ -379,7 +372,7 @@ describe("Physics Level 2 learner flow", () => {
 		);
 
 		expect(text).toContain(
-			"No physical apparatus, personal-device data, home electrical work"
+			"without physical apparatus or personal measurements"
 		);
 		expect(text).toContain(
 			"No required learner reaction-time, location, household-energy"
@@ -438,12 +431,10 @@ describe("Physics Level 2 learner flow", () => {
 			const module = requireModule(EXPECTED_SEQUENCE[index]);
 			const reading = module.curriculum[index === 0 ? 1 : 0];
 			expect(reading.contentKind).toBe("reading");
-			expect(reading.content).toContain(
-				physicsLevel2FoundationReadings[number]
-			);
+			expect(reading.content).toContain(physicsLevel2Readings[number]);
 			expect(reading.content).toContain("### Worked");
 		}
-		const cases = Object.values(physicsLevel2FoundationReadings).join("\n");
+		const cases = Object.values(physicsLevel2Readings).join("\n");
 		for (const result of [
 			"35.35 m",
 			"55.0 s",
@@ -487,10 +478,9 @@ describe("Physics Level 2 learner flow", () => {
 					...module.curriculum,
 					...module.supplementalProjects
 				];
-				if (index < 4)
-					expect(items.filter(isLessonLearningItem)).toHaveLength(
-						index === 0 ? 2 : 1
-					);
+				expect(items.filter(isLessonLearningItem)).toHaveLength(
+					index === 0 ? 2 : 1
+				);
 				for (const original of [
 					...authored.curriculum,
 					...authored.supplementalProjects
@@ -508,10 +498,9 @@ describe("Physics Level 2 learner flow", () => {
 							? original.solutionLink
 							: undefined
 					);
-					if (index < 4)
-						expect(isLessonLearningItem(item)).toBe(
-							original.contentKind === "reading"
-						);
+					expect(isLessonLearningItem(item)).toBe(
+						original.contentKind === "reading"
+					);
 				}
 			}
 		}

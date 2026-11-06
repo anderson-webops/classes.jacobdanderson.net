@@ -101,7 +101,7 @@ const cases = [
 	{
 		id: "physics-level-2",
 		source: physicsLevel2Course,
-		readings: 5,
+		readings: 38,
 		additions: []
 	}
 ] as const;
@@ -282,17 +282,7 @@ it.each(
 					.filter(item => !isLessonLearningItem(item))
 					.map(card)
 			}));
-		const reviewedModules =
-			id === "physics-level-2"
-				? modules.filter(module =>
-						source.modules
-							.slice(0, 4)
-							.some(authored => authored.title === module.title)
-					)
-				: modules;
-		expect(reviewedModules.flatMap(module => module.readings)).toHaveLength(
-			count
-		);
+		expect(modules.flatMap(module => module.readings)).toHaveLength(count);
 		if (algebra)
 			expect(modules).toHaveLength(id === "algebra-2a" ? 15 : 12);
 		else
@@ -304,14 +294,15 @@ it.each(
 					: count
 			);
 		for (const module of modules) {
-			if (id === "physics-level-2") {
-				const index = source.modules.findIndex(
-					candidate => candidate.title === module.title
-				);
-				if (index >= 0 && index < 4)
-					expect(module.readings).toHaveLength(index === 0 ? 2 : 1);
-			} else if (id === "intro-to-physics" && module.kind === "appendix")
+			if (
+				["intro-to-physics", "physics-level-2"].includes(id) &&
+				module.kind === "appendix"
+			)
 				expect(module.readings.length, module.title).toBeGreaterThan(0);
+			else if (id === "physics-level-2")
+				expect(module.readings, module.title).toHaveLength(
+					module.title.startsWith("PHY8 ") ? 2 : 1
+				);
 			else if (!algebra)
 				expect(module.readings, module.title).toHaveLength(1);
 			else if (module.readings.length === 0)
@@ -345,24 +336,8 @@ it.each(
 						restoredIdentities: additions.length,
 						sourceProjects: sourceProjects.length,
 						modules,
-						reviewedModuleIds:
-							id === "physics-level-2"
-								? modules
-										.filter(module =>
-											source.modules
-												.slice(0, 4)
-												.some(
-													authored =>
-														authored.title ===
-														module.title
-												)
-										)
-										.map(module => module.id)
-								: undefined,
 						reviewScope:
-							id === "physics-level-2"
-								? "PHY8–PHY11 foundation only; later modules and reference content remain unreviewed in this acceptance"
-								: "complete course reading and assignment view",
+							"complete course reading and assignment view",
 						internalModules: course.modules
 							.filter(module => module.internal)
 							.map(module => ({

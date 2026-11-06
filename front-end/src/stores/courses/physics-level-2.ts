@@ -1,6 +1,6 @@
 import type { RawCourse, RawCourseModuleItem } from "./types";
 import { contextualizePhysicsCourse } from "./physicsContentContext";
-import { physicsLevel2FoundationReadings } from "./physicsLevel2FoundationReadings";
+import { physicsLevel2Readings } from "./physicsLevel2Readings";
 
 const physicsLevel2SourceCourse: RawCourse = contextualizePhysicsCourse({
 	name: "Physics Level 2",
@@ -11,7 +11,7 @@ const physicsLevel2SourceCourse: RawCourse = contextualizePhysicsCourse({
 				{
 					title: "Introductions, Tooling, and Data Workflow",
 					content:
-						"This course builds on Intro to Physics and assumes comfort with algebra, graph reading, and basic trigonometry. The modeling workflow includes VS Code or PyCharm for optional Python notebooks, spreadsheets for quick data work, and browser tools like PhET and Desmos for visual reasoning. The course now expects more multi-step modeling, clearer assumptions, and stronger graph interpretation than the introductory sequence."
+						"**Concept path:** Quantitative core. Physics Level 2 builds on Intro to Physics and assumes algebra, graph reading and basic trigonometry. Intro modules with similar PHY numbers are optional survey previews; this course rebuilds those ideas with algebra, trigonometry, multiple representations, validation, and uncertainty. PHY8–PHY16 complete the core; PHY17–PHY23 are advanced choices and PHY24 is a final synthesis. Supplied cases support paper, spreadsheet and optional computational routes without physical apparatus or personal measurements."
 				},
 				{
 					title: "Functions, Vectors, and Coordinate Systems",
@@ -68,7 +68,7 @@ const physicsLevel2SourceCourse: RawCourse = contextualizePhysicsCourse({
 				{
 					title: "Worked Example Set: Elevators, Scales, and Connected Objects",
 					content:
-						"Work examples involving elevators, hanging masses, and platforms where the same object experiences multiple forces at once. Use Newton's laws to connect scale readings, normal force, and acceleration in a quantitative way. Highlight how the algebra stays manageable when the diagram is accurate."
+						"Solve the supplied elevator, two-cable sign and accelerating-platform cases. Draw each object diagram before writing force components. Connect the scale or cable reading to net force and acceleration, and check the result against the stated constant-velocity or equilibrium condition."
 				},
 				{
 					title: "Graph and Data Exercise: Force Sensor or Spreadsheet Trends",
@@ -115,7 +115,7 @@ const physicsLevel2SourceCourse: RawCourse = contextualizePhysicsCourse({
 				{
 					title: "Worked Example Set: Blocks, Ramps, and Pulleys",
 					content:
-						"Work through a block at rest on a ramp, a sliding crate with kinetic friction, and a simple connected-mass or pulley example. Choose axes along and perpendicular to the incline, then interpret each sign and term physically. Use the worked examples to normalize slow, organized setup."
+						"Work through a block at rest on a ramp, a sliding crate with kinetic friction, and a simple connected-mass or pulley example. Choose axes along and perpendicular to the incline, then interpret each sign and term physically. Check each result by substituting into its separate object equations."
 				},
 				{
 					title: "Graph and Data Exercise: Acceleration Versus Angle",
@@ -372,7 +372,7 @@ const physicsLevel2SourceCourse: RawCourse = contextualizePhysicsCourse({
 				{
 					title: "Diagnostic Checkpoint",
 					content:
-						"Readiness check: distinguish heat from temperature, identify the dominant heat-transfer pathway in a scenario, and interpret a heating curve in words. If optics is included, the checkpoint explains what a lens is doing to rays rather than merely naming the lens type."
+						"Readiness check: distinguish heat from temperature, identify the dominant heat-transfer pathway in a scenario, and interpret a heating curve in words. For the supplied lens case, explain how rays locate a real or virtual image rather than merely naming the lens type."
 				},
 				{
 					title: "Failure Modes",
@@ -397,7 +397,7 @@ const physicsLevel2SourceCourse: RawCourse = contextualizePhysicsCourse({
 				{
 					title: "Worked Example Set: From Physical Situation to Model",
 					content:
-						"Model selection includes choosing a system, stating assumptions, defining variables, and deciding whether the right tool is forces, energy, momentum, torque, or a hybrid model. Include one example where the first chosen model is not the best one, then revise it."
+						"Use the supplied impact comparison to connect momentum change, stopping time, energy loss and distance. Test a force-only recommendation against both constraints, show where it fails, then revise the model or recommendation with explicit assumptions and calculations."
 				},
 				{
 					title: "Graph and Data Exercise: Prediction Versus Observation",
@@ -407,7 +407,7 @@ const physicsLevel2SourceCourse: RawCourse = contextualizePhysicsCourse({
 				{
 					title: "Investigation or Simulation: Engineering Modeling Challenge",
 					content:
-						"Accept projects such as a projectile planner, elevator-force simulation, pulley design, collision analysis, orbit model, or thermal design study. Each project includes a question, a model, a data source, a graph, and a short defense of the model's limits."
+						"Choose one supplied capstone case: ramp delivery, a two-load circuit or the impact comparison. State the question, model, source values and criteria; calculate and graph a comparison, then defend its uncertainty and limitations. A documented infeasible result can support a revised recommendation."
 				},
 				{
 					title: "Reflection Question: What Makes a Physics Answer Convincing?",
@@ -449,7 +449,7 @@ const physicsLevel2SourceCourse: RawCourse = contextualizePhysicsCourse({
 				{
 					title: "Worked Example Set",
 					content:
-						"Use examples from projectile motion with drag, iterative motion updates, and simulation-versus-ideal comparisons. For each example, show the update rule, a small table or graph, the first few calculated steps, and the validation check that makes the output credible."
+						"Reproduce the supplied free-fall updates and oscillator energy traces. For each method, show the update order, units, initial state and step size, calculate the first two steps and compare the longer record with the analytic position or energy baseline."
 				},
 				{
 					title: "Time-Step Data Exercise",
@@ -501,7 +501,7 @@ const physicsLevel2SourceCourse: RawCourse = contextualizePhysicsCourse({
 				{
 					title: "Worked Example Set",
 					content:
-						"Use examples from position-time, velocity-time, force-extension, current-voltage, and transformed-variable graphs. For each example, identify the measured variables, graph shape, fitted relationship, residual behavior, and physical meaning of the slope or intercept."
+						"Analyze the supplied linear and curved position-time datasets. Distinguish the candidate line from the least-squares fit, calculate residuals and interpret slope, intercept and their units. Compare a straight-line model with the stated quadratic model and explain which residual pattern favors each."
 				},
 				{
 					title: "Residuals and Slope Exercise",
@@ -553,7 +553,7 @@ const physicsLevel2SourceCourse: RawCourse = contextualizePhysicsCourse({
 				{
 					title: "Worked Example Set",
 					content:
-						"Use examples from pulleys, elevators, linked carts, friction pairs, rods, strings, and mechanical linkages. For each example, draw the connected objects, state the constraint in words, translate it into equations, and check whether the assumed linkage is physically plausible."
+						"Solve the supplied linked blocks, Atwood masses and moving-pulley constraint. Draw each object, state the rope relation in words and symbols, and check the force equations against the whole-system result. Compare negligible-inertia and thin-ring pulleys without assuming equal tension in both."
 				},
 				{
 					title: "Constraint Diagram Exercise",
@@ -605,7 +605,7 @@ const physicsLevel2SourceCourse: RawCourse = contextualizePhysicsCourse({
 				{
 					title: "Worked Example Set",
 					content:
-						"Use examples from pipes, nozzles, blood vessels, ducts, weather, water slides, and simplified wing models. For each example, label the control volume or flow path, name the pressure and flow variables, and decide which assumptions make the simplified fluid model usable."
+						"Use the supplied successive pipe sections and branching-flow record. Label a control volume, convert areas and flow units, calculate continuity and ideal pressure predictions, and compare the measured pressures. Name the assumptions that limit applying the result to a different nozzle, duct or fluid."
 				},
 				{
 					title: "Pressure and Flow Exercise",
@@ -632,7 +632,7 @@ const physicsLevel2SourceCourse: RawCourse = contextualizePhysicsCourse({
 				{
 					title: "Failure Modes",
 					content:
-						"Common failure modes include using a pipe-flow formula outside its assumptions, ignoring viscosity or turbulence, mixing pressure and force units, and treating density as constant when the situation does not justify it."
+						"Common failure modes include applying Bernoulli-style reasoning to unsteady, compressible or strongly dissipative flow, confusing pressure with force, and assuming a continuum at molecular scale; continuum models break down when the averaging region no longer contains enough representative particles."
 				},
 				{
 					title: "Extension Project: Fluid System Case Study",
@@ -657,7 +657,7 @@ const physicsLevel2SourceCourse: RawCourse = contextualizePhysicsCourse({
 				{
 					title: "Worked Example Set",
 					content:
-						"Use examples from engines, refrigerators, heat pumps, power plants, human bodies, and energy-flow diagrams. For each example, mark the system boundary, heat direction, work direction, internal-energy change, and useful-output definition before comparing efficiency or performance."
+						"Analyze Engine A, Engine B, Refrigerator C and the two process paths. Draw their energy-flow directions and state a sign convention before calculating work, efficiency or COP. Compare the reservoir bound with each engine and distinguish useful output from total transferred energy."
 				},
 				{
 					title: "Energy Flow Exercise",
@@ -709,7 +709,7 @@ const physicsLevel2SourceCourse: RawCourse = contextualizePhysicsCourse({
 				{
 					title: "Worked Example Set",
 					content:
-						"Use examples from microphones, speakers, thermistors, accelerometers, RC-style filtering, and noisy time-series graphs. For each example, trace the physical quantity through the transducer, calibration step, signal graph, and interpretation limit."
+						"Work the supplied induction, temperature-calibration and noisy-signal cases. Connect flux change to induced voltage, convert calibration voltage to temperature, and calculate a trailing moving mean. Keep the transduction mechanism, calibration model and sampling limitation distinct."
 				},
 				{
 					title: "Noisy Signal Exercise",
@@ -761,7 +761,7 @@ const physicsLevel2SourceCourse: RawCourse = contextualizePhysicsCourse({
 				{
 					title: "Worked Example Set",
 					content:
-						"Use examples from passenger-car-road frames, high-speed limits, GPS timing, particle examples, and event diagrams. For each example, label the observer frame, event order, classical expectation, correction trigger, and scale where the difference matters."
+						"Use the supplied Lorentz-factor table, particle lifetime and five-event train case. Label the frame for each interval and event, calculate the laboratory lifetime and distance, and compare low- and high-speed factors. Distinguish emission simultaneity from the order of light reception."
 				},
 				{
 					title: "Event Diagram Exercise",
@@ -813,7 +813,7 @@ const physicsLevel2SourceCourse: RawCourse = contextualizePhysicsCourse({
 				{
 					title: "Worked Example Set",
 					content:
-						"Use examples from sports, rockets, music, climate, medicine, robotics, or electronics translated into physics questions. For each example, narrow the broad topic into a modelable question, identify the evidence source, and explain how the physics model supports or limits the claim."
+						"Choose one supplied research seed: numerical verification, measurement model, engineering comparison or model domain. Narrow it to a quantity and test condition, name the linked dataset and competing model or criterion, and show how one calculation supports or changes the claim."
 				},
 				{
 					title: "Portfolio Evidence Exercise",
@@ -1423,7 +1423,7 @@ function physicsLevel2CurriculumPath(
 function physicsLevel2ProjectPath(
 	title: string
 ): RawCourseModuleItem["learningPath"] {
-	if (/Readiness Check$/i.test(title)) return "core";
+	if (/Readiness Check$/i.test(title)) return "choice";
 	if (/Failure Modes$/i.test(title)) return "choice";
 	return "challenge";
 }
@@ -1454,7 +1454,9 @@ export const physicsLevel2Course: RawCourse = {
 		}
 
 		const moduleNumber = Number(module.title.match(/^PHY(\d+) /u)?.[1]);
-		const reading = physicsLevel2FoundationReadings[moduleNumber];
+		const reading = physicsLevel2Readings[moduleNumber];
+		if (!reading)
+			throw new Error(`Missing Level 2 reading for ${module.title}.`);
 		const readingIndex = moduleNumber === 8 ? 1 : 0;
 		const curriculum = module.curriculum.map<RawCourseModuleItem>(
 			(item, itemIndex) => ({
@@ -1467,22 +1469,22 @@ export const physicsLevel2Course: RawCourse = {
 						? "reading"
 						: "assignment"
 					: undefined,
-				content: [
-					itemIndex === 0
-						? `**Concept path:** ${flow.stage}. Physics Level 2 is the quantitative continuation after Intro to Physics. Intro modules with similar PHY numbers are optional survey previews; this course's PHY8–PHY16 sequence rebuilds those ideas with algebra, trigonometry, multiple representations, validation, and uncertainty. No physical apparatus, personal-device data, home electrical work, projectiles, heat sources, or learner household measurements are required.`
-						: "",
-					itemIndex === readingIndex && reading
-						? reading
+				content:
+					itemIndex === readingIndex
+						? [
+								itemIndex === 0
+									? `**Concept path:** ${flow.stage}.`
+									: "",
+								reading,
+								`**Guiding phenomenon:** ${flow.phenomenon}`,
+								`**Core route:** ${flow.corePath}`,
+								`**Stretch route:** ${flow.stretchPath}`,
+								`**Quantitative evidence gate:** ${flow.evidenceGate}`,
+								`**Model domain and limit:** ${flow.boundary}`
+							]
+								.filter(Boolean)
+								.join("\n\n")
 						: item.content,
-					`**Guiding phenomenon:** ${flow.phenomenon}`,
-					`**Core route:** ${flow.corePath}`,
-					`**Stretch route:** ${flow.stretchPath}`,
-					`**Quantitative evidence gate:** ${flow.evidenceGate}`,
-					`**Model domain and limit:** ${flow.boundary}`,
-					`**Reference:** [Open the authoritative module reference](${flow.referenceLink}).`
-				]
-					.filter(Boolean)
-					.join("\n\n"),
 				learningPath: physicsLevel2CurriculumPath(flow.stage),
 				datasetLink:
 					item.datasetLink ??
@@ -1496,14 +1498,11 @@ export const physicsLevel2Course: RawCourse = {
 
 		const supplementalProjects = module.supplementalProjects.map(item => ({
 			...item,
+			contentKind: "assignment" as const,
 			preserveInstructions: true,
 			content: [
 				item.content,
-				`**Course stage:** ${flow.stage}.`,
-				`**Guiding phenomenon:** ${flow.phenomenon}`,
-				`**Completion route:** ${physicsLevel2ProjectCompletion(item.title, flow)}`,
-				`**Quantitative evidence gate:** ${flow.evidenceGate}`,
-				`**Model domain and limit:** ${flow.boundary}`
+				`**Completion route:** ${physicsLevel2ProjectCompletion(item.title, flow)}`
 			].join("\n\n"),
 			learningPath: physicsLevel2ProjectPath(item.title),
 			datasetLink:
