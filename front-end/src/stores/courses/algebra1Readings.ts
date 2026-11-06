@@ -101,7 +101,8 @@ export function applyAlgebra1AReadings(course: RawCourse) {
 		const item = course.modules
 			.flatMap(module => module.curriculum)
 			.find(item => item.title === entry.target);
-		if (!item) throw new Error(`Missing Algebra 1A reading ${entry.target}`);
+		if (!item)
+			throw new Error(`Missing Algebra 1A reading ${entry.target}`);
 		item.content = `**Method**\n\n${entry.method}\n\n**Worked example**\n\n${entry.worked}\n\n${item.content}`;
 		item.contentKind = "reading";
 		item.preserveInstructions = true;
@@ -138,11 +139,12 @@ export function applyAlgebra1AReadings(course: RawCourse) {
 				item.preserveInstructions = true;
 			}
 		}
-		if (module.title.startsWith("AA3 ") || module.title.startsWith("AA11 "))
+		if (module.title.startsWith("AA3 ") || module.title.startsWith("AA11 ")) {
 			for (const item of [
 				...module.curriculum,
 				...module.supplementalProjects
 			])
 				item.preserveInstructions = true;
+		}
 	}
 }

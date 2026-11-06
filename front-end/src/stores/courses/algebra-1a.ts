@@ -1,6 +1,6 @@
 import type { RawCourse } from "./types";
-import { configureMathCourseFlow } from "./mathCourseFlow";
 import { applyAlgebra1AReadings } from "./algebra1Readings";
+import { configureMathCourseFlow } from "./mathCourseFlow";
 import { pendingStaticMediaNotice, staticMediaUrl } from "./staticMedia";
 
 const MEDIA_BASE = "https://static.classes.jacobdanderson.net/algebra-1a";
