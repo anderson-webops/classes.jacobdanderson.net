@@ -39,6 +39,7 @@ import {
 	networkCourseResource,
 	networkImportFiles
 } from "@/modules/networkProjectResources";
+import { physicsLevel2CourseResource } from "@/modules/physicsLevel2ProjectResources";
 import { loadPyGamesCoreFiles } from "@/modules/pyGamesCoreProjectResources";
 import { rustStarterCode, rustStarterFiles } from "@/modules/rustIdeSource";
 import { isRustProjectTextPath } from "@/modules/rustProjectFiles";
@@ -454,6 +455,8 @@ export function pythonIdeModeForCourseResource(courseId: string, url: string) {
 		return rustCourseResource(url) ? "rust" : null;
 	if (courseId === "c-systems-engineering")
 		return c17CourseResource(url) ? "c" : null;
+	if (courseId === "physics-level-2")
+		return physicsLevel2CourseResource(url) ? "python" : null;
 	if (courseId.startsWith("usaco-")) {
 		return (
 			restoredUsacoResource(

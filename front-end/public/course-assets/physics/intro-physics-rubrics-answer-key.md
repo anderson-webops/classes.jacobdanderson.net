@@ -21,21 +21,21 @@ A 12–15 score across the most relevant five dimensions indicates core-route re
 
 ### Walking data
 
-- Group A start-to-finish speed: \((4.8-0.0)/(4.0-0.0)=1.20\text{ m/s}\).
-- Group B start-to-finish speed: \((4.7-0.1)/(4.0-0.0)=1.15\text{ m/s}\).
+- Group A start-to-finish speed: `(4.8-0.0)/(4.0-0.0)=1.20 m/s`.
+- Group B start-to-finish speed: `(4.7-0.1)/(4.0-0.0)=1.15 m/s`.
 - Both series are consistent with nearly steady motion and small reading differences. The 0.05 m/s difference does not by itself establish that one method is wrong.
 - A defensible report preserves the stated 0.10 m position and 0.05 s time resolutions. Reporting many extra digits would overstate the evidence.
 - Random scatter can come from frame selection or reading a marker. A systematic bias can come from a shifted origin, scale calibration, or consistently early timestamp.
 
 ### Reaction-distance model
 
-Using \(t=\sqrt{2d/g}\), the modeled times are approximately 0.157, 0.192, 0.175, 0.207, and 0.169 s. Mean ≈ 0.180 s; range ≈ 0.050 s.
+Using `t=√(2d/g)`, the modeled times are approximately 0.157, 0.192, 0.175, 0.207, and 0.169 s. Mean ≈ 0.180 s; range ≈ 0.050 s.
 
 The model assumes free fall, a correct distance reading, and an event marker that matches the start of the fall. The small sample describes these trials, not a person's permanent reaction ability.
 
 ### Quantity cards
 
-The timestamp and image position are direct readings from the supplied record. Graph slope is calculated. Acceleration inferred from a trend is model-dependent and calculated. Reference \(g\) is a sourced model value. Distance from a not-to-scale illustration is an estimate without a defensible measurement scale.
+The timestamp and image position are direct readings from the supplied record. Graph slope is calculated. Acceleration inferred from a trend is model-dependent and calculated. Reference `g` is a sourced model value. Distance from a not-to-scale illustration is an estimate without a defensible measurement scale.
 
 Core evidence:
 
@@ -49,10 +49,10 @@ Core evidence:
 
 ### Piecewise record
 
-Interval velocities from 0–6 s are \(+2,+2,0,-1,-2,-3\text{ m/s}\). The object rests from 2–3 s, begins westward motion after 3 s, and crosses the origin during the final interval.
+Interval velocities from 0–6 s are `+2,+2,0,-1,-2,-3 m/s`. The object rests from 2–3 s, begins westward motion after 3 s, and crosses the origin during the final interval.
 
-- total distance: \(2+2+0+1+2+3=10\text{ m}\);
-- displacement: \(-2-0=-2\text{ m}\);
+- total distance: `2+2+0+1+2+3=10 m`;
+- displacement: `-2-0=-2 m`;
 - positive position at 4 s means the object remains east of the origin;
 - negative velocity from 3–4 s means its position is decreasing under the chosen convention.
 
@@ -60,7 +60,7 @@ Interval velocities from 0–6 s are \(+2,+2,0,-1,-2,-3\text{ m/s}\). The object
 
 The sprinter's 10 s displacement is 64 m. The distance runner's is 34 m. “Efficient” needs a criterion: greater short-interval displacement favors the sprinter in this record, while a longer event cannot be decided without extended evidence about sustainable pace.
 
-Plane ground speed is \(\sqrt{180^2+60^2}\approx190\text{ km/h}\), about \(18.4^\circ\) east of north. A 60 km/h south wind instead produces 120 km/h due north in the simple collinear model.
+Plane ground speed is `√(180²+60²)≈190 km/h`, about `18.4°` east of north. A 60 km/h south wind instead produces 120 km/h due north in the simple collinear model.
 
 Core evidence:
 
@@ -71,7 +71,7 @@ Core evidence:
 
 ## Forces and Newton Laws Key
 
-The acceleration-versus-force slopes are \(0.50\text{ kg}^{-1}\) for the 2.0 kg cart and \(0.25\text{ kg}^{-1}\) for the 4.0 kg cart. A 10 N net force on 4.0 kg gives \(2.5\text{ m/s}^2\).
+The acceleration-versus-force slopes are `0.50 kg⁻¹` for the 2.0 kg cart and `0.25 kg⁻¹` for the 4.0 kg cart. A 10 N net force on 4.0 kg gives `2.5 m/s²`.
 
 Free-body essentials:
 
@@ -101,20 +101,20 @@ Core evidence:
 
 At 1.0 m for the 2.0 kg cart:
 
-- gravitational energy relative to the bottom: \(mgh=19.6\text{ J}\);
-- rough-track kinetic energy at 4.00 m/s: \(mv^2/2=16.0\text{ J}\);
+- gravitational energy relative to the bottom: `mgh=19.6 J`;
+- rough-track kinetic energy at 4.00 m/s: `mv²/2=16.0 J`;
 - mechanical-energy difference: 3.6 J, represented as thermal, sound, deformation, or other transfer in the larger system.
 
 For the 500 kg coaster:
 
-- A: \(98{,}000+1{,}000=99{,}000\text{ J}\);
-- B: \(58{,}800+36{,}000=94{,}800\text{ J}\);
-- C: \(19{,}600+72{,}250=91{,}850\text{ J}\);
-- D: \(49{,}000+30{,}250=79{,}250\text{ J}\).
+- A: `98,000+1,000=99,000 J`;
+- B: `58,800+36,000=94,800 J`;
+- C: `19,600+72,250=91,850 J`;
+- D: `49,000+30,250=79,250 J`.
 
 The decreasing modeled mechanical energy can represent transfer to thermal, sound, or deformation, together with rounded evidence. It is not missing total energy.
 
-The ball positions fit \(y=-4.9t^2\) under an upward-positive convention, which supports constant downward acceleration more strongly than constant velocity.
+The ball positions fit `y=-4.9t²` under an upward-positive convention, which supports constant downward acceleration more strongly than constant velocity.
 
 Core evidence:
 
@@ -125,12 +125,12 @@ Core evidence:
 
 ## Circuits Key
 
-The ideal current-voltage data represent \(R=V/I=10\ \Omega\). A best-fit interpretation of the noisy data remains close to 10 Ω; scatter is expected and does not erase the trend.
+The ideal current-voltage data represent `R=V/I=10 Ω`. A best-fit interpretation of the noisy data remains close to 10 Ω; scatter is expected and does not erase the trend.
 
 Circuit values:
 
-- Series S: \(R_\text{eq}=12\ \Omega\), source current 1 A, about 6 V across each equal resistor.
-- Parallel P: \(R_\text{eq}=3\ \Omega\), source current 4 A, 2 A in each equal branch, 12 V across each branch.
+- Series S: `R_eq=12 Ω`, source current 1 A, about 6 V across each equal resistor.
+- Parallel P: `R_eq=3 Ω`, source current 4 A, 2 A in each equal branch, 12 V across each branch.
 - Open O: no complete path and zero modeled current.
 - Branch-open B: the intact 6 Ω branch remains across 12 V and carries 2 A; source current is therefore 2 A.
 - Bypass R: the ideal wire imposes zero voltage across the first resistor, so its current is zero. The remaining 6 Ω resistor has 12 V across it, giving equivalent resistance 6 Ω and source current 2 A. The bypass wire carries 2 A around the first resistor. Opening the remaining resistor breaks the only complete path; opening only the bypassed resistor leaves the wire path intact.
@@ -156,7 +156,7 @@ Core evidence:
 
 For the Interference Phase Cards, matching-phase totals are 0, +4, 0, −4, 0 cm, giving amplitude 4 cm at the sampled point. Opposite-phase totals are zero at every listed time, giving a node with zero displacement amplitude at that point. Superposition adds signed displacements, not amplitudes without regard to phase. This local cancellation does not imply that the wave field has no energy at other locations; the counterpropagating-wave model redistributes the response spatially.
 
-All four wave-table cases have speed \(v=f\lambda=6.0\text{ m/s}\). A and B show doubled frequency with halved wavelength at the same modeled speed. B and C have the same frequency and wavelength but different amplitude.
+All four wave-table cases have speed `v=fλ=6.0 m/s`. A and B show doubled frequency with halved wavelength at the same modeled speed. B and C have the same frequency and wavelength but different amplitude.
 
 The waveform has:
 
@@ -194,7 +194,7 @@ Accept any one supplied investigation when it includes:
 
 Useful conclusions:
 
-- ramp speed is not linear in height; speed is more directly proportional to \(\sqrt{h}\) in the ideal energy model;
+- ramp speed is not linear in height; speed is more directly proportional to `√(h)` in the ideal energy model;
 - at fixed voltage, current decreases as resistance increases;
 - the small-angle pendulum model is close to the supplied periods, with small differences that can reflect rounding, measurement, or nonideal behavior.
 
@@ -205,13 +205,13 @@ Weak-proposal corrections narrow the scope, define variables and graph choice in
 Total momentum:
 
 - Case A: 3.0 kg·m/s before and after; final velocity 1.50 m/s.
-- Case B: 1.0 kg·m/s before and after; final velocity \(0.67\text{ m/s}\) after rounding.
+- Case B: 1.0 kg·m/s before and after; final velocity `0.67 m/s` after rounding.
 - Case C: 0 kg·m/s before and after; the stuck pair rests in the ideal model.
 
 Case A kinetic energy:
 
-- before: \(4.5\text{ J}\);
-- after: \(2.25\text{ J}\).
+- before: `4.5 J`;
+- after: `2.25 J`.
 
 Momentum conservation is compatible with kinetic-energy transfer to deformation, thermal energy, and sound.
 
@@ -228,14 +228,14 @@ Core evidence:
 
 With counterclockwise positive:
 
-- A: \(+40(1.50)=+60\text{ N·m}\);
-- B: \(-30(2.00)=-60\text{ N·m}\);
-- C: \(-20(0.50)=-10\text{ N·m}\);
-- net with all three: \(-10\text{ N·m}\), clockwise.
+- A: `+40(1.50)=+60 N·m`;
+- B: `-30(2.00)=-60 N·m`;
+- C: `-20(0.50)=-10 N·m`;
+- net with all three: `-10 N·m`, clockwise.
 
-A 20 N downward force on the right balances A at \(r=60/20=3.0\text{ m}\).
+A 20 N downward force on the right balances A at `r=60/20=3.0 m`.
 
-For \(r=0.80\text{ m}\) and \(F=50\text{ N}\):
+For `r=0.80 m` and `F=50 N`:
 
 | Angle | Torque magnitude |
 | ----: | ---------------: |
@@ -261,9 +261,9 @@ Average densities:
 
 Pressure values:
 
-- A: \(600/0.030=20{,}000\text{ Pa}\);
-- B: \(600/0.120=5{,}000\text{ Pa}\);
-- C: \(300/0.030=10{,}000\text{ Pa}\).
+- A: `600/0.030=20,000 Pa`;
+- B: `600/0.120=5,000 Pa`;
+- C: `300/0.030=10,000 Pa`.
 
 The hull record suggests 1.0 kg added load is inside the supplied stable range, 1.5 kg approaches the rim, and 2.0 kg violates the no-water-entry constraint. A recommendation must name the selected safety margin rather than using 2.0 kg as a safe load.
 
@@ -276,11 +276,11 @@ Core evidence:
 
 ## Thermal Key
 
-Using \(\Delta T=Q/(mc)\):
+Using `ΔT=Q/(mc)`:
 
-- aluminum: \(10{,}000/(0.50\times900)\approx22.2^\circ\text{C}\);
-- water: \(10{,}000/(0.50\times4180)\approx4.8^\circ\text{C}\);
-- glass: \(10{,}000/(0.50\times840)\approx23.8^\circ\text{C}\).
+- aluminum: `10,000/(0.50×900)≈22.2°C`;
+- water: `10,000/(0.50×4180)≈4.8°C`;
+- glass: `10,000/(0.50×840)≈23.8°C`.
 
 During the 0 °C plateau, energy transfer can continue while the represented material changes phase rather than increasing temperature.
 
@@ -295,14 +295,14 @@ Core evidence:
 
 ## Optics Key
 
-For \(f=10\text{ cm}\):
+For `f=10 cm`:
 
-| \(d_o\) | \(d_i\) | Magnification | Classification             |
-| ------: | ------: | ------------: | -------------------------- |
-|   30 cm |   15 cm |         -0.50 | real, inverted, reduced    |
-|   20 cm |   20 cm |         -1.00 | real, inverted, same size  |
-|   15 cm |   30 cm |         -2.00 | real, inverted, enlarged   |
-|    8 cm |  -40 cm |         +5.00 | virtual, upright, enlarged |
+| `d_o` |  `d_i` | Magnification | Classification             |
+| ----: | -----: | ------------: | -------------------------- |
+| 30 cm |  15 cm |         -0.50 | real, inverted, reduced    |
+| 20 cm |  20 cm |         -1.00 | real, inverted, same size  |
+| 15 cm |  30 cm |         -2.00 | real, inverted, enlarged   |
+|  8 cm | -40 cm |         +5.00 | virtual, upright, enlarged |
 
 A plane-mirror ray reflects at the same angle from the normal. Rays entering a slower optical medium bend toward the normal in this qualitative model; rays entering a faster one bend away.
 
@@ -333,13 +333,11 @@ Core evidence:
 
 ## Oscillation and Resonance Key
 
-For 1.50 kg and \(k=10\text{ N/m}\):
+For 1.50 kg and `k=10 N/m`:
 
-\[
-T=2\pi\sqrt{1.50/10}\approx2.43\text{ s}.
-\]
+`T=2π√(1.50/10)≈2.43 s.`
 
-The period follows \(\sqrt{m}\), not mass directly. The driven-response table peaks near 1.0 Hz. Higher damping lowers the peak and makes the response less sharply concentrated around the resonant region.
+The period follows `√(m)`, not mass directly. The driven-response table peaks near 1.0 Hz. Higher damping lowers the peak and makes the response less sharply concentrated around the resonant region.
 
 One full cycle returns to the same position and motion direction. Two equilibrium crossings can represent half or a full cycle depending on direction, so direction must accompany position.
 
@@ -352,7 +350,7 @@ Core evidence:
 
 ## Astronomy and Orbits Key
 
-The values of \(T^2/r^3\) are close to 1 in Earth-Sun units for the supplied planets:
+The values of `T²/r³` are close to 1 in Earth-Sun units for the supplied planets:
 
 - Mercury ≈ 1.00;
 - Venus ≈ 1.00;
@@ -380,7 +378,7 @@ Core evidence:
 
 ## Modern Physics Key
 
-The supplied threshold is near \(5.0\times10^{14}\text{ Hz}\). Above threshold, stopping potential increases with frequency in the record. At fixed 6.0×10¹⁴ Hz, increased intensity changes modeled electron count without materially changing the stopping potential.
+The supplied threshold is near `5.0×10¹⁴ Hz`. Above threshold, stopping potential increases with frequency in the record. At fixed 6.0×10¹⁴ Hz, increased intensity changes modeled electron count without materially changing the stopping potential.
 
 The Unknown emission spectrum matches Source A across the four listed lines. This supports the match within the small supplied library; it does not rule out mixtures, calibration shifts, or sources absent from the table.
 

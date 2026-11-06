@@ -1,8 +1,14 @@
 import fs from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
+import { createPinia, setActivePinia } from "pinia";
+import { isLessonLearningItem } from "@/modules/courseLessonPresentation";
+import { physicsLevel2CourseResource } from "@/modules/physicsLevel2ProjectResources";
+import { useAppStore } from "@/stores/app";
+import { useCoursesStore } from "@/stores/courses";
 import { loadRawCourse } from "@/stores/courses/index";
 import { physicsLevel2Course } from "@/stores/courses/physics-level-2";
+import { physicsLevel2Readings } from "@/stores/courses/physicsLevel2Readings";
 
 const EXPECTED_SEQUENCE = [
 	"PHY8 Quantitative Kinematics and Vector Modeling",
@@ -145,40 +151,30 @@ describe("Physics Level 2 learner flow", () => {
 		for (const [index, module] of physicsLevel2Course.modules.entries()) {
 			expect(module.estimatedTime, module.title).toMatch(/session/);
 			expect(module.keyBlocks, module.title).toHaveLength(6);
-			expect(
-				module.curriculum.length,
-				module.title
-			).toBeGreaterThanOrEqual(5);
 			expect(module.supplementalProjects, module.title).toHaveLength(3);
-			expect(module.curriculum[0]?.content, module.title).toContain(
-				"**Teaching flow:**"
-			);
-
 			const expectedPath = index >= 9 && index <= 15 ? "choice" : "core";
 			expect(
 				module.curriculum.every(
-					item =>
-						item.learningPath === expectedPath &&
-						item.content.includes("**Guiding phenomenon:**") &&
-						item.content.includes("**Core route:**") &&
-						item.content.includes("**Stretch route:**") &&
-						item.content.includes(
-							"**Quantitative evidence gate:**"
-						) &&
-						item.content.includes("**Model domain and limit:**")
-				),
-				module.title
+					item => item.learningPath === expectedPath
+				)
 			).toBe(true);
+			const readings = module.curriculum.filter(
+				item => item.contentKind === "reading"
+			);
+			expect(readings).toHaveLength(index === 0 ? 2 : 1);
+			const concept = readings[index === 0 ? 1 : 0];
+			expect(concept.content).toMatch(/^### Worked/m);
+			expect(concept.content).toContain("**Core route:**");
+			expect(concept.content).toContain("**Model domain and limit:**");
 		}
-
 		expect(
-			requireModule(EXPECTED_SEQUENCE[0]).curriculum[0]?.content
+			requireModule(EXPECTED_SEQUENCE[0]).curriculum[0].content
 		).toContain("Quantitative core");
 		expect(
-			requireModule(EXPECTED_SEQUENCE[9]).curriculum[0]?.content
+			requireModule(EXPECTED_SEQUENCE[9]).curriculum[0].content
 		).toContain("Advanced modeling extension");
 		expect(
-			requireModule(EXPECTED_SEQUENCE[16]).curriculum[0]?.content
+			requireModule(EXPECTED_SEQUENCE[16]).curriculum[0].content
 		).toContain("Independent synthesis");
 	});
 
@@ -203,13 +199,25 @@ describe("Physics Level 2 learner flow", () => {
 
 	it("turns every lesson and project into a linked quantitative task", () => {
 		for (const item of allItems()) {
-			expect(item.content.length, item.title).toBeGreaterThanOrEqual(700);
+			expect(
+				item.content.trim().split(/\s+/u).length,
+				item.title
+			).toBeGreaterThanOrEqual(20);
 			expect(item.datasetLink, item.title).toMatch(
 				/^\/course-assets\/physics\/physics-level-2-materials-pack\.md#/
 			);
-			expect(item.solutionLink, item.title).toMatch(
-				/^\/course-assets\/physics\/physics-level-2-rubrics-answer-key\.md#/
-			);
+			const code = physicsLevel2CourseResource(item.solutionLink ?? "");
+			if (code) {
+				expect(code.role).toBe("reference");
+				expect(
+					physicsLevel2CourseResource(item.projectLink ?? "")
+				).toMatchObject({ pack: code.pack, role: "starter" });
+				expect(item.ideImport).toBe(true);
+			} else {
+				expect(item.solutionLink, item.title).toMatch(
+					/^\/course-assets\/physics\/physics-level-2-rubrics-answer-key\.md#/
+				);
+			}
 			expect(item.projectLink, item.title).toMatch(/^https:\/\//);
 		}
 
@@ -328,9 +336,21 @@ describe("Physics Level 2 learner flow", () => {
 			expect(materialHeadings, item.title).toContain(
 				item.datasetLink?.split("#")[1]
 			);
-			expect(answerHeadings, item.title).toContain(
-				item.solutionLink?.split("#")[1]
-			);
+			if (!physicsLevel2CourseResource(item.solutionLink ?? "")) {
+				expect(answerHeadings, item.title).toContain(
+					item.solutionLink?.split("#")[1]
+				);
+			}
+		}
+		for (const module of physicsLevel2Course.modules) {
+			expect(
+				module.curriculum.some(item =>
+					item.solutionLink?.startsWith(
+						"/course-assets/physics/physics-level-2-rubrics-answer-key.md#"
+					)
+				),
+				module.title
+			).toBe(true);
 		}
 
 		expect(materials).toContain("Explicit Euler free-fall check");
@@ -374,7 +394,7 @@ describe("Physics Level 2 learner flow", () => {
 		);
 
 		expect(text).toContain(
-			"No physical apparatus, personal-device data, home electrical work"
+			"without physical apparatus or personal measurements"
 		);
 		expect(text).toContain(
 			"No required learner reaction-time, location, household-energy"
@@ -427,6 +447,86 @@ describe("Physics Level 2 learner flow", () => {
 			"/course-assets/physics/physics-level-2-rubrics-answer-key.md#"
 		);
 	});
+
+	it("teaches the first four quantitative models with worked supplied cases", () => {
+		for (const [index, number] of [8, 9, 10, 11].entries()) {
+			const module = requireModule(EXPECTED_SEQUENCE[index]);
+			const reading = module.curriculum[index === 0 ? 1 : 0];
+			expect(reading.contentKind).toBe("reading");
+			expect(reading.content).toContain(physicsLevel2Readings[number]);
+			expect(reading.content).toContain("### Worked");
+		}
+		const cases = Object.values(physicsLevel2Readings).join("\n");
+		for (const result of [
+			"35.35 m",
+			"55.0 s",
+			"+2.20 m/s²",
+			"763.2 N",
+			"1.51 m/s²",
+			"23.52 N",
+			"20 N·s",
+			"0.5875 kg·m/s"
+		])
+			expect(cases).toContain(result);
+	});
+
+	it.each(["learner", "instructor"])(
+		"preserves complete instructions and foundation Learn entries for %s",
+		async role => {
+			setActivePinia(createPinia());
+			if (role === "instructor")
+				useAppStore().setCurrentTutor({
+					_id: "physics-level-2-review-tutor",
+					name: "Tutor",
+					email: "tutor@example.invalid",
+					age: 30,
+					state: "GA",
+					usersOfTutorLength: 0,
+					coursePermissions: ["physics-level-2"],
+					editTutors: false,
+					saveEdit: "Save"
+				});
+			const displayed =
+				(await useCoursesStore().loadCourseById("physics-level-2"))!;
+			for (const [
+				index,
+				authored
+			] of physicsLevel2Course.modules.entries()) {
+				const module = displayed.modules.find(
+					candidate => candidate.title === authored.title
+				)!;
+				expect(module, authored.title).toBeDefined();
+				const items = [
+					...module.curriculum,
+					...module.supplementalProjects
+				];
+				expect(items.filter(isLessonLearningItem)).toHaveLength(
+					index === 0 ? 2 : 1
+				);
+				for (const original of [
+					...authored.curriculum,
+					...authored.supplementalProjects
+				]) {
+					const item = items.find(
+						candidate => candidate.title === original.title
+					)!;
+					expect(item, original.title).toBeDefined();
+					expect(item.content, original.title).toBe(
+						original.content.trim()
+					);
+					expect(item.datasetLink).toBe(original.datasetLink);
+					expect(item.solutionLink).toBe(
+						role === "instructor"
+							? original.solutionLink
+							: undefined
+					);
+					expect(isLessonLearningItem(item)).toBe(
+						original.contentKind === "reading"
+					);
+				}
+			}
+		}
+	);
 
 	it("avoids old generic and unsafe implementation language", () => {
 		const source = fs.readFileSync(

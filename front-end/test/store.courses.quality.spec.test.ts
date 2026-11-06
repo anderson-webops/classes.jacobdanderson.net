@@ -7,10 +7,12 @@ import type {
 	RawCourseModuleItem
 } from "@/stores/courses/types";
 import { javascriptCourseResource } from "@/modules/javascriptCourseResources";
+import { physicsLevel2CourseResource } from "@/modules/physicsLevel2ProjectResources";
 import { rawCourseProse } from "./courseProse";
 import { createPinia, setActivePinia } from "pinia";
 import { useCoursesStore } from "@/stores/courses";
 import { introToPhysicsCourse } from "@/stores/courses/intro-to-physics";
+import { physicsLevel2Course } from "@/stores/courses/physics-level-2";
 import {
 	pyGamesCoreResource,
 	pyGamesCoreSourceRevision
@@ -289,16 +291,19 @@ function isProjectLikeTitle(title: string) {
 const physicsEvidenceFiles = new Map<string, string>();
 function physicsEvidenceSection(
 	link: string | undefined,
-	kind: "materials-pack" | "rubrics-answer-key"
+	kind: "materials-pack" | "rubrics-answer-key",
+	courseId: string
 ) {
+	const prefix =
+		courseId === "physics-level-2" ? "physics-level-2" : "intro-physics";
 	const match = link?.match(
 		new RegExp(
-			`^/course-assets/physics/intro-physics-${kind}\\.md(?:#([a-z-]+))?$`,
+			`^/course-assets/physics/${prefix}-${kind}\\.md(?:#([a-z-]+))?$`,
 			"u"
 		)
 	);
 	if (!match) return "";
-	const file = `public/course-assets/physics/intro-physics-${kind}.md`;
+	const file = `public/course-assets/physics/${prefix}-${kind}.md`;
 	if (!physicsEvidenceFiles.has(file))
 		physicsEvidenceFiles.set(file, fs.readFileSync(file, "utf8"));
 	const text = physicsEvidenceFiles.get(file)!;
@@ -320,21 +325,48 @@ function completePhysicsPractice(
 	item: RawCourseModuleItem
 ) {
 	if (
-		courseId !== "intro-to-physics" ||
+		!["intro-to-physics", "physics-level-2"].includes(courseId) ||
 		item.contentKind !== "assignment" ||
 		!item.preserveInstructions
 	)
 		return false;
+	const starter =
+		courseId === "physics-level-2"
+			? physicsLevel2CourseResource(item.projectLink ?? "")
+			: null;
+	const reference = physicsLevel2CourseResource(item.solutionLink ?? "");
+	const moduleKey =
+		starter?.role === "starter" &&
+		reference?.role === "reference" &&
+		reference.pack === starter.pack &&
+		item.ideImport &&
+		item.datasetLink
+			? module.curriculum.find(
+					candidate =>
+						candidate.solutionLink ===
+						item
+							.datasetLink!.replace(
+								"materials-pack.md",
+								"rubrics-answer-key.md"
+							)
+							.replace(/-cases$/u, "-key")
+				)?.solutionLink
+			: undefined;
 	if (
-		physicsEvidenceSection(item.datasetLink, "materials-pack").length <
-			300 ||
-		physicsEvidenceSection(item.solutionLink, "rubrics-answer-key").length <
-			100
+		physicsEvidenceSection(item.datasetLink, "materials-pack", courseId)
+			.length < 300 ||
+		physicsEvidenceSection(
+			moduleKey ?? item.solutionLink,
+			"rubrics-answer-key",
+			courseId
+		).length < 100
 	)
 		return false;
-	const originalModule = introToPhysicsCourse.modules.find(
-		candidate => candidate.title === module.title
-	);
+	const originalModule = (
+		courseId === "physics-level-2"
+			? physicsLevel2Course
+			: introToPhysicsCourse
+	).modules.find(candidate => candidate.title === module.title);
 	if (originalModule) {
 		const original = [
 			...originalModule.curriculum,
@@ -348,7 +380,9 @@ function completePhysicsPractice(
 					reading.contentKind === "reading" &&
 					reading.preserveInstructions &&
 					wordCount(reading.content) >= 120 &&
-					reading.content.includes("**Worked case:**")
+					(courseId === "physics-level-2"
+						? /^### Worked/m.test(reading.content)
+						: reading.content.includes("**Worked case:**"))
 			)
 		);
 	}
@@ -5215,7 +5249,13 @@ describe("course text quality normalization", () => {
 					continue;
 				}
 
-				if (pathParts[0] !== "instruction-material") {
+				if (
+					pathParts[0] !== "instruction-material" &&
+					!(
+						course === "physics-level-2" &&
+						physicsLevel2CourseResource(link)
+					)
+				) {
 					externalGithubLinks.push(label);
 				}
 
@@ -8291,10 +8331,19 @@ describe("course text quality normalization", () => {
 		);
 		expect(text).not.toMatch(/\bshould\b/i);
 		expect(mediaLinks).toEqual([
-			"https://static.classes.jacobdanderson.net/paa_kickoff_0.png",
-			"https://static.classes.jacobdanderson.net/paa_kickoff_1.png",
 			"https://www.youtube.com/watch?v=8nKPC-WmLjU"
 		]);
+		expect(
+			course.modules
+				.filter(module => !module.internal)
+				.flatMap(module => [
+					...module.curriculum,
+					...module.supplementalProjects
+				])
+				.some(item =>
+					/Pending media|not currently available/i.test(item.content)
+				)
+		).toBe(false);
 	});
 
 	it("adds Pre-Algebra B reference archive from the math sequence", async () => {
@@ -10153,17 +10202,15 @@ describe("course text quality normalization", () => {
 			"Investigation or Simulation: Engineering Modeling Challenge"
 		);
 		expect(physics2Corpus).toContain(
-			"Numerical modeling turns a physics relationship into repeated update rules."
+			"Explicit Euler uses the old state on the right-hand side:"
 		);
 		expect(physics2Corpus).toContain(
-			"Experimental uncertainty is part of the evidence, not a decoration added after the answer."
+			"A residual is measured value minus model prediction."
 		);
 		expect(physics2Corpus).toContain(
-			"Reference frames determine how position, velocity, time, and event order are described."
+			"Proper time is measured between events occurring at the same position in the relevant frame."
 		);
-		expect(physics2Corpus).toContain(
-			"An independent physics portfolio begins with a focused question narrow enough to model and broad enough to matter."
-		);
+		expect(physics2Corpus).toContain("The analytic baseline is −19.60 m.");
 		expect(
 			findItem(physics2!, /Failure Modes/, /Bernoulli-style reasoning/)
 				.content

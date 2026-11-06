@@ -22,9 +22,12 @@ const courseIds = [
 	"scratch-level-1-bootcamp",
 	"algebra-2a",
 	"algebra-2b",
-	"intro-to-physics"
+	"intro-to-physics",
+	"physics-level-2",
+	"pre-algebra-a",
+	"geometry-a"
 ];
-const readingCounts = [10, 13, 14, 16, 20, 14, 9, 4, 27, 22, 37];
+const readingCounts = [10, 13, 14, 16, 20, 14, 9, 4, 27, 22, 37, 38, 11, 6];
 assert.equal(readingCounts.length, courseIds.length);
 const requestedCourses = process.env.SELF_STUDY_BROWSER_COURSES;
 const sourceMode = process.env.SELF_STUDY_BROWSER_SOURCE_MODE ?? "build";
@@ -185,7 +188,7 @@ async function checkTableLayout(
 	return result;
 }
 
-async function checkCards(page, module, expected, optional) {
+async function checkCards(page, module, expected, optional, resourceViews, profileName) {
 	const rows = await page.$$eval(
 		"#course-reader-panel .lesson-list > .lesson-item",
 		items =>
@@ -212,25 +215,56 @@ async function checkCards(page, module, expected, optional) {
 		);
 		if (item.requiredDirective) {
 			await page.waitForFunction(
-				({ id, required }) => {
+				({ id, required, textMode }) => {
 					const row = document.getElementById(id);
 					return row
-						?.querySelector(".assignment-content")
-						?.textContent
+						?.querySelector(".assignment-content")?.[textMode]
 						.replace(/\s+/g, " ")
 						.trim()
 						.includes(required);
 				},
 				{},
-				{ id: rows[index].id, required: item.requiredDirective }
-			);
+				{
+					id: rows[index].id,
+					required: item.requiredDirective,
+					textMode: item.directiveTextMode ?? "textContent"
+				}
+			).catch(async error => {
+				const actual = await page.$eval(
+					`#${rows[index].id} .assignment-content`,
+					(element, mode) => element[mode].replace(/\s+/g, " ").trim(),
+					item.directiveTextMode ?? "textContent"
+				);
+				throw new Error(
+					`${item.title}: complete assignment text did not match.\nExpected: ${item.requiredDirective}\nActual: ${actual}`,
+					{ cause: error }
+				);
+			});
+		}
+		for (const check of item.selfChecks ?? []) {
+			const selector = `#${rows[index].id} .assignment-content a[href=${JSON.stringify(check.href)}]`;
+			assert.equal(await page.$eval(selector, element => element.textContent.trim()), check.label);
+			await page.$eval(selector, element => { element.target = "_self"; });
+			await page.locator(selector).click();
+			await page.waitForSelector(".course-resource-card .item-content-markdown");
+			assert.equal(new URL(page.url()).searchParams.get("asset"), check.asset);
+			assert.equal(await page.$(".course-resource-error"), null);
+			assert.equal(await page.$eval(".course-resource-page h1", element => element.textContent.trim()), check.heading);
+			await page.waitForFunction(text => document.querySelector(".course-resource-card .item-content-markdown")?.textContent.replace(/\s+/g, " ").trim() === text, {}, check.expectedText);
+			assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true, `${check.heading}: no viewer overflow`);
+			resourceViews.push({ item: item.id, asset: check.asset, fullTextSHA256: digest(check.expectedText) });
+			if (check.label === "Project self-check" || check.asset.endsWith("#optional-percent-changes")) {
+				await page.screenshot({ path: join(process.env.SELF_STUDY_BROWSER_PROOF_DIR ?? "output/self-study-browser", `${profileName}-${item.id}-self-check.png`), fullPage: true });
+			}
+			await page.goBack({ waitUntil: "domcontentloaded" });
+			await page.waitForSelector(`#${rows[index].id}`);
 		}
 	}
 	return rows.map(row => row.id);
 }
 
 test(
-	"complete self-study readings and assignments in both roles and viewport sizes",
+	"reviewed self-study readings and assignments in both roles and viewport sizes",
 	{ timeout: 900000 },
 	async () => {
 		const previous = process.cwd();
@@ -317,6 +351,7 @@ test(
 						const pageErrors = [];
 						const readings = [];
 						const assignments = [];
+						const resourceViews = [];
 						try {
 							await page.setViewport({ width, height: 900 });
 							page.setDefaultTimeout(20000);
@@ -432,6 +467,7 @@ test(
 								index,
 								module
 							] of fixture.modules.entries()) {
+								if (fixture.reviewedModuleIds && !fixture.reviewedModuleIds.includes(module.id)) continue;
 								const groupIndex = fixture.modules.slice(0, index).filter(candidate => candidate.kind === module.kind).length;
 								await chooseModule(page, module, groupIndex);
 								await chooseView(page, 3);
@@ -552,7 +588,8 @@ test(
 								);
 								if (
 									index === 0
-									|| (id === "intro-to-physics" && /^(?:Standards Map|Course Roadmap)$/.test(module.title))
+									|| (["intro-to-physics", "physics-level-2"].includes(id) && /^(?:Standards Map|Course Roadmap)$/.test(module.title))
+                                    || (id === "physics-level-2" && /^(?:PHY12|PHY16|PHY17|PHY23) /.test(module.title))
 									|| module.readings.some(
 										item => item.images.length
 									)
@@ -579,14 +616,18 @@ test(
 									page,
 									module,
 									module.projects,
-									false
+									false,
+									resourceViews,
+									name
 								);
 								await chooseView(page, 2);
 								const optional = await checkCards(
 									page,
 									module,
 									module.optional,
-									true
+									true,
+									resourceViews,
+									name
 								);
 								assignments.push({
 									module: module.id,
@@ -595,14 +636,19 @@ test(
 								});
 							}
 							assert.equal(writes, 0);
+							if (id === "pre-algebra-a") assert.equal(resourceViews.length, 23);
+							if (id === "geometry-a") assert.equal(resourceViews.length, 17);
 							assert.deepEqual(pageErrors, []);
 							profiles.push({
 								id,
 								role,
 								width,
 								sourceCommit: fixture.sourceCommit,
-								moduleViews: fixture.modules.length,
+								moduleViews: assignments.length,
+								reviewScope: fixture.reviewScope,
+								reviewedModuleIds: fixture.reviewedModuleIds,
 								completeReadings: readings,
+								resourceViews,
 								assignments,
 								internalModulesExcluded:
 									fixture.internalModules,
@@ -624,7 +670,7 @@ test(
 									id,
 									role,
 									width,
-									modules: fixture.modules.length,
+									modules: assignments.length,
 									readings: readings.length,
 									preservedPublishedIdentities:
 										fixture.publishedIdentities,

@@ -43,7 +43,7 @@ Tasks:
 
 ### Reaction-distance trials
 
-Use \(g = 9.8\text{ m/s}^2\) and the model \(d = \frac{1}{2}gt^2\). Distances came from a shared demonstration record, not a learner measurement.
+Use `g = 9.8 m/s²` and the model `d = (1/2)gt²`. Distances came from a shared demonstration record, not a learner measurement.
 
 | Trial | Drop distance (cm) |
 | ----: | -----------------: |
@@ -88,7 +88,7 @@ Tasks:
 - identify rest, eastward motion, westward motion, and direction reversal;
 - calculate total distance and displacement;
 - sketch a matching velocity-time graph;
-- explain why positive position at \(t=4\text{ s}\) does not mean positive velocity.
+- explain why positive position at `t=4 s` does not mean positive velocity.
 
 ### Runner strategy cards
 
@@ -138,7 +138,7 @@ For each card, isolate the bold object and list only external forces acting on i
 
 ### Elevator scale evidence
 
-The rider's mass is 60.0 kg. Use \(g = 9.8\text{ m/s}^2\).
+The rider's mass is 60.0 kg. Use `g = 9.8 m/s²`.
 
 | Interval | Scale force (N) | Velocity description        |
 | -------- | --------------: | --------------------------- |
@@ -157,7 +157,7 @@ A horizontal 4 m beam is supported at both ends. A 600 N sign hangs at the cente
 
 ### Ramp height and speed
 
-A 2.0 kg cart starts from rest. The ideal column uses \(v=\sqrt{2gh}\). The measured column is fictional evidence from a rough-track model.
+A 2.0 kg cart starts from rest. The ideal column uses `v=√(2gh)`. The measured column is fictional evidence from a rough-track model.
 
 | Starting height (m) | Ideal bottom speed (m/s) | Rough-track speed (m/s) |
 | ------------------: | -----------------------: | ----------------------: |
@@ -223,7 +223,7 @@ For Bypass R, also find the voltage and current in the bypassed resistor. Compar
 
 ### Device energy cards
 
-Use \(E=Pt\).
+Use `E=Pt`.
 
 | Device       | Power (W) | Modeled use time |
 | ------------ | --------: | ---------------: |
@@ -265,12 +265,12 @@ Estimate amplitude, period, and frequency. Explain why this time graph alone doe
 Two ideal waves travel in opposite directions in a linear medium. Each has amplitude 2 cm and period 1 s. The table samples one fixed point for two different phase relationships. Superposition means adding the signed displacements at the same point and time.
 
 | Time (s) | Wave 1 (cm) | Wave 2, matching phase (cm) | Wave 2, opposite phase (cm) |
-| -------: | ----------: | -------------------------: | -------------------------: |
-|     0.00 |           0 |                          0 |                          0 |
-|     0.25 |           2 |                          2 |                         -2 |
-|     0.50 |           0 |                          0 |                          0 |
-|     0.75 |          -2 |                         -2 |                          2 |
-|     1.00 |           0 |                          0 |                          0 |
+| -------: | ----------: | --------------------------: | --------------------------: |
+|     0.00 |           0 |                           0 |                           0 |
+|     0.25 |           2 |                           2 |                          -2 |
+|     0.50 |           0 |                           0 |                           0 |
+|     0.75 |          -2 |                          -2 |                           2 |
+|     1.00 |           0 |                           0 |                           0 |
 
 Calculate and graph the total displacement for each phase relationship. Find its amplitude at this point. Explain why cancellation at one point does not demonstrate disappearance of wave energy everywhere. A table or paper graph is a complete model route; an interactive simulation is optional.
 
@@ -306,7 +306,7 @@ For every card, draw the boundary and normal, preserve angle conventions, and di
 |       0.75 |                3.61 |                3.66 |                3.63 |
 |       1.00 |                4.12 |                4.18 |                4.15 |
 
-Possible narrow question: How does starting height relate to bottom speed in this model? A useful extension compares speed with \(\sqrt{h}\) rather than forcing a linear speed-height claim.
+Possible narrow question: How does starting height relate to bottom speed in this model? A useful extension compares speed with `√(h)` rather than forcing a linear speed-height claim.
 
 ### Investigation option B: Circuit relationship
 
@@ -346,11 +346,11 @@ Revise each into a focused, testable, and appropriately bounded plan.
 
 Positive velocity is right.
 
-| Case | \(m_1\) (kg) | \(v_{1i}\) (m/s) | \(m_2\) (kg) | \(v_{2i}\) (m/s) | Shared final velocity if objects stick (m/s) |
-| ---- | -----------: | ---------------: | -----------: | ---------------: | -------------------------------------------: |
-| A    |          1.0 |              3.0 |          1.0 |              0.0 |                                         1.50 |
-| B    |          0.5 |              4.0 |          1.0 |             -1.0 |                                         0.67 |
-| C    |          2.0 |             -2.0 |          1.0 |              4.0 |                                         0.00 |
+| Case | `m_1` (kg) | `v_1i` (m/s) | `m_2` (kg) | `v_2i` (m/s) | Shared final velocity if objects stick (m/s) |
+| ---- | ---------: | -----------: | ---------: | -----------: | -------------------------------------------: |
+| A    |        1.0 |          3.0 |        1.0 |          0.0 |                                         1.50 |
+| B    |        0.5 |          4.0 |        1.0 |         -1.0 |                                         0.67 |
+| C    |        2.0 |         -2.0 |        1.0 |          4.0 |                                         0.00 |
 
 Calculate total momentum before and after. Compare kinetic energy before and after for Case A and explain why the decrease does not violate total-energy conservation.
 
@@ -400,7 +400,7 @@ A 50 N force acts 0.80 m from a hinge.
 |                               30° |           to calculate |
 |                                0° |           to calculate |
 
-Use \(\tau=rF\sin\theta\). Explain why distance along the door remains 0.80 m while effective turning leverage changes.
+Use `τ=rF sin θ`. Explain why distance along the door remains 0.80 m while effective turning leverage changes.
 
 ### Design cards
 
@@ -458,7 +458,7 @@ Each 0.50 kg sample receives 10,000 J in an idealized model.
 | water    |                    4180 |                      to calculate |
 | glass    |                     840 |                      to calculate |
 
-Use \(Q=mc\Delta T\). Explain why equal energy, equal mass, and different material can produce different temperature changes.
+Use `Q=mcΔT`. Explain why equal energy, equal mass, and different material can produce different temperature changes.
 
 ### Heating-curve record
 
@@ -489,14 +489,14 @@ Compare temperature loss over equal intervals, state the operational goal before
 
 ### Converging-lens evidence
 
-Use focal length \(f=10\text{ cm}\), the thin-lens relationship \(\frac{1}{f}=\frac{1}{d_o}+\frac{1}{d_i}\), and magnification \(m=-d_i/d_o\).
+Use focal length `f=10 cm`, the thin-lens relationship `1/f=1/d_o+1/d_i`, and magnification `m=-d_i/d_o`.
 
-| Object distance \(d_o\) (cm) | Predicted image distance \(d_i\) (cm) | Magnification | Image classification |
-| ---------------------------: | ------------------------------------: | ------------: | -------------------- |
-|                           30 |                          to calculate |  to calculate | to classify          |
-|                           20 |                          to calculate |  to calculate | to classify          |
-|                           15 |                          to calculate |  to calculate | to classify          |
-|                            8 |                          to calculate |  to calculate | to classify          |
+| Object distance `d_o` (cm) | Predicted image distance `d_i` (cm) | Magnification | Image classification |
+| -------------------------: | ----------------------------------: | ------------: | -------------------- |
+|                         30 |                        to calculate |  to calculate | to classify          |
+|                         20 |                        to calculate |  to calculate | to classify          |
+|                         15 |                        to calculate |  to calculate | to classify          |
+|                          8 |                        to calculate |  to calculate | to classify          |
 
 Draw two principal rays for each case before calculating.
 
@@ -559,7 +559,7 @@ For each path, identify current, field, motion or change, useful output, and los
 
 ### Mass-spring periods
 
-The model uses \(k=10\text{ N/m}\) and \(T=2\pi\sqrt{m/k}\).
+The model uses `k=10 N/m` and `T=2π√(m/k)`.
 
 | Mass (kg) | Modeled period (s) |
 | --------: | -----------------: |
@@ -568,7 +568,7 @@ The model uses \(k=10\text{ N/m}\) and \(T=2\pi\sqrt{m/k}\).
 |      1.00 |               1.99 |
 |      2.00 |               2.81 |
 
-Test whether period is proportional to mass, \(\sqrt{m}\), or \(1/m\). Predict the period for 1.50 kg.
+Test whether period is proportional to mass, `√(m)`, or `1/m`. Predict the period for 1.50 kg.
 
 ### Driven response
 
@@ -597,7 +597,7 @@ Identify which events mark half a cycle, a full cycle, and energy exchange betwe
 
 Distances and periods use Earth-orbit units.
 
-| Planet  | Mean orbital radius (AU) | Period (Earth years) |  \(T^2/r^3\) |
+| Planet  | Mean orbital radius (AU) | Period (Earth years) |      `T²/r³` |
 | ------- | -----------------------: | -------------------: | -----------: |
 | Mercury |                    0.387 |                0.241 | to calculate |
 | Venus   |                    0.723 |                0.615 | to calculate |
@@ -609,7 +609,7 @@ Test the relationship without claiming that every orbit is perfectly circular or
 
 ### Weight across worlds
 
-Use a 50.0 kg modeled astronaut and \(W=mg\).
+Use a 50.0 kg modeled astronaut and `W=mg`.
 
 | World                       | Surface gravitational field strength (N/kg) |   Weight (N) |
 | --------------------------- | ------------------------------------------: | -----------: |
@@ -634,7 +634,7 @@ Correct the physics while preserving a clear statement about what the diagram do
 
 ### Photoelectric threshold evidence
 
-The fictional metal has a threshold frequency near \(5.0\times10^{14}\text{ Hz}\).
+The fictional metal has a threshold frequency near `5.0×10¹⁴ Hz`.
 
 | Light frequency (10¹⁴ Hz) | Stopping potential (V) |
 | ------------------------: | ---------------------: |

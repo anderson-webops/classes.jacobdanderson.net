@@ -1,7 +1,7 @@
 import type { CourseModuleItem } from "@/stores/courses/types";
 import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { mkdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { createPinia, setActivePinia } from "pinia";
 import MarkdownIt from "markdown-it";
@@ -19,6 +19,9 @@ import { useCoursesStore } from "@/stores/courses";
 import { algebra2ACourse } from "@/stores/courses/algebra-2a";
 import { algebra2BCourse } from "@/stores/courses/algebra-2b";
 import { introToPhysicsCourse } from "@/stores/courses/intro-to-physics";
+import { physicsLevel2Course } from "@/stores/courses/physics-level-2";
+import { geometryACourse } from "@/stores/courses/geometry-a";
+import { preAlgebraACourse } from "@/stores/courses/pre-algebra-a";
 import {
 	entrepreneurship101Course,
 	grammarMechanicsCourse,
@@ -31,6 +34,12 @@ import {
 } from "@/stores/courses/source-library-courses";
 
 const cases = [
+	{
+		id: "geometry-a",
+		source: geometryACourse,
+		readings: 6,
+		additions: []
+	},
 	{
 		id: "entrepreneurship-101",
 		source: entrepreneurship101Course,
@@ -95,6 +104,18 @@ const cases = [
 		id: "intro-to-physics",
 		source: introToPhysicsCourse,
 		readings: 37,
+		additions: []
+	},
+	{
+		id: "physics-level-2",
+		source: physicsLevel2Course,
+		readings: 38,
+		additions: []
+	},
+	{
+		id: "pre-algebra-a",
+		source: preAlgebraACourse,
+		readings: 11,
 		additions: []
 	}
 ] as const;
@@ -230,6 +251,58 @@ it.each(
 				expect(displayedPrompt, project.title).toBe(originalPrompt);
 		}
 		const card = (item: CourseModuleItem) => {
+			const fullBlocks = ["pre-algebra-a", "geometry-a"].includes(id);
+			const selfChecks = fullBlocks
+				? [
+						...item.content.matchAll(
+							/\[(Check answers and reasoning|Project self-check)\]\(([^)]+)\)/g
+						)
+					].map(([, label, href]) => {
+						const url = new URL(href, "https://example.invalid");
+						const asset = url.searchParams.get("asset")!;
+						const [path, anchor] = asset.split("#");
+						const source = readFileSync(
+							join(process.cwd(), "public", path),
+							"utf8"
+						);
+						const section = source
+							.split(/^## /m)
+							.slice(1)
+							.find(
+								section =>
+									section
+										.split("\n", 1)[0]
+										.toLowerCase()
+										.replace(/[^a-z0-9\s-]/g, "")
+										.trim()
+										.replace(/\s+/g, "-") === anchor
+							);
+						expect(section, asset).toBeDefined();
+						const container = document.createElement("div");
+						container.innerHTML = markdown.render(
+							section!.slice(section!.indexOf("\n") + 1).trim()
+						);
+						return {
+							label,
+							href,
+							asset,
+							heading: section!.split("\n", 1)[0].trim(),
+							expectedText: container
+								.textContent!.replace(/\s+/g, " ")
+								.trim()
+						};
+					})
+				: [];
+			// These authored labels become separate headings in assignment cards.
+			// Keep every body word while matching the displayed heading punctuation.
+			const fullAssignment = fullBlocks
+				? item.content
+						.replace(/^\*\*(Goal|Steps):\*\*/gm, "**$1**")
+						.replace(
+							/^\*\*Extension:\*\*/gm,
+							"**Optional · Extension**"
+						)
+				: item.content;
 			const directive = item.content.match(
 				/^(?:\*\*(?:Project )?goal:\*\*\s*)?([\s\S]+?)\s*\*\*Completion evidence:\*\*/i
 			)?.[1];
@@ -239,9 +312,12 @@ it.each(
 					directive ??
 						([
 							"introduction-to-public-speaking",
-							"intro-to-physics"
+							"intro-to-physics",
+							"physics-level-2",
+							"pre-algebra-a",
+							"geometry-a"
 						].includes(id)
-							? item.content
+							? fullAssignment
 							: "")
 				)
 			);
@@ -249,6 +325,8 @@ it.each(
 				id: item.id,
 				title: item.title,
 				learningPath: item.learningPath,
+				selfChecks,
+				directiveTextMode: fullBlocks ? "innerText" : "textContent",
 				requiredDirective: container
 					.textContent!.replace(/\s+/g, " ")
 					.trim()
@@ -280,10 +358,42 @@ it.each(
 		else
 			expect(
 				modules.filter(module => module.kind === "module")
-			).toHaveLength(id === "intro-to-physics" ? 17 : count);
+			).toHaveLength(
+				id === "geometry-a"
+					? 7
+					: id === "pre-algebra-a"
+						? 8
+						: ["intro-to-physics", "physics-level-2"].includes(id)
+							? 17
+							: count
+			);
 		for (const module of modules) {
-			if (id === "intro-to-physics" && module.kind === "appendix")
+			if (id === "geometry-a")
+				expect(module.readings, module.title).toHaveLength(
+					module.title.startsWith("Check-In")
+						? 0
+						: module.title.startsWith("GEOA4")
+							? 2
+							: 1
+				);
+			else if (id === "pre-algebra-a")
+				expect(module.readings, module.title).toHaveLength(
+					module.title === "Pre-Algebra A Kick-Off" ||
+						module.title === "Check-In #1"
+						? 0
+						: /^(?:PAA3|PAA8|PAA13|PAA18)/.test(module.title)
+							? 2
+							: 1
+				);
+			else if (
+				["intro-to-physics", "physics-level-2"].includes(id) &&
+				module.kind === "appendix"
+			)
 				expect(module.readings.length, module.title).toBeGreaterThan(0);
+			else if (id === "physics-level-2")
+				expect(module.readings, module.title).toHaveLength(
+					module.title.startsWith("PHY8 ") ? 2 : 1
+				);
 			else if (!algebra)
 				expect(module.readings, module.title).toHaveLength(1);
 			else if (module.readings.length === 0)
@@ -317,6 +427,8 @@ it.each(
 						restoredIdentities: additions.length,
 						sourceProjects: sourceProjects.length,
 						modules,
+						reviewScope:
+							"complete course reading and assignment view",
 						internalModules: course.modules
 							.filter(module => module.internal)
 							.map(module => ({

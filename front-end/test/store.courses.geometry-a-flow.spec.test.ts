@@ -38,9 +38,10 @@ describe("Geometry A learner flow", () => {
 			candidate => candidate.kind !== "appendix"
 		)) {
 			expect(module.estimatedTime, module.title).toMatch(/session/);
-			expect(module.keyBlocks?.length, module.title).toBeGreaterThanOrEqual(
-				5
-			);
+			expect(
+				module.keyBlocks?.length,
+				module.title
+			).toBeGreaterThanOrEqual(5);
 			expect(
 				module.curriculum.every(item => item.learningPath === "core"),
 				module.title
@@ -66,17 +67,16 @@ describe("Geometry A learner flow", () => {
 			)?.learningPath
 		).toBe("challenge");
 		expect(
-			requireModule("Check-In #2: Triangle Relationships")
-				.supplementalProjects.find(
-					item => item.title === "Project: Pythagorean Error Repair"
-				)?.learningPath
+			requireModule(
+				"Check-In #2: Triangle Relationships"
+			).supplementalProjects.find(
+				item => item.title === "Project: Pythagorean Error Repair"
+			)?.learningPath
 		).toBe("challenge");
 	});
 
 	it("promotes the design defense into the required capstone path", () => {
-		const capstone = requireModule(
-			"Check-In #3 and Geometry A Capstone"
-		);
+		const capstone = requireModule("Check-In #3 and Geometry A Capstone");
 		expect(capstone.curriculum.map(item => item.title)).toEqual([
 			"Final Readiness Check",
 			"Capstone: Geometry A Design Defense"
@@ -85,6 +85,10 @@ describe("Geometry A learner flow", () => {
 			expect.objectContaining({
 				learningPath: "choice",
 				title: "Project: Geometry A Portfolio Audit"
+			}),
+			expect.objectContaining({
+				learningPath: "choice",
+				title: "Check-In #3 and Geometry A Capstone Changed-Case Review"
 			})
 		]);
 		expect(capstone.curriculum[0]?.content).toContain(

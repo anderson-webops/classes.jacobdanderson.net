@@ -7,6 +7,7 @@ import webNotificationSource from "../../test/fixtures/web-notification-source.j
 import webContactSource from "../../test/fixtures/web-contact-source.json";
 import webNotesSource from "../../test/fixtures/web-notes-source.json";
 import webModuleSource from "../../test/fixtures/web-portfolio-module-source.json";
+import physics2Packs from "../../test/fixtures/physics-level-2-code-packs.json";
 import webPortfolioSource from "../../test/fixtures/web-portfolio-source.json";
 import { api } from "@/api";
 import { resetCourseAssetPreviewCache } from "@/modules/courseAssetPreview";
@@ -448,6 +449,94 @@ describe("CourseExplorer.vue", () => {
 		window.history.replaceState({}, "", "/courses");
 		vi.unstubAllGlobals();
 	});
+
+	it.each(
+		physics2Packs.activities.flatMap(activity =>
+			["learner", "instructor"].map(role => ({ ...activity, role }))
+		)
+	)(
+		"offers the $pack Python activity with $role source visibility",
+		async activity => {
+			const pinia = createPinia();
+			setActivePinia(pinia);
+			const app = useAppStore();
+			app.setCurrentUser({
+				_id: "physics-learner",
+				name: "Learner",
+				email: "learner@example.invalid",
+				age: 14,
+				state: "GA",
+				courseAccess: ["physics-level-2"],
+				courseProgress: [],
+				editUsers: false,
+				saveEdit: "Save"
+			});
+			if (activity.role === "instructor") {
+				app.setCurrentTutor({
+					_id: "physics-tutor",
+					name: "Tutor",
+					email: "tutor@example.invalid",
+					age: 30,
+					state: "GA",
+					coursePermissions: ["physics-level-2"],
+					usersOfTutorLength: 1,
+					editTutors: false,
+					saveEdit: "Save"
+				});
+				app.setUsers([app.currentUser!]);
+				vi.mocked(api.get).mockResolvedValueOnce({
+					data: [app.currentUser!]
+				});
+			}
+			window.history.replaceState({}, "", `/courses#${activity.module}`);
+			const wrapper = mount(CourseExplorer, {
+				global: { plugins: [pinia] }
+			});
+			try {
+				await vi.waitFor(() =>
+					expect(wrapper.find(".lesson-view-toggle").exists()).toBe(
+						true
+					)
+				);
+				await wrapper
+					.findAll(".lesson-view-toggle button")[0]
+					.trigger("click");
+				await flushPromises();
+				const card = wrapper.find(
+					`#${activity.module}-${activity.item}`
+				);
+				expect(card.exists()).toBe(true);
+				const links = card.findAll("a.is-ide-starter");
+				expect(links).toHaveLength(
+					activity.role === "instructor" ? 2 : 1
+				);
+				for (const [index, link] of links.entries()) {
+					const role = index === 0 ? "starter" : "reference";
+					const url = new URL(
+						link.attributes("href"),
+						"https://example.invalid"
+					);
+					expect(url.pathname).toBe("/ide");
+					expect(url.searchParams.get("mode")).toBe("python");
+					expect(url.searchParams.get("course")).toBe(
+						"physics-level-2"
+					);
+					expect(url.searchParams.get("projectKey")).toBe(
+						`physics-level-2:${activity.item}:${role}`
+					);
+					expect(url.searchParams.get("starterUrl")).toBe(
+						`https://github.com/anderson-webops/classes.jacobdanderson.net/tree/${physics2Packs.revision}/${physics2Packs.sourceRoot}/${activity.pack}/${role}`
+					);
+				}
+				expect(
+					card.findAll('a[href*="physics-level-2-materials-pack.md"]')
+						.length
+				).toBeGreaterThan(0);
+			} finally {
+				wrapper.unmount();
+			}
+		}
+	);
 
 	it.each([
 		...c17VerifiedPacks.flatMap(({ pack, revision }, index) =>

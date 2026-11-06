@@ -104,3 +104,10 @@
 3. The interval is 3<x<13. The first set is a valid obtuse triangle since 64>25+25; the second is acute since 81<25+64.
 4. The hypotenuse is 15, so sine is 3/5, cosine 4/5 and tangent 3/4. In the second triangle, the side opposite 30 degrees is 10 and the other leg is 10sqrt(3).
 5. The vertex-to-centroid part is 14 and the centroid-to-midpoint part is 7, in the ratio 2:1.
+
+## Blueprint Changed-Case Review
+
+1. AB=8, AC=6 and BC=sqrt(8^2+6^2)=10. AB is horizontal and AC vertical, so angle A is right. The perimeter is 24 coordinate units and the area is (1/2)×8×6=24 square coordinate units.
+2. The correspondence is A-D, B-E, C-F, with length factor 3/2. The side lengths are 12,9,15 and perimeter is 36. The area is (1/2)×12×9=54. Lengths scale by 3/2, while area scales by (3/2)^2=9/4 because both a base and its perpendicular height scale.
+3. With C=(3,6), AB^2=64, AC^2=45 and BC^2=61. The longest side is AB; 64 is not 45+61, so this triangle is not right. It is acute since 64<106. Its area is still 24 because base AB is still 8 and the perpendicular height is still 6. Equal area does not establish equal corresponding angles or proportional side lengths; this acute triangle is not similar to the original right triangle.
+4. The first centroid is ((0+8+0)/3,(0+0+6)/3)=(8/3,2). The third is ((0+8+3)/3,(0+0+6)/3)=(11/3,2). Moving one vertex 3 units right shifts the average x-coordinate 1 unit right, while the average y-coordinate remains 2.
