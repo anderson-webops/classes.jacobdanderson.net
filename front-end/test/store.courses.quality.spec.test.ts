@@ -19,6 +19,7 @@ import { lateElementaryAMaterials } from "@/stores/courses/lateElementaryAMateri
 import { lateElementaryBMaterials } from "@/stores/courses/lateElementaryBMaterials";
 import { joyOfReadingGuidance } from "@/stores/courses/joyOfReadingGuidance";
 import { pictureBookGuidance } from "@/stores/courses/pictureBookGuidance";
+import { pictureBookTaskInputs } from "@/stores/courses/pictureBookTaskInputs";
 import {
 	pyGamesCoreResource,
 	pyGamesCoreSourceRevision
@@ -307,8 +308,12 @@ function completeSourceActivity(
 	if (!original?.content.startsWith(prefix)) return false;
 	const body = original.content.slice(prefix.length);
 	const [directive, evidence] = body.split("**Completion evidence:**");
+	const supplied =
+		source.name === "Early Elementary B: Write Your Own Picture Book"
+			? pictureBookTaskInputs[item.title]
+			: undefined;
 	return (
-		item.content === body &&
+		item.content === body + (supplied ? `\n\n${supplied}` : "") &&
 		directive.trim().length > 0 &&
 		(evidence?.match(/^- \S.+/gm)?.length ?? 0) >= 1 &&
 		wordCount(evidence ?? "") >= 8
