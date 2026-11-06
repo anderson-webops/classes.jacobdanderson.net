@@ -136,17 +136,37 @@ describe("research-backed course family expansions", () => {
 				);
 				expect(roadmapModule, courseId).toBeDefined();
 				const roadmapText = moduleText(roadmapModule!);
-				expect(roadmapText, courseId).toContain("**Map purpose:**");
-				expect(roadmapText, courseId).toContain("**Map reading:**");
-				expect(roadmapText, courseId).toContain(
-					"**What the map clarifies:**"
-				);
-				expect(roadmapText, courseId).toContain(
-					"**Inventory purpose:**"
-				);
-				expect(roadmapText, courseId).toContain(
-					"**Inventory reading:**"
-				);
+				if (courseId === "intro-to-physics") {
+					expect(roadmapText, courseId).toContain(
+						"PHY2 signed velocity, PHY3 external forces and PHY4 kinetic energy before PHY8 momentum"
+					);
+					expect(roadmapText, courseId).toContain(
+						"PHY5 current/voltage and PHY4 energy before PHY13"
+					);
+					expect(roadmapText, courseId).toContain(
+						"17 module case sections and 17 corresponding answer/rubric sections"
+					);
+					for (const pack of [
+						"intro-physics-materials-pack.md",
+						"intro-physics-rubrics-answer-key.md"
+					]) {
+						expect(roadmapText, courseId).toContain(
+							`/course-assets/physics/${pack}`
+						);
+					}
+				} else {
+					for (const label of [
+						"Map purpose",
+						"Map reading",
+						"What the map clarifies",
+						"Inventory purpose",
+						"Inventory reading"
+					]) {
+						expect(roadmapText, courseId).toContain(
+							`**${label}:**`
+						);
+					}
+				}
 				expect(roadmapText, courseId).not.toMatch(
 					/\*\*Goal:\*\*\s+(?:Draw or write a prerequisite map|Build a resource inventory)/i
 				);
@@ -199,7 +219,7 @@ describe("research-backed course family expansions", () => {
 				"The order follows prerequisite dependency so each extension builds on skills already practiced.",
 				"**Useful module pattern:** A complete module states the concept, explains why it matters, includes one worked example, provides one practice task, checks understanding quickly, and offers one extension.",
 				"Links that are only background references are labeled that way so they do not look like required assignments.",
-				"Each edge explains the dependency in plain language, such as \"requires arrays before 2D grids\" or \"requires variables before simulation state.\"",
+				'Each edge explains the dependency in plain language, such as "requires arrays before 2D grids" or "requires variables before simulation state."',
 				"AP Computer Science An edge",
 				"The first version stays narrow, demonstrable, and easy to verify before optional polish is added.",
 				"**Required capstone brief:** Name the target user or problem, the exact project result, the core concept being reused from earlier modules, the minimum viable first version, and the evidence that will prove the first version works."
