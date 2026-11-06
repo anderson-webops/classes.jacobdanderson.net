@@ -1,4 +1,3 @@
-import { checkWheelFinalGuess } from "./scratch-wheel-final-guess-check.mjs";
 import assert from "node:assert/strict";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
@@ -6,10 +5,12 @@ import process from "node:process";
 import { strFromU8, unzipSync } from "fflate";
 import { originalAttributionId, originalScratchProjects } from "../front-end/scripts/scratch/generate-original-projects.mjs";
 import { applyOriginalProgramCorrection } from "../front-end/scripts/scratch/program-corrections.mjs";
-import { checkSpeedClickRound } from "./scratch-speed-click-round-check.mjs";
-import { checkRocketshipRestart } from "./scratch-rocketship-restart-check.mjs";
-import { checkSpellingBeeTraversal } from "./scratch-spelling-traversal-check.mjs";
 import { checkDottyGraph } from "./scratch-dotty-graph-check.mjs";
+import { checkRepairedScratchGame } from "./scratch-game-state-vm-checks.mjs";
+import { checkRocketshipRestart } from "./scratch-rocketship-restart-check.mjs";
+import { checkSpeedClickRound } from "./scratch-speed-click-round-check.mjs";
+import { checkSpellingBeeTraversal } from "./scratch-spelling-traversal-check.mjs";
+import { checkWheelFinalGuess } from "./scratch-wheel-final-guess-check.mjs";
 
 export async function checkScratchEventReading(page, { origin, files, setRole }) {
 	const output = process.env.SCRATCH_ORIGINAL_BROWSER_PROOF_DIR || path.join(files, "original-proof");
@@ -289,7 +290,7 @@ export async function checkScratchOriginalImports(page, { origin, files, loaded,
 		await confirm();
 		const speedFrame = page.frames().find(frame => frame !== page.mainFrame());
 		const speedRound = await checkSpeedClickRound(speedFrame, output);
-		await page.$eval(".scratch-toolbar input[maxlength='120']", input => {
+		await page.$eval(".scratch-toolbar input[maxlength='120']", (input) => {
 			input.value = "Speed Click corrected";
 			input.dispatchEvent(new Event("input", { bubbles: true }));
 		});
@@ -311,7 +312,7 @@ export async function checkScratchOriginalImports(page, { origin, files, loaded,
 		await confirm();
 		const rocketFrame = page.frames().find(frame => frame !== page.mainFrame());
 		const rocketRestart = await checkRocketshipRestart(rocketFrame, output);
-		await page.$eval(".scratch-toolbar input[maxlength='120']", input => {
+		await page.$eval(".scratch-toolbar input[maxlength='120']", (input) => {
 			input.value = "Rocketship corrected";
 			input.dispatchEvent(new Event("input", { bubbles: true }));
 		});
@@ -326,71 +327,101 @@ export async function checkScratchOriginalImports(page, { origin, files, loaded,
 		rocketRestart.exportReopenedWithCorrectionAndAttribution = true;
 		await writeFile(path.join(output, "rocketship-restart.json"), `${JSON.stringify(rocketRestart, null, 2)}\n`);
 
-  const spellingBee = originalScratchProjects.find(project => project.id === "357452924");
-  await route(sourceHref(spellingBee));
-  assert.match(await page.$eval(".scratch-original-import", element => element.textContent), /Reference correction: spelling stops after the last selected letter/);
-  await confirm();
-  const spellingFrame = page.frames().find(frame => frame !== page.mainFrame());
-  const traversal = await checkSpellingBeeTraversal(spellingFrame, output);
-  await page.$eval(".scratch-toolbar input[maxlength='120']", input => {
-   input.value = "Spelling Bee corrected";
-   input.dispatchEvent(new Event("input", { bubbles: true }));
-  });
-  await downloadProject("Spelling Bee corrected.sb3");
-  const savedBee = unzipSync(new Uint8Array(await readFile(path.join(files, "Spelling Bee corrected.sb3"))));
-  const savedBeeProject = JSON.parse(strFromU8(savedBee["project.json"]));
-  assert.equal(savedBeeProject.targets.find(target => target.name === "Sprite1").blocks["classes-spelling-bee-alternate-count"].fields.OPERATOR[0], "ceiling");
-  assert.match(savedBeeProject.targets.find(target => target.isStage).comments[originalAttributionId(spellingBee.id)].text, /String traversal bounds/);
-  await newProject();
-  await openFile(path.join(files, "Spelling Bee corrected.sb3"));
-  assert.deepEqual((await inspect(spellingBee)).problems, []);
-  const reopenedFrame = page.frames().find(frame => frame !== page.mainFrame());
-  const reopenedTraversal = await checkSpellingBeeTraversal(reopenedFrame, output);
-  traversal.exportReopenedWithCorrectionAndAttribution = true;
-  traversal.reopenedCases = reopenedTraversal.cases;
-  await writeFile(path.join(output, "spelling-bee-traversal.json"), JSON.stringify(traversal, null, 2) + "\n");
+		const spellingBee = originalScratchProjects.find(project => project.id === "357452924");
+		await route(sourceHref(spellingBee));
+		assert.match(await page.$eval(".scratch-original-import", element => element.textContent), /Reference correction: spelling stops after the last selected letter/);
+		await confirm();
+		const spellingFrame = page.frames().find(frame => frame !== page.mainFrame());
+		const traversal = await checkSpellingBeeTraversal(spellingFrame, output);
+		await page.$eval(".scratch-toolbar input[maxlength='120']", (input) => {
+			input.value = "Spelling Bee corrected";
+			input.dispatchEvent(new Event("input", { bubbles: true }));
+		});
+		await downloadProject("Spelling Bee corrected.sb3");
+		const savedBee = unzipSync(new Uint8Array(await readFile(path.join(files, "Spelling Bee corrected.sb3"))));
+		const savedBeeProject = JSON.parse(strFromU8(savedBee["project.json"]));
+		assert.equal(savedBeeProject.targets.find(target => target.name === "Sprite1").blocks["classes-spelling-bee-alternate-count"].fields.OPERATOR[0], "ceiling");
+		assert.match(savedBeeProject.targets.find(target => target.isStage).comments[originalAttributionId(spellingBee.id)].text, /String traversal bounds/);
+		await newProject();
+		await openFile(path.join(files, "Spelling Bee corrected.sb3"));
+		assert.deepEqual((await inspect(spellingBee)).problems, []);
+		const reopenedFrame = page.frames().find(frame => frame !== page.mainFrame());
+		const reopenedTraversal = await checkSpellingBeeTraversal(reopenedFrame, output);
+		traversal.exportReopenedWithCorrectionAndAttribution = true;
+		traversal.reopenedCases = reopenedTraversal.cases;
+		await writeFile(path.join(output, "spelling-bee-traversal.json"), `${JSON.stringify(traversal, null, 2)}\n`);
 
-  const dotty = originalScratchProjects.find(project=>project.id==="338501835");
-  await route(sourceHref(dotty));
-  assert.match(await page.$eval(".scratch-original-import",element=>element.textContent),/Reference correction: reset the pen and finish the graph at \(180, 180\)/);
-  await confirm();
-  const dottyFrame=page.frames().find(frame=>frame!==page.mainFrame());
-  const graph=await checkDottyGraph(dottyFrame,output);
-  await page.$eval(".scratch-toolbar input[maxlength='120']",input=>{
-   input.value="Dotty corrected";input.dispatchEvent(new Event("input",{bubbles:true}));
-  });
-  await downloadProject("Dotty corrected.sb3");
-  const savedDotty=unzipSync(new Uint8Array(await readFile(path.join(files,"Dotty corrected.sb3"))));
-  const savedDottyProject=JSON.parse(strFromU8(savedDotty["project.json"]));
-  assert.equal(savedDottyProject.targets.find(target=>target.name==="Dotty").blocks["classes-dotty-reset-pen"].opcode,"pen_penUp");
-  assert.match(savedDottyProject.targets.find(target=>target.isStage).comments[originalAttributionId(dotty.id)].text,/Absolute-value trace/);
-  await newProject();await openFile(path.join(files,"Dotty corrected.sb3"));
-  assert.deepEqual((await inspect(dotty)).problems,[]);
-  const reopenedDottyFrame=page.frames().find(frame=>frame!==page.mainFrame());
-  const reopenedGraph=await checkDottyGraph(reopenedDottyFrame,output);
-  graph.exportReopenedWithCorrectionAndAttribution=true;graph.reopenedCases=reopenedGraph.cases;
-  await writeFile(path.join(output,"dotty-graph.json"),JSON.stringify(graph,null,2)+"\n");
+		const dotty = originalScratchProjects.find(project => project.id === "338501835");
+		await route(sourceHref(dotty));
+		assert.match(await page.$eval(".scratch-original-import", element => element.textContent), /Reference correction: reset the pen and finish the graph at \(180, 180\)/);
+		await confirm();
+		const dottyFrame = page.frames().find(frame => frame !== page.mainFrame());
+		const graph = await checkDottyGraph(dottyFrame, output);
+		await page.$eval(".scratch-toolbar input[maxlength='120']", (input) => {
+			input.value = "Dotty corrected";
+			input.dispatchEvent(new Event("input", { bubbles: true }));
+		});
+		await downloadProject("Dotty corrected.sb3");
+		const savedDotty = unzipSync(new Uint8Array(await readFile(path.join(files, "Dotty corrected.sb3"))));
+		const savedDottyProject = JSON.parse(strFromU8(savedDotty["project.json"]));
+		assert.equal(savedDottyProject.targets.find(target => target.name === "Dotty").blocks["classes-dotty-reset-pen"].opcode, "pen_penUp");
+		assert.match(savedDottyProject.targets.find(target => target.isStage).comments[originalAttributionId(dotty.id)].text, /Absolute-value trace/);
+		await newProject();
+		await openFile(path.join(files, "Dotty corrected.sb3"));
+		assert.deepEqual((await inspect(dotty)).problems, []);
+		const reopenedDottyFrame = page.frames().find(frame => frame !== page.mainFrame());
+		const reopenedGraph = await checkDottyGraph(reopenedDottyFrame, output);
+		graph.exportReopenedWithCorrectionAndAttribution = true;
+		graph.reopenedCases = reopenedGraph.cases;
+		await writeFile(path.join(output, "dotty-graph.json"), `${JSON.stringify(graph, null, 2)}\n`);
 
- const wheel = originalScratchProjects.find(project => project.id === "342643080");
- await route(sourceHref(wheel));
- assert.match(await page.$eval(".scratch-original-import", element => element.textContent), /Reference correction: completing the word on the last guess wins/);
- await confirm();
- const wheelFrame = page.frames().find(frame => frame !== page.mainFrame());
- const wheelProof = await checkWheelFinalGuess(wheelFrame, output);
- await page.$eval(".scratch-toolbar input[maxlength='120']", input => {
-  input.value = "Wheel corrected"; input.dispatchEvent(new Event("input", { bubbles: true }));
- });
- await downloadProject("Wheel corrected.sb3");
- const wheelSaved = unzipSync(new Uint8Array(await readFile(path.join(files, "Wheel corrected.sb3"))));
- const wheelProject = JSON.parse(strFromU8(wheelSaved["project.json"]));
- assert.match(wheelProject.targets.find(target => target.isStage).comments[originalAttributionId(wheel.id)].text, /Final-guess victory/);
- await newProject(); await openFile(path.join(files, "Wheel corrected.sb3"));
- assert.deepEqual((await inspect(wheel)).problems, []);
- const wheelReopenedFrame = page.frames().find(frame => frame !== page.mainFrame());
- const reopenedWheel = await checkWheelFinalGuess(wheelReopenedFrame, output);
- wheelProof.reopenedCases = reopenedWheel.cases;
- wheelProof.exportReopenedWithCorrectionAndAttribution = true;
- await writeFile(path.join(output, "wheel-final-guess.json"), JSON.stringify(wheelProof, null, 2) + "\n");
+		const wheel = originalScratchProjects.find(project => project.id === "342643080");
+		await route(sourceHref(wheel));
+		assert.match(await page.$eval(".scratch-original-import", element => element.textContent), /Reference correction: completing the word on the last guess wins/);
+		await confirm();
+		const wheelFrame = page.frames().find(frame => frame !== page.mainFrame());
+		const wheelProof = await checkWheelFinalGuess(wheelFrame, output);
+		await page.$eval(".scratch-toolbar input[maxlength='120']", (input) => {
+			input.value = "Wheel corrected";
+			input.dispatchEvent(new Event("input", { bubbles: true }));
+		});
+		await downloadProject("Wheel corrected.sb3");
+		const wheelSaved = unzipSync(new Uint8Array(await readFile(path.join(files, "Wheel corrected.sb3"))));
+		const wheelProject = JSON.parse(strFromU8(wheelSaved["project.json"]));
+		assert.match(wheelProject.targets.find(target => target.isStage).comments[originalAttributionId(wheel.id)].text, /Final-guess victory/);
+		await newProject();
+		await openFile(path.join(files, "Wheel corrected.sb3"));
+		assert.deepEqual((await inspect(wheel)).problems, []);
+		const wheelReopenedFrame = page.frames().find(frame => frame !== page.mainFrame());
+		const reopenedWheel = await checkWheelFinalGuess(wheelReopenedFrame, output);
+		wheelProof.reopenedCases = reopenedWheel.cases;
+		wheelProof.exportReopenedWithCorrectionAndAttribution = true;
+		await writeFile(path.join(output, "wheel-final-guess.json"), `${JSON.stringify(wheelProof, null, 2)}\n`);
+
+		for (const id of ["357453262", "343348430", "348994271", "341945558", "342645999"]) {
+			const game = originalScratchProjects.find(project => project.id === id);
+			await route(sourceHref(game));
+			await confirm();
+			const frame = page.frames().find(frame => frame !== page.mainFrame());
+			const proof = await checkRepairedScratchGame(frame, output, id);
+			const name = `Repaired game ${id}`;
+			await page.$eval(".scratch-toolbar input[maxlength='120']", (input, name) => {
+				input.value = name;
+				input.dispatchEvent(new Event("input", { bubbles: true }));
+			}, name);
+			await downloadProject(`${name}.sb3`);
+			const saved = unzipSync(new Uint8Array(await readFile(path.join(files, `${name}.sb3`))));
+			const project = JSON.parse(strFromU8(saved["project.json"]));
+			assert.ok(project.targets.find(t => t.isStage).comments[originalAttributionId(id)].text.includes("correction"));
+			await newProject();
+			await openFile(path.join(files, `${name}.sb3`));
+			assert.deepEqual((await inspect(game)).problems, []);
+			const reopenedFrame = page.frames().find(frame => frame !== page.mainFrame());
+			const reopened = await checkRepairedScratchGame(reopenedFrame, output, id);
+			proof.reopenedCases = reopened.cases;
+			proof.exportReopenedWithCorrectionAndAttribution = true;
+			await writeFile(path.join(output, `game-state-${id}.json`), `${JSON.stringify(proof, null, 2)}\n`);
+		}
 
 		const spinner = originalScratchProjects.find(project => project.id === "287887351");
 		await route(sourceHref(spinner));
