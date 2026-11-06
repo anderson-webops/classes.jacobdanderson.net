@@ -12,6 +12,7 @@ import { createServer, preview } from "vite";
 
 const root = fileURLToPath(new URL("../front-end/", import.meta.url));
 const courseIds = [
+ "early-elementary-a-math",
 	"algebra-1a",
 	"algebra-1b",
 	"entrepreneurship-101",
@@ -30,7 +31,7 @@ const courseIds = [
 	"geometry-a",
 	"geometry-b"
 ];
-const readingCounts = [15, 31, 10, 13, 14, 16, 20, 14, 9, 4, 27, 22, 37, 38, 11, 6, 11];
+const readingCounts = [22,15, 31, 10, 13, 14, 16, 20, 14, 9, 4, 27, 22, 37, 38, 11, 6, 11];
 assert.equal(readingCounts.length, courseIds.length);
 const requestedCourses = process.env.SELF_STUDY_BROWSER_COURSES;
 const sourceMode = process.env.SELF_STUDY_BROWSER_SOURCE_MODE ?? "build";
@@ -617,6 +618,7 @@ test(
 									|| (["intro-to-physics", "physics-level-2"].includes(id) && /^(?:Standards Map|Course Roadmap)$/.test(module.title))
 									|| (id === "physics-level-2" && /^(?:PHY12|PHY16|PHY17|PHY23) /.test(module.title))
 									|| (id === "algebra-1a" && /^AA(?:1|11) /.test(module.title))
+									|| (id === "early-elementary-a-math" && /^(?:EEA1 |EEA13 |EEA15 |EEA16 |EEA19 )/.test(module.title))
 									|| (id === "algebra-1b" && /^AB(?:1|19) /.test(module.title))
 									|| module.readings.some(
 										item => item.images.length
@@ -667,6 +669,7 @@ test(
 							if (id === "pre-algebra-a") assert.equal(resourceViews.length, 23);
 							if (id === "geometry-a") assert.equal(resourceViews.length, 17);
 							if (id === "geometry-b") assert.equal(resourceViews.length, 13);
+							if (id === "early-elementary-a-math") assert.equal(resourceViews.length, 70);
 							if (id === "algebra-1a") assert.equal(resourceViews.length, 7);
 							if (id === "algebra-1b") assert.equal(resourceViews.length, 3);
 							if (id === "algebra-2a") assert.equal(resourceViews.length, 4);

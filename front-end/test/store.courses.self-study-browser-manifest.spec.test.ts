@@ -7,6 +7,7 @@ import { createPinia, setActivePinia } from "pinia";
 import MarkdownIt from "markdown-it";
 import { expect, it } from "vitest";
 import published from "../../test/fixtures/catalog-published-identities.json";
+import elementaryAdditions from "../../test/fixtures/early-elementary-a-restored-identities.json";
 import ventureAdditions from "../../test/fixtures/entrepreneurship-restored-core-identities.json";
 import grammarAdditions from "../../test/fixtures/grammar-mechanics-restored-identities.json";
 import literatureAdditions from "../../test/fixtures/middle-school-literature-restored-identities.json";
@@ -30,6 +31,7 @@ import { geometryACourse } from "@/stores/courses/geometry-a";
 import { geometryBCourse } from "@/stores/courses/geometry-b";
 import { preAlgebraACourse } from "@/stores/courses/pre-algebra-a";
 import {
+	earlyElementaryMathACourse,
 	entrepreneurship101Course,
 	grammarMechanicsCourse,
 	introductionToPublicSpeakingCourse,
@@ -41,6 +43,12 @@ import {
 } from "@/stores/courses/source-library-courses";
 
 const cases = [
+	{
+		id: "early-elementary-a-math",
+		source: earlyElementaryMathACourse,
+		readings: 22,
+		additions: elementaryAdditions
+	},
 	{
 		id: "algebra-1a",
 		source: algebra1ACourse,
@@ -292,6 +300,7 @@ it.each(
 		}
 		const card = (item: CourseModuleItem) => {
 			const fullBlocks = [
+				"early-elementary-a-math",
 				"algebra-1a",
 				"algebra-1b",
 				"pre-algebra-a",
@@ -351,7 +360,13 @@ it.each(
 							"**Optional · Extension**"
 						)
 				: item.content;
-			if (id === "algebra-1a" || id === "algebra-1b") {
+			if (
+				[
+					"algebra-1a",
+					"algebra-1b",
+					"early-elementary-a-math"
+				].includes(id)
+			) {
 				const sections = lessonContentSections(
 					item.content,
 					item.contentKind ?? "assignment"
@@ -379,6 +394,7 @@ it.each(
 				normalizeInlineCourseMarkdown(
 					directive ??
 						([
+							"early-elementary-a-math",
 							"algebra-1a",
 							"algebra-1b",
 							"introduction-to-public-speaking",
@@ -411,7 +427,12 @@ it.each(
 			.filter(
 				module =>
 					!module.internal &&
-					(!(algebra || algebra1) || module.kind !== "appendix")
+					(!(
+						algebra ||
+						algebra1 ||
+						id === "early-elementary-a-math"
+					) ||
+						module.kind !== "appendix")
 			)
 			.map(module => ({
 				id: module.id,

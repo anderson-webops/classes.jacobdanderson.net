@@ -1,32 +1,84 @@
 import type { RawCourse } from "./types";
+import { earlyElementaryAMaterials } from "./earlyElementaryAMaterials";
+
+function itemId(module: string, title: string) {
+	return `early-elementary-a-math-${module}-curriculum-${title}`
+		.toLowerCase()
+		.replace(/[^a-z0-9]+/g, "-")
+		.replace(/^-|-$/g, "");
+}
+
+function selfCheck(anchor: string) {
+	const asset = `/course-assets/early-elementary-a/practice-checks-v2.md#${anchor}`;
+	return `[Project self-check](/course-resource?asset=${encodeURIComponent(asset)}&label=${encodeURIComponent("Practice self-check")})`;
+}
 
 export function applyEarlyElementaryAProjects(
 	course: RawCourse,
 	raw: RawCourse
 ) {
-	const title = "EEA4 Module Project: Escape the Game";
-	const original = raw.modules.find(module => module.title === title);
-	const displayed = course.modules.find(module => module.title === title);
-	const reading = displayed?.curriculum.find(item =>
-		item.title.endsWith("Core Concepts")
-	);
-	if (!original || !displayed || !reading)
-		throw new Error("Missing Early Elementary A escape project");
-	const projects = original.curriculum.filter(
-		item => item.preserveAssignment
-	);
-	if (projects.length !== 2)
-		throw new Error("Expected both Early Elementary A escape activities");
-	const projectIds = new Set(projects.map(item => item.id));
-	reading.aliases = reading.aliases?.filter(alias => !projectIds.has(alias));
-	reading.contentKind = "reading";
-	reading.preserveInstructions = true;
-	reading.content = `**Budget and route methods**
-
-A budget is the largest amount available to spend. Add the prices of the selected items. Subtract that total from the budget to find the amount left. Check by adding the amount spent and the amount left: the sum equals the original budget.
-
-For a 100-point budget, two items costing 20 and 30 points use 20 + 30 = 50 points. There are 100 - 50 = 50 points left, and 50 + 50 = 100 checks the result.
-
-On a grid, count horizontal and vertical movement separately. One right jump and one left jump cancel their changes in position, although both jumps still count toward the total. For example, three right jumps followed by one left jump use four jumps and end two squares to the right of the start. The same rule works for up and down jumps. Check every part of the route against the grid boundary before checking the final corner.`;
-	displayed.curriculum = [reading, ...projects.map(item => ({ ...item }))];
+	for (const original of raw.modules) {
+		const code = original.title.startsWith("Check-in #")
+			? `check-${original.title.slice(-1)}`
+			: original.title.split(" ")[0];
+		const material = earlyElementaryAMaterials.find(
+			unit => unit.code === code
+		);
+		const displayed = course.modules.find(
+			module =>
+				module.title.toLowerCase() === original.title.toLowerCase()
+		);
+		const reading = displayed?.curriculum[0];
+		if (!material || !displayed || !reading)
+			throw new Error(`Missing Early Elementary A material ${code}`);
+		const projects = original.curriculum.slice(1).map(item => {
+			const supplied = material.tasks.find(
+				task => task.title === item.title
+			);
+			if (!supplied && code !== "EEA4") {
+				throw new Error(
+					`Missing elementary project inputs: ${item.title}`
+				);
+			}
+			const previous = displayed.curriculum.find(
+				row => row.title === item.title
+			);
+			return {
+				...item,
+				...previous,
+				id:
+					previous?.id ??
+					item.id ??
+					itemId(original.title, item.title),
+				content: supplied
+					? `**Problems**\n\n${supplied.prompt}\n\n${selfCheck(supplied.anchor)}`
+					: item.content,
+				contentKind: "assignment" as const,
+				learningPath: "core" as const,
+				preserveAssignment: true,
+				preserveInstructions: true
+			};
+		});
+		const projectIds = new Set(projects.map(item => item.id));
+		reading.aliases = reading.aliases?.filter(
+			alias => !projectIds.has(alias)
+		);
+		reading.contentKind = "reading";
+		reading.learningPath = "core";
+		reading.preserveInstructions = true;
+		reading.content = `**Method**\n\n${material.method}\n\n**Worked example**\n\n${material.worked}`;
+		displayed.curriculum = [reading, ...projects];
+		if (displayed.supplementalProjects.length !== 2) {
+			throw new Error(
+				`Unexpected elementary optional activities: ${code}`
+			);
+		}
+		displayed.supplementalProjects.forEach((item, index) => {
+			const task = index === 0 ? material.practice : material.challenge;
+			item.content = `**Problems**\n\n${task.prompt}\n\n${selfCheck(task.anchor)}`;
+			item.contentKind = "assignment";
+			item.preserveAssignment = true;
+			item.preserveInstructions = true;
+		});
+	}
 }
