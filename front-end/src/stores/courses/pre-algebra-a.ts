@@ -625,6 +625,7 @@ export const preAlgebraACourse: RawCourse = {
 		{
 			kind: "appendix",
 			title: "Pending Static Assets",
+			internal: true,
 			curriculum: [
 				lesson(
 					"Pre-Algebra A Asset Status",

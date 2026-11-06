@@ -20,6 +20,7 @@ import { algebra2ACourse } from "@/stores/courses/algebra-2a";
 import { algebra2BCourse } from "@/stores/courses/algebra-2b";
 import { introToPhysicsCourse } from "@/stores/courses/intro-to-physics";
 import { physicsLevel2Course } from "@/stores/courses/physics-level-2";
+import { preAlgebraACourse } from "@/stores/courses/pre-algebra-a";
 import {
 	entrepreneurship101Course,
 	grammarMechanicsCourse,
@@ -102,6 +103,12 @@ const cases = [
 		id: "physics-level-2",
 		source: physicsLevel2Course,
 		readings: 38,
+		additions: []
+	},
+	{
+		id: "pre-algebra-a",
+		source: preAlgebraACourse,
+		readings: 11,
 		additions: []
 	}
 ] as const;
@@ -247,7 +254,8 @@ it.each(
 						([
 							"introduction-to-public-speaking",
 							"intro-to-physics",
-							"physics-level-2"
+							"physics-level-2",
+							"pre-algebra-a"
 						].includes(id)
 							? item.content
 							: "")
@@ -289,12 +297,23 @@ it.each(
 			expect(
 				modules.filter(module => module.kind === "module")
 			).toHaveLength(
-				["intro-to-physics", "physics-level-2"].includes(id)
-					? 17
-					: count
+				id === "pre-algebra-a"
+					? 8
+					: ["intro-to-physics", "physics-level-2"].includes(id)
+						? 17
+						: count
 			);
 		for (const module of modules) {
-			if (
+			if (id === "pre-algebra-a")
+				expect(module.readings, module.title).toHaveLength(
+					module.title === "Pre-Algebra A Kick-Off" ||
+						module.title === "Check-In #1"
+						? 0
+						: /^(?:PAA3|PAA8|PAA13|PAA18)/.test(module.title)
+							? 2
+							: 1
+				);
+			else if (
 				["intro-to-physics", "physics-level-2"].includes(id) &&
 				module.kind === "appendix"
 			)

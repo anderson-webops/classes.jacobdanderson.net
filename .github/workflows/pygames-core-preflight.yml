@@ -372,6 +372,7 @@ jobs:
           test/store.courses.public-speaking-content.spec.test.ts
           test/store.courses.physics-level-2-flow.spec.test.ts
           test/physics-level-2-ide.spec.test.ts
+          test/physics-materials-rendering.spec.test.ts
           test/store.courses.pre-algebra-a-flow.spec.test.ts
           test/store.courses.prealgebra-a-practice.spec.test.ts
           test/store.courses.scratch-bootcamp-flow.spec.test.ts
@@ -397,15 +398,17 @@ jobs:
           npm exec -w front-end -- vitest run test/components.courseexplorer.spec.test.ts
           -t 'keeps reference appendices separate|offers original Scratch imports|offers each original Bootcamp capstone' --no-file-parallelism --maxWorkers=1
       - name: Build both workspaces
+        id: course_build
         run: node scripts/classes-family-heavy-task.mjs -- npm run build
       - name: Verify all self-study course pages in both roles and sizes
         if: inputs.course != 'scratch-originals' && inputs.course != 'scratch-tasks'
         run: node scripts/classes-family-heavy-task.mjs -- node --test test/self-study-course-browser.test.mjs
       - name: Verify the Physics Level 2 Python models against independent values
-        if: inputs.course == 'physics-models'
+        id: physics_native
+        if: always() && !cancelled() && inputs.course == 'physics-models' && steps.course_build.outcome == 'success'
         run: python3 -I -B test/physics-level-2-code-packs.test.py
       - name: Verify Physics consent, actual Python runs, edits and saved exports
-        if: inputs.course == 'physics-models'
+        if: always() && !cancelled() && inputs.course == 'physics-models' && steps.course_build.outcome == 'success' && steps.physics_native.outcome == 'success'
         run: node scripts/classes-family-heavy-task.mjs -- node --test test/physics-level-2-workflows-browser.test.mjs
       - name: Verify original Scratch program and media identities
         if: inputs.course == 'scratch-originals' || inputs.course == 'course-audit'
