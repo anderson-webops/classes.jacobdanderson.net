@@ -6,6 +6,7 @@ import { expect, it } from "vitest";
 import elementaryAdditions from "../../test/fixtures/early-elementary-a-restored-identities.json";
 import elementaryBAdditions from "../../test/fixtures/early-elementary-b-restored-identities.json";
 import lateElementaryAAdditions from "../../test/fixtures/late-elementary-a-restored-identities.json";
+import lateElementaryBAdditions from "../../test/fixtures/late-elementary-b-restored-identities.json";
 import restoredEntrepreneurshipProjects from "../../test/fixtures/entrepreneurship-restored-core-identities.json";
 import restoredGrammarProjects from "../../test/fixtures/grammar-mechanics-restored-identities.json";
 import restoredLiteratureProjects from "../../test/fixtures/middle-school-literature-restored-identities.json";
@@ -44,6 +45,7 @@ const addedIdentities: Record<
 	"early-elementary-a-math": elementaryAdditions,
 	"early-elementary-b-math": elementaryBAdditions,
 	"late-elementary-a-math": lateElementaryAAdditions,
+	"late-elementary-b-math": lateElementaryBAdditions,
 	"entrepreneurship-101": restoredEntrepreneurshipProjects,
 	"middle-school-c-grammar": restoredGrammarProjects,
 	"middle-school-a-literature": restoredLiteratureProjects,

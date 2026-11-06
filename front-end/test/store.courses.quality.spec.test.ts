@@ -16,6 +16,7 @@ import { physicsLevel2Course } from "@/stores/courses/physics-level-2";
 import { earlyElementaryAMaterials } from "@/stores/courses/earlyElementaryAMaterials";
 import { earlyElementaryBMaterials } from "@/stores/courses/earlyElementaryBMaterials";
 import { lateElementaryAMaterials } from "@/stores/courses/lateElementaryAMaterials";
+import { lateElementaryBMaterials } from "@/stores/courses/lateElementaryBMaterials";
 import {
 	pyGamesCoreResource,
 	pyGamesCoreSourceRevision
@@ -53,7 +54,8 @@ const COURSE_SWEEP_TIMEOUT = 180000;
 const elementaryMaterials = {
 	"early-elementary-a-math": earlyElementaryAMaterials,
 	"early-elementary-b-math": earlyElementaryBMaterials,
-	"late-elementary-a-math": lateElementaryAMaterials
+	"late-elementary-a-math": lateElementaryAMaterials,
+	"late-elementary-b-math": lateElementaryBMaterials
 };
 
 function completeElementaryPractice(
@@ -7872,6 +7874,10 @@ describe("course text quality normalization", () => {
 		if (!course) return;
 
 		const text = allCourseText(course);
+		const original = await courseCatalog
+			.find(entry => entry.id === "late-elementary-b-math")!
+			.load();
+		const originalText = allCourseText(original);
 		const expectedAnchors = [
 			"Hot Dog Contest Equivalent Fractions",
 			"Chore Ribbon Fraction Ordering",
@@ -7953,12 +7959,15 @@ describe("course text quality normalization", () => {
 		];
 
 		expect(text).not.toContain("Source Activity Anchors:");
-		expect(text).toContain("**Completion evidence:**");
+		expectElementaryReadings(course, "late-elementary-b-math");
+		expect(originalText).toContain("**Completion evidence:**");
 		for (const anchor of expectedAnchors) {
 			expect(text, anchor).toContain(anchor);
 		}
 		for (const originalReference of originalReferences) {
-			expect(text, originalReference).toContain(originalReference);
+			expect(originalText, originalReference).toContain(
+				originalReference
+			);
 		}
 
 		expect(text).not.toMatch(

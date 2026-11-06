@@ -10,6 +10,7 @@ import published from "../../test/fixtures/catalog-published-identities.json";
 import elementaryAdditions from "../../test/fixtures/early-elementary-a-restored-identities.json";
 import elementaryBAdditions from "../../test/fixtures/early-elementary-b-restored-identities.json";
 import lateElementaryAAdditions from "../../test/fixtures/late-elementary-a-restored-identities.json";
+import lateElementaryBAdditions from "../../test/fixtures/late-elementary-b-restored-identities.json";
 import ventureAdditions from "../../test/fixtures/entrepreneurship-restored-core-identities.json";
 import grammarAdditions from "../../test/fixtures/grammar-mechanics-restored-identities.json";
 import literatureAdditions from "../../test/fixtures/middle-school-literature-restored-identities.json";
@@ -36,6 +37,7 @@ import {
 	earlyElementaryMathACourse,
 	earlyElementaryMathBCourse,
 	lateElementaryMathACourse,
+	lateElementaryMathBCourse,
 	entrepreneurship101Course,
 	grammarMechanicsCourse,
 	introductionToPublicSpeakingCourse,
@@ -47,6 +49,12 @@ import {
 } from "@/stores/courses/source-library-courses";
 
 const cases = [
+	{
+		id: "late-elementary-b-math",
+		source: lateElementaryMathBCourse,
+		readings: 20,
+		additions: lateElementaryBAdditions
+	},
 	{
 		id: "late-elementary-a-math",
 		source: lateElementaryMathACourse,
@@ -319,6 +327,7 @@ it.each(
 				"early-elementary-a-math",
 				"early-elementary-b-math",
 				"late-elementary-a-math",
+				"late-elementary-b-math",
 				"algebra-1a",
 				"algebra-1b",
 				"pre-algebra-a",
@@ -415,6 +424,7 @@ it.each(
 							"early-elementary-a-math",
 							"early-elementary-b-math",
 							"late-elementary-a-math",
+							"late-elementary-b-math",
 							"algebra-1a",
 							"algebra-1b",
 							"introduction-to-public-speaking",
@@ -453,7 +463,8 @@ it.each(
 						[
 							"early-elementary-a-math",
 							"early-elementary-b-math",
-							"late-elementary-a-math"
+							"late-elementary-a-math",
+							"late-elementary-b-math"
 						].includes(id)
 					) ||
 						module.kind !== "appendix")
