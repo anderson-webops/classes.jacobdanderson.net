@@ -11,6 +11,40 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 
+def select_failed_result(bundle):
+    """Select one failed profile from a known, immutable native course archive."""
+    names = bundle.namelist()
+    assert len(names) == len(set(names)), "Duplicate archive members"
+    courses = {"tracker", "gallery", "hobby", "map", "capstone"}
+    proofs = [course + "/proof.json" for course in courses
+              if course + "/proof.json" in names]
+    assert len(proofs) == 1, "One known course proof is required"
+    proof_path = proofs[0]
+    course = proof_path.split("/")[0]
+    proof = json.loads(bundle.read(proof_path))
+    failures = [profile for profile in proof["simulatorTests"]
+                if not profile["passed"]]
+    assert len(failures) == 1, "One original failed profile is required"
+    failure = failures[0]
+    assert failure["role"] in {"starter", "solution"}
+    assert failure["size"] in {"small", "large"}
+    assert failure["variant"] in {"standard", "largest-text"}
+    profile = "-".join(failure[key] for key in ("role", "size", "variant"))
+    result = course + "/results/" + profile + ".xcresult"
+    selected = [name for name in names
+                if name == proof_path or name.startswith(result + "/")]
+    assert any(name.startswith(result + "/") for name in selected)
+    return {
+        "course": course,
+        "proof": proof_path,
+        "result": result,
+        "selected": selected,
+        "failure": failure,
+        "testId": ("TrackerUITests/testTrackerWorkflow()" if course == "tracker"
+                   else "CanonicalCourseUITests/testCourseWorkflow()"),
+    }
+
+
 def main():
     parser = ArgumentParser(description=__doc__)
     parser.add_argument("--run-id", required=True)
@@ -131,25 +165,16 @@ def main():
                 dest = (extracted / info.filename).resolve()
                 assert dest.is_relative_to(extracted), info.filename
                 assert (info.external_attr >> 16) & 0o170000 != 0o120000
-            selected = [
-                name for name in bundle.namelist()
-                if name == "tracker/proof.json"
-                or name.startswith("tracker/results/solution-large-standard.xcresult/")
-            ]
-            assert selected
-            bundle.extractall(extracted, selected)
+            selection = select_failed_result(bundle)
+            bundle.extractall(extracted, selection["selected"])
         archive.rename(output / "original-artifact.zip")
         # The original archive stays in its producer run; retain its verified identity.
         (output / "original-artifact.zip").unlink()
-        result = extracted / "tracker/results/solution-large-standard.xcresult"
+        result = extracted / selection["result"]
         assert result.is_dir()
-        proof = json.loads((extracted / "tracker/proof.json").read_text())
-        failures = [p for p in proof["simulatorTests"] if not p["passed"]]
-        assert len(failures) == 1
-        assert [failures[0][k] for k in ["role", "size", "variant"]] == [
-            "solution", "large", "standard"
-        ]
-        record["originalFailure"] = failures[0]
+        record["originalFailure"] = selection["failure"]
+        record["originalCourse"] = selection["course"]
+        record["originalResultPath"] = selection["result"]
         execute(["xcodebuild", "-version"], "xcode-version")
         for command in [
             ["get", "test-results", "summary"],
@@ -170,7 +195,7 @@ def main():
         execute(
             ["xcrun", "xcresulttool", "get", "test-results", "activities",
              "--path", str(result), "--test-id",
-             "TrackerUITests/testTrackerWorkflow()"],
+             selection["testId"]],
             "result-activities", required=False,
         )
         attachments = output / "attachments"

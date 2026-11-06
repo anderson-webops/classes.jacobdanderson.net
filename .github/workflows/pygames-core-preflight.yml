@@ -50,6 +50,8 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
+      - name: Verify bounded retained native result selection
+        run: python3 test/native-ui-evidence-selection.test.py
       - name: Inspect the unchanged original native failure
         env:
           GH_TOKEN: ${{ github.token }}
