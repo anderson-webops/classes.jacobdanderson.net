@@ -917,7 +917,7 @@ Inverse variation has the form \`y = k/x\`.
 			createLesson(
 				"Trend Lines and Interpreting a Fit",
 				`
-Compare candidate models using plotted observations and their numerical pattern. A line has a constant change in output for equal input steps. A pure exponential \`y=ab^x\`, with \`a!=0\` and \`b>0\`, has a constant ratio between consecutive outputs at unit input steps. Quadratic and cubic shapes can suggest other candidates, but a model should also reproduce the observations or account for its residuals.
+Compare candidate models using plotted observations and their numerical pattern. A line has a constant change in output for equal input steps. A pure exponential \`y=ab^x\`, with \`a!=0\` and \`b>0\`, has a constant ratio between consecutive outputs at unit input steps. Quadratic and cubic shapes suggest other candidates; verify each proposed model against the observations and account for its residuals.
 
 **Worked example**
 
