@@ -373,6 +373,7 @@ Challenge: Draw a different circle using different numbers.`,
 			curriculum: [
 				{
 					title: "Introducing conditionals",
+					contentKind: "reading",
 					content:
 						'Conditionals let a program make decisions. The "if … then" block checks a condition, and sensing blocks such as "touching mouse pointer", "key right arrow pressed", and "touching color ___" provide facts the condition can test. In games, conditionals often sit inside a `forever` loop so Scratch keeps checking for changes. A useful test describes both outcomes: what happens when the condition is true and what remains unchanged when it is false.'
 				},
@@ -527,8 +528,22 @@ Challenge: Add more sprites to the game and have the ball pass between them.`,
 			curriculum: [
 				{
 					title: "Getting user input",
-					content:
-						'Event listeners respond to button presses, but many projects also need text typed by the user. The "ask ___ and wait" block collects typed input, and the "answer" variable stores the most recent response. The equality (=) block compares the answer to a correct value, while < and > blocks compare typed numbers by size.'
+					contentKind: "reading",
+					content: `**Concept path:** Event listeners respond to button presses, but many projects also need text typed by the user. The "ask ___ and wait" block collects typed input, and the "answer" variable stores the most recent response. The equality (=) block compares the answer to a correct value, while < and > blocks compare typed numbers by size.
+
+**Keeping two answers:** Every completed question replaces the previous answer. Save a response in a named variable before asking another question when both values are needed:
+
+\`\`\`text
+when green flag clicked
+ask [What is your name?] and wait
+set [Name] to (answer)
+ask [What is your favorite color?] and wait
+say (join (Name) (join [ likes ] (answer)))
+\`\`\`
+
+For the responses "Ari" and "green", the final message is "Ari likes green". Reading only "answer" after the second question gives "green", so the Name variable preserves the earlier response.
+
+**Comparing a number:** In Number Guesser, compare the latest answer with the target number. A smaller answer produces the low hint, a larger answer produces the high hint, and equality finishes the guessing loop. Test a guess below the target, one above it, and the target itself; keep the same target during those retries.`
 				},
 				{
 					title: "Project 1 – Math Facts",
@@ -656,19 +671,17 @@ For example, start at (30, -20). Changing x by 10 gives **(40, -20)**. Changing 
 				},
 				{
 					title: "GS8 Supplemental Project 1 – Quadrant Practice",
-					content: `
-1. Use the arrow keys to move a sprite to each quadrant of the stage.
-2. When the sprite reaches a quadrant, display a message such as "I'm in Quadrant I".
-3. Challenge: Add shapes or obstacles that must be avoided.`,
+					content: correctedJuniScratchInstructions(
+						"GS8 Supplemental Project 1 – Quadrant Practice"
+					),
 					projectLink: "https://scratch.mit.edu/projects/329289426/",
 					solutionLink: "https://scratch.mit.edu/projects/329283944/"
 				},
 				{
 					title: "GS8 Supplemental Project 2 – Coordinate Drawings",
-					content: `
-1. Using the Pen extension, draw a picture by moving the sprite to various X and Y coordinates.
-2. Allow the user to enter coordinates to draw their own shapes.
-3. Encourage drawing initials or simple pictures.`,
+					content: correctedJuniScratchInstructions(
+						"GS8 Supplemental Project 2 – Coordinate Drawings"
+					),
 					projectLink: "https://scratch.mit.edu/projects/329294838/",
 					solutionLink: "https://scratch.mit.edu/projects/329290359/"
 				},
@@ -691,6 +704,7 @@ For example, start at (30, -20). Changing x by 10 gives **(40, -20)**. Changing 
 			curriculum: [
 				{
 					title: "Introducing variables",
+					contentKind: "reading",
 					content:
 						'Variables store information such as scores, timers, answers, or other values that can change while a project runs. The "set [variable] to" block replaces the current value, while "change [variable] by" increases or decreases it. A counting loop can make a sprite count from 1 to 10, count backward, or count by larger steps.'
 				},
@@ -769,6 +783,7 @@ For example, start at (30, -20). Changing x by 10 gives **(40, -20)**. Changing 
 			curriculum: [
 				{
 					title: "Message broadcasting",
+					contentKind: "reading",
 					content:
 						"Broadcasting lets sprites send messages to each other. This is useful when one sprite needs to wait for another sprite to finish speaking, moving, or changing state before its own script begins.\n\nOpen the Events blocks and compare `broadcast __` with `when I receive __`. Practice by making one sprite finish a short action, broadcast a message, and trigger a second sprite to start moving only after that message is received."
 				},
@@ -915,21 +930,22 @@ The wizard has been turned into a frog! Help him collect potions while avoiding 
 				{
 					title: "Hedgehog Race: Fluency Drill",
 					content: buildScratchFluencyDrill({
-						project: "race simulation",
-						focus: "random movement, finish-line detection, score or winner state, and clean restart behavior",
+						project: "two-player keyboard race",
+						focus: "alternating key controls, finish-line detection, per-player win counters, and clean restart behavior",
 						restartCheck:
-							"A winner is declared only once, and a new race does not preserve old positions or winner messages."
+							"Each race records one winner. Start returns both racers to the starting line while retaining the win counters; the green flag also resets both counters."
 					})
 				},
 				{
 					title: "Hedgehog Race: Open-Ended Variant",
 					content: buildScratchOpenEndedVariant({
-						project: "randomized race game",
-						coreIdea: "random movement and finish-line logic",
+						project: "two-player keyboard race",
+						coreIdea:
+							"alternating keys, finish-line detection, and per-player wins",
 						variation:
-							"the racers, track layout, random speed range, obstacle rule, or winner display",
+							"the racers, track layout, key pairs, steps per alternating press, or winner display",
 						evidence:
-							"Multiple runs can produce different outcomes, and the finish condition remains fair and easy to observe."
+							"Both players use alternating controls, each race records one winner, and Start prepares the next race while retaining the win counters."
 					})
 				}
 			]

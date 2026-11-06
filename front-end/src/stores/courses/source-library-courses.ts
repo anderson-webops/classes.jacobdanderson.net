@@ -4,6 +4,8 @@ import type {
 	RawCourseModule,
 	RawCourseModuleItem
 } from "./types";
+import { correctedJuniScratchInstructions } from "./juniScratchInstructionCorrections";
+import { scratchBootcampTask } from "./scratchBootcampTasks";
 import { pendingStaticMediaNotice, staticMediaUrl } from "./staticMedia";
 import { buildSupportSectionGuidance } from "./supportSectionGuidance";
 
@@ -6700,7 +6702,7 @@ const sourceVariantCourses = {
 					learningPath: "core",
 					projectLink: "https://scratch.mit.edu/projects/592006491/",
 					title: "Dragonfly Event Listener Remix",
-					prompt: "Use the original dragonfly activity at https://scratch.mit.edu/projects/592006491/ as a reference for event-driven behavior. Add separate events for the green flag, space key, and sprite click so the dragonfly moves, plays a sound, and says a short message.",
+					prompt: scratchBootcampTask("592006491"),
 					evidence: [
 						"The green flag starts the project and moves the sprite to a random position.",
 						"The space key triggers a sound effect without needing another click.",
@@ -6711,7 +6713,7 @@ const sourceVariantCourses = {
 					learningPath: "choice",
 					projectLink: "https://scratch.mit.edu/projects/592008620/",
 					title: "Beetle Keyboard Drawing Controls",
-					prompt: "Use https://scratch.mit.edu/projects/592008620/ as the shape-drawing reference. Build keyboard events that move a beetle with the arrow keys, reset the drawing with the green flag, and draw a square, triangle, and arrow from number-key events.",
+					prompt: scratchBootcampTask("592008620"),
 					evidence: [
 						"Arrow-key controls move the sprite in predictable directions.",
 						"The reset event clears the drawing and returns the beetle to a known starting position.",
@@ -6757,7 +6759,7 @@ const sourceVariantCourses = {
 					learningPath: "choice",
 					projectLink: "https://scratch.mit.edu/projects/592014695/",
 					title: "Elephant Repeat and Forever Effects",
-					prompt: "Use https://scratch.mit.edu/projects/592014695/ as the loop-effects reference. Build key events that grow, shrink, change color, apply another visual effect, and repeatedly hide and show the elephant.",
+					prompt: scratchBootcampTask("592014695"),
 					evidence: [
 						"Growth and shrink actions use repeat blocks instead of duplicated manual blocks.",
 						"At least one visual effect runs in a forever loop.",
@@ -6769,7 +6771,7 @@ const sourceVariantCourses = {
 					learningPath: "core",
 					projectLink: "https://scratch.mit.edu/projects/601699148/",
 					title: "Mouse Shape Loops",
-					prompt: "Use https://scratch.mit.edu/projects/601699148/ as the looped-shapes reference. Add a reset event, then use loops to draw a triangle, a circle-like shape, and at least one additional shape or design.",
+					prompt: scratchBootcampTask("601699148"),
 					evidence: [
 						"The reset event clears the previous drawing before a new drawing starts.",
 						"Shape scripts use repeated movement and turns rather than one block per side.",
@@ -6794,7 +6796,7 @@ const sourceVariantCourses = {
 					learningPath: "core",
 					projectLink: "https://scratch.mit.edu/projects/592019210/",
 					title: "Button Click Timer Game",
-					prompt: "Use https://scratch.mit.edu/projects/592019210/ as the variables reference. Build a timed button-click game with a click counter, countdown timer, start sequence, button feedback, and game-over hiding behavior.",
+					prompt: scratchBootcampTask("592019210"),
 					evidence: [
 						"A click-count variable resets at the start and increases only when the button is active.",
 						"A timer variable counts down from 10 to 0.",
@@ -6829,7 +6831,16 @@ const sourceVariantCourses = {
 					id: "scratch-level-1-bootcamp-gs4-master-project-curriculum-source-activity-anchors-master-project",
 					learningPath: "core",
 					title: "Bootcamp Game Selection",
-					prompt: "Choose a master-project direction from the original options: Spider Smash at https://scratch.mit.edu/projects/299272518/, Hungry Shark at https://scratch.mit.edu/projects/608768681/, or Save the Princess at https://scratch.mit.edu/projects/608770708/. Identify the core player action, objective, score or win condition, and main feedback loop before building.",
+					prompt: `Choose one master-project direction: [Spider Smash](https://scratch.mit.edu/projects/299272518/), [Hungry Shark](https://scratch.mit.edu/projects/608768681/) or [Save the Princess](https://scratch.mit.edu/projects/608770708/). Plan the controls, objective and ending before building.
+
+### Spider Smash
+${correctedJuniScratchInstructions("Project 2 – Spider Smash")}
+
+### Hungry Shark
+${scratchBootcampTask("608768681")}
+
+### Save the Princess
+${scratchBootcampTask("608770708")}`,
 					evidence: [
 						"The project plan names the selected game direction and its playable goal.",
 						"The plan includes events, loops, conditionals, variables, and visible feedback.",

@@ -1,5 +1,6 @@
 // Explicit corrections to the archived catalog, verified against the linked
-// JuniLearningScratch starters. Unlisted original projects remain unchanged.
+// JuniLearningScratch programs and published instructions. Unlisted projects
+// retain their archived instructions.
 export const juniScratchInstructionCorrections = [
 	{
 		courseId: "scratch-level-1",
@@ -240,6 +241,113 @@ Optional: also check whether the chosen animal matches the environment, using th
 3. Compare answer with "Earth", "Saturn" and "Star". Move Dot to sprite "3", "2" or "1", respectively.
 4. For another answer, explain that the place is unknown and stop that question script.
 5. In a separate green-flag forever loop on Spot, check whether it is touching Dot. When it is, have Spot say "Hi Dot!".`
+	},
+	{
+		courseId: "scratch-level-1",
+		title: "GS8 Supplemental Project 1 – Quadrant Practice",
+		projectId: "329289426",
+		solutionId: "329283944",
+		baselineContentSha256:
+			"b0e98ac2156c5b09bae179671f2d297e03612cc0f881392d140d4bdc4a42360b",
+		publishedInstructionsSha256:
+			"05597c7688fb56809a9a8c764258156c66fe9d5b084a35bc916f75ae4c4b5723",
+		content: `Use the grid and the signs of x and y to describe the cat's position.
+
+1. On the green flag, make Scratch the Cat follow the mouse pointer forever.
+2. In that loop, use if and operator blocks to say "I'm in the top right!" when x is greater than 0 and y is greater than 0.
+3. Add the other three cases: x less than 0 and y greater than 0 for top left; x greater than 0 and y less than 0 for bottom right; x less than 0 and y less than 0 for bottom left.
+
+Optional: try arrow-key controls or add obstacles.`
+	},
+	{
+		courseId: "scratch-level-1",
+		title: "GS8 Supplemental Project 2 – Coordinate Drawings",
+		projectId: "329294838",
+		solutionId: "329290359",
+		baselineContentSha256:
+			"61080d36adf0d0b3049e4e0e425f719fdf7eac92ba021043ff325e937bac063c",
+		publishedInstructionsSha256:
+			"9ca33d08ea39528dd6f90fad3ab77b1d641f941f05afd2fd1e3b4828304bea84",
+		content: `Recreate the drawings on the supplied grid backdrops with the Pen extension and x/y coordinates.
+
+1. Look through the backdrops and choose a drawing to reproduce.
+2. Lift the pen before placing the pencil at a starting coordinate, then lower it to begin the outline.
+3. Use go to x/y and change x/y blocks to trace the drawing's corners and lines.
+4. Try another supplied drawing and compare the result with its backdrop.
+
+Optional: ask for coordinates so the user can choose points, or draw initials.`
+	},
+	{
+		courseId: "scratch-level-2",
+		title: "GM2 Supplemental Project 3: Rainbow Flower",
+		projectId: "335808333",
+		referenceSourceSha256:
+			"2203067efcdda7093a077273cc6a5863421711248f09f402919d760a2d855dff",
+		reason: "The reference repeats six petals; a seventh retraces the first orientation.",
+		solutionId: "335807180",
+		baselineContentSha256:
+			"45ecf208549022fa7d54b5bea8f4a9489b6353cfcacbf7accfb5eb36904cc0e4",
+		publishedInstructionsSha256:
+			"b0e10aad197fc295730ac79c0cfd66825c9ac1b7a9fed7d4542eb85f2f2da0fc",
+		content: `Draw a rainbow flower.
+
+1. When the green flag is clicked, make the pencil sprite go to the center of the screen and put the pen down.
+2. Start by programming a circle. Experiment with changing the turn amount and increasing it on each step. Use a variable to track the angle and increase it by 1 each time through the loop.
+3. After experimenting, set the angle to 0 degrees and repeat 40 times to draw one spiral-shaped petal.
+4. Draw the other five (six petals total), starting each petal at the center and moving outwards.
+5. Change the pen color after each petal to make a rainbow-colored flower.`
+	},
+	{
+		courseId: "scratch-level-2",
+		title: "GM7 Project 2: List Practice",
+		projectId: "315090026",
+		solutionId: "315051160",
+		baselineContentSha256:
+			"952319acd98ef7201af1763f2ab4477a428dbd86008cb03546f0b9974b56709e",
+		publishedInstructionsSha256:
+			"57da55bf936de1cb2b769b4da8f15a20dc1aa527011bbc7ad5d63d18ee9a5b72",
+		content: `1. When the spacebar is pressed, make the cat ask, “What number do you want to add to the list?” Add the number the user enters to the list.
+2. When the green flag is clicked, delete everything in the list.
+3. When the 1 key is pressed, program the cat to read the list normally, saying each number in the list for 1 second.
+4. When the 2 key is pressed, program the cat to read each number in the list doubled.
+5. When the 3 key is pressed, program the cat to read the list backwards.
+6. When the 4 key is pressed, program the cat to read each number and then whether the number is odd or even (e.g.: “1, Odd, 14, Even,...”).
+
+Optional:
+- Say every other number in the list.
+- Say every number in the list, multiplied by 10.
+- Say each number and then turn that many degrees to the right.`
+	},
+	{
+		courseId: "scratch-level-2",
+		title: "GM7 Supplemental Project 2: Wheel of Fortune",
+		projectId: "340691786",
+		solutionId: "342643080",
+		baselineContentSha256:
+			"c37431d6a9a45435c537027a7bd30b100b0dc04353f287f88c46f3126f2b4575",
+		publishedInstructionsSha256:
+			"95fdc4295c5583e4bda6cbedf6a484c8140d0da96d2489f027c9e5302fbb736c",
+		content: `Welcome to the Wheel of Fortune! In this game, the user has a certain number of guesses to guess every letter of the secret word.
+1. Construct a word bank using a list, from which the computer will choose a random word of at the beginning of each game.
+2. Once the secret word is decided, add all the letters of the word to a new list and count the total number of unique letters in the word. Use this variable to keep track of the total number of letters the user needs to guess correctly. As you are adding the letters, make sure you don't add the same letter twice.
+3. Ask the user to guess a letter. If they guess a letter that is in the secret word (and they have not already guessed this letter), add this letter to the guess list and update the variable you are using to keep track of how many correct guesses the user has made.
+4. Allow the user a certain number of guesses to win the game (for example, the length of the word, plus 5).
+5. The user wins the game if they have correctly guessed all of the letters in the word, and they lose if they run out of guesses!`
+	},
+	{
+		courseId: "scratch-level-2",
+		title: "GM8 Supplemental Project 1: Extra Functions",
+		projectId: "339918479",
+		solutionId: "339602908",
+		baselineContentSha256:
+			"bf976ca2a8e1f048f12c1ed014a0cffe6afdf3b5dba042ce930fbcdbc2d22c5e",
+		publishedInstructionsSha256:
+			"8f8919c6e9d0eff8965031ca63375996f6cc921975aa79723ddc7471d9637082",
+		content: `1. Write a function that draws a shape! It should take in as input the number of sides and the size of each side. To calculate how many degrees to turn after drawing each side, use 360 divided by the number of sides.
+2. Write a function that takes in a starting number and an ending number, and make the function count from a starting number up to (and including) an ending number. (Challenge: If the ending number is smaller than the starting number, make it count down from the starting number.)
+3. Write a function that takes in two numbers and reports the result of addition, subtraction, multiplication, and division with the two numbers. (Challenge: calculate the average of the two numbers as well.)
+4. Write a function that takes in a number and says the first 10 multiples of that number. (Challenge: take in a number of multiples as another input, and say that many multiples of the number.)
+5. Call each of these functions with inputs of your choice when the 1, 2, 3, or 4 key is pressed!`
 	}
 ] as const;
 
@@ -255,11 +363,11 @@ export function findJuniScratchInstructionCorrection(
 	);
 }
 
-export function correctedJuniScratchInstructions(title: string) {
-	const correction = findJuniScratchInstructionCorrection(
-		"scratch-level-1",
-		title
-	);
+export function correctedJuniScratchInstructions(
+	title: string,
+	courseId = "scratch-level-1"
+) {
+	const correction = findJuniScratchInstructionCorrection(courseId, title);
 	if (!correction)
 		throw new Error(`Missing verified Scratch instructions: ${title}`);
 	return correction.content;

@@ -1,5 +1,10 @@
 import { createHash } from "node:crypto";
 import sourceFixture from "./fixtures/juni-scratch-project-fidelity.json";
+import conceptReadings from "./fixtures/scratch-concept-readings.json";
+import {
+	isLessonLearningItem,
+	lessonContentSections
+} from "@/modules/courseLessonPresentation";
 import type {
 	CourseDefinition,
 	CourseModule,
@@ -218,13 +223,157 @@ describe("original Juni Scratch project instructions", () => {
 		});
 	}
 
-	it("limits corrections to thirteen uniquely identified published starters", () => {
-		expect(juniScratchInstructionCorrections).toHaveLength(13);
+	it.each(["learner", "instructor"])(
+		"retains the six-petal source task and reference for %s",
+		async role => {
+			if (role === "instructor")
+				useAppStore().setCurrentTutor({
+					_id: "nested-review-tutor",
+					name: "Tutor",
+					email: "tutor@example.invalid",
+					age: 30,
+					state: "GA",
+					usersOfTutorLength: 0,
+					coursePermissions: ["scratch-level-2"],
+					editTutors: false,
+					saveEdit: "Save"
+				});
+			const course =
+				(await useCoursesStore().loadCourseById("scratch-level-2"))!;
+			const module = course.modules.find(
+				module => module.title === "GM2 Nested Loops"
+			)!;
+			const item = module.supplementalProjects.find(
+				item =>
+					item.projectLink ===
+					"https://scratch.mit.edu/projects/335808333/"
+			)!;
+			expect(item).toBeDefined();
+			expect(item.learningPath).toBe("choice");
+			expect(item.playableSolutionEmbedUrl).toBe(
+				"https://scratch.mit.edu/projects/335807180/embed"
+			);
+			expect(item.content).toContain("other five (six petals total)");
+			expect(item.content).not.toContain("other six");
+			expect(item.content).toContain("repeat 40 times");
+		}
+	);
+
+	for (const courseId of ["scratch-level-1", "scratch-level-2"]) {
+		it.each(["learner", "instructor"])(
+			courseId + " explanations stay in Learn for %s",
+			async role => {
+				if (role === "instructor")
+					useAppStore().setCurrentTutor({
+						_id: "reading-placement-tutor",
+						name: "Tutor",
+						email: "tutor@example.invalid",
+						age: 30,
+						state: "GA",
+						usersOfTutorLength: 0,
+						coursePermissions: [courseId],
+						editTutors: false,
+						saveEdit: "Save"
+					});
+				const course =
+					(await useCoursesStore().loadCourseById(courseId))!;
+				for (const expected of conceptReadings.filter(
+					row => row.courseId === courseId
+				)) {
+					const module = course.modules.find(
+						module => module.id === expected.moduleId
+					)!;
+					const item = module.curriculum.find(
+						item => item.id === expected.itemId
+					)!;
+					expect(item, expected.itemId).toBeDefined();
+					expect(item.title).toBe(expected.title);
+					expect(item.contentKind).toBe("reading");
+					expect(isLessonLearningItem(item)).toBe(true);
+					for (const originalId of expected.sourceItemIds)
+						expect([item.id, ...(item.aliases ?? [])]).toContain(
+							originalId
+						);
+					for (const text of expected.requiredText)
+						expect(item.content).toContain(text);
+					expect(item.content).not.toMatch(
+						/(?:Core Concepts|Application Check) project/
+					);
+				}
+			}
+		);
+	}
+
+	it("separates the three List Practice extensions from its six assigned tasks", () => {
+		const correction = findJuniScratchInstructionCorrection(
+			"scratch-level-2",
+			"GM7 Project 2: List Practice"
+		)!;
+		const sections = lessonContentSections(correction.content);
+		const optional = sections.filter(
+			section => section.kind === "optional"
+		);
+		expect(optional).toHaveLength(1);
+		for (const text of [
+			"every other",
+			"multiplied by 10",
+			"turn that many degrees"
+		]) {
+			expect(optional[0]!.content).toContain(text);
+			expect(
+				sections
+					.filter(section => section.kind === "assignment")
+					.map(section => section.content)
+					.join("\n")
+			).not.toContain(text);
+		}
+		expect(sections[0]!.content).toContain("6. When the 4 key");
+	});
+
+	it.each(["learner", "instructor"])(
+		"keeps all nine complete checkpoint assignments for %s",
+		async role => {
+			if (role === "instructor")
+				useAppStore().setCurrentTutor({
+					_id: "checkpoint-tutor",
+					name: "Tutor",
+					email: "tutor@example.invalid",
+					age: 30,
+					state: "GA",
+					usersOfTutorLength: 0,
+					coursePermissions: ["scratch-level-2"],
+					editTutors: false,
+					saveEdit: "Save"
+				});
+			const course =
+				(await useCoursesStore().loadCourseById("scratch-level-2"))!;
+			let count = 0;
+			for (const original of scratchLevel2Course.modules.filter(m =>
+				/^Check-In #[12]$/.test(m.title)
+			)) {
+				const module = matchingModule(course, original);
+				for (const item of original.curriculum) {
+					const actual = matchingItem(module.curriculum, item)!;
+					expect(actual, item.title).toBeDefined();
+					expect(actual.content, item.title).toBe(
+						item.content.trim()
+					);
+					expect(actual.contentKind).toBe("assignment");
+					expect(isLessonLearningItem(actual)).toBe(false);
+					count++;
+				}
+			}
+			expect(count).toBe(9);
+		}
+	);
+
+	it("limits corrections to nineteen uniquely identified published starters", () => {
+		expect(juniScratchInstructionCorrections).toHaveLength(19);
 		expect(
 			new Set(
 				juniScratchInstructionCorrections.map(item => item.projectId)
 			).size
-		).toBe(13);
+		).toBe(19);
 		for (const correction of juniScratchInstructionCorrections) {
 			expect(correction.publishedInstructionsSha256).toMatch(
 				/^[a-f0-9]{64}$/
@@ -233,7 +382,7 @@ describe("original Juni Scratch project instructions", () => {
 	});
 
 	it.each(["learner", "instructor"])(
-		"retains published user-input tasks and links for %s",
+		"retains published input and coordinate tasks and links for %s",
 		async role => {
 			if (role === "instructor")
 				useAppStore().setCurrentTutor({
@@ -249,13 +398,10 @@ describe("original Juni Scratch project instructions", () => {
 				});
 			const course =
 				(await useCoursesStore().loadCourseById("scratch-level-1"))!;
-			const module = course.modules.find(
-				module => module.title === "GS9 User Input"
-			)!;
-			const items = [
+			const items = course.modules.flatMap(module => [
 				...module.curriculum,
 				...module.supplementalProjects
-			];
+			]);
 			for (const [id, solution, path, required, excluded] of [
 				[
 					"297744913",
@@ -296,6 +442,36 @@ describe("original Juni Scratch project instructions", () => {
 						"two seconds"
 					],
 					["build a shop", "plant a tree", "items collected"]
+				],
+				[
+					"329289426",
+					"329283944",
+					"choice",
+					[
+						"mouse pointer",
+						"forever",
+						"greater than 0",
+						"less than 0",
+						"top left",
+						"bottom right",
+						"bottom left",
+						"Optional:"
+					],
+					["Use the arrow keys to move", "Quadrant I"]
+				],
+				[
+					"329294838",
+					"329290359",
+					"choice",
+					[
+						"supplied grid backdrops",
+						"Pen extension",
+						"Lift the pen",
+						"go to x/y",
+						"change x/y",
+						"Optional: ask for coordinates"
+					],
+					["2. Allow the user to enter coordinates"]
 				],
 				[
 					"328310783",

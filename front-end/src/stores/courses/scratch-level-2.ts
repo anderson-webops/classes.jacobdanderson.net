@@ -4,7 +4,16 @@ import type {
 	RawCourseModule,
 	RawCourseModuleItem
 } from "./types";
+import { correctedJuniScratchInstructions } from "./juniScratchInstructionCorrections";
 import { isCoreProjectTitle } from "./projectGrouping";
+import {
+	scratchFishFoodPlan,
+	scratchTreasureCavePlan
+} from "./scratchAdvancedGameLessons";
+import { scratchFunctionLesson } from "./scratchFunctionLesson";
+import { scratchListLesson } from "./scratchListLesson";
+import { scratchNestedLoopLesson } from "./scratchNestedLoopLesson";
+import { scratchOperatorLesson } from "./scratchOperatorLesson";
 import {
 	buildScratchFluencyDrill,
 	buildScratchOpenEndedVariant
@@ -19,6 +28,7 @@ export const scratchLevel2Course: RawCourse = {
 			curriculum: [
 				{
 					title: "Event listeners",
+					contentKind: "reading",
 					content:
 						'An event listener makes a sprite wait for a specific event and then react with a script. Common Scratch event blocks include "when green flag clicked" and "when arrow key pressed"; these blocks connect user actions or project startup to visible sprite behavior.'
 				},
@@ -38,8 +48,9 @@ View CS Training's Code`,
 				},
 				{
 					title: "Loops",
+					contentKind: "reading",
 					content:
-						'Loops repeat code without copying the same blocks over and over. They make movement, animation, drawing, and forever-running game behavior easier to build and easier to revise.\nOpen the Control blocks and compare `repeat` with `forever`. Both blocks contain a "mouth" where other blocks can be placed and repeated.\nPractice by repeating `move __ steps` and `turn ___ degrees`. Start with a fixed `repeat` count, then try the same motion inside a `forever` loop.'
+						'A loop repeats code without copying the same blocks over and over. They make movement, animation, drawing, and forever-running game behavior easier to build and easier to revise.\nOpen the Control blocks and compare `repeat` with `forever`. Both blocks contain a "mouth" where other blocks can be placed and repeated.\nPractice by repeating `move __ steps` and `turn ___ degrees`. Start with a fixed `repeat` count, then try the same motion inside a `forever` loop.'
 				},
 				{
 					title: "GM1 Project 2: Drawing Mouse",
@@ -54,8 +65,9 @@ View CS Training's Code`,
 				},
 				{
 					title: "Conditionals",
+					contentKind: "reading",
 					content:
-						'Conditionals let a program choose what happens based on whether something is true. A real-life conditional looks like "if it is cold, wear a jacket." In Scratch, an `if` block runs code only when its condition is true.\nAn `if...then...else` block adds a second path: one set of blocks runs when the condition is true, and another set runs when it is false. Practice with sensing blocks, comparison blocks, and user input so the program can respond to different answers or game states.'
+						'An if block lets a program choose what happens based on whether something is true. A real-life conditional looks like "if it is cold, wear a jacket." In Scratch, an `if` block runs code only when its condition is true.\nAn `if...then...else` block adds a second path: one set of blocks runs when the condition is true, and another set runs when it is false. Practice with sensing blocks, comparison blocks, and user input so the program can respond to different answers or game states.'
 				},
 				{
 					title: "GM1 Project 3: Math Facts",
@@ -68,8 +80,9 @@ View CS Training's Code`,
 				},
 				{
 					title: "Variables",
+					contentKind: "reading",
 					content:
-						"Variables store information that can change, such as a score, timer, answer, or level number. In Scratch, the `set __ to __` block replaces a variable's value, while `change __ by __` increases or decreases the current value.\nPractice by making the cat count from 1 to 10 with a loop. Then modify the same idea so the cat counts backward from 10 to 0 and backward from 100 to 0 by 10s."
+						"A variable stores information that can change, such as a score, timer, answer, or level number. In Scratch, the `set __ to __` block replaces a variable's value, while `change __ by __` increases or decreases the current value.\nPractice by making the cat count from 1 to 10 with a loop. Then modify the same idea so the cat counts backward from 10 to 0 and backward from 100 to 0 by 10s."
 				},
 				{
 					title: "GM1 Project 4: Speed Click",
@@ -86,8 +99,9 @@ View CS Training's Code`,
 				},
 				{
 					title: "Message Broadcasting",
+					contentKind: "reading",
 					content:
-						"Broadcasting lets sprites send messages to each other. This is useful when one sprite waits for another sprite to finish speaking, moving, or changing state before its own script begins.\nOpen the Events blocks and compare `broadcast __` with `when I receive __`. Practice by making one sprite finish a short action, broadcast a message, and trigger a second sprite to start moving only after that message is received."
+						"A broadcast lets sprites send messages to each other. This is useful when one sprite waits for another sprite to finish speaking, moving, or changing state before its own script begins.\nOpen the Events blocks and compare `broadcast __` with `when I receive __`. Practice by making one sprite finish a short action, broadcast a message, and trigger a second sprite to start moving only after that message is received."
 				},
 				{
 					title: "GM1 Project 5: Dance Off",
@@ -159,8 +173,9 @@ Starter code is provided, but it is also fine to create a project from scratch w
 			curriculum: [
 				{
 					title: "Nested loops",
-					content:
-						"A nested-loop pattern places one loop inside another loop. The idea is similar to Russian nesting dolls: one structure sits inside another structure.\nThis pattern is useful when a repeated action itself contains another repeated action, such as drawing several rows of shapes, building grids, or repeating an animation pattern multiple times."
+					contentKind: "reading",
+					preserveInstructions: true,
+					content: scratchNestedLoopLesson
 				},
 				{
 					title: "GM2 Project 1: Square Inception",
@@ -213,12 +228,10 @@ Finally, share the project!`,
 				},
 				{
 					title: "GM2 Supplemental Project 3: Rainbow Flower",
-					content: `Draw a beautiful rainbow flower!
-1. When the green flag is clicked, make the pencil sprite go to the center of the screen and put the pen down.
-2. Start by programming the code for a circle and then take a look at the turn block. What would happen if we changed the amount we were turning? What would happen if we changed the amount we turned each time we turned? Try to make a variable that keeps track of the angle we turn and increase it by 1 each time we go through the loop.
-3. After you're done experimenting in step 2, set up the code so that the angle starts at 0 degrees and repeat 40 times to get a really pretty looking spiral!
-4. Now that we have one petal of our flower, can you make the other six? Think about how we have to start from the center of the flower and move outwards each time.
-5. Change the pen color after each petal to get a rainbow colored flower!`,
+					content: correctedJuniScratchInstructions(
+						"GM2 Supplemental Project 3: Rainbow Flower",
+						"scratch-level-2"
+					),
 					projectLink: "https://scratch.mit.edu/projects/335808333/",
 					solutionLink: "https://scratch.mit.edu/projects/335807180/"
 				}
@@ -229,6 +242,7 @@ Finally, share the project!`,
 			curriculum: [
 				{
 					title: "Complex conditionals",
+					contentKind: "reading",
 					content:
 						"A complex conditional combines more than one condition. The `and` block requires both conditions to be true, the `or` block requires at least one condition to be true, and the `not` block reverses true and false.\nPractice by making a sprite respond differently when it touches multiple colors, either one of two colors, or none of the target colors."
 				},
@@ -308,6 +322,7 @@ Finally, share the project!`,
 			curriculum: [
 				{
 					title: "Cloning",
+					contentKind: "reading",
 					content:
 						"A clone is a temporary copy of a sprite while the project runs. This is useful when many similar objects appear on screen, such as raindrops, paint marks, enemies, stars, or collectibles.\nThe main Scratch blocks are `create clone of myself`, `when I start as a clone`, and `delete this clone`. Most clone-based projects hide the original parent sprite and show only the clones, because the clones are the objects that move, collide, and disappear."
 				},
@@ -378,41 +393,49 @@ Finally, share the project!`,
 			curriculum: [
 				{
 					title: "Check-In #1: Nested Loops",
+					contentKind: "assignment",
+					preserveInstructions: true,
 					content: `**Check-in goal:** Review loops and nested loops with a small Scratch drawing project.
 
 **Setup:** Create a new blank Scratch project named "Check-in #1".
 
 **Prompts:**
+
 1. Define a loop and explain what it means for one loop to be placed inside another loop.
 2. Add a sprite that plays a sound when the spacebar is pressed. Put a repeat 3 around the sound block, then put a repeat 2 around the whole script. Predict the total number of sounds before running it.
 3. When the green flag is clicked, draw a triangle, turn 60 degrees, and draw another triangle. Add a repeat block to form a hexagon of triangles.
-4. Draw another larger hexagon around the first one. A loop around the existing code can remove repetition.
-
-**Completion check:** The prediction for the sound loop matches the actual run, and the drawing shows why nested loops reduce repeated code.`,
+4. Draw another larger hexagon around the first one. A loop around the existing code can remove repetition.`,
 					solutionLink: "https://scratch.mit.edu/projects/341945558/"
 				},
 				{
 					title: "Check-In #1: Cloning",
+					contentKind: "assignment",
+					preserveInstructions: true,
 					content: `**Check-in goal:** Review how clones let one sprite create temporary copies with their own behavior.
 
 **Prompts:**
+
 1. Explain how Scratch can duplicate sprites and make the duplicates do different things.
 2. Move the drawing code so the parent sprite creates clones every 2 seconds after the green flag is clicked.
 3. Make each clone go to a random position and draw the hexagon shape.
 4. Make clones show when created and delete themselves when finished.
 5. Decide what the original parent sprite does while it is not drawing.
 
-**Completion check:** The parent sprite manages clone creation while the clones handle the drawing and cleanup.`,
+**Checkpoints:** Start two overlapping clones; each completes both rings with independent side lengths. Restart during drawing to check that no old clone or repositioning stroke remains.`,
 					solutionLink: "https://scratch.mit.edu/projects/341945558/"
 				},
 				{
 					title: "Check-In #1: Complex Conditionals",
+					contentKind: "assignment",
+					preserveInstructions: true,
 					content:
 						"Complex-1: What block would you use if you wanted to check if two things are true in the same if/then block?\nComplex-2: What about if you wanted to check if, given two things, at least one of them is true?\nComplex-3: What about if you wanted to check if a condition isn't true?\nComplex-ALL: Using complex conditionals, update your code so that the clones that are in the top right portion of the screen all have a blue pen color. (Hint: You may have to use coordinates!) Now, can you add code so that each of the four quadrants uses a different pen color?",
 					solutionLink: "https://scratch.mit.edu/projects/341945558/"
 				},
 				{
 					title: "Check-In #1: Additional Practice Project",
+					contentKind: "assignment",
+					preserveInstructions: true,
 					content: `Use a variable to make the owl count from 1 to 50.
 Add a conditional so that if the spacebar or the up arrow is pressed, the owl says something instead of the number.
 Add a conditional so that if the mouse pointer is on the owl, it gets shy and doesn\'t say anything at all!`,
@@ -458,6 +481,7 @@ Add a conditional so that if the mouse pointer is on the owl, it gets shy and do
 			curriculum: [
 				{
 					title: "Strings",
+					contentKind: "reading",
 					content:
 						"Programs can store different kinds of data. Earlier variables mainly held numbers for scores, timers, movement, and comparisons. Strings store text: words, letters, spaces, punctuation, and other characters.\nA string can be thought of as characters connected in order. Scratch string blocks make it possible to join text, read a specific character, and measure text length. Practice with `join __ __`, `letter __ of __`, and `length of __`. String length includes spaces and punctuation, not just letters. Good string reasoning always checks position and length: the first character, last character, an input that is too short, and an input with a space can all change the result."
 				},
@@ -535,8 +559,9 @@ Challenge: Try to accomplish step 3 using one "say" block with many "join" block
 			curriculum: [
 				{
 					title: "Mathematical Operators",
-					content:
-						"Computers can calculate, compare, and combine numbers quickly, which makes mathematical operators useful for games, quizzes, simulations, and score systems.\nCreate a new Scratch project. Open the Operators section, and experiment with how different mathematical operations can be performed with these blocks."
+					contentKind: "reading",
+					preserveInstructions: true,
+					content: scratchOperatorLesson
 				},
 				{
 					title: "GM6 Project 1: Calculator",
@@ -611,8 +636,9 @@ Challenge: Have Scratch also ask the user how many multiples the user wants to h
 			curriculum: [
 				{
 					title: "Lists",
-					content:
-						"A list stores many related values in one variable-like structure. A list can hold items such as groceries, favorite sports, places, names, scores, or words.\nIn programming, lists make it easier to store, inspect, add, remove, and count related items without creating a separate variable for each one.\nPractice by creating a list, adding elements, reading the list length, and deleting all items from the list."
+					contentKind: "reading",
+					preserveInstructions: true,
+					content: scratchListLesson
 				},
 				{
 					title: "GM7 Project 1: Bucket List",
@@ -628,17 +654,10 @@ View CS Training's Code`,
 				},
 				{
 					title: "GM7 Project 2: List Practice",
-					content: `1. When the spacebar is pressed, make the cat ask, “What number do you want to add to the list?” Add the number the user enters to the list.
-2. When the green flag is clicked, delete everything in the list.
-3. When the 1 key is pressed, program the cat to read the list normally, saying each number in the list for 1 second.
-4. When the 2 key is pressed, program the cat to read each number in the list doubled.
-5. When the 3 key is pressed, program the cat to read the list backwards.
-6. When the 4 key is pressed, program the cat to read each number and then whether the number is odd or even (e.g.: “1, Odd, 14, Even,...”).
-Say every other number in the list
-Say every number in the list, multiplied by 10
-Say each number and then turn that many degrees to the right
-Finally, share the project!
-View CS Training's Code`,
+					content: correctedJuniScratchInstructions(
+						"GM7 Project 2: List Practice",
+						"scratch-level-2"
+					),
 					projectLink: "https://scratch.mit.edu/projects/315090026/",
 					solutionLink: "https://scratch.mit.edu/projects/315051160/"
 				},
@@ -669,14 +688,12 @@ Finally, share the project!`,
 				},
 				{
 					title: "GM7 Supplemental Project 2: Wheel of Fortune",
-					content: `Welcome to the Wheel of Fortune! In this game, the user has a certain number of guesses to guess every letter of the secret word.
-1. Construct a word bank using a list, from which the computer will choose a random word of at the beginning of each game.
-2. Once the secret word is decided, add all the letters of the word to a new list and count the total number of unique letters in the word. Use this variable to keep track of the total number of letters the user needs to guess correctly. As you are adding the letters, make sure you don't add the same letter twice.
-3. Ask the user to guess a letter. If they guess a letter that is in the secret word (and they have not already guessed this letter), add this letter to the guess list and and update the variable you are using to keep track of how many correct guesses the user has made.
-4. Allow the user a certain number of guesses to win the game (for example, the length of the word, plus 5).
-5. The user wins the game if they have correctly guessed all of the letters in the word, and they lose if they run out of guesses!`,
-					projectLink: "https://scratch.mit.edu/projects/340691786",
-					solutionLink: "https://scratch.mit.edu/projects/342643080"
+					content: correctedJuniScratchInstructions(
+						"GM7 Supplemental Project 2: Wheel of Fortune",
+						"scratch-level-2"
+					),
+					projectLink: "https://scratch.mit.edu/projects/340691786/",
+					solutionLink: "https://scratch.mit.edu/projects/342643080/"
 				},
 				{
 					title: "Lists: Open-Ended Variant",
@@ -697,11 +714,9 @@ Finally, share the project!`,
 			curriculum: [
 				{
 					title: "Functions",
-					content: `**Concept path:** Custom blocks in Scratch work like functions. A function is a named set of instructions that can be reused whenever a sprite needs that behavior.
-
-**Definition and call:** The My Blocks section creates custom blocks, defines what each block does, and calls those blocks from other scripts. Defining a function describes the behavior once; calling the function runs that behavior with specific input values.
-
-**Why it matters:** Functions keep projects organized by separating repeated behavior into named pieces. A game such as Music Memory could use functions for playing a note sequence, checking an answer, resetting a round, or displaying feedback.`
+					contentKind: "reading",
+					preserveInstructions: true,
+					content: scratchFunctionLesson
 				},
 				{
 					title: "GM8 Project 1: My First Functions",
@@ -737,12 +752,12 @@ View CS Training's Code`,
 			supplementalProjects: [
 				{
 					title: "GM8 Supplemental Project 1: Extra Functions",
-					content: `1. Write a function that draws a shape! It should take in as input the number of sides and the size of each side. To calculate how many degrees to turn after drawing each side, use 360 divided by the number of sides.
-2. Write a function that takes in a starting number and an ending number, and make the function count from a starting number up to (and including) an ending number. (Challenge: If the ending number is smaller than the starting number, make it count down from the starting number.)
-3. Write a function that takes in two numbers and reports the result of addition, subtraction, multiplication, and division with the two numbers. (Challenge: calculate the average of the two numbers as well.)
-4. Write a function that takes in a number and says the first 10 multiples of that number. (Challenge: take in a number of multiples as another input, and say that many multiples of the number.)`,
-					projectLink: "https://scratch.mit.edu/projects/339918479",
-					solutionLink: "https://scratch.mit.edu/projects/339602908"
+					content: correctedJuniScratchInstructions(
+						"GM8 Supplemental Project 1: Extra Functions",
+						"scratch-level-2"
+					),
+					projectLink: "https://scratch.mit.edu/projects/339918479/",
+					solutionLink: "https://scratch.mit.edu/projects/339602908/"
 				},
 				{
 					title: "GM8 Supplemental Project 2: Rock Paper Scissors",
@@ -774,37 +789,45 @@ View CS Training's Code`,
 			curriculum: [
 				{
 					title: "Check-In #2: Strings",
+					contentKind: "assignment",
+					preserveInstructions: true,
 					content:
 						'Create a new blank project in Scratch, and name it "Check-in #2".\nStrings-1: What does the word “string” mean in Scratch?\nStrings-2: Add the Andie sprite to your project. When the 1 key is pressed, have him ask the user what their name is. Once the user responds, have him say “Hello [your name]” using one say block.\nStrings-3,4: Report to the user the first letter of their name and how many letters are in their name.',
 					solutionLink: "https://scratch.mit.edu/projects/342645999/"
 				},
 				{
 					title: "Check-In #2: Mathematical Operators and Randomness",
+					contentKind: "assignment",
+					preserveInstructions: true,
 					content:
-						"Math-1: How can Scratch perform operations on numbers? Where are these blocks located?\nMath-2: When the 2 key is pressed, make Andie say the result of adding together 5 and 6.\nMath-3,4: Create a random number between 1 and 20 and store it in a variable. If the number is less than 10, have Andie say “Wow, that's a small number!” otherwise, say “Whoa, that's a big number!”\nMath-5: What is the mod block? Have it report to the user the remainder of dividing any two numbers.",
+						"Math-1: How can Scratch perform operations on numbers? Where are these blocks located?\nMath-2: When the 2 key is pressed, make Andie say the result of adding together 5 and 6.\nMath-3,4: Create a random number between 1 and 20 and store it in a variable. If the number is less than 10, have Andie say “Wow, that's a small number!” otherwise, say “Whoa, that's a big number!”\nMath-5: What is the mod block? Have it report to the user the remainder of dividing any two numbers.\n\n**Checkpoints:** Temporarily set the saved variable to 1, 9, 10 and 20. Values below 10 take the small-number branch; 10 and 20 take the other branch. Read the saved variable to explain each result.",
 					solutionLink: "https://scratch.mit.edu/projects/342645999/"
 				},
 				{
 					title: "Check-In #2: Lists",
+					contentKind: "assignment",
+					preserveInstructions: true,
 					content: `**Check-in goal:** Review how lists store related values and support repeated behavior.
 
 **Prompts:**
+
 1. Explain what lists are useful for in Scratch.
 2. Rename each of Andie's costumes to match its action, such as pass or shoot.
 3. Create a list called actions and add each costume name when 3 is pressed.
 4. Make Andie say the second item in the list.
 5. Report all available actions by looping through the list.
 6. After reporting all actions, ask which action to show and switch to that costume.
-7. Clear the list first so pressing 3 does not add duplicate items.
-
-**Completion check:** The action list is rebuilt cleanly and controls the costume selection.`,
+7. Clear the list first so pressing 3 does not add duplicate items.`,
 					solutionLink: "https://scratch.mit.edu/projects/342645999/"
 				},
 				{
 					title: "Check-In #2: Functions",
+					contentKind: "assignment",
+					preserveInstructions: true,
 					content: `**Check-in goal:** Review custom blocks as reusable Scratch functions.
 
 **Prompts:**
+
 1. Explain what functions are in Scratch and where custom blocks can be created.
 2. Create a function called Score! that changes Andie's costume, says "Woohoo!", and plays a clapping sound.
 3. Make Andie score when the spacebar is pressed.
@@ -812,11 +835,13 @@ View CS Training's Code`,
 5. Have Find Multiples say the first 10 multiples of the input number.
 6. When the spacebar is pressed, make Andie say the multiples of a random number from 1 to 10.
 
-**Completion check:** The same Find Multiples custom block works for different random inputs.`,
+**Checkpoints:** Test Find Multiples with 1 and 10. Each run says exactly ten products, including both the input and ten times that input.`,
 					solutionLink: "https://scratch.mit.edu/projects/342645999/"
 				},
 				{
 					title: "Check-In #2: Additional Practice Project",
+					contentKind: "assignment",
+					preserveInstructions: true,
 					content: `Add one of the dancing sprites to the project and create a function that loops through all of their costumes.
 Add a number input that says how many seconds they should dance for in total. Can you use a division operator in the wait block to make sure they\'re dancing for the right number of seconds? Hint: Think about how long they should spend on each costume to add up to the right number of seconds.
 When the green flag is pressed, make your sprite dance for 3 seconds.
@@ -881,11 +906,9 @@ Finally, share the project!`,
 				},
 				{
 					title: "Fish Food: Planning and Architecture",
-					content: buildSupportSectionGuidance({
-						courseFamily: "Scratch",
-						moduleTitle: "Fish Food",
-						section: "planning"
-					})
+					contentKind: "reading",
+					preserveInstructions: true,
+					content: scratchFishFoodPlan
 				},
 				{
 					title: "Fish Food: Verification and Reflection",
@@ -960,11 +983,9 @@ Finally, share the project!`,
 				},
 				{
 					title: "Treasure Cave: Planning and Architecture",
-					content: buildSupportSectionGuidance({
-						courseFamily: "Scratch",
-						moduleTitle: "Treasure Cave",
-						section: "planning"
-					})
+					contentKind: "reading",
+					preserveInstructions: true,
+					content: scratchTreasureCavePlan
 				},
 				{
 					title: "Treasure Cave: Verification and Reflection",
@@ -1371,9 +1392,7 @@ const SCRATCH_LEVEL_2_FLOW: ScratchLevel2FlowConfig[] = [
 			"create clone",
 			"delete clone",
 			"green-flag reset"
-		],
-		projectThread:
-			"Treat this as a low-stakes readiness checkpoint: predict first, build one integrated scene, and assign only the smallest targeted review needed before continuing."
+		]
 	},
 	{
 		oldTitle: "GM5 Strings",
@@ -1395,9 +1414,8 @@ const SCRATCH_LEVEL_2_FLOW: ScratchLevel2FlowConfig[] = [
 			"pick random",
 			"comparisons"
 		],
-		challengeCurriculumTitles: ["GM6 Project 2: FizzBuzz"],
 		projectThread:
-			"Use Calculator to connect user input, operator choice, and conditional output. FizzBuzz becomes a challenge after mod and branch order can be explained."
+			"Use Calculator to connect user input, operator choice, and conditional output. Continue with FizzBuzz after mod and branch order can be explained."
 	},
 	{
 		oldTitle: "GM7 Lists",
