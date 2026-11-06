@@ -400,6 +400,7 @@ Finally, share the project!`,
 **Setup:** Create a new blank Scratch project named "Check-in #1".
 
 **Prompts:**
+
 1. Define a loop and explain what it means for one loop to be placed inside another loop.
 2. Add a sprite that plays a sound when the spacebar is pressed. Put a repeat 3 around the sound block, then put a repeat 2 around the whole script. Predict the total number of sounds before running it.
 3. When the green flag is clicked, draw a triangle, turn 60 degrees, and draw another triangle. Add a repeat block to form a hexagon of triangles.
@@ -413,11 +414,14 @@ Finally, share the project!`,
 					content: `**Check-in goal:** Review how clones let one sprite create temporary copies with their own behavior.
 
 **Prompts:**
+
 1. Explain how Scratch can duplicate sprites and make the duplicates do different things.
 2. Move the drawing code so the parent sprite creates clones every 2 seconds after the green flag is clicked.
 3. Make each clone go to a random position and draw the hexagon shape.
 4. Make clones show when created and delete themselves when finished.
-5. Decide what the original parent sprite does while it is not drawing.`,
+5. Decide what the original parent sprite does while it is not drawing.
+
+**Checkpoints:** Start two overlapping clones; each completes both rings with independent side lengths. Restart during drawing to check that no old clone or repositioning stroke remains.`,
 					solutionLink: "https://scratch.mit.edu/projects/341945558/"
 				},
 				{
@@ -796,7 +800,7 @@ View CS Training's Code`,
 					contentKind: "assignment",
 					preserveInstructions: true,
 					content:
-						"Math-1: How can Scratch perform operations on numbers? Where are these blocks located?\nMath-2: When the 2 key is pressed, make Andie say the result of adding together 5 and 6.\nMath-3,4: Create a random number between 1 and 20 and store it in a variable. If the number is less than 10, have Andie say “Wow, that's a small number!” otherwise, say “Whoa, that's a big number!”\nMath-5: What is the mod block? Have it report to the user the remainder of dividing any two numbers.",
+						"Math-1: How can Scratch perform operations on numbers? Where are these blocks located?\nMath-2: When the 2 key is pressed, make Andie say the result of adding together 5 and 6.\nMath-3,4: Create a random number between 1 and 20 and store it in a variable. If the number is less than 10, have Andie say “Wow, that's a small number!” otherwise, say “Whoa, that's a big number!”\nMath-5: What is the mod block? Have it report to the user the remainder of dividing any two numbers.\n\n**Checkpoints:** Temporarily set the saved variable to 1, 9, 10 and 20. Values below 10 take the small-number branch; 10 and 20 take the other branch. Read the saved variable to explain each result.",
 					solutionLink: "https://scratch.mit.edu/projects/342645999/"
 				},
 				{
@@ -806,6 +810,7 @@ View CS Training's Code`,
 					content: `**Check-in goal:** Review how lists store related values and support repeated behavior.
 
 **Prompts:**
+
 1. Explain what lists are useful for in Scratch.
 2. Rename each of Andie's costumes to match its action, such as pass or shoot.
 3. Create a list called actions and add each costume name when 3 is pressed.
@@ -822,12 +827,15 @@ View CS Training's Code`,
 					content: `**Check-in goal:** Review custom blocks as reusable Scratch functions.
 
 **Prompts:**
+
 1. Explain what functions are in Scratch and where custom blocks can be created.
 2. Create a function called Score! that changes Andie's costume, says "Woohoo!", and plays a clapping sound.
 3. Make Andie score when the spacebar is pressed.
 4. Create a function called Find Multiples that takes one number input.
 5. Have Find Multiples say the first 10 multiples of the input number.
-6. When the spacebar is pressed, make Andie say the multiples of a random number from 1 to 10.`,
+6. When the spacebar is pressed, make Andie say the multiples of a random number from 1 to 10.
+
+**Checkpoints:** Test Find Multiples with 1 and 10. Each run says exactly ten products, including both the input and ten times that input.`,
 					solutionLink: "https://scratch.mit.edu/projects/342645999/"
 				},
 				{
@@ -1384,9 +1392,7 @@ const SCRATCH_LEVEL_2_FLOW: ScratchLevel2FlowConfig[] = [
 			"create clone",
 			"delete clone",
 			"green-flag reset"
-		],
-		projectThread:
-			"Treat this as a low-stakes readiness checkpoint: predict first, build one integrated scene, and assign only the smallest targeted review needed before continuing."
+		]
 	},
 	{
 		oldTitle: "GM5 Strings",

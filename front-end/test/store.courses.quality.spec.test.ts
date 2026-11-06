@@ -6168,7 +6168,8 @@ describe("course text quality normalization", () => {
 		expect(wheel.content).toContain(
 			"3. Ask the user to guess a letter. If they guess a letter that is in the secret word"
 		);
-		expect(wheel.content).toContain("guess list and and update");
+		expect(wheel.content).toContain("guess list and update");
+		expect(wheel.content).not.toContain("guess list and and update");
 	});
 
 	it("keeps generated project support from using robotic or malformed goal text", async () => {
@@ -6512,8 +6513,14 @@ describe("course text quality normalization", () => {
 				/\bfamily can tell\b/i
 			];
 
-			for (const phrase of internalPhrases)
-				expect(corpus).not.toMatch(phrase);
+			const internalCopy = internalPhrases.flatMap(phrase => {
+				const match = corpus.match(phrase);
+				if (!match || match.index === undefined) return [];
+				return [
+					`${phrase}: ${corpus.slice(Math.max(0, match.index - 60), match.index + 180).replace(/\s+/g, " ")}`
+				];
+			});
+			expect(internalCopy).toEqual([]);
 
 			expect(corpus).not.toMatch(/The goal is to be able to/i);
 			expect(corpus).not.toMatch(/\bThe goal is to\b/i);
@@ -7172,6 +7179,18 @@ describe("course text quality normalization", () => {
 		if (!course) return;
 
 		const text = allCourseText(course);
+		const resources = course.modules
+			.flatMap(module => [
+				...module.curriculum,
+				...module.supplementalProjects
+			])
+			.flatMap(item => [
+				item.content,
+				item.projectLink,
+				item.solutionLink
+			])
+			.filter(Boolean)
+			.join("\n");
 		const expectedAnchors = [
 			"Scratch Account and First Project Tour",
 			"Dragonfly Event Listener Remix",
@@ -7192,10 +7211,10 @@ describe("course text quality normalization", () => {
 		expect(text).not.toContain("Source Activity Anchors:");
 		expect(text).toContain("**Course flow:**");
 		expect(text).toContain("**Completion evidence:**");
-		expect(text).toContain("scratch.mit.edu/projects/592006491");
-		expect(text).toContain("scratch.mit.edu/projects/287738652");
-		expect(text).toContain("scratch.mit.edu/projects/327610777");
-		expect(text).toContain("scratch.mit.edu/projects/299272518");
+		expect(resources).toContain("scratch.mit.edu/projects/592006491");
+		expect(resources).toContain("scratch.mit.edu/projects/287738652");
+		expect(resources).toContain("scratch.mit.edu/projects/327610777");
+		expect(resources).toContain("scratch.mit.edu/projects/299272518");
 		expect(text).toContain("events, loops, conditionals, variables");
 		for (const anchor of expectedAnchors) {
 			expect(text).toContain(anchor);

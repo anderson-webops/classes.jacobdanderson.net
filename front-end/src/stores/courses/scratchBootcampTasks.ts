@@ -7,6 +7,7 @@ export const scratchBootcampTasks = [
 		publishedInstructionsSHA256:
 			"9a2c05d56a2df38325179402e32c00b5fff1ef8c8acacae0d160657d3eb7d7d3",
 		content: `The starter supplies the dragonfly and wetland backdrop; add its event scripts.
+
 1. When the green flag is clicked, make the dragonfly go to a random position.
 2. When the space key is pressed, play its pop sound.
 3. When the dragonfly is clicked, make it say a short message such as "Buzzzz".`
@@ -19,6 +20,7 @@ export const scratchBootcampTasks = [
 		publishedInstructionsSHA256:
 			"779089e881cd1aaff7233159572d6e0948271c0a09e58e540300bf2815a66be7",
 		content: `Use the supplied beetle and drawing backdrops.
+
 1. Make each arrow key move the beetle 10 steps in that key's direction.
 2. On the green flag, erase the drawing and return the beetle to the center facing right. Lift the pen while returning, then lower it for a shape.
 3. Use the 1 key to draw a square with movement and turns.
@@ -33,6 +35,7 @@ export const scratchBootcampTasks = [
 		publishedInstructionsSHA256:
 			"853cbcbf29fa2eb5d42cbc644c293d6deb429e4cb4c6ec46237e55a502f3cb77",
 		content: `Add key events to the supplied elephant.
+
 1. With the 1 key, repeat 10 changes of size by 10.
 2. With the 2 key, repeat 10 changes of size by -10.
 3. With the 3 key, change the color effect in a forever loop.
@@ -48,6 +51,7 @@ On the green flag, show the elephant, restore size 100 and clear graphic effects
 		publishedInstructionsSHA256:
 			"0f070b71e18f7509ec1259c1b3dc8d5a78f9d10e8c77249a503d5b5ffcad0549",
 		content: `The starter already has the green-flag introduction and click costume/sound feedback. Extend those stacks.
+
 1. Make a Clicks variable and reset it to 0 at the start.
 2. Count a button click only while the round is active. The same click switches to Pressed and plays Coin, then restores Regular.
 3. Make a Seconds left variable and start it at 10.
@@ -64,6 +68,7 @@ A Playing variable with values 0 and 1 can guard the existing click stack, as sh
 		publishedInstructionsSHA256:
 			"eef253db1e45b4b4f8aac7f4af8739635ee25c15278e1699f2c76ba271d233b7",
 		content: `Add shape scripts to the supplied mouse.
+
 1. On the green flag, erase the drawing and reset the mouse's position, direction and pen state.
 2. With the 1 key, use a loop to draw a triangle.
 3. With the 2 key, use a loop to draw a circle-like shape from small turns and movements.
@@ -77,6 +82,7 @@ A Playing variable with values 0 and 1 can guard the existing click stack, as sh
 		publishedInstructionsSHA256:
 			"1ebe0dceda282f8affbf5289051f731fd3f9c3bcfbd86c671a5af01ddeef1f90",
 		content: `Use the shark, ordinary fish and pufferfish in the starter.
+
 1. On the green flag, reset Score to 0 and make Shark 2 follow the mouse pointer continuously.
 2. While the mouse button is pressed, switch the shark to its closed-mouth costume and play its supplied Bite sound. Restore its resting costume when the button is released.
 3. Make Fish and Fish2 move to random positions, wait 2 seconds and repeat.
@@ -94,6 +100,7 @@ Restart with score, positions and costumes reset. The fish scripts belong to the
 		publishedInstructionsSHA256:
 			"235318c656f9fd374e6dcad9bc6509fce4edcc9d781db0b5b2fa6cc47ad774e4",
 		content: `Use the supplied Princess and Dragon.
+
 1. Make the left and right arrow keys move Princess horizontally.
 2. Make Dragon fall by decreasing y repeatedly.
 3. When Dragon reaches the lower boundary or touches Princess, return it to the top at a random x position.
