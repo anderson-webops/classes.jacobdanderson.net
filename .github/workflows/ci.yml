@@ -2156,6 +2156,10 @@ jobs:
               if: matrix.course == 'map'
               run: node scripts/classes-family-heavy-task.mjs -- python3 test/swift-course-scroll-geometry.py
 
+            - name: Verify bounded simulator launch recovery
+              if: matrix.course == 'capstone'
+              run: node scripts/classes-family-heavy-task.mjs -- python3 test/swift-simulator-launch-recovery.test.py
+
             - name: Test selected course roles and largest text on two iPhone sizes
               run: node scripts/classes-family-heavy-task.mjs -- python3 test/swift-welcome-exported-ios.py --course "$SWIFT_COURSE" --browser "output/swift-canonical-workflows/swift-${SWIFT_COURSE}-browser" --proof "$RUNNER_TEMP/swift-canonical-ios/$SWIFT_COURSE/proof.json"
 

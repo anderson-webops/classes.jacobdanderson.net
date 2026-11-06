@@ -10,6 +10,7 @@ import type {
 } from "@/stores/courses/types";
 import { createPinia, setActivePinia } from "pinia";
 import { beforeEach, describe, expect, it } from "vitest";
+import { useAppStore } from "@/stores/app";
 import { useCoursesStore } from "@/stores/courses";
 import {
 	findJuniScratchInstructionCorrection,
@@ -217,19 +218,171 @@ describe("original Juni Scratch project instructions", () => {
 		});
 	}
 
-	it("limits corrections to six uniquely identified published starters", () => {
-		expect(juniScratchInstructionCorrections).toHaveLength(6);
+	it("limits corrections to thirteen uniquely identified published starters", () => {
+		expect(juniScratchInstructionCorrections).toHaveLength(13);
 		expect(
 			new Set(
 				juniScratchInstructionCorrections.map(item => item.projectId)
 			).size
-		).toBe(6);
+		).toBe(13);
 		for (const correction of juniScratchInstructionCorrections) {
 			expect(correction.publishedInstructionsSha256).toMatch(
 				/^[a-f0-9]{64}$/
 			);
 		}
 	});
+
+	it.each(["learner", "instructor"])(
+		"retains published user-input tasks and links for %s",
+		async role => {
+			if (role === "instructor")
+				useAppStore().setCurrentTutor({
+					_id: "task-review-tutor",
+					name: "Tutor",
+					email: "tutor@example.invalid",
+					age: 30,
+					state: "GA",
+					usersOfTutorLength: 0,
+					coursePermissions: ["scratch-level-1"],
+					editTutors: false,
+					saveEdit: "Save"
+				});
+			const course =
+				(await useCoursesStore().loadCourseById("scratch-level-1"))!;
+			const module = course.modules.find(
+				module => module.title === "GS9 User Input"
+			)!;
+			const items = [
+				...module.curriculum,
+				...module.supplementalProjects
+			];
+			for (const [id, solution, path, required, excluded] of [
+				[
+					"297744913",
+					"297735619",
+					"core",
+					[
+						"hat is clicked",
+						"between 1 and 5",
+						"Magic Spell",
+						"twice",
+						"each number"
+					],
+					["Love, Money, or Friendship"]
+				],
+				[
+					"295334181",
+					"294561252",
+					"core",
+					[
+						"1 and 100",
+						"51",
+						"Too low!",
+						"Too high!",
+						"unchanged",
+						"Optional:"
+					],
+					["between 1 and 20"]
+				],
+				[
+					"328309551",
+					"328310531",
+					"choice",
+					[
+						"backdrops named",
+						"dinosaur",
+						"jellyfish",
+						"giraffe",
+						"two seconds"
+					],
+					["build a shop", "plant a tree", "items collected"]
+				],
+				[
+					"328310783",
+					"328308418",
+					"choice",
+					[
+						"Spot",
+						"Dot",
+						"(0, 0)",
+						"Earth",
+						"Saturn",
+						"Star",
+						"pick random",
+						"Hi Dot!"
+					],
+					["Captain", "Mars", "Jupiter", "discoveries"]
+				]
+			] as const) {
+				const item = items.find(
+					item =>
+						item.projectLink ===
+						`https://scratch.mit.edu/projects/${id}/`
+				)!;
+				expect(item).toBeDefined();
+				expect(item.learningPath).toBe(path);
+				expect(item.playableSolutionEmbedUrl).toBe(
+					`https://scratch.mit.edu/projects/${solution}/embed`
+				);
+				for (const text of required)
+					expect(item.content).toContain(text);
+				for (const text of excluded)
+					expect(item.content).not.toContain(text);
+			}
+		}
+	);
+
+	it.each([
+		{
+			projectId: "327635693",
+			required: ["Zebra Steps", "set it to 0", "next costume", "by 1"],
+			excluded: []
+		},
+		{
+			projectId: "327610777",
+			required: [
+				"random x",
+				"pick random",
+				"decreasing y",
+				"Puffs Eaten",
+				"Chomp"
+			],
+			excluded: ["3. Add a timer"]
+		},
+		{
+			projectId: "327607937",
+			required: [
+				"donut $2",
+				"pizza $4",
+				"taco $3",
+				"apple $1",
+				"store the answer",
+				"done",
+				"unchanged",
+				"money remains"
+			],
+			excluded: ["set to 10", "sandwich", "salad"]
+		}
+	])(
+		"retains the supplied input and behavior contract for $projectId",
+		async ({ projectId, required, excluded }) => {
+			const course =
+				(await useCoursesStore().loadCourseById("scratch-level-1"))!;
+			const item = course.modules
+				.flatMap(module => module.supplementalProjects)
+				.find(
+					item =>
+						item.projectLink ===
+						`https://scratch.mit.edu/projects/${projectId}/`
+				)!;
+			expect(item).toBeDefined();
+			for (const text of required) expect(item.content).toContain(text);
+			for (const text of excluded)
+				expect(item.content).not.toContain(text);
+			if (projectId === "327610777")
+				expect(item.content).toContain("Optional: add a timed round");
+		}
+	);
 
 	for (const [title, required, excluded] of [
 		[

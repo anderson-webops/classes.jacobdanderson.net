@@ -19,18 +19,24 @@ const courseIds = [
 	"middle-school-c-grammar",
 	"novel-writing",
 	"introduction-to-public-speaking",
-	"scratch-level-1-bootcamp"
+	"scratch-level-1-bootcamp",
+	"algebra-2a",
+	"algebra-2b"
 ];
-const readingCounts = [10, 13, 14, 16, 20, 14, 9, 4];
+const readingCounts = [10, 13, 14, 16, 20, 14, 9, 4, 27, 22];
 assert.equal(readingCounts.length, courseIds.length);
 const requestedCourses = process.env.SELF_STUDY_BROWSER_COURSES;
-const selectedCourseIds = requestedCourses ? requestedCourses.split(",") : courseIds;
+const selectedCourseIds = requestedCourses
+	? requestedCourses.split(",")
+	: courseIds;
 assert.ok(selectedCourseIds.length > 0);
 assert.equal(new Set(selectedCourseIds).size, selectedCourseIds.length);
 assert.ok(selectedCourseIds.every(id => courseIds.includes(id)));
 const expectedProfiles = selectedCourseIds.length * 4;
-const expectedReadingViews = selectedCourseIds.reduce((total, id) =>
-	total + readingCounts[courseIds.indexOf(id)] * 4, 0);
+const expectedReadingViews = selectedCourseIds.reduce(
+	(total, id) => total + readingCounts[courseIds.indexOf(id)] * 4,
+	0
+);
 const digest = value => createHash("sha256").update(value).digest("hex");
 
 function account(path, role) {
@@ -43,13 +49,14 @@ function account(path, role) {
 		courseAccess: courseIds,
 		courseProgress: []
 	};
-	if (path === "/api/accounts/me")
+	if (path === "/api/accounts/me") {
 		return role === "instructor"
 			? { tutorID: "self-study-tutor" }
 			: { userID: learner._id };
+	}
 	if (path === "/api/users/loggedin" && role === "learner")
 		return { currentUser: learner };
-	if (path === "/api/tutors/loggedin" && role === "instructor")
+	if (path === "/api/tutors/loggedin" && role === "instructor") {
 		return {
 			currentTutor: {
 				_id: "self-study-tutor",
@@ -63,6 +70,7 @@ function account(path, role) {
 				saveEdit: "Save"
 			}
 		};
+	}
 	if (path === "/api/users/oftutor/self-study-tutor") return [learner];
 	return {};
 }
@@ -70,13 +78,14 @@ function account(path, role) {
 async function chooseModule(page, module, index) {
 	const toggle = await page.$(".outline-toggle");
 	if (
-		toggle &&
-		(await toggle.boundingBox()) &&
-		(await toggle.evaluate(
+		toggle
+		&& (await toggle.boundingBox())
+		&& (await toggle.evaluate(
 			element => element.getAttribute("aria-expanded") !== "true"
 		))
-	)
+	) {
 		await toggle.click();
+	}
 	const label = `Show ${module.kind} ${index + 1}: ${module.title}`;
 	await page
 		.locator(`.outline-button[aria-label=${JSON.stringify(label)}]`)
@@ -85,7 +94,8 @@ async function chooseModule(page, module, index) {
 		title =>
 			document
 				.querySelector("#course-reader-panel h3")
-				?.textContent.trim() === title,
+				?.textContent
+				.trim() === title,
 		{},
 		module.title
 	);
@@ -100,45 +110,56 @@ async function chooseView(page, position) {
 	);
 }
 
-async function checkTableLayout(page, anchor, width, stressWideTable) {
+async function checkTableLayout(
+	page,
+	anchor,
+	width,
+	stressWideTable,
+	expectedParagraphBreaks
+) {
 	const result = await page.evaluate(
-		({ anchor, stressWideTable }) => {
+		({ anchor, stressWideTable, expectedParagraphBreaks }) => {
 			const content = document
 				.getElementById(anchor)
 				.querySelector(".item-content-markdown");
 			const wrappers = [
 				...content.querySelectorAll(".markdown-table-scroll")
 			];
-			const compactTablesFit =
-				wrappers.every(
-					wrapper =>
-						wrapper.querySelectorAll("thead th").length > 3 ||
-						wrapper.scrollWidth <= wrapper.clientWidth + 2
-				);
+			const compactTablesFit = wrappers.every(
+				wrapper =>
+					wrapper.querySelectorAll("thead th").length > 3
+					|| wrapper.scrollWidth <= wrapper.clientWidth + 2
+			);
 			let wideTableScrolls = null;
 			if (stressWideTable && wrappers.length) {
 				const clone = content.cloneNode(true);
 				try {
-					for (const row of clone.querySelectorAll("tr"))
+					for (const row of clone.querySelectorAll("tr")) {
 						while (row.children.length < 12)
 							row.append(row.children[0].cloneNode(true));
+					}
 					content.parentElement.append(clone);
 					const wide = clone.querySelector(".markdown-table-scroll");
-					wideTableScrolls =
-						wide.scrollWidth > wide.clientWidth &&
-						document.documentElement.scrollWidth <= innerWidth;
-				} finally {
+					wideTableScrolls
+						= wide.scrollWidth > wide.clientWidth
+							&& document.documentElement.scrollWidth <= innerWidth;
+				}
+				finally {
 					clone.remove();
 				}
 			}
 			return {
 				compactTablesFit,
 				wideTableScrolls,
+				observedParagraphBreaks:
+					content.querySelectorAll(":scope > p > br").length,
+				expectedParagraphBreaks,
 				forcedParagraphBreaks:
 					content.querySelectorAll(":scope > p > br").length
+					- expectedParagraphBreaks
 			};
 		},
-		{ anchor, stressWideTable }
+		{ anchor, stressWideTable, expectedParagraphBreaks }
 	);
 	assert.equal(
 		result.compactTablesFit,
@@ -148,14 +169,15 @@ async function checkTableLayout(page, anchor, width, stressWideTable) {
 	assert.equal(
 		result.forcedParagraphBreaks,
 		0,
-		"Prose wraps to the viewport instead of source-code line lengths"
+		"Paragraph breaks match the reviewed prose and equation layout"
 	);
-	if (stressWideTable)
+	if (stressWideTable) {
 		assert.equal(
 			result.wideTableScrolls,
 			true,
 			"Genuinely wide tables keep independent scrolling"
 		);
+	}
 	return result;
 }
 
@@ -190,7 +212,8 @@ async function checkCards(page, module, expected, optional) {
 					const row = document.getElementById(id);
 					return row
 						?.querySelector(".assignment-content")
-						?.textContent.replace(/\s+/g, " ")
+						?.textContent
+						.replace(/\s+/g, " ")
 						.trim()
 						.includes(required);
 				},
@@ -209,11 +232,11 @@ test(
 		const previous = process.cwd();
 		const output = resolve(
 			previous,
-			process.env.SELF_STUDY_BROWSER_PROOF_DIR ??
-				"output/self-study-browser"
+			process.env.SELF_STUDY_BROWSER_PROOF_DIR
+			?? "output/self-study-browser"
 		);
-		const taskId =
-			process.env.CLASSES_FAMILY_TASK_ID ?? "self-study-browser";
+		const taskId
+			= process.env.CLASSES_FAMILY_TASK_ID ?? "self-study-browser";
 		const startedAt = new Date().toISOString();
 		const profiles = [];
 		let browser;
@@ -266,11 +289,12 @@ test(
 						);
 						assert.equal(fixture.id, id);
 						assert.equal(fixture.role, role);
-						if (process.env.GITHUB_SHA)
+						if (process.env.GITHUB_SHA) {
 							assert.equal(
 								fixture.sourceCommit,
 								process.env.GITHUB_SHA
 							);
+						}
 						const name = `${id}-${role}-${width}`;
 						const context = await browser.createBrowserContext();
 						const page = await context.newPage();
@@ -282,23 +306,23 @@ test(
 							await page.setViewport({ width, height: 900 });
 							page.setDefaultTimeout(20000);
 							page.on("pageerror", error =>
-								pageErrors.push(String(error))
-							);
+								pageErrors.push(String(error)));
 							await page.setRequestInterception(true);
-							page.on("request", request => {
+							page.on("request", (request) => {
 								if (request.isInterceptResolutionHandled())
 									return;
 								const url = new URL(request.url());
 								if (
-									url.origin !== origin ||
-									url.pathname.startsWith("/api/")
+									url.origin !== origin
+									|| url.pathname.startsWith("/api/")
 								) {
 									if (
 										!["GET", "OPTIONS"].includes(
 											request.method()
 										)
-									)
+									) {
 										writes++;
+									}
 									void request.respond({
 										status: 200,
 										contentType: "application/json",
@@ -308,16 +332,17 @@ test(
 												: {}
 										)
 									});
-								} else {
+								}
+								else {
 									void request.continue();
 								}
 							});
 							const [accountResponse] = await Promise.all([
 								page.waitForResponse(
 									response =>
-										response.request().method() === "GET" &&
-										new URL(response.url()).pathname ===
-											"/api/accounts/me"
+										response.request().method() === "GET"
+										&& new URL(response.url()).pathname
+										=== "/api/accounts/me"
 								),
 								page.goto(
 									`${origin}/courses#${fixture.modules[0].id}`,
@@ -329,10 +354,11 @@ test(
 								role =>
 									document
 										.querySelector(".site-nav__badge")
-										?.textContent.trim() ===
-									(role === "instructor"
-										? "Tutor"
-										: "Student"),
+										?.textContent
+										.trim()
+										=== (role === "instructor"
+											? "Tutor"
+											: "Student"),
 								{},
 								role
 							);
@@ -344,15 +370,49 @@ test(
 								id
 							);
 							const outline = await page.$$eval(
-								".outline-button strong",
+								".outline-button:not(.is-reference) strong",
 								items =>
 									items.map(item => item.textContent.trim())
 							);
 							assert.deepEqual(
 								outline,
 								fixture.modules.map(module => module.title),
-								"Every teaching module is reachable; maintenance records stay outside course navigation"
+								"Every teaching module is reachable in its teaching group"
 							);
+							const references = await page.$$eval(
+								".outline-button.is-reference",
+								buttons =>
+									buttons.map(button => ({
+										title: button
+											.querySelector("strong")
+											.textContent
+											.trim(),
+										group: button
+											.closest(".outline-section")
+											.querySelector(
+												".outline-section-label"
+											)
+											.textContent
+											.trim()
+									}))
+							);
+							assert.deepEqual(
+								references,
+								fixture.referenceModules.map(module => ({
+									title: module.title,
+									group: "References"
+								})),
+								"Legitimate reference appendices retain their separate navigation group"
+							);
+							for (const module of fixture.internalModules) {
+								assert.ok(
+									![
+										...outline,
+										...references.map(r => r.title)
+									].includes(module.title),
+									"Maintenance records stay outside navigation"
+								);
+							}
 							for (const [
 								index,
 								module
@@ -368,7 +428,8 @@ test(
 												?.querySelector(
 													".item-content-markdown"
 												)
-												?.textContent.replace(
+												?.textContent
+												.replace(
 													/\s+/g,
 													" "
 												)
@@ -396,11 +457,12 @@ test(
 										page,
 										anchor,
 										width,
-										width === 1280 &&
-											module.title ===
-												"MSC16 Sentence Types"
+										width === 1280
+										&& module.title
+										=== "MSC16 Sentence Types",
+										item.paragraphBreaks
 									);
-									for (const image of item.images)
+									for (const image of item.images) {
 										await page.waitForFunction(
 											({ anchor, image }) =>
 												[
@@ -411,30 +473,31 @@ test(
 													element =>
 														element.getAttribute(
 															"src"
-														) === image.src &&
-														element.alt ===
-															image.alt &&
-														element.complete &&
-														element.naturalWidth > 0
+														) === image.src
+														&& element.alt
+														=== image.alt
+														&& element.complete
+														&& element.naturalWidth > 0
 												),
 											{},
 											{ anchor, image }
 										);
+									}
 									assert.equal(
 										await page.$eval(
 											`[id=${JSON.stringify(anchor)}]`,
-											element => {
-												const next =
-													document.querySelector(
+											(element) => {
+												const next
+													= document.querySelector(
 														"#course-reader-panel .learning-card"
 													);
 												return (
-													!next ||
-													!!(
+													!next
+													|| !!(
 														element.compareDocumentPosition(
 															next
-														) &
-														Node.DOCUMENT_POSITION_FOLLOWING
+														)
+														& Node.DOCUMENT_POSITION_FOLLOWING
 													)
 												);
 											}
@@ -462,11 +525,11 @@ test(
 									`${module.title}: no page overflow`
 								);
 								if (
-									index === 0 ||
-									module.readings.some(
+									index === 0
+									|| module.readings.some(
 										item => item.images.length
-									) ||
-									/Financial Feasibility|Sentence Types|Analyzing Evidence|Entry Diagnostic|Exit Diagnostic|NW10 Writing Dialogue|MYP7 Defense Attorney|MYP9 Master Project/.test(
+									)
+									|| /Financial Feasibility|Sentence Types|Analyzing Evidence|Entry Diagnostic|Exit Diagnostic|NW10 Writing Dialogue|MYP7 Defense Attorney|MYP9 Master Project/.test(
 										module.title
 									)
 								) {
@@ -516,16 +579,17 @@ test(
 								assignments,
 								internalModulesExcluded:
 									fixture.internalModules,
+								referenceModulesSeparate: references,
 								pageErrors,
 								writes
 							});
 							await writeFile(
 								join(output, "browser-proof.json"),
-								JSON.stringify(
+								`${JSON.stringify(
 									{ complete: false, profiles },
 									null,
 									2
-								) + "\n"
+								)}\n`
 							);
 							console.log(
 								JSON.stringify({
@@ -543,7 +607,8 @@ test(
 									writes
 								})
 							);
-						} catch (error) {
+						}
+						catch (error) {
 							await page
 								.screenshot({
 									path: join(output, `${name}-failed.png`),
@@ -552,7 +617,7 @@ test(
 								.catch(() => {});
 							await writeFile(
 								join(output, `${name}-failed.json`),
-								JSON.stringify(
+								`${JSON.stringify(
 									{
 										id,
 										role,
@@ -565,10 +630,11 @@ test(
 									},
 									null,
 									2
-								) + "\n"
+								)}\n`
 							);
 							throw error;
-						} finally {
+						}
+						finally {
 							await context.close();
 						}
 					}
@@ -584,7 +650,7 @@ test(
 			);
 			await writeFile(
 				join(output, "browser-proof.json"),
-				JSON.stringify(
+				`${JSON.stringify(
 					{
 						complete: true,
 						sourceCommit: profiles[0].sourceCommit,
@@ -595,17 +661,20 @@ test(
 					},
 					null,
 					2
-				) + "\n"
+				)}\n`
 			);
 			passed = true;
-		} finally {
+		}
+		finally {
 			try {
 				if (browser) await browser.close();
-			} finally {
-				if (server?.httpServer)
+			}
+			finally {
+				if (server?.httpServer) {
 					await new Promise(resolve =>
 						server.httpServer.close(resolve)
 					);
+				}
 				process.chdir(previous);
 				console.log(
 					JSON.stringify({

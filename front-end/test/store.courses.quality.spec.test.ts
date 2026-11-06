@@ -6882,10 +6882,10 @@ describe("course text quality normalization", () => {
 				"nonlinear readiness scenario"
 			);
 			expect(supplementalCorpus).toContain(
-				"advanced-function readiness scenario"
+				"a supplied complex-arithmetic or quadratic-transformation case"
 			);
 			expect(supplementalCorpus).toContain(
-				"cumulative modeling scenario"
+				"a supplied bag-draw, survey-table, regression or periodic-function case"
 			);
 			expect(new Set(checkInModelingBodies).size).toBe(
 				checkInModelingBodies.length

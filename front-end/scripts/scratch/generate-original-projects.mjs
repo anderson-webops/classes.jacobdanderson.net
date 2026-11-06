@@ -3,6 +3,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { strToU8, zipSync } from "fflate";
+import { applyOriginalProgramCorrection } from "./program-corrections.mjs";
 
 const root = new URL("./originals/", import.meta.url);
 const catalog = JSON.parse(
@@ -58,6 +59,7 @@ export async function createOriginalProject(id) {
 	if (sha256(raw) !== original.sourceSHA256)
 		throw new Error(`Original Scratch source identity mismatch: ${id}`);
 	const project = JSON.parse(raw.toString("utf8"));
+	const programCorrection = applyOriginalProgramCorrection(project, original);
 	const stage = project.targets.find(target => target.isStage);
 	if (!stage || project.targets.filter(target => target.isStage).length !== 1)
 		throw new Error(`Invalid original Scratch stage: ${id}`);
@@ -117,7 +119,10 @@ export async function createOriginalProject(id) {
 			: "",
 		compatibilityChanges.size
 			? "Changes: attribution comment and SVG compatibility corrections. The course’s supplied archive retains the unchanged original definition and media."
-			: "Changes: attribution comment added."
+			: "Changes: attribution comment added.",
+		programCorrection
+			? `Program correction: ${programCorrection.summary}`
+			: ""
 	]
 		.filter(Boolean)
 		.join("\n");
@@ -138,6 +143,11 @@ export async function createOriginalProject(id) {
 	if (compatibilityChanges.size) {
 		files["SOURCE/compatibility.json"] = strToU8(
 			JSON.stringify([...compatibilityChanges.values()], null, 2)
+		);
+	}
+	if (programCorrection) {
+		files["SOURCE/program-correction.json"] = strToU8(
+			JSON.stringify(programCorrection, null, 2)
 		);
 	}
 	const archive = zipSync(files, { level: 6, mtime: new Date(2026, 0, 1) });

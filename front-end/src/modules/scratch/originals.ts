@@ -1,4 +1,5 @@
 import catalog from "../../../scripts/scratch/originals/catalog.json";
+import corrections from "../../../scripts/scratch/originals/program-corrections.json";
 import { scratchProjectLimit } from "./frame";
 
 export interface ScratchOriginalProject {
@@ -10,6 +11,14 @@ export interface ScratchOriginalProject {
 	providedCode: boolean;
 	extensions: string[];
 	bindings: Array<{ courseId: string; role: string }>;
+}
+
+export function scratchOriginalCorrection(project: ScratchOriginalProject) {
+	return corrections.find(
+		record =>
+			record.id === project.id &&
+			record.sourceSHA256 === project.sourceSHA256
+	)?.displaySummary;
 }
 
 export function scratchOriginalProject(

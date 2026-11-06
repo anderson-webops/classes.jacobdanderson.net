@@ -4,16 +4,15 @@ import { applyAlgebra2Readings } from "./algebra2Readings";
 import { configureMathCourseFlow } from "./mathCourseFlow";
 import { pendingStaticMediaNotice, staticMediaUrl } from "./staticMedia";
 
-const MEDIA_BASE = "https://static.classes.jacobdanderson.net/algebra-2a";
-
 const media = {
-	complexPlane: `${MEDIA_BASE}/ala1-complex-plane.svg`,
-	quadraticForms: `${MEDIA_BASE}/ala3-quadratic-forms.svg`,
-	quadraticTransforms: `${MEDIA_BASE}/ala3-quadratic-transformations.svg`,
-	polynomialBehavior: `${MEDIA_BASE}/ala7-polynomial-behavior.svg`,
-	rationalFunctions: `${MEDIA_BASE}/ala8-rational-functions.svg`,
-	radicalFunctions: `${MEDIA_BASE}/ala10-radical-functions.svg`,
-	piecewiseFunctions: `${MEDIA_BASE}/ala11-piecewise-functions.svg`
+	complexPlane: "/course-assets/algebra-2a/complex-plane-v2.svg",
+	quadraticForms: "/course-assets/algebra-2a/quadratic-forms-v2.svg",
+	quadraticTransforms:
+		"/course-assets/algebra-2a/quadratic-transformations-v2.svg",
+	polynomialBehavior: "/course-assets/algebra-2a/polynomial-behavior-v2.svg",
+	rationalFunctions: "/course-assets/algebra-2a/rational-functions-v2.svg",
+	radicalFunctions: "/course-assets/algebra-2a/radical-functions-v2.svg",
+	piecewiseFunctions: "/course-assets/algebra-2a/piecewise-functions-v2.svg"
 } as const;
 
 const sourceStaticFilenames = [

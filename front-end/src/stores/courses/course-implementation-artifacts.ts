@@ -4,6 +4,7 @@ import type {
 	RawCourseModule,
 	RawCourseModuleItem
 } from "./types";
+import { algebra2CheckInFocus } from "./algebra2CheckInFocus";
 import { researchBackedExpansionProfiles } from "./research-expansions";
 
 const INSTRUCTION_MATERIAL_URL = "https://github.com/instruction-material";
@@ -1509,6 +1510,8 @@ function profileFor(courseId: string) {
 
 function algebraCheckInTopicFocus(courseId: string, moduleTitle: string) {
 	if (!/^check-in #\d+$/i.test(moduleTitle.trim())) return null;
+	const algebra2Focus = algebra2CheckInFocus(courseId, moduleTitle);
+	if (algebra2Focus) return algebra2Focus;
 
 	const checkInFocusByCourse: Record<
 		string,
@@ -1533,26 +1536,6 @@ function algebraCheckInTopicFocus(courseId: string, moduleTitle: string) {
 			model: "a nonlinear readiness scenario such as a projectile path, area relationship, savings growth, or linear-versus-quadratic comparison",
 			error: "a solution that calculates a root, vertex, or growth value but does not connect it to the question being asked",
 			check: "substituting a selected input, checking the graph feature, and explaining whether the model behavior fits the context"
-		},
-		"algebra-2a": {
-			representation:
-				"tracking a function through notation, transformation description, composition table, inverse check, and exponential or logarithmic form",
-			routine:
-				"checking function-family readiness through transformations, composition, inverse reasoning, logarithms, and quadratic method choice",
-			trap: "a transformation-order mistake, unrestricted inverse, mismatched sequence index, or logarithm used without domain context",
-			model: "an advanced-function readiness scenario such as repeated discounts, transformed measurements, dose decay, or inverse conversion",
-			error: "a solution that performs symbolic steps correctly but loses the input-output meaning or allowed domain",
-			check: "testing a small input, verifying inverse or composition behavior, and comparing the symbolic result with the graph or context"
-		},
-		"algebra-2b": {
-			representation:
-				"comparison of polynomial graph features, rational restrictions, trigonometric period/amplitude, probability table, and residual interpretation",
-			routine:
-				"checking cumulative modeling readiness through polynomial, rational, trigonometric, probability, statistics, and cross-model interpretation",
-			trap: "an ignored asymptote, invalid domain value, period mismatch, probability assumption, or model chosen despite poor residual behavior",
-			model: "a cumulative modeling scenario such as periodic daylight, concentration over time, production cost, rational rate behavior, or probability decision",
-			error: "a solution that fits a formula mechanically but ignores domain, end behavior, periodicity, uncertainty, or model limitations",
-			check: "testing a domain value, inspecting the graph or residual pattern, and explaining the model limitation in context"
 		}
 	};
 

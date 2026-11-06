@@ -110,10 +110,140 @@ export const juniScratchInstructionCorrections = [
 4. Award a point only when both conditions are true: the mouse button is pressed and the spider is touching the hammer.
 5. After a successful smash, move the spider to a new random position and play the crunch sound.
 6. Add a one-minute timer and end the game when time runs out.`
+	},
+	{
+		courseId: "scratch-level-1",
+		title: "GS9 Supplemental Project 1 – Counting Steps",
+		projectId: "327635693",
+		solutionId: "327634746",
+		baselineContentSha256:
+			"1c993af3a6ee59b54095fc1b164322e4fb41ee8df2c3f10727db16014181323f",
+		publishedInstructionsSha256:
+			"700002f6be108f6db6355944adda0531d05afaa268e0883b7f2e3a1cd4324023",
+		content: `Use the zebra's movement to count steps.
+
+1. Create a variable named "Zebra Steps" and set it to 0 on the green flag.
+2. Make the right arrow point the zebra right and move it 10 steps. Make the left arrow point it left and move it 10 steps.
+3. Switch to the next costume on each movement so the zebra appears to take a step.
+4. Increase Zebra Steps by 1 for each movement and display the count on the stage.
+
+Optional: add obstacles and a goal to reach.`
+	},
+	{
+		courseId: "scratch-level-1",
+		title: "GS9 Supplemental Project 2 – Hungry Crab",
+		projectId: "327610777",
+		solutionId: "327610727",
+		baselineContentSha256:
+			"cf78095187f06ad43333dc943585b3094053328a9a14dd9da87100cf7d3ebacb",
+		publishedInstructionsSha256:
+			"32a8b5250308ab426c1614e15589d179c62c99644eeb6ee02cfe74dc129598ec",
+		content: `Help the crab catch falling cheesy puffs and count how many it eats.
+
+1. Use the left and right arrow keys to move the crab across the stage.
+2. On the green flag, place the cheesy puffs at a random x position near the top of the stage. Choose x with pick random and keep y at the chosen top position.
+3. Make the puffs fall continuously by decreasing y. A larger downward change makes them fall faster.
+4. When the puffs reach the lower part of the stage, return them to a random x at the top.
+5. Create a variable named "Puffs Eaten" and set it to 0 on the green flag. Increase it by 1 when the crab touches the puffs.
+6. Change the crab's costume and play its Chomp sound to show it eating, then restore the resting costume.
+
+Optional: add a timed round that ends and reports the total.`
+	},
+	{
+		courseId: "scratch-level-1",
+		title: "GS9 Supplemental Project 3 – Lunch Money",
+		projectId: "327607937",
+		solutionId: "327607840",
+		baselineContentSha256:
+			"e4cc1d276ffe06436686b280553dcee393c324aaeed1f6d81377730f07a46bd3",
+		publishedInstructionsSha256:
+			"85c2141cacf25ff5133406eb5ddfddf5941ed7332659070abde13cce7a32d5e0",
+		content: `Track a lunch budget while choosing items from this menu: donut $2, pizza $4, taco $3 and apple $1.
+
+1. Ask how much lunch money is available and store the answer in a variable named "Lunch Money".
+2. Repeatedly ask for one menu item or the word "done".
+3. Before each purchase, compare the balance with that item's price. If the balance is too small, show a message and leave the balance unchanged. Otherwise, subtract the price.
+4. After a purchase, report how much money remains.
+5. Stop when the answer is "done". If the balance reaches 0, say that the money has run out and stop.
+
+Optional: use join to show the message and remaining amount in one speech bubble.`
+	},
+	{
+		courseId: "scratch-level-1",
+		title: "Project 2 – Fortune Teller",
+		projectId: "297744913",
+		solutionId: "297735619",
+		baselineContentSha256:
+			"1d22348d99a8202af2ecaf57d50814b23bee55b1464089a60cb4748dee263c51",
+		publishedInstructionsSha256:
+			"a7bc68ec9ada8b383503e4219dad5690def817a74ffc1b742a951b176b68beaf",
+		content: `Make the wizard hat tell a different fortune for each number.
+
+1. When the hat is clicked, use ask and wait to request a number between 1 and 5.
+2. After the answer arrives, start the Magic Spell sound and make the hat spin twice. A full turn is 360 degrees.
+3. Compare answer with each number from 1 to 5 and show a different fortune for each match. Use the answer before asking another question.
+4. Show a message when the number is outside that range.
+
+Optional: add more fortunes or a second question.`
+	},
+	{
+		courseId: "scratch-level-1",
+		title: "Project 3 – Number Guesser",
+		projectId: "295334181",
+		solutionId: "294561252",
+		baselineContentSha256:
+			"2383a99d5196abfe41c08ffbb98e7efa655579785292c808e8c04cbdf2e99de1",
+		publishedInstructionsSha256:
+			"8004f5d279fa95ad406e7a30694cb9ea5e80212b6f7228a15ca95e8e5aae324a",
+		content: `Help Giga give hints until the correct number is guessed.
+
+1. Choose a target between 1 and 100. The supplied reference uses 51.
+2. On the green flag, ask for a guess using ask and wait.
+3. Compare answer with the target. If it is smaller, say "Too low!"; if it is larger, say "Too high!".
+4. After an incorrect guess, ask again. Keep the target unchanged during these retries.
+5. When the answer matches, celebrate with a costume, message and sound, then stop the game.
+
+Optional: store a randomly chosen target in a variable before the first question, or count guesses.`
+	},
+	{
+		courseId: "scratch-level-1",
+		title: "GS7 Supplemental Project 1 – Animal Crossing",
+		projectId: "328309551",
+		solutionId: "328310531",
+		baselineContentSha256:
+			"5fe7ed1f01bc2ceced3939d80a29e017e6b14f449624dc68cf7ca9a235dd1b24",
+		publishedInstructionsSha256:
+			"319ca450cc1b4d0fc676f99dda3fa04bf3b7be5d460ac1f697df0f4c51541b92",
+		content: `Choose an animal costume for a changing environment.
+
+1. The starter provides backdrops named "1", "2" and "3". Pick a random number from 1 to 3 and use it to switch the backdrop.
+2. Reset the sprite to its Abby-a costume, then ask which animal belongs there.
+3. Compare answer with "dinosaur", "jellyfish" and "giraffe". Switch to the corresponding supplied costume when a name matches.
+4. Explain when an answer is not one of the available animals.
+5. Wait two seconds, choose another random backdrop and repeat the question.
+
+Optional: also check whether the chosen animal matches the environment, using the backdrop name as a second condition.`
+	},
+	{
+		courseId: "scratch-level-1",
+		title: "GS7 Supplemental Project 2 – Space Cadets",
+		projectId: "328310783",
+		solutionId: "328308418",
+		baselineContentSha256:
+			"e7051efdaba34e980e33fe3655ec5a007756a5dfb63f092b2d6da90d00f92122",
+		publishedInstructionsSha256:
+			"b6f42f3e8603c98f6a0cc71d9425990422a067e06f30fa9d1519008f976071a2",
+		content: `Move Dot to the place named in an answer and look for Spot.
+
+1. On the green flag, send Spot randomly to one of the three destination sprites. They are named "1" for Star, "2" for Saturn and "3" for Earth. Put pick random 1 to 3 into the Motion go to input.
+2. Start Dot at (0, 0) and ask "Where is Spot?".
+3. Compare answer with "Earth", "Saturn" and "Star". Move Dot to sprite "3", "2" or "1", respectively.
+4. For another answer, explain that the place is unknown and stop that question script.
+5. In a separate green-flag forever loop on Spot, check whether it is touching Dot. When it is, have Spot say "Hi Dot!".`
 	}
 ] as const;
 
-export const juniScratchInstructionsVerifiedOn = "2026-10-04";
+export const juniScratchInstructionsVerifiedOn = "2026-11-05";
 
 export function findJuniScratchInstructionCorrection(
 	courseId: string,
