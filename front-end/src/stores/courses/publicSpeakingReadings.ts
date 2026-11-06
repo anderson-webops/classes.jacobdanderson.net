@@ -136,9 +136,8 @@ check." Reasons: the three notes give listeners specific clues, and the timetabl
 reveal connects them. A competing audience wanting chase scenes might find that
 slower structure a poor fit. "Everyone will love it" ignores the criterion.
 
-Use three minutes for planning if following the source project's planning
-constraint; the five-minute limit applies to the delivered pitch. Those are
-different timers. Draft the recommendation, strongest reasons, one example and
+Allow three minutes for planning and up to five minutes for delivering the
+pitch. Draft the recommendation, strongest reasons, one example and
 closing invitation, then time the actual delivery. After feedback, identify the
 changed section and compare whether the listener can state the recommendation
 and its reason without seeing a visual aid.
@@ -229,8 +228,7 @@ should add an example or comparison. Use original or appropriately licensed asse
 and record the source and terms for borrowed material. For private audio-only
 delivery, mark framing, lighting
 and visual-edit checks as not applicable; check audible speech and any audio
-rights instead. Use the project's live or private portfolio route and retain the
-existing distinction between a classroom talk and an affiliated public event.
+rights instead.
 `.trim()
 };
 
