@@ -168,7 +168,7 @@ const groups = [
 	{
 		course: "scratch-level-2",
 		module: "scratch-level-2-gm7-lists",
-		tab: 2,
+		tab: 1,
 		projects: [
 			{
 				id: "315090026",
