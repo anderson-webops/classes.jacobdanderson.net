@@ -49,7 +49,7 @@ const cases = [
 	{
 		id: "algebra-1b",
 		source: algebra1BCourse,
-		readings: 8,
+		readings: 31,
 		additions: []
 	},
 	{
@@ -340,13 +340,15 @@ it.each(
 					item.content,
 					item.contentKind ?? "assignment"
 				);
-				expect(sections.some(section => section.kind === "learn")).toBe(
-					false
-				);
+				expect(
+					sections.some(section => section.kind === "learn"),
+					item.title
+				).toBe(false);
 				fullAssignment = sections
 					.map(section => {
 						const label =
-							section.kind === "optional" && section.label !== "Optional"
+							section.kind === "optional" &&
+							section.label !== "Optional"
 								? `Optional · ${section.label}`
 								: section.label;
 						return `### ${label}\n\n${section.content}`;

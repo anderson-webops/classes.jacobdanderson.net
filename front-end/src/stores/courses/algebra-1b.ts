@@ -1,4 +1,5 @@
 import type { RawCourse } from "./types";
+import { applyAlgebra1BReadings } from "./algebra1BReadings";
 import { configureMathCourseFlow } from "./mathCourseFlow";
 import { pendingStaticMediaNotice, staticMediaUrl } from "./staticMedia";
 
@@ -1557,6 +1558,8 @@ configureMathCourseFlow(algebra1BCourse, {
 	],
 	appendixTitles: ["Reference Archive: Algebra 1B"]
 });
+
+applyAlgebra1BReadings(algebra1BCourse);
 
 const dataModelModule = algebra1BCourse.modules.find(module =>
 	module.title.startsWith("AB19 ")

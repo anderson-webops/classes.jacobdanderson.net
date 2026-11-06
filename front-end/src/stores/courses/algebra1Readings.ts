@@ -96,17 +96,24 @@ const groups = [
 	}
 ] as const;
 
-export function applyAlgebra1AReadings(course: RawCourse) {
-	for (const entry of algebra1AReadingMethods) {
+export function applyAuthoredAlgebraMethods(
+	course: RawCourse,
+	methods: readonly { target: string; method: string; worked: string }[]
+) {
+	for (const entry of methods) {
 		const item = course.modules
 			.flatMap(module => module.curriculum)
 			.find(item => item.title === entry.target);
 		if (!item)
-			throw new Error(`Missing Algebra 1A reading ${entry.target}`);
+			throw new Error(`Missing ${course.name} reading ${entry.target}`);
 		item.content = `**Method**\n\n${entry.method}\n\n**Worked example**\n\n${entry.worked}\n\n${item.content}`;
 		item.contentKind = "reading";
 		item.preserveInstructions = true;
 	}
+}
+
+export function applyAlgebra1AReadings(course: RawCourse) {
+	applyAuthoredAlgebraMethods(course, algebra1AReadingMethods);
 	for (const group of groups) {
 		const module = course.modules.find(module =>
 			module.title.startsWith(group.modulePrefix)
