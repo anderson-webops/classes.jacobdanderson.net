@@ -10019,16 +10019,16 @@ describe("course text quality normalization", () => {
 		const introPhysics = await loadRawCourse("intro-to-physics");
 		const introPhysicsCorpus = allCourseText(introPhysics);
 		expect(introPhysicsCorpus).toContain(
-			"Momentum treats motion as a conserved, direction-aware quantity during short interactions."
+			"Momentum p = mv combines mass and signed velocity"
 		);
 		expect(introPhysicsCorpus).toContain(
-			"Fluids connect pressure, density, and buoyancy through contact forces spread over area"
+			"Pressure P = F/A is normal force per area"
 		);
 		expect(introPhysicsCorpus).toContain(
-			"Modern physics introduces places where classical models stop being enough."
+			"A physical model has a domain in which its predictions agree usefully with evidence."
 		);
 		expect(introPhysicsCorpus).toContain(
-			"The final portfolio turns physics knowledge into a defended design or investigation."
+			"Engineering chooses among alternatives using criteria and constraints."
 		);
 		expect(introPhysicsCorpus).toContain(
 			"The opening workflow is intentionally lightweight and remote-friendly."

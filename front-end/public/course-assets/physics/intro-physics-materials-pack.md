@@ -215,9 +215,11 @@ Graph current against voltage, estimate resistance, and explain why scatter does
 - **Parallel P:** 12 V source, two 6 Ω resistors on separate branches.
 - **Open O:** same as Series S, but one wire break opens the only path.
 - **Branch-open B:** same as Parallel P, but one branch is open.
-- **Short-risk R:** a near-zero-resistance wire bypasses one component in the ideal diagram.
+- **Bypass R:** start with Series S and connect an ideal zero-resistance wire across only the first 6 Ω resistor. The second 6 Ω resistor remains in series with the 12 V source. This wire does not connect the two source terminals directly.
 
 For each, identify complete paths, equivalent resistance when appropriate, source current, branch behavior, and the effect of one component opening.
+
+For Bypass R, also find the voltage and current in the bypassed resistor. Compare this with a separate ideal wire connected directly across the source: explain why an ideal 12 V source and zero resistance give no finite current solution. These are diagram cases, with no physical construction required.
 
 ### Device energy cards
 

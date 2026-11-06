@@ -18,6 +18,7 @@ import { useAppStore } from "@/stores/app";
 import { useCoursesStore } from "@/stores/courses";
 import { algebra2ACourse } from "@/stores/courses/algebra-2a";
 import { algebra2BCourse } from "@/stores/courses/algebra-2b";
+import { introToPhysicsCourse } from "@/stores/courses/intro-to-physics";
 import {
 	entrepreneurship101Course,
 	grammarMechanicsCourse,
@@ -88,6 +89,12 @@ const cases = [
 		id: "algebra-2b",
 		source: algebra2BCourse,
 		readings: 22,
+		additions: []
+	},
+	{
+		id: "intro-to-physics",
+		source: introToPhysicsCourse,
+		readings: 17,
 		additions: []
 	}
 ] as const;
@@ -230,7 +237,12 @@ it.each(
 			container.innerHTML = markdown.render(
 				normalizeInlineCourseMarkdown(
 					directive ??
-						(id === "introduction-to-public-speaking" ? item.content : "")
+						([
+							"introduction-to-public-speaking",
+							"intro-to-physics"
+						].includes(id)
+							? item.content
+							: "")
 				)
 			);
 			return {
@@ -246,7 +258,10 @@ it.each(
 		const modules = course.modules
 			.filter(
 				module =>
-					!module.internal && (!algebra || module.kind !== "appendix")
+					!module.internal &&
+					(!algebra || module.kind !== "appendix") &&
+					(id !== "intro-to-physics" ||
+						/^PHY\d+ /u.test(module.title))
 			)
 			.map(module => ({
 				id: module.id,

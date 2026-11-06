@@ -8,7 +8,7 @@ import process from "node:process";
 import { test } from "node:test";
 import { fileURLToPath } from "node:url";
 import puppeteer from "puppeteer";
-import { preview } from "vite";
+import { createServer, preview } from "vite";
 
 const root = fileURLToPath(new URL("../front-end/", import.meta.url));
 const courseIds = [
@@ -21,11 +21,14 @@ const courseIds = [
 	"introduction-to-public-speaking",
 	"scratch-level-1-bootcamp",
 	"algebra-2a",
-	"algebra-2b"
+	"algebra-2b",
+	"intro-to-physics"
 ];
-const readingCounts = [10, 13, 14, 16, 20, 14, 9, 4, 27, 22];
+const readingCounts = [10, 13, 14, 16, 20, 14, 9, 4, 27, 22, 17];
 assert.equal(readingCounts.length, courseIds.length);
 const requestedCourses = process.env.SELF_STUDY_BROWSER_COURSES;
+const sourceMode = process.env.SELF_STUDY_BROWSER_SOURCE_MODE ?? "build";
+assert.ok(["build", "dev"].includes(sourceMode));
 const selectedCourseIds = requestedCourses
 	? requestedCourses.split(",")
 	: courseIds;
@@ -255,15 +258,26 @@ test(
 		);
 		try {
 			await mkdir(output, { recursive: true });
-			assert.ok(
-				existsSync(join(root, "dist/index.html")),
-				"Build this checkout before checking its pages"
-			);
+			if (sourceMode === "build") {
+				assert.ok(
+					existsSync(join(root, "dist/index.html")),
+					"Build this checkout before checking its pages"
+				);
+			}
 			process.chdir(root);
-			server = await preview({
-				root,
-				preview: { host: "127.0.0.1", port: 0, strictPort: true }
-			});
+			if (sourceMode === "dev") {
+				server = await createServer({
+					root,
+					server: { host: "127.0.0.1", port: 0, strictPort: true, open: false }
+				});
+				await server.listen();
+			}
+			else {
+				server = await preview({
+					root,
+					preview: { host: "127.0.0.1", port: 0, strictPort: true }
+				});
+			}
 			const origin = `http://127.0.0.1:${server.httpServer.address().port}`;
 			const executablePath = [
 				process.env.PUPPETEER_EXECUTABLE_PATH,
@@ -653,6 +667,7 @@ test(
 				`${JSON.stringify(
 					{
 						complete: true,
+						sourceMode,
 						sourceCommit: profiles[0].sourceCommit,
 						selectedCourseIds,
 						expectedProfiles,
@@ -670,7 +685,10 @@ test(
 				if (browser) await browser.close();
 			}
 			finally {
-				if (server?.httpServer) {
+				if (sourceMode === "dev" && server) {
+					await server.close();
+				}
+				else if (server?.httpServer) {
 					await new Promise(resolve =>
 						server.httpServer.close(resolve)
 					);
