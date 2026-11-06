@@ -20,6 +20,7 @@ import { algebra2ACourse } from "@/stores/courses/algebra-2a";
 import { algebra2BCourse } from "@/stores/courses/algebra-2b";
 import { introToPhysicsCourse } from "@/stores/courses/intro-to-physics";
 import { physicsLevel2Course } from "@/stores/courses/physics-level-2";
+import { geometryACourse } from "@/stores/courses/geometry-a";
 import { preAlgebraACourse } from "@/stores/courses/pre-algebra-a";
 import {
 	entrepreneurship101Course,
@@ -33,6 +34,12 @@ import {
 } from "@/stores/courses/source-library-courses";
 
 const cases = [
+	{
+		id: "geometry-a",
+		source: geometryACourse,
+		readings: 6,
+		additions: []
+	},
 	{
 		id: "entrepreneurship-101",
 		source: entrepreneurship101Course,
@@ -244,64 +251,58 @@ it.each(
 				expect(displayedPrompt, project.title).toBe(originalPrompt);
 		}
 		const card = (item: CourseModuleItem) => {
-			const selfChecks =
-				id === "pre-algebra-a"
-					? [
-							...item.content.matchAll(
-								/\[(Check answers and reasoning|Project self-check)\]\(([^)]+)\)/g
-							)
-						].map(([, label, href]) => {
-							const url = new URL(
-								href,
-								"https://example.invalid"
+			const fullBlocks = ["pre-algebra-a", "geometry-a"].includes(id);
+			const selfChecks = fullBlocks
+				? [
+						...item.content.matchAll(
+							/\[(Check answers and reasoning|Project self-check)\]\(([^)]+)\)/g
+						)
+					].map(([, label, href]) => {
+						const url = new URL(href, "https://example.invalid");
+						const asset = url.searchParams.get("asset")!;
+						const [path, anchor] = asset.split("#");
+						const source = readFileSync(
+							join(process.cwd(), "public", path),
+							"utf8"
+						);
+						const section = source
+							.split(/^## /m)
+							.slice(1)
+							.find(
+								section =>
+									section
+										.split("\n", 1)[0]
+										.toLowerCase()
+										.replace(/[^a-z0-9\s-]/g, "")
+										.trim()
+										.replace(/\s+/g, "-") === anchor
 							);
-							const asset = url.searchParams.get("asset")!;
-							const [path, anchor] = asset.split("#");
-							const source = readFileSync(
-								join(process.cwd(), "public", path),
-								"utf8"
-							);
-							const section = source
-								.split(/^## /m)
-								.slice(1)
-								.find(
-									section =>
-										section
-											.split("\n", 1)[0]
-											.toLowerCase()
-											.replace(/[^a-z0-9\s-]/g, "")
-											.trim()
-											.replace(/\s+/g, "-") === anchor
-								);
-							expect(section, asset).toBeDefined();
-							const container = document.createElement("div");
-							container.innerHTML = markdown.render(
-								section!
-									.slice(section!.indexOf("\n") + 1)
-									.trim()
-							);
-							return {
-								label,
-								href,
-								asset,
-								heading: section!.split("\n", 1)[0].trim(),
-								expectedText: container
-									.textContent!.replace(/\s+/g, " ")
-									.trim()
-							};
-						})
-					: [];
+						expect(section, asset).toBeDefined();
+						const container = document.createElement("div");
+						container.innerHTML = markdown.render(
+							section!.slice(section!.indexOf("\n") + 1).trim()
+						);
+						return {
+							label,
+							href,
+							asset,
+							heading: section!.split("\n", 1)[0].trim(),
+							expectedText: container
+								.textContent!.replace(/\s+/g, " ")
+								.trim()
+						};
+					})
+				: [];
 			// These authored labels become separate headings in assignment cards.
 			// Keep every body word while matching the displayed heading punctuation.
-			const fullAssignment =
-				id === "pre-algebra-a"
-					? item.content
-							.replace(/^\*\*(Goal|Steps):\*\*/gm, "**$1**")
-							.replace(
-								/^\*\*Extension:\*\*/gm,
-								"**Optional · Extension**"
-							)
-					: item.content;
+			const fullAssignment = fullBlocks
+				? item.content
+						.replace(/^\*\*(Goal|Steps):\*\*/gm, "**$1**")
+						.replace(
+							/^\*\*Extension:\*\*/gm,
+							"**Optional · Extension**"
+						)
+				: item.content;
 			const directive = item.content.match(
 				/^(?:\*\*(?:Project )?goal:\*\*\s*)?([\s\S]+?)\s*\*\*Completion evidence:\*\*/i
 			)?.[1];
@@ -313,7 +314,8 @@ it.each(
 							"introduction-to-public-speaking",
 							"intro-to-physics",
 							"physics-level-2",
-							"pre-algebra-a"
+							"pre-algebra-a",
+							"geometry-a"
 						].includes(id)
 							? fullAssignment
 							: "")
@@ -324,8 +326,7 @@ it.each(
 				title: item.title,
 				learningPath: item.learningPath,
 				selfChecks,
-				directiveTextMode:
-					id === "pre-algebra-a" ? "innerText" : "textContent",
+				directiveTextMode: fullBlocks ? "innerText" : "textContent",
 				requiredDirective: container
 					.textContent!.replace(/\s+/g, " ")
 					.trim()
@@ -358,14 +359,24 @@ it.each(
 			expect(
 				modules.filter(module => module.kind === "module")
 			).toHaveLength(
-				id === "pre-algebra-a"
-					? 8
-					: ["intro-to-physics", "physics-level-2"].includes(id)
-						? 17
-						: count
+				id === "geometry-a"
+					? 7
+					: id === "pre-algebra-a"
+						? 8
+						: ["intro-to-physics", "physics-level-2"].includes(id)
+							? 17
+							: count
 			);
 		for (const module of modules) {
-			if (id === "pre-algebra-a")
+			if (id === "geometry-a")
+				expect(module.readings, module.title).toHaveLength(
+					module.title.startsWith("Check-In")
+						? 0
+						: module.title.startsWith("GEOA4")
+							? 2
+							: 1
+				);
+			else if (id === "pre-algebra-a")
 				expect(module.readings, module.title).toHaveLength(
 					module.title === "Pre-Algebra A Kick-Off" ||
 						module.title === "Check-In #1"

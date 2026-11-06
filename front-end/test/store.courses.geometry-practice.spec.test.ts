@@ -13,6 +13,7 @@ import {
 import { isLessonLearningItem } from "@/modules/courseLessonPresentation";
 import { useAppStore } from "@/stores/app";
 import { useCoursesStore } from "@/stores/courses";
+import { geometryACourse } from "@/stores/courses/geometry-a";
 import { geometryBCourse } from "@/stores/courses/geometry-b";
 
 interface PublishedGeometry {
@@ -70,6 +71,29 @@ it.each([
 				saveEdit: "Save"
 			});
 		const course = (await useCoursesStore().loadCourseById(courseId))!;
+		if (track === "a") {
+			for (const authored of geometryACourse.modules
+				.flatMap(module => [
+					...module.curriculum,
+					...module.supplementalProjects
+				])
+				.filter(item => /^(?:Project|Capstone):/.test(item.title))) {
+				const displayed = course.modules
+					.flatMap(module => [
+						...module.curriculum,
+						...module.supplementalProjects
+					])
+					.find(item => item.title === authored.title)!;
+				const body = authored.content
+					.replace(/^\*\*Goal:\*\*\s*/, "")
+					.replace(/\s+/g, " ")
+					.trim();
+				expect(
+					displayed.content.replace(/\s+/g, " "),
+					authored.title
+				).toContain(body);
+			}
+		}
 		const actual = course.modules.flatMap(module => [
 			...module.curriculum.map(item => ({
 				moduleId: module.id,
@@ -170,6 +194,34 @@ it.each([
 			anchors.add(section.hash);
 		}
 		expect(anchors.size).toBe(track === "a" ? 16 : 12);
+		if (track === "a") {
+			const variation = coreModules
+				.flatMap(module => module.supplementalProjects)
+				.find(item =>
+					item.title.endsWith("Capstone Changed-Case Review")
+				)!;
+			expect(variation.learningPath).toBe("choice");
+			expect(variation.content.match(/^\d+\. /gm)).toHaveLength(4);
+			const href = variation.content.match(
+				/\[Check answers and reasoning\]\(([^)]+)\)/
+			)![1];
+			const viewer = new URL(href, "https://example.invalid");
+			const section = await loadCourseAssetSection(
+				viewer.searchParams.get("asset")!,
+				"Self-check",
+				async url =>
+					({
+						ok: true,
+						text: async () =>
+							readFileSync(
+								resolve(process.cwd(), "public" + url),
+								"utf8"
+							)
+					}) as Response
+			);
+			expect(section.content.match(/^\d+\. /gm)).toHaveLength(4);
+			expect(anchors.has(section.hash)).toBe(false);
+		}
 		const capstones = coreModules
 			.flatMap(module => module.curriculum)
 			.filter(item => item.title.startsWith("Capstone:"));
