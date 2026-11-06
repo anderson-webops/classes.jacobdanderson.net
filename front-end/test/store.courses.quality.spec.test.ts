@@ -13,6 +13,8 @@ import { createPinia, setActivePinia } from "pinia";
 import { useCoursesStore } from "@/stores/courses";
 import { introToPhysicsCourse } from "@/stores/courses/intro-to-physics";
 import { physicsLevel2Course } from "@/stores/courses/physics-level-2";
+import { earlyElementaryAMaterials } from "@/stores/courses/earlyElementaryAMaterials";
+import { earlyElementaryBMaterials } from "@/stores/courses/earlyElementaryBMaterials";
 import {
 	pyGamesCoreResource,
 	pyGamesCoreSourceRevision
@@ -47,6 +49,81 @@ import {
 import { isGitHubUrl } from "@/modules/resourceUrls";
 
 const COURSE_SWEEP_TIMEOUT = 180000;
+const elementaryMaterials = {
+	"early-elementary-a-math": earlyElementaryAMaterials,
+	"early-elementary-b-math": earlyElementaryBMaterials
+};
+
+function completeElementaryPractice(
+	courseId: string,
+	module: RawCourseModule,
+	item: RawCourseModuleItem
+) {
+	if (!(courseId in elementaryMaterials)) return false;
+	const materials =
+		elementaryMaterials[courseId as keyof typeof elementaryMaterials];
+	const unit = materials.find(material =>
+		module.curriculum.some(
+			reading =>
+				reading.contentKind === "reading" &&
+				reading.content.includes(material.method) &&
+				reading.content.includes(material.worked)
+		)
+	);
+	const task =
+		unit &&
+		[...unit.tasks, unit.practice, unit.challenge].find(candidate =>
+			item.content.includes(candidate.prompt)
+		);
+	if (
+		!task ||
+		item.contentKind !== "assignment" ||
+		!item.preserveInstructions ||
+		!item.preserveAssignment
+	)
+		return false;
+	const href = item.content.match(/\[Project self-check\]\(([^)]+)\)/)?.[1];
+	if (!href) return false;
+	const asset = new URL(href, "https://example.invalid").searchParams.get(
+		"asset"
+	);
+	const prefix =
+		courseId === "early-elementary-a-math"
+			? "/course-assets/early-elementary-a/practice-checks-v2.md"
+			: "/course-assets/early-elementary-b/practice-checks-v1.md";
+	if (asset !== `${prefix}#${task.anchor}`) return false;
+	const text = fs.readFileSync(`public${prefix}`, "utf8");
+	const section = text
+		.split(/^## /m)
+		.find(part => part.split("\n")[0] === task.anchor);
+	expect(section, item.title).toBeDefined();
+	expect(
+		section!.slice(task.anchor.length).trim().length,
+		item.title
+	).toBeGreaterThan(15);
+	return true;
+}
+
+function expectElementaryReadings(course: RawCourse, courseId: string) {
+	const materials =
+		elementaryMaterials[courseId as keyof typeof elementaryMaterials];
+	const modules = course.modules.filter(module => module.kind !== "appendix");
+	expect(modules, courseId).toHaveLength(materials.length);
+	for (const material of materials) {
+		const reading = modules
+			.flatMap(module => module.curriculum)
+			.find(
+				item =>
+					item.contentKind === "reading" &&
+					item.content.includes(material.method)
+			);
+		expect(reading, material.code).toBeDefined();
+		expect(reading!.content, material.code).toContain(material.worked);
+		expect(reading!.content, material.code).not.toContain(
+			"Break a typical problem"
+		);
+	}
+}
 const LEGACY_STATIC_HOST_IN_TEXT_RE =
 	/(^|[^a-z0-9.-])static\.junilearning\.com(?=$|[^a-z0-9.-])/i;
 const normalizedCoursePromises = new Map<
@@ -460,6 +537,8 @@ const lessonBackbonePattern =
 
 function hasLessonBackbone(item: { title: string; content: string }) {
 	return (
+		(/\*\*Method\*\*[\s\S]+\*\*Worked example\*\*/.test(item.content) &&
+			wordCount(item.content) >= 40) ||
 		lessonBackbonePattern.test(`${item.title}\n${item.content}`) ||
 		(wordCount(item.content) >= 300 &&
 			(item.content.match(/^## /gm)?.length ?? 0) >= 5 &&
@@ -5694,6 +5773,11 @@ describe("course text quality normalization", () => {
 											entry.id,
 											module,
 											item
+										) &&
+										!completeElementaryPractice(
+											entry.id,
+											module,
+											item
 										)
 								)
 								.filter(
@@ -5760,7 +5844,8 @@ describe("course text quality normalization", () => {
 							) &&
 							!reviewedJavaScriptProjectReadme(id, item) &&
 							!completeSpeakingPractice(id, module, item) &&
-							!completePhysicsPractice(id, module, item);
+							!completePhysicsPractice(id, module, item) &&
+							!completeElementaryPractice(id, module, item);
 
 						return shortWithoutReview
 							? [
@@ -7104,7 +7189,9 @@ describe("course text quality normalization", () => {
 
 			const text = allCourseText(course);
 			const courseId = courseIds[index];
-			if (courseId in authoredReadingCounts) {
+			if (courseId in elementaryMaterials) {
+				expectElementaryReadings(course, courseId);
+			} else if (courseId in authoredReadingCounts) {
 				expectAuthoredReadings(course, courseId);
 			} else {
 				expect(text).toContain("**Concept path:**");
@@ -7494,6 +7581,10 @@ describe("course text quality normalization", () => {
 		if (!course) return;
 
 		const text = allCourseText(course);
+		const original = await courseCatalog
+			.find(entry => entry.id === "early-elementary-a-math")!
+			.load();
+		const originalText = allCourseText(original);
 		const expectedAnchors = [
 			"Ladybug Number Bond Cases",
 			"Starfish Tank Regrouping",
@@ -7550,12 +7641,15 @@ describe("course text quality normalization", () => {
 		];
 
 		expect(text).not.toContain("Source Activity Anchors:");
-		expect(text).toContain("**Completion evidence:**");
+		expectElementaryReadings(course, "early-elementary-a-math");
+		expect(originalText).toContain("**Completion evidence:**");
 		for (const anchor of expectedAnchors) {
 			expect(text, anchor).toContain(anchor);
 		}
 		for (const originalReference of originalReferences) {
-			expect(text, originalReference).toContain(originalReference);
+			expect(originalText, originalReference).toContain(
+				originalReference
+			);
 		}
 
 		expect(text).not.toMatch(
@@ -7571,6 +7665,10 @@ describe("course text quality normalization", () => {
 		if (!course) return;
 
 		const text = allCourseText(course);
+		const original = await courseCatalog
+			.find(entry => entry.id === "early-elementary-b-math")!
+			.load();
+		const originalText = allCourseText(original);
 		const expectedAnchors = [
 			"Millionaire Block Strategy Review",
 			"Skee-Ball Record Challenge",
@@ -7630,12 +7728,15 @@ describe("course text quality normalization", () => {
 		];
 
 		expect(text).not.toContain("Source Activity Anchors:");
-		expect(text).toContain("**Completion evidence:**");
+		expectElementaryReadings(course, "early-elementary-b-math");
+		expect(originalText).toContain("**Completion evidence:**");
 		for (const anchor of expectedAnchors) {
 			expect(text, anchor).toContain(anchor);
 		}
 		for (const originalReference of originalReferences) {
-			expect(text, originalReference).toContain(originalReference);
+			expect(originalText, originalReference).toContain(
+				originalReference
+			);
 		}
 
 		expect(text).not.toMatch(
@@ -7988,7 +8089,9 @@ describe("course text quality normalization", () => {
 			const text = allCourseText(course);
 
 			expect(text, courseId).not.toContain("Source Activity Anchors:");
-			expect(text, courseId).toContain("**Completion evidence:**");
+			if (courseId in elementaryMaterials) {
+				expect(text, courseId).toContain("Project self-check");
+			} else expect(text, courseId).toContain("**Completion evidence:**");
 			for (const anchor of expectedAnchors) {
 				expect(text, `${courseId}: ${anchor}`).toContain(anchor);
 			}
@@ -8198,13 +8301,17 @@ describe("course text quality normalization", () => {
 
 			expect(teachingModules.length, courseId).toBeGreaterThanOrEqual(1);
 			expect(wordCount(text), courseId).toBeGreaterThan(600);
-			if (courseId in authoredReadingCounts) {
+			if (courseId in elementaryMaterials) {
+				expectElementaryReadings(course, courseId);
+			} else if (courseId in authoredReadingCounts) {
 				expectAuthoredReadings(course, courseId);
 			} else {
 				expect(text, courseId).toContain("**Concept path:**");
 				expect(text, courseId).toContain("Core topics in this module:");
 			}
-			expect(text, courseId).toContain("**Completion evidence:**");
+			if (courseId in elementaryMaterials) {
+				expect(text, courseId).toContain("Project self-check");
+			} else expect(text, courseId).toContain("**Completion evidence:**");
 			expect(text, courseId).not.toMatch(
 				/Juni|Recording Studio|your instructor|with your instructor|Whiteboard|Learning Targets|HQ Support|Slack/i
 			);

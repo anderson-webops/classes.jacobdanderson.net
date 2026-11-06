@@ -4,6 +4,7 @@ import { resolve } from "node:path";
 import { createPinia, setActivePinia } from "pinia";
 import { expect, it } from "vitest";
 import elementaryAdditions from "../../test/fixtures/early-elementary-a-restored-identities.json";
+import elementaryBAdditions from "../../test/fixtures/early-elementary-b-restored-identities.json";
 import restoredEntrepreneurshipProjects from "../../test/fixtures/entrepreneurship-restored-core-identities.json";
 import restoredGrammarProjects from "../../test/fixtures/grammar-mechanics-restored-identities.json";
 import restoredLiteratureProjects from "../../test/fixtures/middle-school-literature-restored-identities.json";
@@ -40,6 +41,7 @@ const addedIdentities: Record<
 	{ moduleId: string; id: string; section: string }[]
 > = {
 	"early-elementary-a-math": elementaryAdditions,
+	"early-elementary-b-math": elementaryBAdditions,
 	"entrepreneurship-101": restoredEntrepreneurshipProjects,
 	"middle-school-c-grammar": restoredGrammarProjects,
 	"middle-school-a-literature": restoredLiteratureProjects,

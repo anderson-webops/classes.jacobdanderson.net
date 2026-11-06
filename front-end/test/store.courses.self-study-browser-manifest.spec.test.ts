@@ -8,6 +8,7 @@ import MarkdownIt from "markdown-it";
 import { expect, it } from "vitest";
 import published from "../../test/fixtures/catalog-published-identities.json";
 import elementaryAdditions from "../../test/fixtures/early-elementary-a-restored-identities.json";
+import elementaryBAdditions from "../../test/fixtures/early-elementary-b-restored-identities.json";
 import ventureAdditions from "../../test/fixtures/entrepreneurship-restored-core-identities.json";
 import grammarAdditions from "../../test/fixtures/grammar-mechanics-restored-identities.json";
 import literatureAdditions from "../../test/fixtures/middle-school-literature-restored-identities.json";
@@ -32,6 +33,7 @@ import { geometryBCourse } from "@/stores/courses/geometry-b";
 import { preAlgebraACourse } from "@/stores/courses/pre-algebra-a";
 import {
 	earlyElementaryMathACourse,
+	earlyElementaryMathBCourse,
 	entrepreneurship101Course,
 	grammarMechanicsCourse,
 	introductionToPublicSpeakingCourse,
@@ -43,6 +45,12 @@ import {
 } from "@/stores/courses/source-library-courses";
 
 const cases = [
+	{
+		id: "early-elementary-b-math",
+		source: earlyElementaryMathBCourse,
+		readings: 19,
+		additions: elementaryBAdditions
+	},
 	{
 		id: "early-elementary-a-math",
 		source: earlyElementaryMathACourse,
@@ -301,6 +309,7 @@ it.each(
 		const card = (item: CourseModuleItem) => {
 			const fullBlocks = [
 				"early-elementary-a-math",
+				"early-elementary-b-math",
 				"algebra-1a",
 				"algebra-1b",
 				"pre-algebra-a",
@@ -395,6 +404,7 @@ it.each(
 					directive ??
 						([
 							"early-elementary-a-math",
+							"early-elementary-b-math",
 							"algebra-1a",
 							"algebra-1b",
 							"introduction-to-public-speaking",
@@ -430,7 +440,10 @@ it.each(
 					(!(
 						algebra ||
 						algebra1 ||
-						id === "early-elementary-a-math"
+						[
+							"early-elementary-a-math",
+							"early-elementary-b-math"
+						].includes(id)
 					) ||
 						module.kind !== "appendix")
 			)

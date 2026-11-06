@@ -356,6 +356,7 @@ jobs:
           test/store.courses.catalog-identities.spec.test.ts
           test/store.courses.self-study-browser-manifest.spec.test.ts
           test/store.courses.early-elementary-a-flow.spec.test.ts
+          test/store.courses.early-elementary-b-content.spec.test.ts
           test/components.courseexplorer-inventory.spec.test.ts
           test/modules.course-lesson-presentation.spec.test.ts
           test/modules.authored-reading.spec.test.ts
