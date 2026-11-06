@@ -95,10 +95,10 @@ function completeElementaryPractice(
 	const text = fs.readFileSync(`public${prefix}`, "utf8");
 	const section = text
 		.split(/^## /m)
-		.find(part => part.split("\n")[0] === task.anchor);
+		.find(part => slugMarkdownHeading(part.split("\n")[0]) === task.anchor);
 	expect(section, item.title).toBeDefined();
 	expect(
-		section!.slice(task.anchor.length).trim().length,
+		section!.slice(section!.indexOf("\n") + 1).trim().length,
 		item.title
 	).toBeGreaterThan(15);
 	return true;
@@ -7200,7 +7200,18 @@ describe("course text quality normalization", () => {
 				expect(text).toContain("**Transfer move:**");
 				expect(text).toContain("**Extension choices:**");
 			}
-			if (courseId === "introduction-to-public-speaking") {
+			if (courseId in elementaryMaterials) {
+				for (const module of course.modules.filter(
+					module => module.kind !== "appendix"
+				)) {
+					for (const item of module.supplementalProjects) {
+						expect(
+							completeElementaryPractice(courseId, module, item),
+							item.title
+						).toBe(true);
+					}
+				}
+			} else if (courseId === "introduction-to-public-speaking") {
 				const modules = course.modules.filter(
 					module => !module.internal
 				);
