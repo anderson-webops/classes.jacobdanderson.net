@@ -7395,8 +7395,8 @@ describe("course text quality normalization", () => {
 				);
 			}
 		}
-		expect(nonProgrammingCorpus).toContain(
-			"the passage or draft section, claim or writing goal"
+		expect(allCourseText(earlyReading!)).toContain(
+			"A summary selects the events needed to understand the main problem and outcome."
 		);
 		expect(allCourseText(publicSpeaking!)).toContain(
 			"Audience: members sharing one model-building table."
