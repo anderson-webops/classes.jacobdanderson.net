@@ -431,7 +431,7 @@ This project applies polynomial modeling to event-planning revenue, cost, and co
 - Doubled-price version vs. competitor:
   - \`T_d(x) = (-0.10x^2 + 100x - 1500) / (-0.055x^2 + 51x - 600)\`
 
-Use the ratio definitions above so that \`T(x) > 1\` means Amy is doing better than the competitor.
+When the competitor's profit \`P_2(x)\` is positive, \`T(x) > 1\` means Amy's profit is greater. If \`P_2(x) = 0\`, the ratio is undefined. If \`P_2(x) < 0\`, multiplying the ratio inequality by that negative denominator reverses its direction, so \`T(x) > 1\` means Amy's profit is smaller. For example, at \`x = 0\`, the profits are \`-750\` and \`-600\`: the ratio is \`1.25\`, but Amy has the larger loss. Compare the two profit values directly whenever the denominator is nonpositive.
 				`.trim()
 			)
 		]),
@@ -772,22 +772,24 @@ This project uses composition and inverse functions to model a fictional wormhol
 			createLesson(
 				"Worked Solution",
 				`
-One consistent choice set is:
+One consistent choice set using linear functions is:
 
-- \`a(t) = t^2\`
-- \`f(a) = 2a\`
-- \`p(f) = ln(f)\`
+- \`a(t) = 2t\`
+- \`f(a) = 3a\`
+- \`p(f) = 4f\`
+
+These are the fictional system's numerical rules. Use \`t >= 0\` and nonnegative outputs. Write \`P(t)\` for the complete pipeline so it is distinct from the final stage \`p(f)\`.
 
 **Composition**
 
-- \`p(t) = ln(2t^2)\`
+- \`P(t) = p(f(a(t))) = 4(3(2t)) = 24t\`
+- At \`t = 2\`, the stages give \`a = 4\`, \`f = 12\`, and \`P = 48\`.
 
 **Inverse**
 
-- Start with \`p = ln(2t^2)\`
-- Exponentiate: \`e^p = 2t^2\`
-- Solve for positive time:
-  - \`t = sqrt(e^p / 2)\`
+- Start with \`P = 24t\` and divide by \`24\`: \`t = P/24\` for \`P >= 0\`.
+- Check both orders: \`24(P/24) = P\` and \`(24t)/24 = t\`.
+- A target output of \`48\` therefore requires \`t = 2\`, matching the forward trace. Negative target outputs are outside this model's range.
 				`.trim(),
 				media.functionComposition
 			)
@@ -992,16 +994,19 @@ The photon-count data for this activity is:
 **Selected observations**
 
 - Highest measured count: \`x = 0\`
-- Lowest-likelihood positions in the zero-filled comparison line are the inserted half-step gaps such as \`x = -3.5, -2.5, ..., 3.5\`
-- The candidate best-fit equations use a different scale than the raw count data, so treat them as model-shape comparisons unless the data is rescaled first
+- The smallest supplied count is \`29\` at \`x = 4\`. No measurements are supplied at half-step positions such as \`x = -3.5\`; inserting a zero there would invent an observation.
+- Compare candidate curve shapes on the same position and count scales. These nine samples alone do not establish the positions of unsampled minima or a complete interference pattern.
 
 **de Broglie wavelength**
 
 - \`lambda = h / (mv)\`
-- Carbon atom with \`m = 6.63 x 10^-27\` kg and \`v = 2200\` m/s:
-  - \`lambda ≈ 4.55 x 10^-11\` m
-- Uranium atom with \`m = 3.95 x 10^-22\` kg and \`lambda = 3.9 x 10^-16\` m:
-  - \`v ≈ 4.30 x 10^3\` m/s
+- Planck's constant is \`h = 6.62607015 x 10^-34\` joule seconds. Use the nonrelativistic particle model and masses in kilograms.
+- A carbon-12 atom has mass approximately \`1.99 x 10^-26\` kg. At \`v = 2200\` m/s:
+  - \`lambda = (6.62607015 x 10^-34)/(1.99 x 10^-26 * 2200) ≈ 1.51 x 10^-11\` m
+- A uranium-238 atom has mass approximately \`3.95 x 10^-25\` kg. For \`lambda = 3.9 x 10^-16\` m, rearrange to \`v = h/(m * lambda)\`:
+  - \`v ≈ 4.30 x 10^6\` m/s
+
+Masses are rounded from the NIST isotope masses for [carbon](https://physics.nist.gov/cgi-bin/Compositions/stand_alone.pl?ascii=ascii&ele=C) and [uranium](https://physics.nist.gov/cgi-bin/Compositions/stand_alone.pl?ascii=ascii&ele=U), using the [NIST atomic mass unit and Planck constant](https://physics.nist.gov/cuu/pdf/wall_2022.pdf).
 				`.trim(),
 					media.photonCounts
 				),
