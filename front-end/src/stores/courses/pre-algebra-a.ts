@@ -103,12 +103,12 @@ export const preAlgebraACourse: RawCourse = {
 						steps: [
 							"Create a store name and budget plan with a starting investment of $3000.",
 							"Write and evaluate an expression for inventory, moving carts, and advertising expenses.",
-							"Represent floor-repair depths with negative numbers and absolute value.",
+							"Represent floor-repair depths with negative numbers and sum their absolute values in feet. Hole areas are not supplied, so the depths do not determine a concrete volume.",
 							"Choose items from plant, tool, pot, and miscellaneous categories, then compare the category fractions.",
 							"Divide four tenths of a bag of soil across three garden sections and record the result as a fraction."
 						],
 						evidence:
-							"The finished plan shows the spending expression, money remaining, absolute concrete amount, ordered category fractions, and soil-per-section fraction."
+							"The finished plan shows the spending expression, money remaining, total absolute repair depth in feet, ordered category fractions, and soil-per-section fraction."
 					}),
 					sourceAnchor({
 						title: "Starting a Gardening Business",
@@ -121,7 +121,7 @@ export const preAlgebraACourse: RawCourse = {
 						],
 						evidence: [
 							"Spending expression and remaining budget are labeled.",
-							"Absolute concrete amount treats depth as distance from the floor surface.",
+							"The total absolute repair depth is 2×abs(-4)+3×abs(-2)=14 feet; a concrete volume would also require each hole's area.",
 							"Category fractions are ordered, combined, and rewritten as a mixed number."
 						]
 					}),
