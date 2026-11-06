@@ -789,8 +789,6 @@ Build one evidence-based model comparison that connects at least three Algebra 2
 					`
 Select one completed artifact from each of five strands: logarithms, sequences, matrices, probability or statistics, and trigonometry. Make a five-row table naming the question, representation, assumptions, independent verification, and any correction needed.
 
-**Completion checks:**
-
 - Check a logarithm through its exponential form and a sequence through listed terms or partial sums.
 - Check matrix dimensions before an operation and verify an inverse by multiplication when applicable.
 - Identify the sample space or dataset behind a probability or statistics result; distinguish association from causation.
@@ -802,8 +800,6 @@ Select one completed artifact from each of five strands: logarithms, sequences, 
 					"Challenge: Model Stress Test",
 					`
 For nonnegative integer n, compare the exponential model E(n)=100(1.10)^n with the arithmetic sequence S(n)=100+10n. Compute both at n=0,1,2. Change only the exponential growth rate from 10% to 20%, giving E_new(n)=100(1.20)^n, and repeat the table while retaining S.
-
-**Completion checks:**
 
 - Show the original and revised predictions, with the change in each prediction.
 - Explain why agreement at the first two inputs does not prove that the original models agree for all inputs.
