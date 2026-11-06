@@ -1090,7 +1090,7 @@ function createSourceActivityAnchorItems(
 					: {}),
 				title: anchor.title,
 				content: [
-					`**Project goal:** ${anchor.prompt}`,
+					`**${anchor.preserveAssignment ? "Goal" : "Project goal"}:** ${anchor.prompt}`,
 					"**Completion evidence:**",
 					...anchor.evidence.map(item => `- ${item}`)
 				].join("\n"),
