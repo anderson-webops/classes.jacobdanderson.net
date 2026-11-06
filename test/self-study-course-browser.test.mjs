@@ -187,7 +187,7 @@ async function checkTableLayout(
 	return result;
 }
 
-async function checkCards(page, module, expected, optional) {
+async function checkCards(page, module, expected, optional, resourceViews, profileName) {
 	const rows = await page.$$eval(
 		"#course-reader-panel .lesson-list > .lesson-item",
 		items =>
@@ -239,6 +239,24 @@ async function checkCards(page, module, expected, optional) {
 					{ cause: error }
 				);
 			});
+		}
+		for (const check of item.selfChecks ?? []) {
+			const selector = `#${rows[index].id} .assignment-content a[href=${JSON.stringify(check.href)}]`;
+			assert.equal(await page.$eval(selector, element => element.textContent.trim()), check.label);
+			await page.$eval(selector, element => { element.target = "_self"; });
+			await page.locator(selector).click();
+			await page.waitForSelector(".course-resource-card .item-content-markdown");
+			assert.equal(new URL(page.url()).searchParams.get("asset"), check.asset);
+			assert.equal(await page.$(".course-resource-error"), null);
+			assert.equal(await page.$eval(".course-resource-page h1", element => element.textContent.trim()), check.heading);
+			await page.waitForFunction(text => document.querySelector(".course-resource-card .item-content-markdown")?.textContent.replace(/\s+/g, " ").trim() === text, {}, check.expectedText);
+			assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true, `${check.heading}: no viewer overflow`);
+			resourceViews.push({ item: item.id, asset: check.asset, fullTextSHA256: digest(check.expectedText) });
+			if (check.label === "Project self-check" || check.heading === "Optional percent-changes") {
+				await page.screenshot({ path: join(process.env.SELF_STUDY_BROWSER_PROOF_DIR ?? "output/self-study-browser", `${profileName}-${item.id}-self-check.png`), fullPage: true });
+			}
+			await page.goBack({ waitUntil: "domcontentloaded" });
+			await page.waitForSelector(`#${rows[index].id}`);
 		}
 	}
 	return rows.map(row => row.id);
@@ -332,6 +350,7 @@ test(
 						const pageErrors = [];
 						const readings = [];
 						const assignments = [];
+						const resourceViews = [];
 						try {
 							await page.setViewport({ width, height: 900 });
 							page.setDefaultTimeout(20000);
@@ -596,14 +615,18 @@ test(
 									page,
 									module,
 									module.projects,
-									false
+									false,
+									resourceViews,
+									name
 								);
 								await chooseView(page, 2);
 								const optional = await checkCards(
 									page,
 									module,
 									module.optional,
-									true
+									true,
+									resourceViews,
+									name
 								);
 								assignments.push({
 									module: module.id,
@@ -612,6 +635,7 @@ test(
 								});
 							}
 							assert.equal(writes, 0);
+							if (id === "pre-algebra-a") assert.equal(resourceViews.length, 23);
 							assert.deepEqual(pageErrors, []);
 							profiles.push({
 								id,
@@ -622,6 +646,7 @@ test(
 								reviewScope: fixture.reviewScope,
 								reviewedModuleIds: fixture.reviewedModuleIds,
 								completeReadings: readings,
+								resourceViews,
 								assignments,
 								internalModulesExcluded:
 									fixture.internalModules,

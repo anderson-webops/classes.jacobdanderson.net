@@ -31,10 +31,7 @@ describe("Pre-Algebra A learner flow", () => {
 			preAlgebraACourse.modules
 				.filter(module => module.kind === "appendix")
 				.map(module => module.title)
-		).toEqual([
-			"Pre-Algebra A Reference Archive",
-			"Pending Static Assets"
-		]);
+		).toEqual(["Pre-Algebra A Reference Archive", "Pending Static Assets"]);
 	});
 
 	it("adds pacing, concept targets, and explicit learning paths", () => {
@@ -42,9 +39,10 @@ describe("Pre-Algebra A learner flow", () => {
 			candidate => candidate.kind !== "appendix"
 		)) {
 			expect(module.estimatedTime, module.title).toMatch(/session/);
-			expect(module.keyBlocks?.length, module.title).toBeGreaterThanOrEqual(
-				5
-			);
+			expect(
+				module.keyBlocks?.length,
+				module.title
+			).toBeGreaterThanOrEqual(5);
 			expect(
 				module.curriculum.every(item => item.learningPath === "core"),
 				module.title
@@ -61,7 +59,7 @@ describe("Pre-Algebra A learner flow", () => {
 		}
 	});
 
-	it("keeps kickoff projects core after the readiness inventory", () => {
+	it("keeps kickoff projects core and extra diagnostics optional", () => {
 		const kickoff = requireModule("Pre-Algebra A Kick-Off");
 		expect(kickoff.curriculum.map(item => item.title)).toEqual([
 			"Course Map and Readiness Check",
@@ -71,7 +69,15 @@ describe("Pre-Algebra A learner flow", () => {
 		expect(
 			kickoff.curriculum.every(item => item.learningPath === "core")
 		).toBe(true);
-		expect(kickoff.supplementalProjects).toHaveLength(0);
+		expect(kickoff.supplementalProjects.map(item => item.title)).toEqual([
+			"Checkpoint: Pre-Algebra A Kick-Off",
+			"Transfer Practice: Pre-Algebra A Kick-Off"
+		]);
+		expect(
+			kickoff.supplementalProjects.every(
+				item => item.learningPath === "choice"
+			)
+		).toBe(true);
 		expect(kickoff.curriculum[0]?.content).toContain(
 			"completing both projects is not required"
 		);

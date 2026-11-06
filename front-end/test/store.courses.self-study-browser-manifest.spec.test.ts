@@ -1,7 +1,7 @@
 import type { CourseModuleItem } from "@/stores/courses/types";
 import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { mkdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { createPinia, setActivePinia } from "pinia";
 import MarkdownIt from "markdown-it";
@@ -244,6 +244,53 @@ it.each(
 				expect(displayedPrompt, project.title).toBe(originalPrompt);
 		}
 		const card = (item: CourseModuleItem) => {
+			const selfChecks =
+				id === "pre-algebra-a"
+					? [
+							...item.content.matchAll(
+								/\[(Check answers and reasoning|Project self-check)\]\(([^)]+)\)/g
+							)
+						].map(([, label, href]) => {
+							const url = new URL(
+								href,
+								"https://example.invalid"
+							);
+							const asset = url.searchParams.get("asset")!;
+							const [path, anchor] = asset.split("#");
+							const source = readFileSync(
+								join(process.cwd(), "public", path),
+								"utf8"
+							);
+							const section = source
+								.split(/^## /m)
+								.slice(1)
+								.find(
+									section =>
+										section
+											.split("\n", 1)[0]
+											.toLowerCase()
+											.replace(/[^a-z0-9\s-]/g, "")
+											.trim()
+											.replace(/\s+/g, "-") === anchor
+								);
+							expect(section, asset).toBeDefined();
+							const container = document.createElement("div");
+							container.innerHTML = markdown.render(
+								section!
+									.slice(section!.indexOf("\n") + 1)
+									.trim()
+							);
+							return {
+								label,
+								href,
+								asset,
+								heading: section!.split("\n", 1)[0].trim(),
+								expectedText: container
+									.textContent!.replace(/\s+/g, " ")
+									.trim()
+							};
+						})
+					: [];
 			// These authored labels become separate headings in assignment cards.
 			// Keep every body word while matching the displayed heading punctuation.
 			const fullAssignment =
@@ -276,6 +323,7 @@ it.each(
 				id: item.id,
 				title: item.title,
 				learningPath: item.learningPath,
+				selfChecks,
 				directiveTextMode:
 					id === "pre-algebra-a" ? "innerText" : "textContent",
 				requiredDirective: container

@@ -176,6 +176,37 @@ it.each(["learner", "instructor"])(
 			anchors.add(section.hash);
 		}
 		expect(anchors.size).toBe(12);
+		const optionalCases = coreModules
+			.flatMap(module => module.supplementalProjects)
+			.filter(item => item.content.includes("%23optional-"));
+		expect(optionalCases).toHaveLength(9);
+		for (const item of optionalCases) {
+			expect(item.learningPath).toBe("choice");
+			expect(item.content.match(/^\d+\. /gm)).toHaveLength(3);
+			expect(item.content).not.toMatch(
+				/Complete a direct|change one condition such as|turn the core concept/
+			);
+			const href = item.content.match(
+				/\[Check answers and reasoning\]\(([^)]+)\)/
+			)![1];
+			const viewer = new URL(href, "https://example.invalid");
+			const section = await loadCourseAssetSection(
+				viewer.searchParams.get("asset")!,
+				"Self-check",
+				async url =>
+					({
+						ok: true,
+						text: async () =>
+							readFileSync(
+								resolve(process.cwd(), "public" + url),
+								"utf8"
+							)
+					}) as Response
+			);
+			expect(section.content.match(/^\d+\. /gm)).toHaveLength(3);
+			expect(anchors.has(section.hash)).toBe(false);
+			anchors.add(section.hash);
+		}
 		const capstones = coreModules
 			.flatMap(module => module.curriculum)
 			.filter(item => item.title === "Master Project: Pre-Algebra A");

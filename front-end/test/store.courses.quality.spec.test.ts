@@ -8331,10 +8331,19 @@ describe("course text quality normalization", () => {
 		);
 		expect(text).not.toMatch(/\bshould\b/i);
 		expect(mediaLinks).toEqual([
-			"https://static.classes.jacobdanderson.net/paa_kickoff_0.png",
-			"https://static.classes.jacobdanderson.net/paa_kickoff_1.png",
 			"https://www.youtube.com/watch?v=8nKPC-WmLjU"
 		]);
+		expect(
+			course.modules
+				.filter(module => !module.internal)
+				.flatMap(module => [
+					...module.curriculum,
+					...module.supplementalProjects
+				])
+				.some(item =>
+					/Pending media|not currently available/i.test(item.content)
+				)
+		).toBe(false);
 	});
 
 	it("adds Pre-Algebra B reference archive from the math sequence", async () => {

@@ -2,6 +2,7 @@ import type { RawCourse } from "./types";
 import { courseAssetViewerUrl } from "@/modules/courseAssetPreview";
 import { configureMathCourseFlow } from "./mathCourseFlow";
 import { addPreAlgebraACases } from "./preAlgebraACases";
+import { addPreAlgebraASupplementalPractice } from "./preAlgebraASupplementalPractice";
 import { pendingStaticMediaNotice, staticMediaUrl } from "./staticMedia";
 
 const KICKOFF_INVENTORY = "paa_kickoff_0.png";
@@ -135,10 +136,8 @@ export const preAlgebraACourse: RawCourse = {
 							"The total absolute repair depth is 2×abs(-4)+3×abs(-2)=14 feet; a concrete volume would also require each hole's area.",
 							"Category fractions are ordered, combined, and rewritten as a mixed number."
 						]
-					}),
-					pendingStaticMediaNotice(KICKOFF_INVENTORY)
-				].join("\n\n"),
-				staticMediaUrl(KICKOFF_INVENTORY)
+					})
+				].join("\n\n")
 			),
 			lesson(
 				"Project: Growing the Gardening Business",
@@ -172,10 +171,8 @@ export const preAlgebraACourse: RawCourse = {
 							"Exponent and scientific-notation corrections explain whether the receipt value is reasonable."
 						]
 					}),
-					"**Pricing exercise:**\n\nUse these prices per item: succulent $8; flower bundle $18; wheelbarrow $120; gardening gloves $6; basic plant pot $12; multi-pot plant stand $45; decorative garden lights $20 per pair; small garden tool shed $240. The quantities in the reference details give first-week revenue.\n\nThe wheelbarrow costs $80 and the gloves cost $4 per pair. For this exercise, the 30% profit target means markup on cost: (selling price-cost)/cost >= 0.30. Profit margin instead divides by selling price and is a different percentage. Startup expenses are $1500+3×$400+$700; the $3000 investment is the starting budget, so a negative remaining balance represents a shortfall.\n\nFor the flower-bundle exponent calculation, each box contains 5^2 bundles and an order contains 3^2 boxes. For the receipt calculation, the amount is 0.000000000265×10^9 dollars and the missing term satisfies 2^(-4)×4^2+q=33.52.",
-					pendingStaticMediaNotice(KICKOFF_PRICING)
-				].join("\n\n"),
-				staticMediaUrl(KICKOFF_PRICING)
+					"**Pricing exercise:**\n\nUse these prices per item: succulent $8; flower bundle $18; wheelbarrow $120; gardening gloves $6; basic plant pot $12; multi-pot plant stand $45; decorative garden lights $20 per pair; small garden tool shed $240. The quantities in the reference details give first-week revenue.\n\nThe wheelbarrow costs $80 and the gloves cost $4 per pair. For this exercise, the 30% profit target means markup on cost: (selling price-cost)/cost >= 0.30. Profit margin instead divides by selling price and is a different percentage. Startup expenses are $1500+3×$400+$700; the $3000 investment is the starting budget, so a negative remaining balance represents a shortfall.\n\nFor the flower-bundle exponent calculation, each box contains 5^2 bundles and an order contains 3^2 boxes. For the receipt calculation, the amount is 0.000000000265×10^9 dollars and the missing term satisfies 2^(-4)×4^2+q=33.52."
+				].join("\n\n")
 			)
 		]),
 		module(
@@ -800,6 +797,7 @@ configureMathCourseFlow(preAlgebraACourse, {
 });
 
 addPreAlgebraACases(preAlgebraACourse);
+addPreAlgebraASupplementalPractice(preAlgebraACourse);
 
 const capstoneReference = preAlgebraACourse.modules
 	.flatMap(module => module.curriculum)
