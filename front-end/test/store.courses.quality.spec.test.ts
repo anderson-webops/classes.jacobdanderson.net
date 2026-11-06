@@ -17,6 +17,7 @@ import { earlyElementaryAMaterials } from "@/stores/courses/earlyElementaryAMate
 import { earlyElementaryBMaterials } from "@/stores/courses/earlyElementaryBMaterials";
 import { lateElementaryAMaterials } from "@/stores/courses/lateElementaryAMaterials";
 import { lateElementaryBMaterials } from "@/stores/courses/lateElementaryBMaterials";
+import { joyOfReadingGuidance } from "@/stores/courses/joyOfReadingGuidance";
 import {
 	pyGamesCoreResource,
 	pyGamesCoreSourceRevision
@@ -238,7 +239,8 @@ const authoredReadingCounts: Record<string, number> = {
 	"middle-school-c-grammar": 20,
 	"novel-writing": 14,
 	"introduction-to-public-speaking": 9,
-	"scratch-level-1-bootcamp": 4
+	"scratch-level-1-bootcamp": 4,
+	"early-elementary-a-reading": 8
 };
 
 const instructorActionPattern =
@@ -250,7 +252,9 @@ function hasAuthoredModuleReading(module: RawCourseModule) {
 			item.contentKind === "reading" &&
 			item.preserveInstructions &&
 			wordCount(item.content) >= 120 &&
-			/^## /m.test(item.content) &&
+			(/^## /m.test(item.content) ||
+				(/^\*\*Method\*\*/m.test(item.content) &&
+					/^\*\*Worked example\*\*/m.test(item.content))) &&
 			(/\b(?:worked|example|practice|original|model|scenario|input)\b/i.test(
 				item.content
 			) ||
@@ -306,6 +310,56 @@ function completeSourceActivity(
 		directive.trim().length > 0 &&
 		(evidence?.match(/^- \S.+/gm)?.length ?? 0) >= 1 &&
 		wordCount(evidence ?? "") >= 8
+	);
+}
+
+function completeJoyOfReadingPractice(
+	courseId: string,
+	module: RawCourseModule,
+	item: RawCourseModuleItem
+) {
+	if (
+		courseId !== "early-elementary-a-reading" ||
+		item.contentKind !== "assignment" ||
+		!item.preserveInstructions ||
+		!item.preserveAssignment ||
+		!hasAuthoredModuleReading(module)
+	)
+		return false;
+	const unit = joyOfReadingGuidance.find(
+		unit => unit.module === module.title
+	);
+	if (
+		!unit ||
+		!module.curriculum.some(
+			reading =>
+				reading.contentKind === "reading" &&
+				reading.content.includes(unit.method) &&
+				reading.content.includes(unit.worked)
+		)
+	)
+		return false;
+	const task = [unit.practice, unit.challenge].find(task =>
+		item.content.includes(task.prompt)
+	);
+	if (!task || wordCount(task.prompt) < 25) return false;
+	const href = item.content.match(/\[Project self-check\]\(([^)]+)\)/)?.[1];
+	if (!href) return false;
+	const asset = new URL(href, "https://example.invalid").searchParams.get(
+		"asset"
+	);
+	const prefix =
+		"/course-assets/early-elementary-a-reading/practice-checks-v1.md";
+	if (asset !== prefix + "#" + task.anchor) return false;
+	const section = fs
+		.readFileSync("public" + prefix, "utf8")
+		.split(/^## /m)
+		.find(
+			section =>
+				slugMarkdownHeading(section.split("\n")[0]) === task.anchor
+		);
+	return Boolean(
+		section && section.slice(section.indexOf("\n") + 1).trim().length > 15
 	);
 }
 
@@ -5743,7 +5797,7 @@ describe("course text quality normalization", () => {
 						)
 				)
 			);
-			expect(sources.size).toBe(8);
+			expect(sources.size).toBe(9);
 			const thinItems = (await loadedCatalogCourses()).flatMap(
 				({ course, entry }) =>
 					(course?.modules ?? [])
@@ -5764,6 +5818,11 @@ describe("course text quality normalization", () => {
 									item =>
 										!completeSourceActivity(
 											sources.get(entry.id),
+											module,
+											item
+										) &&
+										!completeJoyOfReadingPractice(
+											entry.id,
 											module,
 											item
 										) &&
@@ -5846,6 +5905,7 @@ describe("course text quality normalization", () => {
 								item.content
 							) &&
 							!reviewedJavaScriptProjectReadme(id, item) &&
+							!completeJoyOfReadingPractice(id, module, item) &&
 							!completeSpeakingPractice(id, module, item) &&
 							!completePhysicsPractice(id, module, item) &&
 							!completeElementaryPractice(id, module, item);
@@ -7214,6 +7274,58 @@ describe("course text quality normalization", () => {
 						).toBe(true);
 					}
 				}
+			} else if (courseId === "early-elementary-a-reading") {
+				const modules = course.modules.filter(
+					module => module.kind !== "appendix"
+				);
+				expect(modules).toHaveLength(8);
+				for (const module of modules) {
+					const activities = module.supplementalProjects.filter(
+						item =>
+							item.title.startsWith("Practice Map:") ||
+							item.title.startsWith("Extension Review:")
+					);
+					expect(activities).toHaveLength(2);
+					for (const item of activities) {
+						expect(
+							completeJoyOfReadingPractice(
+								courseId,
+								module,
+								item
+							),
+							item.title
+						).toBe(true);
+						const unit = joyOfReadingGuidance.find(
+							unit => unit.module === module.title
+						)!;
+						const task = [unit.practice, unit.challenge].find(
+							task => item.content.includes(task.prompt)
+						)!;
+						for (const content of [
+							item.content.replace(
+								task.prompt,
+								task.prompt.slice(0, 15)
+							),
+							item.content.replace(
+								task.anchor,
+								"missing-sample-response"
+							)
+						])
+							expect(
+								completeJoyOfReadingPractice(courseId, module, {
+									...item,
+									content
+								}),
+								item.title
+							).toBe(false);
+						expect(
+							completeJoyOfReadingPractice(courseId, module, {
+								...item,
+								preserveInstructions: false
+							})
+						).toBe(false);
+					}
+				}
 			} else if (courseId === "introduction-to-public-speaking") {
 				const modules = course.modules.filter(
 					module => !module.internal
@@ -7272,7 +7384,9 @@ describe("course text quality normalization", () => {
 		);
 		expect(allCourseText(earlyMath!)).toContain("**Method**");
 		expect(allCourseText(earlyMath!)).toContain("**Worked example**");
-		expect(corpus).toContain("reading or writing record with claim");
+		expect(allCourseText(earlyReading!)).toContain(
+			"An inference is an idea drawn from clues"
+		);
 		expect(corpus).toContain("problem-solving record with inputs");
 		for (const material of earlyElementaryAMaterials) {
 			for (const task of material.tasks) {
