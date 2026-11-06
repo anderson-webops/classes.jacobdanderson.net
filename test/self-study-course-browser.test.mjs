@@ -214,18 +214,31 @@ async function checkCards(page, module, expected, optional) {
 		);
 		if (item.requiredDirective) {
 			await page.waitForFunction(
-				({ id, required }) => {
+				({ id, required, textMode }) => {
 					const row = document.getElementById(id);
 					return row
-						?.querySelector(".assignment-content")
-						?.textContent
+						?.querySelector(".assignment-content")?.[textMode]
 						.replace(/\s+/g, " ")
 						.trim()
 						.includes(required);
 				},
 				{},
-				{ id: rows[index].id, required: item.requiredDirective }
-			);
+				{
+					id: rows[index].id,
+					required: item.requiredDirective,
+					textMode: item.directiveTextMode ?? "textContent"
+				}
+			).catch(async error => {
+				const actual = await page.$eval(
+					`#${rows[index].id} .assignment-content`,
+					(element, mode) => element[mode].replace(/\s+/g, " ").trim(),
+					item.directiveTextMode ?? "textContent"
+				);
+				throw new Error(
+					`${item.title}: complete assignment text did not match.\nExpected: ${item.requiredDirective}\nActual: ${actual}`,
+					{ cause: error }
+				);
+			});
 		}
 	}
 	return rows.map(row => row.id);

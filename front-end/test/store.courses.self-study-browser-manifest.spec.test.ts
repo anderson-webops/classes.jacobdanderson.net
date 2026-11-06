@@ -244,6 +244,17 @@ it.each(
 				expect(displayedPrompt, project.title).toBe(originalPrompt);
 		}
 		const card = (item: CourseModuleItem) => {
+			// These authored labels become separate headings in assignment cards.
+			// Keep every body word while matching the displayed heading punctuation.
+			const fullAssignment =
+				id === "pre-algebra-a"
+					? item.content
+							.replace(/^\*\*(Goal|Steps):\*\*/gm, "**$1**")
+							.replace(
+								/^\*\*Extension:\*\*/gm,
+								"**Optional · Extension**"
+							)
+					: item.content;
 			const directive = item.content.match(
 				/^(?:\*\*(?:Project )?goal:\*\*\s*)?([\s\S]+?)\s*\*\*Completion evidence:\*\*/i
 			)?.[1];
@@ -257,7 +268,7 @@ it.each(
 							"physics-level-2",
 							"pre-algebra-a"
 						].includes(id)
-							? item.content
+							? fullAssignment
 							: "")
 				)
 			);
@@ -265,6 +276,8 @@ it.each(
 				id: item.id,
 				title: item.title,
 				learningPath: item.learningPath,
+				directiveTextMode:
+					id === "pre-algebra-a" ? "innerText" : "textContent",
 				requiredDirective: container
 					.textContent!.replace(/\s+/g, " ")
 					.trim()
