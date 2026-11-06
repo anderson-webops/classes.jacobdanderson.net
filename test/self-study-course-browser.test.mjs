@@ -605,6 +605,8 @@ test(
 									index === 0
 									|| (["intro-to-physics", "physics-level-2"].includes(id) && /^(?:Standards Map|Course Roadmap)$/.test(module.title))
 									|| (id === "physics-level-2" && /^(?:PHY12|PHY16|PHY17|PHY23) /.test(module.title))
+									|| (id === "algebra-1a" && /^AA(?:1|11) /.test(module.title))
+									|| (id === "algebra-1b" && /^AB(?:1|19) /.test(module.title))
 									|| module.readings.some(
 										item => item.images.length
 									)
@@ -654,6 +656,8 @@ test(
 							if (id === "pre-algebra-a") assert.equal(resourceViews.length, 23);
 							if (id === "geometry-a") assert.equal(resourceViews.length, 17);
 							if (id === "geometry-b") assert.equal(resourceViews.length, 13);
+							if (id === "algebra-1a") assert.equal(resourceViews.length, 7);
+							if (id === "algebra-1b") assert.equal(resourceViews.length, 3);
 							if (id === "algebra-2a") assert.equal(resourceViews.length, 4);
 							if (id === "algebra-2b") assert.equal(resourceViews.length, 3);
 							assert.deepEqual(pageErrors, []);

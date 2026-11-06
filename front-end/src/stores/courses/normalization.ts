@@ -1,4 +1,5 @@
 import type { RawCourse, RawCourseModule, RawCourseModuleItem } from "./types";
+import { applyAlgebraErrorAnalysisCases } from "./algebraErrorAnalysisCases";
 import { applyCourseImplementationArtifacts } from "./course-implementation-artifacts";
 import { applyEntrepreneurshipReadings } from "./entrepreneurshipReadings";
 import { applyGrammarMechanicsReadings } from "./grammarMechanicsReadings";
@@ -9828,6 +9829,7 @@ export function normalizeRawCourse(id: string, rawCourse: RawCourse) {
 		applyCourseLearningPaths(course);
 	}
 	restoreScratchProjectInstructions(course, preservedScratchInstructions);
+	applyAlgebraErrorAnalysisCases(id, course);
 	applyScratchConceptReadings(course, id, rawCourse);
 	applyPyGamesCourseWorkflows(course, id);
 	applyRustCargoCourseWorkflows(course, id);

@@ -21,6 +21,7 @@ import { useAppStore } from "@/stores/app";
 import { useCoursesStore } from "@/stores/courses";
 import { algebra1ACourse } from "@/stores/courses/algebra-1a";
 import { algebra1BCourse } from "@/stores/courses/algebra-1b";
+import { algebraErrorAnalysisCases } from "@/stores/courses/algebraErrorAnalysisCases";
 import { algebra2ACourse } from "@/stores/courses/algebra-2a";
 import { algebra2BCourse } from "@/stores/courses/algebra-2b";
 import { introToPhysicsCourse } from "@/stores/courses/intro-to-physics";
@@ -219,6 +220,21 @@ it.each(
 				saveEdit: "Save"
 			});
 		const course = (await useCoursesStore().loadCourseById(id))!;
+		for (const entry of algebraErrorAnalysisCases.filter(
+			entry => entry.course === id
+		)) {
+			const module = course.modules.find(
+				module => module.title === entry.module
+			)!;
+			const task = module.supplementalProjects.find(item =>
+				item.title.includes("Modeling or Error Analysis")
+			)!;
+			expect(task.contentKind, entry.heading).toBe("assignment");
+			expect(task.content, entry.heading).toContain(entry.given);
+			expect(task.content, entry.heading).toContain(entry.flawed);
+			for (const question of entry.questions)
+				expect(task.content, entry.heading).toContain(question);
+		}
 		const identities = course.modules.flatMap(module =>
 			(
 				[
