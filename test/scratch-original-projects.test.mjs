@@ -1,3 +1,7 @@
+import {
+	verifyAndRestoreWheel,
+	runWheelSource
+} from "./scratch-wheel-source-checks.mjs";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
@@ -351,6 +355,18 @@ test("all original Scratch archives retain upstream bytes and only declared corr
 			expected.add("SOURCE/program-correction.json");
 			programCorrections.push(original.id);
 		}
+		if (original.id === "342643080") {
+			verifyAndRestoreWheel(loaded, source);
+			const correction = JSON.parse(
+				strFromU8(files["SOURCE/program-correction.json"])
+			);
+			assert.equal(correction.id, original.id);
+			assert.equal(correction.sourceSHA256, original.sourceSHA256);
+			assert.equal(correction.addedBlocks, 0);
+			assert.ok(attribution.includes("Final-guess victory"));
+			expected.add("SOURCE/program-correction.json");
+			programCorrections.push(original.id);
+		}
 		for (const [targetIndex, target] of source.targets.entries()) {
 			assert.deepEqual(
 				loaded.targets[targetIndex].blocks,
@@ -432,6 +448,7 @@ test("all original Scratch archives retain upstream bytes and only declared corr
 		"299311602",
 		"332459692",
 		"338501835",
+		"342643080",
 		"357452924"
 	]);
 	if (process.env.SCRATCH_ORIGINAL_BROWSER_PROOF_DIR) {
@@ -443,7 +460,7 @@ test("all original Scratch archives retain upstream bytes and only declared corr
 				process.env.SCRATCH_ORIGINAL_BROWSER_PROOF_DIR,
 				"archive-identity.json"
 			),
-			`${JSON.stringify({ projects: 164, assets: 505, originalSourceBytesRetained: true, unchangedPrograms: 160, declaredProgramCorrections: programCorrections, onlyDeclaredAttributionSvgAndProgramChanges: true, compatibilityAssets: correctedAssets.size, compatibilityProjects: correctedProjects.size, records }, null, 2)}\n`
+			`${JSON.stringify({ projects: 164, assets: 505, originalSourceBytesRetained: true, unchangedPrograms: 159, declaredProgramCorrections: programCorrections, onlyDeclaredAttributionSvgAndProgramChanges: true, compatibilityAssets: correctedAssets.size, compatibilityProjects: correctedProjects.size, records }, null, 2)}\n`
 		);
 	}
 });
@@ -715,4 +732,68 @@ test("Dotty generated reference stamps ten points and completes the absolute-val
 		assert.deepEqual([actual.x, actual.y], [180, 180]);
 		assert.equal(actual.penDown, false);
 	}
+});
+
+test("Wheel of Fortune recognizes every winning position including the last allowed guess", async () => {
+	const source = JSON.parse(
+		await readFile(
+			new URL(
+				"../front-end/scripts/scratch/originals/projects/342643080.json",
+				import.meta.url
+			),
+			"utf8"
+		)
+	);
+	const { archive } = await createOriginalProject("342643080");
+	const corrected = JSON.parse(strFromU8(unzipSync(archive)["project.json"]));
+	verifyAndRestoreWheel(structuredClone(corrected), source);
+	const permutations = items =>
+		items.length
+			? items.flatMap((item, i) =>
+					permutations(items.filter((_, j) => i !== j)).map(rest => [
+						item,
+						...rest
+					])
+				)
+			: [[]];
+	let wins = 0,
+		losses = 0,
+		upstreamLastGuessFailures = 0;
+	for (const [index, word] of ["fun", "new", "happy"].entries()) {
+		const letters = [...new Set(word)];
+		const budget = letters.length + 5;
+		for (const order of permutations(letters)) {
+			for (let wrong = 0; wrong <= 5; wrong++) {
+				const answers = [...Array(wrong).fill("z"), ...order];
+				const actual = runWheelSource(corrected, index + 1, answers);
+				assert.equal(actual.questions, answers.length);
+				assert.equal(
+					actual.said.at(-1),
+					"Congratulations, you've guessed it! the word was: " + word
+				);
+				assert.deepEqual(actual.guessedLetters, order);
+				assert.deepEqual(actual.correctLetters, letters);
+				if (wrong === 5) {
+					const upstream = runWheelSource(source, index + 1, answers);
+					assert.match(upstream.said.at(-1), /all out of guesses/);
+					upstreamLastGuessFailures++;
+				}
+				wins++;
+			}
+		}
+		for (const answers of [
+			Array(budget).fill("z"),
+			Array(budget).fill(""),
+			[letters[0], ...Array(budget - 1).fill(letters[0])]
+		]) {
+			const actual = runWheelSource(corrected, index + 1, answers);
+			assert.equal(actual.questions, budget);
+			assert.match(actual.said.at(-1), /all out of guesses/);
+			assert.ok(actual.guessedLetters.length <= 1);
+			losses++;
+		}
+	}
+	assert.equal(wins, 216);
+	assert.equal(losses, 9);
+	assert.equal(upstreamLastGuessFailures, 36);
 });

@@ -1,7 +1,10 @@
 import { createHash } from "node:crypto";
 import sourceFixture from "./fixtures/juni-scratch-project-fidelity.json";
 import conceptReadings from "./fixtures/scratch-concept-readings.json";
-import { isLessonLearningItem } from "@/modules/courseLessonPresentation";
+import {
+	isLessonLearningItem,
+	lessonContentSections
+} from "@/modules/courseLessonPresentation";
 import type {
 	CourseDefinition,
 	CourseModule,
@@ -301,13 +304,39 @@ describe("original Juni Scratch project instructions", () => {
 		);
 	}
 
-	it("limits corrections to sixteen uniquely identified published starters", () => {
-		expect(juniScratchInstructionCorrections).toHaveLength(16);
+	it("separates the three List Practice extensions from its six assigned tasks", () => {
+		const correction = findJuniScratchInstructionCorrection(
+			"scratch-level-2",
+			"GM7 Project 2: List Practice"
+		)!;
+		const sections = lessonContentSections(correction.content);
+		const optional = sections.filter(
+			section => section.kind === "optional"
+		);
+		expect(optional).toHaveLength(1);
+		for (const text of [
+			"every other",
+			"multiplied by 10",
+			"turn that many degrees"
+		]) {
+			expect(optional[0]!.content).toContain(text);
+			expect(
+				sections
+					.filter(section => section.kind === "assignment")
+					.map(section => section.content)
+					.join("\n")
+			).not.toContain(text);
+		}
+		expect(sections[0]!.content).toContain("6. When the 4 key");
+	});
+
+	it("limits corrections to nineteen uniquely identified published starters", () => {
+		expect(juniScratchInstructionCorrections).toHaveLength(19);
 		expect(
 			new Set(
 				juniScratchInstructionCorrections.map(item => item.projectId)
 			).size
-		).toBe(16);
+		).toBe(19);
 		for (const correction of juniScratchInstructionCorrections) {
 			expect(correction.publishedInstructionsSha256).toMatch(
 				/^[a-f0-9]{64}$/

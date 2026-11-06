@@ -164,6 +164,54 @@ const groups = [
 				excluded: ["other six"]
 			}
 		]
+	},
+	{
+		course: "scratch-level-2",
+		module: "scratch-level-2-gm7-lists",
+		tab: 2,
+		projects: [
+			{
+				id: "315090026",
+				reference: "315051160",
+				required: ["spacebar", "list backwards", "Optional"],
+				optional: [
+					"every other number",
+					"multiplied by 10",
+					"turn that many degrees"
+				],
+				excluded: []
+			}
+		]
+	},
+	{
+		course: "scratch-level-2",
+		module: "scratch-level-2-gm7-lists",
+		tab: 2,
+		projects: [
+			{
+				id: "340691786",
+				reference: "342643080",
+				required: [
+					"unique letters",
+					"and update",
+					"run out of guesses"
+				],
+				excluded: ["and and"]
+			}
+		]
+	},
+	{
+		course: "scratch-level-2",
+		module: "scratch-level-2-gm8-functions",
+		tab: 2,
+		projects: [
+			{
+				id: "339918479",
+				reference: "339602908",
+				required: ["Call each of these functions", "1, 2, 3, or 4 key"],
+				excluded: []
+			}
+		]
 	}
 ];
 
@@ -319,7 +367,7 @@ export async function checkScratchPublishedTasks(
 			}
 		}
 	}
-	assert.equal(record.views.length, 40);
+	assert.equal(record.views.length, 52);
 	record.complete = true;
 	await retain();
 }

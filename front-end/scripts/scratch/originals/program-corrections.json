@@ -741,5 +741,123 @@
 				}
 			}
 		]
+	},
+	{
+		"id": "342643080",
+		"sourceSHA256": "4245543d92e23fefcc2441a6db3b154955339765d553df2ae92e71da65be947d",
+		"target": "Devin",
+		"summary": "Final-guess victory: check for all unique letters after each processed guess, including the last allowed guess.",
+		"displaySummary": "Reference correction: completing the word on the last guess wins.",
+		"addedBlocks": 0,
+		"changes": [
+			{
+				"blockId": "D!*6[C4XMco`ElhJHiFe",
+				"before": {
+					"opcode": "sensing_askandwait",
+					"next": "A--(Z;=#_#@*7YKRd|n:",
+					"parent": "_Q^j6H-:{Dhd.U1mEM+E",
+					"inputs": {
+						"QUESTION": [1, [10, "Guess a letter: "]]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				},
+				"after": {
+					"opcode": "sensing_askandwait",
+					"next": "A--(Z;=#_#@*7YKRd|n:",
+					"parent": ",G:EgEcp!wC])`Q~T5_a",
+					"inputs": {
+						"QUESTION": [1, [10, "Guess a letter: "]]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				}
+			},
+			{
+				"blockId": ",G:EgEcp!wC])`Q~T5_a",
+				"before": {
+					"opcode": "control_repeat",
+					"next": ";eKZnMXie/kYm6/;k2]?",
+					"parent": "UA4;udq_Tv]^;BS1H-9x",
+					"inputs": {
+						"TIMES": [3, "Eiu+T]rRiXkjm|kf?@Kx", [6, "10"]],
+						"SUBSTACK": [2, "_Q^j6H-:{Dhd.U1mEM+E"]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				},
+				"after": {
+					"opcode": "control_repeat",
+					"next": ";eKZnMXie/kYm6/;k2]?",
+					"parent": "UA4;udq_Tv]^;BS1H-9x",
+					"inputs": {
+						"TIMES": [3, "Eiu+T]rRiXkjm|kf?@Kx", [6, "10"]],
+						"SUBSTACK": [2, "D!*6[C4XMco`ElhJHiFe"]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				}
+			},
+			{
+				"blockId": "A--(Z;=#_#@*7YKRd|n:",
+				"before": {
+					"opcode": "control_if_else",
+					"next": null,
+					"parent": "D!*6[C4XMco`ElhJHiFe",
+					"inputs": {
+						"CONDITION": [2, "[o--1yI3e|I|@C1JaZQt"],
+						"SUBSTACK": [2, "#zfz/[xyK8.VxKrQ`T-G"],
+						"SUBSTACK2": [2, "kBKKAqG/S!5!yqat(=jz"]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				},
+				"after": {
+					"opcode": "control_if_else",
+					"next": "_Q^j6H-:{Dhd.U1mEM+E",
+					"parent": "D!*6[C4XMco`ElhJHiFe",
+					"inputs": {
+						"CONDITION": [2, "[o--1yI3e|I|@C1JaZQt"],
+						"SUBSTACK": [2, "#zfz/[xyK8.VxKrQ`T-G"],
+						"SUBSTACK2": [2, "kBKKAqG/S!5!yqat(=jz"]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				}
+			},
+			{
+				"blockId": "_Q^j6H-:{Dhd.U1mEM+E",
+				"before": {
+					"opcode": "control_if",
+					"next": "D!*6[C4XMco`ElhJHiFe",
+					"parent": ",G:EgEcp!wC])`Q~T5_a",
+					"inputs": {
+						"CONDITION": [2, "T41;32V4GMt|t!QPVm)o"],
+						"SUBSTACK": [2, "+gdrc{H7iBbB023is?6~"]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				},
+				"after": {
+					"opcode": "control_if",
+					"next": null,
+					"parent": "A--(Z;=#_#@*7YKRd|n:",
+					"inputs": {
+						"CONDITION": [2, "T41;32V4GMt|t!QPVm)o"],
+						"SUBSTACK": [2, "+gdrc{H7iBbB023is?6~"]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				}
+			}
+		]
 	}
 ]
