@@ -1,6 +1,6 @@
 name: Course preflight
 
-run-name: ${{ inputs.course == 'scratch-tasks' && 'Published Scratch project tasks' || inputs.course == 'course-audit' && 'Course audit follow-ups' || inputs.course == 'scratch-readings' && 'Scratch and self-study readings' || inputs.course == 'scratch-originals' && 'Original Scratch imports' || inputs.course == 'bootcamp' && 'Scratch Bootcamp pages' || inputs.course == 'self-study' && 'Self-study course pages' || inputs.course == 'networking' && 'Swift Networking source evidence' || inputs.course == 'ai-setup' && 'AI setup reading' || 'PyGames core preflight' }}
+run-name: ${{ inputs.course == 'tracker-evidence' && 'Retained Tracker failure evidence' || inputs.course == 'scratch-tasks' && 'Published Scratch project tasks' || inputs.course == 'course-audit' && 'Course audit follow-ups' || inputs.course == 'scratch-readings' && 'Scratch and self-study readings' || inputs.course == 'scratch-originals' && 'Original Scratch imports' || inputs.course == 'bootcamp' && 'Scratch Bootcamp pages' || inputs.course == 'self-study' && 'Self-study course pages' || inputs.course == 'networking' && 'Swift Networking source evidence' || inputs.course == 'ai-setup' && 'AI setup reading' || 'PyGames core preflight' }}
 
 on:
   workflow_dispatch:
@@ -8,7 +8,7 @@ on:
       course:
         description: Course verification to run
         type: choice
-        options: [pygames, networking, ai-setup, self-study, bootcamp, scratch-originals, scratch-readings, course-audit, scratch-tasks]
+        options: [pygames, networking, ai-setup, self-study, bootcamp, scratch-originals, scratch-readings, course-audit, scratch-tasks, tracker-evidence]
         default: pygames
       browser_run_id:
         description: Networking browser export workflow run
@@ -17,14 +17,57 @@ on:
         description: Networking browser export artifact
         type: string
 
+      native_run_id:
+        description: Retained native result producer run
+        type: string
+      native_artifact_id:
+        description: Retained native result artifact
+        type: string
+      native_artifact_sha256:
+        description: Independently verified original ZIP SHA256
+        type: string
+
 permissions:
   contents: read
 
 concurrency:
-  group: pygames-core-preflight-${{ github.ref }}
+  group: pygames-core-preflight-${{ github.ref }}-${{ inputs.course == 'tracker-evidence' && 'evidence' || 'validation' }}
   cancel-in-progress: false
 
 jobs:
+
+  tracker-evidence:
+    if: inputs.course == 'tracker-evidence'
+    runs-on: macos-26
+    timeout-minutes: 12
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Inspect the unchanged original native failure
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NATIVE_RUN_ID: ${{ inputs.native_run_id }}
+          NATIVE_ARTIFACT_ID: ${{ inputs.native_artifact_id }}
+          NATIVE_SHA256: ${{ inputs.native_artifact_sha256 }}
+        run: >-
+          python3 scripts/inspect-native-ui-evidence.py
+          --run-id "$NATIVE_RUN_ID"
+          --artifact-id "$NATIVE_ARTIFACT_ID"
+          --sha256 "$NATIVE_SHA256"
+          --output output/native-evidence
+      - name: Retain original failure analysis
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: native-tracker-failure-analysis
+          path: output/native-evidence/
+          if-no-files-found: error
+          retention-days: 14
+
   preflight:
     if: inputs.course == 'pygames'
     runs-on: ubuntu-24.04
