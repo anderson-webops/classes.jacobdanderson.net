@@ -316,9 +316,7 @@ Optional: ask for coordinates so the user can choose points, or draw initials.`
 Optional:
 - Say every other number in the list.
 - Say every number in the list, multiplied by 10.
-- Say each number and then turn that many degrees to the right.
-Finally, share the project!
-View CS Training's Code`
+- Say each number and then turn that many degrees to the right.`
 	},
 	{
 		courseId: "scratch-level-2",
