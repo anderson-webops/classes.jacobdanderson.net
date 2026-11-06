@@ -112,6 +112,30 @@ describe("Early Elementary A math learner flow", () => {
 		).toContain("not a purchase endorsement");
 	});
 
+	it("assigns both complete escape cases outside the concept reading", async () => {
+		const course = await loadRawCourse("early-elementary-a-math");
+		const module = course!.modules.find(candidate =>
+			candidate.title.startsWith("EEA4 ")
+		)!;
+		expect(module.curriculum.map(item => item.title)).toEqual([
+			"Escape the Game Core Concepts",
+			"Escape the Game Character Budget",
+			"Liang Escape Route Grid"
+		]);
+		expect(module.curriculum[0].contentKind).toBe("reading");
+		for (const item of module.curriculum.slice(1)) {
+			expect(item.contentKind).toBe("assignment");
+			expect(item.preserveInstructions).toBe(true);
+			expect(item.content).toContain("Project self-check");
+		}
+		expect(module.curriculum[1].content).toContain(
+			"| Suit | Rocket | 45 |"
+		);
+		expect(module.curriculum[2].content).toContain(
+			"five squares across and 25 squares up"
+		);
+	});
+
 	it("keeps unavailable source-image bookkeeping out of the learner flow", async () => {
 		const course = await loadRawCourse("early-elementary-a-math");
 		expect(course).not.toBeNull();

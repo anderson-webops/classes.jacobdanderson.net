@@ -38,6 +38,20 @@ const addedIdentities: Record<
 	string,
 	{ moduleId: string; id: string; section: string }[]
 > = {
+	"early-elementary-a-math": [
+		{
+			moduleId:
+				"early-elementary-a-math-eea4-module-project-escape-the-game",
+			id: "early-elementary-a-math-eea4-module-project-escape-the-game-curriculum-escape-the-game-character-budget",
+			section: "core"
+		},
+		{
+			moduleId:
+				"early-elementary-a-math-eea4-module-project-escape-the-game",
+			id: "early-elementary-a-math-eea4-module-project-escape-the-game-curriculum-liang-escape-route-grid",
+			section: "core"
+		}
+	],
 	"entrepreneurship-101": restoredEntrepreneurshipProjects,
 	"middle-school-c-grammar": restoredGrammarProjects,
 	"middle-school-a-literature": restoredLiteratureProjects,
