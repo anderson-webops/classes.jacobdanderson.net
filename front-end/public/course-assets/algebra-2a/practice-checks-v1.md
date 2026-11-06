@@ -51,3 +51,25 @@
 7. Continuity requires 9+2c=6c+1, giving c=2. Both expressions then have boundary value 13.
 
 8. Factoring and multiplying by the reciprocal gives (a+2)/(2a+1). Retain a!=-1/2,1/2,2: the original denominators exclude the first two values and the divisor is zero at 2, even though the final simplified expression has a finite value there.
+
+## Capstone Domain Stress Test
+
+Factoring gives f(x)=(x-1)(x+1)/(x-1)=x+1 only where x!=1. The original denominator still excludes 1.
+
+**Initial interval [-2,2]**
+
+| Input | f(x) | g(x) |
+| ---: | ---: | ---: |
+| 0 | 1 | 1 |
+| 1 | Undefined | 2 |
+| 2 | 3 | 3 |
+
+**Changed interval [1,3]**
+
+| Input | f(x) | g(x) |
+| ---: | ---: | ---: |
+| 1 | Undefined | 2 |
+| 2 | 3 | 3 |
+| 3 | 4 | 4 |
+
+Initially f has domain [-2,1) union (1,2], while g has domain [-2,2]. After the interval change, f has domain (1,3] and g has domain [1,3]. Both agree wherever f is defined, but g also supplies a value at the hole. Matching algebraic formulas after cancellation do not restore an excluded input. A capstone comparison should likewise retain each original restriction and check its new boundary explicitly.

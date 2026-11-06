@@ -77,3 +77,10 @@
 3. Base area is 24 and base perimeter is 24. Volume is 24×5=120; surface area is 2×24+24×5=168.
 4. Slant height is sqrt(3^2+4^2)=5. Volume is 64×3/3=64; surface area is 64+(32×5)/2=144.
 5. Slant height is 13. Volume is pi×25×12/3=100pi, and surface area is 25pi+65pi=90pi. Doubling dimensions multiplies surface area by 4 and volume by 8.
+
+## Design Changed-Case Review
+
+1. Adjacent horizontal and vertical sides are perpendicular; opposite sides are parallel and equal. The diagonal is sqrt(8^2+6^2)=10 units, perimeter is 28 units, and area is 48 square units. The figure is a rectangle and parallelogram. Unequal adjacent sides exclude a rhombus, square and regular polygon, despite all four angles being 90 degrees.
+2. Circumference is 4pi length units and area is 4pi square units. The quarter-circle arc is pi length units and the sector is pi square units. Equal coefficients do not make these different quantities interchangeable.
+3. Rotation maps C=(8,6) to (-6,8) and E=(4,3) to (-3,4). Dilation then gives C'=(-9,12) and E'=(-9/2,6), with radius 3. Perimeter becomes 28×3/2=42 units; area becomes 48×(3/2)^2=108 square units. The rotation preserves orientation and measurements; dilation scales lengths by 3/2 and areas by 9/4.
+4. Initially, volume is pi×2^2×6=24pi cubic units and total area is 2pi×2^2+2pi×2×6=32pi square units. Uniform scaling gives radius 3 and height 9: volume 81pi and total area 72pi, with factors 27/8 and 9/4. Changing only the radius to 3 with height still 6 gives volume 54pi and total area 54pi. That volume factor is 9/4, since height did not scale; the all-dimensions cubic factor does not apply.

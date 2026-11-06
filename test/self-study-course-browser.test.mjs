@@ -12,6 +12,8 @@ import { createServer, preview } from "vite";
 
 const root = fileURLToPath(new URL("../front-end/", import.meta.url));
 const courseIds = [
+	"algebra-1a",
+	"algebra-1b",
 	"entrepreneurship-101",
 	"middle-school-a-literature",
 	"middle-school-b-writing",
@@ -25,9 +27,10 @@ const courseIds = [
 	"intro-to-physics",
 	"physics-level-2",
 	"pre-algebra-a",
-	"geometry-a"
+	"geometry-a",
+	"geometry-b"
 ];
-const readingCounts = [10, 13, 14, 16, 20, 14, 9, 4, 27, 22, 37, 38, 11, 6];
+const readingCounts = [15, 31, 10, 13, 14, 16, 20, 14, 9, 4, 27, 22, 37, 38, 11, 6, 11];
 assert.equal(readingCounts.length, courseIds.length);
 const requestedCourses = process.env.SELF_STUDY_BROWSER_COURSES;
 const sourceMode = process.env.SELF_STUDY_BROWSER_SOURCE_MODE ?? "build";
@@ -229,7 +232,7 @@ async function checkCards(page, module, expected, optional, resourceViews, profi
 					required: item.requiredDirective,
 					textMode: item.directiveTextMode ?? "textContent"
 				}
-			).catch(async error => {
+			).catch(async (error) => {
 				const actual = await page.$eval(
 					`#${rows[index].id} .assignment-content`,
 					(element, mode) => element[mode].replace(/\s+/g, " ").trim(),
@@ -244,7 +247,9 @@ async function checkCards(page, module, expected, optional, resourceViews, profi
 		for (const check of item.selfChecks ?? []) {
 			const selector = `#${rows[index].id} .assignment-content a[href=${JSON.stringify(check.href)}]`;
 			assert.equal(await page.$eval(selector, element => element.textContent.trim()), check.label);
-			await page.$eval(selector, element => { element.target = "_self"; });
+			await page.$eval(selector, (element) => {
+				element.target = "_self";
+			});
 			await page.locator(selector).click();
 			await page.waitForSelector(".course-resource-card .item-content-markdown");
 			assert.equal(new URL(page.url()).searchParams.get("asset"), check.asset);
@@ -252,7 +257,28 @@ async function checkCards(page, module, expected, optional, resourceViews, profi
 			assert.equal(await page.$eval(".course-resource-page h1", element => element.textContent.trim()), check.heading);
 			await page.waitForFunction(text => document.querySelector(".course-resource-card .item-content-markdown")?.textContent.replace(/\s+/g, " ").trim() === text, {}, check.expectedText);
 			assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true, `${check.heading}: no viewer overflow`);
-			resourceViews.push({ item: item.id, asset: check.asset, fullTextSHA256: digest(check.expectedText) });
+			const titleLayout = await page.$eval(".course-resource-page h1", element => {
+				const bounds = element.getBoundingClientRect();
+				const range = document.createRange();
+				range.selectNodeContents(element);
+				const textBounds = range.getBoundingClientRect();
+				return {
+					withinViewport: bounds.left >= 0 && bounds.right <= innerWidth,
+					textFits: textBounds.left >= bounds.left - 1 && textBounds.right <= bounds.right + 1
+				};
+			});
+			assert.ok(titleLayout.withinViewport && titleLayout.textFits, `${check.heading}: complete viewer title fits`);
+			let comparisonTables;
+			if (/#capstone-(?:domain|growth)-stress-test$/.test(check.asset)) {
+				comparisonTables = await page.$$eval(".course-resource-card .item-content-markdown table", tables => tables.map((table) => {
+					const available = table.closest(".item-content-markdown").getBoundingClientRect();
+					const bounds = table.getBoundingClientRect();
+					return { columns: table.rows[0].cells.length, fits: bounds.left >= available.left - 1 && bounds.right <= available.right + 1, width: bounds.width, availableWidth: available.width };
+				}));
+				assert.equal(comparisonTables.length, 2, `${check.heading}: both original and changed cases`);
+				assert.ok(comparisonTables.every(table => table.columns === 3 && table.fits), `${check.heading}: all compared values fit the viewer`);
+			}
+			resourceViews.push({ item: item.id, asset: check.asset, fullTextSHA256: digest(check.expectedText), titleLayout, ...(comparisonTables ? { comparisonTables } : {}) });
 			if (check.label === "Project self-check" || check.asset.endsWith("#optional-percent-changes")) {
 				await page.screenshot({ path: join(process.env.SELF_STUDY_BROWSER_PROOF_DIR ?? "output/self-study-browser", `${profileName}-${item.id}-self-check.png`), fullPage: true });
 			}
@@ -589,7 +615,9 @@ test(
 								if (
 									index === 0
 									|| (["intro-to-physics", "physics-level-2"].includes(id) && /^(?:Standards Map|Course Roadmap)$/.test(module.title))
-                                    || (id === "physics-level-2" && /^(?:PHY12|PHY16|PHY17|PHY23) /.test(module.title))
+									|| (id === "physics-level-2" && /^(?:PHY12|PHY16|PHY17|PHY23) /.test(module.title))
+									|| (id === "algebra-1a" && /^AA(?:1|11) /.test(module.title))
+									|| (id === "algebra-1b" && /^AB(?:1|19) /.test(module.title))
 									|| module.readings.some(
 										item => item.images.length
 									)
@@ -638,6 +666,11 @@ test(
 							assert.equal(writes, 0);
 							if (id === "pre-algebra-a") assert.equal(resourceViews.length, 23);
 							if (id === "geometry-a") assert.equal(resourceViews.length, 17);
+							if (id === "geometry-b") assert.equal(resourceViews.length, 13);
+							if (id === "algebra-1a") assert.equal(resourceViews.length, 7);
+							if (id === "algebra-1b") assert.equal(resourceViews.length, 3);
+							if (id === "algebra-2a") assert.equal(resourceViews.length, 4);
+							if (id === "algebra-2b") assert.equal(resourceViews.length, 3);
 							assert.deepEqual(pageErrors, []);
 							profiles.push({
 								id,

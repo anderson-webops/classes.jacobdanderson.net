@@ -71,8 +71,9 @@ it.each([
 				saveEdit: "Save"
 			});
 		const course = (await useCoursesStore().loadCourseById(courseId))!;
-		if (track === "a") {
-			for (const authored of geometryACourse.modules
+		{
+			const authoredCourse = track === "a" ? geometryACourse : geometryBCourse;
+			for (const authored of authoredCourse.modules
 				.flatMap(module => [
 					...module.curriculum,
 					...module.supplementalProjects
@@ -194,7 +195,7 @@ it.each([
 			anchors.add(section.hash);
 		}
 		expect(anchors.size).toBe(track === "a" ? 16 : 12);
-		if (track === "a") {
+		{
 			const variation = coreModules
 				.flatMap(module => module.supplementalProjects)
 				.find(item =>

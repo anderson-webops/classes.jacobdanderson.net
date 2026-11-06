@@ -1,4 +1,5 @@
 import type { RawCourse } from "./types";
+import { courseAssetViewerUrl } from "@/modules/courseAssetPreview";
 import { addGeometryCases } from "./geometryCases";
 import { configureMathCourseFlow } from "./mathCourseFlow";
 import {
@@ -8,7 +9,13 @@ import {
 } from "./staticMedia";
 
 function lesson(title: string, content: string) {
-	return { title, content };
+	return {
+		title,
+		content,
+		...(/^(?:Project|Capstone):/.test(title)
+			? { preserveInstructions: true }
+			: {})
+	};
 }
 
 function module(
@@ -582,7 +589,7 @@ export const geometryBCourse: RawCourse = {
 							"A complete defense names assumptions, formulas, theorem choices, calculations, units, and limitations."
 						],
 						practice:
-							"Design a small park, game board, package, sculpture, room layout, or logo system that uses at least three Geometry B topic families.",
+							"Design a small park, game board, package, sculpture, room layout, or logo system that uses quadrilaterals or polygons, circles, transformations, and solids.",
 						check: "The final explanation connects each calculation or theorem to a design decision rather than listing disconnected answers."
 					})
 				)
@@ -601,7 +608,7 @@ export const geometryBCourse: RawCourse = {
 						outcome:
 							"The capstone demonstrates connected geometric reasoning across the full Geometry B sequence.",
 						checkpoints: [
-							"At least three Geometry B topic families are used meaningfully.",
+							"All four required topic families are used: quadrilaterals or polygons, circles, transformations, and solids.",
 							"Every formula or theorem is named before it is used.",
 							"Limitations distinguish model simplifications from calculation errors."
 						],
@@ -638,7 +645,6 @@ export const geometryBCourse: RawCourse = {
 				lesson(
 					"Geometry B Reference Map",
 					[
-						"This reference map summarizes Geometry B topic coverage and static media slots without embedding diagram files that are still pending in the class asset library.",
 						[
 							"**Course concept map**",
 							"- Quadrilateral foundations: convex and concave quadrilaterals, trapezoids, kites, parallelograms, rectangles, rhombi, squares, angle sums, medians, diagonals, and classification from evidence.",
@@ -653,8 +659,7 @@ export const geometryBCourse: RawCourse = {
 							"- Pyramid volume visualization: http://pythagoreanmath.com/wp-content/uploads/2014/08/deriving-the-volume-of-a-pyramid.png",
 							"- Sphere volume comparison visual: https://ds055uzetaobb.cloudfront.net/brioche/uploads/Fv9rxkzWWN-90675.svg?width=350",
 							"- Sphere surface-area comparison visual: https://www.mathsisfun.com/geometry/images/sphere-cylinder-area2.svg"
-						].join("\n"),
-						"**Static-media note:** Legacy static diagrams are not embedded directly while those files are pending. The appendix lists stable static media URLs by original filename so diagrams can be added later without changing course references."
+						].join("\n")
 					].join("\n\n")
 				)
 			],
@@ -830,3 +835,31 @@ configureMathCourseFlow(geometryBCourse, {
 });
 
 addGeometryCases(geometryBCourse, "b");
+
+const pendingAssets = geometryBCourse.modules.find(
+	module => module.title === "Pending Static Assets"
+);
+if (!pendingAssets) throw new Error("Missing Geometry B asset record");
+pendingAssets.internal = true;
+
+const capstone = geometryBCourse.modules.find(
+	module => module.title === "Check-In #2 and Geometry B Capstone"
+);
+if (!capstone) throw new Error("Missing Geometry B capstone");
+capstone.supplementalProjects.push({
+	id: "geometry-b-check-in-2-and-geometry-b-capstone-supplemental-check-in-2-and-geometry-b-capstone-changed-case-review",
+	title: "Check-In #2 and Geometry B Capstone Changed-Case Review",
+	aliases: ["Applied Challenge"],
+	learningPath: "choice",
+	contentKind: "assignment",
+	preserveInstructions: true,
+	content: [
+		"**Problems:**",
+		"1. A sign has vertices A=(0,0), B=(8,0), C=(8,6), D=(0,6). Find its diagonal length, perimeter and area. List its parallelogram-family classifications and decide whether it is a regular polygon.",
+		"2. A circular emblem has center E=(4,3) and radius 2. Find its circumference, area, and the arc length and area of a 90-degree sector. Distinguish length from area units.",
+		"3. Rotate the entire sign and emblem 90 degrees counterclockwise about the origin, then dilate the image by factor 3/2 about the origin. Give the intermediate and final coordinates of C and E, the final emblem radius, and the sign's final perimeter and area. Explain the different scale factors.",
+		"4. A closed cylindrical container has radius 2 and height 6. Find its volume and total surface area, then scale all dimensions by 3/2 and calculate both quantities again. Compare with a different change that increases only the radius to 3 while keeping height 6; explain why that change does not use the uniform volume scale factor.",
+		"**Checkpoints:** Use coordinate evidence for classification, track the order and center of transformations, name exposed surfaces, and distinguish length, area and volume scaling.",
+		`[Check answers and reasoning](${courseAssetViewerUrl("/course-assets/geometry-b/practice-checks-v1.md#design-changed-case-review", "Design self-check")})`
+	].join("\n\n")
+});

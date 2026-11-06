@@ -1,4 +1,5 @@
 import type { RawCourse } from "./types";
+import { applyAlgebra1AReadings } from "./algebra1Readings";
 import { configureMathCourseFlow } from "./mathCourseFlow";
 import { pendingStaticMediaNotice, staticMediaUrl } from "./staticMedia";
 
@@ -331,16 +332,16 @@ Build a film-production budget from expressions, equations, and unit-rate calcul
 
 **Mission 1**
 
-- Choose a film concept and list likely costs for the script, producers, editing, marketing, props, and wardrobes.
-- Write algebraic expressions for repeated purchases.
-- Decide how much editing will cost and write an equation showing the remaining budget after editing and script costs.
-- Estimate the spending represented by \`3000 - c = 2086\`.
+- Begin with a \`$3,000\` budget. Choose a film concept and nonnegative dollar amounts \`S\` for the script, \`E\` for editing and \`W\` for wardrobe.
+- Each producer costs \`$150\`, each prop costs \`$25\` and each marketing placement costs \`$32.50\`. Let \`p\`, \`r\` and \`m\` be their whole-number counts. Write an expression for each category and an inequality keeping all six categories within the budget.
+- Write the amount remaining after script and editing costs, then explain how the other categories use that remainder. Supply and justify the chosen amounts; these are design decisions.
+- In a separate budget record, \`3000 - c = 2086\`. Estimate \`c\`, solve exactly and check that spending plus the remainder equals the starting budget.
 
 **Mission 2**
 
-- Use hourly rates for actors, directors, food, cameras, lights, sound equipment, and location.
-- Write equations from fixed totals for actors and cameras.
-- Compute the total when the remaining spending equals the cost of food cubed.
+- An actor costs \`$50\` per actor-hour and the actors' bill is \`$250\`. A camera rental costs \`$35\` per camera-hour and its bill is \`$105\`. Write and solve one equation for each number of billed hours. Actor-hours count all actors' time together; they do not determine the number of actors.
+- For a separate numerical exercise, the food allowance is \`$10\`. A classroom rule sets the remaining production allowance to \`F^3\` dollars, where \`F=10\` is the numerical food-allowance amount. Calculate that allowance and the combined total for actors, cameras and the remaining allowance. Here the rule cubes the number \`10\`; the result is a dollar allowance.
+- Extend the budget to directors, food, lights, sound equipment and location. Choose and record a dollar-per-hour rate and hours for each hourly category, or a fixed dollar amount for a one-time purchase. Allocate these costs within the remaining production allowance and justify any unused amount.
 				`.trim(),
 					undefined,
 					[
@@ -357,7 +358,10 @@ Build a film-production budget from expressions, equations, and unit-rate calcul
 - Marketing expression: \`32.5m\`
 - Actors equation: \`50a = 250\`, so \`a = 5\`
 - Cameras equation: \`35c = 105\`, so \`c = 3\`
-- Food cubed: \`10^3 = 1000\`
+- The variables \`a\` and \`c\` represent billed actor-hours and camera-hours, respectively.
+- Remaining production allowance: \`10^3 = 1000\` dollars; combined total \`250+105+1000=1355\` dollars.
+- Mission 1 constraint: \`S+E+W+150p+25r+32.5m <= 3000\`; the amount remaining after script and editing is \`3000-S-E\` dollars.
+- Separate spending record: about \`$900\`; exactly \`c=3000-2086=914\` dollars, and \`914+2086=3000\`.
 
 The rest of the project is intentionally open ended. A strong response justifies the budget choices, keeps units attached to each cost, and checks whether the selected numbers stay inside the total budget. If a student's plan goes over budget, revise one variable at a time and explain which constraint changed. If the plan stays under budget, identify the unused amount and describe whether that leftover money is savings, contingency, or room for a justified upgrade.
 				`.trim()
@@ -495,8 +499,10 @@ Slope measures how much \`y\` changes for each change in \`x\`. In graphing lang
 
 - Between \`(-8, 6)\` and \`(-4, -6)\`, slope = \`(-6 - 6) / (-4 - (-8)) = -12 / 4 = -3\`
 - For \`6x - y = 4 + x\`, rewrite as \`y = 5x - 4\`, so the slope is \`5\`
-- Parallel lines have equal slopes.
-- Perpendicular lines have slopes that are negative reciprocals.
+- Distinct nonvertical parallel lines have equal slopes. For example, \`y = 2x + 1\` and \`y = 2x - 3\` both have slope \`2\`.
+- Distinct vertical lines, such as \`x = -2\` and \`x = 4\`, are parallel and both have undefined slope.
+- When both slopes are finite and nonzero, perpendicular lines have negative-reciprocal slopes: their product is \`-1\`. Slopes \`2\` and \`-1/2\` are one example.
+- A horizontal line and a vertical line are perpendicular. For example, \`y = 3\` has slope \`0\` and \`x = -2\` has undefined slope.
 
 Tie every slope computation back to a real rate such as deliveries per week, height per day, or cost per month.
 				`.trim()
@@ -585,19 +591,20 @@ The provided graph shows \`y > 2x + 5\`: shade the region above the dashed bound
 				createLesson(
 					"Avalanche Prediction Project Brief",
 					`
-This project combines slope classification with avalanche-risk interpretation.
+Use slope, rates of change and inequalities in the fictional resort case below. The supplied values are a classroom modeling dataset. The \`40%\` reopening rule applies only to this exercise; actual terrain decisions require the current local avalanche forecast and qualified resort assessment.
 
 **Mission 1**
 
-- Classify ski runs by steepness.
-- Compare grade percentages to resort difficulty labels.
-- Use the graph or table provided by the project to justify each classification.
+- Calculate each run's grade as \`100 × vertical drop / horizontal distance\`, using the measurements in Reference Visual.
+- Apply this fictional resort's labels: Green Circle for \`0% <= grade < 25%\`, Blue Square for \`25% <= grade < 40%\`, and Black Diamond for \`grade >= 40%\`. These are the exercise's definitions, not a universal rating standard.
+- Classify all three runs and justify each result with its ratio and units. Explain why a percentage grade is different from an angle in degrees.
 
 **Mission 2**
 
-- Compare avalanche risk after storms of different sizes.
-- Decide how long slopes stay closed if the resort reopens once avalanche probability drops below \`40%\`.
-- Explain why snow-slab risk can change over time.
+- Plot the three supplied storm series, with days after the storm on the horizontal axis and modeled avalanche probability in percent on the vertical axis.
+- Calculate each series' average rate of change between days \`2\` and \`4\`, in percentage points per day. Identify the sharpest decrease.
+- The resort checks only on the listed days and reopens for a modeled probability strictly below \`40%\`. Find the first eligible listed day for each storm and the earliest listed day satisfying all three series. Explain what equality at \`40%\` means.
+- Describe what the table supports about risk over time and what additional snowpack or weather information a real forecast would need. A declining classroom curve does not establish mountain safety.
 				`.trim(),
 					undefined,
 					[
@@ -607,24 +614,60 @@ This project combines slope classification with avalanche-risk interpretation.
 				createLesson(
 					"Reference Visual",
 					`
-Use the project graph or table to compare avalanche-risk curves. If a specific chart is unavailable, reconstruct the comparison from the given storm sizes, days, and risk percentages.
+**Run measurements**
 
-Read the visual by naming the axes first, then compare one storm curve at a time. The important evidence is not only which curve is highest, but how quickly each risk drops below the reopening threshold. A complete interpretation identifies the day range where closure is still justified, explains any curve crossing, and notes that the graph represents a model of risk rather than a guarantee of mountain safety.
+| Run | Vertical drop (m) | Horizontal distance (m) |
+| --- | --- | --- |
+| Aspen | 100 | 200 |
+| Birch | 130 | 200 |
+| Cedar | 160 | 200 |
+
+Grade uses horizontal distance, not distance along the run. For example, a \`30 m\` drop over \`200 m\` horizontally gives \`100×30/200=15%\` grade. It does not mean a \`15°\` angle.
+
+**50 cm storm: classroom model**
+
+| Day | Probability (%) |
+| --- | --- |
+| 0 | 80 |
+| 2 | 60 |
+| 4 | 40 |
+| 5 | 30 |
+| 6 | 20 |
+
+**100 cm storm: classroom model**
+
+| Day | Probability (%) |
+| --- | --- |
+| 0 | 90 |
+| 2 | 70 |
+| 4 | 30 |
+| 5 | 25 |
+| 6 | 20 |
+
+**150 cm storm: classroom model**
+
+| Day | Probability (%) |
+| --- | --- |
+| 0 | 95 |
+| 2 | 85 |
+| 4 | 50 |
+| 5 | 39 |
+| 6 | 30 |
+
+Each percentage is a model input, not a measured local forecast. Plot only the supplied points; connecting them illustrates a trend but does not supply additional observations. For the average rate between days \`2\` and \`4\`, divide the change in probability by \`4-2\` days. State a decrease in percentage points separately from a relative percent change.
 				`.trim()
 				),
 				createLesson(
 					"Reference Notes",
 					`
-Reference results for checking the interpretation:
+Results for the supplied classroom case:
 
-- Ski-run classification prompt: all listed sites were \`Black Diamond\`.
-- Between days \`2\` and \`4\`, the \`100 cm\` storm had the sharpest decline in avalanche probability.
-- Average slopes listed in the answer key:
-  - \`50 cm\` storm -> \`13.36\`
-  - \`100 cm\` storm -> \`15\`
-  - \`150 cm\` storm -> \`5.83\`
-- One recommended closure window was between \`3\` and \`5\` days, because the \`50 cm\` and \`150 cm\` curves crossed below \`40%\` after about day \`4\`.
-- Qualitative explanation: over time, snow packs down and becomes denser, making slabs less likely to shear off.
+- Aspen: \`100×100/200=50%\`; Birch: \`65%\`; Cedar: \`80%\`. All three meet this case's Black Diamond definition.
+- Between days \`2\` and \`4\`, the rates are \`(40-60)/2=-10\`, \`(30-70)/2=-20\` and \`(50-85)/2=-17.5\` percentage points per day. The \`100 cm\` series has the sharpest decrease because its rate is most negative.
+- For the \`50 cm\` series, day \`4\` is exactly \`40%\` and remains ineligible; day \`5\` is the first listed day below the threshold. The \`100 cm\` series first qualifies on day \`4\`, and the \`150 cm\` series on day \`5\`. All three qualify on day \`5\`, with probabilities \`30%\`, \`25%\` and \`39%\`.
+- The table alone does not identify a crossing time between observations or guarantee a general relationship between storm size and probability. The supplied models may reflect different conditions.
+
+Snowpack conditions can strengthen or weaken over time. Persistent weak layers can remain unstable for weeks or months, and new snow, wind loading or warming can change their sensitivity. Elapsed time or increasing density alone does not determine stability. See the [Colorado Avalanche Information Center's persistent-slab explanation](https://www.avalanche.state.co.us/persistent-slab).
 				`.trim()
 				)
 			]
@@ -985,9 +1028,8 @@ The master project closes the course with a short independent explanation.
 - Explain what the concept is for.
 - Describe at least one real-world use.
 - Design and solve at least two original problems.
-- Record a short presentation that explains the explanation clearly and concisely.
+- Record a short presentation of the concept and worked solutions.
 
-	This project is a short capstone reflection rather than another worksheet.
 					`.trim()
 			)
 		]),
@@ -1395,3 +1437,5 @@ configureMathCourseFlow(algebra1ACourse, {
 	],
 	appendixTitles: ["Reference Archive: Algebra 1A"]
 });
+
+applyAlgebra1AReadings(algebra1ACourse);

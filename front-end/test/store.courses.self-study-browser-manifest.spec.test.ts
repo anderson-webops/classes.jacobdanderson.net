@@ -12,15 +12,22 @@ import grammarAdditions from "../../test/fixtures/grammar-mechanics-restored-ide
 import literatureAdditions from "../../test/fixtures/middle-school-literature-restored-identities.json";
 import writingAdditions from "../../test/fixtures/middle-school-writing-restored-identities.json";
 import speakingAdditions from "../../test/fixtures/public-speaking-restored-identities.json";
-import { isLessonLearningItem } from "@/modules/courseLessonPresentation";
+import {
+	isLessonLearningItem,
+	lessonContentSections
+} from "@/modules/courseLessonPresentation";
 import { normalizeInlineCourseMarkdown } from "@/modules/courseMarkdown";
 import { useAppStore } from "@/stores/app";
 import { useCoursesStore } from "@/stores/courses";
+import { algebra1ACourse } from "@/stores/courses/algebra-1a";
+import { algebra1BCourse } from "@/stores/courses/algebra-1b";
+import { algebraErrorAnalysisCases } from "@/stores/courses/algebraErrorAnalysisCases";
 import { algebra2ACourse } from "@/stores/courses/algebra-2a";
 import { algebra2BCourse } from "@/stores/courses/algebra-2b";
 import { introToPhysicsCourse } from "@/stores/courses/intro-to-physics";
 import { physicsLevel2Course } from "@/stores/courses/physics-level-2";
 import { geometryACourse } from "@/stores/courses/geometry-a";
+import { geometryBCourse } from "@/stores/courses/geometry-b";
 import { preAlgebraACourse } from "@/stores/courses/pre-algebra-a";
 import {
 	entrepreneurship101Course,
@@ -34,6 +41,24 @@ import {
 } from "@/stores/courses/source-library-courses";
 
 const cases = [
+	{
+		id: "algebra-1a",
+		source: algebra1ACourse,
+		readings: 15,
+		additions: []
+	},
+	{
+		id: "algebra-1b",
+		source: algebra1BCourse,
+		readings: 31,
+		additions: []
+	},
+	{
+		id: "geometry-b",
+		source: geometryBCourse,
+		readings: 11,
+		additions: []
+	},
 	{
 		id: "geometry-a",
 		source: geometryACourse,
@@ -195,6 +220,21 @@ it.each(
 				saveEdit: "Save"
 			});
 		const course = (await useCoursesStore().loadCourseById(id))!;
+		for (const entry of algebraErrorAnalysisCases.filter(
+			entry => entry.course === id
+		)) {
+			const module = course.modules.find(
+				module => module.title === entry.module
+			)!;
+			const task = module.supplementalProjects.find(item =>
+				item.title.includes("Modeling or Error Analysis")
+			)!;
+			expect(task.contentKind, entry.heading).toBe("assignment");
+			expect(task.content, entry.heading).toContain(entry.given);
+			expect(task.content, entry.heading).toContain(entry.flawed);
+			for (const question of entry.questions)
+				expect(task.content, entry.heading).toContain(question);
+		}
 		const identities = course.modules.flatMap(module =>
 			(
 				[
@@ -251,7 +291,15 @@ it.each(
 				expect(displayedPrompt, project.title).toBe(originalPrompt);
 		}
 		const card = (item: CourseModuleItem) => {
-			const fullBlocks = ["pre-algebra-a", "geometry-a"].includes(id);
+			const fullBlocks = [
+				"algebra-1a",
+				"algebra-1b",
+				"pre-algebra-a",
+				"geometry-a",
+				"geometry-b",
+				"algebra-2a",
+				"algebra-2b"
+			].includes(id);
 			const selfChecks = fullBlocks
 				? [
 						...item.content.matchAll(
@@ -295,7 +343,7 @@ it.each(
 				: [];
 			// These authored labels become separate headings in assignment cards.
 			// Keep every body word while matching the displayed heading punctuation.
-			const fullAssignment = fullBlocks
+			let fullAssignment = fullBlocks
 				? item.content
 						.replace(/^\*\*(Goal|Steps):\*\*/gm, "**$1**")
 						.replace(
@@ -303,6 +351,26 @@ it.each(
 							"**Optional · Extension**"
 						)
 				: item.content;
+			if (id === "algebra-1a" || id === "algebra-1b") {
+				const sections = lessonContentSections(
+					item.content,
+					item.contentKind ?? "assignment"
+				);
+				expect(
+					sections.some(section => section.kind === "learn"),
+					item.title
+				).toBe(false);
+				fullAssignment = sections
+					.map(section => {
+						const label =
+							section.kind === "optional" &&
+							section.label !== "Optional"
+								? `Optional · ${section.label}`
+								: section.label;
+						return `### ${label}\n\n${section.content}`;
+					})
+					.join("\n\n");
+			}
 			const directive = item.content.match(
 				/^(?:\*\*(?:Project )?goal:\*\*\s*)?([\s\S]+?)\s*\*\*Completion evidence:\*\*/i
 			)?.[1];
@@ -311,11 +379,16 @@ it.each(
 				normalizeInlineCourseMarkdown(
 					directive ??
 						([
+							"algebra-1a",
+							"algebra-1b",
 							"introduction-to-public-speaking",
 							"intro-to-physics",
 							"physics-level-2",
 							"pre-algebra-a",
-							"geometry-a"
+							"geometry-a",
+							"geometry-b",
+							"algebra-2a",
+							"algebra-2b"
 						].includes(id)
 							? fullAssignment
 							: "")
@@ -333,10 +406,12 @@ it.each(
 			};
 		};
 		const algebra = id === "algebra-2a" || id === "algebra-2b";
+		const algebra1 = id === "algebra-1a" || id === "algebra-1b";
 		const modules = course.modules
 			.filter(
 				module =>
-					!module.internal && (!algebra || module.kind !== "appendix")
+					!module.internal &&
+					(!(algebra || algebra1) || module.kind !== "appendix")
 			)
 			.map(module => ({
 				id: module.id,
@@ -353,13 +428,15 @@ it.each(
 					.map(card)
 			}));
 		expect(modules.flatMap(module => module.readings)).toHaveLength(count);
-		if (algebra)
+		if (algebra1)
+			expect(modules).toHaveLength(id === "algebra-1a" ? 21 : 25);
+		else if (algebra)
 			expect(modules).toHaveLength(id === "algebra-2a" ? 15 : 12);
 		else
 			expect(
 				modules.filter(module => module.kind === "module")
 			).toHaveLength(
-				id === "geometry-a"
+				["geometry-a", "geometry-b"].includes(id)
 					? 7
 					: id === "pre-algebra-a"
 						? 8
@@ -373,6 +450,14 @@ it.each(
 					module.title.startsWith("Check-In")
 						? 0
 						: module.title.startsWith("GEOA4")
+							? 2
+							: 1
+				);
+			else if (id === "geometry-b")
+				expect(module.readings, module.title).toHaveLength(
+					module.title.startsWith("Check-In #1")
+						? 0
+						: /^(?:GEOB3|GEOB5|GEOB7|GEOB9)/.test(module.title)
 							? 2
 							: 1
 				);
@@ -394,9 +479,9 @@ it.each(
 				expect(module.readings, module.title).toHaveLength(
 					module.title.startsWith("PHY8 ") ? 2 : 1
 				);
-			else if (!algebra)
+			else if (!algebra && !algebra1)
 				expect(module.readings, module.title).toHaveLength(1);
-			else if (module.readings.length === 0)
+			else if (algebra && module.readings.length === 0)
 				expect(module.title).toMatch(/capstone/i);
 			for (const reading of module.readings) {
 				expect(
