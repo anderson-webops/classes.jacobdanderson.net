@@ -1,4 +1,5 @@
 import type { RawCourse, RawCourseModuleItem } from "./types";
+import { physicsLevel2SourceUrl } from "@/modules/physicsLevel2ProjectResources";
 import { contextualizePhysicsCourse } from "./physicsContentContext";
 import { physicsLevel2Readings } from "./physicsLevel2Readings";
 
@@ -266,7 +267,7 @@ const physicsLevel2SourceCourse: RawCourse = contextualizePhysicsCourse({
 				{
 					title: "Investigation or Simulation: Simple Orbit Model in Python or Spreadsheet",
 					content:
-						"Build a basic orbit model with a spreadsheet, Desmos, or simple Python code that updates position and velocity qualitatively. Compare a low-orbit and high-orbit case and explain what changes in period, speed, and curvature."
+						"Model the supplied low orbit using a spreadsheet or the Python starter. In Python, complete advance(): calculate gravity from the old position, update velocity, then position with the new velocity. Compare 10, 5 and 2.5 second steps over one circular period using radius, energy and final-position error. Compare the period and speed with the supplied high-orbit case and explain the change in curvature. The linked case tables support the same analysis on paper or in a spreadsheet."
 				},
 				{
 					title: "Reflection Question: Why Doesn't an Orbiting Object 'Run Out of Gravity'?",
@@ -459,7 +460,7 @@ const physicsLevel2SourceCourse: RawCourse = contextualizePhysicsCourse({
 				{
 					title: "Simulation Case Study",
 					content:
-						"Use a browser simulation, spreadsheet, or short Python notebook to model projectile drag, repeated acceleration updates, orbit-like motion, or another iterative system. Keep the case study evidence-based and usable without special equipment: include the update rule, sample rows or graph output, one validation check, and one reason the ideal model and corrected model differ."
+						"Use the supplied free-fall and oscillator cases in a spreadsheet or the Python starter. Complete explicit-Euler free-fall updates from the old state; compare position error at two seconds as the step halves. For the oscillator, compare old-state explicit Euler with velocity-first symplectic Euler using energy at 0, 5, 10, 15 and 20 seconds. Include equations, units, initial conditions, update order and a graph or sample rows. Distinguish numerical energy drift from a physical loss of energy. The supplied tables support the same comparison without running code; projectile drag or another iterative system can extend the investigation."
 				},
 				{
 					title: "Transfer Practice: Model Stability",
@@ -1404,6 +1405,24 @@ const PHYSICS_LEVEL_2_FLOW: Record<string, PhysicsLevel2ModuleFlow> = {
 	}
 };
 
+function physicsLevel2CodeLinks(moduleNumber: number, title: string) {
+	const pack =
+		moduleNumber === 13 &&
+		title ===
+			"Investigation or Simulation: Simple Orbit Model in Python or Spreadsheet"
+			? "orbit-model"
+			: moduleNumber === 17 && title === "Simulation Case Study"
+				? "numerical-model"
+				: null;
+	return pack
+		? {
+				ideImport: true,
+				projectLink: physicsLevel2SourceUrl(pack, "starter"),
+				solutionLink: physicsLevel2SourceUrl(pack, "reference")
+			}
+		: {};
+}
+
 function physicsLevel2Topic(moduleTitle: string) {
 	return moduleTitle.replace(/^PHY\d+\s+/u, "").trim();
 }
@@ -1492,7 +1511,8 @@ export const physicsLevel2Course: RawCourse = {
 				solutionLink:
 					item.solutionLink ??
 					physicsLevel2AnswerKey(flow.answerSection),
-				projectLink: item.projectLink ?? flow.referenceLink
+				projectLink: item.projectLink ?? flow.referenceLink,
+				...physicsLevel2CodeLinks(moduleNumber, item.title)
 			})
 		);
 

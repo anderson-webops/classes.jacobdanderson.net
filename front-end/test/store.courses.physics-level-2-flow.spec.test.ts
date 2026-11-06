@@ -3,6 +3,7 @@ import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { createPinia, setActivePinia } from "pinia";
 import { isLessonLearningItem } from "@/modules/courseLessonPresentation";
+import { physicsLevel2CourseResource } from "@/modules/physicsLevel2ProjectResources";
 import { useAppStore } from "@/stores/app";
 import { useCoursesStore } from "@/stores/courses";
 import { loadRawCourse } from "@/stores/courses/index";
@@ -205,9 +206,18 @@ describe("Physics Level 2 learner flow", () => {
 			expect(item.datasetLink, item.title).toMatch(
 				/^\/course-assets\/physics\/physics-level-2-materials-pack\.md#/
 			);
-			expect(item.solutionLink, item.title).toMatch(
-				/^\/course-assets\/physics\/physics-level-2-rubrics-answer-key\.md#/
-			);
+			const code = physicsLevel2CourseResource(item.solutionLink ?? "");
+			if (code) {
+				expect(code.role).toBe("reference");
+				expect(
+					physicsLevel2CourseResource(item.projectLink ?? "")
+				).toMatchObject({ pack: code.pack, role: "starter" });
+				expect(item.ideImport).toBe(true);
+			} else {
+				expect(item.solutionLink, item.title).toMatch(
+					/^\/course-assets\/physics\/physics-level-2-rubrics-answer-key\.md#/
+				);
+			}
 			expect(item.projectLink, item.title).toMatch(/^https:\/\//);
 		}
 
@@ -326,9 +336,21 @@ describe("Physics Level 2 learner flow", () => {
 			expect(materialHeadings, item.title).toContain(
 				item.datasetLink?.split("#")[1]
 			);
-			expect(answerHeadings, item.title).toContain(
-				item.solutionLink?.split("#")[1]
-			);
+			if (!physicsLevel2CourseResource(item.solutionLink ?? "")) {
+				expect(answerHeadings, item.title).toContain(
+					item.solutionLink?.split("#")[1]
+				);
+			}
+		}
+		for (const module of physicsLevel2Course.modules) {
+			expect(
+				module.curriculum.some(item =>
+					item.solutionLink?.startsWith(
+						"/course-assets/physics/physics-level-2-rubrics-answer-key.md#"
+					)
+				),
+				module.title
+			).toBe(true);
 		}
 
 		expect(materials).toContain("Explicit Euler free-fall check");

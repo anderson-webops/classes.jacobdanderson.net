@@ -1,6 +1,6 @@
 name: Course preflight
 
-run-name: ${{ inputs.course == 'tracker-evidence' && 'Retained Tracker failure evidence' || inputs.course == 'scratch-tasks' && 'Published Scratch project tasks' || inputs.course == 'course-audit' && 'Course audit follow-ups' || inputs.course == 'scratch-readings' && 'Scratch and self-study readings' || inputs.course == 'scratch-originals' && 'Original Scratch imports' || inputs.course == 'bootcamp' && 'Scratch Bootcamp pages' || inputs.course == 'self-study' && 'Self-study course pages' || inputs.course == 'networking' && 'Swift Networking source evidence' || inputs.course == 'ai-setup' && 'AI setup reading' || 'PyGames core preflight' }}
+run-name: ${{ inputs.course == 'tracker-evidence' && 'Retained Tracker failure evidence' || inputs.course == 'scratch-tasks' && 'Published Scratch project tasks' || inputs.course == 'course-audit' && 'Course audit follow-ups' || inputs.course == 'scratch-readings' && 'Scratch and self-study readings' || inputs.course == 'scratch-originals' && 'Original Scratch imports' || inputs.course == 'bootcamp' && 'Scratch Bootcamp pages' || inputs.course == 'self-study' && 'Self-study course pages' || inputs.course == 'physics-models' && 'Physics model workflows' || inputs.course == 'networking' && 'Swift Networking source evidence' || inputs.course == 'ai-setup' && 'AI setup reading' || 'PyGames core preflight' }}
 
 on:
   workflow_dispatch:
@@ -8,7 +8,7 @@ on:
       course:
         description: Course verification to run
         type: choice
-        options: [pygames, networking, ai-setup, self-study, bootcamp, scratch-originals, scratch-readings, course-audit, scratch-tasks, tracker-evidence]
+        options: [pygames, networking, ai-setup, self-study, physics-models, bootcamp, scratch-originals, scratch-readings, course-audit, scratch-tasks, tracker-evidence]
         default: pygames
       browser_run_id:
         description: Networking browser export workflow run
@@ -302,13 +302,14 @@ jobs:
           retention-days: 14
 
   self-study:
-    if: inputs.course == 'self-study' || inputs.course == 'bootcamp' || inputs.course == 'scratch-originals' || inputs.course == 'scratch-readings' || inputs.course == 'course-audit' || inputs.course == 'scratch-tasks'
+    if: inputs.course == 'self-study' || inputs.course == 'physics-models' || inputs.course == 'bootcamp' || inputs.course == 'scratch-originals' || inputs.course == 'scratch-readings' || inputs.course == 'course-audit' || inputs.course == 'scratch-tasks'
     runs-on: ubuntu-24.04
     timeout-minutes: 40
     env:
       CLASSES_FAMILY_TASK_ID: self-study-courses-${{ github.run_id }}
       SELF_STUDY_BROWSER_PROOF_DIR: ${{ github.workspace }}/output/self-study-browser
-      SELF_STUDY_BROWSER_COURSES: ${{ inputs.course == 'bootcamp' && 'scratch-level-1-bootcamp' || '' }}
+      SELF_STUDY_BROWSER_COURSES: ${{ inputs.course == 'bootcamp' && 'scratch-level-1-bootcamp' || inputs.course == 'physics-models' && 'intro-to-physics,physics-level-2' || '' }}
+      PHYSICS2_BROWSER_PROOF_DIR: ${{ github.workspace }}/output/self-study-browser/physics-models
       SCRATCH_ORIGINAL_BROWSER_PROOF_DIR: ${{ github.workspace }}/output/self-study-browser/scratch-originals
       COURSE_CATALOG_PROOF_DIR: ${{ github.workspace }}/output/self-study-browser/catalog
     steps:
@@ -369,6 +370,8 @@ jobs:
           test/store.courses.novel-writing-content.spec.test.ts
           test/store.courses.public-speaking-flow.spec.test.ts
           test/store.courses.public-speaking-content.spec.test.ts
+          test/store.courses.physics-level-2-flow.spec.test.ts
+          test/physics-level-2-ide.spec.test.ts
           test/store.courses.scratch-bootcamp-flow.spec.test.ts
           test/store.courses.scratch-bootcamp-content.spec.test.ts
           test/store.courses.algebra2-self-study.spec.test.ts
@@ -396,6 +399,12 @@ jobs:
       - name: Verify all self-study course pages in both roles and sizes
         if: inputs.course != 'scratch-originals' && inputs.course != 'scratch-tasks'
         run: node scripts/classes-family-heavy-task.mjs -- node --test test/self-study-course-browser.test.mjs
+      - name: Verify the Physics Level 2 Python models against independent values
+        if: inputs.course == 'physics-models'
+        run: python3 -I -B test/physics-level-2-code-packs.test.py
+      - name: Verify Physics consent, actual Python runs, edits and saved exports
+        if: inputs.course == 'physics-models'
+        run: node scripts/classes-family-heavy-task.mjs -- node --test test/physics-level-2-workflows-browser.test.mjs
       - name: Verify original Scratch program and media identities
         if: inputs.course == 'scratch-originals' || inputs.course == 'course-audit'
         run: node scripts/classes-family-heavy-task.mjs -- node --test --test-concurrency=1 test/scratch-projects.test.mjs test/scratch-original-projects.test.mjs

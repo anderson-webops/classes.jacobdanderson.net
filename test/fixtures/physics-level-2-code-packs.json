@@ -1,0 +1,58 @@
+{
+  "revision": "c4d972f91edb71e7fb9259fcd5df6213d6429401",
+  "sourceRoot": "front-end/public/course-assets/physics/code-packs",
+  "files": {
+    "orbit-model/starter/main.py": {
+      "bytes": 2787,
+      "sha256": "df02f74d24c65771727bba869e94975ed4375197957ad75d2bfab4a0711a4134"
+    },
+    "orbit-model/starter/README.md": {
+      "bytes": 1066,
+      "sha256": "a6bf16ca42cf8515c63550dfc39b8a62a972b1265aaab24cd8ddf7d86fe04f3a"
+    },
+    "orbit-model/reference/main.py": {
+      "bytes": 2825,
+      "sha256": "bf719f7c486a1e23dc3c84c8c7c1815bc726541ac8a0e1a2bb8221a5a5e7ae2f"
+    },
+    "orbit-model/reference/README.md": {
+      "bytes": 1064,
+      "sha256": "e37c29c4573cb89e88c6d7e75491d2ff0d8e9518efee0d9f563d798efc814fab"
+    },
+    "numerical-model/starter/main.py": {
+      "bytes": 2693,
+      "sha256": "b643d5b661f7229e71d53ed4a5af2fe2daf2ca4ea9b16c072553ff850a936a97"
+    },
+    "numerical-model/starter/README.md": {
+      "bytes": 960,
+      "sha256": "b628288efdcb1178c38d6d2f23fdbd248417b991fdcc5ea74eebc281006453c5"
+    },
+    "numerical-model/reference/main.py": {
+      "bytes": 2762,
+      "sha256": "d58bf582bc3d5f91f9d433ed31070028aca2ff4b1c1015285ddcccf99696671c"
+    },
+    "numerical-model/reference/README.md": {
+      "bytes": 958,
+      "sha256": "25b12bc9de923f74d91a54b1c7b934767da8f6fcff0af3f1e0d3eb9e7a6edaa6"
+    }
+  },
+  "activities": [
+    {
+      "pack": "orbit-model",
+      "module": "physics-level-2-phy13-gravitation-circular-motion-and-orbits",
+      "item": "physics-level-2-phy13-gravitation-circular-motion-and-orbits-curriculum-investigation-or-simulation-simple-orbit-model-in-python-or-spreadsheet",
+      "title": "Investigation or Simulation: Simple Orbit Model in Python or Spreadsheet",
+      "caseSection": "gravitation-circular-motion-and-orbits-cases",
+      "answerSection": "gravitation-circular-motion-and-orbits-key",
+      "completion": "physics_orbit_case_complete"
+    },
+    {
+      "pack": "numerical-model",
+      "module": "physics-level-2-phy17-numerical-modeling-and-simulation-checks",
+      "item": "physics-level-2-phy17-numerical-modeling-and-simulation-checks-curriculum-simulation-case-study",
+      "title": "Simulation Case Study",
+      "caseSection": "numerical-modeling-and-simulation-cases",
+      "answerSection": "numerical-modeling-and-simulation-key",
+      "completion": "physics_numerical_case_complete"
+    }
+  ]
+}
