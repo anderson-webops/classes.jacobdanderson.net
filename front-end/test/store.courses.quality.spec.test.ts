@@ -7,6 +7,7 @@ import type {
 	RawCourseModuleItem
 } from "@/stores/courses/types";
 import { javascriptCourseResource } from "@/modules/javascriptCourseResources";
+import { physicsLevel2CourseResource } from "@/modules/physicsLevel2ProjectResources";
 import { rawCourseProse } from "./courseProse";
 import { createPinia, setActivePinia } from "pinia";
 import { useCoursesStore } from "@/stores/courses";
@@ -329,11 +330,33 @@ function completePhysicsPractice(
 		!item.preserveInstructions
 	)
 		return false;
+	const starter =
+		courseId === "physics-level-2"
+			? physicsLevel2CourseResource(item.projectLink ?? "")
+			: null;
+	const reference = physicsLevel2CourseResource(item.solutionLink ?? "");
+	const moduleKey =
+		starter?.role === "starter" &&
+		reference?.role === "reference" &&
+		reference.pack === starter.pack &&
+		item.ideImport &&
+		item.datasetLink
+			? module.curriculum.find(
+					candidate =>
+						candidate.solutionLink ===
+						item
+							.datasetLink!.replace(
+								"materials-pack.md",
+								"rubrics-answer-key.md"
+							)
+							.replace(/-cases$/u, "-key")
+				)?.solutionLink
+			: undefined;
 	if (
 		physicsEvidenceSection(item.datasetLink, "materials-pack", courseId)
 			.length < 300 ||
 		physicsEvidenceSection(
-			item.solutionLink,
+			moduleKey ?? item.solutionLink,
 			"rubrics-answer-key",
 			courseId
 		).length < 100
@@ -5226,7 +5249,13 @@ describe("course text quality normalization", () => {
 					continue;
 				}
 
-				if (pathParts[0] !== "instruction-material") {
+				if (
+					pathParts[0] !== "instruction-material" &&
+					!(
+						course === "physics-level-2" &&
+						physicsLevel2CourseResource(link)
+					)
+				) {
 					externalGithubLinks.push(label);
 				}
 
