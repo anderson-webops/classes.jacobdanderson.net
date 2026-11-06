@@ -15,6 +15,7 @@ import { introToPhysicsCourse } from "@/stores/courses/intro-to-physics";
 import { physicsLevel2Course } from "@/stores/courses/physics-level-2";
 import { earlyElementaryAMaterials } from "@/stores/courses/earlyElementaryAMaterials";
 import { earlyElementaryBMaterials } from "@/stores/courses/earlyElementaryBMaterials";
+import { lateElementaryAMaterials } from "@/stores/courses/lateElementaryAMaterials";
 import {
 	pyGamesCoreResource,
 	pyGamesCoreSourceRevision
@@ -51,7 +52,8 @@ import { isGitHubUrl } from "@/modules/resourceUrls";
 const COURSE_SWEEP_TIMEOUT = 180000;
 const elementaryMaterials = {
 	"early-elementary-a-math": earlyElementaryAMaterials,
-	"early-elementary-b-math": earlyElementaryBMaterials
+	"early-elementary-b-math": earlyElementaryBMaterials,
+	"late-elementary-a-math": lateElementaryAMaterials
 };
 
 function completeElementaryPractice(
@@ -87,10 +89,9 @@ function completeElementaryPractice(
 	const asset = new URL(href, "https://example.invalid").searchParams.get(
 		"asset"
 	);
-	const prefix =
-		courseId === "early-elementary-a-math"
-			? "/course-assets/early-elementary-a/practice-checks-v2.md"
-			: "/course-assets/early-elementary-b/practice-checks-v1.md";
+	const folder = courseId.replace(/-math$/u, "");
+	const version = courseId === "early-elementary-a-math" ? "v2" : "v1";
+	const prefix = `/course-assets/${folder}/practice-checks-${version}.md`;
 	if (asset !== `${prefix}#${task.anchor}`) return false;
 	const text = fs.readFileSync(`public${prefix}`, "utf8");
 	const section = text
@@ -7768,6 +7769,10 @@ describe("course text quality normalization", () => {
 		if (!course) return;
 
 		const text = allCourseText(course);
+		const original = await courseCatalog
+			.find(entry => entry.id === "late-elementary-a-math")!
+			.load();
+		const originalText = allCourseText(original);
 		const expectedAnchors = [
 			"Prize Money Place-Value Exchange",
 			"Party Food Rounding and Store Distance",
@@ -7843,12 +7848,15 @@ describe("course text quality normalization", () => {
 		];
 
 		expect(text).not.toContain("Source Activity Anchors:");
-		expect(text).toContain("**Completion evidence:**");
+		expectElementaryReadings(course, "late-elementary-a-math");
+		expect(originalText).toContain("**Completion evidence:**");
 		for (const anchor of expectedAnchors) {
 			expect(text, anchor).toContain(anchor);
 		}
 		for (const originalReference of originalReferences) {
-			expect(text, originalReference).toContain(originalReference);
+			expect(originalText, originalReference).toContain(
+				originalReference
+			);
 		}
 
 		expect(text).not.toMatch(

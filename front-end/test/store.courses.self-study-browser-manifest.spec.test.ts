@@ -9,6 +9,7 @@ import { expect, it } from "vitest";
 import published from "../../test/fixtures/catalog-published-identities.json";
 import elementaryAdditions from "../../test/fixtures/early-elementary-a-restored-identities.json";
 import elementaryBAdditions from "../../test/fixtures/early-elementary-b-restored-identities.json";
+import lateElementaryAAdditions from "../../test/fixtures/late-elementary-a-restored-identities.json";
 import ventureAdditions from "../../test/fixtures/entrepreneurship-restored-core-identities.json";
 import grammarAdditions from "../../test/fixtures/grammar-mechanics-restored-identities.json";
 import literatureAdditions from "../../test/fixtures/middle-school-literature-restored-identities.json";
@@ -34,6 +35,7 @@ import { preAlgebraACourse } from "@/stores/courses/pre-algebra-a";
 import {
 	earlyElementaryMathACourse,
 	earlyElementaryMathBCourse,
+	lateElementaryMathACourse,
 	entrepreneurship101Course,
 	grammarMechanicsCourse,
 	introductionToPublicSpeakingCourse,
@@ -45,6 +47,12 @@ import {
 } from "@/stores/courses/source-library-courses";
 
 const cases = [
+	{
+		id: "late-elementary-a-math",
+		source: lateElementaryMathACourse,
+		readings: 19,
+		additions: lateElementaryAAdditions
+	},
 	{
 		id: "early-elementary-b-math",
 		source: earlyElementaryMathBCourse,
@@ -310,6 +318,7 @@ it.each(
 			const fullBlocks = [
 				"early-elementary-a-math",
 				"early-elementary-b-math",
+				"late-elementary-a-math",
 				"algebra-1a",
 				"algebra-1b",
 				"pre-algebra-a",
@@ -405,6 +414,7 @@ it.each(
 						([
 							"early-elementary-a-math",
 							"early-elementary-b-math",
+							"late-elementary-a-math",
 							"algebra-1a",
 							"algebra-1b",
 							"introduction-to-public-speaking",
@@ -442,7 +452,8 @@ it.each(
 						algebra1 ||
 						[
 							"early-elementary-a-math",
-							"early-elementary-b-math"
+							"early-elementary-b-math",
+							"late-elementary-a-math"
 						].includes(id)
 					) ||
 						module.kind !== "appendix")

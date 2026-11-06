@@ -5220,7 +5220,7 @@ const lateElementaryAMathSourceAnchors: Record<string, SourceActivityAnchor[]> =
 				prompt: "Use the art-gallery lighting setup to place a light perpendicular to the ceiling, then rotate it left until it is 23 degrees from the ceiling and describe the new angle relationship.",
 				evidence: [
 					"Diagram of the original perpendicular light position.",
-					"Rotation record showing the 23-degree adjustment.",
+					"Rotation record showing a 67-degree turn from perpendicular and a final 23-degree ceiling angle.",
 					"Explanation of how the angle changed from a right angle."
 				]
 			}

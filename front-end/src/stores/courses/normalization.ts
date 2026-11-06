@@ -7,6 +7,7 @@ import { applyEntrepreneurshipReadings } from "./entrepreneurshipReadings";
 import { applyGrammarMechanicsReadings } from "./grammarMechanicsReadings";
 import { applyIntroPhysicsReferences } from "./introPhysicsReferences";
 import { isJuniScratchProjectTitle } from "./juniScratchProjects";
+import { applyLateElementaryAProjects } from "./lateElementaryAProjects";
 import { mapMarkdownProse } from "./markdownProse";
 import { applyMiddleSchoolLiteratureReadings } from "./middleSchoolLiteratureReadings";
 import { applyMiddleSchoolWritingReadings } from "./middleSchoolWritingReadings";
@@ -9836,6 +9837,8 @@ export function normalizeRawCourse(id: string, rawCourse: RawCourse) {
 		applyEarlyElementaryAProjects(course, rawCourse);
 	if (id === "early-elementary-b-math")
 		applyEarlyElementaryBProjects(course, rawCourse);
+	if (id === "late-elementary-a-math")
+		applyLateElementaryAProjects(course, rawCourse);
 	applyScratchConceptReadings(course, id, rawCourse);
 	applyPyGamesCourseWorkflows(course, id);
 	applyRustCargoCourseWorkflows(course, id);
