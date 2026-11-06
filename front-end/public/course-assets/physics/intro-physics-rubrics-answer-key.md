@@ -154,6 +154,8 @@ Core evidence:
 
 ## Waves Sound and Light Key
 
+For the Interference Phase Cards, matching-phase totals are 0, +4, 0, −4, 0 cm, giving amplitude 4 cm at the sampled point. Opposite-phase totals are zero at every listed time, giving a node with zero displacement amplitude at that point. Superposition adds signed displacements, not amplitudes without regard to phase. This local cancellation does not imply that the wave field has no energy at other locations; the counterpropagating-wave model redistributes the response spatially.
+
 All four wave-table cases have speed \(v=f\lambda=6.0\text{ m/s}\). A and B show doubled frequency with halved wavelength at the same modeled speed. B and C have the same frequency and wavelength but different amplitude.
 
 The waveform has:

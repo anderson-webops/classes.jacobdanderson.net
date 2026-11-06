@@ -497,6 +497,50 @@ describe("Intro to Physics learner flow", () => {
 			}
 			expect(readings).toBe(17);
 			expect(assignments).toBe(137);
+			const guides = displayed.modules.filter(
+				module => module.kind === "appendix"
+			);
+			expect(guides).toHaveLength(4);
+			const references = guides.flatMap(module => [
+				...module.curriculum,
+				...module.supplementalProjects
+			]);
+			expect(references).toHaveLength(28);
+			expect(references.filter(isLessonLearningItem)).toHaveLength(20);
+			expect(
+				references.filter(item => !isLessonLearningItem(item))
+			).toHaveLength(8);
+			for (const item of references) {
+				expect(item.content, item.title).not.toMatch(
+					/requires arrays|Each dependency edge|module needs a clearer project target|Reference-supported work|standard or documentation page, explains why it matters/iu
+				);
+				expect(item.datasetLink, item.title).toMatch(
+					/^\/course-assets\/physics\//u
+				);
+				for (const match of item.content.matchAll(
+					/\]\((\/course-assets\/physics\/[^)]+)\)/gu
+				)) {
+					const [file, anchor] = match[1].split("#");
+					const text = fs.readFileSync(
+						path.resolve("public" + file),
+						"utf8"
+					);
+					if (anchor)
+						expect(
+							markdownHeadingSlugs(text),
+							item.title
+						).toContain(anchor);
+				}
+			}
+			const interference = references.find(
+				item =>
+					item.title ===
+					"Practice Project: Wave Interference Simulation"
+			)!;
+			expect(interference.learningPath).toBe("choice");
+			expect(interference.datasetLink).toContain(
+				"#waves-sound-and-light-cases"
+			);
 		}
 	);
 

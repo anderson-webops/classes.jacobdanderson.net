@@ -24,7 +24,7 @@ const courseIds = [
 	"algebra-2b",
 	"intro-to-physics"
 ];
-const readingCounts = [10, 13, 14, 16, 20, 14, 9, 4, 27, 22, 17];
+const readingCounts = [10, 13, 14, 16, 20, 14, 9, 4, 27, 22, 37];
 assert.equal(readingCounts.length, courseIds.length);
 const requestedCourses = process.env.SELF_STUDY_BROWSER_COURSES;
 const sourceMode = process.env.SELF_STUDY_BROWSER_SOURCE_MODE ?? "build";
@@ -390,7 +390,7 @@ test(
 							);
 							assert.deepEqual(
 								outline,
-								fixture.modules.map(module => module.title),
+								fixture.modules.filter(module => module.kind !== "appendix").map(module => module.title),
 								"Every teaching module is reachable in its teaching group"
 							);
 							const references = await page.$$eval(

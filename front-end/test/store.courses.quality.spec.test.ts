@@ -10,6 +10,7 @@ import { javascriptCourseResource } from "@/modules/javascriptCourseResources";
 import { rawCourseProse } from "./courseProse";
 import { createPinia, setActivePinia } from "pinia";
 import { useCoursesStore } from "@/stores/courses";
+import { introToPhysicsCourse } from "@/stores/courses/intro-to-physics";
 import {
 	pyGamesCoreResource,
 	pyGamesCoreSourceRevision
@@ -262,7 +263,8 @@ function completeSpeakingPractice(
 		item.preserveInstructions === true &&
 		item.preserveAssignment === true &&
 		module.supplementalProjects.some(
-			candidate => candidate.id === item.id && candidate.title === item.title
+			candidate =>
+				candidate.id === item.id && candidate.title === item.title
 		) &&
 		hasAuthoredModuleReading(module) &&
 		wordCount(item.content) >= 40 &&
@@ -278,6 +280,88 @@ function isProjectLikeTitle(title: string) {
 		!isInformationalResourceTitle(title) &&
 		/project|capstone|challenge|lab|practice|drill|notebook|audit|reflection|build|create|implement|exercise/i.test(
 			title
+		)
+	);
+}
+
+// Physics tasks share reviewed local tables, keys and worked module readings.
+// Accept concise prompts only while those inputs and the full authored task survive.
+const physicsEvidenceFiles = new Map<string, string>();
+function physicsEvidenceSection(
+	link: string | undefined,
+	kind: "materials-pack" | "rubrics-answer-key"
+) {
+	const match = link?.match(
+		new RegExp(
+			`^/course-assets/physics/intro-physics-${kind}\\.md(?:#([a-z-]+))?$`,
+			"u"
+		)
+	);
+	if (!match) return "";
+	const file = `public/course-assets/physics/intro-physics-${kind}.md`;
+	if (!physicsEvidenceFiles.has(file))
+		physicsEvidenceFiles.set(file, fs.readFileSync(file, "utf8"));
+	const text = physicsEvidenceFiles.get(file)!;
+	if (!match[1]) return text;
+	return (
+		text.split(/^## /mu).find(
+			section =>
+				section
+					.split("\n")[0]
+					.toLowerCase()
+					.replace(/[^a-z0-9 ]/gu, "")
+					.replace(/ +/gu, "-") === match[1]
+		) ?? ""
+	);
+}
+function completePhysicsPractice(
+	courseId: string,
+	module: RawCourseModule,
+	item: RawCourseModuleItem
+) {
+	if (
+		courseId !== "intro-to-physics" ||
+		item.contentKind !== "assignment" ||
+		!item.preserveInstructions
+	)
+		return false;
+	if (
+		physicsEvidenceSection(item.datasetLink, "materials-pack").length <
+			300 ||
+		physicsEvidenceSection(item.solutionLink, "rubrics-answer-key").length <
+			100
+	)
+		return false;
+	const originalModule = introToPhysicsCourse.modules.find(
+		candidate => candidate.title === module.title
+	);
+	if (originalModule) {
+		const original = [
+			...originalModule.curriculum,
+			...originalModule.supplementalProjects
+		].find(candidate => candidate.title === item.title);
+		return (
+			original?.content === item.content &&
+			wordCount(item.content) >= 20 &&
+			module.curriculum.some(
+				reading =>
+					reading.contentKind === "reading" &&
+					reading.preserveInstructions &&
+					wordCount(reading.content) >= 120 &&
+					reading.content.includes("**Worked case:**")
+			)
+		);
+	}
+	return (
+		module.kind === "appendix" &&
+		/^(?:Practice Project|Resource Project):/u.test(item.title) &&
+		item.learningPath === "choice" &&
+		wordCount(item.content) >= 40 &&
+		module.curriculum.some(
+			reading =>
+				reading.contentKind === "reading" &&
+				reading.preserveInstructions &&
+				wordCount(reading.content) >= 30
 		)
 	);
 }
@@ -5561,7 +5645,16 @@ describe("course text quality normalization", () => {
 											module,
 											item
 										) &&
-										!completeSpeakingPractice(entry.id, module, item)
+										!completeSpeakingPractice(
+											entry.id,
+											module,
+											item
+										) &&
+										!completePhysicsPractice(
+											entry.id,
+											module,
+											item
+										)
 								)
 								.filter(
 									item =>
@@ -5626,7 +5719,8 @@ describe("course text quality normalization", () => {
 								item.content
 							) &&
 							!reviewedJavaScriptProjectReadme(id, item) &&
-							!completeSpeakingPractice(id, module, item);
+							!completeSpeakingPractice(id, module, item) &&
+							!completePhysicsPractice(id, module, item);
 
 						return shortWithoutReview
 							? [
@@ -6980,7 +7074,9 @@ describe("course text quality normalization", () => {
 				expect(text).toContain("**Extension choices:**");
 			}
 			if (courseId === "introduction-to-public-speaking") {
-				const modules = course.modules.filter(module => !module.internal);
+				const modules = course.modules.filter(
+					module => !module.internal
+				);
 				expect(modules).toHaveLength(9);
 				for (const module of modules) {
 					expect(module.supplementalProjects).toHaveLength(2);
@@ -6989,7 +7085,9 @@ describe("course text quality normalization", () => {
 							completeSpeakingPractice(courseId, module, item),
 							`${module.title} / ${item.title}: supplied input, work and review`
 						).toBe(true);
-						for (const required of speakingPracticeContracts[module.title]) {
+						for (const required of speakingPracticeContracts[
+							module.title
+						]) {
 							expect(
 								completeSpeakingPractice(courseId, module, {
 									...item,

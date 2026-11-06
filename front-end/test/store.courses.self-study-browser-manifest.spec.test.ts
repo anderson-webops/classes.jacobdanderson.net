@@ -94,7 +94,7 @@ const cases = [
 	{
 		id: "intro-to-physics",
 		source: introToPhysicsCourse,
-		readings: 17,
+		readings: 37,
 		additions: []
 	}
 ] as const;
@@ -258,10 +258,7 @@ it.each(
 		const modules = course.modules
 			.filter(
 				module =>
-					!module.internal &&
-					(!algebra || module.kind !== "appendix") &&
-					(id !== "intro-to-physics" ||
-						/^PHY\d+ /u.test(module.title))
+					!module.internal && (!algebra || module.kind !== "appendix")
 			)
 			.map(module => ({
 				id: module.id,
@@ -283,9 +280,12 @@ it.each(
 		else
 			expect(
 				modules.filter(module => module.kind === "module")
-			).toHaveLength(count);
+			).toHaveLength(id === "intro-to-physics" ? 17 : count);
 		for (const module of modules) {
-			if (!algebra) expect(module.readings, module.title).toHaveLength(1);
+			if (id === "intro-to-physics" && module.kind === "appendix")
+				expect(module.readings.length, module.title).toBeGreaterThan(0);
+			else if (!algebra)
+				expect(module.readings, module.title).toHaveLength(1);
 			else if (module.readings.length === 0)
 				expect(module.title).toMatch(/capstone/i);
 			for (const reading of module.readings) {

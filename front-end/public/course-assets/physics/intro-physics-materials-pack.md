@@ -260,6 +260,20 @@ Calculate wave speed. Compare A with B for frequency and wavelength, and compare
 
 Estimate amplitude, period, and frequency. Explain why this time graph alone does not directly display wavelength.
 
+### Interference phase cards
+
+Two ideal waves travel in opposite directions in a linear medium. Each has amplitude 2 cm and period 1 s. The table samples one fixed point for two different phase relationships. Superposition means adding the signed displacements at the same point and time.
+
+| Time (s) | Wave 1 (cm) | Wave 2, matching phase (cm) | Wave 2, opposite phase (cm) |
+| -------: | ----------: | -------------------------: | -------------------------: |
+|     0.00 |           0 |                          0 |                          0 |
+|     0.25 |           2 |                          2 |                         -2 |
+|     0.50 |           0 |                          0 |                          0 |
+|     0.75 |          -2 |                         -2 |                          2 |
+|     1.00 |           0 |                          0 |                          0 |
+
+Calculate and graph the total displacement for each phase relationship. Find its amplitude at this point. Explain why cancellation at one point does not demonstrate disappearance of wave energy everywhere. A table or paper graph is a complete model route; an interactive simulation is optional.
+
 ### Resonance response
 
 | Driving frequency (Hz) | Response amplitude (relative units) |
