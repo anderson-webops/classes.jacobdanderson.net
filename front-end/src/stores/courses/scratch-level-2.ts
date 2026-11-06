@@ -403,9 +403,7 @@ Finally, share the project!`,
 1. Define a loop and explain what it means for one loop to be placed inside another loop.
 2. Add a sprite that plays a sound when the spacebar is pressed. Put a repeat 3 around the sound block, then put a repeat 2 around the whole script. Predict the total number of sounds before running it.
 3. When the green flag is clicked, draw a triangle, turn 60 degrees, and draw another triangle. Add a repeat block to form a hexagon of triangles.
-4. Draw another larger hexagon around the first one. A loop around the existing code can remove repetition.
-
-**Completion check:** The prediction for the sound loop matches the actual run, and the drawing shows why nested loops reduce repeated code.`,
+4. Draw another larger hexagon around the first one. A loop around the existing code can remove repetition.`,
 					solutionLink: "https://scratch.mit.edu/projects/341945558/"
 				},
 				{
@@ -419,9 +417,7 @@ Finally, share the project!`,
 2. Move the drawing code so the parent sprite creates clones every 2 seconds after the green flag is clicked.
 3. Make each clone go to a random position and draw the hexagon shape.
 4. Make clones show when created and delete themselves when finished.
-5. Decide what the original parent sprite does while it is not drawing.
-
-**Completion check:** The parent sprite manages clone creation while the clones handle the drawing and cleanup.`,
+5. Decide what the original parent sprite does while it is not drawing.`,
 					solutionLink: "https://scratch.mit.edu/projects/341945558/"
 				},
 				{
@@ -816,9 +812,7 @@ View CS Training's Code`,
 4. Make Andie say the second item in the list.
 5. Report all available actions by looping through the list.
 6. After reporting all actions, ask which action to show and switch to that costume.
-7. Clear the list first so pressing 3 does not add duplicate items.
-
-**Completion check:** The action list is rebuilt cleanly and controls the costume selection.`,
+7. Clear the list first so pressing 3 does not add duplicate items.`,
 					solutionLink: "https://scratch.mit.edu/projects/342645999/"
 				},
 				{
@@ -833,9 +827,7 @@ View CS Training's Code`,
 3. Make Andie score when the spacebar is pressed.
 4. Create a function called Find Multiples that takes one number input.
 5. Have Find Multiples say the first 10 multiples of the input number.
-6. When the spacebar is pressed, make Andie say the multiples of a random number from 1 to 10.
-
-**Completion check:** The same Find Multiples custom block works for different random inputs.`,
+6. When the spacebar is pressed, make Andie say the multiples of a random number from 1 to 10.`,
 					solutionLink: "https://scratch.mit.edu/projects/342645999/"
 				},
 				{
