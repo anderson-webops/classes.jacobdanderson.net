@@ -115,6 +115,16 @@ watch(
 	min-width: 0;
 }
 
+.course-resource-hero > div {
+	min-width: 0;
+}
+
+.course-resource-hero .page-title {
+	width: 100%;
+	max-width: 100%;
+	overflow-wrap: anywhere;
+}
+
 .course-resource-card {
 	padding: clamp(1rem, 3vw, 2rem);
 	min-width: 0;
