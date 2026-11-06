@@ -89,7 +89,8 @@ async function chooseModule(page, module, index) {
 	) {
 		await toggle.click();
 	}
-	const label = `Show ${module.kind} ${index + 1}: ${module.title}`;
+	const kind = module.kind === "transition" ? "next step" : module.kind;
+	const label = `Show ${kind} ${index + 1}: ${module.title}`;
 	await page
 		.locator(`.outline-button[aria-label=${JSON.stringify(label)}]`)
 		.click();
@@ -431,7 +432,8 @@ test(
 								index,
 								module
 							] of fixture.modules.entries()) {
-								await chooseModule(page, module, index);
+								const groupIndex = fixture.modules.slice(0, index).filter(candidate => candidate.kind === module.kind).length;
+								await chooseModule(page, module, groupIndex);
 								await chooseView(page, 3);
 								for (const item of module.readings) {
 									const anchor = `${module.id}-${item.id}`;
@@ -540,6 +542,7 @@ test(
 								);
 								if (
 									index === 0
+									|| (id === "intro-to-physics" && /^(?:Standards Map|Course Roadmap)$/.test(module.title))
 									|| module.readings.some(
 										item => item.images.length
 									)
