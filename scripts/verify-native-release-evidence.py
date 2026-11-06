@@ -19,7 +19,7 @@ def now():
     return datetime.now(timezone.utc).isoformat()
 
 
-def digest(path):
+def file_sha256(path):
     result = hashlib.sha256()
     with Path(path).open("rb") as stream:
         for block in iter(lambda: stream.read(1024 * 1024), b""):
@@ -107,7 +107,7 @@ def download(meta, work, output):
     command(["gh", "api", f"repos/{meta['repository']}/actions/artifacts/{meta['artifact']}/zip"],
             output, timeout=240, destination=archive)
     assert archive.stat().st_size == meta["artifactSize"]
-    assert "sha256:" + digest(archive) == meta["artifactDigest"]
+    assert "sha256:" + file_sha256(archive) == meta["artifactDigest"]
     expected = {"classes-native-linux-arm64.tar.gz", "classes-native-linux-arm64.manifest.json",
                 "classes-native-linux-arm64.sigstore.json"}
     assets = {}
@@ -122,8 +122,8 @@ def download(meta, work, output):
                 while block := source.read(1024 * 1024):
                     target.write(block)
             assert path.stat().st_size == entry.file_size
-            assets[entry.filename] = dict(path=str(path), size=entry.file_size, sha256=digest(path))
-    return dict(meta, sha256=digest(archive), assets=assets)
+            assets[entry.filename] = dict(path=str(path), size=entry.file_size, sha256=file_sha256(path))
+    return dict(meta, sha256=file_sha256(archive), assets=assets)
 
 
 def verify(meta, trusted, work, output):
@@ -239,7 +239,7 @@ def verify(meta, trusted, work, output):
     print(json.dumps({key: value for key, value in record.items() if key not in ['assets', 'proofs']}, indent=2))
 
     record.update(inspectorCommit=os.environ.get("GITHUB_SHA"),
-                  inspectorScriptSHA256=digest(Path(__file__)),
+                  inspectorScriptSHA256=file_sha256(Path(__file__)),
                   tagObject=meta["tagObject"], trustedCheckoutClean=True,
                   applicationBuildOrExecutionPerformed=False,
                   sourceVerificationPolicy="Full existing payload,route,source and signed-subject checks.")
