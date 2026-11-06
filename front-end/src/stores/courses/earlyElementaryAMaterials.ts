@@ -19,7 +19,7 @@ export const earlyElementaryAMaterials: ElementaryMaterial[] = [
 		tasks: [
 			{
 				title: "Ladybug Number Bond Cases",
-				prompt: "There are 15 ladybugs and two empty boxes. Put six ladybugs in Box A and the rest in Box B. Draw and label both groups. Move one ladybug from B to A and write the new equation. Finally, share all 15 as evenly as possible between the boxes, leaving one ladybug in the net.",
+				prompt: "There are 15 ladybugs and two empty boxes. Put six ladybugs in Box A and the rest in Box B. Draw and label both groups. Move one ladybug from B to A and write the new equation. Then split all 15 as evenly as possible between the boxes, leaving one ladybug in the net.",
 				anchor: "ladybug-bonds"
 			}
 		],
@@ -227,7 +227,7 @@ export const earlyElementaryAMaterials: ElementaryMaterial[] = [
 			anchor: "eea11-practice"
 		},
 		challenge: {
-			prompt: "Solve 700 - 286. Show how to exchange across the zero tens and ones.",
+			prompt: "Solve 700 - 286. Show the exchanges across the zero tens and ones.",
 			anchor: "eea11-challenge"
 		}
 	},
