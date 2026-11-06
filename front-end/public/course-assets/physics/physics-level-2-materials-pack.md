@@ -64,6 +64,12 @@ A drone can move at 12.0 m/s relative to the air. A steady wind is 5.0 m/s east.
 - compare with a naive due-north heading;
 - repeat for a 7.0 m/s east wind and state the feasibility limit.
 
+### River-crossing case
+
+The river flows east at 1.50 m/s. A modeled swimmer moves at 3.00 m/s relative to the water. The banks are 120 m apart in the north–south direction, and the target is directly opposite the starting point.
+
+Find the westward swimming component and available northward component needed for the target. Calculate crossing time. Compare with a due-north heading, including crossing time and eastward drift. Treat the velocities as constant and use this supplied case without a physical water investigation.
+
 ## Multi Force and Equilibrium Cases
 
 ### Elevator scale data
@@ -94,6 +100,18 @@ A 500 N sign hangs at rest from two identical cables. Each cable is 30° above h
 A 120 kg platform accelerates upward at 0.80 m/s². Two vertical support cables share the load in a 3:2 tension ratio.
 
 Find both tensions. Then compare the whole platform system with a subsystem containing only one attachment point and explain why the same equation cannot be copied unchanged.
+
+### Tug-of-war system case
+
+Both modeled teams and the taut 2.00 kg rope accelerate east at the same rate. The rope is horizontal; weight and normal forces balance vertically. The listed ground forces are within the available traction.
+
+| Object | Mass (kg) | Eastward horizontal force (N) | Westward horizontal force (N) |
+| --- | ---: | ---: | ---: |
+| West team | 60.0 | rope: 180 | ground: 150 |
+| East team | 70.0 | ground: 216 | rope: 181 |
+| Rope | 2.00 | east team: 181 | west team: 180 |
+
+Draw each free-body diagram and calculate each acceleration. Then draw the combined teams-plus-rope system, cancel its internal interaction pairs, and calculate its acceleration from ground forces alone. Explain why the rope's two end tensions differ and why the ground forces on different teams are not a Newton's-third-law pair. The ground experiences the opposite member of each team–ground interaction.
 
 ## Friction Inclines and Connected Systems Cases
 
@@ -138,6 +156,12 @@ Mass A = 3.00 kg hangs on one side of a massless rope and frictionless pulley. M
 
 The same masses are tested with a pulley that has rotational inertia. Supplied acceleration is 1.55 m/s² rather than the ideal prediction. Use the discrepancy to explain which ideal equality or energy account needs refinement.
 
+### Ramp design criteria
+
+For a hold-at-rest design, select the steepest available ramp from 8°, 12° and 18° that permits rest across the entire supplied static-coefficient range 0.25–0.35. Compare the required friction with the smallest available maximum, and state the limiting angle.
+
+For a sliding design, select from 15°, 20° and 25° with μk = 0.20. The target downslope acceleration is 1.40–1.60 m/s² with g = 9.80 m/s². Use the supplied sliding model and state whether each option meets the target.
+
 ## Quantitative Momentum and Collisions Cases
 
 ### Two-dimensional collision
@@ -168,6 +192,8 @@ Both designs bring the same modeled object to rest.
 |     0.08 |                  — |                250 |
 
 Estimate impulse with trapezoids, compare peak and average force, and state whether the samples alone capture the true instantaneous peak.
+
+For a design comparison, require a sampled peak no greater than 600 N and a stopping interval no greater than 0.10 s. Select any design meeting both criteria. Repeat with a stricter interval limit of 0.05 s. Keep these conclusions limited to the supplied records; they do not certify real protective equipment.
 
 ### Momentum uncertainty record
 

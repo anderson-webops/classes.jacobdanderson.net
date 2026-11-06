@@ -22,9 +22,10 @@ const courseIds = [
 	"scratch-level-1-bootcamp",
 	"algebra-2a",
 	"algebra-2b",
-	"intro-to-physics"
+	"intro-to-physics",
+	"physics-level-2"
 ];
-const readingCounts = [10, 13, 14, 16, 20, 14, 9, 4, 27, 22, 37];
+const readingCounts = [10, 13, 14, 16, 20, 14, 9, 4, 27, 22, 37, 5];
 assert.equal(readingCounts.length, courseIds.length);
 const requestedCourses = process.env.SELF_STUDY_BROWSER_COURSES;
 const sourceMode = process.env.SELF_STUDY_BROWSER_SOURCE_MODE ?? "build";
@@ -230,7 +231,7 @@ async function checkCards(page, module, expected, optional) {
 }
 
 test(
-	"complete self-study readings and assignments in both roles and viewport sizes",
+	"reviewed self-study readings and assignments in both roles and viewport sizes",
 	{ timeout: 900000 },
 	async () => {
 		const previous = process.cwd();
@@ -432,6 +433,7 @@ test(
 								index,
 								module
 							] of fixture.modules.entries()) {
+								if (fixture.reviewedModuleIds && !fixture.reviewedModuleIds.includes(module.id)) continue;
 								const groupIndex = fixture.modules.slice(0, index).filter(candidate => candidate.kind === module.kind).length;
 								await chooseModule(page, module, groupIndex);
 								await chooseView(page, 3);
@@ -601,7 +603,9 @@ test(
 								role,
 								width,
 								sourceCommit: fixture.sourceCommit,
-								moduleViews: fixture.modules.length,
+								moduleViews: assignments.length,
+								reviewScope: fixture.reviewScope,
+								reviewedModuleIds: fixture.reviewedModuleIds,
 								completeReadings: readings,
 								assignments,
 								internalModulesExcluded:
@@ -624,7 +628,7 @@ test(
 									id,
 									role,
 									width,
-									modules: fixture.modules.length,
+									modules: assignments.length,
 									readings: readings.length,
 									preservedPublishedIdentities:
 										fixture.publishedIdentities,

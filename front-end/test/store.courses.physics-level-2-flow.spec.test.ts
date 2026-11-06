@@ -1,8 +1,13 @@
 import fs from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
+import { createPinia, setActivePinia } from "pinia";
+import { isLessonLearningItem } from "@/modules/courseLessonPresentation";
+import { useAppStore } from "@/stores/app";
+import { useCoursesStore } from "@/stores/courses";
 import { loadRawCourse } from "@/stores/courses/index";
 import { physicsLevel2Course } from "@/stores/courses/physics-level-2";
+import { physicsLevel2FoundationReadings } from "@/stores/courses/physicsLevel2FoundationReadings";
 
 const EXPECTED_SEQUENCE = [
 	"PHY8 Quantitative Kinematics and Vector Modeling",
@@ -151,7 +156,7 @@ describe("Physics Level 2 learner flow", () => {
 			).toBeGreaterThanOrEqual(5);
 			expect(module.supplementalProjects, module.title).toHaveLength(3);
 			expect(module.curriculum[0]?.content, module.title).toContain(
-				"**Teaching flow:**"
+				"**Concept path:**"
 			);
 
 			const expectedPath = index >= 9 && index <= 15 ? "choice" : "core";
@@ -427,6 +432,90 @@ describe("Physics Level 2 learner flow", () => {
 			"/course-assets/physics/physics-level-2-rubrics-answer-key.md#"
 		);
 	});
+
+	it("teaches the first four quantitative models with worked supplied cases", () => {
+		for (const [index, number] of [8, 9, 10, 11].entries()) {
+			const module = requireModule(EXPECTED_SEQUENCE[index]);
+			const reading = module.curriculum[index === 0 ? 1 : 0];
+			expect(reading.contentKind).toBe("reading");
+			expect(reading.content).toContain(
+				physicsLevel2FoundationReadings[number]
+			);
+			expect(reading.content).toContain("### Worked");
+		}
+		const cases = Object.values(physicsLevel2FoundationReadings).join("\n");
+		for (const result of [
+			"35.35 m",
+			"55.0 s",
+			"+2.20 m/s²",
+			"763.2 N",
+			"1.51 m/s²",
+			"23.52 N",
+			"20 N·s",
+			"0.5875 kg·m/s"
+		])
+			expect(cases).toContain(result);
+	});
+
+	it.each(["learner", "instructor"])(
+		"preserves complete instructions and foundation Learn entries for %s",
+		async role => {
+			setActivePinia(createPinia());
+			if (role === "instructor")
+				useAppStore().setCurrentTutor({
+					_id: "physics-level-2-review-tutor",
+					name: "Tutor",
+					email: "tutor@example.invalid",
+					age: 30,
+					state: "GA",
+					usersOfTutorLength: 0,
+					coursePermissions: ["physics-level-2"],
+					editTutors: false,
+					saveEdit: "Save"
+				});
+			const displayed =
+				(await useCoursesStore().loadCourseById("physics-level-2"))!;
+			for (const [
+				index,
+				authored
+			] of physicsLevel2Course.modules.entries()) {
+				const module = displayed.modules.find(
+					candidate => candidate.title === authored.title
+				)!;
+				expect(module, authored.title).toBeDefined();
+				const items = [
+					...module.curriculum,
+					...module.supplementalProjects
+				];
+				if (index < 4)
+					expect(items.filter(isLessonLearningItem)).toHaveLength(
+						index === 0 ? 2 : 1
+					);
+				for (const original of [
+					...authored.curriculum,
+					...authored.supplementalProjects
+				]) {
+					const item = items.find(
+						candidate => candidate.title === original.title
+					)!;
+					expect(item, original.title).toBeDefined();
+					expect(item.content, original.title).toBe(
+						original.content.trim()
+					);
+					expect(item.datasetLink).toBe(original.datasetLink);
+					expect(item.solutionLink).toBe(
+						role === "instructor"
+							? original.solutionLink
+							: undefined
+					);
+					if (index < 4)
+						expect(isLessonLearningItem(item)).toBe(
+							original.contentKind === "reading"
+						);
+				}
+			}
+		}
+	);
 
 	it("avoids old generic and unsafe implementation language", () => {
 		const source = fs.readFileSync(

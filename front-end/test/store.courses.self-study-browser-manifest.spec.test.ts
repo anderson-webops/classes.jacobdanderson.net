@@ -19,6 +19,7 @@ import { useCoursesStore } from "@/stores/courses";
 import { algebra2ACourse } from "@/stores/courses/algebra-2a";
 import { algebra2BCourse } from "@/stores/courses/algebra-2b";
 import { introToPhysicsCourse } from "@/stores/courses/intro-to-physics";
+import { physicsLevel2Course } from "@/stores/courses/physics-level-2";
 import {
 	entrepreneurship101Course,
 	grammarMechanicsCourse,
@@ -95,6 +96,12 @@ const cases = [
 		id: "intro-to-physics",
 		source: introToPhysicsCourse,
 		readings: 37,
+		additions: []
+	},
+	{
+		id: "physics-level-2",
+		source: physicsLevel2Course,
+		readings: 5,
 		additions: []
 	}
 ] as const;
@@ -239,7 +246,8 @@ it.each(
 					directive ??
 						([
 							"introduction-to-public-speaking",
-							"intro-to-physics"
+							"intro-to-physics",
+							"physics-level-2"
 						].includes(id)
 							? item.content
 							: "")
@@ -274,15 +282,35 @@ it.each(
 					.filter(item => !isLessonLearningItem(item))
 					.map(card)
 			}));
-		expect(modules.flatMap(module => module.readings)).toHaveLength(count);
+		const reviewedModules =
+			id === "physics-level-2"
+				? modules.filter(module =>
+						source.modules
+							.slice(0, 4)
+							.some(authored => authored.title === module.title)
+					)
+				: modules;
+		expect(reviewedModules.flatMap(module => module.readings)).toHaveLength(
+			count
+		);
 		if (algebra)
 			expect(modules).toHaveLength(id === "algebra-2a" ? 15 : 12);
 		else
 			expect(
 				modules.filter(module => module.kind === "module")
-			).toHaveLength(id === "intro-to-physics" ? 17 : count);
+			).toHaveLength(
+				["intro-to-physics", "physics-level-2"].includes(id)
+					? 17
+					: count
+			);
 		for (const module of modules) {
-			if (id === "intro-to-physics" && module.kind === "appendix")
+			if (id === "physics-level-2") {
+				const index = source.modules.findIndex(
+					candidate => candidate.title === module.title
+				);
+				if (index >= 0 && index < 4)
+					expect(module.readings).toHaveLength(index === 0 ? 2 : 1);
+			} else if (id === "intro-to-physics" && module.kind === "appendix")
 				expect(module.readings.length, module.title).toBeGreaterThan(0);
 			else if (!algebra)
 				expect(module.readings, module.title).toHaveLength(1);
@@ -317,6 +345,24 @@ it.each(
 						restoredIdentities: additions.length,
 						sourceProjects: sourceProjects.length,
 						modules,
+						reviewedModuleIds:
+							id === "physics-level-2"
+								? modules
+										.filter(module =>
+											source.modules
+												.slice(0, 4)
+												.some(
+													authored =>
+														authored.title ===
+														module.title
+												)
+										)
+										.map(module => module.id)
+								: undefined,
+						reviewScope:
+							id === "physics-level-2"
+								? "PHY8–PHY11 foundation only; later modules and reference content remain unreviewed in this acceptance"
+								: "complete course reading and assignment view",
 						internalModules: course.modules
 							.filter(module => module.internal)
 							.map(module => ({

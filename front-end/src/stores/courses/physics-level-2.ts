@@ -1,5 +1,6 @@
 import type { RawCourse, RawCourseModuleItem } from "./types";
 import { contextualizePhysicsCourse } from "./physicsContentContext";
+import { physicsLevel2FoundationReadings } from "./physicsLevel2FoundationReadings";
 
 const physicsLevel2SourceCourse: RawCourse = contextualizePhysicsCourse({
 	name: "Physics Level 2",
@@ -20,7 +21,7 @@ const physicsLevel2SourceCourse: RawCourse = contextualizePhysicsCourse({
 				{
 					title: "Worked Example Set: Relative Velocity and Projectile Motion",
 					content:
-						"Work a wind-and-aircraft example, a river-crossing example, and a projectile example where horizontal and vertical motion are separated cleanly. Use component form, not memorized shortcuts alone, so the source of each equation is clear. Connect the mathematics back to physical storylines such as rescue drones, kicked balls, or supply drops."
+						"Work the supplied rescue-drone, river-crossing, and ideal-projectile cases, separating perpendicular components and naming each reference frame. Use component form, not memorized shortcuts alone, so the source of each equation is clear. Connect the mathematics back to physical storylines such as rescue drones, kicked balls, or supply drops."
 				},
 				{
 					title: "Graph and Data Exercise: Motion Graph Detective 2D",
@@ -1452,33 +1453,50 @@ export const physicsLevel2Course: RawCourse = {
 			);
 		}
 
-		const curriculum = module.curriculum.map((item, itemIndex) => ({
-			...item,
-			title: physicsLevel2Title(module.title, item.title),
-			content: [
-				itemIndex === 0
-					? `**Teaching flow:** ${flow.stage}. Physics Level 2 is the quantitative continuation after Intro to Physics. Intro modules with similar PHY numbers are optional survey previews; this course's PHY8–PHY16 sequence rebuilds those ideas with algebra, trigonometry, multiple representations, validation, and uncertainty. No physical apparatus, personal-device data, home electrical work, projectiles, heat sources, or learner household measurements are required.`
-					: "",
-				item.content,
-				`**Guiding phenomenon:** ${flow.phenomenon}`,
-				`**Core route:** ${flow.corePath}`,
-				`**Stretch route:** ${flow.stretchPath}`,
-				`**Quantitative evidence gate:** ${flow.evidenceGate}`,
-				`**Model domain and limit:** ${flow.boundary}`,
-				`**Reference:** [Open the authoritative module reference](${flow.referenceLink}).`
-			]
-				.filter(Boolean)
-				.join("\n\n"),
-			learningPath: physicsLevel2CurriculumPath(flow.stage),
-			datasetLink:
-				item.datasetLink ?? physicsLevel2Material(flow.materialSection),
-			solutionLink:
-				item.solutionLink ?? physicsLevel2AnswerKey(flow.answerSection),
-			projectLink: item.projectLink ?? flow.referenceLink
-		}));
+		const moduleNumber = Number(module.title.match(/^PHY(\d+) /u)?.[1]);
+		const reading = physicsLevel2FoundationReadings[moduleNumber];
+		const readingIndex = moduleNumber === 8 ? 1 : 0;
+		const curriculum = module.curriculum.map<RawCourseModuleItem>(
+			(item, itemIndex) => ({
+				...item,
+				title: physicsLevel2Title(module.title, item.title),
+				preserveInstructions: true,
+				contentKind: reading
+					? itemIndex === readingIndex ||
+						(moduleNumber === 8 && itemIndex === 0)
+						? "reading"
+						: "assignment"
+					: undefined,
+				content: [
+					itemIndex === 0
+						? `**Concept path:** ${flow.stage}. Physics Level 2 is the quantitative continuation after Intro to Physics. Intro modules with similar PHY numbers are optional survey previews; this course's PHY8–PHY16 sequence rebuilds those ideas with algebra, trigonometry, multiple representations, validation, and uncertainty. No physical apparatus, personal-device data, home electrical work, projectiles, heat sources, or learner household measurements are required.`
+						: "",
+					itemIndex === readingIndex && reading
+						? reading
+						: item.content,
+					`**Guiding phenomenon:** ${flow.phenomenon}`,
+					`**Core route:** ${flow.corePath}`,
+					`**Stretch route:** ${flow.stretchPath}`,
+					`**Quantitative evidence gate:** ${flow.evidenceGate}`,
+					`**Model domain and limit:** ${flow.boundary}`,
+					`**Reference:** [Open the authoritative module reference](${flow.referenceLink}).`
+				]
+					.filter(Boolean)
+					.join("\n\n"),
+				learningPath: physicsLevel2CurriculumPath(flow.stage),
+				datasetLink:
+					item.datasetLink ??
+					physicsLevel2Material(flow.materialSection),
+				solutionLink:
+					item.solutionLink ??
+					physicsLevel2AnswerKey(flow.answerSection),
+				projectLink: item.projectLink ?? flow.referenceLink
+			})
+		);
 
 		const supplementalProjects = module.supplementalProjects.map(item => ({
 			...item,
+			preserveInstructions: true,
 			content: [
 				item.content,
 				`**Course stage:** ${flow.stage}.`,

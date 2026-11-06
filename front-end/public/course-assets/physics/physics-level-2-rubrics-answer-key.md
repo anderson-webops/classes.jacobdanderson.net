@@ -41,6 +41,8 @@ For the drone:
 - with 7.0 m/s wind, northward component ≈ 9.75 m/s and time ≈ 61.6 s;
 - a pure due-north ground track becomes impossible when crosswind reaches or exceeds 12.0 m/s under this speed model.
 
+For the river case, cancel the 1.50 m/s eastward current with a 1.50 m/s westward swimming component. The northward component is sqrt(3.00² − 1.50²) = 2.598 m/s, giving crossing time 120/2.598 ≈ 46.2 s. A due-north heading takes 40.0 s and drifts 1.50 × 40.0 = 60.0 m east. The ground path and water-relative heading differ.
+
 ## Multi Force and Equilibrium Key
 
 The rider's gravitational force is 686 N after rounding.
@@ -62,6 +64,10 @@ For the accelerating platform, total upward cable force is \(120(9.8+0.8)=1272\t
 
 Core evidence includes separate object diagrams, a consistent axis, contact-force interpretation, and a whole-system check.
 
+For the tug-of-war case, east-positive net forces are 180 − 150 = 30 N on the 60.0 kg west team, 216 − 181 = 35 N on the 70.0 kg east team, and 181 − 180 = 1 N on the 2.00 kg rope. Each gives acceleration +0.50 m/s².
+
+For the 132 kg combined system, the rope interactions are internal and the net horizontal external force is 216 − 150 = 66 N east. Thus a = 66/132 = 0.50 m/s². The massive accelerating rope needs unequal end tensions. The team–ground reaction forces act on the ground; they are not the two opposing forces already drawn on the combined teams-plus-rope system.
+
 ## Friction Inclines and Connected Systems Key
 
 The static threshold satisfies \(\tan\theta=\mu_s\), giving \(\theta\approx16.7^\circ\). Under the simplified model, 10° and 15° can remain at rest; 20° and 25° exceed maximum static friction.
@@ -75,6 +81,10 @@ For 3.00 kg versus 2.00 kg ideal hanging masses:
 - whole-system net external driving force is 9.8 N over 5.0 kg.
 
 The supplied 1.55 m/s² value indicates extra rotational inertia or another unmodeled effect. Equal tension can also require review if rope or pulley dynamics are included.
+
+For the hold-at-rest ramp, the least favorable static coefficient is 0.25, so the limiting angle is arctan(0.25) ≈ 14.0°. Both 8° and 12° permit rest across the range; 18° does not. The steepest listed qualifying design is 12°.
+
+For the sliding target, the 15°, 20° and 25° options give about 0.64, 1.51 and 2.37 m/s². Only 20° meets 1.40–1.60 m/s² under the stated kinetic model.
 
 ## Quantitative Momentum and Collisions Key
 
@@ -92,6 +102,8 @@ Kinetic energy:
 The 3 J difference can transfer to deformation, thermal energy, sound, or internal motion while total energy remains conserved in a larger system.
 
 Design A trapezoid area is 20 N·s. Design B is 250 N over 0.08 s, also 20 N·s. Design A has a 1000 N sampled peak; Design B has 250 N. Sampling resolution limits claims about the true instantaneous peak.
+
+Under the 600 N sampled-peak and 0.10 s interval limits, Design B qualifies (250 N, 0.08 s); A fails the peak limit (1000 N, 0.04 s). With a 0.05 s interval limit, neither qualifies: B is too slow, while A still exceeds the peak limit. Neither comparison establishes the unsampled true peak or real-world safety.
 
 For the uncertainty record:
 
