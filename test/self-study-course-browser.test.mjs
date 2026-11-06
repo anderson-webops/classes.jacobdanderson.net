@@ -12,6 +12,8 @@ import { createServer, preview } from "vite";
 
 const root = fileURLToPath(new URL("../front-end/", import.meta.url));
 const courseIds = [
+	"algebra-1a",
+	"algebra-1b",
 	"entrepreneurship-101",
 	"middle-school-a-literature",
 	"middle-school-b-writing",
@@ -28,7 +30,7 @@ const courseIds = [
 	"geometry-a",
 	"geometry-b"
 ];
-const readingCounts = [10, 13, 14, 16, 20, 14, 9, 4, 27, 22, 37, 38, 11, 6, 11];
+const readingCounts = [8, 7, 10, 13, 14, 16, 20, 14, 9, 4, 27, 22, 37, 38, 11, 6, 11];
 assert.equal(readingCounts.length, courseIds.length);
 const requestedCourses = process.env.SELF_STUDY_BROWSER_COURSES;
 const sourceMode = process.env.SELF_STUDY_BROWSER_SOURCE_MODE ?? "build";
@@ -230,7 +232,7 @@ async function checkCards(page, module, expected, optional, resourceViews, profi
 					required: item.requiredDirective,
 					textMode: item.directiveTextMode ?? "textContent"
 				}
-			).catch(async error => {
+			).catch(async (error) => {
 				const actual = await page.$eval(
 					`#${rows[index].id} .assignment-content`,
 					(element, mode) => element[mode].replace(/\s+/g, " ").trim(),
@@ -245,7 +247,9 @@ async function checkCards(page, module, expected, optional, resourceViews, profi
 		for (const check of item.selfChecks ?? []) {
 			const selector = `#${rows[index].id} .assignment-content a[href=${JSON.stringify(check.href)}]`;
 			assert.equal(await page.$eval(selector, element => element.textContent.trim()), check.label);
-			await page.$eval(selector, element => { element.target = "_self"; });
+			await page.$eval(selector, (element) => {
+				element.target = "_self";
+			});
 			await page.locator(selector).click();
 			await page.waitForSelector(".course-resource-card .item-content-markdown");
 			assert.equal(new URL(page.url()).searchParams.get("asset"), check.asset);
@@ -255,7 +259,7 @@ async function checkCards(page, module, expected, optional, resourceViews, profi
 			assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true, `${check.heading}: no viewer overflow`);
 			let comparisonTables;
 			if (/#capstone-(?:domain|growth)-stress-test$/.test(check.asset)) {
-				comparisonTables = await page.$$eval(".course-resource-card .item-content-markdown table", tables => tables.map(table => {
+				comparisonTables = await page.$$eval(".course-resource-card .item-content-markdown table", tables => tables.map((table) => {
 					const available = table.closest(".item-content-markdown").getBoundingClientRect();
 					const bounds = table.getBoundingClientRect();
 					return { columns: table.rows[0].cells.length, fits: bounds.left >= available.left - 1 && bounds.right <= available.right + 1, width: bounds.width, availableWidth: available.width };
@@ -600,7 +604,7 @@ test(
 								if (
 									index === 0
 									|| (["intro-to-physics", "physics-level-2"].includes(id) && /^(?:Standards Map|Course Roadmap)$/.test(module.title))
-                                    || (id === "physics-level-2" && /^(?:PHY12|PHY16|PHY17|PHY23) /.test(module.title))
+									|| (id === "physics-level-2" && /^(?:PHY12|PHY16|PHY17|PHY23) /.test(module.title))
 									|| module.readings.some(
 										item => item.images.length
 									)

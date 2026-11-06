@@ -16,6 +16,8 @@ import { isLessonLearningItem } from "@/modules/courseLessonPresentation";
 import { normalizeInlineCourseMarkdown } from "@/modules/courseMarkdown";
 import { useAppStore } from "@/stores/app";
 import { useCoursesStore } from "@/stores/courses";
+import { algebra1ACourse } from "@/stores/courses/algebra-1a";
+import { algebra1BCourse } from "@/stores/courses/algebra-1b";
 import { algebra2ACourse } from "@/stores/courses/algebra-2a";
 import { algebra2BCourse } from "@/stores/courses/algebra-2b";
 import { introToPhysicsCourse } from "@/stores/courses/intro-to-physics";
@@ -35,6 +37,18 @@ import {
 } from "@/stores/courses/source-library-courses";
 
 const cases = [
+	{
+		id: "algebra-1a",
+		source: algebra1ACourse,
+		readings: 8,
+		additions: []
+	},
+	{
+		id: "algebra-1b",
+		source: algebra1BCourse,
+		readings: 7,
+		additions: []
+	},
 	{
 		id: "geometry-b",
 		source: geometryBCourse,
@@ -259,6 +273,8 @@ it.each(
 		}
 		const card = (item: CourseModuleItem) => {
 			const fullBlocks = [
+				"algebra-1a",
+				"algebra-1b",
 				"pre-algebra-a",
 				"geometry-a",
 				"geometry-b",
@@ -324,6 +340,8 @@ it.each(
 				normalizeInlineCourseMarkdown(
 					directive ??
 						([
+							"algebra-1a",
+							"algebra-1b",
 							"introduction-to-public-speaking",
 							"intro-to-physics",
 							"physics-level-2",
@@ -349,10 +367,12 @@ it.each(
 			};
 		};
 		const algebra = id === "algebra-2a" || id === "algebra-2b";
+		const algebra1 = id === "algebra-1a" || id === "algebra-1b";
 		const modules = course.modules
 			.filter(
 				module =>
-					!module.internal && (!algebra || module.kind !== "appendix")
+					!module.internal &&
+					(!(algebra || algebra1) || module.kind !== "appendix")
 			)
 			.map(module => ({
 				id: module.id,
@@ -369,7 +389,9 @@ it.each(
 					.map(card)
 			}));
 		expect(modules.flatMap(module => module.readings)).toHaveLength(count);
-		if (algebra)
+		if (algebra1)
+			expect(modules).toHaveLength(id === "algebra-1a" ? 21 : 25);
+		else if (algebra)
 			expect(modules).toHaveLength(id === "algebra-2a" ? 15 : 12);
 		else
 			expect(
@@ -418,9 +440,9 @@ it.each(
 				expect(module.readings, module.title).toHaveLength(
 					module.title.startsWith("PHY8 ") ? 2 : 1
 				);
-			else if (!algebra)
+			else if (!algebra && !algebra1)
 				expect(module.readings, module.title).toHaveLength(1);
-			else if (module.readings.length === 0)
+			else if (algebra && module.readings.length === 0)
 				expect(module.title).toMatch(/capstone/i);
 			for (const reading of module.readings) {
 				expect(
