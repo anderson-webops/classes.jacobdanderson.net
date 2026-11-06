@@ -259,7 +259,11 @@ function completeSpeakingPractice(
 	return (
 		courseId === "introduction-to-public-speaking" &&
 		item.contentKind === "assignment" &&
-		module.supplementalProjects.some(candidate => candidate.id === item.id) &&
+		item.preserveInstructions === true &&
+		item.preserveAssignment === true &&
+		module.supplementalProjects.some(
+			candidate => candidate.id === item.id && candidate.title === item.title
+		) &&
 		hasAuthoredModuleReading(module) &&
 		wordCount(item.content) >= 40 &&
 		Boolean(contract?.every(pattern => pattern.test(item.content))) &&

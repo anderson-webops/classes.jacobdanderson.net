@@ -387,7 +387,11 @@ export function applyPublicSpeakingReadings(
 				);
 			}
 			optional.contentKind = "assignment";
-			optional.content = formatAuthoredAssignment(task);
+			optional.content = formatAuthoredAssignment(
+				formatAuthoredReading(task)
+			);
+			optional.preserveInstructions = true;
+			optional.preserveAssignment = true;
 		}
 	}
 }

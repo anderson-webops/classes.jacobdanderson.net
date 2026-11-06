@@ -5,6 +5,7 @@ import LazyMarkdownContent from "@/components/LazyMarkdownContent.vue";
 import { isLessonLearningItem } from "@/modules/courseLessonPresentation";
 import { useAppStore } from "@/stores/app";
 import { useCoursesStore } from "@/stores/courses";
+import { loadRawCourse } from "@/stores/courses/index";
 import { introductionToPublicSpeakingCourse } from "@/stores/courses/source-library-courses";
 
 it.each(["learner", "instructor"])(
@@ -25,6 +26,7 @@ it.each(["learner", "instructor"])(
 				saveEdit: "Save"
 			});
 		const course = (await useCoursesStore().loadCourseById(id))!;
+		const authored = (await loadRawCourse(id))!;
 		const modules = course.modules.filter(module => !module.internal);
 		expect(modules).toHaveLength(9);
 		for (const original of introductionToPublicSpeakingCourse.modules) {
@@ -48,6 +50,14 @@ it.each(["learner", "instructor"])(
 			expect(
 				module.supplementalProjects.filter(isLessonLearningItem)
 			).toEqual([]);
+			for (const assignment of authored.modules.find(
+				candidate => candidate.title === module.title
+			)!.supplementalProjects) {
+				const displayed = module.supplementalProjects.find(
+					candidate => candidate.title === assignment.title
+				);
+				expect(displayed?.content, assignment.title).toBe(assignment.content);
+			}
 		}
 		const argument = modules
 			.find(module => module.title === "MYP7 Defense Attorney")!
