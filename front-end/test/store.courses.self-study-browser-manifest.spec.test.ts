@@ -228,7 +228,10 @@ it.each(
 			)?.[1];
 			const container = document.createElement("div");
 			container.innerHTML = markdown.render(
-				normalizeInlineCourseMarkdown(directive ?? "")
+				normalizeInlineCourseMarkdown(
+					directive ??
+						(id === "introduction-to-public-speaking" ? item.content : "")
+				)
 			);
 			return {
 				id: item.id,
