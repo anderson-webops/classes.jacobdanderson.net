@@ -26,7 +26,7 @@ My aunt met Aunt Rosa at Pine Street Library. The first aunt is a common relatio
 
 ## punctuation practice
 
-We need paper, glue, and crayons. After breakfast, we draw. "I like the zebra," said Kit. "Where is the gate?" asked Kit. List commas separate items; the opening phrase takes a comma; the dialogue comma separates speech from its tag.
+The art box contains paper, glue, and crayons. After breakfast, we draw. "I like the zebra," said Kit. "Where is the gate?" asked Kit. List commas separate items; the opening phrase takes a comma; the dialogue comma separates speech from its tag.
 
 ## dialogue list challenge
 

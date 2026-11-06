@@ -51,7 +51,7 @@ export const pictureBookGuidance: ReadingGuidance[] = [
 		method: "A comma separates items in a list and can separate an opening word or phrase from the main sentence. This course uses a comma before and in a list of three or more items. Quotation marks enclose the exact spoken words in written dialogue. In the American punctuation style used here, a statement's period or the comma before a following speech tag goes inside the closing quotation mark. A question keeps its question mark inside the quotation marks. Begin the spoken sentence with a capital. Separate a speech tag from the speech rather than putting quotation marks around the tag itself.",
 		worked: 'Example list: We packed markers, pens, colored pencils, and paper. Example opener: After lunch, we drew the cover. Example dialogue: "I found the map," said Uma. The comma belongs to the quoted statement before its speech tag; said Uma stays outside the quotation marks. For a question, write "Where is the map?" asked Uma. The question mark already ends the spoken question, so no extra comma follows it. The verb asked stays lowercase because the speech tag continues the same sentence.',
 		practice: {
-			prompt: "Add punctuation to these sentences: We need paper glue and crayons. After breakfast we draw. I like the zebra said Kit. Where is the gate asked Kit. Identify the job of each comma and show which words are spoken.",
+			prompt: "Add punctuation to these sentences: The art box contains paper glue and crayons. After breakfast we draw. I like the zebra said Kit. Where is the gate asked Kit. Identify the job of each comma and show which words are spoken.",
 			anchor: "punctuation-practice",
 			title: "punctuation-practice"
 		},

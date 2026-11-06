@@ -4,7 +4,7 @@ export const pictureBookTaskInputs: Record<string, string> = {
 	"Find the Capitalization Rule":
 		"Inspect these complete examples: I visit Oak Park on Monday. My aunt lives in Boston. Aunt Rosa visits in April. We read in summer. English is one of the languages in our library. Correct the new sentence: on friday, i meet ada at pine street library. Explain each changed capital.",
 	"Punctuation Treasure Hunt":
-		"Supply the missing punctuation in these cases: We need markers pens colored pencils and paper. After lunch we visit the zoo. I saw elephants lions and zebras said Nico. May I have a hamburger asked Liv. This course uses American dialogue punctuation and a comma before and in a list of three or more items.",
+		"Supply the missing punctuation in these cases: Ada packs markers pens colored pencils and paper. After lunch we visit the zoo. I saw elephants lions and zebras said Nico. May I have a hamburger asked Liv. This course uses American dialogue punctuation and a comma before and in a list of three or more items.",
 	"Would You Rather Opinion Reasons":
 		"Choose a reading corner or an art table for a shared room. Give two different reasons and one example supporting each. Then create a different two-option question and defend one choice; a reason explains the choice instead of repeating favorite or best.",
 	"Favorite Story Structure Review":
