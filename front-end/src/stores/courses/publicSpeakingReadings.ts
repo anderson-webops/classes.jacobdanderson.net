@@ -240,9 +240,9 @@ const supplementalTasks: Record<string, [string, string]> = {
 reading the paragraph. Mark one pause between ideas and one word to emphasize.
 Compare the two deliveries for clarity, then keep the cue notes and name one
 change that helped the audience follow Rowan's reason for joining the club.`,
-		`Introduce the same fictional person to two audiences: a model-building
-club and a school welcome event. Choose the background detail and closing that
-matter to each audience. Keep both short outlines and explain which details
+		`Prepare two introductions for the same fictional person: one for a
+model-building club and one for a school welcome event. Choose the detail and
+closing that matter to each audience. Keep both short outlines and explain which details
 changed, which stayed accurate, and how the new closing connects with its
 audience.`
 	],
