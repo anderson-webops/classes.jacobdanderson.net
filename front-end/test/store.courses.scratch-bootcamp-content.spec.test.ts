@@ -28,6 +28,42 @@ it.each(["learner", "instructor"])(
 				saveEdit: "Save"
 			});
 		const course = (await useCoursesStore().loadCourseById(id))!;
+		const required: Record<string, string[]> = {
+			"Dragonfly Event Listener Remix": [
+				"random position",
+				"space key",
+				"Buzzzz"
+			],
+			"Beetle Keyboard Drawing Controls": [
+				"10 steps",
+				"1 key",
+				"2 key",
+				"3 key"
+			],
+			"Elephant Repeat and Forever Effects": [
+				"10 changes of size by 10",
+				"size by -10",
+				"wait 1 second"
+			],
+			"Mouse Shape Loops": ["1 key", "2 key", "octagon"],
+			"Button Click Timer Game": [
+				"Seconds left",
+				"scoring inactive",
+				"Pressed",
+				"Regular"
+			],
+			"Bootcamp Game Selection": [
+				"### Spider Smash",
+				"### Hungry Shark",
+				"### Save the Princess",
+				"Bite sound",
+				"Fish2",
+				"subtract 1",
+				"reset it to 3",
+				"Reset Timer to 60"
+			]
+		};
+
 		const modules = course.modules.filter(module => !module.internal);
 		expect(modules.map(module => module.title)).toEqual(
 			scratchLevel1BootcampCourse.modules.map(module => module.title)
@@ -75,6 +111,10 @@ it.each(["learner", "instructor"])(
 					expect(current.learningPath, project.title).toBe(
 						project.learningPath
 					);
+					if (project.title === "Bootcamp Game Selection") {
+						expect(current.ideImport).toBeUndefined();
+						expect(current.solutionLink).toBeUndefined();
+					}
 					expect(current.projectLink, project.title).toBe(
 						project.projectLink
 					);
@@ -90,6 +130,8 @@ it.each(["learner", "instructor"])(
 							.join("\n");
 						expect(assignment, project.title).toContain(directive);
 					}
+					for (const text of required[project.title] ?? [])
+						expect(current.content, project.title).toContain(text);
 					tasks += 1;
 					if (project.projectLink) sourceLinks += 1;
 				}

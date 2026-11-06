@@ -393,6 +393,8 @@ Finally, share the project!`,
 			curriculum: [
 				{
 					title: "Check-In #1: Nested Loops",
+					contentKind: "assignment",
+					preserveInstructions: true,
 					content: `**Check-in goal:** Review loops and nested loops with a small Scratch drawing project.
 
 **Setup:** Create a new blank Scratch project named "Check-in #1".
@@ -408,6 +410,8 @@ Finally, share the project!`,
 				},
 				{
 					title: "Check-In #1: Cloning",
+					contentKind: "assignment",
+					preserveInstructions: true,
 					content: `**Check-in goal:** Review how clones let one sprite create temporary copies with their own behavior.
 
 **Prompts:**
@@ -422,12 +426,16 @@ Finally, share the project!`,
 				},
 				{
 					title: "Check-In #1: Complex Conditionals",
+					contentKind: "assignment",
+					preserveInstructions: true,
 					content:
 						"Complex-1: What block would you use if you wanted to check if two things are true in the same if/then block?\nComplex-2: What about if you wanted to check if, given two things, at least one of them is true?\nComplex-3: What about if you wanted to check if a condition isn't true?\nComplex-ALL: Using complex conditionals, update your code so that the clones that are in the top right portion of the screen all have a blue pen color. (Hint: You may have to use coordinates!) Now, can you add code so that each of the four quadrants uses a different pen color?",
 					solutionLink: "https://scratch.mit.edu/projects/341945558/"
 				},
 				{
 					title: "Check-In #1: Additional Practice Project",
+					contentKind: "assignment",
+					preserveInstructions: true,
 					content: `Use a variable to make the owl count from 1 to 50.
 Add a conditional so that if the spacebar or the up arrow is pressed, the owl says something instead of the number.
 Add a conditional so that if the mouse pointer is on the owl, it gets shy and doesn\'t say anything at all!`,
@@ -781,18 +789,24 @@ View CS Training's Code`,
 			curriculum: [
 				{
 					title: "Check-In #2: Strings",
+					contentKind: "assignment",
+					preserveInstructions: true,
 					content:
 						'Create a new blank project in Scratch, and name it "Check-in #2".\nStrings-1: What does the word “string” mean in Scratch?\nStrings-2: Add the Andie sprite to your project. When the 1 key is pressed, have him ask the user what their name is. Once the user responds, have him say “Hello [your name]” using one say block.\nStrings-3,4: Report to the user the first letter of their name and how many letters are in their name.',
 					solutionLink: "https://scratch.mit.edu/projects/342645999/"
 				},
 				{
 					title: "Check-In #2: Mathematical Operators and Randomness",
+					contentKind: "assignment",
+					preserveInstructions: true,
 					content:
 						"Math-1: How can Scratch perform operations on numbers? Where are these blocks located?\nMath-2: When the 2 key is pressed, make Andie say the result of adding together 5 and 6.\nMath-3,4: Create a random number between 1 and 20 and store it in a variable. If the number is less than 10, have Andie say “Wow, that's a small number!” otherwise, say “Whoa, that's a big number!”\nMath-5: What is the mod block? Have it report to the user the remainder of dividing any two numbers.",
 					solutionLink: "https://scratch.mit.edu/projects/342645999/"
 				},
 				{
 					title: "Check-In #2: Lists",
+					contentKind: "assignment",
+					preserveInstructions: true,
 					content: `**Check-in goal:** Review how lists store related values and support repeated behavior.
 
 **Prompts:**
@@ -809,6 +823,8 @@ View CS Training's Code`,
 				},
 				{
 					title: "Check-In #2: Functions",
+					contentKind: "assignment",
+					preserveInstructions: true,
 					content: `**Check-in goal:** Review custom blocks as reusable Scratch functions.
 
 **Prompts:**
@@ -824,6 +840,8 @@ View CS Training's Code`,
 				},
 				{
 					title: "Check-In #2: Additional Practice Project",
+					contentKind: "assignment",
+					preserveInstructions: true,
 					content: `Add one of the dancing sprites to the project and create a function that loops through all of their costumes.
 Add a number input that says how many seconds they should dance for in total. Can you use a division operator in the wait block to make sure they\'re dancing for the right number of seconds? Hint: Think about how long they should spend on each costume to add up to the right number of seconds.
 When the green flag is pressed, make your sprite dance for 3 seconds.

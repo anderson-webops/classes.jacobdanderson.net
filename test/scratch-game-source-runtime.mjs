@@ -12,7 +12,8 @@ export function sourceGameRuntime(project, options = {}) {
 		stopped: false,
 		events: [],
 		waits: 0,
-		queue: []
+		queue: [],
+		said: []
 	};
 	const stage = state.targets.find(t => t.isStage);
 	const stopScript = Symbol("stop script"),
@@ -32,6 +33,8 @@ export function sourceGameRuntime(project, options = {}) {
 		assert.ok(b, "Referenced source block must exist");
 		const read = key => get(target, b.inputs[key]);
 		switch (b.opcode) {
+			case "operator_join":
+				return String(read("STRING1")) + String(read("STRING2"));
 			case "operator_equals":
 				return (
 					String(read("OPERAND1")).toLowerCase() ===
@@ -41,6 +44,12 @@ export function sourceGameRuntime(project, options = {}) {
 				return Number(read("OPERAND1")) < Number(read("OPERAND2"));
 			case "operator_gt":
 				return Number(read("OPERAND1")) > Number(read("OPERAND2"));
+			case "operator_mod":
+				return (
+					((Number(read("NUM1")) % Number(read("NUM2"))) +
+						Number(read("NUM2"))) %
+					Number(read("NUM2"))
+				);
 			case "operator_add":
 				return Number(read("NUM1")) + Number(read("NUM2"));
 			case "operator_and":
@@ -84,6 +93,8 @@ export function sourceGameRuntime(project, options = {}) {
 				return b.fields.SOUND_MENU[0];
 			case "looks_costume":
 				return b.fields.COSTUME[0];
+			case "motion_goto_menu":
+				return b.fields.TO[0];
 			case "looks_backdrops":
 				return b.fields.BACKDROP[0];
 			default:
@@ -114,6 +125,7 @@ export function sourceGameRuntime(project, options = {}) {
 			switch (b.opcode) {
 				case "event_whenflagclicked":
 				case "event_whenbroadcastreceived":
+				case "event_whenkeypressed":
 				case "control_start_as_clone":
 					break;
 				case "data_setvariableto":
@@ -127,6 +139,26 @@ export function sourceGameRuntime(project, options = {}) {
 				case "data_showvariable":
 				case "data_hidevariable":
 					break;
+				case "looks_sayforsecs":
+					state.said.push(String(read("MESSAGE")));
+					break;
+				case "pen_penUp":
+					target.penDown = false;
+					break;
+				case "pen_setPenColorToColor":
+					target.penColor = read("COLOR");
+					break;
+				case "motion_goto": {
+					assert.equal(read("TO"), "_random_");
+					target.penAtRandomPlacement = !!target.penDown;
+					const point = options.randomPosition?.(target) ?? {
+						x: 100,
+						y: 100
+					};
+					target.x = point.x;
+					target.y = point.y;
+					break;
+				}
 				case "looks_show":
 					target.visible = true;
 					break;
