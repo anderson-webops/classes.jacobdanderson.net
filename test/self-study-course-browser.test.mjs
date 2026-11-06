@@ -478,7 +478,15 @@ test(
 										=== "MSC16 Sentence Types",
 										item.paragraphBreaks
 									);
+									const imageLoads = [];
 									for (const image of item.images) {
+										const before = await page.$eval(`#${anchor}`, (card, expected) => {
+											const element = [...card.querySelectorAll("img")].find(candidate => candidate.getAttribute("src") === expected.src && candidate.alt === expected.alt);
+											if (!element) throw new Error(`Missing expected image: ${expected.src}`);
+											const state = { src: expected.src, loading: element.loading, complete: element.complete, naturalWidth: element.naturalWidth, viewportTop: element.getBoundingClientRect().top };
+											element.scrollIntoView({ block: "center", inline: "nearest" });
+											return state;
+										}, image);
 										await page.waitForFunction(
 											({ anchor, image }) =>
 												[
@@ -498,6 +506,7 @@ test(
 											{},
 											{ anchor, image }
 										);
+										imageLoads.push({ before, loaded: true });
 									}
 									assert.equal(
 										await page.$eval(
@@ -528,6 +537,7 @@ test(
 										renderedTextSHA256: digest(actual.text),
 										tableRows: actual.tableRows,
 										imagesLoaded: item.images.length,
+										imageLoads,
 										tableLayout
 									});
 								}
