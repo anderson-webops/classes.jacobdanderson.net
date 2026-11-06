@@ -2,6 +2,7 @@ import type { RawCourse, RawCourseModule, RawCourseModuleItem } from "./types";
 import { applyCourseImplementationArtifacts } from "./course-implementation-artifacts";
 import { applyEntrepreneurshipReadings } from "./entrepreneurshipReadings";
 import { applyGrammarMechanicsReadings } from "./grammarMechanicsReadings";
+import { applyIntroPhysicsReferences } from "./introPhysicsReferences";
 import { isJuniScratchProjectTitle } from "./juniScratchProjects";
 import { mapMarkdownProse } from "./markdownProse";
 import { applyMiddleSchoolLiteratureReadings } from "./middleSchoolLiteratureReadings";
@@ -9856,6 +9857,7 @@ export function normalizeRawCourse(id: string, rawCourse: RawCourse) {
 		applyPublicSpeakingReadings(course, rawCourse);
 	if (id === "scratch-level-1-bootcamp")
 		applyScratchBootcampReadings(course, rawCourse);
+	if (id === "intro-to-physics") applyIntroPhysicsReferences(course);
 	if (
 		id === "middle-school-b-writing" ||
 		id === "middle-school-b-writing-retake"

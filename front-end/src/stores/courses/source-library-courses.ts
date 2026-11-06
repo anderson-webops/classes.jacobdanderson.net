@@ -3000,7 +3000,7 @@ const englishCourses = {
 					"revision reflection"
 				],
 				flowNote:
-					"Students may introduce themselves, a fictional persona, or another real or fictional person and never need to disclose sensitive personal information. Accept live, private recorded, or audio-only delivery."
+					"Students may introduce themselves, a fictional persona, or another real or fictional person and never need to disclose sensitive personal information. Live, private recorded, or audio-only delivery is valid."
 			},
 			"MYP2 Toastmaker": {
 				estimatedTime: "2 sessions · 40–50 minutes each",
@@ -3048,7 +3048,7 @@ const englishCourses = {
 					"conversational delivery"
 				],
 				flowNote:
-					"Students may use a true, adapted, or fictionalized story and do not need to disclose private experiences. Build one clear scene and turning point before adding detail; accept live, private recorded, or audio-only delivery."
+					"Students may use a true, adapted, or fictionalized story and do not need to disclose private experiences. Build one clear scene and turning point before adding detail. Live, private recorded, or audio-only delivery is valid."
 			},
 			"MYP6 Radio Pitch": {
 				estimatedTime: "2 sessions · 40–50 minutes each",

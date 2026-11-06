@@ -132,8 +132,10 @@ Circuit values:
 - Series S: \(R_\text{eq}=12\ \Omega\), source current 1 A, about 6 V across each equal resistor.
 - Parallel P: \(R_\text{eq}=3\ \Omega\), source current 4 A, 2 A in each equal branch, 12 V across each branch.
 - Open O: no complete path and zero modeled current.
-- Branch-open B: the intact branch remains complete.
-- Short-risk R: the ideal bypass can create very large current because the model gives it near-zero resistance; no physical construction is part of this course.
+- Branch-open B: the intact 6 Ω branch remains across 12 V and carries 2 A; source current is therefore 2 A.
+- Bypass R: the ideal wire imposes zero voltage across the first resistor, so its current is zero. The remaining 6 Ω resistor has 12 V across it, giving equivalent resistance 6 Ω and source current 2 A. The bypass wire carries 2 A around the first resistor. Opening the remaining resistor breaks the only complete path; opening only the bypassed resistor leaves the wire path intact.
+
+A separate wire directly across both source terminals is a different topology. An ideal nonzero-voltage source across zero resistance has no finite current solution. A real source's internal resistance, current limit and wiring would determine the current, and those values are not supplied here. The finite 2 A result for Bypass R must not be replaced with this undefined ideal source-short result. No physical construction is part of either case.
 
 Device energy:
 
@@ -151,6 +153,8 @@ Core evidence:
 - generic device evidence is not turned into a claim about a learner's home.
 
 ## Waves Sound and Light Key
+
+For the Interference Phase Cards, matching-phase totals are 0, +4, 0, −4, 0 cm, giving amplitude 4 cm at the sampled point. Opposite-phase totals are zero at every listed time, giving a node with zero displacement amplitude at that point. Superposition adds signed displacements, not amplitudes without regard to phase. This local cancellation does not imply that the wave field has no energy at other locations; the counterpropagating-wave model redistributes the response spatially.
 
 All four wave-table cases have speed \(v=f\lambda=6.0\text{ m/s}\). A and B show doubled frequency with halved wavelength at the same modeled speed. B and C have the same frequency and wavelength but different amplitude.
 

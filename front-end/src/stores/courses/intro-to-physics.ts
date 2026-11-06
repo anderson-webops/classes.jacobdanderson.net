@@ -1,4 +1,5 @@
 import type { RawCourse, RawCourseModuleItem } from "./types";
+import { introPhysicsReadings } from "./introPhysicsReadings";
 import { contextualizePhysicsCourse } from "./physicsContentContext";
 
 const introToPhysicsSourceCourse: RawCourse = contextualizePhysicsCourse({
@@ -1148,7 +1149,7 @@ const INTRO_PHYSICS_FLOW: Record<string, IntroPhysicsModuleFlow> = {
 		projectCore:
 			"Compare the energy use of supplied devices from power and run time, show calculations with units, and identify which assumption dominates the estimate.",
 		projectStretch:
-			"Construct a conditional recommendation that adds standby use, efficiency, uncertainty, or cost while avoiding claims about a learner's household."
+			"Compare standby demand, efficiency, uncertainty, or cost under stated assumptions; base the recommendation on the supplied device data."
 	},
 	"PHY6 Waves, Sound, and Light": {
 		stage: "Core foundation",
@@ -1557,40 +1558,48 @@ export const introToPhysicsCourse: RawCourse = {
 			);
 		}
 
-		const curriculum = module.curriculum.map((item, itemIndex) => ({
-			...item,
-			title: contextualPhysicsTitle(module.title, item.title),
-			content: [
-				itemIndex === 0
-					? `**Teaching flow:** ${flow.stage}. No physical apparatus, personal device, home electricity, dropped-object activity, outdoor timing, camera, microphone, or learner household data is required. Begin with the supplied phenomenon, predict before calculating, inspect evidence, complete the core route, and revise one representation or claim.`
-					: "",
-				item.content,
-				`**Guiding phenomenon:** ${flow.phenomenon}`,
-				`**Core route:** ${flow.corePath}`,
-				`**Stretch route:** ${flow.stretchPath}`,
-				`**Evidence gate:** ${flow.evidenceGate}`,
-				`**Calculation and model boundary:** ${flow.boundary}`,
-				`**Reference:** [Open the authoritative module reference](${flow.referenceLink}).`
-			]
-				.filter(Boolean)
-				.join("\n\n"),
-			learningPath: introPhysicsCurriculumPath(flow.stage),
-			datasetLink:
-				item.datasetLink ?? introPhysicsMaterial(flow.materialSection),
-			solutionLink:
-				item.solutionLink ?? introPhysicsAnswerKey(flow.answerSection),
-			projectLink: item.projectLink ?? flow.referenceLink
-		}));
+		const moduleNumber = Number(module.title.match(/^PHY(\d+) /u)?.[1]);
+		const reading = introPhysicsReadings[moduleNumber];
+		if (!reading)
+			throw new Error(`Missing Physics reading for ${module.title}.`);
+		const readingIndex = moduleNumber === 1 ? 1 : 0;
+		const curriculum = module.curriculum.map<RawCourseModuleItem>(
+			(item, itemIndex) => ({
+				...item,
+				title: contextualPhysicsTitle(module.title, item.title),
+				contentKind:
+					itemIndex === readingIndex ? "reading" : "assignment",
+				preserveInstructions: true,
+				content:
+					itemIndex === readingIndex
+						? [
+								`**Concept path:** ${flow.stage}.`,
+								reading,
+								`**Guiding phenomenon:** ${flow.phenomenon}`,
+								`**Core route:** ${flow.corePath}`,
+								`**Stretch route:** ${flow.stretchPath}`,
+								`**Evidence gate:** ${flow.evidenceGate}`,
+								`**Calculation and model boundary:** ${flow.boundary}`
+							].join("\n\n")
+						: item.content,
+				learningPath: introPhysicsCurriculumPath(flow.stage),
+				datasetLink:
+					item.datasetLink ??
+					introPhysicsMaterial(flow.materialSection),
+				solutionLink:
+					item.solutionLink ??
+					introPhysicsAnswerKey(flow.answerSection),
+				projectLink: item.projectLink ?? flow.referenceLink
+			})
+		);
 
 		const supplementalProjects = module.supplementalProjects.map(item => ({
 			...item,
+			contentKind: "assignment" as const,
+			preserveInstructions: true,
 			content: [
 				item.content,
-				`**Course stage:** ${flow.stage}.`,
-				`**Guiding phenomenon:** ${flow.phenomenon}`,
-				`**Completion route:** ${introPhysicsProjectCompletion(item.title, flow)}`,
-				`**Evidence gate:** ${flow.evidenceGate}`,
-				`**Calculation and model boundary:** ${flow.boundary}`
+				`**Completion route:** ${introPhysicsProjectCompletion(item.title, flow)}`
 			].join("\n\n"),
 			learningPath: introPhysicsProjectPath(item.title),
 			datasetLink:

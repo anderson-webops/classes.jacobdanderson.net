@@ -2,23 +2,24 @@ export const javascriptDynamicComponentsResources = [
 	{
 		project: "dynamic-components",
 		title: "Dynamic Components",
-		version: 1,
+		version: 2,
 		role: "starter",
 		urls: [
+			"/course-assets/javascript-level-1/dynamic-components-v2/dynamic-components/starter/index.html.txt",
 			"/course-assets/javascript-level-1/dynamic-components-v1/dynamic-components/starter/index.html.txt"
 		],
 		files: [
 			{
 				name: "index.html",
-				path: "dynamic-components-v1/dynamic-components/starter/index.html.txt",
+				path: "dynamic-components-v2/dynamic-components/starter/index.html.txt",
 				byteLength: 550,
 				sha256: "033412397d2f7a9737d7179a59db421cdfd47bfde1dbc1c30ef69c0592923d1d"
 			},
 			{
 				name: "styles.css",
-				path: "dynamic-components-v1/dynamic-components/starter/styles.css.txt",
-				byteLength: 2687,
-				sha256: "a821044c397fecd1bda5251bb85b5adc1bbc4fc7bdcdc87f5b103bdc369d6638"
+				path: "dynamic-components-v2/dynamic-components/starter/styles.css.txt",
+				byteLength: 2822,
+				sha256: "65a2f61912aa977f8f83a21aaa0d1812c8b40d650c51de3d1cf0811ad375aabc"
 			},
 			{
 				name: "script.js",
@@ -103,7 +104,7 @@ export const javascriptDynamicComponentsResources = [
 	{
 		project: "dynamic-components",
 		title: "Dynamic Components",
-		version: 1,
+		version: 2,
 		role: "reference",
 		urls: [
 			"https://codepen.io/junilearning/pen/e55b7c0d570df2c9943e06395a42c974",
@@ -112,15 +113,15 @@ export const javascriptDynamicComponentsResources = [
 		files: [
 			{
 				name: "index.html",
-				path: "dynamic-components-v1/dynamic-components/reference/index.html.txt",
-				byteLength: 3786,
-				sha256: "d975279e14e21bb9de11790f738614c1fc4218a96304649172dd4550b37c8b95"
+				path: "dynamic-components-v2/dynamic-components/reference/index.html.txt",
+				byteLength: 3772,
+				sha256: "2592465209824f2f7ec3faaaaa972cf5fc81562c2a866c0b8a376f34aafcfdb3"
 			},
 			{
 				name: "styles.css",
-				path: "dynamic-components-v1/dynamic-components/reference/styles.css.txt",
-				byteLength: 2687,
-				sha256: "a821044c397fecd1bda5251bb85b5adc1bbc4fc7bdcdc87f5b103bdc369d6638"
+				path: "dynamic-components-v2/dynamic-components/reference/styles.css.txt",
+				byteLength: 2822,
+				sha256: "65a2f61912aa977f8f83a21aaa0d1812c8b40d650c51de3d1cf0811ad375aabc"
 			},
 			{
 				name: "script.js",
@@ -205,23 +206,24 @@ export const javascriptDynamicComponentsResources = [
 	{
 		project: "my-javascript-art-part-4",
 		title: "My JavaScript Art Part IV",
-		version: 1,
+		version: 2,
 		role: "starter",
 		urls: [
+			"/course-assets/javascript-level-1/dynamic-components-v2/my-javascript-art-part-4/starter/index.html.txt",
 			"/course-assets/javascript-level-1/dynamic-components-v1/my-javascript-art-part-4/starter/index.html.txt"
 		],
 		files: [
 			{
 				name: "index.html",
-				path: "dynamic-components-v1/my-javascript-art-part-4/starter/index.html.txt",
-				byteLength: 2935,
-				sha256: "5a359c72d6c5603b90e4a5d972470c1a75c322b19959c5a96427e74b38a06b04"
+				path: "dynamic-components-v2/my-javascript-art-part-4/starter/index.html.txt",
+				byteLength: 2921,
+				sha256: "2908b579d0407360ecc8a0202a4d7bfef3831b99e984114c7ae1b60aa9a0d3ac"
 			},
 			{
 				name: "styles.css",
-				path: "dynamic-components-v1/my-javascript-art-part-4/starter/styles.css.txt",
-				byteLength: 2339,
-				sha256: "cf0582d621835f109ce83c0ae54987cf13b764a15611e3273da018bfbc96b80f"
+				path: "dynamic-components-v2/my-javascript-art-part-4/starter/styles.css.txt",
+				byteLength: 2474,
+				sha256: "fcaec6b8e8b7fae076df9a8c46deb5036b73005ec5360e7bc0e0cd6d13bfbfe4"
 			},
 			{
 				name: "script.js",
@@ -282,7 +284,7 @@ export const javascriptDynamicComponentsResources = [
 	{
 		project: "my-javascript-art-part-4",
 		title: "My JavaScript Art Part IV",
-		version: 1,
+		version: 2,
 		role: "reference",
 		urls: [
 			"https://codepen.io/junilearning/pen/68807d2000d19574d4c80d354eea197f",
@@ -291,15 +293,15 @@ export const javascriptDynamicComponentsResources = [
 		files: [
 			{
 				name: "index.html",
-				path: "dynamic-components-v1/my-javascript-art-part-4/reference/index.html.txt",
-				byteLength: 3480,
-				sha256: "a5c88bd060ecefd8609889eb7417ec986048d47345f1e4065383d7556f349c9b"
+				path: "dynamic-components-v2/my-javascript-art-part-4/reference/index.html.txt",
+				byteLength: 3466,
+				sha256: "df629ca556b9cf54979370a335abca1a5c31636d628486a3345cdd2d57fb42cf"
 			},
 			{
 				name: "styles.css",
-				path: "dynamic-components-v1/my-javascript-art-part-4/reference/styles.css.txt",
-				byteLength: 2339,
-				sha256: "cf0582d621835f109ce83c0ae54987cf13b764a15611e3273da018bfbc96b80f"
+				path: "dynamic-components-v2/my-javascript-art-part-4/reference/styles.css.txt",
+				byteLength: 2474,
+				sha256: "fcaec6b8e8b7fae076df9a8c46deb5036b73005ec5360e7bc0e0cd6d13bfbfe4"
 			},
 			{
 				name: "script.js",

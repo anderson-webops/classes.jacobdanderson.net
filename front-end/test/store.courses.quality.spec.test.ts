@@ -10,6 +10,7 @@ import { javascriptCourseResource } from "@/modules/javascriptCourseResources";
 import { rawCourseProse } from "./courseProse";
 import { createPinia, setActivePinia } from "pinia";
 import { useCoursesStore } from "@/stores/courses";
+import { introToPhysicsCourse } from "@/stores/courses/intro-to-physics";
 import {
 	pyGamesCoreResource,
 	pyGamesCoreSourceRevision
@@ -226,11 +227,141 @@ function completeSourceActivity(
 	);
 }
 
+const speakingPracticeContracts: Record<string, [RegExp, RegExp]> = {
+	"MYP1 Personal Introductions": [
+		/Rowan introduction|same fictional person/i,
+		/cue notes|short outlines/i
+	],
+	"MYP2 Toastmaker": [/repair-club toast/i, /cue notes|versions/i],
+	"MYP3 Speechwriter": [/handover-note/i, /annotated outline|openings/i],
+	"MYP4 Keynote Speaker": [
+		/parts-box segment/i,
+		/emphasis cues|brief descriptions/i
+	],
+	"MYP5 Storyteller": [/tower story/i, /cue words|openings and endings/i],
+	"MYP6 Radio Pitch": [/Bell Courier/i, /outline|recommendation/i],
+	"MYP7 Defense Attorney": [/case cards/i, /conclusion|argument/i],
+	"MYP8 Stand-up Comedian": [
+		/miscellaneous-drawer segment|first drawer label/i,
+		/marked scripts|new closing line/i
+	],
+	"MYP9 Master Project: Your TED-Ed Talk": [
+		/supplied mini-talk|full project talk/i,
+		/annotate|ninety-second version/i
+	]
+};
+
+function completeSpeakingPractice(
+	courseId: string,
+	module: RawCourseModule,
+	item: RawCourseModuleItem
+) {
+	const contract = speakingPracticeContracts[module.title];
+	return (
+		courseId === "introduction-to-public-speaking" &&
+		item.contentKind === "assignment" &&
+		item.preserveInstructions === true &&
+		item.preserveAssignment === true &&
+		module.supplementalProjects.some(
+			candidate =>
+				candidate.id === item.id && candidate.title === item.title
+		) &&
+		hasAuthoredModuleReading(module) &&
+		wordCount(item.content) >= 40 &&
+		Boolean(contract?.every(pattern => pattern.test(item.content))) &&
+		/compare|feedback|revision|revise|check|changed|observed|explain/i.test(
+			item.content
+		)
+	);
+}
+
 function isProjectLikeTitle(title: string) {
 	return (
 		!isInformationalResourceTitle(title) &&
 		/project|capstone|challenge|lab|practice|drill|notebook|audit|reflection|build|create|implement|exercise/i.test(
 			title
+		)
+	);
+}
+
+// Physics tasks share reviewed local tables, keys and worked module readings.
+// Accept concise prompts only while those inputs and the full authored task survive.
+const physicsEvidenceFiles = new Map<string, string>();
+function physicsEvidenceSection(
+	link: string | undefined,
+	kind: "materials-pack" | "rubrics-answer-key"
+) {
+	const match = link?.match(
+		new RegExp(
+			`^/course-assets/physics/intro-physics-${kind}\\.md(?:#([a-z-]+))?$`,
+			"u"
+		)
+	);
+	if (!match) return "";
+	const file = `public/course-assets/physics/intro-physics-${kind}.md`;
+	if (!physicsEvidenceFiles.has(file))
+		physicsEvidenceFiles.set(file, fs.readFileSync(file, "utf8"));
+	const text = physicsEvidenceFiles.get(file)!;
+	if (!match[1]) return text;
+	return (
+		text.split(/^## /mu).find(
+			section =>
+				section
+					.split("\n")[0]
+					.toLowerCase()
+					.replace(/[^a-z0-9 ]/gu, "")
+					.replace(/ +/gu, "-") === match[1]
+		) ?? ""
+	);
+}
+function completePhysicsPractice(
+	courseId: string,
+	module: RawCourseModule,
+	item: RawCourseModuleItem
+) {
+	if (
+		courseId !== "intro-to-physics" ||
+		item.contentKind !== "assignment" ||
+		!item.preserveInstructions
+	)
+		return false;
+	if (
+		physicsEvidenceSection(item.datasetLink, "materials-pack").length <
+			300 ||
+		physicsEvidenceSection(item.solutionLink, "rubrics-answer-key").length <
+			100
+	)
+		return false;
+	const originalModule = introToPhysicsCourse.modules.find(
+		candidate => candidate.title === module.title
+	);
+	if (originalModule) {
+		const original = [
+			...originalModule.curriculum,
+			...originalModule.supplementalProjects
+		].find(candidate => candidate.title === item.title);
+		return (
+			original?.content === item.content &&
+			wordCount(item.content) >= 20 &&
+			module.curriculum.some(
+				reading =>
+					reading.contentKind === "reading" &&
+					reading.preserveInstructions &&
+					wordCount(reading.content) >= 120 &&
+					reading.content.includes("**Worked case:**")
+			)
+		);
+	}
+	return (
+		module.kind === "appendix" &&
+		/^(?:Practice Project|Resource Project):/u.test(item.title) &&
+		item.learningPath === "choice" &&
+		wordCount(item.content) >= 40 &&
+		module.curriculum.some(
+			reading =>
+				reading.contentKind === "reading" &&
+				reading.preserveInstructions &&
+				wordCount(reading.content) >= 30
 		)
 	);
 }
@@ -5513,6 +5644,16 @@ describe("course text quality normalization", () => {
 											sources.get(entry.id),
 											module,
 											item
+										) &&
+										!completeSpeakingPractice(
+											entry.id,
+											module,
+											item
+										) &&
+										!completePhysicsPractice(
+											entry.id,
+											module,
+											item
 										)
 								)
 								.filter(
@@ -5577,7 +5718,9 @@ describe("course text quality normalization", () => {
 							!scratchSupportStructurePattern.test(
 								item.content
 							) &&
-							!reviewedJavaScriptProjectReadme(id, item);
+							!reviewedJavaScriptProjectReadme(id, item) &&
+							!completeSpeakingPractice(id, module, item) &&
+							!completePhysicsPractice(id, module, item);
 
 						return shortWithoutReview
 							? [
@@ -6930,8 +7073,37 @@ describe("course text quality normalization", () => {
 				expect(text).toContain("**Transfer move:**");
 				expect(text).toContain("**Extension choices:**");
 			}
-			expect(text).toContain("**Setup:**");
-			expect(text).toContain("**Process:**");
+			if (courseId === "introduction-to-public-speaking") {
+				const modules = course.modules.filter(
+					module => !module.internal
+				);
+				expect(modules).toHaveLength(9);
+				for (const module of modules) {
+					expect(module.supplementalProjects).toHaveLength(2);
+					for (const item of module.supplementalProjects) {
+						expect(
+							completeSpeakingPractice(courseId, module, item),
+							`${module.title} / ${item.title}: supplied input, work and review`
+						).toBe(true);
+						for (const required of speakingPracticeContracts[
+							module.title
+						]) {
+							expect(
+								completeSpeakingPractice(courseId, module, {
+									...item,
+									content: item.content.replaceAll(
+										new RegExp(required.source, "gi"),
+										"an example"
+									)
+								})
+							).toBe(false);
+						}
+					}
+				}
+			} else {
+				expect(text).toContain("**Setup:**");
+				expect(text).toContain("**Process:**");
+			}
 			expect(text).toContain("**Completion evidence:**");
 			expect(text).not.toMatch(
 				/The .* connection matters because .* builds skill through repeated evidence/i
@@ -6954,7 +7126,9 @@ describe("course text quality normalization", () => {
 			.join("\n");
 
 		expect(corpus).toContain("decision record with assumptions");
-		expect(corpus).toContain("speech outline with purpose");
+		expect(allCourseText(publicSpeaking!)).toContain(
+			"Three-part outline with transitions and support for each main point."
+		);
 		expect(corpus).toContain("worked math record with diagrams");
 		expect(corpus).toContain("reading or writing record with claim");
 		expect(corpus).toContain("problem-solving record with inputs");
@@ -6964,8 +7138,8 @@ describe("course text quality normalization", () => {
 		expect(nonProgrammingCorpus).toContain(
 			"the passage or draft section, claim or writing goal"
 		);
-		expect(nonProgrammingCorpus).toContain(
-			"the audience, purpose, central message"
+		expect(allCourseText(publicSpeaking!)).toContain(
+			"Audience: members sharing one model-building table."
 		);
 		expect(nonProgrammingCorpus).toContain(
 			"the goal, assumptions, available evidence"
@@ -9943,16 +10117,16 @@ describe("course text quality normalization", () => {
 		const introPhysics = await loadRawCourse("intro-to-physics");
 		const introPhysicsCorpus = allCourseText(introPhysics);
 		expect(introPhysicsCorpus).toContain(
-			"Momentum treats motion as a conserved, direction-aware quantity during short interactions."
+			"Momentum p = mv combines mass and signed velocity"
 		);
 		expect(introPhysicsCorpus).toContain(
-			"Fluids connect pressure, density, and buoyancy through contact forces spread over area"
+			"Pressure P = F/A is normal force per area"
 		);
 		expect(introPhysicsCorpus).toContain(
-			"Modern physics introduces places where classical models stop being enough."
+			"A physical model has a domain in which its predictions agree usefully with evidence."
 		);
 		expect(introPhysicsCorpus).toContain(
-			"The final portfolio turns physics knowledge into a defended design or investigation."
+			"Engineering chooses among alternatives using criteria and constraints."
 		);
 		expect(introPhysicsCorpus).toContain(
 			"The opening workflow is intentionally lightweight and remote-friendly."

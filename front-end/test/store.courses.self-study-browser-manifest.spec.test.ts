@@ -18,6 +18,7 @@ import { useAppStore } from "@/stores/app";
 import { useCoursesStore } from "@/stores/courses";
 import { algebra2ACourse } from "@/stores/courses/algebra-2a";
 import { algebra2BCourse } from "@/stores/courses/algebra-2b";
+import { introToPhysicsCourse } from "@/stores/courses/intro-to-physics";
 import {
 	entrepreneurship101Course,
 	grammarMechanicsCourse,
@@ -88,6 +89,12 @@ const cases = [
 		id: "algebra-2b",
 		source: algebra2BCourse,
 		readings: 22,
+		additions: []
+	},
+	{
+		id: "intro-to-physics",
+		source: introToPhysicsCourse,
+		readings: 37,
 		additions: []
 	}
 ] as const;
@@ -228,7 +235,15 @@ it.each(
 			)?.[1];
 			const container = document.createElement("div");
 			container.innerHTML = markdown.render(
-				normalizeInlineCourseMarkdown(directive ?? "")
+				normalizeInlineCourseMarkdown(
+					directive ??
+						([
+							"introduction-to-public-speaking",
+							"intro-to-physics"
+						].includes(id)
+							? item.content
+							: "")
+				)
 			);
 			return {
 				id: item.id,
@@ -265,9 +280,12 @@ it.each(
 		else
 			expect(
 				modules.filter(module => module.kind === "module")
-			).toHaveLength(count);
+			).toHaveLength(id === "intro-to-physics" ? 17 : count);
 		for (const module of modules) {
-			if (!algebra) expect(module.readings, module.title).toHaveLength(1);
+			if (id === "intro-to-physics" && module.kind === "appendix")
+				expect(module.readings.length, module.title).toBeGreaterThan(0);
+			else if (!algebra)
+				expect(module.readings, module.title).toHaveLength(1);
 			else if (module.readings.length === 0)
 				expect(module.title).toMatch(/capstone/i);
 			for (const reading of module.readings) {

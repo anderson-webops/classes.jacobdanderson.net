@@ -3,6 +3,36 @@ import { readFileSync } from "node:fs";
 
 const fixture = JSON.parse(readFileSync(new URL("./fixtures/javascript-dynamic-components-sources.json", import.meta.url), "utf8"));
 
+export async function inspectDynamicComponentNavigation(page) {
+	const navigation = await page.$eval("#menu-trigger", button => {
+		const box = button.getBoundingClientRect();
+		const nav = button.closest("nav").getBoundingClientRect();
+		const icon = button.querySelector("i").getBoundingClientRect();
+		const label = [...button.childNodes].find(node =>
+			node.nodeType === Node.TEXT_NODE && node.textContent.trim()
+		);
+		const range = document.createRange();
+		range.selectNodeContents(label);
+		const text = range.getBoundingClientRect();
+		const inside = (outer, inner) => inner.left >= outer.left - 2
+			&& inner.top >= outer.top - 2 && inner.right <= outer.right + 2
+			&& inner.bottom <= outer.bottom + 2;
+		return {
+			label: label.textContent.trim(),
+			contentInsideButton: inside(box, icon) && inside(box, text),
+			buttonInsideNavigation: inside(nav, box),
+			iconAndLabelShareLine: Math.abs(
+				(icon.top + icon.bottom - text.top - text.bottom) / 2
+			) <= 3
+		};
+	});
+	assert.equal(navigation.label, "Menu");
+	assert.ok(navigation.contentInsideButton, "Menu icon and label must fit inside their button");
+	assert.ok(navigation.buttonInsideNavigation, "Menu button must fit inside the navigation bar");
+	assert.ok(navigation.iconAndLabelShareLine, "Menu icon and label must share one line");
+	return navigation;
+}
+
 export function editedDynamicComponentsSource(resource, filename) {
 	const reference = fixture.resources.find(row => row.project === resource.project && row.role === "reference");
 	const source = readFileSync(new URL(`../front-end/public/course-assets/javascript-level-1/${reference.files.find(file => file.name === filename).path}`, import.meta.url), "utf8");
@@ -30,6 +60,8 @@ export async function inspectDynamicComponents(page, resource, kind) {
 	assert.ok(state.noHorizontalOverflow);
 	assert.equal(state.headingCount, 1);
 	assert.equal(new Set(state.ids).size, state.ids.length);
+	if (await page.$("#menu-trigger"))
+		state.navigation = await inspectDynamicComponentNavigation(page);
 	if (kind === "edited") {
 		assert.ok(state.savedHeading);
 		assert.equal(state.borderTop, "rgb(124, 58, 237)");

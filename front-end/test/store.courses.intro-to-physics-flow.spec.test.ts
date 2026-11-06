@@ -1,6 +1,10 @@
 import fs from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
+import { createPinia, setActivePinia } from "pinia";
+import { isLessonLearningItem } from "@/modules/courseLessonPresentation";
+import { useAppStore } from "@/stores/app";
+import { useCoursesStore } from "@/stores/courses";
 import { loadRawCourse } from "@/stores/courses/index";
 import { introToPhysicsCourse } from "@/stores/courses/intro-to-physics";
 
@@ -150,41 +154,55 @@ describe("Intro to Physics learner flow", () => {
 				module.title
 			).toBeGreaterThanOrEqual(6);
 			expect(module.supplementalProjects, module.title).toHaveLength(3);
-			expect(module.curriculum[0]?.content, module.title).toContain(
-				"**Teaching flow:**"
+			const readings = module.curriculum.filter(
+				item => item.contentKind === "reading"
 			);
+			expect(readings, module.title).toHaveLength(1);
+			const reading = readings[0];
 
 			const expectedPath = index >= 7 && index <= 15 ? "choice" : "core";
 			expect(
 				module.curriculum.every(
-					item =>
-						item.learningPath === expectedPath &&
-						item.content.includes("**Guiding phenomenon:**") &&
-						item.content.includes("**Core route:**") &&
-						item.content.includes("**Stretch route:**") &&
-						item.content.includes("**Evidence gate:**") &&
-						item.content.includes(
-							"**Calculation and model boundary:**"
-						)
+					item => item.learningPath === expectedPath
 				),
 				module.title
 			).toBe(true);
+			for (const section of [
+				"**Concept path:**",
+				"**Worked case:**",
+				"**Guiding phenomenon:**",
+				"**Core route:**",
+				"**Stretch route:**",
+				"**Evidence gate:**",
+				"**Calculation and model boundary:**"
+			]) {
+				expect(reading.content, module.title).toContain(section);
+			}
 		}
 
 		expect(
-			requireModule(EXPECTED_SEQUENCE[6]).curriculum[0]?.content
+			requireModule(EXPECTED_SEQUENCE[6]).curriculum.find(
+				item => item.contentKind === "reading"
+			)?.content
 		).toContain("Core foundation");
 		expect(
-			requireModule(EXPECTED_SEQUENCE[7]).curriculum[0]?.content
+			requireModule(EXPECTED_SEQUENCE[7]).curriculum.find(
+				item => item.contentKind === "reading"
+			)?.content
 		).toContain("Guided extension");
 		expect(
-			requireModule(EXPECTED_SEQUENCE[16]).curriculum[0]?.content
+			requireModule(EXPECTED_SEQUENCE[16]).curriculum.find(
+				item => item.contentKind === "reading"
+			)?.content
 		).toContain("Final synthesis");
 	});
 
-	it("turns every lesson and project into a linked runnable evidence task", () => {
+	it("keeps local cases and keys available on complete readings and assignments", () => {
 		for (const item of allItems()) {
-			expect(item.content.length, item.title).toBeGreaterThanOrEqual(700);
+			expect(item.preserveInstructions, item.title).toBe(true);
+			expect(["reading", "assignment"], item.title).toContain(
+				item.contentKind
+			);
 			expect(item.datasetLink, item.title).toMatch(
 				/^\/course-assets\/physics\/intro-physics-materials-pack\.md#/
 			);
@@ -367,7 +385,7 @@ describe("Intro to Physics learner flow", () => {
 		);
 
 		expect(text).toContain(
-			"No physical apparatus, personal device, home electricity"
+			"No required physical apparatus, home electrical work"
 		);
 		expect(text).toContain(
 			"No required learner health, reaction-time, home-energy, location"
@@ -408,9 +426,11 @@ describe("Intro to Physics learner flow", () => {
 			expect(module, title).toBeDefined();
 			expect(module!.curriculum.length, title).toBeGreaterThanOrEqual(6);
 			expect(module!.supplementalProjects, title).toHaveLength(3);
-			expect(module!.curriculum[0]?.content, title).toContain(
-				"**Concept path:**"
-			);
+			expect(
+				module!.curriculum.find(item => item.contentKind === "reading")
+					?.content,
+				title
+			).toContain("**Concept path:**");
 		}
 
 		expect(JSON.stringify(loaded)).toContain(
@@ -420,6 +440,109 @@ describe("Intro to Physics learner flow", () => {
 			"/course-assets/physics/intro-physics-rubrics-answer-key.md#"
 		);
 	});
+
+	it.each(["learner", "instructor"])(
+		"preserves all authored text and Learn placement for %s",
+		async role => {
+			setActivePinia(createPinia());
+			if (role === "instructor")
+				useAppStore().setCurrentTutor({
+					_id: "physics-review-tutor",
+					name: "Tutor",
+					email: "physics@example.invalid",
+					age: 30,
+					state: "GA",
+					usersOfTutorLength: 0,
+					coursePermissions: ["intro-to-physics"],
+					editTutors: false,
+					saveEdit: "Save"
+				});
+			const displayed =
+				(await useCoursesStore().loadCourseById("intro-to-physics"))!;
+			let readings = 0;
+			let assignments = 0;
+			for (const authored of introToPhysicsCourse.modules) {
+				const module = displayed.modules.find(
+					candidate => candidate.title === authored.title
+				)!;
+				expect(module, authored.title).toBeDefined();
+				const all = [
+					...module.curriculum,
+					...module.supplementalProjects
+				];
+				expect(
+					all.filter(isLessonLearningItem),
+					authored.title
+				).toHaveLength(1);
+				for (const original of [
+					...authored.curriculum,
+					...authored.supplementalProjects
+				]) {
+					const item = all.find(
+						candidate => candidate.title === original.title
+					)!;
+					expect(item, original.title).toBeDefined();
+					expect(item.content, original.title).toBe(
+						original.content.trim()
+					);
+					expect(item.datasetLink, original.title).toBe(
+						original.datasetLink
+					);
+					expect(isLessonLearningItem(item), original.title).toBe(
+						original.contentKind === "reading"
+					);
+					if (isLessonLearningItem(item)) readings++;
+					else assignments++;
+				}
+			}
+			expect(readings).toBe(17);
+			expect(assignments).toBe(137);
+			const guides = displayed.modules.filter(
+				module => module.kind === "appendix"
+			);
+			expect(guides).toHaveLength(4);
+			const references = guides.flatMap(module => [
+				...module.curriculum,
+				...module.supplementalProjects
+			]);
+			expect(references).toHaveLength(28);
+			expect(references.filter(isLessonLearningItem)).toHaveLength(20);
+			expect(
+				references.filter(item => !isLessonLearningItem(item))
+			).toHaveLength(8);
+			for (const item of references) {
+				expect(item.content, item.title).not.toMatch(
+					/requires arrays|Each dependency edge|module needs a clearer project target|Reference-supported work|standard or documentation page, explains why it matters/iu
+				);
+				expect(item.datasetLink, item.title).toMatch(
+					/^\/course-assets\/physics\//u
+				);
+				for (const match of item.content.matchAll(
+					/\]\((\/course-assets\/physics\/[^)]+)\)/gu
+				)) {
+					const [file, anchor] = match[1].split("#");
+					const text = fs.readFileSync(
+						path.resolve("public" + file),
+						"utf8"
+					);
+					if (anchor)
+						expect(
+							markdownHeadingSlugs(text),
+							item.title
+						).toContain(anchor);
+				}
+			}
+			const interference = references.find(
+				item =>
+					item.title ===
+					"Practice Project: Wave Interference Simulation"
+			)!;
+			expect(interference.learningPath).toBe("choice");
+			expect(interference.datasetLink).toContain(
+				"#waves-sound-and-light-cases"
+			);
+		}
+	);
 
 	it("avoids the old generic and unsafe implementation language", () => {
 		const source = fs.readFileSync(

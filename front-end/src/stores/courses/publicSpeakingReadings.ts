@@ -136,9 +136,8 @@ check." Reasons: the three notes give listeners specific clues, and the timetabl
 reveal connects them. A competing audience wanting chase scenes might find that
 slower structure a poor fit. "Everyone will love it" ignores the criterion.
 
-Use three minutes for planning if following the source project's planning
-constraint; the five-minute limit applies to the delivered pitch. Those are
-different timers. Draft the recommendation, strongest reasons, one example and
+Allow three minutes for planning and up to five minutes for delivering the
+pitch. Draft the recommendation, strongest reasons, one example and
 closing invitation, then time the actual delivery. After feedback, identify the
 changed section and compare whether the listener can state the recommendation
 and its reason without seeing a visual aid.
@@ -229,9 +228,117 @@ should add an example or comparison. Use original or appropriately licensed asse
 and record the source and terms for borrowed material. For private audio-only
 delivery, mark framing, lighting
 and visual-edit checks as not applicable; check audible speech and any audio
-rights instead. Use the project's live or private portfolio route and retain the
-existing distinction between a classroom talk and an affiliated public event.
+rights instead.
 `.trim()
+};
+
+const supplementalTasks: Record<string, [string, string]> = {
+	"MYP1 Personal Introductions": [
+		`Rehearse the supplied Rowan introduction from five cue words instead of
+reading the paragraph. Mark one pause between ideas and one word to emphasize.
+Compare the two deliveries for clarity, then keep the cue notes and name one
+change that helped the audience follow Rowan's reason for joining the club.`,
+		`Prepare two introductions for the same fictional person: one for a
+model-building club and one for a school welcome event. Choose the detail and
+closing that matter to each audience. Keep both short outlines and explain which details
+changed, which stayed accurate, and how the new closing connects with its
+audience.`
+	],
+	"MYP2 Toastmaker": [
+		`Reduce the supplied repair-club toast to five cue words, then deliver it
+without reading the paragraph. Preserve the honoree, bent-axle memory and closing
+sentiment. Mark an opening audience-look cue, or an audio greeting, and one pause.
+Keep the cue notes and compare whether the meaningful detail remained clear.`,
+		`Adapt the repair-club toast to thank one fictional volunteer rather than
+the whole group. Choose a specific action from the supplied model and connect it
+to the closing sentiment. Compare the group and individual versions; identify
+which pronouns, details and emphasis changed without inventing a real person's
+history.`
+	],
+	"MYP3 Speechwriter": [
+		`Use the supplied handover-note outline to separate the central claim,
+two reasons and the detail supporting each reason. Read only the transitions
+aloud. Replace one vague transition with a sentence explaining the connection
+between the points. Keep the annotated outline and explain how the revision
+helps the club audience follow the proposal.`,
+		`Change the audience for the handover-note speech from current club
+members to people joining the club for the first time. Add the context needed
+to understand the drying wheel and loose wheel. Keep the same proposal and
+fictional facts, then compare the openings and identify one detail the original
+audience could already understand.`
+	],
+	"MYP4 Keynote Speaker": [
+		`Annotate the supplied parts-box segment with two emphasis cues and one
+pause. Rehearse the segment twice, moving the pause between versions. Keep the
+through-line about labels answering a user's question. Compare which placement
+makes the change from the vague label to the useful label easier to follow,
+using a rehearsal note or listener feedback.`,
+		`Adapt the parts-box segment for audio-only delivery. Replace the showing
+and pointing cues with brief descriptions that let a listener understand the
+two labels and the proposed search test. Keep the central message unchanged.
+Compare the versions and remove any spoken description that repeats information
+the listener already has.`
+	],
+	"MYP5 Storyteller": [
+		`Retell the supplied cardboard-tower story from five cue words. Preserve
+the collapse, the rejected sketch, the rebuild and the narrator's changed
+attitude. Mark one pause at the turning point. Compare the retelling with the
+model and identify a detail that helped connect the practical problem to the
+ending, rather than merely adding length.`,
+		`Retell the fictional tower story from the partner's point of view.
+Keep the visible events unchanged, but distinguish what the partner could
+observe from what only the original narrator could know. Compare the two
+openings and endings. Identify one changed interpretation and the event in
+the supplied story that supports it.`
+	],
+	"MYP6 Radio Pitch": [
+		`Plan an audio pitch for The Bell Courier using the supplied synopsis.
+Use three minutes for the outline and keep the delivered pitch within five
+minutes. Include a recommendation, a specific audience and two supporting
+details. After rehearsal, check whether a listener can identify the
+recommendation and its reason without a visual aid.`,
+		`Change the target audience from a quiet mystery club to a group seeking
+fast action. Use the same Bell Courier synopsis to explain why it may be a
+poor fit. Keep the recommendation honest rather than adding chase scenes that
+the synopsis does not supply. Compare which details matter to the two audiences
+and revise the closing accordingly.`
+	],
+	"MYP7 Defense Attorney": [
+		`Sort the three supplied fictional case cards into support for and
+challenges to the claim that a purchase guarantees happiness. Explain how each
+case affects the claim, then write a narrower conclusion that accounts for
+all three. Keep case details separate from general claims about real people;
+these examples are reasoning practice, not population evidence.`,
+		`Present the strongest objection to the reading's bounded claim before
+presenting the claim itself. Answer that objection using two of the supplied
+case cards and explain how each bears on the response. Compare the reordered
+argument with the original sequence, noting whether the conclusion still
+acknowledges what the fictional evidence cannot establish.`
+	],
+	"MYP8 Stand-up Comedian": [
+		`Rehearse the supplied miscellaneous-drawer segment with two different
+pause placements. Preserve its wording so the comparison concerns timing.
+Record where the listener has enough information to understand each payoff.
+Keep the two marked scripts and a revision note; distinguish observed feedback
+from a prediction when rehearsing without an audience.`,
+		`Write a new closing line that calls back to the first drawer label in
+the supplied segment. Keep the fictional organizing habit as the target.
+Compare the new ending with the original filing-system line and explain how
+each returns to an earlier idea. Rehearse both before choosing the ending
+whose connection is clearest.`
+	],
+	"MYP9 Master Project: Your TED-Ed Talk": [
+		`Choose one supplied mini-talk and annotate its central idea, one
+supporting detail and two delivery cues. Rehearse it with a changed pause or
+emphasis, keeping the wording stable. Explain which connection the changed cue
+is meant to clarify, then distinguish that intention from any feedback actually
+observed during the rehearsal.`,
+		`Create a ninety-second version of the full project talk. Preserve its
+central idea and one complete supporting example while cutting secondary
+material. Time the delivery, then compare it with the longer outline. Identify
+what the shorter version communicates clearly and one useful point lost in the
+cut; revise an abrupt transition before delivering again.`
+	]
 };
 
 export function applyPublicSpeakingReadings(
@@ -272,9 +379,19 @@ export function applyPublicSpeakingReadings(
 				preserveAssignment: true
 			}))
 		];
-		for (const optional of module.supplementalProjects) {
+		for (const [index, optional] of module.supplementalProjects.entries()) {
+			const task = supplementalTasks[original.title]?.[index];
+			if (!task) {
+				throw new Error(
+					`Missing Public Speaking practice: ${original.title}/${index}`
+				);
+			}
 			optional.contentKind = "assignment";
-			optional.content = formatAuthoredAssignment(optional.content);
+			optional.content = formatAuthoredAssignment(
+				formatAuthoredReading(task)
+			);
+			optional.preserveInstructions = true;
+			optional.preserveAssignment = true;
 		}
 	}
 }

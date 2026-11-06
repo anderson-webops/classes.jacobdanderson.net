@@ -215,9 +215,11 @@ Graph current against voltage, estimate resistance, and explain why scatter does
 - **Parallel P:** 12 V source, two 6 Ω resistors on separate branches.
 - **Open O:** same as Series S, but one wire break opens the only path.
 - **Branch-open B:** same as Parallel P, but one branch is open.
-- **Short-risk R:** a near-zero-resistance wire bypasses one component in the ideal diagram.
+- **Bypass R:** start with Series S and connect an ideal zero-resistance wire across only the first 6 Ω resistor. The second 6 Ω resistor remains in series with the 12 V source. This wire does not connect the two source terminals directly.
 
 For each, identify complete paths, equivalent resistance when appropriate, source current, branch behavior, and the effect of one component opening.
+
+For Bypass R, also find the voltage and current in the bypassed resistor. Compare this with a separate ideal wire connected directly across the source: explain why an ideal 12 V source and zero resistance give no finite current solution. These are diagram cases, with no physical construction required.
 
 ### Device energy cards
 
@@ -257,6 +259,20 @@ Calculate wave speed. Compare A with B for frequency and wavelength, and compare
 |     1.25 |               2.0 |
 
 Estimate amplitude, period, and frequency. Explain why this time graph alone does not directly display wavelength.
+
+### Interference phase cards
+
+Two ideal waves travel in opposite directions in a linear medium. Each has amplitude 2 cm and period 1 s. The table samples one fixed point for two different phase relationships. Superposition means adding the signed displacements at the same point and time.
+
+| Time (s) | Wave 1 (cm) | Wave 2, matching phase (cm) | Wave 2, opposite phase (cm) |
+| -------: | ----------: | -------------------------: | -------------------------: |
+|     0.00 |           0 |                          0 |                          0 |
+|     0.25 |           2 |                          2 |                         -2 |
+|     0.50 |           0 |                          0 |                          0 |
+|     0.75 |          -2 |                         -2 |                          2 |
+|     1.00 |           0 |                          0 |                          0 |
+
+Calculate and graph the total displacement for each phase relationship. Find its amplitude at this point. Explain why cancellation at one point does not demonstrate disappearance of wave energy everywhere. A table or paper graph is a complete model route; an interactive simulation is optional.
 
 ### Resonance response
 

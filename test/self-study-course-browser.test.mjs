@@ -8,7 +8,7 @@ import process from "node:process";
 import { test } from "node:test";
 import { fileURLToPath } from "node:url";
 import puppeteer from "puppeteer";
-import { preview } from "vite";
+import { createServer, preview } from "vite";
 
 const root = fileURLToPath(new URL("../front-end/", import.meta.url));
 const courseIds = [
@@ -21,11 +21,14 @@ const courseIds = [
 	"introduction-to-public-speaking",
 	"scratch-level-1-bootcamp",
 	"algebra-2a",
-	"algebra-2b"
+	"algebra-2b",
+	"intro-to-physics"
 ];
-const readingCounts = [10, 13, 14, 16, 20, 14, 9, 4, 27, 22];
+const readingCounts = [10, 13, 14, 16, 20, 14, 9, 4, 27, 22, 37];
 assert.equal(readingCounts.length, courseIds.length);
 const requestedCourses = process.env.SELF_STUDY_BROWSER_COURSES;
+const sourceMode = process.env.SELF_STUDY_BROWSER_SOURCE_MODE ?? "build";
+assert.ok(["build", "dev"].includes(sourceMode));
 const selectedCourseIds = requestedCourses
 	? requestedCourses.split(",")
 	: courseIds;
@@ -86,7 +89,8 @@ async function chooseModule(page, module, index) {
 	) {
 		await toggle.click();
 	}
-	const label = `Show ${module.kind} ${index + 1}: ${module.title}`;
+	const kind = module.kind === "transition" ? "next step" : module.kind;
+	const label = `Show ${kind} ${index + 1}: ${module.title}`;
 	await page
 		.locator(`.outline-button[aria-label=${JSON.stringify(label)}]`)
 		.click();
@@ -255,15 +259,26 @@ test(
 		);
 		try {
 			await mkdir(output, { recursive: true });
-			assert.ok(
-				existsSync(join(root, "dist/index.html")),
-				"Build this checkout before checking its pages"
-			);
+			if (sourceMode === "build") {
+				assert.ok(
+					existsSync(join(root, "dist/index.html")),
+					"Build this checkout before checking its pages"
+				);
+			}
 			process.chdir(root);
-			server = await preview({
-				root,
-				preview: { host: "127.0.0.1", port: 0, strictPort: true }
-			});
+			if (sourceMode === "dev") {
+				server = await createServer({
+					root,
+					server: { host: "127.0.0.1", port: 0, strictPort: true, open: false }
+				});
+				await server.listen();
+			}
+			else {
+				server = await preview({
+					root,
+					preview: { host: "127.0.0.1", port: 0, strictPort: true }
+				});
+			}
 			const origin = `http://127.0.0.1:${server.httpServer.address().port}`;
 			const executablePath = [
 				process.env.PUPPETEER_EXECUTABLE_PATH,
@@ -376,7 +391,7 @@ test(
 							);
 							assert.deepEqual(
 								outline,
-								fixture.modules.map(module => module.title),
+								fixture.modules.filter(module => module.kind !== "appendix").map(module => module.title),
 								"Every teaching module is reachable in its teaching group"
 							);
 							const references = await page.$$eval(
@@ -417,7 +432,8 @@ test(
 								index,
 								module
 							] of fixture.modules.entries()) {
-								await chooseModule(page, module, index);
+								const groupIndex = fixture.modules.slice(0, index).filter(candidate => candidate.kind === module.kind).length;
+								await chooseModule(page, module, groupIndex);
 								await chooseView(page, 3);
 								for (const item of module.readings) {
 									const anchor = `${module.id}-${item.id}`;
@@ -462,7 +478,15 @@ test(
 										=== "MSC16 Sentence Types",
 										item.paragraphBreaks
 									);
+									const imageLoads = [];
 									for (const image of item.images) {
+										const before = await page.$eval(`#${anchor}`, (card, expected) => {
+											const element = [...card.querySelectorAll("img")].find(candidate => candidate.getAttribute("src") === expected.src && candidate.alt === expected.alt);
+											if (!element) throw new Error(`Missing expected image: ${expected.src}`);
+											const state = { src: expected.src, loading: element.loading, complete: element.complete, naturalWidth: element.naturalWidth, viewportTop: element.getBoundingClientRect().top };
+											element.scrollIntoView({ block: "center", inline: "nearest" });
+											return state;
+										}, image);
 										await page.waitForFunction(
 											({ anchor, image }) =>
 												[
@@ -482,6 +506,7 @@ test(
 											{},
 											{ anchor, image }
 										);
+										imageLoads.push({ before, loaded: true });
 									}
 									assert.equal(
 										await page.$eval(
@@ -512,6 +537,7 @@ test(
 										renderedTextSHA256: digest(actual.text),
 										tableRows: actual.tableRows,
 										imagesLoaded: item.images.length,
+										imageLoads,
 										tableLayout
 									});
 								}
@@ -526,6 +552,7 @@ test(
 								);
 								if (
 									index === 0
+									|| (id === "intro-to-physics" && /^(?:Standards Map|Course Roadmap)$/.test(module.title))
 									|| module.readings.some(
 										item => item.images.length
 									)
@@ -653,6 +680,7 @@ test(
 				`${JSON.stringify(
 					{
 						complete: true,
+						sourceMode,
 						sourceCommit: profiles[0].sourceCommit,
 						selectedCourseIds,
 						expectedProfiles,
@@ -670,7 +698,10 @@ test(
 				if (browser) await browser.close();
 			}
 			finally {
-				if (server?.httpServer) {
+				if (sourceMode === "dev" && server) {
+					await server.close();
+				}
+				else if (server?.httpServer) {
 					await new Promise(resolve =>
 						server.httpServer.close(resolve)
 					);
