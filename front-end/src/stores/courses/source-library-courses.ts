@@ -2518,7 +2518,7 @@ const englishCourses = {
 			"JoR5 Figurative Language": [
 				{
 					title: "Figurative Language Drawing Set",
-					prompt: "Compare literal drawings with sentence context for idioms, similes, metaphors, and personification. Use phrases such as hard nut to crack, walk on eggshells, in a nutshell, as tall as a giraffe, The test was a breeze, and The wind whipped through my hair to infer the meaning of each type.",
+					prompt: "Compare literal pictures with these complete contexts: After several failed attempts, the puzzle was a hard nut to crack. To avoid upsetting a resting sibling, Kai had to walk on eggshells. In a nutshell, the trip went well. The sunflower was as tall as a giraffe. The test was a breeze, so the class finished early. The wind whipped through my hair. Compare the last sentence with The wind whispered a secret to the leaves. Explain intended meanings and justify idiom, simile, metaphor or personification labels. A phrase may fit more than one category; strong motion alone does not establish human behavior.",
 					evidence: [
 						"Drawing or written literal interpretation for each figurative phrase.",
 						"Definition of idiom, simile, metaphor, and personification using the phrase examples.",
@@ -2549,11 +2549,11 @@ const englishCourses = {
 			"JoR6 Master Project": [
 				{
 					title: "Master Project Choice and Evidence Plan",
-					prompt: "Preview the story-review and informational-report paths, confirm access to one selected text or an equivalent, and plan the summary or main idea, evidence, audience format, and revision check before building.",
+					prompt: "Choose one story-review, figurative-art, interview or news-report path and confirm access to its selected text. Plan the summary or main idea, at least three supporting details and audience format. Complete the selected response and document one revision.",
 					evidence: [
 						"Selected project path and accessible text.",
 						"Planning notes for summary or main idea, at least three supporting details, and the intended audience.",
-						"Completion checklist for the selected response format and one planned revision."
+						"Finished response in the selected format, with an evidence checklist and one documented revision."
 					]
 				},
 				{

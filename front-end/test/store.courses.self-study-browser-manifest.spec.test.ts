@@ -11,6 +11,7 @@ import elementaryAdditions from "../../test/fixtures/early-elementary-a-restored
 import elementaryBAdditions from "../../test/fixtures/early-elementary-b-restored-identities.json";
 import lateElementaryAAdditions from "../../test/fixtures/late-elementary-a-restored-identities.json";
 import lateElementaryBAdditions from "../../test/fixtures/late-elementary-b-restored-identities.json";
+import joyOfReadingAdditions from "../../test/fixtures/joy-of-reading-restored-identities.json";
 import ventureAdditions from "../../test/fixtures/entrepreneurship-restored-core-identities.json";
 import grammarAdditions from "../../test/fixtures/grammar-mechanics-restored-identities.json";
 import literatureAdditions from "../../test/fixtures/middle-school-literature-restored-identities.json";
@@ -38,6 +39,7 @@ import {
 	earlyElementaryMathBCourse,
 	lateElementaryMathACourse,
 	lateElementaryMathBCourse,
+	earlyElementaryJoyOfReadingCourse,
 	entrepreneurship101Course,
 	grammarMechanicsCourse,
 	introductionToPublicSpeakingCourse,
@@ -49,6 +51,12 @@ import {
 } from "@/stores/courses/source-library-courses";
 
 const cases = [
+	{
+		id: "early-elementary-a-reading",
+		source: earlyElementaryJoyOfReadingCourse,
+		readings: 8,
+		additions: joyOfReadingAdditions
+	},
 	{
 		id: "late-elementary-b-math",
 		source: lateElementaryMathBCourse,
@@ -328,6 +336,7 @@ it.each(
 				"early-elementary-b-math",
 				"late-elementary-a-math",
 				"late-elementary-b-math",
+				"early-elementary-a-reading",
 				"algebra-1a",
 				"algebra-1b",
 				"pre-algebra-a",
@@ -425,6 +434,7 @@ it.each(
 							"early-elementary-b-math",
 							"late-elementary-a-math",
 							"late-elementary-b-math",
+							"early-elementary-a-reading",
 							"algebra-1a",
 							"algebra-1b",
 							"introduction-to-public-speaking",
@@ -464,7 +474,8 @@ it.each(
 							"early-elementary-a-math",
 							"early-elementary-b-math",
 							"late-elementary-a-math",
-							"late-elementary-b-math"
+							"late-elementary-b-math",
+							"early-elementary-a-reading"
 						].includes(id)
 					) ||
 						module.kind !== "appendix")
@@ -569,7 +580,9 @@ it.each(
 						sourceProjects: sourceProjects.length,
 						modules,
 						reviewScope:
-							"complete course reading and assignment view",
+							id === "early-elementary-a-reading"
+								? "Complete on-site explanations and briefs; the ten named reading texts remain unavailable."
+								: "complete course reading and assignment view",
 						internalModules: course.modules
 							.filter(module => module.internal)
 							.map(module => ({
