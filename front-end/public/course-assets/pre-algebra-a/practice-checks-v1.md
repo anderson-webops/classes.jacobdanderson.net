@@ -107,7 +107,7 @@ For month n with 53^n orders:
 
 These thresholds follow from a repeated factor of 53 each month. That idealized rule assumes continued multiplication and sufficient capacity; it is not evidence that real demand will follow the same pattern.
 
-## Optional readiness-operations
+## Optional Readiness Operations
 
 1. Multiplication first gives -8+15=7. The parentheses change the first operation: (-8+3)×5=-5×5=-25.
 
@@ -115,7 +115,7 @@ These thresholds follow from a repeated factor of 53 each month. That idealized 
 
 3. 15%=15/100, so (15/100)×60=9. The distance from -8 to zero is abs(-8)=8 units; distance is nonnegative.
 
-## Optional readiness-scaling
+## Optional Readiness Scaling
 
 1. One bar uses (3/4)/6=1/8 cup. Ten bars use 10/8=5/4=1 1/4 cups.
 
@@ -123,7 +123,7 @@ These thresholds follow from a repeated factor of 53 each month. That idealized 
 
 3. Two cups provide 2/(1/8)=16 bars. Seventeen bars require 17/8=2 1/8 cups, which exceeds 2 cups.
 
-## Optional elevator-displacement
+## Optional Elevator Displacement
 
 1. After rising, -7+12=5. After descending, 5-9=-4.
 
@@ -131,7 +131,7 @@ These thresholds follow from a repeated factor of 53 each month. That idealized 
 
 3. Starting at 7 gives intermediate level 19 and final level 10. Total distance is still 21 levels and displacement is 10-7=3 levels. Changing the starting position shifts the positions without changing the two moves.
 
-## Optional ribbon-whole-pieces
+## Optional Ribbon Whole Pieces
 
 1. (7/8)/(3/16)=(7/8)×(16/3)=14/3=4 2/3. Four complete pieces can be cut.
 
@@ -139,7 +139,7 @@ These thresholds follow from a repeated factor of 53 each month. That idealized 
 
 3. (7/4)/(3/16)=28/3=9 1/3, so there are 9 complete pieces. They use 27/16 meter, leaving 28/16-27/16=1/16 meter. Doubling the original leftover allows an extra complete piece; rounding down before doubling loses that information.
 
-## Optional arithmetic-ratio-checkpoint
+## Optional Arithmetic Ratio Checkpoint
 
 1. The discount is 0.15×$80=$12, leaving $68. Tax is 0.05×$68=$3.40. The final price is $71.40; the tax base is the discounted price.
 
@@ -147,7 +147,7 @@ These thresholds follow from a repeated factor of 53 each month. That idealized 
 
 3. The scale factor is 10/4=5/2. Rice is (3/5)×(5/2)=3/2=1 1/2 cups.
 
-## Optional percent-changes
+## Optional Percent Changes
 
 1. A 20% increase gives $60. A 20% decrease of $60 removes $12, leaving $48. Relative to $50, the change is (48-50)/50×100%=-4%.
 
@@ -155,7 +155,7 @@ These thresholds follow from a repeated factor of 53 each month. That idealized 
 
 3. The reduced amount is $40 and the missing amount is $10. The needed increase is $10/$40×100%=25%, with $40 as the base. Equivalently, 0.8×1.25=1.
 
-## Optional sequence-shift
+## Optional Sequence Shift
 
 1. The difference is 4, so a_n=5+4(n-1)=4n+1. Row 10 contains 4×10+1=41 tiles.
 
@@ -163,7 +163,7 @@ These thresholds follow from a repeated factor of 53 each month. That idealized 
 
 3. The new expression is 3+4(n-1)=4n-1. Row 10 has 39 tiles and the total is 10(3+39)/2=210 tiles. Every one of the 10 rows has 2 fewer tiles, so the total is 20 fewer.
 
-## Optional exponent-root-checkpoint
+## Optional Exponent Root Checkpoint
 
 1. 2^(-3)=1/8 and 4^2=16, so the product is 2. With base 2, the product is 2^(-3)×2^4=2^1=2.
 
@@ -171,7 +171,7 @@ These thresholds follow from a repeated factor of 53 each month. That idealized 
 
 3. The product is (3×4)×10^(5-3)=12×10^2=1.2×10^3. The normalized coefficient 1.2 is at least 1 and less than 10.
 
-## Optional exponent-counterexamples
+## Optional Exponent Counterexamples
 
 1. The left side is 8^2=64 and the right side is 2^5=32, so the claim is false. The power-of-a-power rule multiplies exponents: (2^3)^2=2^(3×2)=2^6=64.
 

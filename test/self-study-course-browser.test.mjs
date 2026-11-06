@@ -252,7 +252,7 @@ async function checkCards(page, module, expected, optional, resourceViews, profi
 			await page.waitForFunction(text => document.querySelector(".course-resource-card .item-content-markdown")?.textContent.replace(/\s+/g, " ").trim() === text, {}, check.expectedText);
 			assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true, `${check.heading}: no viewer overflow`);
 			resourceViews.push({ item: item.id, asset: check.asset, fullTextSHA256: digest(check.expectedText) });
-			if (check.label === "Project self-check" || check.heading === "Optional percent-changes") {
+			if (check.label === "Project self-check" || check.asset.endsWith("#optional-percent-changes")) {
 				await page.screenshot({ path: join(process.env.SELF_STUDY_BROWSER_PROOF_DIR ?? "output/self-study-browser", `${profileName}-${item.id}-self-check.png`), fullPage: true });
 			}
 			await page.goBack({ waitUntil: "domcontentloaded" });
