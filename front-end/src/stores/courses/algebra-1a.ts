@@ -495,8 +495,10 @@ Slope measures how much \`y\` changes for each change in \`x\`. In graphing lang
 
 - Between \`(-8, 6)\` and \`(-4, -6)\`, slope = \`(-6 - 6) / (-4 - (-8)) = -12 / 4 = -3\`
 - For \`6x - y = 4 + x\`, rewrite as \`y = 5x - 4\`, so the slope is \`5\`
-- Parallel lines have equal slopes.
-- Perpendicular lines have slopes that are negative reciprocals.
+- Distinct nonvertical parallel lines have equal slopes. For example, \`y = 2x + 1\` and \`y = 2x - 3\` both have slope \`2\`.
+- Distinct vertical lines, such as \`x = -2\` and \`x = 4\`, are parallel and both have undefined slope.
+- When both slopes are finite and nonzero, perpendicular lines have negative-reciprocal slopes: their product is \`-1\`. Slopes \`2\` and \`-1/2\` are one example.
+- A horizontal line and a vertical line are perpendicular. For example, \`y = 3\` has slope \`0\` and \`x = -2\` has undefined slope.
 
 Tie every slope computation back to a real rate such as deliveries per week, height per day, or cost per month.
 				`.trim()
