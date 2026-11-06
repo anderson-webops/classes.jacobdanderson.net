@@ -34,7 +34,7 @@ export async function checkScratchCheckpointTasks(
 					["Complex-3", "Complex-ALL", "each of the four quadrants"]
 				],
 				[
-					"Check-In #1: Additional Practice Project",
+					"Scratch Level 2 Check-In 1 Practice Project",
 					[
 						"count from 1 to 50",
 						"spacebar or the up arrow",
@@ -65,7 +65,7 @@ export async function checkScratchCheckpointTasks(
 					["first 10 multiples", "random number from 1 to 10"]
 				],
 				[
-					"Check-In #2: Additional Practice Project",
+					"Scratch Level 2 Check-In 2 Practice Project",
 					["top five favorites", "dance for 3 seconds"]
 				]
 			]
