@@ -1149,7 +1149,7 @@ const INTRO_PHYSICS_FLOW: Record<string, IntroPhysicsModuleFlow> = {
 		projectCore:
 			"Compare the energy use of supplied devices from power and run time, show calculations with units, and identify which assumption dominates the estimate.",
 		projectStretch:
-			"Construct a conditional recommendation that adds standby use, efficiency, uncertainty, or cost while avoiding claims about a learner's household."
+			"Compare standby demand, efficiency, uncertainty, or cost under stated assumptions; base the recommendation on the supplied device data."
 	},
 	"PHY6 Waves, Sound, and Light": {
 		stage: "Core foundation",
