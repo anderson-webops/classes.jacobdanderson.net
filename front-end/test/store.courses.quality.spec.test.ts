@@ -226,6 +226,49 @@ function completeSourceActivity(
 	);
 }
 
+const speakingPracticeContracts: Record<string, [RegExp, RegExp]> = {
+	"MYP1 Personal Introductions": [
+		/Rowan introduction|same fictional person/i,
+		/cue notes|short outlines/i
+	],
+	"MYP2 Toastmaker": [/repair-club toast/i, /cue notes|versions/i],
+	"MYP3 Speechwriter": [/handover-note/i, /annotated outline|openings/i],
+	"MYP4 Keynote Speaker": [
+		/parts-box segment/i,
+		/emphasis cues|brief descriptions/i
+	],
+	"MYP5 Storyteller": [/tower story/i, /cue words|openings and endings/i],
+	"MYP6 Radio Pitch": [/Bell Courier/i, /outline|recommendation/i],
+	"MYP7 Defense Attorney": [/case cards/i, /conclusion|argument/i],
+	"MYP8 Stand-up Comedian": [
+		/miscellaneous-drawer segment|first drawer label/i,
+		/marked scripts|new closing line/i
+	],
+	"MYP9 Master Project: Your TED-Ed Talk": [
+		/supplied mini-talk|full project talk/i,
+		/annotate|ninety-second version/i
+	]
+};
+
+function completeSpeakingPractice(
+	courseId: string,
+	module: RawCourseModule,
+	item: RawCourseModuleItem
+) {
+	const contract = speakingPracticeContracts[module.title];
+	return (
+		courseId === "introduction-to-public-speaking" &&
+		item.contentKind === "assignment" &&
+		module.supplementalProjects.some(candidate => candidate.id === item.id) &&
+		hasAuthoredModuleReading(module) &&
+		wordCount(item.content) >= 40 &&
+		Boolean(contract?.every(pattern => pattern.test(item.content))) &&
+		/compare|feedback|revision|revise|check|changed|observed|explain/i.test(
+			item.content
+		)
+	);
+}
+
 function isProjectLikeTitle(title: string) {
 	return (
 		!isInformationalResourceTitle(title) &&
@@ -5513,7 +5556,8 @@ describe("course text quality normalization", () => {
 											sources.get(entry.id),
 											module,
 											item
-										)
+										) &&
+										!completeSpeakingPractice(entry.id, module, item)
 								)
 								.filter(
 									item =>
@@ -5577,7 +5621,8 @@ describe("course text quality normalization", () => {
 							!scratchSupportStructurePattern.test(
 								item.content
 							) &&
-							!reviewedJavaScriptProjectReadme(id, item);
+							!reviewedJavaScriptProjectReadme(id, item) &&
+							!completeSpeakingPractice(id, module, item);
 
 						return shortWithoutReview
 							? [
@@ -6930,8 +6975,33 @@ describe("course text quality normalization", () => {
 				expect(text).toContain("**Transfer move:**");
 				expect(text).toContain("**Extension choices:**");
 			}
-			expect(text).toContain("**Setup:**");
-			expect(text).toContain("**Process:**");
+			if (courseId === "introduction-to-public-speaking") {
+				const modules = course.modules.filter(module => !module.internal);
+				expect(modules).toHaveLength(9);
+				for (const module of modules) {
+					expect(module.supplementalProjects).toHaveLength(2);
+					for (const item of module.supplementalProjects) {
+						expect(
+							completeSpeakingPractice(courseId, module, item),
+							`${module.title} / ${item.title}: supplied input, work and review`
+						).toBe(true);
+						for (const required of speakingPracticeContracts[module.title]) {
+							expect(
+								completeSpeakingPractice(courseId, module, {
+									...item,
+									content: item.content.replaceAll(
+										new RegExp(required.source, "gi"),
+										"an example"
+									)
+								})
+							).toBe(false);
+						}
+					}
+				}
+			} else {
+				expect(text).toContain("**Setup:**");
+				expect(text).toContain("**Process:**");
+			}
 			expect(text).toContain("**Completion evidence:**");
 			expect(text).not.toMatch(
 				/The .* connection matters because .* builds skill through repeated evidence/i
@@ -6954,7 +7024,9 @@ describe("course text quality normalization", () => {
 			.join("\n");
 
 		expect(corpus).toContain("decision record with assumptions");
-		expect(corpus).toContain("speech outline with purpose");
+		expect(allCourseText(publicSpeaking!)).toContain(
+			"Three-part outline with transitions and support for each main point."
+		);
 		expect(corpus).toContain("worked math record with diagrams");
 		expect(corpus).toContain("reading or writing record with claim");
 		expect(corpus).toContain("problem-solving record with inputs");
@@ -6964,8 +7036,8 @@ describe("course text quality normalization", () => {
 		expect(nonProgrammingCorpus).toContain(
 			"the passage or draft section, claim or writing goal"
 		);
-		expect(nonProgrammingCorpus).toContain(
-			"the audience, purpose, central message"
+		expect(allCourseText(publicSpeaking!)).toContain(
+			"Audience: members sharing one model-building table."
 		);
 		expect(nonProgrammingCorpus).toContain(
 			"the goal, assumptions, available evidence"
