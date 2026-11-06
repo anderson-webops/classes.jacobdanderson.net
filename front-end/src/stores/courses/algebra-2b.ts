@@ -787,13 +787,30 @@ Build one evidence-based model comparison that connects at least three Algebra 2
 				createLesson(
 					"Choice: Course Evidence Audit",
 					`
-Select one artifact from logarithms, sequences, matrices, probability or statistics, and trigonometry. For each artifact, name the main representation, the verification method, and one correction that improved the reasoning. Use this audit when organizing existing work would strengthen the capstone plan.
+Select one completed artifact from each of five strands: logarithms, sequences, matrices, probability or statistics, and trigonometry. Make a five-row table naming the question, representation, assumptions, independent verification, and any correction needed.
+
+**Completion checks:**
+
+- Check a logarithm through its exponential form and a sequence through listed terms or partial sums.
+- Check matrix dimensions before an operation and verify an inverse by multiplication when applicable.
+- Identify the sample space or dataset behind a probability or statistics result; distinguish association from causation.
+- Check a trigonometric result against its triangle, unit-circle position, or graph features.
+- For correct work, record the successful check. Use the table to justify the capstone's selection of at least three strands.
 					`.trim()
 				),
 				createLesson(
 					"Challenge: Model Stress Test",
 					`
-Change one growth rate, sequence ratio, data point, matrix entry, probability assumption, or trigonometric parameter in the capstone scenario. Recalculate both models, compare how their predictions change, and explain which conclusion is more stable.
+For nonnegative integer n, compare the exponential model E(n)=100(1.10)^n with the arithmetic sequence S(n)=100+10n. Compute both at n=0,1,2. Change only the exponential growth rate from 10% to 20%, giving E_new(n)=100(1.20)^n, and repeat the table while retaining S.
+
+**Completion checks:**
+
+- Show the original and revised predictions, with the change in each prediction.
+- Explain why agreement at the first two inputs does not prove that the original models agree for all inputs.
+- Distinguish sensitivity to the changed parameter from evidence that either model fits a real dataset.
+- Change one growth rate, sequence ratio, data point, matrix entry, probability assumption, or trigonometric parameter in the capstone. Recalculate both models and support the revised conclusion with checked values.
+
+[Project self-check](/course-resource?asset=%2Fcourse-assets%2Falgebra-2b%2Fpractice-checks-v1.md%23capstone-growth-stress-test&label=Capstone+growth+stress+test)
 					`.trim()
 				)
 			]

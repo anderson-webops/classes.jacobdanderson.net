@@ -258,7 +258,13 @@ it.each(
 				expect(displayedPrompt, project.title).toBe(originalPrompt);
 		}
 		const card = (item: CourseModuleItem) => {
-			const fullBlocks = ["pre-algebra-a", "geometry-a", "geometry-b"].includes(id);
+			const fullBlocks = [
+				"pre-algebra-a",
+				"geometry-a",
+				"geometry-b",
+				"algebra-2a",
+				"algebra-2b"
+			].includes(id);
 			const selfChecks = fullBlocks
 				? [
 						...item.content.matchAll(
@@ -323,7 +329,9 @@ it.each(
 							"physics-level-2",
 							"pre-algebra-a",
 							"geometry-a",
-							"geometry-b"
+							"geometry-b",
+							"algebra-2a",
+							"algebra-2b"
 						].includes(id)
 							? fullAssignment
 							: "")

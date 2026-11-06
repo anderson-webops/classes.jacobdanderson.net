@@ -640,6 +640,8 @@ test(
 							if (id === "pre-algebra-a") assert.equal(resourceViews.length, 23);
 							if (id === "geometry-a") assert.equal(resourceViews.length, 17);
 							if (id === "geometry-b") assert.equal(resourceViews.length, 13);
+							if (id === "algebra-2a") assert.equal(resourceViews.length, 4);
+							if (id === "algebra-2b") assert.equal(resourceViews.length, 3);
 							assert.deepEqual(pageErrors, []);
 							profiles.push({
 								id,

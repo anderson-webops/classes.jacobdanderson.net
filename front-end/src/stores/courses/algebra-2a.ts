@@ -885,13 +885,29 @@ Build one coherent portfolio that compares how Algebra 2A function families repr
 				createLesson(
 					"Choice: Portfolio Evidence Audit",
 					`
-Choose one artifact from complex numbers, quadratics, polynomials, rational functions, radicals, and piecewise functions. For each artifact, name the representation, verification method, and one revision that improved the reasoning. Use the audit only when organizing existing evidence would strengthen the capstone plan.
+Select one completed artifact from each of six topics: complex numbers, quadratics, polynomials, rational functions, radicals, and piecewise functions. Build a six-row table naming the original question, the representation used, an independent verification, and any correction needed.
+
+**Completion checks:**
+
+- Verify a complex-number result by multiplication or coordinates, and a quadratic or polynomial result by expansion or substitution.
+- Retain original exclusions for rational expressions, check radical solutions in the original equation, and test both sides of a piecewise boundary.
+- When a result is already correct, record the successful check instead of inventing an error.
+- Use the table to choose the two function families for the capstone and explain which existing evidence supports that choice.
 					`.trim()
 				),
 				createLesson(
 					"Challenge: Cross-Family Model Stress Test",
 					`
-Change one domain boundary, data point, intercept, asymptote, or continuity condition in the capstone scenario. Refit or revise both candidate models, compare which conclusion changes, and explain which model is more stable under the changed condition.
+Compare f(x)=(x^2-1)/(x-1) with g(x)=x+1. Initially restrict inputs to [-2,2]. Evaluate both at x=0,1,2, then change the allowed interval to [1,3] and evaluate at x=1,2,3. Factor before cancelling and retain exclusions from the original expression.
+
+**Completion checks:**
+
+- Give each model's domain before and after the interval change.
+- Make a table distinguishing a numerical value from an undefined value.
+- Explain why matching outputs at shared valid inputs do not make the two domains identical.
+- Apply the same comparison method to one changed domain boundary, intercept, or continuity condition in the capstone's own two models. State which conclusion changes and support it with two checked inputs.
+
+[Project self-check](/course-resource?asset=%2Fcourse-assets%2Falgebra-2a%2Fpractice-checks-v1.md%23capstone-domain-stress-test&label=Capstone+domain+stress+test)
 					`.trim()
 				)
 			]
