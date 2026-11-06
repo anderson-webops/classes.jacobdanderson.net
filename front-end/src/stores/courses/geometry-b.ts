@@ -582,7 +582,7 @@ export const geometryBCourse: RawCourse = {
 							"A complete defense names assumptions, formulas, theorem choices, calculations, units, and limitations."
 						],
 						practice:
-							"Design a small park, game board, package, sculpture, room layout, or logo system that uses at least three Geometry B topic families.",
+							"Design a small park, game board, package, sculpture, room layout, or logo system that uses quadrilaterals or polygons, circles, transformations, and solids.",
 						check: "The final explanation connects each calculation or theorem to a design decision rather than listing disconnected answers."
 					})
 				)
@@ -601,7 +601,7 @@ export const geometryBCourse: RawCourse = {
 						outcome:
 							"The capstone demonstrates connected geometric reasoning across the full Geometry B sequence.",
 						checkpoints: [
-							"At least three Geometry B topic families are used meaningfully.",
+							"All four required topic families are used: quadrilaterals or polygons, circles, transformations, and solids.",
 							"Every formula or theorem is named before it is used.",
 							"Limitations distinguish model simplifications from calculation errors."
 						],
@@ -638,7 +638,6 @@ export const geometryBCourse: RawCourse = {
 				lesson(
 					"Geometry B Reference Map",
 					[
-						"This reference map summarizes Geometry B topic coverage and static media slots without embedding diagram files that are still pending in the class asset library.",
 						[
 							"**Course concept map**",
 							"- Quadrilateral foundations: convex and concave quadrilaterals, trapezoids, kites, parallelograms, rectangles, rhombi, squares, angle sums, medians, diagonals, and classification from evidence.",
@@ -653,8 +652,7 @@ export const geometryBCourse: RawCourse = {
 							"- Pyramid volume visualization: http://pythagoreanmath.com/wp-content/uploads/2014/08/deriving-the-volume-of-a-pyramid.png",
 							"- Sphere volume comparison visual: https://ds055uzetaobb.cloudfront.net/brioche/uploads/Fv9rxkzWWN-90675.svg?width=350",
 							"- Sphere surface-area comparison visual: https://www.mathsisfun.com/geometry/images/sphere-cylinder-area2.svg"
-						].join("\n"),
-						"**Static-media note:** Legacy static diagrams are not embedded directly while those files are pending. The appendix lists stable static media URLs by original filename so diagrams can be added later without changing course references."
+						].join("\n")
 					].join("\n\n")
 				)
 			],
@@ -830,3 +828,9 @@ configureMathCourseFlow(geometryBCourse, {
 });
 
 addGeometryCases(geometryBCourse, "b");
+
+const pendingAssets = geometryBCourse.modules.find(
+	module => module.title === "Pending Static Assets"
+);
+if (!pendingAssets) throw new Error("Missing Geometry B asset record");
+pendingAssets.internal = true;

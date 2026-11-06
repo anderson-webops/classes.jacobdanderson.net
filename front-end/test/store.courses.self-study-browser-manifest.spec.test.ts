@@ -21,6 +21,7 @@ import { algebra2BCourse } from "@/stores/courses/algebra-2b";
 import { introToPhysicsCourse } from "@/stores/courses/intro-to-physics";
 import { physicsLevel2Course } from "@/stores/courses/physics-level-2";
 import { geometryACourse } from "@/stores/courses/geometry-a";
+import { geometryBCourse } from "@/stores/courses/geometry-b";
 import { preAlgebraACourse } from "@/stores/courses/pre-algebra-a";
 import {
 	entrepreneurship101Course,
@@ -34,6 +35,12 @@ import {
 } from "@/stores/courses/source-library-courses";
 
 const cases = [
+	{
+		id: "geometry-b",
+		source: geometryBCourse,
+		readings: 11,
+		additions: []
+	},
 	{
 		id: "geometry-a",
 		source: geometryACourse,
@@ -251,7 +258,7 @@ it.each(
 				expect(displayedPrompt, project.title).toBe(originalPrompt);
 		}
 		const card = (item: CourseModuleItem) => {
-			const fullBlocks = ["pre-algebra-a", "geometry-a"].includes(id);
+			const fullBlocks = ["pre-algebra-a", "geometry-a", "geometry-b"].includes(id);
 			const selfChecks = fullBlocks
 				? [
 						...item.content.matchAll(
@@ -315,7 +322,8 @@ it.each(
 							"intro-to-physics",
 							"physics-level-2",
 							"pre-algebra-a",
-							"geometry-a"
+							"geometry-a",
+							"geometry-b"
 						].includes(id)
 							? fullAssignment
 							: "")
@@ -359,7 +367,7 @@ it.each(
 			expect(
 				modules.filter(module => module.kind === "module")
 			).toHaveLength(
-				id === "geometry-a"
+				["geometry-a", "geometry-b"].includes(id)
 					? 7
 					: id === "pre-algebra-a"
 						? 8
@@ -373,6 +381,14 @@ it.each(
 					module.title.startsWith("Check-In")
 						? 0
 						: module.title.startsWith("GEOA4")
+							? 2
+							: 1
+				);
+			else if (id === "geometry-b")
+				expect(module.readings, module.title).toHaveLength(
+					module.title.startsWith("Check-In #1")
+						? 0
+						: /^(?:GEOB3|GEOB5|GEOB7|GEOB9)/.test(module.title)
 							? 2
 							: 1
 				);

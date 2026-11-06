@@ -25,9 +25,10 @@ const courseIds = [
 	"intro-to-physics",
 	"physics-level-2",
 	"pre-algebra-a",
-	"geometry-a"
+	"geometry-a",
+	"geometry-b"
 ];
-const readingCounts = [10, 13, 14, 16, 20, 14, 9, 4, 27, 22, 37, 38, 11, 6];
+const readingCounts = [10, 13, 14, 16, 20, 14, 9, 4, 27, 22, 37, 38, 11, 6, 11];
 assert.equal(readingCounts.length, courseIds.length);
 const requestedCourses = process.env.SELF_STUDY_BROWSER_COURSES;
 const sourceMode = process.env.SELF_STUDY_BROWSER_SOURCE_MODE ?? "build";
@@ -638,6 +639,7 @@ test(
 							assert.equal(writes, 0);
 							if (id === "pre-algebra-a") assert.equal(resourceViews.length, 23);
 							if (id === "geometry-a") assert.equal(resourceViews.length, 17);
+							if (id === "geometry-b") assert.equal(resourceViews.length, 12);
 							assert.deepEqual(pageErrors, []);
 							profiles.push({
 								id,

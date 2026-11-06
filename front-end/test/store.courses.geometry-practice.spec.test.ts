@@ -71,8 +71,9 @@ it.each([
 				saveEdit: "Save"
 			});
 		const course = (await useCoursesStore().loadCourseById(courseId))!;
-		if (track === "a") {
-			for (const authored of geometryACourse.modules
+		{
+			const authoredCourse = track === "a" ? geometryACourse : geometryBCourse;
+			for (const authored of authoredCourse.modules
 				.flatMap(module => [
 					...module.curriculum,
 					...module.supplementalProjects
