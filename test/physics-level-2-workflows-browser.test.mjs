@@ -137,13 +137,24 @@ async function runProgram(page, activity, width, complete, marker = "") {
 			.locator(".mobile-view-picker button[data-view='console']")
 			.click();
 	await page.waitForFunction(
-		() =>
-			/^(?:Run complete|Run failed|Run finished with issues)$/.test(
-				document
-					.querySelector("[data-testid='ide-run-status']")
-					?.textContent.trim() ?? ""
-			),
-		{ timeout: 90000 }
+		expected => {
+			const status = document
+				.querySelector("[data-testid='ide-run-status']")
+				?.textContent.trim();
+			if (
+				status === "Run failed" ||
+				status === "Run finished with issues"
+			)
+				return true;
+			const stdout = [
+				...document.querySelectorAll(".output-line--stdout")
+			]
+				.map(element => element.textContent)
+				.join("\n");
+			return status === "Run complete" && stdout.includes(expected);
+		},
+		{ timeout: 90000 },
+		marker || (complete ? activity.completion : "starter:")
 	);
 	const status = await page.$eval("[data-testid='ide-run-status']", element =>
 		element.textContent.trim()
