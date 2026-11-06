@@ -42,7 +42,7 @@ export function applyJoyOfReadingGuidance(course: RawCourse, raw: RawCourse) {
 					item.id ??
 					itemId(original.title, item.title, section),
 				content:
-					item.content +
+					item.content.replace(/^\*\*Project goal:\*\*\s*/i, "") +
 					(item.title === "Figurative Language Drawing Set"
 						? `\n\n${sampleResponse(
 								"figurative-language-drawing-set"
