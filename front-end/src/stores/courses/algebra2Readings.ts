@@ -745,5 +745,15 @@ export function applyAlgebra2Readings(course: RawCourse, courseId: string) {
 			item => item.title === "Representative Review Problems"
 		);
 		if (review) review.preserveInstructions = true;
+		if (
+			module.title === "ALA12 Algebra 2A Function Family Capstone" ||
+			module.title === "ALB10 Algebra 2B Modeling Capstone"
+		) {
+			for (const item of [
+				...module.curriculum,
+				...module.supplementalProjects
+			])
+				item.preserveInstructions = true;
+		}
 	}
 }

@@ -12,6 +12,8 @@ import {
 import { isLessonLearningItem } from "@/modules/courseLessonPresentation";
 import { useAppStore } from "@/stores/app";
 import { useCoursesStore } from "@/stores/courses";
+import { algebra2ACourse } from "@/stores/courses/algebra-2a";
+import { algebra2BCourse } from "@/stores/courses/algebra-2b";
 
 const checkInTopics: Record<
 	string,
@@ -78,6 +80,24 @@ it.each(
 				saveEdit: "Save"
 			});
 		const course = (await useCoursesStore().loadCourseById(courseId))!;
+		const authored =
+			courseId === "algebra-2a" ? algebra2ACourse : algebra2BCourse;
+		const authoredCapstone = authored.modules.find(module =>
+			module.curriculum.some(item => item.title.startsWith("Capstone:"))
+		)!;
+		const capstone = course.modules.find(
+			module => module.title === authoredCapstone.title
+		)!;
+		for (const section of ["curriculum", "supplementalProjects"] as const)
+			for (const task of authoredCapstone[section]) {
+				const visible = capstone[section].find(
+					item => item.title === task.title
+				)!;
+				expect(visible.content, `${role}: ${task.title}`).toBe(
+					task.content.trim()
+				);
+				expect(visible.learningPath).toBe(task.learningPath);
+			}
 		const actual = course.modules.flatMap(module => [
 			...module.curriculum.map(item => ({
 				moduleId: module.id,
