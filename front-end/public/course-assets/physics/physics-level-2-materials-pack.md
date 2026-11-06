@@ -23,13 +23,13 @@ Visual work includes text descriptions, signal and sound work includes time-seri
 
 ### Ideal projectile comparison
 
-Use launch speed 20.0 m/s, launch and landing at the same height, and \(g=9.80\text{ m/s}^2\).
+Use launch speed 20.0 m/s, launch and landing at the same height, and `g=9.80 m/s²`.
 
-| Angle | \(v_{0x}\) (m/s) | \(v_{0y}\) (m/s) |     Time (s) |    Range (m) | Maximum height (m) |
-| ----: | ---------------: | ---------------: | -----------: | -----------: | -----------------: |
-|   30° |     to calculate |     to calculate | to calculate | to calculate |       to calculate |
-|   45° |     to calculate |     to calculate | to calculate | to calculate |       to calculate |
-|   60° |     to calculate |     to calculate | to calculate | to calculate |       to calculate |
+| Angle | `v_0x` (m/s) | `v_0y` (m/s) |     Time (s) |    Range (m) | Maximum height (m) |
+| ----: | -----------: | -----------: | -----------: | -----------: | -----------------: |
+|   30° | to calculate | to calculate | to calculate | to calculate |       to calculate |
+|   45° | to calculate | to calculate | to calculate | to calculate |       to calculate |
+|   60° | to calculate | to calculate | to calculate | to calculate |       to calculate |
 
 Tasks:
 
@@ -43,14 +43,14 @@ Tasks:
 
 Both traces use 20.0 m/s at 45°. Positions are rounded.
 
-| Time (s) | No-drag \(x\) (m) | No-drag \(y\) (m) | Drag-model \(x\) (m) | Drag-model \(y\) (m) |
-| -------: | ----------------: | ----------------: | -------------------: | -------------------: |
-|      0.0 |               0.0 |               0.0 |                  0.0 |                  0.0 |
-|      0.5 |               7.1 |               5.8 |                  6.7 |                  5.5 |
-|      1.0 |              14.1 |               9.2 |                 12.7 |                  8.4 |
-|      1.5 |              21.2 |              10.2 |                 18.1 |                  8.7 |
-|      2.0 |              28.3 |               8.7 |                 23.0 |                  6.5 |
-|      2.5 |              35.4 |               4.7 |                 27.4 |                  2.0 |
+| Time (s) | No-drag `x` (m) | No-drag `y` (m) | Drag-model `x` (m) | Drag-model `y` (m) |
+| -------: | --------------: | --------------: | -----------------: | -----------------: |
+|      0.0 |             0.0 |             0.0 |                0.0 |                0.0 |
+|      0.5 |             7.1 |             5.8 |                6.7 |                5.5 |
+|      1.0 |            14.1 |             9.2 |               12.7 |                8.4 |
+|      1.5 |            21.2 |            10.2 |               18.1 |                8.7 |
+|      2.0 |            28.3 |             8.7 |               23.0 |                6.5 |
+|      2.5 |            35.4 |             4.7 |               27.4 |                2.0 |
 
 Calculate horizontal residuals relative to the no-drag model and identify when the discrepancy becomes decision-relevant under a ±1.0 m position tolerance.
 
@@ -74,7 +74,7 @@ Find the westward swimming component and available northward component needed fo
 
 ### Elevator scale data
 
-A 70.0 kg rider uses \(g=9.80\text{ m/s}^2\).
+A 70.0 kg rider uses `g=9.80 m/s²`.
 
 | Interval | Scale force (N) | Velocity description     |
 | -------- | --------------: | ------------------------ |
@@ -105,11 +105,11 @@ Find both tensions. Then compare the whole platform system with a subsystem cont
 
 Both modeled teams and the taut 2.00 kg rope accelerate east at the same rate. The rope is horizontal; weight and normal forces balance vertically. The listed ground forces are within the available traction.
 
-| Object | Mass (kg) | Eastward horizontal force (N) | Westward horizontal force (N) |
-| --- | ---: | ---: | ---: |
-| West team | 60.0 | rope: 180 | ground: 150 |
-| East team | 70.0 | ground: 216 | rope: 181 |
-| Rope | 2.00 | east team: 181 | west team: 180 |
+| Object    | Mass (kg) | Eastward horizontal force (N) | Westward horizontal force (N) |
+| --------- | --------: | ----------------------------: | ----------------------------: |
+| West team |      60.0 |                     rope: 180 |                   ground: 150 |
+| East team |      70.0 |                   ground: 216 |                     rope: 181 |
+| Rope      |      2.00 |                east team: 181 |                west team: 180 |
 
 Draw each free-body diagram and calculate each acceleration. Then draw the combined teams-plus-rope system, cancel its internal interaction pairs, and calculate its acceleration from ground forces alone. Explain why the rope's two end tensions differ and why the ground forces on different teams are not a Newton's-third-law pair. The ground experiences the opposite member of each team–ground interaction.
 
@@ -117,20 +117,20 @@ Draw each free-body diagram and calculate each acceleration. Then draw the combi
 
 ### Static threshold
 
-A block has \(\mu_s=0.30\) and \(\mu_k=0.20\).
+A block has `μ_s=0.30` and `μ_k=0.20`.
 
-| Ramp angle | \(mg\sin\theta/mg\) | \(\mu_s\cos\theta\) | Predicted state from rest |
-| ---------: | ------------------: | ------------------: | ------------------------- |
-|        10° |        to calculate |        to calculate | classify                  |
-|        15° |        to calculate |        to calculate | classify                  |
-|        20° |        to calculate |        to calculate | classify                  |
-|        25° |        to calculate |        to calculate | classify                  |
+| Ramp angle | `(mg sin θ)/(mg)` |  `μ_s cos θ` | Predicted state from rest |
+| ---------: | ----------------: | -----------: | ------------------------- |
+|        10° |      to calculate | to calculate | classify                  |
+|        15° |      to calculate | to calculate | classify                  |
+|        20° |      to calculate | to calculate | classify                  |
+|        25° |      to calculate | to calculate | classify                  |
 
 Compare the downslope requirement with maximum static friction. Do not substitute kinetic friction until sliding occurs.
 
 ### Sliding acceleration
 
-For the same block after sliding begins, use \(a=g(\sin\theta-\mu_k\cos\theta)\).
+For the same block after sliding begins, use `a=g(sin θ-μ_k cos θ)`.
 
 | Angle | Acceleration (m/s²) |
 | ----: | ------------------: |
@@ -166,14 +166,14 @@ For a sliding design, select from 15°, 20° and 25° with μk = 0.20. The targe
 
 ### Two-dimensional collision
 
-Positive \(x\) is east and positive \(y\) is north.
+Positive `x` is east and positive `y` is north.
 
 | Object | Mass (kg) | Initial velocity (m/s) | Final velocity (m/s) |
 | ------ | --------: | ---------------------- | -------------------- |
-| A      |      1.00 | \((4.0,0.0)\)          | \((0.0,2.0)\)        |
-| B      |      2.00 | \((0.0,1.0)\)          | \((2.0,0.0)\)        |
+| A      |      1.00 | `(4.0,0.0)`            | `(0.0,2.0)`          |
+| B      |      2.00 | `(0.0,1.0)`            | `(2.0,0.0)`          |
 
-Build separate \(x\)- and \(y\)-momentum ledgers, compare total kinetic energy, and identify one physical energy-transfer route.
+Build separate `x`- and `y`-momentum ledgers, compare total kinetic energy, and identify one physical energy-transfer route.
 
 ### Elastic collision and recoil cases
 
@@ -219,10 +219,10 @@ Calculate central momentum values, compare the apparent mismatch with measuremen
 
 A solid disk and thin ring each have mass 2.00 kg and radius 0.500 m. Each receives a net torque of 3.00 N·m.
 
-| Object | Inertia model   | \(I\) (kg·m²) | Angular acceleration (rad/s²) |
-| ------ | --------------- | ------------: | ----------------------------: |
-| disk   | \(\frac12MR^2\) |  to calculate |                  to calculate |
-| ring   | \(MR^2\)        |  to calculate |                  to calculate |
+| Object | Inertia model |  `I` (kg·m²) | Angular acceleration (rad/s²) |
+| ------ | ------------- | -----------: | ----------------------------: |
+| disk   | `(1/2)MR²`    | to calculate |                  to calculate |
+| ring   | `MR²`         | to calculate |                  to calculate |
 
 Explain why equal mass, radius, and torque do not give equal angular acceleration.
 
@@ -248,28 +248,28 @@ Compare both options with torque and vertical-force balance. A suitable response
 
 ## Gravitation Circular Motion and Orbits Cases
 
-Use Earth gravitational parameter \(\mu=3.986\times10^{14}\text{ m}^3/\text{s}^2\).
+Use Earth gravitational parameter `μ=3.986×10¹⁴ m³/s²`.
 
 ### Circular-orbit table
 
 | Orbit                    | Radius from Earth's center (m) |  Speed (m/s) |   Period (s) |
 | ------------------------ | -----------------------------: | -----------: | -----------: |
-| low A                    |             \(6.77\times10^6\) | to calculate | to calculate |
-| low B                    |             \(7.37\times10^6\) | to calculate | to calculate |
-| geosynchronous reference |           \(4.2164\times10^7\) | to calculate | to calculate |
+| low A                    |                     `6.77×10⁶` | to calculate | to calculate |
+| low B                    |                     `7.37×10⁶` | to calculate | to calculate |
+| geosynchronous reference |                   `4.2164×10⁷` | to calculate | to calculate |
 
-Use \(v=\sqrt{\mu/r}\) and \(T=2\pi r/v\). Compare period and speed trends with radius.
+Use `v=√(μ/r)` and `T=2π r/v`. Compare period and speed trends with radius.
 
 ### Inverse-square comparison
 
-| Separation \(r\) | Relative gravitational force |
-| ---------------- | ---------------------------: |
-| \(R\)            |                            1 |
-| \(2R\)           |                 to calculate |
-| \(3R\)           |                 to calculate |
-| \(4R\)           |                 to calculate |
+| Separation `r` | Relative gravitational force |
+| -------------- | ---------------------------: |
+| `R`            |                            1 |
+| `2R`           |                 to calculate |
+| `3R`           |                 to calculate |
+| `4R`           |                 to calculate |
 
-State which quantities are held fixed and why \(r\) is center-to-center separation.
+State which quantities are held fixed and why `r` is center-to-center separation.
 
 ### Orbit energy cards
 
@@ -294,11 +294,11 @@ An ideal emf of 12.0 V has internal resistance 1.00 Ω.
 |                  10 | to calculate |         to calculate |   to calculate |
 |                  20 | to calculate |         to calculate |   to calculate |
 
-Use \(I=\mathcal{E}/(R+r)\), \(V_\text{terminal}=IR\), and \(P_\text{load}=I^2R\).
+Use `I=ℰ/(R+r)`, `V_terminal=IR`, and `P_load=I²R`.
 
 ### Node-voltage case
 
-A 12.0 V node connects through 6.0 Ω to unknown node \(V\). Node \(V\) connects to ground through parallel 3.0 Ω and 6.0 Ω branches.
+A 12.0 V node connects through 6.0 Ω to unknown node `V`. Node `V` connects to ground through parallel 3.0 Ω and 6.0 Ω branches.
 
 - write one junction equation;
 - solve node voltage;
@@ -330,7 +330,7 @@ Estimate energy input, temperature slope, and effective specific heat. State how
 
 ### Lens comparison
 
-A converging lens has \(f=12.0\text{ cm}\).
+A converging lens has `f=12.0 cm`.
 
 | Object distance (cm) | Measured image distance (cm) | Thin-lens prediction (cm) |
 | -------------------: | ---------------------------: | ------------------------: |
@@ -358,13 +358,13 @@ State the classical expectation being tested, the threshold pattern, and the lim
 An ideal 0.100 kg sample begins at its melting point, 0 °C. Constant input power is 100 W. Use latent heat 334,000 J/kg and liquid specific heat 4180 J/(kg·°C), with no losses.
 
 | Time (s) | Temperature (°C) |
-| ---: | ---: |
-| 0 | 0 |
-| 100 | 0 |
-| 200 | 0 |
-| 334 | 0 |
-| 375.8 | 10 |
-| 417.6 | 20 |
+| -------: | ---------------: |
+|        0 |                0 |
+|      100 |                0 |
+|      200 |                0 |
+|      334 |                0 |
+|    375.8 |               10 |
+|    417.6 |               20 |
 
 Explain what changes during the plateau. Calculate the melting duration and the energy needed for the following 10 °C increase.
 
@@ -373,10 +373,10 @@ Explain what changes during the plateau. Calculate the melting duration and the 
 Two fictional insulated enclosures have effective heat capacity 200 J/K, start at 60 °C and cool in the same 20 °C room.
 
 | Time (s) | Design A temperature (°C) | Design B temperature (°C) |
-| ---: | ---: | ---: |
-| 0 | 60 | 60 |
-| 60 | 54 | 57 |
-| 120 | 48 | 54 |
+| -------: | ------------------------: | ------------------------: |
+|        0 |                        60 |                        60 |
+|       60 |                        54 |                        57 |
+|      120 |                        48 |                        54 |
 
 A costs 4 units; B costs 7 units. Require temperature at least 52 °C at 120 s and cost at most 8 units. Estimate each average heat-loss rate from CΔT/Δt, compare the criteria, and identify why the short record does not establish a cooling law at all temperatures.
 
@@ -385,12 +385,12 @@ A costs 4 units; B costs 7 units. Require temperature at least 52 °C at 120 s a
 Two linear waves travel in opposite directions with equal 2 cm amplitudes and period 1 s. At one position their displacements are:
 
 | Time (s) | Wave A (cm) | Wave B, matching phase (cm) | Wave B, opposite phase (cm) |
-| ---: | ---: | ---: | ---: |
-| 0.00 | 0 | 0 | 0 |
-| 0.25 | 2 | 2 | -2 |
-| 0.50 | 0 | 0 | 0 |
-| 0.75 | -2 | -2 | 2 |
-| 1.00 | 0 | 0 | 0 |
+| -------: | ----------: | --------------------------: | --------------------------: |
+|     0.00 |           0 |                           0 |                           0 |
+|     0.25 |           2 |                           2 |                          -2 |
+|     0.50 |           0 |                           0 |                           0 |
+|     0.75 |          -2 |                          -2 |                           2 |
+|     1.00 |           0 |                           0 |                           0 |
 
 Use signed addition to find both total-displacement records and their amplitudes. This is an optional wave-model bridge for the optics discussion, not a prerequisite for completing the quantitative core.
 
@@ -452,14 +452,11 @@ Every option includes question, system, model, source values, calculation, valid
 
 ### Explicit Euler free-fall check
 
-Use upward positive, \(a=-9.80\text{ m/s}^2\), \(x_0=0\), \(v_0=0\), and:
+Use upward positive, `a=-9.80 m/s²`, `x_0=0`, `v_0=0`, and:
 
-\[
-x_{n+1}=x_n+v_n\Delta t,\qquad
-v_{n+1}=v_n+a\Delta t.
-\]
+`x_(n+1)=x_n+v_nΔt; v_(n+1)=v_n+aΔt.`
 
-At \(t=2.00\text{ s}\), analytic \(x=-19.60\text{ m}\).
+At `t=2.00 s`, analytic `x=-19.60 m`.
 
 | Step size (s) | Euler position at 2.00 s (m) | Absolute error (m) |
 | ------------: | ---------------------------: | -----------------: |
@@ -475,12 +472,12 @@ Graph error against step size and describe convergence.
 The undamped oscillator has m = 1.00 kg, k = 1.00 N/m, x₀ = 1.00 m, v₀ = 0 and step h = 0.0500 s. Analytic energy is 0.500 J. Explicit Euler uses xnext = x + vh and vnext = v − (k/m)xh, with both right-hand sides from the old state. Symplectic Euler updates v first and then xnext = x + vnext h.
 
 | Time (s) | Analytic energy (J) | Explicit Euler energy (J) | Symplectic Euler energy (J) |
-| ---: | ---: | ---: | ---: |
-| 0 | 0.500 | 0.500 | 0.500 |
-| 5 | 0.500 | 0.642 | 0.507 |
-| 10 | 0.500 | 0.824 | 0.489 |
-| 15 | 0.500 | 1.058 | 0.513 |
-| 20 | 0.500 | 1.357 | 0.491 |
+| -------: | ------------------: | ------------------------: | --------------------------: |
+|        0 |               0.500 |                     0.500 |                       0.500 |
+|        5 |               0.500 |                     0.642 |                       0.507 |
+|       10 |               0.500 |                     0.824 |                       0.489 |
+|       15 |               0.500 |                     1.058 |                       0.513 |
+|       20 |               0.500 |                     1.357 |                       0.491 |
 
 Identify numerical energy drift and explain why a visually oscillating result can still fail a conservation check.
 
@@ -500,27 +497,27 @@ Identify numerical energy drift and explain why a visually oscillating result ca
 
 For both datasets below, x is time in seconds and y is position in metres. For the linear record, take independent standard uncertainty u(y) = 0.20 m at every point and negligible x uncertainty. The displayed candidate model is y = (2 m/s)x + 1 m; it is not declared to be the least-squares fit.
 
-| \(x\) | Measured \(y\) | Model \(y=2x+1\) | Residual \(y-y_\text{model}\) |
-| ----: | -------------: | ---------------: | ----------------------------: |
-|     0 |            1.1 |     to calculate |                  to calculate |
-|     1 |            2.9 |     to calculate |                  to calculate |
-|     2 |            5.2 |     to calculate |                  to calculate |
-|     3 |            6.8 |     to calculate |                  to calculate |
-|     4 |            9.1 |     to calculate |                  to calculate |
-|     5 |           10.9 |     to calculate |                  to calculate |
+| `x` | Measured `y` | Model `y=2x+1` | Residual `y-y_model` |
+| --: | -----------: | -------------: | -------------------: |
+|   0 |          1.1 |   to calculate |         to calculate |
+|   1 |          2.9 |   to calculate |         to calculate |
+|   2 |          5.2 |   to calculate |         to calculate |
+|   3 |          6.8 |   to calculate |         to calculate |
+|   4 |          9.1 |   to calculate |         to calculate |
+|   5 |         10.9 |   to calculate |         to calculate |
 
 Graph data and residuals. Decide whether residual signs look random or patterned.
 
 ### Curved-model evidence
 
-| \(x\) | Measured \(y\) |
-| ----: | -------------: |
-|     0 |            0.1 |
-|     1 |            1.0 |
-|     2 |            4.2 |
-|     3 |            9.1 |
-|     4 |           15.9 |
-|     5 |           25.2 |
+| `x` | Measured `y` |
+| --: | -----------: |
+|   0 |          0.1 |
+|   1 |          1.0 |
+|   2 |          4.2 |
+|   3 |          9.1 |
+|   4 |         15.9 |
+|   5 |         25.2 |
 
 Compare a linear fit with y = (1 m/s²)x². Use residual structure rather than visual preference alone.
 
@@ -552,14 +549,14 @@ Masses 4.00 kg and 2.00 kg connect over a frictionless massless pulley.
 
 - derive the shared acceleration magnitude;
 - calculate tension;
-- check \(0<a<g\);
+- check `0<a<g`;
 - compare with a fixed-axis 1.00 kg thin-ring pulley of radius R and inertia I = MR², with a massless rope, no slip and no bearing friction; derive acceleration before comparing with the supplied 2.80 m/s².
 
 ### Moving support constraint
 
 A rope passes over a fixed pulley, around a movable pulley supporting load L, and attaches to a driven endpoint E.
 
-If the total variable rope length is \(x_E+2y_L\), derive the velocity and acceleration relation. State why the load speed is not equal to endpoint speed.
+If the total variable rope length is `x_E+2y_L`, derive the velocity and acceleration relation. State why the load speed is not equal to endpoint speed.
 
 ## Fluids and Continuum Models Cases
 
@@ -573,7 +570,7 @@ Water has density 1000 kg/m³. Elevation is constant.
 | 2       |        2.0 | to calculate |         to calculate |                   117.8 |
 | 3       |        1.0 | to calculate |         to calculate |                   110.9 |
 
-Use continuity and \(p+\frac12\rho v^2=\text{constant}\) for the ideal prediction. Compare measured pressure with ideal pressure and estimate loss.
+Use continuity and `p+(1/2)ρ v²=constant` for the ideal prediction. Compare measured pressure with ideal pressure and estimate loss.
 
 ### Branching flow
 
@@ -599,7 +596,7 @@ For each, identify whether incompressible, inviscid, steady, laminar, one-dimens
 
 ### Engine and refrigerator records
 
-| Device         |  \(Q_h\) (J) | \(Q_c\) (J) |     Work (J) | Quantity to calculate |
+| Device         |    `Q_h` (J) |   `Q_c` (J) |     Work (J) | Quantity to calculate |
 | -------------- | -----------: | ----------: | -----------: | --------------------- |
 | Engine A       |         1000 |         650 | to calculate | efficiency            |
 | Engine B       |         1000 |         500 | to calculate | efficiency            |
@@ -625,7 +622,7 @@ A gas moves between the same initial and final states by two paths:
 | X    |                  500 |                     200 |
 | Y    |                  700 |                     400 |
 
-Calculate \(\Delta U\) for each and explain why heat and work can depend on path while internal-energy change depends only on endpoints.
+Calculate `ΔU` for each and explain why heat and work can depend on path while internal-energy change depends only on endpoints.
 
 ## Electromagnetic Signals and Sensors Cases
 
@@ -634,14 +631,14 @@ Calculate \(\Delta U\) for each and explain why heat and work can depend on path
 The reference quantity q is temperature in °C for a fictional sensor. Voltage sensitivity is 0.020 V/°C over 0–40 °C and nominal zero offset is 0.50 V.
 
 | Reference temperature (°C) | Sensor voltage (V) |
-| -----------------: | -----------------: |
-|                  0 |               0.51 |
-|                 10 |               0.70 |
-|                 20 |               0.91 |
-|                 30 |               1.09 |
-|                 40 |               1.31 |
+| -------------------------: | -----------------: |
+|                          0 |               0.51 |
+|                         10 |               0.70 |
+|                         20 |               0.91 |
+|                         30 |               1.09 |
+|                         40 |               1.31 |
 
-Compare the nominal calibration \(q=(V-0.50)/0.020\) with the supplied points. Calculate residuals in voltage or inferred quantity.
+Compare the nominal calibration `q=(V-0.50)/0.020` with the supplied points. Calculate residuals in voltage or inferred quantity.
 
 ### Induction transduction case
 
@@ -677,23 +674,23 @@ For each, identify what the record can preserve, distort, or entirely miss.
 
 ### Lorentz-factor table
 
-Use \(\gamma=1/\sqrt{1-\beta^2}\), where \(\beta=v/c\).
+Use `γ=1/√(1-β²)`, where `β=v/c`.
 
-| \(\beta\) |   \(\gamma\) |
-| --------: | -----------: |
-|      0.01 | to calculate |
-|      0.10 | to calculate |
-|      0.50 | to calculate |
-|      0.80 | to calculate |
-|      0.95 | to calculate |
+|  `β` |          `γ` |
+| ---: | -----------: |
+| 0.01 | to calculate |
+| 0.10 | to calculate |
+| 0.50 | to calculate |
+| 0.80 | to calculate |
+| 0.95 | to calculate |
 
-Compare each with the classical low-speed approximation \(\gamma\approx1\).
+Compare each with the classical low-speed approximation `γ≈1`.
 
 ### Proper-time case
 
 A moving unstable particle has proper lifetime 2.20 µs and speed 0.95c in the laboratory frame.
 
-- calculate \(\gamma\);
+- calculate `γ`;
 - calculate laboratory mean lifetime;
 - calculate mean laboratory travel distance under constant speed;
 - identify which frame measures proper time;

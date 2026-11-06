@@ -22,21 +22,21 @@ The core point score uses the first six dimensions, setup through model honesty,
 
 Ideal projectile values:
 
-| Angle | \(v_{0x}\) | \(v_{0y}\) |   Time |   Range | Maximum height |
-| ----: | ---------: | ---------: | -----: | ------: | -------------: |
-|   30° |  17.32 m/s |  10.00 m/s | 2.04 s | 35.35 m |         5.10 m |
-|   45° |  14.14 m/s |  14.14 m/s | 2.89 s | 40.82 m |        10.20 m |
-|   60° |  10.00 m/s |  17.32 m/s | 3.53 s | 35.35 m |        15.31 m |
+| Angle |    `v_0x` |    `v_0y` |   Time |   Range | Maximum height |
+| ----: | --------: | --------: | -----: | ------: | -------------: |
+|   30° | 17.32 m/s | 10.00 m/s | 2.04 s | 35.35 m |         5.10 m |
+|   45° | 14.14 m/s | 14.14 m/s | 2.89 s | 40.82 m |        10.20 m |
+|   60° | 10.00 m/s | 17.32 m/s | 3.53 s | 35.35 m |        15.31 m |
 
-The 30° and 60° ranges match only under equal launch and landing height, common speed, uniform \(g\), and no drag.
+The 30° and 60° ranges match only under equal launch and landing height, common speed, uniform `g`, and no drag.
 
 Horizontal drag-model residual magnitudes are about 0.4, 1.4, 3.1, 5.3, and 8.0 m from 0.5–2.5 s. A ±1.0 m tolerance is exceeded by 1.0 s.
 
 For the drone:
 
 - westward air component: 5.0 m/s;
-- northward component: \(\sqrt{12^2-5^2}=10.91\text{ m/s}\);
-- travel time: \(600/10.91\approx55.0\text{ s}\);
+- northward component: `√(12²-5²)=10.91 m/s`;
+- travel time: `600/10.91≈55.0 s`;
 - aiming due north gives 50.0 s northward travel and 250 m east drift;
 - with 7.0 m/s wind, northward component ≈ 9.75 m/s and time ≈ 61.6 s;
 - a pure due-north ground track becomes impossible when crosswind reaches or exceeds 12.0 m/s under this speed model.
@@ -56,11 +56,11 @@ The rider's gravitational force is 686 N after rounding.
 
 For the symmetric sign:
 
-- at 30° above horizontal, \(2T\sin30^\circ=500\), so \(T=500\text{ N}\);
-- at 60°, \(T\approx289\text{ N}\);
+- at 30° above horizontal, `2T sin 30°=500`, so `T=500 N`;
+- at 60°, `T≈289 N`;
 - nearly horizontal cables require large tension because their vertical components are small.
 
-For the accelerating platform, total upward cable force is \(120(9.8+0.8)=1272\text{ N}\). A 3:2 division gives 763.2 N and 508.8 N.
+For the accelerating platform, total upward cable force is `120(9.8+0.8)=1272 N`. A 3:2 division gives 763.2 N and 508.8 N.
 
 Core evidence includes separate object diagrams, a consistent axis, contact-force interpretation, and a whole-system check.
 
@@ -70,14 +70,14 @@ For the 132 kg combined system, the rope interactions are internal and the net h
 
 ## Friction Inclines and Connected Systems Key
 
-The static threshold satisfies \(\tan\theta=\mu_s\), giving \(\theta\approx16.7^\circ\). Under the simplified model, 10° and 15° can remain at rest; 20° and 25° exceed maximum static friction.
+The static threshold satisfies `tan θ=μ_s`, giving `θ≈16.7°`. Under the simplified model, 10° and 15° can remain at rest; 20° and 25° exceed maximum static friction.
 
-The supplied kinetic-acceleration values match \(g(\sin\theta-0.20\cos\theta)\). Curvature comes from sine and cosine dependence rather than a linear angle law.
+The supplied kinetic-acceleration values match `g(sin θ-0.20 cos θ)`. Curvature comes from sine and cosine dependence rather than a linear angle law.
 
 For 3.00 kg versus 2.00 kg ideal hanging masses:
 
-- acceleration: \((3-2)g/(3+2)=1.96\text{ m/s}^2\);
-- tension: \(2(9.8+1.96)=23.52\text{ N}\);
+- acceleration: `(3-2)g/(3+2)=1.96 m/s²`;
+- tension: `2(9.8+1.96)=23.52 N`;
 - whole-system net external driving force is 9.8 N over 5.0 kg.
 
 The supplied 1.55 m/s² value indicates extra rotational inertia or another unmodeled effect. Equal tension can also require review if rope or pulley dynamics are included.
@@ -88,16 +88,16 @@ For the sliding target, the 15°, 20° and 25° options give about 0.64, 1.51 an
 
 ## Quantitative Momentum and Collisions Key
 
-Initial total momentum is \((4,2)\text{ kg·m/s}\). Final momentum is:
+Initial total momentum is `(4,2) kg·m/s`. Final momentum is:
 
-- A: \((0,2)\text{ kg·m/s}\);
-- B: \((4,0)\text{ kg·m/s}\);
-- total: \((4,2)\text{ kg·m/s}\).
+- A: `(0,2) kg·m/s`;
+- B: `(4,0) kg·m/s`;
+- total: `(4,2) kg·m/s`.
 
 Kinetic energy:
 
-- initial: \(8+1=9\text{ J}\);
-- final: \(2+4=6\text{ J}\).
+- initial: `8+1=9 J`;
+- final: `2+4=6 J`.
 
 The 3 J difference can transfer to deformation, thermal energy, sound, or internal motion while total energy remains conserved in a larger system.
 
@@ -111,28 +111,28 @@ Under the 600 N sampled-peak and 0.10 s interval limits, Design B qualifies (250
 
 For the uncertainty record:
 
-- initial momentum ≈ \(0.500(1.80)+0.750(-0.40)=0.600\text{ kg·m/s}\);
-- final momentum ≈ \(1.250(0.47)=0.588\text{ kg·m/s}\);
+- initial momentum ≈ `0.500(1.80)+0.750(-0.40)=0.600 kg·m/s`;
+- final momentum ≈ `1.250(0.47)=0.588 kg·m/s`;
 - central difference ≈ 0.012 kg·m/s, small relative to velocity uncertainties and rounding.
 
 ## Rotational Motion and Torque Key
 
 Disk:
 
-- \(I=\frac12(2.00)(0.500)^2=0.250\text{ kg·m}^2\);
-- \(\alpha=3.00/0.250=12.0\text{ rad/s}^2\).
+- `I=(1/2)(2.00)(0.500)²=0.250 kg·m²`;
+- `α=3.00/0.250=12.0 rad/s²`.
 
 Ring:
 
-- \(I=(2.00)(0.500)^2=0.500\text{ kg·m}^2\);
-- \(\alpha=6.00\text{ rad/s}^2\).
+- `I=(2.00)(0.500)²=0.500 kg·m²`;
+- `α=6.00 rad/s²`.
 
-Beam equilibrium requires \(300(1.50)=F(1.00)\), so the unknown load is 450 N. The center support carries \(196+300+450=946\text{ N}\) upward in static equilibrium.
+Beam equilibrium requires `300(1.50)=F(1.00)`, so the unknown load is 450 N. The center support carries `196+300+450=946 N` upward in static equilibrium.
 
 Rolling from 1.20 m:
 
-- disk: \(v=\sqrt{2gh/(1+1/2)}\approx3.96\text{ m/s}\);
-- ring: \(v=\sqrt{2gh/(1+1)}\approx3.43\text{ m/s}\).
+- disk: `v=√(2gh/(1+1/2))≈3.96 m/s`;
+- ring: `v=√(2gh/(1+1))≈3.43 m/s`.
 
 Mass distribution changes rotational kinetic energy at the same translational speed.
 
@@ -142,15 +142,15 @@ The lever options require effort F = 300(0.200)/r. The 0.500 m arm needs 120 N a
 
 Approximate circular-orbit results:
 
-| Orbit                       |     Speed |                     Period |
-| --------------------------- | --------: | -------------------------: |
-| low A, \(6.77\times10^6\) m | 7.67 km/s | 5.54×10³ s, about 92.4 min |
-| low B, \(7.37\times10^6\) m | 7.35 km/s |  6.30×10³ s, about 105 min |
-| geosynchronous reference    | 3.07 km/s |   8.62×10⁴ s, about 23.9 h |
+| Orbit                    |     Speed |                     Period |
+| ------------------------ | --------: | -------------------------: |
+| low A, `6.77×10⁶` m      | 7.67 km/s | 5.54×10³ s, about 92.4 min |
+| low B, `7.37×10⁶` m      | 7.35 km/s |  6.30×10³ s, about 105 min |
+| geosynchronous reference | 3.07 km/s |   8.62×10⁴ s, about 23.9 h |
 
-Relative inverse-square forces at \(R,2R,3R,4R\) are \(1,1/4,1/9,1/16\).
+Relative inverse-square forces at `R,2R,3R,4R` are `1,1/4,1/9,1/16`.
 
-For circular orbit, total energy is \(-\mu m/(2r)\). The higher circular orbit has less-negative total energy and lower speed. Raising orbit requires external energy even though the final circular speed is lower.
+For circular orbit, total energy is `-μ m/(2r)`. The higher circular orbit has less-negative total energy and lower speed. Raising orbit requires external energy even though the final circular speed is lower.
 
 For the loop top, inward force balance gives Ntop = mv²/r − mg = 0.725 N. Energy conservation from top to bottom gives vbottom² = 3.00² + 4gr = 40.36 m²/s², so vbottom ≈ 6.35 m/s. At the bottom, Nbottom − mg = mvbottom²/r, giving Nbottom ≈ 30.1 N. Minimum top speed for contact is sqrt(gr) = 2.80 m/s.
 
@@ -167,11 +167,9 @@ Internal-resistance values:
 
 For the node case:
 
-\[
-\frac{12-V}{6}=\frac{V}{3}+\frac{V}{6}
-\]
+`(12-V)/6=V/3+V/6`
 
-gives \(V=3.0\text{ V}\). Source current is 1.5 A; branch currents are 1.0 A and 0.5 A. Source power is 18 W, matching 13.5 W + 3.0 W + 1.5 W in the three resistors.
+gives `V=3.0 V`. Source current is 1.5 A; branch currents are 1.0 A and 0.5 A. Source power is 18 W, matching 13.5 W + 3.0 W + 1.5 W in the three resistors.
 
 For the specified divider, an ideal meter reads 6.00 V. A 1.0 MΩ meter makes the lower equivalent resistance 90.91 kΩ, giving 5.714 V. A 100 kΩ meter gives a 50.0 kΩ lower equivalent and reads 4.00 V. The finite meter changes the circuit it measures.
 
@@ -179,13 +177,11 @@ For the specified divider, an ideal meter reads 6.00 V. A 1.0 MΩ meter makes th
 
 At 80 s, input energy is 4000 J and temperature rise is 19.1 °C. The average slope is about 0.239 °C/s. An ideal effective specific heat is:
 
-\[
-c=\frac{4000}{0.250(19.1)}\approx838\text{ J/(kg·°C)}.
-\]
+`c=4000/(0.250(19.1))≈838 J/(kg·°C).`
 
 Environmental loss makes this simple calculation overestimate the energy retained by the sample and can bias the inferred material property.
 
-Thin-lens predictions for \(f=12.0\text{ cm}\):
+Thin-lens predictions for `f=12.0 cm`:
 
 | Object distance | Prediction | Measured residual |
 | --------------: | ---------: | ----------------: |
@@ -234,10 +230,10 @@ For circuit option B, parallel 8 Ω and 12 Ω loads have equivalent resistance 4
 For impact option C under constant deceleration:
 
 | Stop time (s) | Force magnitude (N) | Stop distance (m) |
-| ---: | ---: | ---: |
-| 0.05 | 400 | 0.125 |
-| 0.08 | 250 | 0.200 |
-| 0.12 | 166.7 | 0.300 |
+| ------------: | ------------------: | ----------------: |
+|          0.05 |                 400 |             0.125 |
+|          0.08 |                 250 |             0.200 |
+|          0.12 |               166.7 |             0.300 |
 
 None meets both below-300 N force and at-most-0.12 m distance criteria. Stopping removes 50 J, so any constant-force stop within 0.12 m needs at least 416.7 N. A qualifying revision could relax the distance beyond 0.1667 m for force below 300 N, or raise the allowed force appropriately. This is a conclusion about the supplied constant-deceleration family, not every possible force-time profile.
 
@@ -260,15 +256,13 @@ Secure evidence names method, step, initial conditions, analytic comparison, err
 
 ## Uncertainty and Curve Fitting Key
 
-For \(y=2x+1\), residuals are:
+For `y=2x+1`, residuals are:
 
-\[
-+0.1,-0.1,+0.2,-0.2,+0.1,-0.1.
-\]
+`+0.1,-0.1,+0.2,-0.2,+0.1,-0.1.`
 
 For the specified seconds/metres units, these residuals are in metres. They change sign around zero without obvious monotonic drift, but the short record is insufficient to prove a noise distribution. The unweighted least-squares fit is y ≈ 1.057 m + (1.977 m/s)x. Under the stated independent 0.20 m standard y-uncertainty and negligible x-uncertainty, u(slope) = 0.20/sqrt(17.5) ≈ 0.048 m/s; this is a standard uncertainty, not a declared 95% interval.
 
-The second dataset follows \(y=x^2\) closely. A linear model leaves curved residual structure and is not rescued by a visually plausible average slope.
+The second dataset follows `y=x²` closely. A linear model leaves curved residual structure and is not rescued by a visually plausible average slope.
 
 Bias and scatter classifications:
 
@@ -282,26 +276,24 @@ Bias and scatter classifications:
 
 Two blocks without friction:
 
-- acceleration: \(20/(2+3)=4.0\text{ m/s}^2\);
-- tension accelerating A: \(2(4.0)=8.0\text{ N}\).
+- acceleration: `20/(2+3)=4.0 m/s²`;
+- tension accelerating A: `2(4.0)=8.0 N`.
 
 With 2.0 N friction on each:
 
-- system acceleration: \((20-4)/(5)=3.2\text{ m/s}^2\);
-- tension from A: \(T-2=2(3.2)\), so \(T=8.4\text{ N}\).
+- system acceleration: `(20-4)/(5)=3.2 m/s²`;
+- tension from A: `T-2=2(3.2)`, so `T=8.4 N`.
 
 Atwood masses 4.00 and 2.00 kg:
 
-- \(a=(4-2)g/(4+2)=3.27\text{ m/s}^2\);
-- \(T=2(9.8+3.27)=26.1\text{ N}\).
+- `a=(4-2)g/(4+2)=3.27 m/s²`;
+- `T=2(9.8+3.27)=26.1 N`.
 
 For the specified 1.00 kg thin-ring pulley, I/R² = 1.00 kg, so a = (4−2)g/(4+2+1) = 2.80 m/s². Heavy-side tension is 28.0 N and light-side tension is 25.2 N. Their difference supplies the pulley torque; a different inertia distribution would give a different acceleration.
 
-For variable rope length \(x_E+2y_L=\text{constant}\):
+For variable rope length `x_E+2y_L=constant`:
 
-\[
-v_E+2v_L=0,\qquad a_E+2a_L=0.
-\]
+`v_E+2v_L=0; a_E+2a_L=0.`
 
 The load speed magnitude is half the driven endpoint speed in the opposite coordinate direction.
 
@@ -314,24 +306,24 @@ Continuity gives:
 
 Ideal same-height Bernoulli pressures:
 
-- Section 2: \(120.0+0.5(1000)(1^2-2^2)/1000=118.5\text{ kPa}\);
-- Section 3: \(112.5\text{ kPa}\).
+- Section 2: `120.0+0.5(1000)(1²-2²)/1000=118.5 kPa`;
+- Section 3: `112.5 kPa`.
 
 Measured pressures are 0.7 and 1.6 kPa below the ideal predictions, consistent with increasing loss or a model/data mismatch. This does not justify applying one constant loss without further evidence.
 
-Branch C flow is \(6.0-2.2-1.8=2.0\text{ L/s}=0.0020\text{ m}^3/\text{s}\).
+Branch C flow is `6.0-2.2-1.8=2.0 L/s=0.0020 m³/s`.
 
 ## Thermodynamics and Engines Key
 
 Device values:
 
-- Engine A: \(W=350\text{ J}\), efficiency 0.35;
-- Engine B: \(W=500\text{ J}\), efficiency 0.50;
-- Refrigerator C: \(W=800-600=200\text{ J}\), refrigerator COP \(=600/200=3.0\).
+- Engine A: `W=350 J`, efficiency 0.35;
+- Engine B: `W=500 J`, efficiency 0.50;
+- Refrigerator C: `W=800-600=200 J`, refrigerator COP `=600/200=3.0`.
 
-For 600 K and 300 K reservoirs, reversible upper-bound efficiency is \(1-300/600=0.50\). Engine B reaches the ideal bound only in the simplified record; a real finite-rate device includes irreversibility. For 400 K and 300 K, the upper bound is 0.25.
+For 600 K and 300 K reservoirs, reversible upper-bound efficiency is `1-300/600=0.50`. Engine B reaches the ideal bound only in the simplified record; a real finite-rate device includes irreversibility. For 400 K and 300 K, the upper bound is 0.25.
 
-Both process paths give \(\Delta U=Q-W=300\text{ J}\). Heat and work differ by path; internal-energy change matches because endpoints match.
+Both process paths give `ΔU=Q-W=300 J`. Heat and work differ by path; internal-energy change matches because endpoints match.
 
 ## Electromagnetic Signals and Sensors Key
 
@@ -354,21 +346,21 @@ Sampling interpretations:
 
 Lorentz factors:
 
-| \(\beta\) | \(\gamma\) |
-| --------: | ---------: |
-|      0.01 |    1.00005 |
-|      0.10 |    1.00504 |
-|      0.50 |     1.1547 |
-|      0.80 |     1.6667 |
-|      0.95 |     3.2026 |
+|  `β` |     `γ` |
+| ---: | ------: |
+| 0.01 | 1.00005 |
+| 0.10 | 1.00504 |
+| 0.50 |  1.1547 |
+| 0.80 |  1.6667 |
+| 0.95 |  3.2026 |
 
-At everyday speeds, \(\gamma\) is extremely close to 1, explaining why classical timing works well.
+At everyday speeds, `γ` is extremely close to 1, explaining why classical timing works well.
 
 For the particle:
 
 - proper time: 2.20 µs in the particle rest frame;
-- laboratory mean lifetime: \(3.2026(2.20)\approx7.05\text{ µs}\);
-- mean laboratory distance: \(0.95c(7.05\text{ µs})\approx2.01\text{ km}\).
+- laboratory mean lifetime: `3.2026(2.20)≈7.05 µs`;
+- mean laboratory distance: `0.95c(7.05 µs)≈2.01 km`.
 
 The five events must distinguish the front and rear arrivals at the train midpoint. The approaching train midpoint receives the front signal before the rear signal. The emissions are simultaneous in the platform frame and not in the train frame. Emission and reception are different events, while the ordering of the two receptions on the train observer worldline is consistent across inertial frames. Simultaneity at separated positions is frame-dependent under consistent transformations. The observers do not merely suffer visual illusions; they assign coordinates to the same events from different inertial frames.
 

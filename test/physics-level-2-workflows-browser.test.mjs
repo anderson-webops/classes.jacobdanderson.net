@@ -274,6 +274,9 @@ async function checkViewer(page, selector, expectedAsset, card, label) {
 		element => element.innerText
 	);
 	assert.ok(text.length > 300);
+	assert.doesNotMatch(text, /\\(?:frac|sqrt|text|times|mu)|\\[()[\]]/);
+	if (expectedAsset.endsWith("#gravitation-circular-motion-and-orbits-cases"))
+		assert.ok(text.includes("μ=3.986×10¹⁴ m³/s²"), text);
 	await page.screenshot({
 		path: join(output, label + ".png"),
 		fullPage: true
