@@ -428,6 +428,7 @@ jobs:
           test/store.courses.late-elementary-b-content.spec.test.ts
           test/store.courses.joy-of-reading-flow.spec.test.ts
           test/store.courses.joy-of-reading-content.spec.test.ts
+          test/store.courses.picture-book-content.spec.test.ts
           test/components.courseexplorer-inventory.spec.test.ts
           test/modules.course-lesson-presentation.spec.test.ts
           test/modules.authored-reading.spec.test.ts

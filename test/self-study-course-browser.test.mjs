@@ -17,6 +17,7 @@ const courseIds = [
  "late-elementary-a-math",
  "late-elementary-b-math",
  "early-elementary-a-reading",
+ "early-elementary-b-picture-book",
 	"algebra-1a",
 	"algebra-1b",
 	"entrepreneurship-101",
@@ -622,6 +623,7 @@ test(
 									|| (["intro-to-physics", "physics-level-2"].includes(id) && /^(?:Standards Map|Course Roadmap)$/.test(module.title))
 									|| (id === "physics-level-2" && /^(?:PHY12|PHY16|PHY17|PHY23) /.test(module.title))
 									|| (id === "algebra-1a" && /^AA(?:1|11) /.test(module.title))
+									|| id === "early-elementary-b-picture-book"
 									|| (id === "early-elementary-a-reading" && /^(?:JoR1 |JoR2 |JoR5 |JoR Check-In|JoR6 )/.test(module.title))
 									|| (id === "late-elementary-b-math" && /^(?:LEB3 |LEB4 |LEB5 |LEB6 |LEB10 |LEB12 |LEB16 |LEB17 |LEB18 )/.test(module.title))
 									|| (id === "late-elementary-a-math" && /^(?:LEA1 |LEA4 |LEA9 |LEA12 |LEA13 |LEA16 |LEA17 )/.test(module.title))
@@ -682,6 +684,7 @@ test(
 							if (id === "late-elementary-a-math") assert.equal(resourceViews.length, 62);
 							if (id === "late-elementary-b-math") assert.equal(resourceViews.length, 66);
 							if (id === "early-elementary-a-reading") assert.equal(resourceViews.length, 17);
+ if (id === "early-elementary-b-picture-book") assert.equal(resourceViews.length, 26);
 							if (id === "algebra-1a") assert.equal(resourceViews.length, 7);
 							if (id === "algebra-1b") assert.equal(resourceViews.length, 3);
 							if (id === "algebra-2a") assert.equal(resourceViews.length, 4);

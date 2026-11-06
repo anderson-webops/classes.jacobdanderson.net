@@ -15,6 +15,7 @@ import { applyMiddleSchoolLiteratureReadings } from "./middleSchoolLiteratureRea
 import { applyMiddleSchoolWritingReadings } from "./middleSchoolWritingReadings";
 import { applyNovelWritingReadings } from "./novelWritingReadings";
 import { applyPhysicsLevel2References } from "./physicsLevel2References";
+import { applyPictureBookGuidance } from "./pictureBookProjects";
 import { buildProjectGuidance } from "./projectGuidance";
 import { applyPublicSpeakingReadings } from "./publicSpeakingReadings";
 import { applyPyGamesCourseWorkflows } from "./pyGamesCourseWorkflows";
@@ -9845,6 +9846,8 @@ export function normalizeRawCourse(id: string, rawCourse: RawCourse) {
 		applyLateElementaryBProjects(course, rawCourse);
 	if (id === "early-elementary-a-reading")
 		applyJoyOfReadingGuidance(course, rawCourse);
+	if (id === "early-elementary-b-picture-book")
+		applyPictureBookGuidance(course, rawCourse);
 	applyScratchConceptReadings(course, id, rawCourse);
 	applyPyGamesCourseWorkflows(course, id);
 	applyRustCargoCourseWorkflows(course, id);

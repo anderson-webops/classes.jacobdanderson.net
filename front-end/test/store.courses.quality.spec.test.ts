@@ -18,6 +18,7 @@ import { earlyElementaryBMaterials } from "@/stores/courses/earlyElementaryBMate
 import { lateElementaryAMaterials } from "@/stores/courses/lateElementaryAMaterials";
 import { lateElementaryBMaterials } from "@/stores/courses/lateElementaryBMaterials";
 import { joyOfReadingGuidance } from "@/stores/courses/joyOfReadingGuidance";
+import { pictureBookGuidance } from "@/stores/courses/pictureBookGuidance";
 import {
 	pyGamesCoreResource,
 	pyGamesCoreSourceRevision
@@ -240,7 +241,8 @@ const authoredReadingCounts: Record<string, number> = {
 	"novel-writing": 14,
 	"introduction-to-public-speaking": 9,
 	"scratch-level-1-bootcamp": 4,
-	"early-elementary-a-reading": 8
+	"early-elementary-a-reading": 8,
+	"early-elementary-b-picture-book": 13
 };
 
 const instructorActionPattern =
@@ -313,22 +315,27 @@ function completeSourceActivity(
 	);
 }
 
-function completeJoyOfReadingPractice(
+function completeAuthoredReadingPractice(
 	courseId: string,
 	module: RawCourseModule,
 	item: RawCourseModuleItem
 ) {
 	if (
-		courseId !== "early-elementary-a-reading" ||
+		![
+			"early-elementary-a-reading",
+			"early-elementary-b-picture-book"
+		].includes(courseId) ||
 		item.contentKind !== "assignment" ||
 		!item.preserveInstructions ||
 		!item.preserveAssignment ||
 		!hasAuthoredModuleReading(module)
 	)
 		return false;
-	const unit = joyOfReadingGuidance.find(
-		unit => unit.module === module.title
-	);
+	const materials =
+		courseId === "early-elementary-a-reading"
+			? joyOfReadingGuidance
+			: pictureBookGuidance;
+	const unit = materials.find(unit => unit.module === module.title);
 	if (
 		!unit ||
 		!module.curriculum.some(
@@ -348,8 +355,7 @@ function completeJoyOfReadingPractice(
 	const asset = new URL(href, "https://example.invalid").searchParams.get(
 		"asset"
 	);
-	const prefix =
-		"/course-assets/early-elementary-a-reading/practice-checks-v1.md";
+	const prefix = "/course-assets/" + courseId + "/practice-checks-v1.md";
 	if (asset !== prefix + "#" + task.anchor) return false;
 	const section = fs
 		.readFileSync("public" + prefix, "utf8")
@@ -5797,7 +5803,7 @@ describe("course text quality normalization", () => {
 						)
 				)
 			);
-			expect(sources.size).toBe(9);
+			expect(sources.size).toBe(10);
 			const thinItems = (await loadedCatalogCourses()).flatMap(
 				({ course, entry }) =>
 					(course?.modules ?? [])
@@ -5821,7 +5827,7 @@ describe("course text quality normalization", () => {
 											module,
 											item
 										) &&
-										!completeJoyOfReadingPractice(
+										!completeAuthoredReadingPractice(
 											entry.id,
 											module,
 											item
@@ -5905,7 +5911,11 @@ describe("course text quality normalization", () => {
 								item.content
 							) &&
 							!reviewedJavaScriptProjectReadme(id, item) &&
-							!completeJoyOfReadingPractice(id, module, item) &&
+							!completeAuthoredReadingPractice(
+								id,
+								module,
+								item
+							) &&
 							!completeSpeakingPractice(id, module, item) &&
 							!completePhysicsPractice(id, module, item) &&
 							!completeElementaryPractice(id, module, item);
@@ -7288,7 +7298,7 @@ describe("course text quality normalization", () => {
 					expect(activities).toHaveLength(2);
 					for (const item of activities) {
 						expect(
-							completeJoyOfReadingPractice(
+							completeAuthoredReadingPractice(
 								courseId,
 								module,
 								item
@@ -7312,14 +7322,18 @@ describe("course text quality normalization", () => {
 							)
 						])
 							expect(
-								completeJoyOfReadingPractice(courseId, module, {
-									...item,
-									content
-								}),
+								completeAuthoredReadingPractice(
+									courseId,
+									module,
+									{
+										...item,
+										content
+									}
+								),
 								item.title
 							).toBe(false);
 						expect(
-							completeJoyOfReadingPractice(courseId, module, {
+							completeAuthoredReadingPractice(courseId, module, {
 								...item,
 								preserveInstructions: false
 							})
