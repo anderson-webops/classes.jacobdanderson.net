@@ -8,7 +8,13 @@ import {
 } from "./staticMedia";
 
 function lesson(title: string, content: string) {
-	return { title, content };
+	return {
+		title,
+		content,
+		...(/^(?:Project|Capstone):/.test(title)
+			? { preserveInstructions: true }
+			: {})
+	};
 }
 
 function module(
