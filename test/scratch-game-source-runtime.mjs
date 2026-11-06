@@ -159,11 +159,11 @@ export function sourceGameRuntime(project, options = {}) {
 					target.direction = Number(read("DIRECTION"));
 					break;
 				case "motion_movesteps": {
- const angle = target.direction * Math.PI / 180;
- target.x += Math.sin(angle) * Number(read("STEPS"));
- target.y += Math.cos(angle) * Number(read("STEPS"));
- break;
- }
+					const angle = (target.direction * Math.PI) / 180;
+					target.x += Math.sin(angle) * Number(read("STEPS"));
+					target.y += Math.cos(angle) * Number(read("STEPS"));
+					break;
+				}
 				case "motion_setrotationstyle":
 					target.rotationStyle = b.fields.STYLE[0];
 					break;
