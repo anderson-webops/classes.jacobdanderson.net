@@ -77,3 +77,32 @@
 3. an=3+5(n-1); a12=58 and S12=12(3+58)/2=366.
 4. The power product is 2^2=4, and 64^(2/3)=4^2=16. sqrt(36)=6; the equation has y=6 or y=-6.
 5. 30×10^3=3×10^4=30000.
+
+## Symptom Spree Model Checks
+
+The table advances by a factor of 4 at each ten-unit step. With n equal to elapsed value divided by 10, the rule is 4^n. At elapsed value 60, n=6 and the score is 4096=4.096×10^3.
+
+For the separate comparison, t>0 permits the stated real roots and nonzero denominators:
+
+- A: (t^4)^(1/5)×t=t^(4/5+1)=t^(9/5).
+- B: sqrt(t^4)/t^(3/2)=t^(2-3/2)=t^(1/2).
+- C: (t^4×t^(-1))^(1/7)=(t^3)^(1/7)=t^(3/7).
+- D: (t^4)^3/t^(2/3)=t^(12-2/3)=t^(34/3).
+
+All four equal 1 at t=1. For t>1, the order from largest to smallest is D, A, B, C. For 0<t<1, it reverses to C, B, A, D: a larger positive exponent makes a fraction smaller. The table's 4^n is exponential in n; these simplified powers have fixed exponents and variable base t. Their inputs and rules are distinct. The fictional scores do not establish a clinical model.
+
+## Red Hot Chilli Chicken Sales Checks
+
+The total is 615+123+246+369=1353. In the listed product order, the exact shares are 5/11, 1/11, 2/11 and 3/11. Their decimals are approximately 0.4545, 0.0909, 0.1818 and 0.2727; the percentages are approximately 45.45%, 9.09%, 18.18% and 27.27%. The exact fractions sum to 1; rounded percentages may sum to 99.99%.
+
+One third of the existing 369 Classic customers is 123 potential customers. This is distinct from an observed count of new orders. Under the separate constant-share assumption, doubling total orders gives 1230, 246, 492 and 738 orders, totaling 2706.
+
+The two weekly rates are 123/2=61.5 and 246/3=82 new orders per week. The second trial has the higher rate; that comparison alone does not account for costs, capacity or different market conditions.
+
+For month n with 53^n orders:
+
+- 53^3=148877 is below one million, while 53^4=7890481 is above it. The first qualifying month is 4.
+- 53^5=418195493 is below one billion, while 53^6=22164361129 is above it. The first qualifying month is 6.
+- The month-6 value is 2.2164361129×10^10.
+
+These thresholds follow from a repeated factor of 53 each month. That idealized rule assumes continued multiplication and sufficient capacity; it is not evidence that real demand will follow the same pattern.

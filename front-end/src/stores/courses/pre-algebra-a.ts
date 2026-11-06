@@ -1,4 +1,5 @@
 import type { RawCourse } from "./types";
+import { courseAssetViewerUrl } from "@/modules/courseAssetPreview";
 import { configureMathCourseFlow } from "./mathCourseFlow";
 import { addPreAlgebraACases } from "./preAlgebraACases";
 import { pendingStaticMediaNotice, staticMediaUrl } from "./staticMedia";
@@ -48,11 +49,13 @@ function overview({
 }
 
 function project({
+	answerSection,
 	evidence,
 	goal,
 	steps,
 	title
 }: {
+	answerSection?: string;
 	evidence: string;
 	goal: string;
 	steps: string[];
@@ -62,7 +65,15 @@ function project({
 		`**Project goal:** ${goal}`,
 		`**Work path:**\n${steps.map((step, index) => `${index + 1}. ${step}`).join("\n")}`,
 		`**Evidence of completion:** ${evidence}`,
-		`**Project reference:** ${title}`
+		`**Project reference:** ${title}`,
+		...(answerSection
+			? [
+					`[Project self-check](${courseAssetViewerUrl(
+						`/course-assets/pre-algebra-a/practice-checks-v1.md#${answerSection}`,
+						"Project self-check"
+					)})`
+				]
+			: [])
 	].join("\n\n");
 }
 
@@ -434,32 +445,34 @@ export const preAlgebraACourse: RawCourse = {
 					"Project: Symptom Spree",
 					project({
 						title: "PAA22 Module Project: Symptom Spree",
-						goal: "Use exponent rules, roots, and scale reasoning in a symptom-spread or population-growth scenario.",
+						answerSection: "symptom-spree-model-checks",
+						goal: "Compare fictional, dimensionless models using exponent rules, roots, and scale reasoning.",
 						steps: [
-							"Choose a starting amount and a repeated growth or shrink factor.",
-							"Write an exponential expression for several stages.",
-							"Use exponent rules to simplify or compare stages.",
-							"Translate one large or small value into scientific notation.",
-							"Explain what the model captures and what real-world detail it leaves out."
+							"For elapsed values 10, 20, 30, 40 and 50, the fictional scores are 4, 16, 64, 256 and 1024. Define n as elapsed value divided by 10, write the score as a power and predict the score at elapsed value 60.",
+							"In a separate comparison, use positive dimensionless input t and baseline t^4. Model A is (t^4)^(1/5)×t; B is sqrt(t^4)/t^(3/2); C is (t^4×t^(-1))^(1/7); D is (t^4)^3/t^(2/3). Simplify each to one power of t, showing the rule at each step.",
+							"Compare the four models at t=1 and rank their outputs for t>1. Check whether the ordering changes for 0<t<1, using an exact power or a calculator value as evidence.",
+							"Write the predicted table score at elapsed value 60 in scientific notation. Explain why the table's exponential rule 4^n and the comparison baseline t^4 are different models.",
+							"State the positive-input restriction and keep the conclusions about these fictional mathematical scores; they are not clinical predictions."
 						],
 						evidence:
-							"The model includes exponent expressions, at least one simplified comparison, a scientific-notation value, and a sentence about model limits."
+							"The comparison includes the table rule and prediction, four simplified powers, rankings on both positive-input intervals, scientific notation, and the model/domain distinction."
 					})
 				),
 				lesson(
 					"Project: Red Hot Chilli Chicken",
 					project({
 						title: "PAA23 Module Project: Red Hot Chilli Chicken",
-						goal: "Use exponents, roots, ratios, and scale to model a spicy-food challenge or recipe-growth scenario.",
+						answerSection: "red-hot-chilli-chicken-sales-checks",
+						goal: "Use order proportions, rates and powers to analyze the supplied sandwich-sales model.",
 						steps: [
-							"Define a spice scale or recipe scale with a starting value.",
-							"Use powers or roots to model repeated increases, decreases, or comparisons.",
-							"Convert one extreme value into scientific notation.",
-							"Compare two recipes or challenge levels using ratios.",
-							"Write a recommendation backed by the calculations."
+							"Use these sandwich orders: Dani California 615, Tell Me Baby 123, Californication 246 and The Classic 369, totaling 1353. Calculate each share as a simplified fraction, decimal and percent, then check that the shares total one.",
+							"A proposed new sandwich could interest one third of the existing Classic customers. Calculate that potential audience separately from a projected total of 2706 orders. If the original product shares stay constant when the total doubles, calculate each product's projected orders and state that assumption.",
+							"Compare two pop-up trials: 123 new orders over two weeks and 246 new orders over three weeks. Calculate orders per week before recommending a location.",
+							"For the separate idealized growth model, month n has 53^n orders, starting with n=1. Find the first whole-number month exceeding one million and one billion. Show neighboring powers to verify each threshold and write one large result in scientific notation.",
+							"Explain why the idealized power model does not establish an actual demand forecast: its repeated factor and unlimited capacity are assumptions."
 						],
 						evidence:
-							"The recommendation includes a scale definition, exponent or root calculation, scientific notation, ratio comparison, and a reasonableness check."
+							"The analysis includes four order shares, the potential audience and conditional projections, both weekly rates, checked month thresholds, scientific notation and a limitation of the growth model."
 					})
 				)
 			]
@@ -475,19 +488,18 @@ export const preAlgebraACourse: RawCourse = {
 			),
 			lesson(
 				"Master Project: Pre-Algebra A",
-				project({
+				`${project({
 					title: "PAA24 Master Project: Pre-Algebra A",
-					goal: "Design a final math project that combines arithmetic, fractions, decimals, percents, ratios, expressions, sequences, exponents, and radicals in one coherent scenario.",
+					goal: "Explain one selected course concept through an application and two original problems with complete solutions.",
 					steps: [
-						"Choose a scenario such as a business plan, science model, sports analysis, travel plan, game system, or recipe design.",
-						"Include at least one calculation from each major course strand.",
-						"Use a table, diagram, graph, or number-line model to make the reasoning visible.",
-						"Add one deliberate error-analysis section that identifies and corrects a plausible mistake.",
+						"Choose one course concept that was challenging or interesting. Explain its purpose and one real-world application using the definitions and methods from the course.",
+						"Create at least two distinct problems about that concept. State all inputs, solve both problems completely and show a calculation check or corrected error.",
+						"Use a table, diagram, graph or number-line model when it helps explain the chosen concept. The explanation may use text, diagrams, speech or a recording.",
 						"End with a short reflection naming the topic that improved most and the topic that still needs practice."
 					],
 					evidence:
-						"The capstone contains multiple representations, labeled calculations, one error correction, and a final explanation connecting the scenario to the math."
-				})
+						"The capstone names the selected concept, explains an application, supplies two original problems and complete checked solutions, and identifies growth plus one remaining practice target."
+				})}\n\n**Extension:** Build a broader scenario that combines several course strands, such as a business, travel, game or recipe model. Define its inputs and connect the calculations across strands; this extension is optional.`
 			),
 			lesson(
 				"Pre-Algebra A Capstone Reference Map",
@@ -655,9 +667,9 @@ export const preAlgebraACourse: RawCourse = {
 			"Avoids instructor-portal operations and private platform references"
 		],
 		capstoneExpectations: [
-			"At least one calculation from each major course strand",
-			"At least one table, diagram, graph, or number-line model",
-			"One error-analysis section with corrected reasoning"
+			"One selected course concept, its purpose and a real-world application",
+			"At least two original problems with complete checked solutions",
+			"A reflection on growth and a remaining practice target; broader multi-strand synthesis is optional"
 		],
 		recommendedNextWork: [
 			"Keep the Pre-Algebra B entry diagnostic aligned with this course's capstone evidence and remaining-practice reflection",
@@ -780,7 +792,7 @@ configureMathCourseFlow(preAlgebraACourse, {
 				"Pre-Algebra B handoff"
 			],
 			flowNote:
-				"Pass the expressions-and-exponents readiness sample before beginning the capstone. The capstone must connect every major strand, include one corrected error, and end with a handoff note naming evidence that is secure and one target to revisit in Pre-Algebra B."
+				"Complete the expressions-and-exponents readiness sample before beginning the capstone. Focus the required capstone on one selected concept, an application and two original solved problems; a broader multi-strand model is optional. End with a handoff note naming evidence that is secure and one target to revisit in Pre-Algebra B."
 		}
 	],
 	appendixTitles: ["Pre-Algebra A Reference Archive", "Pending Static Assets"]

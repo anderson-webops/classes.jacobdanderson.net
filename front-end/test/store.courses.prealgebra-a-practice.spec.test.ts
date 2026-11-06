@@ -182,6 +182,51 @@ it.each(["learner", "instructor"])(
 		expect(capstones).toHaveLength(1);
 		expect(capstones[0].learningPath).toBe("core");
 		expect(isLessonLearningItem(capstones[0])).toBe(false);
+		for (const authored of preAlgebraACourse.modules
+			.flatMap(module => [
+				...module.curriculum,
+				...module.supplementalProjects
+			])
+			.filter(item =>
+				/^(?:Project|Challenge|Master Project):/.test(item.title)
+			)) {
+			const displayed = course.modules
+				.flatMap(module => [
+					...module.curriculum,
+					...module.supplementalProjects
+				])
+				.find(item => item.title === authored.title);
+			expect(displayed, authored.title).toBeDefined();
+			const steps = [...authored.content.matchAll(/^\d+\. (.+)$/gm)];
+			expect(steps.length, authored.title).toBeGreaterThanOrEqual(4);
+			const body = displayed!.content.replace(/\s+/g, " ");
+			for (const [, step] of steps) {
+				expect(body, authored.title).toContain(
+					step.replace(/\s+/g, " ")
+				);
+			}
+			const projectCheck = authored.content.match(
+				/\[Project self-check\]\(([^)]+)\)/
+			)?.[1];
+			if (projectCheck) {
+				const url = new URL(projectCheck, "https://example.invalid");
+				const section = await loadCourseAssetSection(
+					url.searchParams.get("asset")!,
+					"Project self-check",
+					async path =>
+						({
+							ok: true,
+							text: async () =>
+								readFileSync(
+									resolve(process.cwd(), "public" + path),
+									"utf8"
+								)
+						}) as Response
+				);
+				expect(section.content.length).toBeGreaterThan(400);
+				expect(section.content.match(/^## /gm)).toHaveLength(1);
+			}
+		}
 	}
 );
 
