@@ -859,5 +859,1246 @@
 				}
 			}
 		]
+	},
+	{
+		"id": "357453262",
+		"sourceSHA256": "c4ca40da41473c6045be3b56a84e56800a57c110858fe0d6b76064d9d0fc8266",
+		"target": "Player",
+		"changes": [
+			{
+				"blockId": "H.5T):B!{[hT3?b/_zUI",
+				"before": {
+					"opcode": "event_whenflagclicked",
+					"next": "?XED0kHYdrMXMKGmIfrD",
+					"parent": null,
+					"inputs": {},
+					"fields": {},
+					"shadow": false,
+					"topLevel": true,
+					"x": 28,
+					"y": 268
+				},
+				"after": {
+					"opcode": "event_whenflagclicked",
+					"next": "classes-fish-round-reset",
+					"parent": null,
+					"inputs": {},
+					"fields": {},
+					"shadow": false,
+					"topLevel": true,
+					"x": 28,
+					"y": 268
+				}
+			},
+			{
+				"blockId": "?XED0kHYdrMXMKGmIfrD",
+				"before": {
+					"opcode": "looks_show",
+					"next": "P~XNhrgOh(ap]z@G%cU_",
+					"parent": "H.5T):B!{[hT3?b/_zUI",
+					"inputs": {},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				},
+				"after": {
+					"opcode": "looks_show",
+					"next": "P~XNhrgOh(ap]z@G%cU_",
+					"parent": "classes-fish-position-reset",
+					"inputs": {},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				}
+			},
+			{
+				"blockId": "7xJ4i3^F@8)#wcfnVSw4",
+				"before": {
+					"opcode": "event_whenbroadcastreceived",
+					"next": "W!S8LnE:IfN:~VljFLf|",
+					"parent": null,
+					"inputs": {},
+					"fields": {
+						"BROADCAST_OPTION": [
+							"Ate Food",
+							"broadcastMsgId-ate food"
+						]
+					},
+					"shadow": false,
+					"topLevel": true,
+					"x": 504,
+					"y": 261
+				},
+				"after": {
+					"opcode": "event_whenbroadcastreceived",
+					"next": "classes-fish-growth-guard",
+					"parent": null,
+					"inputs": {},
+					"fields": {
+						"BROADCAST_OPTION": [
+							"Ate Food",
+							"broadcastMsgId-ate food"
+						]
+					},
+					"shadow": false,
+					"topLevel": true,
+					"x": 504,
+					"y": 261
+				}
+			},
+			{
+				"blockId": "W!S8LnE:IfN:~VljFLf|",
+				"before": {
+					"opcode": "data_changevariableby",
+					"next": "A}rbKiEb%V5h|9978h35",
+					"parent": "7xJ4i3^F@8)#wcfnVSw4",
+					"inputs": {
+						"VALUE": [1, [4, 5]]
+					},
+					"fields": {
+						"VARIABLE": [
+							"Player Size",
+							"Ku;G(*g2d(Nh|wi(:5oZ-Player Size-"
+						]
+					},
+					"shadow": false,
+					"topLevel": false
+				},
+				"after": {
+					"opcode": "data_changevariableby",
+					"next": "A}rbKiEb%V5h|9978h35",
+					"parent": "classes-fish-growth-guard",
+					"inputs": {
+						"VALUE": [1, [4, 5]]
+					},
+					"fields": {
+						"VARIABLE": [
+							"Player Size",
+							"Ku;G(*g2d(Nh|wi(:5oZ-Player Size-"
+						]
+					},
+					"shadow": false,
+					"topLevel": false
+				}
+			},
+			{
+				"blockId": "0v1)+i._yoO7{U#Xbon@",
+				"before": {
+					"opcode": "control_if_else",
+					"next": null,
+					"parent": "A}rbKiEb%V5h|9978h35",
+					"inputs": {
+						"CONDITION": [2, "8b=c,Mp*Yh#:ReFz`7hL"],
+						"SUBSTACK": [2, "^~Z3Jn,yab2`c+R3RZuI"],
+						"SUBSTACK2": [2, "u.L+amgjpnUa/Ad_J%{Z"]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				},
+				"after": {
+					"opcode": "control_if_else",
+					"next": null,
+					"parent": "A}rbKiEb%V5h|9978h35",
+					"inputs": {
+						"CONDITION": [2, "8b=c,Mp*Yh#:ReFz`7hL"],
+						"SUBSTACK": [2, "classes-fish-mark-won"],
+						"SUBSTACK2": [2, "u.L+amgjpnUa/Ad_J%{Z"]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				}
+			},
+			{
+				"blockId": "^~Z3Jn,yab2`c+R3RZuI",
+				"before": {
+					"opcode": "event_broadcast",
+					"next": "/74Tl}!DXhN-rEu+vwrg",
+					"parent": "0v1)+i._yoO7{U#Xbon@",
+					"inputs": {
+						"BROADCAST_INPUT": [
+							1,
+							[11, "Player wins!", "broadcastMsgId-player wins!"]
+						]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				},
+				"after": {
+					"opcode": "event_broadcastandwait",
+					"next": "/74Tl}!DXhN-rEu+vwrg",
+					"parent": "classes-fish-mark-won",
+					"inputs": {
+						"BROADCAST_INPUT": [
+							1,
+							[11, "Player wins!", "broadcastMsgId-player wins!"]
+						]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				}
+			},
+			{
+				"blockId": "~7b[krZVnhI!ky.I-4s}",
+				"before": {
+					"opcode": "data_showvariable",
+					"next": null,
+					"parent": "/74Tl}!DXhN-rEu+vwrg",
+					"inputs": {},
+					"fields": {
+						"VARIABLE": [
+							"Player Level",
+							"Ku;G(*g2d(Nh|wi(:5oZ-Player Level-"
+						]
+					},
+					"shadow": false,
+					"topLevel": false
+				},
+				"after": {
+					"opcode": "data_showvariable",
+					"next": "classes-fish-win-stop",
+					"parent": "/74Tl}!DXhN-rEu+vwrg",
+					"inputs": {},
+					"fields": {
+						"VARIABLE": [
+							"Player Level",
+							"Ku;G(*g2d(Nh|wi(:5oZ-Player Level-"
+						]
+					},
+					"shadow": false,
+					"topLevel": false
+				}
+			},
+			{
+				"blockId": "VBUWm=3/{!M5))XgVTgY",
+				"before": {
+					"opcode": "control_stop",
+					"next": null,
+					"parent": "ME!6(IQ4FIST7C=.0pvs",
+					"inputs": {},
+					"fields": {
+						"STOP_OPTION": ["all"]
+					},
+					"shadow": false,
+					"topLevel": false
+				},
+				"after": {
+					"opcode": "control_stop",
+					"next": null,
+					"parent": "ME!6(IQ4FIST7C=.0pvs",
+					"inputs": {},
+					"fields": {
+						"STOP_OPTION": ["this script"]
+					},
+					"shadow": false,
+					"topLevel": false,
+					"mutation": {
+						"tagName": "mutation",
+						"children": [],
+						"hasnext": "false"
+					}
+				}
+			},
+			{
+				"blockId": "classes-fish-round-reset",
+				"before": null,
+				"after": {
+					"opcode": "data_setvariableto",
+					"next": "classes-fish-position-reset",
+					"parent": "H.5T):B!{[hT3?b/_zUI",
+					"inputs": {
+						"VALUE": [1, [10, "playing"]]
+					},
+					"fields": {
+						"VARIABLE": ["Round State", "classes-fish-round-state"]
+					},
+					"shadow": false,
+					"topLevel": false
+				}
+			},
+			{
+				"blockId": "classes-fish-position-reset",
+				"before": null,
+				"after": {
+					"opcode": "motion_gotoxy",
+					"next": "?XED0kHYdrMXMKGmIfrD",
+					"parent": "classes-fish-round-reset",
+					"inputs": {
+						"X": [1, [4, "0"]],
+						"Y": [1, [4, "0"]]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				}
+			},
+			{
+				"blockId": "classes-fish-growth-guard",
+				"before": null,
+				"after": {
+					"opcode": "control_if",
+					"next": null,
+					"parent": "7xJ4i3^F@8)#wcfnVSw4",
+					"inputs": {
+						"CONDITION": [2, "classes-fish-growth-guard-playing"],
+						"SUBSTACK": [2, "W!S8LnE:IfN:~VljFLf|"]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				}
+			},
+			{
+				"blockId": "classes-fish-growth-guard-playing",
+				"before": null,
+				"after": {
+					"opcode": "operator_equals",
+					"next": null,
+					"parent": "classes-fish-growth-guard",
+					"inputs": {
+						"OPERAND1": [
+							3,
+							[12, "Round State", "classes-fish-round-state"],
+							[10, ""]
+						],
+						"OPERAND2": [1, [10, "playing"]]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				}
+			},
+			{
+				"blockId": "classes-fish-mark-won",
+				"before": null,
+				"after": {
+					"opcode": "data_setvariableto",
+					"next": "^~Z3Jn,yab2`c+R3RZuI",
+					"parent": "0v1)+i._yoO7{U#Xbon@",
+					"inputs": {
+						"VALUE": [1, [10, "won"]]
+					},
+					"fields": {
+						"VARIABLE": ["Round State", "classes-fish-round-state"]
+					},
+					"shadow": false,
+					"topLevel": false
+				}
+			},
+			{
+				"blockId": "classes-fish-win-stop",
+				"before": null,
+				"after": {
+					"opcode": "control_stop",
+					"next": null,
+					"parent": "~7b[krZVnhI!ky.I-4s}",
+					"inputs": {},
+					"fields": {
+						"STOP_OPTION": ["all"]
+					},
+					"shadow": false,
+					"topLevel": false,
+					"mutation": {
+						"tagName": "mutation",
+						"children": [],
+						"hasnext": "false"
+					}
+				}
+			}
+		],
+		"summary": "Round completion: reset position and phase, process only active collisions, and finish outcome messages before stopping.",
+		"displaySummary": "Reference correction: reset the fish and finish win/loss rounds consistently.",
+		"addedBlocks": 10,
+		"removedBlocks": 0,
+		"additionalTargets": [
+			{
+				"target": "Stage",
+				"changes": [],
+				"variables": [
+					{
+						"variableId": "classes-fish-round-state",
+						"before": null,
+						"after": ["Round State", "playing"]
+					}
+				]
+			},
+			{
+				"target": "Food",
+				"changes": [
+					{
+						"blockId": "{0iC4Wcqv:FT}cQ!E/ic",
+						"before": {
+							"opcode": "control_if",
+							"next": null,
+							"parent": "CZlhGO2#l{}|Pu)a)7B)",
+							"inputs": {
+								"CONDITION": [2, ")0ka~5}#{:xCk1,{NQyH"],
+								"SUBSTACK": [2, "*.r7(oA*I5?PvroV;}E="]
+							},
+							"fields": {},
+							"shadow": false,
+							"topLevel": false
+						},
+						"after": {
+							"opcode": "control_if",
+							"next": null,
+							"parent": "CZlhGO2#l{}|Pu)a)7B)",
+							"inputs": {
+								"CONDITION": [
+									2,
+									"classes-fish-contact-playing"
+								],
+								"SUBSTACK": [2, "*.r7(oA*I5?PvroV;}E="]
+							},
+							"fields": {},
+							"shadow": false,
+							"topLevel": false
+						}
+					},
+					{
+						"blockId": ")0ka~5}#{:xCk1,{NQyH",
+						"before": {
+							"opcode": "sensing_touchingobject",
+							"next": null,
+							"parent": "{0iC4Wcqv:FT}cQ!E/ic",
+							"inputs": {
+								"TOUCHINGOBJECTMENU": [
+									1,
+									"}B6RouUNKI;DOa^lCEo8"
+								]
+							},
+							"fields": {},
+							"shadow": false,
+							"topLevel": false
+						},
+						"after": {
+							"opcode": "sensing_touchingobject",
+							"next": null,
+							"parent": "classes-fish-contact-playing",
+							"inputs": {
+								"TOUCHINGOBJECTMENU": [
+									1,
+									"}B6RouUNKI;DOa^lCEo8"
+								]
+							},
+							"fields": {},
+							"shadow": false,
+							"topLevel": false
+						}
+					},
+					{
+						"blockId": "*.r7(oA*I5?PvroV;}E=",
+						"before": {
+							"opcode": "control_if_else",
+							"next": null,
+							"parent": "{0iC4Wcqv:FT}cQ!E/ic",
+							"inputs": {
+								"CONDITION": [2, "AZC-to{e%ZX}b2ZH!Lyk"],
+								"SUBSTACK": [2, "+@s5zP1XGELoa+B6LWU~"],
+								"SUBSTACK2": [2, "(]8UeofuD+~vG/tQFcq="]
+							},
+							"fields": {},
+							"shadow": false,
+							"topLevel": false
+						},
+						"after": {
+							"opcode": "control_if_else",
+							"next": null,
+							"parent": "{0iC4Wcqv:FT}cQ!E/ic",
+							"inputs": {
+								"CONDITION": [2, "AZC-to{e%ZX}b2ZH!Lyk"],
+								"SUBSTACK": [2, "+@s5zP1XGELoa+B6LWU~"],
+								"SUBSTACK2": [2, "classes-fish-mark-lost"]
+							},
+							"fields": {},
+							"shadow": false,
+							"topLevel": false
+						}
+					},
+					{
+						"blockId": "(]8UeofuD+~vG/tQFcq=",
+						"before": {
+							"opcode": "event_broadcast",
+							"next": null,
+							"parent": "*.r7(oA*I5?PvroV;}E=",
+							"inputs": {
+								"BROADCAST_INPUT": [
+									1,
+									[11, "Died :(", "broadcastMsgId-died :("]
+								]
+							},
+							"fields": {},
+							"shadow": false,
+							"topLevel": false
+						},
+						"after": {
+							"opcode": "event_broadcastandwait",
+							"next": "classes-fish-loss-stop",
+							"parent": "classes-fish-mark-lost",
+							"inputs": {
+								"BROADCAST_INPUT": [
+									1,
+									[11, "Died :(", "broadcastMsgId-died :("]
+								]
+							},
+							"fields": {},
+							"shadow": false,
+							"topLevel": false
+						}
+					},
+					{
+						"blockId": "classes-fish-contact-playing",
+						"before": null,
+						"after": {
+							"opcode": "operator_and",
+							"next": null,
+							"parent": "{0iC4Wcqv:FT}cQ!E/ic",
+							"inputs": {
+								"OPERAND1": [2, ")0ka~5}#{:xCk1,{NQyH"],
+								"OPERAND2": [
+									2,
+									"classes-fish-contact-playing-state"
+								]
+							},
+							"fields": {},
+							"shadow": false,
+							"topLevel": false
+						}
+					},
+					{
+						"blockId": "classes-fish-contact-playing-state",
+						"before": null,
+						"after": {
+							"opcode": "operator_equals",
+							"next": null,
+							"parent": "classes-fish-contact-playing",
+							"inputs": {
+								"OPERAND1": [
+									3,
+									[
+										12,
+										"Round State",
+										"classes-fish-round-state"
+									],
+									[10, ""]
+								],
+								"OPERAND2": [1, [10, "playing"]]
+							},
+							"fields": {},
+							"shadow": false,
+							"topLevel": false
+						}
+					},
+					{
+						"blockId": "classes-fish-mark-lost",
+						"before": null,
+						"after": {
+							"opcode": "data_setvariableto",
+							"next": "(]8UeofuD+~vG/tQFcq=",
+							"parent": "*.r7(oA*I5?PvroV;}E=",
+							"inputs": {
+								"VALUE": [1, [10, "lost"]]
+							},
+							"fields": {
+								"VARIABLE": [
+									"Round State",
+									"classes-fish-round-state"
+								]
+							},
+							"shadow": false,
+							"topLevel": false
+						}
+					},
+					{
+						"blockId": "classes-fish-loss-stop",
+						"before": null,
+						"after": {
+							"opcode": "control_stop",
+							"next": null,
+							"parent": "(]8UeofuD+~vG/tQFcq=",
+							"inputs": {},
+							"fields": {
+								"STOP_OPTION": ["all"]
+							},
+							"shadow": false,
+							"topLevel": false,
+							"mutation": {
+								"tagName": "mutation",
+								"children": [],
+								"hasnext": "false"
+							}
+						}
+					}
+				]
+			}
+		]
+	},
+	{
+		"id": "343348430",
+		"sourceSHA256": "04f55423bae1c7892f7507ea1cdcdb2152a4f43b524c5b527ba325894c3873a6",
+		"target": "Pal",
+		"changes": [
+			{
+				"blockId": "]mw]gk539}eex43Jg$#k",
+				"before": {
+					"opcode": "control_repeat_until",
+					"next": null,
+					"parent": "3ZQ=vE:L,iuKh_`shI6:",
+					"inputs": {
+						"CONDITION": [2, "HrQjFGtOSVGkSmgd7PpQ"],
+						"SUBSTACK": [2, "aB$M*f0C^YMdC#1RJ^9%"]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				},
+				"after": {
+					"opcode": "control_repeat_until",
+					"next": null,
+					"parent": "3ZQ=vE:L,iuKh_`shI6:",
+					"inputs": {
+						"CONDITION": [2, "classes-pal-ground-or-pit"],
+						"SUBSTACK": [2, "5kD6}u7VT}4T!O}b2%%`"]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				}
+			},
+			{
+				"blockId": "HrQjFGtOSVGkSmgd7PpQ",
+				"before": {
+					"opcode": "sensing_touchingcolor",
+					"next": null,
+					"parent": "]mw]gk539}eex43Jg$#k",
+					"inputs": {
+						"COLOR": [1, [9, "#00cc44"]]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				},
+				"after": {
+					"opcode": "sensing_touchingcolor",
+					"next": null,
+					"parent": "classes-pal-ground-or-pit",
+					"inputs": {
+						"COLOR": [1, [9, "#00cc44"]]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				}
+			},
+			{
+				"blockId": "5kD6}u7VT}4T!O}b2%%`",
+				"before": {
+					"opcode": "motion_changeyby",
+					"next": null,
+					"parent": "aB$M*f0C^YMdC#1RJ^9%",
+					"inputs": {
+						"DY": [1, [4, "-5"]]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				},
+				"after": {
+					"opcode": "motion_changeyby",
+					"next": null,
+					"parent": "]mw]gk539}eex43Jg$#k",
+					"inputs": {
+						"DY": [1, [4, "-5"]]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				}
+			},
+			{
+				"blockId": "~-4HzZ=-o{|@_CDL8fl]",
+				"before": {
+					"opcode": "sound_play",
+					"next": "Z6]j8d15S^j9IETQzzYo",
+					"parent": "[VAFnz2~nm81tkWJ8W)U",
+					"inputs": {
+						"SOUND_MENU": [1, "8WJta.%W}KRSr_3W1q8v"]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				},
+				"after": {
+					"opcode": "sound_play",
+					"next": "classes-pal-jump-reset",
+					"parent": "[VAFnz2~nm81tkWJ8W)U",
+					"inputs": {
+						"SOUND_MENU": [1, "8WJta.%W}KRSr_3W1q8v"]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				}
+			},
+			{
+				"blockId": "Z6]j8d15S^j9IETQzzYo",
+				"before": {
+					"opcode": "control_repeat",
+					"next": null,
+					"parent": "~-4HzZ=-o{|@_CDL8fl]",
+					"inputs": {
+						"TIMES": [1, [6, "15"]],
+						"SUBSTACK": [2, "|.pQ+p`%}#e1PHD;j]=q"]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				},
+				"after": {
+					"opcode": "control_repeat",
+					"next": null,
+					"parent": "classes-pal-jump-reset",
+					"inputs": {
+						"TIMES": [1, [6, "15"]],
+						"SUBSTACK": [2, "classes-pal-jump-active"]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				}
+			},
+			{
+				"blockId": "t^f:!Gvrl{ayGKmiq6~m",
+				"before": {
+					"opcode": "procedures_call",
+					"next": "+WS+AmZ/v9CPvF}YKet7",
+					"parent": "eId#-PxY9sXwS,mCGI$/",
+					"inputs": {},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false,
+					"mutation": {
+						"tagName": "mutation",
+						"children": [],
+						"proccode": "stay on ground",
+						"argumentids": "[]",
+						"warp": "false"
+					}
+				},
+				"after": {
+					"opcode": "data_setvariableto",
+					"next": null,
+					"parent": "eId#-PxY9sXwS,mCGI$/",
+					"inputs": {
+						"VALUE": [1, [10, "1"]]
+					},
+					"fields": {
+						"VARIABLE": ["Jump Blocked", "classes-pal-jump-blocked"]
+					},
+					"shadow": false,
+					"topLevel": false
+				}
+			},
+			{
+				"blockId": "+WS+AmZ/v9CPvF}YKet7",
+				"before": {
+					"opcode": "control_stop",
+					"next": null,
+					"parent": "t^f:!Gvrl{ayGKmiq6~m",
+					"inputs": {},
+					"fields": {
+						"STOP_OPTION": ["this script", null]
+					},
+					"shadow": false,
+					"topLevel": false,
+					"mutation": {
+						"tagName": "mutation",
+						"children": [],
+						"hasnext": "false"
+					}
+				},
+				"after": null
+			},
+			{
+				"blockId": "|.pQ+p`%}#e1PHD;j]=q",
+				"before": {
+					"opcode": "motion_changeyby",
+					"next": "=rcKq!I/!Sdjb_e`[(;5",
+					"parent": "Z6]j8d15S^j9IETQzzYo",
+					"inputs": {
+						"DY": [1, [4, "10"]]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				},
+				"after": {
+					"opcode": "motion_changeyby",
+					"next": "=rcKq!I/!Sdjb_e`[(;5",
+					"parent": "classes-pal-jump-active",
+					"inputs": {
+						"DY": [1, [4, "10"]]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				}
+			},
+			{
+				"blockId": "YmBL/p8|tM3D3E~Trf=[",
+				"before": {
+					"opcode": "operator_not",
+					"next": null,
+					"parent": "aB$M*f0C^YMdC#1RJ^9%",
+					"inputs": {
+						"OPERAND": [2, "?7i|p(s.Q,%goq=.:1dk"]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				},
+				"after": null
+			},
+			{
+				"blockId": "?7i|p(s.Q,%goq=.:1dk",
+				"before": {
+					"opcode": "sensing_touchingcolor",
+					"next": null,
+					"parent": "YmBL/p8|tM3D3E~Trf=[",
+					"inputs": {
+						"COLOR": [1, [9, "#79654a"]]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				},
+				"after": {
+					"opcode": "sensing_touchingcolor",
+					"next": null,
+					"parent": "classes-pal-ground-or-pit",
+					"inputs": {
+						"COLOR": [1, [9, "#79654a"]]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				}
+			},
+			{
+				"blockId": "aB$M*f0C^YMdC#1RJ^9%",
+				"before": {
+					"opcode": "control_if_else",
+					"next": null,
+					"parent": "]mw]gk539}eex43Jg$#k",
+					"inputs": {
+						"CONDITION": [2, "YmBL/p8|tM3D3E~Trf=["],
+						"SUBSTACK": [2, "5kD6}u7VT}4T!O}b2%%`"],
+						"SUBSTACK2": [2, "X7S@:n^YaA2tEd}Y[5ih"]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false,
+					"comment": "{s~`qWW@C+nnzq-RR{?8"
+				},
+				"after": null
+			},
+			{
+				"blockId": "X7S@:n^YaA2tEd}Y[5ih",
+				"before": {
+					"opcode": "control_stop",
+					"next": null,
+					"parent": "aB$M*f0C^YMdC#1RJ^9%",
+					"inputs": {},
+					"fields": {
+						"STOP_OPTION": ["this script", null]
+					},
+					"shadow": false,
+					"topLevel": false,
+					"mutation": {
+						"tagName": "mutation",
+						"children": [],
+						"hasnext": "false"
+					}
+				},
+				"after": null
+			},
+			{
+				"blockId": "classes-pal-ground-or-pit",
+				"before": null,
+				"after": {
+					"opcode": "operator_or",
+					"next": null,
+					"parent": "]mw]gk539}eex43Jg$#k",
+					"inputs": {
+						"OPERAND1": [2, "HrQjFGtOSVGkSmgd7PpQ"],
+						"OPERAND2": [2, "?7i|p(s.Q,%goq=.:1dk"]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				}
+			},
+			{
+				"blockId": "classes-pal-jump-reset",
+				"before": null,
+				"after": {
+					"opcode": "data_setvariableto",
+					"next": "Z6]j8d15S^j9IETQzzYo",
+					"parent": "~-4HzZ=-o{|@_CDL8fl]",
+					"inputs": {
+						"VALUE": [1, [10, "0"]]
+					},
+					"fields": {
+						"VARIABLE": ["Jump Blocked", "classes-pal-jump-blocked"]
+					},
+					"shadow": false,
+					"topLevel": false
+				}
+			},
+			{
+				"blockId": "classes-pal-jump-active",
+				"before": null,
+				"after": {
+					"opcode": "control_if",
+					"next": null,
+					"parent": "Z6]j8d15S^j9IETQzzYo",
+					"inputs": {
+						"CONDITION": [2, "classes-pal-jump-active-condition"],
+						"SUBSTACK": [2, "|.pQ+p`%}#e1PHD;j]=q"]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				}
+			},
+			{
+				"blockId": "classes-pal-jump-active-condition",
+				"before": null,
+				"after": {
+					"opcode": "operator_equals",
+					"next": null,
+					"parent": "classes-pal-jump-active",
+					"inputs": {
+						"OPERAND1": [
+							3,
+							[12, "Jump Blocked", "classes-pal-jump-blocked"],
+							[10, ""]
+						],
+						"OPERAND2": [1, [10, "0"]]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				}
+			}
+		],
+		"variables": [
+			{
+				"variableId": "classes-pal-jump-blocked",
+				"before": null,
+				"after": ["Jump Blocked", 0]
+			}
+		],
+		"summary": "Level control flow: return from gravity on green or brown contact and finish ceiling collisions without stopping the calling level script.",
+		"displaySummary": "Reference correction: recover from pitfalls and ceiling hits without freezing the level.",
+		"addedBlocks": 4,
+		"removedBlocks": 4
+	},
+	{
+		"id": "348994271",
+		"sourceSHA256": "233ab4713e3a9355546c7d389f8382ff99620a2733bddfb3a82e247305f3bf56",
+		"target": "Fruit",
+		"changes": [
+			{
+				"blockId": "cXYyC,q6V_T++aI!m!t%",
+				"before": {
+					"opcode": "data_setvariableto",
+					"next": ":#MW`]*w(;YG?9MK|E$1",
+					"parent": "neF=:wPJCAM$4Owr+C+o",
+					"inputs": {
+						"VALUE": [3, "X{_!A,|mz7pYD$$BO(pV", [10, "0"]]
+					},
+					"fields": {
+						"VARIABLE": ["costume", "T|=.;@hFzv%TTuku}Gaw"]
+					},
+					"shadow": false,
+					"topLevel": false
+				},
+				"after": {
+					"opcode": "data_setvariableto",
+					"next": ":#MW`]*w(;YG?9MK|E$1",
+					"parent": "neF=:wPJCAM$4Owr+C+o",
+					"inputs": {
+						"VALUE": [3, "X{_!A,|mz7pYD$$BO(pV", [10, "0"]]
+					},
+					"fields": {
+						"VARIABLE": ["Fruit Kind", "classes-fruit-kind"]
+					},
+					"shadow": false,
+					"topLevel": false
+				}
+			},
+			{
+				"blockId": ";^KykO@AL-{?UX)KP=lk",
+				"before": {
+					"opcode": "looks_switchcostumeto",
+					"next": ",[_NO5B{v0Hge,v;Su3C",
+					"parent": ":#MW`]*w(;YG?9MK|E$1",
+					"inputs": {
+						"COSTUME": [
+							3,
+							[12, "costume", "T|=.;@hFzv%TTuku}Gaw"],
+							"eRO1):R-w@tnwG!}Gyf7"
+						]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				},
+				"after": {
+					"opcode": "looks_switchcostumeto",
+					"next": ",[_NO5B{v0Hge,v;Su3C",
+					"parent": ":#MW`]*w(;YG?9MK|E$1",
+					"inputs": {
+						"COSTUME": [
+							3,
+							[12, "Fruit Kind", "classes-fruit-kind"],
+							"eRO1):R-w@tnwG!}Gyf7"
+						]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				}
+			},
+			{
+				"blockId": "5j~5fXscgvvHwf+5=}xy",
+				"before": {
+					"opcode": "operator_equals",
+					"next": null,
+					"parent": "g#DeQZGvin#GbcYj]DjF",
+					"inputs": {
+						"OPERAND1": [
+							3,
+							[12, "costume", "T|=.;@hFzv%TTuku}Gaw"],
+							[10, ""]
+						],
+						"OPERAND2": [1, [10, "2"]]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				},
+				"after": {
+					"opcode": "operator_equals",
+					"next": null,
+					"parent": "g#DeQZGvin#GbcYj]DjF",
+					"inputs": {
+						"OPERAND1": [
+							3,
+							[12, "Fruit Kind", "classes-fruit-kind"],
+							[10, ""]
+						],
+						"OPERAND2": [1, [10, "2"]]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				}
+			},
+			{
+				"blockId": ".vB7u?XW~EK4@H{Z]G|G",
+				"before": {
+					"opcode": "operator_equals",
+					"next": null,
+					"parent": "m6%P._Kz@Bv;yjZy|4Kp",
+					"inputs": {
+						"OPERAND1": [
+							3,
+							[12, "costume", "T|=.;@hFzv%TTuku}Gaw"],
+							[10, ""]
+						],
+						"OPERAND2": [1, [10, "2"]]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				},
+				"after": {
+					"opcode": "operator_equals",
+					"next": null,
+					"parent": "m6%P._Kz@Bv;yjZy|4Kp",
+					"inputs": {
+						"OPERAND1": [
+							3,
+							[12, "Fruit Kind", "classes-fruit-kind"],
+							[10, ""]
+						],
+						"OPERAND2": [1, [10, "2"]]
+					},
+					"fields": {},
+					"shadow": false,
+					"topLevel": false
+				}
+			}
+		],
+		"variables": [
+			{
+				"variableId": "classes-fruit-kind",
+				"before": null,
+				"after": ["Fruit Kind", 0]
+			}
+		],
+		"summary": "Clone and round state: keep each fruit/bomb kind local, count down 60 seconds, and end for at least three misses.",
+		"displaySummary": "Reference correction: independent clone types, a 60-second round and reliable game over.",
+		"addedBlocks": 1,
+		"removedBlocks": 0,
+		"additionalTargets": [
+			{
+				"target": "Blade",
+				"changes": [
+					{
+						"blockId": "oTE0+3?_,MyR~KSs6(fo",
+						"before": {
+							"opcode": "data_setvariableto",
+							"next": "!ui=!.x?Tf@Fzb^G_{Uk",
+							"parent": "4Bv23zOdID7kg8.3l2EE",
+							"inputs": {
+								"VALUE": [1, [10, "0"]]
+							},
+							"fields": {
+								"VARIABLE": ["Timer", "0X*V_C]Q6ePKZ[W%dxkr"]
+							},
+							"shadow": false,
+							"topLevel": false
+						},
+						"after": {
+							"opcode": "data_setvariableto",
+							"next": "!ui=!.x?Tf@Fzb^G_{Uk",
+							"parent": "4Bv23zOdID7kg8.3l2EE",
+							"inputs": {
+								"VALUE": [1, [10, "60"]]
+							},
+							"fields": {
+								"VARIABLE": ["Timer", "0X*V_C]Q6ePKZ[W%dxkr"]
+							},
+							"shadow": false,
+							"topLevel": false
+						}
+					},
+					{
+						"blockId": "Yb?N_1yCe1wVH7jy_}S]",
+						"before": {
+							"opcode": "control_forever",
+							"next": null,
+							"parent": "!ui=!.x?Tf@Fzb^G_{Uk",
+							"inputs": {
+								"SUBSTACK": [2, "pHF1pI5~CTdHD|9h[;g{"]
+							},
+							"fields": {},
+							"shadow": false,
+							"topLevel": false
+						},
+						"after": {
+							"opcode": "control_repeat",
+							"next": "classes-fruit-timeout",
+							"parent": "!ui=!.x?Tf@Fzb^G_{Uk",
+							"inputs": {
+								"TIMES": [1, [6, "60"]],
+								"SUBSTACK": [2, "pHF1pI5~CTdHD|9h[;g{"]
+							},
+							"fields": {},
+							"shadow": false,
+							"topLevel": false
+						}
+					},
+					{
+						"blockId": "36z=X6_2N-6_Ve[*Y$@:",
+						"before": {
+							"opcode": "data_changevariableby",
+							"next": null,
+							"parent": "pHF1pI5~CTdHD|9h[;g{",
+							"inputs": {
+								"VALUE": [1, [4, "1"]]
+							},
+							"fields": {
+								"VARIABLE": ["Timer", "0X*V_C]Q6ePKZ[W%dxkr"]
+							},
+							"shadow": false,
+							"topLevel": false
+						},
+						"after": {
+							"opcode": "data_changevariableby",
+							"next": null,
+							"parent": "pHF1pI5~CTdHD|9h[;g{",
+							"inputs": {
+								"VALUE": [1, [4, "-1"]]
+							},
+							"fields": {
+								"VARIABLE": ["Timer", "0X*V_C]Q6ePKZ[W%dxkr"]
+							},
+							"shadow": false,
+							"topLevel": false
+						}
+					},
+					{
+						"blockId": "^KTmt5ZfFe4J8bj92^g,",
+						"before": {
+							"opcode": "operator_equals",
+							"next": null,
+							"parent": "5Oz,B#Pxw{xsn6}sgGQF",
+							"inputs": {
+								"OPERAND1": [
+									3,
+									[12, "Misses", "CJg!#vP~DGeJ,CsQpWi2"],
+									[10, ""]
+								],
+								"OPERAND2": [1, [10, "3"]]
+							},
+							"fields": {},
+							"shadow": false,
+							"topLevel": false
+						},
+						"after": {
+							"opcode": "operator_gt",
+							"next": null,
+							"parent": "5Oz,B#Pxw{xsn6}sgGQF",
+							"inputs": {
+								"OPERAND1": [
+									3,
+									[12, "Misses", "CJg!#vP~DGeJ,CsQpWi2"],
+									[10, ""]
+								],
+								"OPERAND2": [1, [10, "2"]]
+							},
+							"fields": {},
+							"shadow": false,
+							"topLevel": false
+						}
+					},
+					{
+						"blockId": "classes-fruit-timeout",
+						"before": null,
+						"after": {
+							"opcode": "event_broadcast",
+							"next": null,
+							"parent": "Yb?N_1yCe1wVH7jy_}S]",
+							"inputs": {
+								"BROADCAST_INPUT": [
+									1,
+									[11, "Game Over", "C]4R8j=FkB3vycIv;Kxc"]
+								]
+							},
+							"fields": {},
+							"shadow": false,
+							"topLevel": false
+						}
+					}
+				]
+			}
+		]
 	}
 ]

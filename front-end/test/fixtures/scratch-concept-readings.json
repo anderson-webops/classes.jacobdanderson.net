@@ -158,5 +158,39 @@
 			"Run without screen refresh",
 			"keys 1 through 4"
 		]
+	},
+	{
+		"courseId": "scratch-level-2",
+		"moduleId": "scratch-level-2-gm9-fish-food",
+		"itemId": "scratch-level-2-gm9-fish-food-curriculum-fish-food-core-concepts",
+		"title": "Fish Food Core Concepts",
+		"sourceItemIds": [
+			"scratch-level-2-gm9-fish-food-curriculum-fish-food-planning-and-architecture"
+		],
+		"requiredText": [
+			"Player Size + 20",
+			"size 205",
+			"Round State",
+			"Broadcast and wait",
+			"Jump Blocked",
+			"not a function-return block"
+		]
+	},
+	{
+		"courseId": "scratch-level-2",
+		"moduleId": "scratch-level-2-gm10-treasure-cave",
+		"itemId": "scratch-level-2-gm10-treasure-cave-curriculum-treasure-cave-core-concepts",
+		"title": "Treasure Cave Core Concepts",
+		"sourceItemIds": [
+			"scratch-level-2-gm10-treasure-cave-curriculum-treasure-cave-planning-and-architecture"
+		],
+		"requiredText": [
+			"Questions and Answers lists",
+			"On the third wrong answer",
+			"60-second countdown",
+			"Fruit Kind",
+			"Misses > 2",
+			"probability 1/10"
+		]
 	}
 ]
