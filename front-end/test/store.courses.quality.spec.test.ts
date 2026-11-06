@@ -7267,12 +7267,17 @@ describe("course text quality normalization", () => {
 		expect(allCourseText(publicSpeaking!)).toContain(
 			"Three-part outline with transitions and support for each main point."
 		);
-		expect(corpus).toContain("worked math record with diagrams");
+		expect(allCourseText(earlyMath!)).toContain("**Method**");
+		expect(allCourseText(earlyMath!)).toContain("**Worked example**");
 		expect(corpus).toContain("reading or writing record with claim");
 		expect(corpus).toContain("problem-solving record with inputs");
-		expect(nonProgrammingCorpus).toContain(
-			"the known quantities, needed representation"
-		);
+		for (const material of earlyElementaryAMaterials) {
+			for (const task of material.tasks) {
+				expect(allCourseText(earlyMath!), task.title).toContain(
+					task.prompt
+				);
+			}
+		}
 		expect(nonProgrammingCorpus).toContain(
 			"the passage or draft section, claim or writing goal"
 		);
