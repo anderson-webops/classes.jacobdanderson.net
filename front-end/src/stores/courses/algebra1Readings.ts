@@ -139,7 +139,10 @@ export function applyAlgebra1AReadings(course: RawCourse) {
 				item.preserveInstructions = true;
 			}
 		}
-		if (module.title.startsWith("AA3 ") || module.title.startsWith("AA11 ")) {
+		if (
+			module.title.startsWith("AA3 ") ||
+			module.title.startsWith("AA11 ")
+		) {
 			for (const item of [
 				...module.curriculum,
 				...module.supplementalProjects

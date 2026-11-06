@@ -49,7 +49,7 @@ const cases = [
 	{
 		id: "algebra-1b",
 		source: algebra1BCourse,
-		readings: 7,
+		readings: 8,
 		additions: []
 	},
 	{

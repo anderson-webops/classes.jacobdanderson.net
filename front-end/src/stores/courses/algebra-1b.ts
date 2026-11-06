@@ -916,18 +916,29 @@ Inverse variation has the form \`y = k/x\`.
 			createLesson(
 				"Trend Lines and Interpreting a Fit",
 				`
-Data rarely lands perfectly on a clean function, so this module focuses on choosing a reasonable model and interpreting what it says.
+Compare candidate models using plotted observations and their numerical pattern. A line has a constant change in output for equal input steps. A pure exponential \`y=ab^x\`, with \`a!=0\` and \`b>0\`, has a constant ratio between consecutive outputs at unit input steps. Quadratic and cubic shapes can suggest other candidates, but a model should also reproduce the observations or account for its residuals.
 
-**Graph-classification reference**
+**Worked example**
 
-- quadratic
-- exponential
-- linear
-- none
-- cubic
-- linear
+For inputs \`0,1,2,3\` and outputs \`2,5,8,11\`, consecutive output changes are all \`3\`. The input-zero value is \`2\`, giving the candidate \`y=3x+2\`. It reproduces all four observations. This is evidence about the supplied values, not proof that an unknown real process stays linear outside them.
 
-Use those labels as a check after classifying each graph by its visible shape. A live graphing tool can recreate nearby examples for extra practice.
+**Model comparison task**
+
+Use these complete classroom datasets. Every series uses the ordered inputs \`x=-2,-1,0,1,2\`; the five outputs in each row follow that order.
+
+| Series | Output values |
+| --- | --- |
+| A | 4, 1, 0, 1, 4 |
+| B | 0.25, 0.5, 1, 2, 4 |
+| C | -3, -1, 1, 3, 5 |
+| D | 1, 4, 0, 3, 2 |
+| E | -8, -1, 0, 1, 8 |
+| F | -5, -2, 1, 4, 7 |
+
+1. Plot and label every supplied point for each series. Keep the source values unchanged.
+2. Compare a linear, quadratic, cubic or pure exponential candidate. For the exact-pattern series, write a rule and verify every listed input. Identify a series without one of these simple exact patterns.
+3. Choose a simple prediction rule for series D and calculate all five residuals as observed minus predicted. Use the errors to explain a limitation of that rule.
+4. Separate interpolation within the supplied input range from extrapolation outside it. Explain why five observations alone do not establish a real-world cause or a unique model.
 				`.trim(),
 				media.costOfLivingTrend
 			),
@@ -945,10 +956,12 @@ Residual = actual value minus predicted value.
   - predicted \`= 3625\`
   - residual \`= 3250 - 3625 = -375\`
 
-**Visual-reference note**
+**Model comparison checks**
 
-- Some residual plots and scatterplots are best handled with a graphing tool built from the provided data.
-- Focus on identifying the residual as vertical prediction error and explaining whether the model overpredicts or underpredicts.
+- A: \`y=x^2\`; B: \`y=2^x\`; C: \`y=2x+1\`; E: \`y=x^3\`; F: \`y=3x+1\`. Substituting each of the five inputs reproduces its series.
+- D has irregular successive changes \`3,-4,3,-1\`. The simple constant prediction \`y=2\` gives residuals \`-1,2,-2,1,0\`, whose squared errors sum to \`10\`. This is one candidate for comparison, not an exact fit or the only possible model.
+- A positive residual means the model underpredicts that observation; a negative residual means it overpredicts. A zero residual at one input checks that point alone.
+- Any conclusion about an unobserved input requires an assumption that the proposed pattern continues. A graphing tool can plot these supplied points, but the values and calculations above are sufficient without an external chart.
 				`.trim()
 			)
 		]),
@@ -1544,3 +1557,17 @@ configureMathCourseFlow(algebra1BCourse, {
 	],
 	appendixTitles: ["Reference Archive: Algebra 1B"]
 });
+
+const dataModelModule = algebra1BCourse.modules.find(module =>
+	module.title.startsWith("AB19 ")
+);
+if (!dataModelModule) {
+	throw new Error("Missing Algebra 1B data-model module.");
+}
+for (const item of dataModelModule.curriculum) {
+	item.preserveInstructions = true;
+	item.contentKind =
+		item.title === "Residuals and Visual References"
+			? "reading"
+			: "assignment";
+}
