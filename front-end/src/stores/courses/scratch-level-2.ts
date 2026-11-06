@@ -6,6 +6,10 @@ import type {
 } from "./types";
 import { correctedJuniScratchInstructions } from "./juniScratchInstructionCorrections";
 import { isCoreProjectTitle } from "./projectGrouping";
+import {
+	scratchFishFoodPlan,
+	scratchTreasureCavePlan
+} from "./scratchAdvancedGameLessons";
 import { scratchFunctionLesson } from "./scratchFunctionLesson";
 import { scratchListLesson } from "./scratchListLesson";
 import { scratchNestedLoopLesson } from "./scratchNestedLoopLesson";
@@ -884,11 +888,9 @@ Finally, share the project!`,
 				},
 				{
 					title: "Fish Food: Planning and Architecture",
-					content: buildSupportSectionGuidance({
-						courseFamily: "Scratch",
-						moduleTitle: "Fish Food",
-						section: "planning"
-					})
+					contentKind: "reading",
+					preserveInstructions: true,
+					content: scratchFishFoodPlan
 				},
 				{
 					title: "Fish Food: Verification and Reflection",
@@ -963,11 +965,9 @@ Finally, share the project!`,
 				},
 				{
 					title: "Treasure Cave: Planning and Architecture",
-					content: buildSupportSectionGuidance({
-						courseFamily: "Scratch",
-						moduleTitle: "Treasure Cave",
-						section: "planning"
-					})
+					contentKind: "reading",
+					preserveInstructions: true,
+					content: scratchTreasureCavePlan
 				},
 				{
 					title: "Treasure Cave: Verification and Reflection",

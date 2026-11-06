@@ -1,3 +1,6 @@
+import { sourceGameRuntime } from "./scratch-game-source-runtime.mjs";
+import { applyOriginalProgramCorrection } from "../front-end/scripts/scratch/program-corrections.mjs";
+import gameCorrections from "../front-end/scripts/scratch/originals/program-corrections.json" with { type: "json" };
 import {
 	verifyAndRestoreWheel,
 	runWheelSource
@@ -25,6 +28,48 @@ const compatibility = JSON.parse(
 		"utf8"
 	)
 ).changes;
+
+function verifyAndRestoreAdvancedGame(loaded, source, id) {
+	const correction = gameCorrections.find(r => r.id === id);
+	assert.ok(correction);
+	for (const patch of [correction, ...(correction.additionalTargets || [])]) {
+		const target = loaded.targets.find(t => t.name === patch.target);
+		for (const change of patch.changes) {
+			assert.deepEqual(
+				target.blocks[change.blockId] ?? null,
+				change.after
+			);
+			if (change.before === null) delete target.blocks[change.blockId];
+			else target.blocks[change.blockId] = structuredClone(change.before);
+		}
+		for (const change of patch.variables || []) {
+			assert.deepEqual(
+				target.variables[change.variableId] ?? null,
+				change.after
+			);
+			if (change.before === null)
+				delete target.variables[change.variableId];
+			else
+				target.variables[change.variableId] = structuredClone(
+					change.before
+				);
+		}
+	}
+	for (const target of source.targets) {
+		const restored = loaded.targets.find(t => t.name === target.name);
+		assert.deepEqual(restored.blocks, target.blocks);
+		assert.deepEqual(restored.variables, target.variables);
+	}
+}
+
+async function reviewedGame(id) {
+	const { archive } = await createOriginalProject(id);
+	const files = unzipSync(archive);
+	const corrected = JSON.parse(strFromU8(files["project.json"]));
+	const source = JSON.parse(strFromU8(files["SOURCE/original.json"]));
+	verifyAndRestoreAdvancedGame(structuredClone(corrected), source, id);
+	return { corrected, source };
+}
 
 function verifyAndRestoreRocketship(loaded, source) {
 	const target = loaded.targets.find(t => t.name === "Rocketship");
@@ -367,6 +412,20 @@ test("all original Scratch archives retain upstream bytes and only declared corr
 			expected.add("SOURCE/program-correction.json");
 			programCorrections.push(original.id);
 		}
+
+		if (["343348430", "348994271", "357453262"].includes(original.id)) {
+			verifyAndRestoreAdvancedGame(loaded, source, original.id);
+			const correction = JSON.parse(
+				strFromU8(files["SOURCE/program-correction.json"])
+			);
+			assert.deepEqual(
+				correction,
+				gameCorrections.find(r => r.id === original.id)
+			);
+			assert.ok(attribution.includes(correction.summary));
+			expected.add("SOURCE/program-correction.json");
+			programCorrections.push(original.id);
+		}
 		for (const [targetIndex, target] of source.targets.entries()) {
 			assert.deepEqual(
 				loaded.targets[targetIndex].blocks,
@@ -449,7 +508,10 @@ test("all original Scratch archives retain upstream bytes and only declared corr
 		"332459692",
 		"338501835",
 		"342643080",
-		"357452924"
+		"343348430",
+		"348994271",
+		"357452924",
+		"357453262"
 	]);
 	if (process.env.SCRATCH_ORIGINAL_BROWSER_PROOF_DIR) {
 		await mkdir(process.env.SCRATCH_ORIGINAL_BROWSER_PROOF_DIR, {
@@ -460,7 +522,7 @@ test("all original Scratch archives retain upstream bytes and only declared corr
 				process.env.SCRATCH_ORIGINAL_BROWSER_PROOF_DIR,
 				"archive-identity.json"
 			),
-			`${JSON.stringify({ projects: 164, assets: 505, originalSourceBytesRetained: true, unchangedPrograms: 159, declaredProgramCorrections: programCorrections, onlyDeclaredAttributionSvgAndProgramChanges: true, compatibilityAssets: correctedAssets.size, compatibilityProjects: correctedProjects.size, records }, null, 2)}\n`
+			`${JSON.stringify({ projects: 164, assets: 505, originalSourceBytesRetained: true, unchangedPrograms: 156, declaredProgramCorrections: programCorrections, onlyDeclaredAttributionSvgAndProgramChanges: true, compatibilityAssets: correctedAssets.size, compatibilityProjects: correctedProjects.size, records }, null, 2)}\n`
 		);
 	}
 });
@@ -796,4 +858,143 @@ test("Wheel of Fortune recognizes every winning position including the last allo
 	assert.equal(wins, 216);
 	assert.equal(losses, 9);
 	assert.equal(upstreamLastGuessFailures, 36);
+});
+
+test("Advanced game patches reject a later target mismatch without partial mutation", async () => {
+	const { source } = await reviewedGame("357453262");
+	const original = originalScratchProjects.find(p => p.id === "357453262");
+	const changed = structuredClone(source);
+	changed.targets.find(t => t.name === "Food").blocks[
+		"(]8UeofuD+~vG/tQFcq="
+	].opcode = "control_wait";
+	const before = structuredClone(changed);
+	assert.throws(
+		() => applyOriginalProgramCorrection(changed, original),
+		/input mismatch/
+	);
+	assert.deepEqual(changed, before);
+});
+
+test("Fish Food ends both outcomes, ignores ended collisions and resets position", async () => {
+	const { corrected, source } = await reviewedGame("357453262");
+	const size = "Ku;G(*g2d(Nh|wi(:5oZ-Player Size-";
+	for (const project of [source, corrected]) {
+		const rt = sourceGameRuntime(project);
+		rt.variable(rt.target("Player"), size, 200);
+		rt.run(rt.target("Player"), "7xJ4i3^F@8)#wcfnVSw4");
+		assert.equal(rt.state.stopped, project === corrected);
+		assert.equal(rt.target("Sprite2").visible, true);
+		assert.equal(rt.target("Sprite3").visible, true);
+	}
+	for (const project of [source, corrected]) {
+		const rt = sourceGameRuntime(project, { touch: () => true });
+		rt.target("Sprite1").visible = false;
+		rt.target("Food").size = 100;
+		rt.variable(rt.target("Player"), size, 20);
+		rt.run(rt.target("Food"), "dG*oBH9x_pRSPO;ZTv)\u0060");
+		assert.equal(rt.state.stopped, true);
+		assert.equal(rt.target("Sprite1").visible, project === corrected);
+	}
+	for (const phase of ["won", "lost"]) {
+		const rt = sourceGameRuntime(corrected, { touch: () => true });
+		rt.variable(rt.target("Player"), "classes-fish-round-state", phase);
+		const before = rt.variable(rt.target("Player"), size);
+		rt.run(rt.target("Player"), "7xJ4i3^F@8)#wcfnVSw4");
+		rt.run(rt.target("Food"), "dG*oBH9x_pRSPO;ZTv)\u0060");
+		assert.equal(rt.variable(rt.target("Player"), size), before);
+		assert.deepEqual(rt.state.events, []);
+	}
+	const rt = sourceGameRuntime(corrected);
+	const player = rt.target("Player");
+	player.x = 120;
+	player.y = -40;
+	player.visible = false;
+	rt.variable(player, "classes-fish-round-state", "won");
+	for (const [id, b] of Object.entries(player.blocks))
+		if (b.opcode === "event_whenflagclicked") rt.run(player, id);
+	assert.deepEqual(
+		[player.x, player.y, player.visible, player.size],
+		[0, 0, true, 20]
+	);
+	assert.equal(Number(rt.variable(player, size)), 20);
+	assert.equal(rt.variable(player, "classes-fish-round-state"), "playing");
+});
+
+test("Platformer gravity and ceiling handling return to the level controller", async () => {
+	const { corrected, source } = await reviewedGame("343348430");
+	for (const project of [source, corrected]) {
+		const rt = sourceGameRuntime(project, {
+			color: (_t, color) => color === "#79654a"
+		});
+		const pal = rt.target("Pal");
+		const result = rt.procedure(pal, "stay on ground");
+		assert.equal(!!result.scriptStopped, project === source);
+	}
+	for (const project of [source, corrected]) {
+		const rt = sourceGameRuntime(project, {
+			color: (t, color) => color === "#00cc44" && (t.y >= 30 || t.y <= 0)
+		});
+		const pal = rt.target("Pal");
+		pal.x = 0;
+		pal.y = 20;
+		const result = rt.procedure(pal, "jump");
+		assert.equal(!!result.scriptStopped, project === source);
+		if (project === corrected) {
+			assert.equal(pal.y, 25);
+			assert.equal(rt.procedure(pal, "stay on ground").returned, true);
+			assert.equal(pal.y, 0);
+		}
+	}
+	const rt = sourceGameRuntime(corrected, {
+		color: (_t, color) => color === "#79654a"
+	});
+	const result = rt.run(rt.target("Pal"), "9Ty](*JvMo#%?ti_1_1;");
+	assert.equal(result.returned, true);
+	assert.deepEqual([rt.target("Pal").x, rt.target("Pal").y], [-204, 37]);
+	assert.ok(rt.state.events.includes("sound:Slide Whistle"));
+});
+
+test("Fruit Ninja clones keep independent kinds and countdown/misses terminate", async () => {
+	const { corrected, source } = await reviewedGame("348994271");
+	for (const project of [source, corrected]) {
+		let selected = 1;
+		const rt = sourceGameRuntime(project, { random: () => selected });
+		const first = rt.clone("Fruit", " A"),
+			second = rt.clone("Fruit", " B");
+		const switchId = Object.keys(first.blocks).find(
+			id => first.blocks[id].opcode === "looks_switchcostumeto"
+		);
+		const stopBefore = first.blocks[switchId].next;
+		rt.run(first, "neF=:wPJCAM$4Owr+C+o", stopBefore);
+		selected = 4;
+		rt.run(second, "neF=:wPJCAM$4Owr+C+o", stopBefore);
+		assert.deepEqual([first.costume, second.costume], [1, 2]);
+		assert.equal(rt.expression(second, ".vB7u?XW~EK4@H{Z]G|G"), true);
+		assert.equal(
+			rt.expression(first, ".vB7u?XW~EK4@H{Z]G|G"),
+			project === source
+		);
+	}
+	for (const project of [source, corrected]) {
+		const rt = sourceGameRuntime(project);
+		rt.run(rt.target("Blade"), "{BA^/qV:/.2[~SdfPs(?");
+		assert.equal(rt.state.stopped, project === corrected);
+		if (project === corrected) {
+			assert.equal(rt.state.waits, 60);
+			assert.equal(
+				rt.variable(rt.target("Blade"), "0X*V_C]Q6ePKZ[W%dxkr"),
+				0
+			);
+			assert.equal(
+				rt.state.targets.find(t => t.isStage).backdrop,
+				"Rays"
+			);
+		}
+	}
+	for (const misses of [0, 2, 3, 4, 8]) {
+		const rt = sourceGameRuntime(corrected);
+		rt.variable(rt.target("Blade"), "CJg!#vP~DGeJ,CsQpWi2", misses);
+		rt.run(rt.target("Blade"), "S+GPTixnVAyz3W9WRl[y");
+		assert.equal(rt.state.stopped, misses >= 3);
+	}
 });

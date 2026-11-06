@@ -171,7 +171,7 @@ export async function checkScratchConceptReadings(
 			}
 		}
 	}
-	assert.equal(views.length, 52);
+	assert.equal(views.length, 60);
 	assert.equal(nestedViews.length, 4);
 	await writeFile(
 		path.join(output, "concept-readings.json"),
