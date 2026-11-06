@@ -6,6 +6,8 @@ import type {
 } from "./types";
 import { correctedJuniScratchInstructions } from "./juniScratchInstructionCorrections";
 import { isCoreProjectTitle } from "./projectGrouping";
+import { scratchFunctionLesson } from "./scratchFunctionLesson";
+import { scratchListLesson } from "./scratchListLesson";
 import { scratchNestedLoopLesson } from "./scratchNestedLoopLesson";
 import { scratchOperatorLesson } from "./scratchOperatorLesson";
 import {
@@ -623,8 +625,8 @@ Challenge: Have Scratch also ask the user how many multiples the user wants to h
 				{
 					title: "Lists",
 					contentKind: "reading",
-					content:
-						"A list stores many related values in one variable-like structure. A list can hold items such as groceries, favorite sports, places, names, scores, or words.\nIn programming, lists make it easier to store, inspect, add, remove, and count related items without creating a separate variable for each one.\nPractice by creating a list, adding elements, reading the list length, and deleting all items from the list."
+					preserveInstructions: true,
+					content: scratchListLesson
 				},
 				{
 					title: "GM7 Project 1: Bucket List",
@@ -640,17 +642,10 @@ View CS Training's Code`,
 				},
 				{
 					title: "GM7 Project 2: List Practice",
-					content: `1. When the spacebar is pressed, make the cat ask, “What number do you want to add to the list?” Add the number the user enters to the list.
-2. When the green flag is clicked, delete everything in the list.
-3. When the 1 key is pressed, program the cat to read the list normally, saying each number in the list for 1 second.
-4. When the 2 key is pressed, program the cat to read each number in the list doubled.
-5. When the 3 key is pressed, program the cat to read the list backwards.
-6. When the 4 key is pressed, program the cat to read each number and then whether the number is odd or even (e.g.: “1, Odd, 14, Even,...”).
-Say every other number in the list
-Say every number in the list, multiplied by 10
-Say each number and then turn that many degrees to the right
-Finally, share the project!
-View CS Training's Code`,
+					content: correctedJuniScratchInstructions(
+						"GM7 Project 2: List Practice",
+						"scratch-level-2"
+					),
 					projectLink: "https://scratch.mit.edu/projects/315090026/",
 					solutionLink: "https://scratch.mit.edu/projects/315051160/"
 				},
@@ -681,14 +676,12 @@ Finally, share the project!`,
 				},
 				{
 					title: "GM7 Supplemental Project 2: Wheel of Fortune",
-					content: `Welcome to the Wheel of Fortune! In this game, the user has a certain number of guesses to guess every letter of the secret word.
-1. Construct a word bank using a list, from which the computer will choose a random word of at the beginning of each game.
-2. Once the secret word is decided, add all the letters of the word to a new list and count the total number of unique letters in the word. Use this variable to keep track of the total number of letters the user needs to guess correctly. As you are adding the letters, make sure you don't add the same letter twice.
-3. Ask the user to guess a letter. If they guess a letter that is in the secret word (and they have not already guessed this letter), add this letter to the guess list and and update the variable you are using to keep track of how many correct guesses the user has made.
-4. Allow the user a certain number of guesses to win the game (for example, the length of the word, plus 5).
-5. The user wins the game if they have correctly guessed all of the letters in the word, and they lose if they run out of guesses!`,
-					projectLink: "https://scratch.mit.edu/projects/340691786",
-					solutionLink: "https://scratch.mit.edu/projects/342643080"
+					content: correctedJuniScratchInstructions(
+						"GM7 Supplemental Project 2: Wheel of Fortune",
+						"scratch-level-2"
+					),
+					projectLink: "https://scratch.mit.edu/projects/340691786/",
+					solutionLink: "https://scratch.mit.edu/projects/342643080/"
 				},
 				{
 					title: "Lists: Open-Ended Variant",
@@ -710,11 +703,8 @@ Finally, share the project!`,
 				{
 					title: "Functions",
 					contentKind: "reading",
-					content: `**Concept path:** Custom blocks in Scratch work like functions. A function is a named set of instructions that can be reused whenever a sprite needs that behavior.
-
-**Definition and call:** The My Blocks section creates custom blocks, defines what each block does, and calls those blocks from other scripts. Defining a function describes the behavior once; calling the function runs that behavior with specific input values.
-
-**Why it matters:** Functions keep projects organized by separating repeated behavior into named pieces. A game such as Music Memory could use functions for playing a note sequence, checking an answer, resetting a round, or displaying feedback.`
+					preserveInstructions: true,
+					content: scratchFunctionLesson
 				},
 				{
 					title: "GM8 Project 1: My First Functions",
@@ -750,12 +740,12 @@ View CS Training's Code`,
 			supplementalProjects: [
 				{
 					title: "GM8 Supplemental Project 1: Extra Functions",
-					content: `1. Write a function that draws a shape! It should take in as input the number of sides and the size of each side. To calculate how many degrees to turn after drawing each side, use 360 divided by the number of sides.
-2. Write a function that takes in a starting number and an ending number, and make the function count from a starting number up to (and including) an ending number. (Challenge: If the ending number is smaller than the starting number, make it count down from the starting number.)
-3. Write a function that takes in two numbers and reports the result of addition, subtraction, multiplication, and division with the two numbers. (Challenge: calculate the average of the two numbers as well.)
-4. Write a function that takes in a number and says the first 10 multiples of that number. (Challenge: take in a number of multiples as another input, and say that many multiples of the number.)`,
-					projectLink: "https://scratch.mit.edu/projects/339918479",
-					solutionLink: "https://scratch.mit.edu/projects/339602908"
+					content: correctedJuniScratchInstructions(
+						"GM8 Supplemental Project 1: Extra Functions",
+						"scratch-level-2"
+					),
+					projectLink: "https://scratch.mit.edu/projects/339918479/",
+					solutionLink: "https://scratch.mit.edu/projects/339602908/"
 				},
 				{
 					title: "GM8 Supplemental Project 2: Rock Paper Scissors",

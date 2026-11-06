@@ -133,7 +133,15 @@
 		"itemId": "scratch-level-2-gm7-lists-curriculum-lists",
 		"title": "Lists",
 		"sourceItemIds": ["scratch-level-2-gm7-lists-curriculum-lists"],
-		"requiredText": ["A list stores many related values"]
+		"requiredText": [
+			"A list stores many related values",
+			"Scratch starts at 1",
+			"set index to 1",
+			"change index by -1",
+			"stop is never stored",
+			"happy contributes h, a, p, y",
+			"including the last allowed guess"
+		]
 	},
 	{
 		"courseId": "scratch-level-2",
@@ -141,6 +149,14 @@
 		"itemId": "scratch-level-2-gm8-functions-curriculum-functions",
 		"title": "Functions",
 		"sourceItemIds": ["scratch-level-2-gm8-functions-curriculum-functions"],
-		"requiredText": ["A function is a named set of instructions"]
+		"requiredText": [
+			"A function is a named set of instructions",
+			"Make a Block",
+			"define draw square (side)",
+			"not a global variable",
+			"do not return a reporter value",
+			"Run without screen refresh",
+			"keys 1 through 4"
+		]
 	}
 ]

@@ -1,3 +1,4 @@
+import { checkWheelFinalGuess } from "./scratch-wheel-final-guess-check.mjs";
 import assert from "node:assert/strict";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
@@ -369,6 +370,27 @@ export async function checkScratchOriginalImports(page, { origin, files, loaded,
   const reopenedGraph=await checkDottyGraph(reopenedDottyFrame,output);
   graph.exportReopenedWithCorrectionAndAttribution=true;graph.reopenedCases=reopenedGraph.cases;
   await writeFile(path.join(output,"dotty-graph.json"),JSON.stringify(graph,null,2)+"\n");
+
+ const wheel = originalScratchProjects.find(project => project.id === "342643080");
+ await route(sourceHref(wheel));
+ assert.match(await page.$eval(".scratch-original-import", element => element.textContent), /Reference correction: completing the word on the last guess wins/);
+ await confirm();
+ const wheelFrame = page.frames().find(frame => frame !== page.mainFrame());
+ const wheelProof = await checkWheelFinalGuess(wheelFrame, output);
+ await page.$eval(".scratch-toolbar input[maxlength='120']", input => {
+  input.value = "Wheel corrected"; input.dispatchEvent(new Event("input", { bubbles: true }));
+ });
+ await downloadProject("Wheel corrected.sb3");
+ const wheelSaved = unzipSync(new Uint8Array(await readFile(path.join(files, "Wheel corrected.sb3"))));
+ const wheelProject = JSON.parse(strFromU8(wheelSaved["project.json"]));
+ assert.match(wheelProject.targets.find(target => target.isStage).comments[originalAttributionId(wheel.id)].text, /Final-guess victory/);
+ await newProject(); await openFile(path.join(files, "Wheel corrected.sb3"));
+ assert.deepEqual((await inspect(wheel)).problems, []);
+ const wheelReopenedFrame = page.frames().find(frame => frame !== page.mainFrame());
+ const reopenedWheel = await checkWheelFinalGuess(wheelReopenedFrame, output);
+ wheelProof.reopenedCases = reopenedWheel.cases;
+ wheelProof.exportReopenedWithCorrectionAndAttribution = true;
+ await writeFile(path.join(output, "wheel-final-guess.json"), JSON.stringify(wheelProof, null, 2) + "\n");
 
 		const spinner = originalScratchProjects.find(project => project.id === "287887351");
 		await route(sourceHref(spinner));
