@@ -56,13 +56,20 @@
 
 Factoring gives f(x)=(x-1)(x+1)/(x-1)=x+1 only where x!=1. The original denominator still excludes 1.
 
-| Interval | Input | f(x) | g(x) |
-| --- | ---: | ---: | ---: |
-| [-2,2] | 0 | 1 | 1 |
-| [-2,2] | 1 | Undefined | 2 |
-| [-2,2] | 2 | 3 | 3 |
-| [1,3] | 1 | Undefined | 2 |
-| [1,3] | 2 | 3 | 3 |
-| [1,3] | 3 | 4 | 4 |
+**Initial interval [-2,2]**
+
+| Input | f(x) | g(x) |
+| ---: | ---: | ---: |
+| 0 | 1 | 1 |
+| 1 | Undefined | 2 |
+| 2 | 3 | 3 |
+
+**Changed interval [1,3]**
+
+| Input | f(x) | g(x) |
+| ---: | ---: | ---: |
+| 1 | Undefined | 2 |
+| 2 | 3 | 3 |
+| 3 | 4 | 4 |
 
 Initially f has domain [-2,1) union (1,2], while g has domain [-2,2]. After the interval change, f has domain (1,3] and g has domain [1,3]. Both agree wherever f is defined, but g also supplies a value at the hole. Matching algebraic formulas after cancellation do not restore an excluded input. A capstone comparison should likewise retain each original restriction and check its new boundary explicitly.

@@ -50,10 +50,22 @@
 
 ## Capstone Growth Stress Test
 
-| n | E(n) at 10% | E_new(n) at 20% | Change in E | S(n) | Change in S |
-| ---: | ---: | ---: | ---: | ---: | ---: |
-| 0 | 100 | 100 | 0 | 100 | 0 |
-| 1 | 110 | 120 | 10 | 110 | 0 |
-| 2 | 121 | 144 | 23 | 120 | 0 |
+**Original growth rate: 10%**
+
+| n | E(n) | S(n) |
+| ---: | ---: | ---: |
+| 0 | 100 | 100 |
+| 1 | 110 | 110 |
+| 2 | 121 | 120 |
+
+**Changed growth rate: 20%**
+
+| n | E_new(n) | S(n) |
+| ---: | ---: | ---: |
+| 0 | 100 | 100 |
+| 1 | 120 | 110 |
+| 2 | 144 | 120 |
+
+The changes in E at n=0,1,2 are 0,10,23, respectively; the changes in S are all zero.
 
 At n=2, the original exponential gives 100(1.10)^2=121, while the arithmetic sequence gives 100+10(2)=120. Their agreement at n=0 and n=1 therefore does not establish identical models. Changing the growth rate affects the exponential parameter; the arithmetic sequence's initial value and common difference remain fixed, so its predictions do not change. This measures sensitivity to the stated change. Choosing a model for an actual situation additionally requires observations and justified assumptions about the process.

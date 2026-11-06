@@ -253,7 +253,17 @@ async function checkCards(page, module, expected, optional, resourceViews, profi
 			assert.equal(await page.$eval(".course-resource-page h1", element => element.textContent.trim()), check.heading);
 			await page.waitForFunction(text => document.querySelector(".course-resource-card .item-content-markdown")?.textContent.replace(/\s+/g, " ").trim() === text, {}, check.expectedText);
 			assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true, `${check.heading}: no viewer overflow`);
-			resourceViews.push({ item: item.id, asset: check.asset, fullTextSHA256: digest(check.expectedText) });
+			let comparisonTables;
+			if (/#capstone-(?:domain|growth)-stress-test$/.test(check.asset)) {
+				comparisonTables = await page.$$eval(".course-resource-card .item-content-markdown table", tables => tables.map(table => {
+					const available = table.closest(".item-content-markdown").getBoundingClientRect();
+					const bounds = table.getBoundingClientRect();
+					return { columns: table.rows[0].cells.length, fits: bounds.left >= available.left - 1 && bounds.right <= available.right + 1, width: bounds.width, availableWidth: available.width };
+				}));
+				assert.equal(comparisonTables.length, 2, `${check.heading}: both original and changed cases`);
+				assert.ok(comparisonTables.every(table => table.columns === 3 && table.fits), `${check.heading}: all compared values fit the viewer`);
+			}
+			resourceViews.push({ item: item.id, asset: check.asset, fullTextSHA256: digest(check.expectedText), ...(comparisonTables ? { comparisonTables } : {}) });
 			if (check.label === "Project self-check" || check.asset.endsWith("#optional-percent-changes")) {
 				await page.screenshot({ path: join(process.env.SELF_STUDY_BROWSER_PROOF_DIR ?? "output/self-study-browser", `${profileName}-${item.id}-self-check.png`), fullPage: true });
 			}
