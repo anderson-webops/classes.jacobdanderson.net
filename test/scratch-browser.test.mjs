@@ -14,12 +14,13 @@ import {
 	createProject,
 	lessons
 } from "../front-end/scripts/scratch/generate-projects.mjs";
+import { checkScratchCheckpointTasks } from "./scratch-checkpoint-task-check.mjs";
+import { checkScratchConceptReadings } from "./scratch-concept-reading-check.mjs";
 import { checkScratchConditionalCourse, scratchCourseAccount } from "./scratch-conditional-course-checks.mjs";
 import { checkScratchEducationalQuiz } from "./scratch-educational-quiz-checks.mjs";
 import { checkScratchGameProgression } from "./scratch-game-progression-checks.mjs";
 import { checkScratchCoordinateReading, checkScratchEventReading, checkScratchOriginalImports } from "./scratch-original-import-checks.mjs";
 import { checkScratchPublishedTasks } from "./scratch-published-task-check.mjs";
-import { checkScratchConceptReadings } from "./scratch-concept-reading-check.mjs";
 
 const root = fileURLToPath(new URL("../front-end/", import.meta.url));
 nodeTest(
@@ -123,11 +124,14 @@ nodeTest(
 				}
 			});
 			if (process.env.SCRATCH_BROWSER_READING_ONLY === "1") {
-				const readingOptions = { origin: "http://127.0.0.1:5198", files, setRole: (role) => { courseRole = role; } };
+				const readingOptions = { origin: "http://127.0.0.1:5198", files, setRole: (role) => {
+					courseRole = role;
+				} };
 				await verifyScope("event-reading", () => checkScratchEventReading(page, readingOptions));
 				await verifyScope("coordinate-reading", () => checkScratchCoordinateReading(page, readingOptions));
 				await verifyScope("concept-readings", () => checkScratchConceptReadings(page, readingOptions));
 				await verifyScope("published-tasks", () => checkScratchPublishedTasks(page, readingOptions));
+				await verifyScope("checkpoint-tasks", () => checkScratchCheckpointTasks(page, readingOptions));
 				assert.deepEqual(scopeFailures, [], "Every requested Scratch reading scope must pass");
 				assert.deepEqual(errors, []);
 				return;
@@ -458,18 +462,27 @@ nodeTest(
 			await verifyScope("coordinate-reading", () => checkScratchCoordinateReading(page, {
 				origin: "http://127.0.0.1:5198",
 				files,
-				setRole: (role) => { courseRole = role; }
+				setRole: (role) => {
+					courseRole = role;
+				}
 			}));
 			await verifyScope("concept-readings", () => checkScratchConceptReadings(page, {
 				origin: "http://127.0.0.1:5198",
 				files,
-				setRole: (role) => { courseRole = role; }
+				setRole: (role) => {
+					courseRole = role;
+				}
 			}));
 			await verifyScope("published-tasks", () => checkScratchPublishedTasks(page, {
 				origin: "http://127.0.0.1:5198",
 				files,
-				setRole: (role) => { courseRole = role; }
+				setRole: (role) => {
+					courseRole = role;
+				}
 			}));
+			await verifyScope("checkpoint-tasks", () => checkScratchCheckpointTasks(page, { origin: "http://127.0.0.1:5198", files, setRole: (role) => {
+				courseRole = role;
+			} }));
 			await verifyScope("originals", () => checkScratchOriginalImports(page, {
 				origin: "http://127.0.0.1:5198",
 				files,
@@ -487,7 +500,9 @@ nodeTest(
 					await loaded();
 					await setProjectMenuOpen(false);
 				},
-				setRole: (role) => { courseRole = role; },
+				setRole: (role) => {
+					courseRole = role;
+				},
 				acceptDialogs: (value) => { acceptDialogs = value; }
 			}));
 			await verifyScope("conditional-course", () => checkScratchConditionalCourse(page, "http://127.0.0.1:5198", (role) => {
