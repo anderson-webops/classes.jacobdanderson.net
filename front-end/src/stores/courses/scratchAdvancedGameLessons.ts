@@ -19,7 +19,7 @@ Check a smaller, equal-sized and larger collision separately. Restart after both
 
 ### Optional Platformer Pal: collision and level control
 
-The supplied Pal, Key and two portal sprites use three level backdrops. Green ground is #00cc44; brown pitfalls are #79654a. Use the color picker on the actual artwork. A level broadcast places Pal and Key, then starts that level's movement controller. The reference starts Pal at (-207, -109), (-204, 37) and (-187, 13), with keys at (205, 59), (212, 2) and (4, 126).
+The supplied Pal, Key, Teleport In and Teleport Out sprites use three level backdrops. Green ground is #00cc44; brown pitfalls are #79654a. Use the color picker on the actual artwork. A level broadcast places Pal and Key, then starts that level's movement controller. The reference starts Pal at (-207, -109), (-204, 37) and (-187, 13), with keys at (205, 59), (212, 2) and (4, 126).
 
 The move l/r custom block checks held arrows and changes x by 10 or -10. The stay on ground block repeatedly changes y by -5 until Pal touches green or brown. Brown must return control to the level script, which plays the fall sound, drops Pal and restarts that level. Stopping this script inside the custom block would terminate its caller and prevent recovery.
 
