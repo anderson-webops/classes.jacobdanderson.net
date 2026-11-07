@@ -1,5 +1,6 @@
 import type { RawCourse, RawCourseModuleItem } from "./types";
 import { buildImplementationLabGuidance } from "./implementationLabGuidance";
+import { completeJavaPatternsOpening } from "./javaPatternsOpeningTeaching";
 import { buildProjectGuidance } from "./projectGuidance";
 
 const designPatternsInJavaSourceCourse: RawCourse = {
@@ -1615,7 +1616,8 @@ function buildDesignPatternsJavaStudioAppendix(
 const designPatternsJavaPrimaryModules =
 	designPatternsInJavaSourceCourse.modules
 		.filter(module => DESIGN_PATTERNS_JAVA_PRIMARY_TITLES.has(module.title))
-		.map(decorateDesignPatternsJavaModule);
+		.map(decorateDesignPatternsJavaModule)
+		.map(completeJavaPatternsOpening);
 const designPatternsJavaStudios =
 	designPatternsInJavaSourceCourse.modules.filter(
 		module => !DESIGN_PATTERNS_JAVA_PRIMARY_TITLES.has(module.title)

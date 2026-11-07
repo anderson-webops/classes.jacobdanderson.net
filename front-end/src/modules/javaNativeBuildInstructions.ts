@@ -1,3 +1,8 @@
+import {
+	javaPatternsExtensionID,
+	javaPatternsPricingID,
+	javaPatternsReadingID
+} from "./javaPatternsResources";
 import { javaRecursionProjects } from "./javaRecursionResources";
 import {
 	bronzeRequiredAssignment,
@@ -122,6 +127,36 @@ export function javaNativeBuildInstructions(
 ): string[] | null {
 	const parts = (courseProjectKey ?? "").split(":");
 	const [course, item, role, extra] = parts;
+	if (
+		course === "design-patterns-in-java" &&
+		[
+			javaPatternsPricingID,
+			javaPatternsReadingID,
+			javaPatternsExtensionID
+		].includes(item ?? "") &&
+		["starter", "reference"].includes(role ?? "") &&
+		parts.length === 4 &&
+		extra === "native-java-patterns"
+	) {
+		const pricing = item === javaPatternsPricingID;
+		return [
+			"Java 21 design-patterns workflow",
+			"Save the attempt, download its ZIP, extract it, and open a terminal in the project folder.",
+			pricing
+				? "javac --release 21 -Xlint:all -Werror Main.java PricingStrategy.java BulkPricingStrategy.java ContractTests.java"
+				: "javac --release 21 -Xlint:all -Werror Main.java ContractTests.java",
+			...(!pricing ? ["java ContractTests base"] : []),
+			"java ContractTests",
+			"java Main",
+			pricing
+				? "Main prints 18.0. The completed pricing harness reports 10014 passed."
+				: "Main prints 1800, 2420, 1620, 2240 on separate lines. The baseline reports 20052 passed; the full reference reports 28070 passed.",
+			role === "starter"
+				? `The starter compiles. Its full harness rejects the named unfinished method until it is implemented.${pricing ? "" : " The comparison baseline already passes in the extension starter."}`
+				: "The reference checks input and pricing/shipping behavior. A design decision and explanation remain separate completion evidence.",
+			"Each project defines Main; compile projects in separate folders. Run displays these native instructions. README.md contains the complete contract."
+		];
+	}
 	if (
 		course === "java-level-3" &&
 		javaRecursionProjects.some(project => project.id === item) &&

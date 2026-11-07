@@ -41,6 +41,7 @@ const readingCounts = [22,19,19,20,8,13,15,31,10,13,14,16,20,14,9,4,27,22,37,38,
 assert.equal(readingCounts.length, courseIds.length);
 // Reading counts for explicitly selected teaching scopes.
 const focusedReadingCounts = {
+ "design-patterns-in-java":1,
  "java-level-3": 1,
 	"intro-to-environmental-science": 27,
 	"elementary-science": 36,

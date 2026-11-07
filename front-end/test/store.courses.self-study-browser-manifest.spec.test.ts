@@ -57,9 +57,23 @@ import {
 	scratchLevel1BootcampCourse
 } from "@/stores/courses/source-library-courses";
 
+import { designPatternsInJavaCourse } from "@/stores/courses/design-patterns-in-java";
 import { javaLevel3Course } from "@/stores/courses/java-level-3";
 
+function isReviewedModule(id: string, title: string) {
+	return id === "java-level-3"
+		? title === "AJ4 Recursion"
+		: id === "design-patterns-in-java"
+			? title === "DPJ1 What Patterns Are and What They Are Not"
+			: true;
+}
 const cases = [
+	{
+		id: "design-patterns-in-java",
+		source: designPatternsInJavaCourse,
+		readings: 1,
+		additions: []
+	},
 	{
 		id: "java-level-3",
 		source: javaLevel3Course,
@@ -403,10 +417,7 @@ it.each(
 			}
 		}
 		const sourceProjects = source.modules
-			.filter(
-				module =>
-					id !== "java-level-3" || module.title === "AJ4 Recursion"
-			)
+			.filter(module => isReviewedModule(id, module.title))
 			.flatMap(module => [
 				...module.curriculum,
 				...module.supplementalProjects
@@ -440,8 +451,10 @@ it.each(
 		}
 		const card = (item: CourseModuleItem) => {
 			const javaRecursionTask =
-				id === "java-level-3" &&
-				item.id.startsWith("java-level-3-aj4-recursion-");
+				(id === "java-level-3" &&
+					item.id.startsWith("java-level-3-aj4-recursion-")) ||
+				(id === "design-patterns-in-java" &&
+					item.id.startsWith("design-patterns-in-java-dpj1-"));
 			const completeAssignment =
 				javaRecursionTask ||
 				[
@@ -662,14 +675,12 @@ it.each(
 			}));
 		expect(
 			modules
-				.filter(
-					module =>
-						id !== "java-level-3" ||
-						module.title === "AJ4 Recursion"
-				)
+				.filter(module => isReviewedModule(id, module.title))
 				.flatMap(module => module.readings)
 		).toHaveLength(count);
-		if (id === "java-level-3") expect(modules).toHaveLength(25);
+		if (id === "design-patterns-in-java")
+			expect(modules.length).toBeGreaterThan(10);
+		else if (id === "java-level-3") expect(modules).toHaveLength(25);
 		else if (algebra1)
 			expect(modules).toHaveLength(id === "algebra-1a" ? 21 : 25);
 		else if (algebra)
@@ -696,8 +707,7 @@ it.each(
 										: count
 			);
 		for (const module of modules) {
-			if (id === "java-level-3" && module.title !== "AJ4 Recursion")
-				continue;
+			if (!isReviewedModule(id, module.title)) continue;
 			if (id === "geometry-a")
 				expect(module.readings, module.title).toHaveLength(
 					module.title.startsWith("Check-In")
@@ -807,34 +817,41 @@ it.each(
 						restoredIdentities: additions.length,
 						sourceProjects: sourceProjects.length,
 						modules,
-						...(id === "java-level-3"
+						...([
+							"java-level-3",
+							"design-patterns-in-java"
+						].includes(id)
 							? {
 									reviewedModuleIds: [
-										"java-level-3-aj4-recursion"
+										id === "java-level-3"
+											? "java-level-3-aj4-recursion"
+											: "design-patterns-in-java-dpj1-what-patterns-are-and-what-they-are-not"
 									]
 								}
 							: {}),
 						reviewScope:
-							id === "java-level-3"
-								? "AJ4 only: one reading, two core projects, three optional tasks and ten input/response views per profile. All 217 course identities checked; other Java units are outside this teaching and runtime acceptance."
-								: id === "intro-to-environmental-science"
-									? "Complete Environmental Science teaching and tasks:27readings,17coreactivities,24optionalactivities and82input/response views per profile;all68published identities retained. Original photosynthesis-image fidelity remains separate."
-									: id === "intro-to-chemistry"
-										? "Complete Chemistry teaching and tasks:62readings,14coreactivities,37optionalactivities and102input/response views per profile;all113published identities retained. Original video evidence remains distinct from authored text alternatives."
-										: id === "intro-to-biology"
-											? "Eight worked body-systems units:8readings,36coreactivities,24optionalprojects and120input/response views per profile;all68published identities retained. Original three legacy images remain separately identified."
-											: id === "elementary-science"
-												? "Eight teaching units and six reference appendices:36readings,48coreactivities,16optionalprojects and11optionalreferenceactivities;all111published identities checked."
-												: id ===
-													  "middle-school-integrated-science"
-													? "Complete ten teaching units and five reference appendices:65readings,58complete optional/required activities and117input/response views per role/width profile;all123published identities retained."
+							id === "design-patterns-in-java"
+								? "DPJ1 opening only: one reading, five core activities, three optional tasks and sixteen case/answer views per profile. All published course identities checked; later units remain outside this teaching/runtime acceptance."
+								: id === "java-level-3"
+									? "AJ4 only: one reading, two core projects, three optional tasks and ten input/response views per profile. All 217 course identities checked; other Java units are outside this teaching and runtime acceptance."
+									: id === "intro-to-environmental-science"
+										? "Complete Environmental Science teaching and tasks:27readings,17coreactivities,24optionalactivities and82input/response views per profile;all68published identities retained. Original photosynthesis-image fidelity remains separate."
+										: id === "intro-to-chemistry"
+											? "Complete Chemistry teaching and tasks:62readings,14coreactivities,37optionalactivities and102input/response views per profile;all113published identities retained. Original video evidence remains distinct from authored text alternatives."
+											: id === "intro-to-biology"
+												? "Eight worked body-systems units:8readings,36coreactivities,24optionalprojects and120input/response views per profile;all68published identities retained. Original three legacy images remain separately identified."
+												: id === "elementary-science"
+													? "Eight teaching units and six reference appendices:36readings,48coreactivities,16optionalprojects and11optionalreferenceactivities;all111published identities checked."
 													: id ===
-														  "early-elementary-a-reading"
-														? "Complete on-site explanations and briefs; the ten named reading texts remain unavailable."
+														  "middle-school-integrated-science"
+														? "Complete ten teaching units and five reference appendices:65readings,58complete optional/required activities and117input/response views per role/width profile;all123published identities retained."
 														: id ===
-															  "early-elementary-b-picture-book"
-															? "Complete supplied teaching,practice,case inputs and briefs;original Gabby Tries text remains unavailable."
-															: "complete course reading and assignment view",
+															  "early-elementary-a-reading"
+															? "Complete on-site explanations and briefs; the ten named reading texts remain unavailable."
+															: id ===
+																  "early-elementary-b-picture-book"
+																? "Complete supplied teaching,practice,case inputs and briefs;original Gabby Tries text remains unavailable."
+																: "complete course reading and assignment view",
 						internalModules: course.modules
 							.filter(module => module.internal)
 							.map(module => ({
