@@ -14,14 +14,41 @@ Choose a mechanism for A: one fixed Page configuration; B: a renderer chosen fro
 
 ## Selection answers
 
-| Case | Smallest useful choice under the given assumptions | Test and cost                                                                                                              |
-| ---- | -------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| A    | Direct Page constructor                            | Compare its components/rendered text; positional options can become less clear as their number grows.                      |
-| B    | Named static factory with the fixed switch         | Both enum choices render correctly and null is rejected; adding a choice edits this selection boundary.                    |
-| C    | Factory Method in the existing creator workflow    | Subclass hook called once and chosen product used; inheritance adds navigation and couples the subclass to the creator.    |
-| D    | Injected Abstract Factory for Heading and BodyLine | Both families render correctly and a mixed pair is refused; more product interfaces and implementations must agree.        |
-| E    | Fluent configuration Builder                       | Defaults, invalid options and independent built values; a mutable builder and duplicated construction API add maintenance. |
-| F    | Injected Supplier or a simpler direct collaborator | Exactly one get call and the agreed null/cache behavior; the caller must state semantics beyond the Supplier interface.    |
+### Case A
+
+**Choice:** Direct Page constructor
+
+**Test and cost:** Compare its components/rendered text; positional options can become less clear as their number grows.
+
+### Case B
+
+**Choice:** Named static factory with the fixed switch
+
+**Test and cost:** Both enum choices render correctly and null is rejected; adding a choice edits this selection boundary.
+
+### Case C
+
+**Choice:** Factory Method in the existing creator workflow
+
+**Test and cost:** Subclass hook called once and chosen product used; inheritance adds navigation and couples the subclass to the creator.
+
+### Case D
+
+**Choice:** Injected Abstract Factory for Heading and BodyLine
+
+**Test and cost:** Both families render correctly and a mixed pair is refused; more product interfaces and implementations must agree.
+
+### Case E
+
+**Choice:** Fluent configuration Builder
+
+**Test and cost:** Defaults, invalid options and independent built values; a mutable builder and duplicated construction API add maintenance.
+
+### Case F
+
+**Choice:** Injected Supplier or a simpler direct collaborator
+
+**Test and cost:** Exactly one get call and the agreed null/cache behavior; the caller must state semantics beyond the Supplier interface.
 
 Equivalent designs can be justified by different explicit assumptions. A builder does not select a product family merely because it has fluent methods. A static create method does not become Factory Method merely because of its name.
 
@@ -39,14 +66,53 @@ Use six rows: constructor, named static factory, Supplier injection, Factory Met
 
 ## Matrix answers
 
-| Mechanism            | Decision and owner                                      | Contract/test                                                                  | Cost                                                     |
-| -------------------- | ------------------------------------------------------- | ------------------------------------------------------------------------------ | -------------------------------------------------------- |
-| Constructor          | Caller chooses concrete valid value                     | Page rejects null title/body; fixed values render as promised                  | Caller names the class and supplies positional arguments |
-| Named static factory | Static method names/selects creation                    | Label.named preserves text; RendererFactory checks both styles and null        | Shared selection point changes for new fixed choices     |
-| Supplier injection   | Caller supplies creation or retrieval function          | Cached Label is permitted; supplied calls get once and rejects null            | Freshness/null semantics need explicit agreement         |
-| Factory Method       | Creator subclass chooses product inside stable workflow | Null report fails before hook; hook called once; null product fails            | Inheritance and creator/product collaboration            |
-| Abstract Factory     | Injected family chooses several related products        | Heading and BodyLine styles agree; both plain/boxed text cases pass            | Related product APIs and compatibility tests             |
-| Fluent Builder       | Caller names optional configuration steps               | PLAIN/false/empty defaults; bad footer rejected; old job unchanged after reuse | Mutable builder and extra methods                        |
+### Constructor
+
+**Decision and owner:** Caller chooses concrete valid value
+
+**Contract and test:** Page rejects null title/body; fixed values render as promised
+
+**Cost:** Caller names the class and supplies positional arguments
+
+### Named static factory
+
+**Decision and owner:** Static method names/selects creation
+
+**Contract and test:** Label.named preserves text; RendererFactory checks both styles and null
+
+**Cost:** Shared selection point changes for new fixed choices
+
+### Supplier injection
+
+**Decision and owner:** Caller supplies creation or retrieval function
+
+**Contract and test:** Cached Label is permitted; supplied calls get once and rejects null
+
+**Cost:** Freshness/null semantics need explicit agreement
+
+### Factory Method
+
+**Decision and owner:** Creator subclass chooses product inside stable workflow
+
+**Contract and test:** Null report fails before hook; hook called once; null product fails
+
+**Cost:** Inheritance and creator/product collaboration
+
+### Abstract Factory
+
+**Decision and owner:** Injected family chooses several related products
+
+**Contract and test:** Heading and BodyLine styles agree; both plain/boxed text cases pass
+
+**Cost:** Related product APIs and compatibility tests
+
+### Fluent Builder
+
+**Decision and owner:** Caller names optional configuration steps
+
+**Contract and test:** PLAIN/false/empty defaults; bad footer rejected; old job unchanged after reuse
+
+**Cost:** Mutable builder and extra methods
 
 The simplest fixed Page case uses its constructor. A test-only retrieval seam can use a Supplier without a new creator hierarchy. A cached supplier returning the same immutable object is valid when the consumer permits it.
 
