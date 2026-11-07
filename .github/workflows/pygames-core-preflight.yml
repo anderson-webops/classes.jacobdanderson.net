@@ -174,7 +174,6 @@ jobs:
           test/pygames-course-workflows.spec.test.ts
           test/store.courses.python-pygames-classroom.spec.test.ts
           test/store.courses.catalog-identities.spec.test.ts
-          test/java-recursion-workspace.spec.test.ts test/store.courses.java-level-3-flow.spec.test.ts
           --no-file-parallelism --maxWorkers=1
       - name: Build the complete site
         run: node scripts/classes-family-heavy-task.mjs -- npm run build
@@ -422,6 +421,7 @@ jobs:
           node scripts/classes-family-heavy-task.mjs --
           npm exec -w front-end -- vitest run
           test/store.courses.catalog-identities.spec.test.ts
+          test/java-recursion-workspace.spec.test.ts test/store.courses.java-level-3-flow.spec.test.ts
           test/store.courses.self-study-browser-manifest.spec.test.ts
           test/store.courses.middle-school-integrated-science-flow.spec.test.ts
           test/store.courses.elementary-science-flow.spec.test.ts test/store.courses.intro-biology-flow.spec.test.ts
