@@ -5,6 +5,7 @@ import { createPinia, setActivePinia } from "pinia";
 import { useAppStore } from "@/stores/app";
 import { useCoursesStore } from "@/stores/courses";
 import { middleSchoolScienceGuidance } from "@/stores/courses/middleSchoolScienceGuidance";
+import { middleSchoolScienceReferences } from "@/stores/courses/middleSchoolScienceReferences";
 import { completeMiddleSchoolScienceActivity } from "./middleSchoolScienceReview";
 import { describe, expect, it } from "vitest";
 import { loadRawCourse } from "@/stores/courses/index";
@@ -338,7 +339,54 @@ describe("Middle School Integrated Science learner flow", () => {
 					}
 				}
 			}
-			expect(compared).toBe(180);
+			for (const stage of [raw, final]) {
+				for (const [title, entries] of Object.entries(
+					middleSchoolScienceReferences
+				)) {
+					const module = stage.modules.find(
+						candidate => candidate.title === title
+					)!;
+					expect(module.kind).toBe("appendix");
+					const items = [
+						...module.curriculum,
+						...module.supplementalProjects
+					];
+					expect(items).toHaveLength(Object.keys(entries).length);
+					for (const item of items) {
+						const practice =
+							/^(?:Practice Project|Resource Project|Integrated Science Project):/.test(
+								item.title
+							);
+						expect(
+							item.content.startsWith(entries[item.title]),
+							item.title
+						).toBe(true);
+						expect(item.contentKind, item.title).toBe(
+							practice ? "assignment" : "reading"
+						);
+						expect(item.preserveInstructions, item.title).toBe(
+							true
+						);
+						expect(item.preserveAssignment, item.title).toBe(true);
+						expect(item.content, item.title).not.toMatch(
+							/each module cites|modules need|course is ready|needs a clearer project target/i
+						);
+						if (practice) {
+							expect(item.content, item.title).toContain(
+								"[Case inputs]("
+							);
+							expect(item.content, item.title).toContain(
+								"[Project self-check]("
+							);
+						} else
+							expect(item.content, item.title).toBe(
+								entries[item.title]
+							);
+						compared++;
+					}
+				}
+			}
+			expect(compared).toBe(246);
 		}
 	);
 

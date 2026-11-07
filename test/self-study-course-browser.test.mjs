@@ -37,7 +37,7 @@ const courseIds = [
 	"geometry-b",
 	"middle-school-integrated-science"
 ];
-const readingCounts = [22,19,19,20,8,13,15,31,10,13,14,16,20,14,9,4,27,22,37,38,11,6,11,41];
+const readingCounts = [22,19,19,20,8,13,15,31,10,13,14,16,20,14,9,4,27,22,37,38,11,6,11,65];
 assert.equal(readingCounts.length, courseIds.length);
 const requestedCourses = process.env.SELF_STUDY_BROWSER_COURSES;
 const sourceMode = process.env.SELF_STUDY_BROWSER_SOURCE_MODE ?? "build";
@@ -697,7 +697,7 @@ test(
 								});
 							}
 							assert.equal(writes, 0);
-							if (id === "middle-school-integrated-science") assert.equal(resourceViews.length, 98);
+							if (id === "middle-school-integrated-science") assert.equal(resourceViews.length, 117);
 							if (id === "pre-algebra-a") assert.equal(resourceViews.length, 23);
 							if (id === "geometry-a") assert.equal(resourceViews.length, 17);
 							if (id === "geometry-b") assert.equal(resourceViews.length, 13);

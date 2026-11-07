@@ -57,7 +57,7 @@ const cases = [
 	{
 		id: "middle-school-integrated-science",
 		source: middleSchoolIntegratedScienceCourse,
-		readings: 41,
+		readings: 65,
 		additions: []
 	},
 	{
@@ -370,7 +370,7 @@ it.each(
 			const selfChecks = fullBlocks
 				? [
 						...item.content.matchAll(
-							/\[(Check answers and reasoning|Project self-check|Case inputs)\]\(([^)]+)\)/g
+							/\[(Check answers and reasoning|Project self-check|Case inputs|Runoff inputs)\]\(([^)]+)\)/g
 						)
 					].map(([, label, href]) => {
 						const url = new URL(href, "https://example.invalid");
@@ -522,7 +522,6 @@ it.each(
 						algebra ||
 						algebra1 ||
 						[
-							"middle-school-integrated-science",
 							"early-elementary-a-math",
 							"early-elementary-b-math",
 							"late-elementary-a-math",
@@ -603,7 +602,15 @@ it.each(
 				);
 			else if (id === "middle-school-integrated-science")
 				expect(module.readings).toHaveLength(
-					module.title.startsWith("MS9 ") ? 5 : 4
+					module.kind === "appendix"
+						? ["Standards Map", "Course Roadmap"].includes(
+								module.title
+							)
+							? 6
+							: 4
+						: module.title.startsWith("MS9 ")
+							? 5
+							: 4
 				);
 			else if (!algebra && !algebra1)
 				expect(module.readings, module.title).toHaveLength(1);
@@ -640,7 +647,7 @@ it.each(
 						modules,
 						reviewScope:
 							id === "middle-school-integrated-science"
-								? "Complete ten authored teaching units, investigations, supplied inputs and responses; five reference appendices retain their published identities and navigation."
+								? "Complete ten teaching units and five reference appendices:65readings,58complete optional/required activities and117input/response views per role/width profile;all123published identities retained."
 								: id === "early-elementary-a-reading"
 									? "Complete on-site explanations and briefs; the ten named reading texts remain unavailable."
 									: id === "early-elementary-b-picture-book"
