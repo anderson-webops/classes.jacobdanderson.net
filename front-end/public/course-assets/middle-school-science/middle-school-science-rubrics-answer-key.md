@@ -61,6 +61,8 @@ A decision can favor different options under different criteria. A complete reco
 
 The seven-day sequence shows falling pressure and rising humidity before the largest precipitation on day 4, then rising pressure and drying conditions. This supports a bounded forecast discussion, not a climate conclusion.
 
+The baseline decades have mean anomaly (−0.3 + 0.0 + 0.3) / 3 = 0.0 °C, consistent with the stated equal weighting. The 2011–2020 average is 14.0 + 0.7 = 14.7 °C. The first-to-last change is 0.7 − (−0.6) = 1.3 °C; shifting the reference average changes anomaly values while preserving this difference. The missing year could bias the earliest average if that year differed from the nine observed years, and its effect cannot be calculated from the supplied table.
+
 The fictional temperature anomaly increases across the five decadal periods. That is detection evidence for the supplied region. Attribution requires independent evidence about drivers, mechanisms, competing explanations, and model agreement. A single storm cannot confirm or refute a long-term climate trend.
 
 Plate-tectonic support becomes stronger when independent evidence converges:

@@ -1,3 +1,4 @@
+import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
@@ -75,6 +76,48 @@ function markdownHeadingSlugs(markdown: string) {
 }
 
 describe("Middle School Integrated Science learner flow", () => {
+	it("reconciles fictional climate anomalies with their stated baseline", () => {
+		const source = fs.readFileSync(
+			path.resolve(
+				process.cwd(),
+				"public/course-assets/middle-school-science/middle-school-science-materials-pack.md"
+			),
+			"utf8"
+		);
+		const section = source
+			.split("### Fictional regional climate series\n")[1]
+			.split("### Climate claim ladder cards")[0];
+		const [, start, end] = section.match(/(\d{4})–(\d{4}) baseline/);
+		const rows = [
+			...section.matchAll(
+				/^\| (\d{4})–(\d{4})\s*\|\s*(-?\d+\.\d+) °C\s*\|\s*\d+ mm\s*\|\s*(\d+) of (\d+) \|/gm
+			)
+		].map(([, first, last, anomaly, count, total]) => ({
+			first: +first,
+			last: +last,
+			anomaly: +anomaly,
+			count: +count,
+			total: +total
+		}));
+		assert.equal(rows.length, 5);
+		const baseline = rows.filter(
+			row => row.first >= +start && row.last <= +end
+		);
+		assert.equal(baseline.length, 3);
+		assert.equal(
+			baseline.reduce((years, row) => years + row.total, 0),
+			+end - +start + 1
+		);
+		assert.ok(baseline.every(row => row.count === row.total));
+		const mean =
+			baseline.reduce((sum, row) => sum + row.anomaly * row.count, 0) /
+			baseline.reduce((sum, row) => sum + row.count, 0);
+		assert.ok(
+			Math.abs(mean) < 1e-12,
+			`The stated reference period must average to zero; got ${mean} °C.`
+		);
+	});
+
 	it("preserves the ten-module sequence and twenty distinctive projects", () => {
 		expect(
 			middleSchoolIntegratedScienceCourse.modules.map(

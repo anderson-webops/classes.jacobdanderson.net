@@ -203,15 +203,17 @@ The sequence supports weather description and bounded forecasting. It cannot est
 
 ### Fictional regional climate series
 
-Temperature values are anomalies relative to a stated 1981–2010 baseline.
+A temperature anomaly is the period's average temperature minus the average for a reference period. This fictional series uses a 1981–2010 baseline of 14.0 °C, with the same station and equal weighting of each complete year. An average of 13.4 °C therefore has an anomaly of 13.4 − 14.0 = −0.6 °C. A negative anomaly means cooler than the baseline, rather than below freezing. [NASA's anomaly definition](https://data.giss.nasa.gov/gistemp/maps/index.html) uses the same subtraction; the values below are instructional data.
 
 | Period    | Mean temperature anomaly | Annual precipitation | Complete station years |
 | --------- | -----------------------: | -------------------: | ---------------------: |
-| 1971–1980 |                  -0.4 °C |               812 mm |                9 of 10 |
-| 1981–1990 |                  -0.1 °C |               825 mm |               10 of 10 |
-| 1991–2000 |                   0.2 °C |               819 mm |               10 of 10 |
-| 2001–2010 |                   0.5 °C |               838 mm |               10 of 10 |
-| 2011–2020 |                   0.9 °C |               844 mm |               10 of 10 |
+| 1971–1980 |                  -0.6 °C |               812 mm |                9 of 10 |
+| 1981–1990 |                  -0.3 °C |               825 mm |               10 of 10 |
+| 1991–2000 |                   0.0 °C |               819 mm |               10 of 10 |
+| 2001–2010 |                   0.3 °C |               838 mm |               10 of 10 |
+| 2011–2020 |                   0.7 °C |               844 mm |               10 of 10 |
+
+Calculate the mean anomaly across the three baseline decades, the average temperature for 2011–2020, and the temperature change between the first and last periods. Explain how the missing year limits the earliest period's comparison.
 
 The series supports trend detection in the fictional region. Attribution requires additional evidence about possible drivers and mechanisms.
 
