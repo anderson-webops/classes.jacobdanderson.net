@@ -176,7 +176,9 @@ describe("Design Patterns in Java learner flow", () => {
 		expect(foundations).toContain("sealed interface");
 		expect(foundations).toContain("enum");
 		expect(foundations).toContain("lambdas");
-		expect(behavior).toContain("functional interface or method reference");
+		expect(behavior).toContain("functional interface");
+		expect(behavior).toContain("lambda");
+		expect(behavior).toContain("method reference");
 		expect(architecture).toContain("ServiceLoader");
 		expect(architecture).toContain("META-INF/services");
 		expect(architecture).toContain("zero, one, and multiple providers");

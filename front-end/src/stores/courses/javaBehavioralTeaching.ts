@@ -40,7 +40,7 @@ export function completeJavaBehavioral(
 
 ### Who owns the decision?
 
-Strategy packages an interchangeable algorithm behind an interface. The caller selects the rule, and the context delegates without knowing its implementation. TextRule has one operation, apply, so a lambda or method reference can implement a small stateless rule. Rules.Prefix is a named object with a configured prefix. A class is useful when named configuration, dependencies or lifecycle deserve their own boundary.
+Strategy packages an interchangeable algorithm behind an interface. The caller selects the rule, and the context delegates without knowing its implementation. TextRule is a functional interface with one abstract operation, apply. A lambda or method reference can implement that operation for a small stateless rule. Rules.Prefix is a named object with a configured prefix. A class is useful when named configuration, dependencies or lifecycle deserve their own boundary.
 
 State delegates behavior to the current state object. An operation can move its context to another state, changing later permitted behavior. Document owns its current phase; callers request submit, approve or revise through Document. They do not select or install the next private state directly.
 
