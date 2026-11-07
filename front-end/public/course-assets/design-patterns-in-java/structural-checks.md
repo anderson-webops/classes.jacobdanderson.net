@@ -55,7 +55,7 @@ Compare Emphasis around a Sequence of Plain a and Upper b against a Sequence of 
 
 ## Transfer answers
 
-Emphasis(Sequence(...)) renders _[a,B]_. Sequence(Emphasis(...),Emphasis(...)) renders [_a_,_B_]. READY placements render ready@1 and ready@2 and share the Word reference in one pool. Another pool can return an equal ready Word with different identity. At row10 raises IllegalArgumentException before rendering. LazyNode retains one successfully loaded product; its mutable output may vary without loading again. Word is intrinsic, row is extrinsic. Direct enum/string values can be simpler if sharing carries no useful benefit.
+Emphasis(Sequence(...)) renders `*[a,B]*`. Sequence(Emphasis(...),Emphasis(...)) renders `[*a*,*B*]`. READY placements render ready@1 and ready@2 and share the Word reference in one pool. Another pool can return an equal ready Word with different identity. At row10 raises IllegalArgumentException before rendering. LazyNode retains one successfully loaded product; its mutable output may vary without loading again. Word is intrinsic, row is extrinsic. Direct enum/string values can be simpler if sharing carries no useful benefit.
 
 ## Extension inputs
 
