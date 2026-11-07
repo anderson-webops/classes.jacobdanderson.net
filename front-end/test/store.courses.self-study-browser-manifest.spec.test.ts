@@ -67,7 +67,10 @@ function isReviewedModule(id: string, title: string) {
 			? [
 					"DPJ1 What Patterns Are and What They Are Not",
 					"DPJ2 Java Design Foundations",
-					"DPJ3 Creational Patterns I"
+					"DPJ3 Creational Patterns I",
+					"DPJ4 Creational Patterns II and Boundary Patterns",
+					"DPJ5 Structural Patterns in Depth",
+					"DPJ6 Behavioral Patterns I"
 				].includes(title)
 			: true;
 }
@@ -75,7 +78,7 @@ const cases = [
 	{
 		id: "design-patterns-in-java",
 		source: designPatternsInJavaCourse,
-		readings: 3,
+		readings: 6,
 		additions: []
 	},
 	{
@@ -839,7 +842,10 @@ it.each(
 										...(id === "design-patterns-in-java"
 											? [
 													"design-patterns-in-java-dpj2-java-design-foundations",
-													"design-patterns-in-java-dpj3-creational-patterns-i"
+													"design-patterns-in-java-dpj3-creational-patterns-i",
+													"design-patterns-in-java-dpj4-creational-patterns-ii-and-boundary-patterns",
+													"design-patterns-in-java-dpj5-structural-patterns-in-depth",
+													"design-patterns-in-java-dpj6-behavioral-patterns-i"
 												]
 											: [])
 									]
@@ -847,7 +853,7 @@ it.each(
 							: {}),
 						reviewScope:
 							id === "design-patterns-in-java"
-								? "DPJ1 through DPJ3 only: three complete readings, sixteen core activities, nine optional tasks and fifty case/answer views per profile. All 134 published identities checked; later units remain outside this teaching/runtime acceptance."
+								? "DPJ1 through DPJ6 only: six complete readings, every core/optional activity and linked input/answer case in those units. All 134 published identities checked; later units remain outside this teaching/runtime acceptance."
 								: id === "java-level-3"
 									? "AJ4 only: one reading, two core projects, three optional tasks and ten input/response views per profile. All 217 course identities checked; other Java units are outside this teaching and runtime acceptance."
 									: id === "intro-to-environmental-science"

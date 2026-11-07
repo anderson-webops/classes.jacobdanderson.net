@@ -98,11 +98,11 @@ describe("Design Patterns in Java learner flow", () => {
 			module => module.supplementalProjects.map(item => item.title)
 		);
 
-		expect(curriculumTitles).toHaveLength(79);
+		expect(curriculumTitles).toHaveLength(70);
 		expect(optionTitles).toHaveLength(51);
 		for (const title of [
 			"Core Project: What Patterns Are and What They Are Not",
-			"DPJ5 Structural Patterns in Depth: Core Project",
+			"Core Project: Structural Patterns in Depth",
 			"DPJ10 Capstone Refactor: Core Project",
 			"Strategy Selection Refactor: Core Project",
 			"Structural Wrapper Refactor: Core Project",
@@ -112,9 +112,7 @@ describe("Design Patterns in Java learner flow", () => {
 			"Architecture Judgment Capstone Extension Practice"
 		]) {
 			const collection =
-				title.includes("DPJ") ||
-				title ===
-					"Core Project: What Patterns Are and What They Are Not"
+				title.includes("DPJ") || title.startsWith("Core Project:")
 					? curriculumTitles
 					: optionTitles;
 			expect(collection, title).toContain(title);
@@ -178,7 +176,9 @@ describe("Design Patterns in Java learner flow", () => {
 		expect(foundations).toContain("sealed interface");
 		expect(foundations).toContain("enum");
 		expect(foundations).toContain("lambdas");
-		expect(behavior).toContain("functional interface or method reference");
+		expect(behavior).toContain("functional interface");
+		expect(behavior).toContain("lambda");
+		expect(behavior).toContain("method reference");
 		expect(architecture).toContain("ServiceLoader");
 		expect(architecture).toContain("META-INF/services");
 		expect(architecture).toContain("zero, one, and multiple providers");

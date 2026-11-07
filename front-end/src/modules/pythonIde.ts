@@ -19,9 +19,17 @@ import {
 	loadGitHubProjectFile,
 	parseGitHubResource
 } from "@/modules/codePreview";
-
 import { courseReferenceExamples } from "@/modules/courseReferenceExamples";
 import { cppStarterCode, cppWorkspaceReadme } from "@/modules/cppIdeSource";
+import {
+	javaBehavioralImportFiles,
+	javaBehavioralResource
+} from "@/modules/javaBehavioralResources";
+
+import {
+	javaBoundaryImportFiles,
+	javaBoundaryResource
+} from "@/modules/javaBoundaryResources";
 import {
 	javaCreationalImportFiles,
 	javaCreationalResource
@@ -42,6 +50,10 @@ import {
 	javascriptCourseResource,
 	loadJavaScriptCourseFiles
 } from "@/modules/javascriptCourseResources";
+import {
+	javaStructuralImportFiles,
+	javaStructuralResource
+} from "@/modules/javaStructuralResources";
 import { linuxStarterCode, linuxStarterFiles } from "@/modules/linuxIdeSource";
 import {
 	isLinuxProjectTextPath,
@@ -3245,14 +3257,20 @@ export async function loadPythonIdeStarterFilesFromGitHub(
 			(javaRecursionResource(starterUrl) !== null ||
 				javaPatternsResource(starterUrl) !== null ||
 				javaFoundationsResource(starterUrl) !== null ||
-				javaCreationalResource(starterUrl) !== null))
+				javaCreationalResource(starterUrl) !== null ||
+				javaBoundaryResource(starterUrl) !== null ||
+				javaStructuralResource(starterUrl) !== null ||
+				javaBehavioralResource(starterUrl) !== null))
 	) {
 		const selected =
 			mode === "java"
 				? (javaRecursionImportFiles(starterUrl) ??
 					javaPatternsImportFiles(starterUrl) ??
 					javaFoundationsImportFiles(starterUrl) ??
-					javaCreationalImportFiles(starterUrl))
+					javaCreationalImportFiles(starterUrl) ??
+					javaBoundaryImportFiles(starterUrl) ??
+					javaStructuralImportFiles(starterUrl) ??
+					javaBehavioralImportFiles(starterUrl))
 				: mode === "swift"
 					? swiftImportFiles(starterUrl)
 					: mode === "web"
