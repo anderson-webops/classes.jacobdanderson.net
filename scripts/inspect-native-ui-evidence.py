@@ -15,7 +15,7 @@ def select_failed_result(bundle):
     """Select one failed profile from a known, immutable native course archive."""
     names = bundle.namelist()
     assert len(names) == len(set(names)), "Duplicate archive members"
-    courses = {"tracker", "gallery", "hobby", "map", "capstone"}
+    courses = {"tracker", "swiftdata", "gallery", "hobby", "map", "capstone"}
     proofs = [course + "/proof.json" for course in courses
               if course + "/proof.json" in names]
     assert len(proofs) == 1, "One known course proof is required"
@@ -40,7 +40,7 @@ def select_failed_result(bundle):
         "result": result,
         "selected": selected,
         "failure": failure,
-        "testId": ("TrackerUITests/testTrackerWorkflow()" if course == "tracker"
+        "testId": ("TrackerUITests/testTrackerWorkflow()" if course in {"tracker", "swiftdata"}
                    else "CanonicalCourseUITests/testCourseWorkflow()"),
     }
 
