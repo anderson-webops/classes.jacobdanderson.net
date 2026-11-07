@@ -455,10 +455,15 @@ it.each(
 		}
 		const card = (item: CourseModuleItem) => {
 			const focusedJavaTask =
-				(id === "java-level-3" &&
-					item.id.startsWith("java-level-3-aj4-recursion-")) ||
-				(id === "design-patterns-in-java" &&
-					/^design-patterns-in-java-dpj[12]-/.test(item.id));
+				["java-level-3", "design-patterns-in-java"].includes(id) &&
+				course.modules.some(
+					module =>
+						isReviewedModule(id, module.title) &&
+						[
+							...module.curriculum,
+							...module.supplementalProjects
+						].some(row => row.id === item.id)
+				);
 			const completeAssignment =
 				focusedJavaTask ||
 				[
@@ -533,6 +538,7 @@ it.each(
 						};
 					})
 				: [];
+			if (focusedJavaTask) expect(selfChecks, item.id).toHaveLength(2);
 			// These authored labels become separate headings in assignment cards.
 			// Keep every body word while matching the displayed heading punctuation.
 			let fullAssignment = fullBlocks
