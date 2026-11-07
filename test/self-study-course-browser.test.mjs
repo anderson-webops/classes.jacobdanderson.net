@@ -39,8 +39,9 @@ const courseIds = [
 ];
 const readingCounts = [22,19,19,20,8,13,15,31,10,13,14,16,20,14,9,4,27,22,37,38,11,6,11,65];
 assert.equal(readingCounts.length, courseIds.length);
-// These focused scopes review two foundation units, not either whole course.
+// Reading counts for explicitly selected teaching scopes.
 const focusedReadingCounts = {
+	"elementary-science": 8,
  "python-level-1": 1,
  "python-level-1-classroom": 1
 };

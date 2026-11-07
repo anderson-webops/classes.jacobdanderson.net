@@ -131,6 +131,16 @@ For each card, distinguish the supplied change, a predicted direct effect, a pos
 
 This short series supports weather description, graphing, and a bounded forecast discussion. It is not long enough to establish climate.
 
+### Fictional Day 8 forecast
+
+This model forecast is issued after Day 7 for the same fictional location during Day 8.
+
+| Predicted daily high | Chance of measurable rain | Wind speed | Sky |
+| --- | --- | --- | --- |
+| 18 °C | 60% | 18 km/h | mostly cloudy |
+
+The rain chance describes uncertainty about rain at that location during the stated day. It is separate from the measured rain amounts in the seven-day table. A planning statement can say “the fictional outdoor poster needs a rain cover”; it remains a response to a forecast rather than an observed rain event.
+
 ### Water journey cards
 
 - ocean or lake — pool;
@@ -144,6 +154,19 @@ This short series supports weather description, graphing, and a bounded forecast
 - runoff — flow;
 - infiltration — flow;
 - transpiration — flow through plants to atmosphere.
+
+### Text water-cycle diagram
+
+Ocean or lake → evaporation → water vapor in air → condensation → cloud droplets → precipitation → soil surface.
+
+From the soil surface, two possible routes are:
+
+- runoff → river → ocean;
+- infiltration → groundwater → spring → river → ocean.
+
+A plant branch is soil water → root uptake → plant → transpiration → water vapor in air. Sunlight supplies much evaporation energy; gravity moves falling and downhill water. These arrows describe possible routes, not a required order for every drop.
+
+The supplied human-use branch is groundwater → pump → irrigation → soil or plant. Some water can then infiltrate, run off or leave through transpiration. The diagram leaves the amount withdrawn and local environmental effects unspecified, so it cannot establish whether the withdrawal is sustainable.
 
 ### Earth-change sort
 
@@ -172,6 +195,12 @@ Ratings are fictional and use 1 for low and 5 for high.
 | rubber sheet        |           5 |                5 |            1 |        3 |          1 |             3 |
 
 No material is best without a job, criteria, and constraints.
+
+### Design cases
+
+- **Viewing cover:** water resistance and transparency must each be at least 4; relative mass must be at most 2. Compare clear plastic, cloth and aluminum. These are model-rating limits.
+- **Absorbent wipe:** absorbency must be at least 4. Compare the same three materials; the cover's preferred material need not win this new job.
+- **Changed condition:** the cover now also needs flexibility of at least 4. The previous clear-plastic choice has flexibility 3. Identify that failed criterion, then explain why the supplied table has no material satisfying all four requirements. Revise a requirement or propose a new material to test; do not invent a passing measurement.
 
 ### State and change cards
 
@@ -218,6 +247,21 @@ In the simplified final intervals, unchanged speed can coexist with balanced hor
 
 These qualitative ratings demonstrate a tradeoff. They are not measurements of total work or efficiency.
 
+### Six machine object cards
+
+| Described object | Machine type | Mechanism and job |
+| --- | --- | --- |
+| sloping path to a raised platform | inclined plane or ramp | moves the load along a longer path while raising it |
+| bar resting on a pivot beneath a box | lever | turns around the pivot to lift the box |
+| rope passing over one fixed overhead wheel | fixed pulley | changes the direction of the pull; this single fixed pulley does not multiply force |
+| cart wheel rigidly attached to its axle | wheel and axle | the connected parts turn together |
+| triangular doorstop pressed into a gap | wedge | sloping faces hold or separate surfaces |
+| threaded jar lid | screw | a thread converts turning into motion along the thread's axis |
+
+### Box-lift design and failure case
+
+Use the method table for the same model box and lift height. The maximum allowed force rating is 3 and the maximum effort distance is 3 units. A lever also requires a stable pivot. First compare the four methods under those limits. Then use this new test result: **the available lever pivot shifts and the box does not reach the target**. Preserve that failed test and choose an alternative supported by the table. This is a paper design case, not a lifting experiment.
+
 ## Light Sound and Signal Cases
 
 ### Light path cards
@@ -229,15 +273,40 @@ These qualitative ratings demonstrate a tradeoff. They are not measurements of t
 
 Every diagram includes a source, interaction, path, and receiver. Eyes receive light; they do not send seeing rays.
 
+### Light-path repair and shadow case
+
+The intentionally incorrect diagram is **eye → book → lamp**. Repair the arrows for a lamp-lit book seen by an eye.
+
+In this fictional straight-ray model, the point light stays at position 0 and the receiving screen stays at position 4. One unit-high opaque object moves along the same line; its centre stays on the light-to-screen axis.
+
+| Case | Object position | Shadow height on fixed screen |
+| --- | --- | --- |
+| A | 1 | 4 units |
+| B | 2 | 2 units |
+
+The object closer to the source gives the larger shadow in this model. The comparison changes object position while holding the source, screen and object size fixed. A real extended light source can also produce partly lit shadow edges, which this point-source model omits.
+
 ### Sound event table
 
 | Case           | Vibrating source | Medium        | Receiver evidence            | Comparison limit               |
 | -------------- | ---------------- | ------------- | ---------------------------- | ------------------------------ |
-| drum clip      | drumhead         | air           | microphone waveform          | video volume setting varies    |
-| ruler model    | flexible strip   | air and table | motion frames and waveform   | physical ruler is not required |
-| bell animation | bell surface     | air           | transcript and event markers | animation simplifies shape     |
+| drum description | drumhead | air | drumhead moves repeatedly around a middle position | source/path description only |
+| ruler model | flexible strip | air and table | strip bends back and forth in the supplied description | source/path description only |
+| bell description | bell surface | air | bell surface vibrates and transfers a disturbance to nearby air | source/path description only |
 
-Pitch and loudness are compared separately. Audio is optional because the waveform, transcript, and event markers provide the same evidence route.
+These descriptions identify source and medium. The comparable vibration table below supplies the evidence for the separate pitch and loudness comparison.
+
+### Comparable vibration data
+
+These supplied fictional measurements replace any need to obtain a clip or waveform. Source type, receiver distance and playback setting are held constant. Frequency counts full vibrations per second. Amplitude rating compares the size of the vibration; it is a model rating, not a decibel measurement or a hearing test.
+
+| Case | Vibrations per second | Amplitude rating |
+| --- | --- | --- |
+| A | 200 | 1 |
+| B | 400 | 1 |
+| C | 200 | 2 |
+
+Compare A with B to change frequency while holding amplitude fixed. Compare A with C to change amplitude while holding frequency fixed. Greater frequency predicts higher pitch; under these controlled model conditions greater amplitude predicts greater loudness.
 
 ### Signal reliability cases
 
@@ -248,20 +317,47 @@ Pitch and loudness are compared separately. Audio is optional because the wavefo
 | hand wave         | ready            | blocked view       | add shared symbol card or text      |
 | icon sequence     | route change     | ambiguous icons    | add legend and confirmation step    |
 
+### Signal test record
+
+The message is **return to base**. The original code is three short beeps. The revised code keeps the beeps and adds the word **RETURN** on a screen. “Received” means the supplied receiver identified that exact message.
+
+| Test condition | Original beeps | Revised beeps plus text |
+| --- | --- | --- |
+| quiet, screen visible | received | received |
+| loud background noise, screen visible | missed | received through text |
+| loud background noise, screen obscured | missed | missed |
+
+The criterion is correct receipt in the first two stated conditions; the constraint is use of the supplied speaker and text screen. The revised design meets that criterion but still fails the obscured-screen condition. A proposed additional route needs its own test; a proposal is not a recorded success.
+
 ## Sky Pattern and Planet Model Cards
 
 ### Day-night sequence
 
-Four cards show one location at sunrise, midday, sunset, and night. The Earth-rotation model uses a lamp symbol for the Sun and a marked point on a globe diagram. The model represents changing illumination as Earth rotates; it omits scale, orbital motion during one day, atmosphere, and the Sun's enormous size and distance.
+The Earth-rotation model keeps a light source fixed and follows one marked surface point. These are eight supplied text observations in a simplified 12-hour daylight model, not local sunrise predictions.
 
-### Fictionalized comparison table using rounded instructional values
+| Model time | Day 1 description | Day 2 description |
+| --- | --- | --- |
+| 06:00 | marked point turns into light; sunrise | marked point turns into light; sunrise |
+| 12:00 | marked point faces the source; midday | marked point faces the source; midday |
+| 18:00 | marked point turns away from light; sunset | marked point turns away from light; sunset |
+| 24:00 | marked point is on the dark side; night | marked point is on the dark side; night |
 
-| Object  | Diameter relative to Earth | Distance from Sun in AU | Length of year in Earth years | Surface or atmosphere note                    |
-| ------- | -------------------------: | ----------------------: | ----------------------------: | --------------------------------------------- |
-| Earth   |                       1.00 |                    1.00 |                          1.00 | rocky surface, nitrogen-oxygen atmosphere     |
-| Mars    |                       0.53 |                    1.52 |                          1.88 | rocky surface, thin carbon-dioxide atmosphere |
-| Jupiter |                       11.2 |                    5.20 |                         11.86 | gas giant with no solid outer surface         |
-| Moon    |                       0.27 |         Earth satellite |  0.075 for orbit around Earth | rocky, extremely thin exosphere               |
+The repetition is explained by rotation. The model omits the actual effects of latitude, season and atmosphere, as well as size and distance scale and Earth's orbital motion during a day.
+
+### Moon phase descriptions
+
+Sunlight illuminates about half the Moon. In the new-Moon alignment the lit half mostly faces away from the Earth observer; at first quarter about half the visible disk is lit; at full Moon the visible disk is almost entirely lit; at last quarter about half is lit again from the other side. These descriptions sequence a changing view over a cycle of about 29.5 days. Ordinary phases are not produced by Earth's shadow; a lunar eclipse requires a separate alignment.
+
+### Comparison table using rounded instructional values
+
+| Object | Diameter relative to Earth | Approximate distance from Sun in AU | Orbit around | Orbital period in Earth years | Surface or atmosphere note |
+| --- | ---: | ---: | --- | ---: | --- |
+| Earth | 1.00 | 1.00 | Sun | 1.00 | rocky surface, nitrogen-oxygen atmosphere |
+| Mars | 0.53 | 1.52 | Sun | 1.88 | rocky surface, thin carbon-dioxide atmosphere |
+| Jupiter | 11.2 | 5.20 | Sun | 11.86 | gas giant with no solid outer surface |
+| Moon | 0.27 | about 1.00 with Earth | Earth | 0.075 | rocky, extremely thin exosphere |
+
+One AU is approximately the average Earth–Sun distance. The period column uses the central body named in “Orbit around.” The Moon's 0.075-Earth-year period is around Earth; its distance column still refers to the Sun. Do not interpret that value as the Moon's year around the Sun or confuse it with the 29.5-day phase cycle.
 
 Use NASA Space Place for age-appropriate source reading before replacing rounded values. A card may preserve property comparisons but cannot preserve both planetary sizes and interplanetary distances on one ordinary page.
 
@@ -290,3 +386,21 @@ Choose one supplied phenomenon from this pack or one teacher-approved source.
 12. Answer: What evidence would change this explanation or design?
 
 No physical build is required. A drawing, storyboard, simulation state, or paper/browser model can provide the plan-test-improve evidence.
+
+### Worked capstone evidence record
+
+- **Question:** Does adding text improve the return-to-base signal under the supplied quiet and noisy conditions?
+- **First design:** three beeps; it succeeds in quiet and fails in noise.
+- **Revision:** beeps plus RETURN text; it succeeds in both conditions when the screen is visible.
+- **Evidence:** the two corresponding rows in the signal test record.
+- **Reasoning:** text preserves the code's meaning when noise blocks the sound route.
+- **Limit:** the revised design still fails when noise blocks sound and the screen is obscured.
+- **Optional continuation:** preserve this artifact, add one changed condition or new route, and compare the additional result with the original. A new route remains a proposal until evidence tests it.
+
+### References
+
+- [NOAA weather probability glossary](https://www.noaa.gov/jetstream/appendix/weather-glossary-p)
+- [USGS water-cycle diagrams](https://www.usgs.gov/special-topics/water-science-school/science/water-cycle-diagrams)
+- [National Park Service sound explanation](https://www.nps.gov/subjects/sound/understandingsound.htm)
+- [NASA Moon phases](https://science.nasa.gov/moon/moon-phases/)
+- [NASA Solar System learning resources](https://spaceplace.nasa.gov/menu/solar-system/)

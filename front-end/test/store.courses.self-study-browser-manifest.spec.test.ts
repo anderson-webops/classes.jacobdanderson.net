@@ -35,6 +35,7 @@ import { physicsLevel2Course } from "@/stores/courses/physics-level-2";
 import { geometryACourse } from "@/stores/courses/geometry-a";
 import { geometryBCourse } from "@/stores/courses/geometry-b";
 import { middleSchoolIntegratedScienceCourse } from "@/stores/courses/middle-school-integrated-science";
+import { elementaryScienceCourse } from "@/stores/courses/elementary-science";
 import { preAlgebraACourse } from "@/stores/courses/pre-algebra-a";
 import {
 	earlyElementaryMathACourse,
@@ -54,6 +55,12 @@ import {
 } from "@/stores/courses/source-library-courses";
 
 const cases = [
+	{
+		id: "elementary-science",
+		source: elementaryScienceCourse,
+		readings: 8,
+		additions: []
+	},
 	{
 		id: "middle-school-integrated-science",
 		source: middleSchoolIntegratedScienceCourse,
@@ -347,11 +354,13 @@ it.each(
 		}
 		const card = (item: CourseModuleItem) => {
 			const completeAssignment = [
+				"elementary-science",
 				"middle-school-integrated-science",
 				"early-elementary-a-reading",
 				"early-elementary-b-picture-book"
 			].includes(id);
 			const fullBlocks = [
+				"elementary-science",
 				"middle-school-integrated-science",
 				"early-elementary-a-math",
 				"early-elementary-b-math",
@@ -478,7 +487,9 @@ it.each(
 			);
 			if (
 				completeAssignment &&
-				id !== "middle-school-integrated-science"
+				!["middle-school-integrated-science", "elementary-science"].includes(
+					id
+				)
 			) {
 				const completion = item.content.split(
 					"**Completion evidence:**"
@@ -522,6 +533,7 @@ it.each(
 						algebra ||
 						algebra1 ||
 						[
+							"elementary-science",
 							"early-elementary-a-math",
 							"early-elementary-b-math",
 							"late-elementary-a-math",
@@ -646,7 +658,9 @@ it.each(
 						sourceProjects: sourceProjects.length,
 						modules,
 						reviewScope:
-							id === "middle-school-integrated-science"
+							id === "elementary-science"
+								? "Eight teaching units:8readings,48coreactivities and16optionalprojects;all111published identities checked. Six reference appendices retain separate final review."
+								: id === "middle-school-integrated-science"
 								? "Complete ten teaching units and five reference appendices:65readings,58complete optional/required activities and117input/response views per role/width profile;all123published identities retained."
 								: id === "early-elementary-a-reading"
 									? "Complete on-site explanations and briefs; the ten named reading texts remain unavailable."

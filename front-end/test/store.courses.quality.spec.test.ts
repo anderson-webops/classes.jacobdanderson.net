@@ -19,7 +19,10 @@ import { lateElementaryAMaterials } from "@/stores/courses/lateElementaryAMateri
 import { lateElementaryBMaterials } from "@/stores/courses/lateElementaryBMaterials";
 import { joyOfReadingGuidance } from "@/stores/courses/joyOfReadingGuidance";
 import { pictureBookGuidance } from "@/stores/courses/pictureBookGuidance";
-import { completeMiddleSchoolScienceActivity } from "./middleSchoolScienceReview";
+import {
+	completeMiddleSchoolScienceActivity,
+	completeElementaryScienceActivity
+} from "./middleSchoolScienceReview";
 import { pictureBookTaskInputs } from "@/stores/courses/pictureBookTaskInputs";
 import {
 	pyGamesCoreResource,
@@ -235,6 +238,7 @@ function wordCount(text: string) {
 }
 
 const authoredReadingCounts: Record<string, number> = {
+	"elementary-science": 8,
 	"entrepreneurship-101": 10,
 	"middle-school-a-literature": 13,
 	"middle-school-b-writing": 14,
@@ -5853,6 +5857,11 @@ describe("course text quality normalization", () => {
 								)
 								.filter(
 									item =>
+										!completeElementaryScienceActivity(
+											entry.id,
+											module,
+											item
+										) &&
 										!completeMiddleSchoolScienceActivity(
 											entry.id,
 											module,
@@ -5955,6 +5964,7 @@ describe("course text quality normalization", () => {
 							!completeSpeakingPractice(id, module, item) &&
 							!completePhysicsPractice(id, module, item) &&
 							!completeElementaryPractice(id, module, item) &&
+							!completeElementaryScienceActivity(id, module, item) &&
 							!completeMiddleSchoolScienceActivity(
 								id,
 								module,
