@@ -25,11 +25,15 @@ import {
 	javaBehavioralImportFiles,
 	javaBehavioralResource
 } from "@/modules/javaBehavioralResources";
-
 import {
 	javaBoundaryImportFiles,
 	javaBoundaryResource
 } from "@/modules/javaBoundaryResources";
+
+import {
+	javaCollaborationImportFiles,
+	javaCollaborationResource
+} from "@/modules/javaCollaborationResources";
 import {
 	javaCreationalImportFiles,
 	javaCreationalResource
@@ -3260,7 +3264,8 @@ export async function loadPythonIdeStarterFilesFromGitHub(
 				javaCreationalResource(starterUrl) !== null ||
 				javaBoundaryResource(starterUrl) !== null ||
 				javaStructuralResource(starterUrl) !== null ||
-				javaBehavioralResource(starterUrl) !== null))
+				javaBehavioralResource(starterUrl) !== null ||
+				javaCollaborationResource(starterUrl) !== null))
 	) {
 		const selected =
 			mode === "java"
@@ -3270,7 +3275,8 @@ export async function loadPythonIdeStarterFilesFromGitHub(
 					javaCreationalImportFiles(starterUrl) ??
 					javaBoundaryImportFiles(starterUrl) ??
 					javaStructuralImportFiles(starterUrl) ??
-					javaBehavioralImportFiles(starterUrl))
+					javaBehavioralImportFiles(starterUrl) ??
+					javaCollaborationImportFiles(starterUrl))
 				: mode === "swift"
 					? swiftImportFiles(starterUrl)
 					: mode === "web"
