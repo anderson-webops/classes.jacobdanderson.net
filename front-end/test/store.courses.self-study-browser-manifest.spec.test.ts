@@ -334,6 +334,28 @@ it.each(
 			expect(identities.filter(item => item.id === added.id)).toEqual([
 				added
 			]);
+		if (id === "intro-to-chemistry") {
+			for (const rawModule of source.modules) {
+				const displayedModule = course.modules.find(
+					module => module.title === rawModule.title
+				)!;
+				expect(displayedModule, rawModule.title).toBeDefined();
+				for (const section of [
+					"curriculum",
+					"supplementalProjects"
+				] as const) {
+					for (const rawItem of rawModule[section]) {
+						const displayed = displayedModule[section].find(
+							item => item.title === rawItem.title
+						)!;
+						expect(displayed, rawItem.title).toBeDefined();
+						expect(displayed.content, rawItem.title).toBe(
+							rawItem.content.trim()
+						);
+					}
+				}
+			}
+		}
 		const sourceProjects = source.modules
 			.flatMap(module => [
 				...module.curriculum,
@@ -597,7 +619,9 @@ it.each(
 								? 10
 								: id === "elementary-science"
 									? 8
-									: count
+									: id === "intro-to-chemistry"
+										? 11
+										: count
 			);
 		for (const module of modules) {
 			if (id === "geometry-a")
