@@ -115,8 +115,9 @@ for (const example of examples) {
 							await page.$eval("button.run-control", button =>
 								button.textContent.trim()
 							),
-							"Build instructions"
+							"Run"
 						);
+						assert.equal(await page.$(".stdin-panel"), null);
 						return;
 					}
 					await page.waitForFunction(() =>
