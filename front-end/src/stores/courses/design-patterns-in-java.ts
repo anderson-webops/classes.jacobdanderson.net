@@ -1,3 +1,4 @@
+import { completeJavaFoundations } from "./javaFoundationsTeaching";
 import type { RawCourse, RawCourseModuleItem } from "./types";
 import { buildImplementationLabGuidance } from "./implementationLabGuidance";
 import { completeJavaPatternsOpening } from "./javaPatternsOpeningTeaching";
@@ -1617,7 +1618,8 @@ const designPatternsJavaPrimaryModules =
 	designPatternsInJavaSourceCourse.modules
 		.filter(module => DESIGN_PATTERNS_JAVA_PRIMARY_TITLES.has(module.title))
 		.map(decorateDesignPatternsJavaModule)
-		.map(completeJavaPatternsOpening);
+		.map(completeJavaPatternsOpening)
+		.map(completeJavaFoundations);
 const designPatternsJavaStudios =
 	designPatternsInJavaSourceCourse.modules.filter(
 		module => !DESIGN_PATTERNS_JAVA_PRIMARY_TITLES.has(module.title)

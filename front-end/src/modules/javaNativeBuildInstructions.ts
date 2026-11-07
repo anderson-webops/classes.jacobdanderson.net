@@ -1,4 +1,8 @@
 import {
+	javaFoundationsReadingID,
+	javaFoundationsCoreID
+} from "./javaFoundationsResources";
+import {
 	javaPatternsExtensionID,
 	javaPatternsPricingID,
 	javaPatternsReadingID
@@ -127,6 +131,30 @@ export function javaNativeBuildInstructions(
 ): string[] | null {
 	const parts = (courseProjectKey ?? "").split(":");
 	const [course, item, role, extra] = parts;
+	if (
+		course === "design-patterns-in-java" &&
+		[javaFoundationsReadingID, javaFoundationsCoreID].includes(
+			item ?? ""
+		) &&
+		["starter", "reference"].includes(role ?? "") &&
+		parts.length === 4 &&
+		extra === "native-java-foundations"
+	) {
+		return [
+			"Java 21 packaged foundations workflow",
+			"Save and download the ZIP, extract it, and use a terminal in its project root. Keep sources.txt and the src package tree intact.",
+			"javac --release 21 -Xlint:all -Werror -d classes @sources.txt",
+			"java -cp classes ContractTests core",
+			"java -cp classes Main",
+			"java -cp classes ContractTests",
+			"Complete the three core methods first. Core checks report 649 passed, and Main prints Weekly report, Ready, Checked on separate lines. The complete harness additionally checks the optional uppercase-title method and reports 654 passed.",
+			role === "starter"
+				? "The untouched starter compiles, then reports a named UnsupportedOperationException. An unfinished optional extension must leave completed core work usable."
+				: "The reference supplies complete core and optional methods. Package arrows and the refactoring explanation remain separate completion evidence.",
+			"These programs read no standard input. Run displays native build instructions; the full compiler and contract checks run in Java 21."
+		];
+	}
+
 	if (
 		course === "design-patterns-in-java" &&
 		[

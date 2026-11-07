@@ -64,14 +64,17 @@ function isReviewedModule(id: string, title: string) {
 	return id === "java-level-3"
 		? title === "AJ4 Recursion"
 		: id === "design-patterns-in-java"
-			? title === "DPJ1 What Patterns Are and What They Are Not"
+			? [
+					"DPJ1 What Patterns Are and What They Are Not",
+					"DPJ2 Java Design Foundations"
+				].includes(title)
 			: true;
 }
 const cases = [
 	{
 		id: "design-patterns-in-java",
 		source: designPatternsInJavaCourse,
-		readings: 1,
+		readings: 2,
 		additions: []
 	},
 	{
@@ -450,13 +453,13 @@ it.each(
 				expect(displayedPrompt, project.title).toBe(originalPrompt);
 		}
 		const card = (item: CourseModuleItem) => {
-			const javaRecursionTask =
+			const focusedJavaTask =
 				(id === "java-level-3" &&
 					item.id.startsWith("java-level-3-aj4-recursion-")) ||
 				(id === "design-patterns-in-java" &&
-					item.id.startsWith("design-patterns-in-java-dpj1-"));
+					/^design-patterns-in-java-dpj[12]-/.test(item.id));
 			const completeAssignment =
-				javaRecursionTask ||
+				focusedJavaTask ||
 				[
 					"intro-to-environmental-science",
 					"elementary-science",
@@ -467,7 +470,7 @@ it.each(
 					"early-elementary-b-picture-book"
 				].includes(id);
 			const fullBlocks =
-				javaRecursionTask ||
+				focusedJavaTask ||
 				[
 					"intro-to-environmental-science",
 					"elementary-science",
@@ -825,13 +828,18 @@ it.each(
 									reviewedModuleIds: [
 										id === "java-level-3"
 											? "java-level-3-aj4-recursion"
-											: "design-patterns-in-java-dpj1-what-patterns-are-and-what-they-are-not"
+											: "design-patterns-in-java-dpj1-what-patterns-are-and-what-they-are-not",
+										...(id === "design-patterns-in-java"
+											? [
+													"design-patterns-in-java-dpj2-java-design-foundations"
+												]
+											: [])
 									]
 								}
 							: {}),
 						reviewScope:
 							id === "design-patterns-in-java"
-								? "DPJ1 opening only: one reading, five core activities, three optional tasks and sixteen case/answer views per profile. All published course identities checked; later units remain outside this teaching/runtime acceptance."
+								? "DPJ1 and DPJ2 only: two complete readings, eleven core activities, six optional tasks and thirty-four case/answer views per profile. All134published identities checked; later units remain outside this teaching/runtime acceptance."
 								: id === "java-level-3"
 									? "AJ4 only: one reading, two core projects, three optional tasks and ten input/response views per profile. All 217 course identities checked; other Java units are outside this teaching and runtime acceptance."
 									: id === "intro-to-environmental-science"
