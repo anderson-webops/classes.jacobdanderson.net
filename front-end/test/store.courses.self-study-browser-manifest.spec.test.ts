@@ -37,6 +37,7 @@ import { geometryBCourse } from "@/stores/courses/geometry-b";
 import { middleSchoolIntegratedScienceCourse } from "@/stores/courses/middle-school-integrated-science";
 import { introToBiologyCourse } from "@/stores/courses/intro-to-biology";
 import { introToChemistryCourse } from "@/stores/courses/intro-to-chemistry";
+import { introToEnvironmentalScienceCourse } from "@/stores/courses/intro-to-environmental-science";
 import { elementaryScienceCourse } from "@/stores/courses/elementary-science";
 import { preAlgebraACourse } from "@/stores/courses/pre-algebra-a";
 import {
@@ -57,6 +58,12 @@ import {
 } from "@/stores/courses/source-library-courses";
 
 const cases = [
+	{
+		id: "intro-to-environmental-science",
+		source: introToEnvironmentalScienceCourse,
+		readings: 27,
+		additions: []
+	},
 	{
 		id: "intro-to-chemistry",
 		source: introToChemistryCourse,
@@ -237,6 +244,16 @@ const chemistryModuleCounts: Record<string, [number, number, number]> = {
 	CHM11: [5, 2, 3],
 	Reference: [5, 0, 2]
 };
+const environmentalModuleCounts: Record<string, [number, number, number]> = {
+	ES1: [3, 3, 3],
+	ES2: [4, 2, 3],
+	ES3: [3, 2, 3],
+	ES4: [4, 2, 3],
+	ES5: [4, 2, 3],
+	ES6: [3, 2, 3],
+	ES7: [3, 2, 3],
+	ES8: [3, 2, 3]
+};
 const intentionalMathLineBreaks: Record<string, Record<string, number>> = {
 	"algebra-2a": {
 		"Applications and Parabola Geometry": 1,
@@ -348,7 +365,11 @@ it.each(
 			expect(identities.filter(item => item.id === added.id)).toEqual([
 				added
 			]);
-		if (id === "intro-to-chemistry") {
+		if (
+			["intro-to-chemistry", "intro-to-environmental-science"].includes(
+				id
+			)
+		) {
 			for (const rawModule of source.modules) {
 				const displayedModule = course.modules.find(
 					module => module.title === rawModule.title
@@ -407,6 +428,7 @@ it.each(
 		}
 		const card = (item: CourseModuleItem) => {
 			const completeAssignment = [
+				"intro-to-environmental-science",
 				"elementary-science",
 				"intro-to-biology",
 				"intro-to-chemistry",
@@ -415,6 +437,7 @@ it.each(
 				"early-elementary-b-picture-book"
 			].includes(id);
 			const fullBlocks = [
+				"intro-to-environmental-science",
 				"elementary-science",
 				"intro-to-biology",
 				"intro-to-chemistry",
@@ -548,6 +571,7 @@ it.each(
 					"middle-school-integrated-science",
 					"elementary-science",
 					"intro-to-biology",
+					"intro-to-environmental-science",
 					"intro-to-chemistry"
 				].includes(id)
 			) {
@@ -634,7 +658,10 @@ it.each(
 							? 17
 							: id === "middle-school-integrated-science"
 								? 10
-								: id === "elementary-science"
+								: [
+											"elementary-science",
+											"intro-to-environmental-science"
+									  ].includes(id)
 									? 8
 									: id === "intro-to-chemistry"
 										? 11
@@ -697,9 +724,17 @@ it.each(
 							? 5
 							: 4
 				);
-			else if (id === "intro-to-chemistry") {
-				const expected =
-					chemistryModuleCounts[module.title.split(" ")[0]];
+			else if (
+				[
+					"intro-to-chemistry",
+					"intro-to-environmental-science"
+				].includes(id)
+			) {
+				const expected = (
+					id === "intro-to-chemistry"
+						? chemistryModuleCounts
+						: environmentalModuleCounts
+				)[module.title.split(" ")[0]];
 				expect(expected, module.title).toBeDefined();
 				expect(
 					[
@@ -743,22 +778,24 @@ it.each(
 						sourceProjects: sourceProjects.length,
 						modules,
 						reviewScope:
-							id === "intro-to-chemistry"
-								? "Complete Chemistry teaching and tasks:62readings,14coreactivities,37optionalactivities and102input/response views per profile;all113published identities retained. Original video evidence remains distinct from authored text alternatives."
-								: id === "intro-to-biology"
-									? "Eight worked body-systems units:8readings,36coreactivities,24optionalprojects and120input/response views per profile;all68published identities retained. Original three legacy images remain separately identified."
-									: id === "elementary-science"
-										? "Eight teaching units and six reference appendices:36readings,48coreactivities,16optionalprojects and11optionalreferenceactivities;all111published identities checked."
-										: id ===
-											  "middle-school-integrated-science"
-											? "Complete ten teaching units and five reference appendices:65readings,58complete optional/required activities and117input/response views per role/width profile;all123published identities retained."
+							id === "intro-to-environmental-science"
+								? "Complete Environmental Science teaching and tasks:27readings,17coreactivities,24optionalactivities and82input/response views per profile;all68published identities retained. Original photosynthesis-image fidelity remains separate."
+								: id === "intro-to-chemistry"
+									? "Complete Chemistry teaching and tasks:62readings,14coreactivities,37optionalactivities and102input/response views per profile;all113published identities retained. Original video evidence remains distinct from authored text alternatives."
+									: id === "intro-to-biology"
+										? "Eight worked body-systems units:8readings,36coreactivities,24optionalprojects and120input/response views per profile;all68published identities retained. Original three legacy images remain separately identified."
+										: id === "elementary-science"
+											? "Eight teaching units and six reference appendices:36readings,48coreactivities,16optionalprojects and11optionalreferenceactivities;all111published identities checked."
 											: id ===
-												  "early-elementary-a-reading"
-												? "Complete on-site explanations and briefs; the ten named reading texts remain unavailable."
+												  "middle-school-integrated-science"
+												? "Complete ten teaching units and five reference appendices:65readings,58complete optional/required activities and117input/response views per role/width profile;all123published identities retained."
 												: id ===
-													  "early-elementary-b-picture-book"
-													? "Complete supplied teaching,practice,case inputs and briefs;original Gabby Tries text remains unavailable."
-													: "complete course reading and assignment view",
+													  "early-elementary-a-reading"
+													? "Complete on-site explanations and briefs; the ten named reading texts remain unavailable."
+													: id ===
+														  "early-elementary-b-picture-book"
+														? "Complete supplied teaching,practice,case inputs and briefs;original Gabby Tries text remains unavailable."
+														: "complete course reading and assignment view",
 						internalModules: course.modules
 							.filter(module => module.internal)
 							.map(module => ({
