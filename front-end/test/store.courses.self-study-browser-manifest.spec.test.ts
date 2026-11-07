@@ -851,7 +851,7 @@ it.each(
 							: {}),
 						reviewScope:
 							id === "design-patterns-in-java"
-								? "DPJ1 through DPJ5 only: five complete readings, twenty-five core activities, fifteen optional tasks and eighty case/answer views per profile. All 134 published identities checked; later units remain outside this teaching/runtime acceptance."
+								? "DPJ1 through DPJ5 only: five complete readings, every core/optional activity and linked input/answer case in those units. All 134 published identities checked; later units remain outside this teaching/runtime acceptance."
 								: id === "java-level-3"
 									? "AJ4 only: one reading, two core projects, three optional tasks and ten input/response views per profile. All 217 course identities checked; other Java units are outside this teaching and runtime acceptance."
 									: id === "intro-to-environmental-science"
