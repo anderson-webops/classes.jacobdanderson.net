@@ -19,6 +19,7 @@ import { lateElementaryAMaterials } from "@/stores/courses/lateElementaryAMateri
 import { lateElementaryBMaterials } from "@/stores/courses/lateElementaryBMaterials";
 import { joyOfReadingGuidance } from "@/stores/courses/joyOfReadingGuidance";
 import { pictureBookGuidance } from "@/stores/courses/pictureBookGuidance";
+import { completeMiddleSchoolScienceActivity } from "./middleSchoolScienceReview";
 import { pictureBookTaskInputs } from "@/stores/courses/pictureBookTaskInputs";
 import {
 	pyGamesCoreResource,
@@ -243,7 +244,8 @@ const authoredReadingCounts: Record<string, number> = {
 	"introduction-to-public-speaking": 9,
 	"scratch-level-1-bootcamp": 4,
 	"early-elementary-a-reading": 8,
-	"early-elementary-b-picture-book": 13
+	"early-elementary-b-picture-book": 13,
+	"middle-school-integrated-science": 41
 };
 
 const instructorActionPattern =
@@ -5808,7 +5810,9 @@ describe("course text quality normalization", () => {
 						)
 				)
 			);
-			expect(sources.size).toBe(10);
+			expect(sources.size).toBe(
+				Object.keys(authoredReadingCounts).length
+			);
 			const thinItems = (await loadedCatalogCourses()).flatMap(
 				({ course, entry }) =>
 					(course?.modules ?? [])
@@ -5827,6 +5831,11 @@ describe("course text quality normalization", () => {
 								)
 								.filter(
 									item =>
+										!completeMiddleSchoolScienceActivity(
+											entry.id,
+											module,
+											item
+										) &&
 										!completeSourceActivity(
 											sources.get(entry.id),
 											module,
@@ -5923,7 +5932,12 @@ describe("course text quality normalization", () => {
 							) &&
 							!completeSpeakingPractice(id, module, item) &&
 							!completePhysicsPractice(id, module, item) &&
-							!completeElementaryPractice(id, module, item);
+							!completeElementaryPractice(id, module, item) &&
+							!completeMiddleSchoolScienceActivity(
+								id,
+								module,
+								item
+							);
 
 						return shortWithoutReview
 							? [

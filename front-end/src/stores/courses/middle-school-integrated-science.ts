@@ -1,5 +1,6 @@
 import type { RawCourse, RawCourseModuleItem } from "./types";
 import { isPhetResourceUrl } from "../../modules/resourceUrls";
+import { middleSchoolScienceGuidance } from "./middleSchoolScienceGuidance";
 
 const middleSchoolIntegratedScienceSourceCourse: RawCourse = {
 	name: "Middle School Integrated Science",
@@ -62,12 +63,12 @@ const middleSchoolIntegratedScienceSourceCourse: RawCourse = {
 				{
 					title: "Organelles and Cell Jobs",
 					content:
-						"Cover the nucleus, cell membrane, cytoplasm, mitochondria, chloroplasts, cell wall, and vacuole. Keep the focus on the job of each structure and how cells meet life needs."
+						"The nucleus holds genetic material in the modeled plant and animal cells. The membrane regulates exchange, mitochondria participate in cellular energy transfer, and chloroplasts support photosynthesis. A wall provides support and a vacuole stores materials. These structures interact rather than acting as independent miniature organs."
 				},
 				{
 					title: "From Cells to Body Systems",
 					content:
-						"Connect cells, tissues, organs, and organ systems. Use the digestive, respiratory, circulatory, nervous, and muscular systems to show how specialized parts work together."
+						"Similar specialized cells form tissues; several tissues form an organ. Organ systems coordinate multiple organs. In the supplied runner case, digestion supplies nutrients, lungs exchange gases, blood transports materials, nervous signals coordinate responses, and muscles produce movement. Each system depends on the others."
 				},
 				{
 					title: "Guided Practice: System Interaction Case Study",
@@ -109,7 +110,7 @@ const middleSchoolIntegratedScienceSourceCourse: RawCourse = {
 				{
 					title: "Adaptations Are Population-Level Changes",
 					content:
-						"Clarify that individual organisms do not choose to evolve. Populations change over generations when inherited traits become more or less common."
+						"An adaptation is an inherited feature shaped by selection in a population's evolutionary history. Populations change across generations as inherited variants become more or less common. Individuals do not choose mutations or evolve a needed trait during their lives. A short-term individual response, such as a behavioral adjustment, is distinct from a change in inherited population frequencies."
 				},
 				{
 					title: "Guided Practice: Trait Data and Environmental Pressure",
@@ -151,7 +152,7 @@ const middleSchoolIntegratedScienceSourceCourse: RawCourse = {
 				{
 					title: "Biodiversity and Ecosystem Stability",
 					content:
-						"Connect biodiversity to resilience and ecosystem services. Use examples such as pollination, soil health, clean water, fisheries, and forests."
+						"Biodiversity includes variation among organisms and species. Resilience is a system's ability to retain or recover functions after disturbance. Different species can respond differently, so diverse communities may retain some functions when conditions change; diversity alone does not guarantee stability. Pollination, water filtration and soil processes are examples of ecosystem services that support human activity."
 				},
 				{
 					title: "Case Study: Human Impact and Tradeoffs",
@@ -188,12 +189,12 @@ const middleSchoolIntegratedScienceSourceCourse: RawCourse = {
 				{
 					title: "Weather, Air Masses, and Forecasting",
 					content:
-						"Cover temperature, pressure, humidity, fronts, wind, clouds, and precipitation. Use maps and forecasts to show how meteorologists infer future conditions from current data."
+						"An air mass has broadly similar temperature and moisture properties, and a front is a boundary between air masses. Air-pressure differences help drive wind. Clouds form when water vapor condenses into droplets or ice; precipitation falls from clouds when particles grow sufficiently. Maps combine measurements to support forecasts, while incomplete observations and changing conditions create uncertainty."
 				},
 				{
 					title: "Climate Patterns and Climate Change",
 					content:
-						"Distinguish weather from climate and short-term variation from long-term trends. Use graphs of temperature, precipitation, or carbon dioxide and discuss evidence-based reasoning."
+						"Weather records individual conditions and events; climate summarizes patterns over longer periods. A trend describes change across an ordered series, while shorter variations can occur within it. Detecting a temperature trend requires comparable records and a defined interval. Explaining its cause additionally requires evidence about mechanisms and possible drivers."
 				},
 				{
 					title: "Data Practice: Reading Earth Science Graphs",
@@ -361,7 +362,7 @@ const middleSchoolIntegratedScienceSourceCourse: RawCourse = {
 				{
 					title: "Electricity and Circuits",
 					content:
-						"Charge, current, voltage, resistance, conductors, insulators, series circuits, and parallel circuits can be modeled with virtual circuit builders rather than physical components."
+						"Electric charge is a property of matter. Current measures charge flow per unit time, voltage measures energy difference per unit charge, and resistance describes opposition to current. Conductors allow charge to move more readily than insulators. A series circuit has one path, while parallel branches offer separate paths; the supplied circuit states show how opening one path changes the whole circuit."
 				},
 				{
 					title: "Magnetism and Electromagnetism",
@@ -408,7 +409,7 @@ const middleSchoolIntegratedScienceSourceCourse: RawCourse = {
 				{
 					title: "Capstone Studio: Research, Model, Explain, Revise",
 					content:
-						"Choose a question from life science, Earth science, physical science, or space science. Build a model or analysis, explain evidence, receive feedback, and revise the final presentation."
+						"Complete a science presentation using a question and records from the supplied case packs. Include the question, source log, raw evidence, a labeled model or data display, a claim, two specific evidence points, reasoning, an alternative, and a limitation. Retain the first version, make a substantive revision, and explain which evidence changed the work. Present the completed artifact with a text description of each visual; a proposal or outline alone does not complete this project."
 				}
 			],
 			supplementalProjects: [
@@ -420,7 +421,7 @@ const middleSchoolIntegratedScienceSourceCourse: RawCourse = {
 				{
 					title: "Project: Middle School Science Capstone",
 					content:
-						"Create a final science presentation with a question, background, data or evidence, model, explanation, limitation, and next question. The format can be slides, a written brief, or a recorded explanation."
+						"Extend the completed core science capstone by connecting a second science domain or comparing a competing engineering design. Add a new evidence display, explain what it changes, and defend one uncertainty or tradeoff. The extension can be slides, a written brief, or a recorded explanation with transcript."
 				}
 			]
 		}
@@ -696,7 +697,7 @@ const MIDDLE_SCHOOL_SCIENCE_FLOW: Record<string, MiddleSchoolScienceFlow> = {
 			"Capstone defense and revision"
 		],
 		phenomenon:
-			"Repeated sky observations, model snapshots, planetary data, and spectra support several explanations while revealing that no single diagram can preserve geometry, motion, size, distance, and time scale at once.",
+			"A supplied idealized phase sequence, two explicit Earth-Moon models, planetary data, and spectral evidence cards support explanations while showing that one diagram cannot preserve geometry, motion, size, distance, and time scale at once. The modeled sequence is labeled separately from measured sky observations.",
 		corePath:
 			"Use repeated evidence to explain day and night, Moon phases, seasons, and orbital motion; compare planetary properties with consistent units; and complete a source-based capstone.",
 		stretchPath:
@@ -1031,7 +1032,7 @@ const MIDDLE_SCHOOL_SCIENCE_ADDITIONS: Record<string, RawCourseModuleItem[]> = {
 		{
 			title: "Sky Pattern, Gravity, Orbit, and Scale-Model Gate",
 			content: [
-				"**Observation before model:** Sequence dated or timed sky observations, then use geometry and motion models to explain the pattern. Label viewpoint, light source, illuminated half, observer location, direction, and time step.",
+				"**Observation and model:** Analyze the supplied timed phase-model sequence and label it as modeled data. A real sky log is an optional comparison with recorded dates. Use geometry to explain the sequence, labeling viewpoint, light source, illuminated half, observer location, direction, and time step.",
 				"**Gravity and orbit:** Gravity continually changes an orbiting object's velocity direction. The object has tangential motion and inward acceleration; orbit does not mean gravity disappears.",
 				"**Scale honesty:** State whether a model preserves order, relative size, distance, period, direction, or geometry. A classroom page cannot usually preserve all of them, and decorative spacing does not become measured distance.",
 				"**Mastery check:** Correct Moon-phase and season misconceptions, compare two orbital models, quantify one supplied scale ratio, and name what each representation omits."
@@ -1104,8 +1105,27 @@ const MIDDLE_SCHOOL_SCIENCE_PROJECT_COMPLETION: Record<string, string> = {
 	"Project: Space Systems Model Critique":
 		"Core: compare what two supplied models represent, explain, distort, and omit for one space phenomenon. Stretch: add viewpoint, geometry, gravity, time, and quantitative scale analysis; correct a phase, season, or orbit misconception; and propose a better combined representation.",
 	"Project: Middle School Science Capstone":
-		"Core: include question, source log, data or model, claim, two evidence points, reasoning, limitation, and revision. Stretch: compare an alternative, quantify uncertainty or sensitivity, connect multiple science disciplines or engineering constraints, preserve before-and-after evidence, and defend what would change the conclusion."
+		"Core: extend the completed core capstone with a second science domain or competing design and a new evidence display. Stretch: quantify a sensitivity or uncertainty, compare the alternatives under a changed condition, and defend what would change the extended conclusion."
 };
+
+function middleSchoolScienceItemKind(title: string) {
+	return /^(?:Data Practice|Guided Practice|Case Study|Simulation Practice|Capstone Studio):/.test(
+		title
+	)
+		? ("assignment" as const)
+		: ("reading" as const);
+}
+
+function middleSchoolScienceTaskResources(
+	content: string,
+	flow: MiddleSchoolScienceFlow
+) {
+	const inputs = middleSchoolScienceMaterial(flow.materialSection);
+	const answers = middleSchoolScienceAnswerKey(flow.answerSection);
+	const viewer = (asset: string) =>
+		`/course-resource?asset=${encodeURIComponent(asset)}`;
+	return `${content}\n\n[Case inputs](${viewer(inputs)})\n\n[Project self-check](${viewer(answers)})`;
+}
 
 function middleSchoolScienceProjectPath(title: string) {
 	return /critique|case file|challenge|impact memo|capstone/i.test(title)
@@ -1117,30 +1137,26 @@ export const middleSchoolIntegratedScienceCourse: RawCourse = {
 	...middleSchoolIntegratedScienceSourceCourse,
 	modules: middleSchoolIntegratedScienceSourceCourse.modules.map(module => {
 		const flow = MIDDLE_SCHOOL_SCIENCE_FLOW[module.title];
+		const guidance = middleSchoolScienceGuidance.find(
+			unit => unit.module === module.title
+		);
+		if (!guidance)
+			throw new Error(`Missing science guidance: ${module.title}`);
 		const referenceIsMedia = isPhetResourceUrl(flow.referenceLink);
 		const curriculum = module.curriculum.map((item, index) => ({
 			...item,
-			content: [
+			content:
 				index === 0
-					? "**Teaching flow:** No specialized science equipment or required household experiments are needed; specialized science equipment or household experiments are not required for any core or stretch route. Begin with the supplied phenomenon, inspect evidence before vocabulary, complete the core route, and end by revising one claim, model, graph, or design decision."
-					: "",
-				item.content,
-				`**Supplied phenomenon:** ${flow.phenomenon}`,
-				`**Core route:** ${flow.corePath}`,
-				`**Stretch route:** ${flow.stretchPath}`,
-				`**Science explanation:** ${flow.evidenceGate}`,
-				`**Model and claim boundary:** ${flow.boundary}`,
-				`**Authoritative reference:** [Open the module reference](${flow.referenceLink}).`
-			]
-				.filter(Boolean)
-				.join("\n\n"),
+					? `**Method**\n\n${guidance.method}\n\n**Worked example**\n\n${guidance.worked}\n\n**Evidence check**\n\n${flow.evidenceGate}\n\n**Model limits**\n\n${flow.boundary}\n\n[Reference](${flow.referenceLink})`
+					: middleSchoolScienceItemKind(item.title) === "assignment"
+						? middleSchoolScienceTaskResources(item.content, flow)
+						: item.content,
+			contentKind: middleSchoolScienceItemKind(item.title),
+			preserveInstructions: true,
+			preserveAssignment: true,
 			datasetLink:
 				item.datasetLink ??
-				(index === 0
-					? referenceIsMedia
-						? middleSchoolScienceMaterial(flow.materialSection)
-						: flow.referenceLink
-					: middleSchoolScienceMaterial(flow.materialSection)),
+				middleSchoolScienceMaterial(flow.materialSection),
 			mediaLink:
 				item.mediaLink ??
 				(index === 0 && referenceIsMedia
@@ -1154,26 +1170,25 @@ export const middleSchoolIntegratedScienceCourse: RawCourse = {
 		const additions = MIDDLE_SCHOOL_SCIENCE_ADDITIONS[module.title].map(
 			item => ({
 				...item,
-				content: [
-					item.content,
-					`**Supplied phenomenon:** ${flow.phenomenon}`,
-					`**Core route:** ${flow.corePath}`,
-					`**Stretch route:** ${flow.stretchPath}`,
-					`**Science explanation:** ${flow.evidenceGate}`,
-					`**Model and claim boundary:** ${flow.boundary}`
-				].join("\n\n"),
+				content: middleSchoolScienceTaskResources(item.content, flow),
+				contentKind: "assignment" as const,
+				preserveInstructions: true,
+				preserveAssignment: true,
 				projectLink: item.projectLink ?? flow.referenceLink
 			})
 		);
 		const supplementalProjects = module.supplementalProjects.map(item => ({
 			...item,
-			content: [
-				item.content,
-				`**Supplied phenomenon:** ${flow.phenomenon}`,
-				`**Completion route:** ${MIDDLE_SCHOOL_SCIENCE_PROJECT_COMPLETION[item.title]}`,
-				`**Science explanation:** ${flow.evidenceGate}`,
-				`**Model and claim boundary:** ${flow.boundary}`
-			].join("\n\n"),
+			content: middleSchoolScienceTaskResources(
+				[
+					item.content,
+					`**Completion route:** ${MIDDLE_SCHOOL_SCIENCE_PROJECT_COMPLETION[item.title]}`
+				].join("\n\n"),
+				flow
+			),
+			contentKind: "assignment" as const,
+			preserveInstructions: true,
+			preserveAssignment: true,
 			datasetLink:
 				item.datasetLink ??
 				middleSchoolScienceMaterial(flow.materialSection),

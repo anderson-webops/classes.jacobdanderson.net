@@ -34,6 +34,7 @@ import { introToPhysicsCourse } from "@/stores/courses/intro-to-physics";
 import { physicsLevel2Course } from "@/stores/courses/physics-level-2";
 import { geometryACourse } from "@/stores/courses/geometry-a";
 import { geometryBCourse } from "@/stores/courses/geometry-b";
+import { middleSchoolIntegratedScienceCourse } from "@/stores/courses/middle-school-integrated-science";
 import { preAlgebraACourse } from "@/stores/courses/pre-algebra-a";
 import {
 	earlyElementaryMathACourse,
@@ -53,6 +54,12 @@ import {
 } from "@/stores/courses/source-library-courses";
 
 const cases = [
+	{
+		id: "middle-school-integrated-science",
+		source: middleSchoolIntegratedScienceCourse,
+		readings: 41,
+		additions: []
+	},
 	{
 		id: "early-elementary-b-picture-book",
 		source: earlyElementaryPictureBookCourse,
@@ -340,10 +347,12 @@ it.each(
 		}
 		const card = (item: CourseModuleItem) => {
 			const completeAssignment = [
+				"middle-school-integrated-science",
 				"early-elementary-a-reading",
 				"early-elementary-b-picture-book"
 			].includes(id);
 			const fullBlocks = [
+				"middle-school-integrated-science",
 				"early-elementary-a-math",
 				"early-elementary-b-math",
 				"late-elementary-a-math",
@@ -361,7 +370,7 @@ it.each(
 			const selfChecks = fullBlocks
 				? [
 						...item.content.matchAll(
-							/\[(Check answers and reasoning|Project self-check)\]\(([^)]+)\)/g
+							/\[(Check answers and reasoning|Project self-check|Case inputs)\]\(([^)]+)\)/g
 						)
 					].map(([, label, href]) => {
 						const url = new URL(href, "https://example.invalid");
@@ -467,7 +476,10 @@ it.each(
 									: ""))
 				)
 			);
-			if (completeAssignment) {
+			if (
+				completeAssignment &&
+				id !== "middle-school-integrated-science"
+			) {
 				const completion = item.content.split(
 					"**Completion evidence:**"
 				)[1];
@@ -510,6 +522,7 @@ it.each(
 						algebra ||
 						algebra1 ||
 						[
+							"middle-school-integrated-science",
 							"early-elementary-a-math",
 							"early-elementary-b-math",
 							"late-elementary-a-math",
@@ -549,7 +562,9 @@ it.each(
 						? 8
 						: ["intro-to-physics", "physics-level-2"].includes(id)
 							? 17
-							: count
+							: id === "middle-school-integrated-science"
+								? 10
+								: count
 			);
 		for (const module of modules) {
 			if (id === "geometry-a")
@@ -586,6 +601,10 @@ it.each(
 				expect(module.readings, module.title).toHaveLength(
 					module.title.startsWith("PHY8 ") ? 2 : 1
 				);
+			else if (id === "middle-school-integrated-science")
+				expect(module.readings).toHaveLength(
+					module.title.startsWith("MS9 ") ? 5 : 4
+				);
 			else if (!algebra && !algebra1)
 				expect(module.readings, module.title).toHaveLength(1);
 			else if (algebra && module.readings.length === 0)
@@ -620,11 +639,13 @@ it.each(
 						sourceProjects: sourceProjects.length,
 						modules,
 						reviewScope:
-							id === "early-elementary-a-reading"
-								? "Complete on-site explanations and briefs; the ten named reading texts remain unavailable."
-								: id === "early-elementary-b-picture-book"
-									? "Complete supplied teaching,practice,case inputs and briefs;original Gabby Tries text remains unavailable."
-									: "complete course reading and assignment view",
+							id === "middle-school-integrated-science"
+								? "Complete ten authored teaching units, investigations, supplied inputs and responses; five reference appendices retain their published identities and navigation."
+								: id === "early-elementary-a-reading"
+									? "Complete on-site explanations and briefs; the ten named reading texts remain unavailable."
+									: id === "early-elementary-b-picture-book"
+										? "Complete supplied teaching,practice,case inputs and briefs;original Gabby Tries text remains unavailable."
+										: "complete course reading and assignment view",
 						internalModules: course.modules
 							.filter(module => module.internal)
 							.map(module => ({
