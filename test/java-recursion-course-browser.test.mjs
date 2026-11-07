@@ -80,6 +80,7 @@ for (const example of examples) {
 					createdAt: "2026-10-01T12:00:00.000Z",
 					updatedAt: "2026-10-01T12:00:00.000Z"
 				}),
+				nativeInstructions: !worked,
 				flatFiles: true,
 				sharedFiles: worked
 					? ["Main.java", "ContractTests.java", "README.md"]

@@ -682,7 +682,7 @@ export async function runAssemblyCoreCourseWorkflow(t, definition) {
 						sameAttemptReused: true,
 						additionalSourceRequests: requests.length - before,
 						previousWorkPreserved: true,
-						nativeInstructions: true,
+						nativeInstructions: definition.nativeInstructions ?? true,
 						remoteWrites
 					});
 				}
