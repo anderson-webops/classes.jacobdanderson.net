@@ -74,7 +74,7 @@ with tempfile.TemporaryDirectory(prefix="java-foundations-exports-") as temporar
                         data=zipped.read(matches[0]);original=FIXTURE["files"][prefix+filename]
                         if variant=="exact":assert hashlib.sha256(data).hexdigest()==original["sha256"]
                         else:
-                            suffix=f"\n// Saved foundations trace {width}\n" if filename=="Main.java" else f"\nSaved foundations trace {width}\n" if filename=="README.md" else ""
+                            suffix=f"\n// Saved foundations trace {width}\n" if filename in ["src/report/domain/Report.java","src/report/adapters/TextFormatter.java","src/report/application/ReportPublisher.java"] else f"\nSaved foundations trace {width}\n" if filename=="README.md" else ""
                             assert data.decode()==original["content"]+suffix
                         path=output/filename;path.parent.mkdir(parents=True,exist_ok=True);path.write_bytes(data)
                 run([JAVAC,"--release","21","-Xlint:all","-Werror","-d","classes","@sources.txt"],cwd=output,check=True)

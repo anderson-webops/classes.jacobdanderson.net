@@ -80,6 +80,12 @@ test(
 			nativeInstructions: true,
 			flatFiles: true,
 			sharedFiles: [],
+			editFiles: [
+				"src/report/domain/Report.java",
+				"src/report/adapters/TextFormatter.java",
+				"src/report/application/ReportPublisher.java",
+				"README.md"
+			],
 			primaryFile: "Main.java",
 			taskFile: "README.md",
 			initialFile: "Main.java",
