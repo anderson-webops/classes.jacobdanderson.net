@@ -13,8 +13,8 @@ import {
 	c17ImportFiles
 } from "@/modules/c17ProjectResources";
 import { cStarterCode, cWorkspaceReadme } from "@/modules/cIdeSource";
-
 import { codeIdeAccountRequest } from "@/modules/codeIdeAccountScope";
+
 import {
 	listGitHubProjectFiles,
 	loadGitHubProjectFile,
@@ -22,6 +22,10 @@ import {
 } from "@/modules/codePreview";
 import { courseReferenceExamples } from "@/modules/courseReferenceExamples";
 import { cppStarterCode, cppWorkspaceReadme } from "@/modules/cppIdeSource";
+import {
+	javaRecursionImportFiles,
+	javaRecursionResource
+} from "@/modules/javaRecursionResources";
 import {
 	javascriptCourseResource,
 	loadJavaScriptCourseFiles
@@ -3224,21 +3228,24 @@ export async function loadPythonIdeStarterFilesFromGitHub(
 		mode === "rust" ||
 		mode === "c" ||
 		mode === "assembly" ||
-		mode === "linux"
+		mode === "linux" ||
+		(mode === "java" && javaRecursionResource(starterUrl) !== null)
 	) {
 		const selected =
-			mode === "swift"
-				? swiftImportFiles(starterUrl)
-				: mode === "web"
-					? webImportFiles(starterUrl)
-					: mode === "rust"
-						? rustImportFiles(starterUrl)
-						: mode === "linux"
-							? (linuxImportFiles(starterUrl) ??
-								networkImportFiles(starterUrl))
-							: mode === "assembly"
-								? assemblyImportFiles(starterUrl)
-								: c17ImportFiles(starterUrl);
+			mode === "java"
+				? javaRecursionImportFiles(starterUrl)
+				: mode === "swift"
+					? swiftImportFiles(starterUrl)
+					: mode === "web"
+						? webImportFiles(starterUrl)
+						: mode === "rust"
+							? rustImportFiles(starterUrl)
+							: mode === "linux"
+								? (linuxImportFiles(starterUrl) ??
+									networkImportFiles(starterUrl))
+								: mode === "assembly"
+									? assemblyImportFiles(starterUrl)
+									: c17ImportFiles(starterUrl);
 		if (!selected) {
 			throw new Error(
 				`${getPythonIdeModeLabel(mode)} source has no verified site import. Use its documented native workflow.`

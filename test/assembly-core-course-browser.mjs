@@ -20,6 +20,7 @@ export async function runAssemblyCoreCourseWorkflow(t, definition) {
 	);
 	const storageKey = "classes-python-ide-projects:anonymous";
 	const moduleID = definition.moduleID;
+	const pack = definition.pack ?? fixture.pack;
 	const coreID = definition.coreID;
 	const courseID = definition.courseID ?? "assembly";
 	const mode = definition.mode ?? "assembly";
@@ -322,7 +323,7 @@ export async function runAssemblyCoreCourseWorkflow(t, definition) {
 							}
 						}
 						else if (url.hostname === "raw.githubusercontent.com") {
-							const prefix = `/instruction-material/${sourceRepository}/${fixture.revision}/${fixture.pack}/`;
+							const prefix = `/instruction-material/${sourceRepository}/${fixture.revision}/${pack}/`;
 							const name = decodeURIComponent(
 								url.pathname.slice(prefix.length)
 							);
@@ -332,7 +333,7 @@ export async function runAssemblyCoreCourseWorkflow(t, definition) {
 										definition.sharedFiles ?? ["README.md"]
 									).includes(name)
 									|| name.startsWith(`${role}/`))
-									? fixture.files[`${fixture.pack}/${name}`]
+									? fixture.files[`${pack}/${name}`]
 									: null;
 							requests.push(name);
 							void request.respond({
@@ -398,7 +399,7 @@ export async function runAssemblyCoreCourseWorkflow(t, definition) {
 					assert.equal(params.get("mode"), mode);
 					assert.equal(
 						params.get("starterUrl"),
-						definition.sourceUrl?.(role) ?? `https://github.com/instruction-material/${sourceRepository}/tree/${fixture.revision}/${fixture.pack}/${role}`
+						definition.sourceUrl?.(role) ?? `https://github.com/instruction-material/${sourceRepository}/tree/${fixture.revision}/${pack}/${role}`
 					);
 					assert.equal(requests.length, 0);
 					catalog = false;
@@ -448,7 +449,7 @@ export async function runAssemblyCoreCourseWorkflow(t, definition) {
 						assert.equal(
 							digest(file.content),
 							(definition.expectedFile?.(role, file.name) ?? fixture.files[
-								`${fixture.pack}/${sourceFileName(file.name)}`
+								`${pack}/${sourceFileName(file.name)}`
 							]).sha256
 						);
 					}
@@ -456,29 +457,33 @@ export async function runAssemblyCoreCourseWorkflow(t, definition) {
 					const exact = await archive(page);
 					checkArchive(exact, saved.files);
 					await writeFile(join(output, `${name}-exact.zip`), exact);
-					await page
-						.locator("button.run-control:not([disabled])")
-						.click();
-					await page.waitForFunction(
-						token =>
-							document
-								.querySelector(".output-panel")
-								?.textContent
-								.includes(token),
-						{},
-						definition.readyToken
-					);
-					const instructions = await page.$eval(
-						".output-panel",
-						element => element.textContent
-					);
-					for (const token of [
-						...definition.instructionTokens,
-						role === "starter"
-							? definition.starterToken
-							: definition.referenceToken
-					])
-						assert.ok(instructions.includes(token), token);
+					if (definition.verifyRun) await definition.verifyRun(page, { role, width });
+					else {
+						await page
+							.locator("button.run-control:not([disabled])")
+							.click();
+						await page.waitForFunction(
+							token =>
+								document
+									.querySelector(".output-panel")
+									?.textContent
+									.includes(token),
+							{},
+							definition.readyToken
+						);
+						const instructions = await page.$eval(
+							".output-panel",
+							element => element.textContent
+						);
+						for (const token of [
+							...definition.instructionTokens,
+							role === "starter"
+								? definition.starterToken
+								: definition.referenceToken
+						])
+							assert.ok(instructions.includes(token), token);
+					}
+
 					if (width < 900) {
 						await page
 							.locator(
@@ -677,7 +682,7 @@ export async function runAssemblyCoreCourseWorkflow(t, definition) {
 						sameAttemptReused: true,
 						additionalSourceRequests: requests.length - before,
 						previousWorkPreserved: true,
-						nativeInstructions: true,
+						nativeInstructions: definition.nativeInstructions ?? true,
 						remoteWrites
 					});
 				}

@@ -1,0 +1,48 @@
+{
+  "curriculum": [
+    {
+      "title": "Recursion Core Concepts",
+      "id": "java-level-3-aj4-recursion-curriculum-recursion-core-concepts",
+      "aliases": [
+        "java-level-3-aj4-recursion-curriculum-core-concepts-and-learning-sequence",
+        "core-concepts",
+        "java-level-3-aj4-recursion-curriculum-core-concepts"
+      ]
+    },
+    {
+      "title": "AJ4 Project 1: Recursion Practice",
+      "id": "java-level-3-aj4-recursion-curriculum-aj4-project-1-recursion-practice"
+    },
+    {
+      "title": "AJ4 Project 2: Divisible by 7",
+      "id": "java-level-3-aj4-recursion-curriculum-aj4-project-2-divisible-by-7"
+    }
+  ],
+  "supplementalProjects": [
+    {
+      "title": "Extension Challenge: Recursion",
+      "id": "java-level-3-aj4-recursion-supplemental-extension-challenge-recursion",
+      "aliases": [
+        "java-level-3-aj4-recursion-supplemental-extension-challenge",
+        "recursion-extension-challenge",
+        "java-level-3-aj4-recursion-supplemental-recursion-extension-challenge"
+      ]
+    },
+    {
+      "title": "Recursive Trace Transfer Practice",
+      "id": "java-level-3-aj4-recursion-supplemental-recursive-trace-transfer-practice",
+      "aliases": [
+        "java-level-3-aj4-recursion-supplemental-transfer-practice",
+        "java-level-3-aj4-recursion-supplemental-transfer-practice-recursion"
+      ]
+    },
+    {
+      "title": "Recursive Backtracking Extension Practice",
+      "id": "java-level-3-aj4-recursion-supplemental-recursive-backtracking-extension-practice",
+      "aliases": [
+        "java-level-3-aj4-recursion-supplemental-extension-practice",
+        "java-level-3-aj4-recursion-supplemental-extension-practice-recursion"
+      ]
+    }
+  ]
+}

@@ -57,7 +57,15 @@ import {
 	scratchLevel1BootcampCourse
 } from "@/stores/courses/source-library-courses";
 
+import { javaLevel3Course } from "@/stores/courses/java-level-3";
+
 const cases = [
+	{
+		id: "java-level-3",
+		source: javaLevel3Course,
+		readings: 1,
+		additions: []
+	},
 	{
 		id: "intro-to-environmental-science",
 		source: introToEnvironmentalScienceCourse,
@@ -395,6 +403,10 @@ it.each(
 			}
 		}
 		const sourceProjects = source.modules
+			.filter(
+				module =>
+					id !== "java-level-3" || module.title === "AJ4 Recursion"
+			)
 			.flatMap(module => [
 				...module.curriculum,
 				...module.supplementalProjects
@@ -427,35 +439,42 @@ it.each(
 				expect(displayedPrompt, project.title).toBe(originalPrompt);
 		}
 		const card = (item: CourseModuleItem) => {
-			const completeAssignment = [
-				"intro-to-environmental-science",
-				"elementary-science",
-				"intro-to-biology",
-				"intro-to-chemistry",
-				"middle-school-integrated-science",
-				"early-elementary-a-reading",
-				"early-elementary-b-picture-book"
-			].includes(id);
-			const fullBlocks = [
-				"intro-to-environmental-science",
-				"elementary-science",
-				"intro-to-biology",
-				"intro-to-chemistry",
-				"middle-school-integrated-science",
-				"early-elementary-a-math",
-				"early-elementary-b-math",
-				"late-elementary-a-math",
-				"late-elementary-b-math",
-				"early-elementary-a-reading",
-				"early-elementary-b-picture-book",
-				"algebra-1a",
-				"algebra-1b",
-				"pre-algebra-a",
-				"geometry-a",
-				"geometry-b",
-				"algebra-2a",
-				"algebra-2b"
-			].includes(id);
+			const javaRecursionTask =
+				id === "java-level-3" &&
+				item.id.startsWith("java-level-3-aj4-recursion-");
+			const completeAssignment =
+				javaRecursionTask ||
+				[
+					"intro-to-environmental-science",
+					"elementary-science",
+					"intro-to-biology",
+					"intro-to-chemistry",
+					"middle-school-integrated-science",
+					"early-elementary-a-reading",
+					"early-elementary-b-picture-book"
+				].includes(id);
+			const fullBlocks =
+				javaRecursionTask ||
+				[
+					"intro-to-environmental-science",
+					"elementary-science",
+					"intro-to-biology",
+					"intro-to-chemistry",
+					"middle-school-integrated-science",
+					"early-elementary-a-math",
+					"early-elementary-b-math",
+					"late-elementary-a-math",
+					"late-elementary-b-math",
+					"early-elementary-a-reading",
+					"early-elementary-b-picture-book",
+					"algebra-1a",
+					"algebra-1b",
+					"pre-algebra-a",
+					"geometry-a",
+					"geometry-b",
+					"algebra-2a",
+					"algebra-2b"
+				].includes(id);
 			const selfChecks = fullBlocks
 				? [
 						...item.content.matchAll(
@@ -641,8 +660,17 @@ it.each(
 					.filter(item => !isLessonLearningItem(item))
 					.map(card)
 			}));
-		expect(modules.flatMap(module => module.readings)).toHaveLength(count);
-		if (algebra1)
+		expect(
+			modules
+				.filter(
+					module =>
+						id !== "java-level-3" ||
+						module.title === "AJ4 Recursion"
+				)
+				.flatMap(module => module.readings)
+		).toHaveLength(count);
+		if (id === "java-level-3") expect(modules).toHaveLength(25);
+		else if (algebra1)
 			expect(modules).toHaveLength(id === "algebra-1a" ? 21 : 25);
 		else if (algebra)
 			expect(modules).toHaveLength(id === "algebra-2a" ? 15 : 12);
@@ -668,6 +696,8 @@ it.each(
 										: count
 			);
 		for (const module of modules) {
+			if (id === "java-level-3" && module.title !== "AJ4 Recursion")
+				continue;
 			if (id === "geometry-a")
 				expect(module.readings, module.title).toHaveLength(
 					module.title.startsWith("Check-In")
@@ -777,25 +807,34 @@ it.each(
 						restoredIdentities: additions.length,
 						sourceProjects: sourceProjects.length,
 						modules,
+						...(id === "java-level-3"
+							? {
+									reviewedModuleIds: [
+										"java-level-3-aj4-recursion"
+									]
+								}
+							: {}),
 						reviewScope:
-							id === "intro-to-environmental-science"
-								? "Complete Environmental Science teaching and tasks:27readings,17coreactivities,24optionalactivities and82input/response views per profile;all68published identities retained. Original photosynthesis-image fidelity remains separate."
-								: id === "intro-to-chemistry"
-									? "Complete Chemistry teaching and tasks:62readings,14coreactivities,37optionalactivities and102input/response views per profile;all113published identities retained. Original video evidence remains distinct from authored text alternatives."
-									: id === "intro-to-biology"
-										? "Eight worked body-systems units:8readings,36coreactivities,24optionalprojects and120input/response views per profile;all68published identities retained. Original three legacy images remain separately identified."
-										: id === "elementary-science"
-											? "Eight teaching units and six reference appendices:36readings,48coreactivities,16optionalprojects and11optionalreferenceactivities;all111published identities checked."
-											: id ===
-												  "middle-school-integrated-science"
-												? "Complete ten teaching units and five reference appendices:65readings,58complete optional/required activities and117input/response views per role/width profile;all123published identities retained."
+							id === "java-level-3"
+								? "AJ4 only: one reading, two core projects, three optional tasks and ten input/response views per profile. All 217 course identities checked; other Java units are outside this teaching and runtime acceptance."
+								: id === "intro-to-environmental-science"
+									? "Complete Environmental Science teaching and tasks:27readings,17coreactivities,24optionalactivities and82input/response views per profile;all68published identities retained. Original photosynthesis-image fidelity remains separate."
+									: id === "intro-to-chemistry"
+										? "Complete Chemistry teaching and tasks:62readings,14coreactivities,37optionalactivities and102input/response views per profile;all113published identities retained. Original video evidence remains distinct from authored text alternatives."
+										: id === "intro-to-biology"
+											? "Eight worked body-systems units:8readings,36coreactivities,24optionalprojects and120input/response views per profile;all68published identities retained. Original three legacy images remain separately identified."
+											: id === "elementary-science"
+												? "Eight teaching units and six reference appendices:36readings,48coreactivities,16optionalprojects and11optionalreferenceactivities;all111published identities checked."
 												: id ===
-													  "early-elementary-a-reading"
-													? "Complete on-site explanations and briefs; the ten named reading texts remain unavailable."
+													  "middle-school-integrated-science"
+													? "Complete ten teaching units and five reference appendices:65readings,58complete optional/required activities and117input/response views per role/width profile;all123published identities retained."
 													: id ===
-														  "early-elementary-b-picture-book"
-														? "Complete supplied teaching,practice,case inputs and briefs;original Gabby Tries text remains unavailable."
-														: "complete course reading and assignment view",
+														  "early-elementary-a-reading"
+														? "Complete on-site explanations and briefs; the ten named reading texts remain unavailable."
+														: id ===
+															  "early-elementary-b-picture-book"
+															? "Complete supplied teaching,practice,case inputs and briefs;original Gabby Tries text remains unavailable."
+															: "complete course reading and assignment view",
 						internalModules: course.modules
 							.filter(module => module.internal)
 							.map(module => ({

@@ -114,7 +114,8 @@ describe("Java Level 3 learner flow", () => {
 			module.supplementalProjects.map(item => item.title)
 		);
 
-		expect(curriculumCount).toBe(142);
+		// AJ4 now has one complete reading in place of four merged fragments.
+		expect(curriculumCount).toBe(139);
 		expect(optionCount).toBe(94);
 		for (const title of JUNI_CORE_PROJECTS) {
 			expect(curriculumTitles, title).toContain(title);
