@@ -339,6 +339,10 @@ it.each(
 				expect(displayedPrompt, project.title).toBe(originalPrompt);
 		}
 		const card = (item: CourseModuleItem) => {
+			const completeAssignment = [
+				"early-elementary-a-reading",
+				"early-elementary-b-picture-book"
+			].includes(id);
 			const fullBlocks = [
 				"early-elementary-a-math",
 				"early-elementary-b-math",
@@ -406,6 +410,7 @@ it.each(
 						)
 				: item.content;
 			if (
+				completeAssignment ||
 				[
 					"algebra-1a",
 					"algebra-1b",
@@ -437,34 +442,58 @@ it.each(
 			const container = document.createElement("div");
 			container.innerHTML = markdown.render(
 				normalizeInlineCourseMarkdown(
-					directive ??
-						([
-							"early-elementary-a-math",
-							"early-elementary-b-math",
-							"late-elementary-a-math",
-							"late-elementary-b-math",
-							"early-elementary-a-reading",
-							"early-elementary-b-picture-book",
-							"algebra-1a",
-							"algebra-1b",
-							"introduction-to-public-speaking",
-							"intro-to-physics",
-							"physics-level-2",
-							"pre-algebra-a",
-							"geometry-a",
-							"geometry-b",
-							"algebra-2a",
-							"algebra-2b"
-						].includes(id)
-							? fullAssignment
-							: "")
+					completeAssignment
+						? fullAssignment
+						: (directive ??
+								([
+									"early-elementary-a-math",
+									"early-elementary-b-math",
+									"late-elementary-a-math",
+									"late-elementary-b-math",
+									"early-elementary-a-reading",
+									"early-elementary-b-picture-book",
+									"algebra-1a",
+									"algebra-1b",
+									"introduction-to-public-speaking",
+									"intro-to-physics",
+									"physics-level-2",
+									"pre-algebra-a",
+									"geometry-a",
+									"geometry-b",
+									"algebra-2a",
+									"algebra-2b"
+								].includes(id)
+									? fullAssignment
+									: ""))
 				)
 			);
+			if (completeAssignment) {
+				const completion = item.content.split(
+					"**Completion evidence:**"
+				)[1];
+				if (item.learningPath === "core")
+					expect(completion, item.title).toBeTruthy();
+				if (completion) {
+					const evidence = document.createElement("div");
+					evidence.innerHTML = markdown.render(
+						normalizeInlineCourseMarkdown(completion)
+					);
+					expect(
+						container.textContent!.replace(/\s+/g, " ").trim(),
+						item.title
+					).toContain(
+						evidence.textContent!.replace(/\s+/g, " ").trim()
+					);
+				}
+			}
 			return {
 				id: item.id,
 				title: item.title,
 				learningPath: item.learningPath,
 				selfChecks,
+				assignmentTextScope: completeAssignment
+					? "complete"
+					: "directive",
 				directiveTextMode: fullBlocks ? "innerText" : "textContent",
 				requiredDirective: container
 					.textContent!.replace(/\s+/g, " ")

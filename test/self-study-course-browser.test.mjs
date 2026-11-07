@@ -197,7 +197,7 @@ async function checkTableLayout(
 	return result;
 }
 
-async function checkCards(page, module, expected, optional, resourceViews, profileName) {
+async function checkCards(page, module, expected, optional, resourceViews, profileName, assignmentViews) {
 	const rows = await page.$$eval(
 		"#course-reader-panel .lesson-list > .lesson-item",
 		items =>
@@ -224,19 +224,20 @@ async function checkCards(page, module, expected, optional, resourceViews, profi
 		);
 		if (item.requiredDirective) {
 			await page.waitForFunction(
-				({ id, required, textMode }) => {
+				({ id, required, textMode, scope }) => {
 					const row = document.getElementById(id);
-					return row
+					const actual = row
 						?.querySelector(".assignment-content")?.[textMode]
 						.replace(/\s+/g, " ")
-						.trim()
-						.includes(required);
+						.trim();
+					return scope === "complete" ? actual === required : actual?.includes(required);
 				},
 				{},
 				{
 					id: rows[index].id,
 					required: item.requiredDirective,
-					textMode: item.directiveTextMode ?? "textContent"
+					textMode: item.directiveTextMode ?? "textContent",
+					scope: item.assignmentTextScope
 				}
 			).catch(async (error) => {
 				const actual = await page.$eval(
@@ -248,6 +249,19 @@ async function checkCards(page, module, expected, optional, resourceViews, profi
 					`${item.title}: complete assignment text did not match.\nExpected: ${item.requiredDirective}\nActual: ${actual}`,
 					{ cause: error }
 				);
+			});
+			const actual = await page.$eval(
+				`#${rows[index].id} .assignment-content`,
+				(element, mode) => element[mode].replace(/\s+/g, " ").trim(),
+				item.directiveTextMode ?? "textContent"
+			);
+			assignmentViews.push({
+				module: module.id,
+				item: item.id,
+				section: optional ? "optional" : "core",
+				scope: item.assignmentTextScope ?? "directive",
+				expectedTextSHA256: digest(item.requiredDirective),
+				renderedTextSHA256: digest(actual)
 			});
 		}
 		for (const check of item.selfChecks ?? []) {
@@ -384,6 +398,7 @@ test(
 						const readings = [];
 						const assignments = [];
 						const resourceViews = [];
+						const assignmentViews = [];
 						try {
 							await page.setViewport({ width, height: 900 });
 							page.setDefaultTimeout(20000);
@@ -658,8 +673,12 @@ test(
 									module.projects,
 									false,
 									resourceViews,
-									name
+									name,
+									assignmentViews
 								);
+								if ((index === 0 && ["early-elementary-a-reading", "early-elementary-b-picture-book"].includes(id)) || module.projects.some(item => /^(?:Punctuation Treasure Hunt|Picture Book Assembly Portfolio)$/.test(item.title))) {
+									await page.screenshot({ path: join(output, `${name}-${index + 1}-complete-projects.png`), fullPage: true });
+								}
 								await chooseView(page, 2);
 								const optional = await checkCards(
 									page,
@@ -667,7 +686,8 @@ test(
 									module.optional,
 									true,
 									resourceViews,
-									name
+									name,
+									assignmentViews
 								);
 								assignments.push({
 									module: module.id,
@@ -700,6 +720,7 @@ test(
 								reviewedModuleIds: fixture.reviewedModuleIds,
 								completeReadings: readings,
 								resourceViews,
+								assignmentViews,
 								assignments,
 								internalModulesExcluded:
 									fixture.internalModules,
