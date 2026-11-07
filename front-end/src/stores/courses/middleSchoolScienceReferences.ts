@@ -54,7 +54,7 @@ export const middleSchoolScienceReferences: Record<
 	},
 	"Digital Resource Bank": {
 		"Curated Digital Resource Bank":
-			"Each unit has a complete local case route: MS1 pond; MS2 cells and runner; MS3 beetles and chance trials; MS4 estuary; MS5 weather, climate and plates; MS6 particle and mass records; MS7 cooling; MS8 cart and forces; MS9 signals and circuits; MS10 Moon models, planets and spectra. External references deepen the explanation while supplied states preserve the evidence needed for the investigations.",
+			"Each unit has a complete local case route: MS1 pond; MS2 cells and runner; MS3 beetles and chance trials; MS4 estuary; MS5 weather, climate and plates; MS6 particle and mass records; MS7 cooling; MS8 cart and forces; MS9 signals and circuits; MS10 Moon models, planets and spectra. External references deepen the explanation while supplied states preserve the evidence needed for the investigations. Optional references include the [PhET biology catalog](https://phet.colorado.edu/en/simulations/filter?subjects=biology) and [Ask A Biologist activities](https://askabiologist.asu.edu/activities). ASU cell-size and food-web activities offer further digital comparisons for MS2–MS4.",
 		"Module-by-Module Resource Mapping Routine":
 			"A source record distinguishes supplied observations, model states, calculated results and background explanations. For a Moon scale calculation, the rounded diameters and separation are inputs; 2.73 mm and 30.2 cm are calculated model dimensions. NASA explains the underlying system. Recording these roles keeps a model-derived result from being presented as a new sky measurement.",
 		"Online Safety and Accessibility Check":
