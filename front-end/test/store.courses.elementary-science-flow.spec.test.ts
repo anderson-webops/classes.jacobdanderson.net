@@ -50,6 +50,40 @@ function slugs(source: string) {
 	);
 }
 describe("Elementary Science supplied teaching and two-band activities", () => {
+	it("turns all six appendices into learner references and supplied optional practice", async () => {
+		const course = (await loadRawCourse("elementary-science"))!;
+		const references = course.modules.filter(
+			module => module.kind === "appendix"
+		);
+		expect(references).toHaveLength(6);
+		const items = references.flatMap(module => [
+			...module.curriculum,
+			...module.supplementalProjects
+		]);
+		expect(items).toHaveLength(39);
+		expect(
+			items.filter(item => item.contentKind === "reading")
+		).toHaveLength(28);
+		expect(
+			items.filter(item => item.contentKind === "assignment")
+		).toHaveLength(11);
+		expect(items.every(item => item.learningPath === "choice")).toBe(true);
+		const route = items.find(
+			item =>
+				item.id ===
+				"elementary-science-elementary-science-grade-band-paths-curriculum-decision-keep-one-course-with-k-2-and-3-5-paths"
+		);
+		expect(route?.title).toBe("Choosing a Grade-Band Route");
+		for (const task of items.filter(
+			item => item.contentKind === "assignment"
+		)) {
+			expect(task.content).toContain("**Checkpoints:**");
+			expect(task.content).toContain("[Case inputs](/course-resource?");
+			expect(task.content).toContain(
+				"[Project self-check](/course-resource?"
+			);
+		}
+	});
 	it("rejects truncated tasks, missing case links and missing teaching", () => {
 		const module = elementaryScienceCourse.modules[0];
 		const task = module.curriculum[1];

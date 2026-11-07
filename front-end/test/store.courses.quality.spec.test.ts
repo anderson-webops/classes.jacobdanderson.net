@@ -609,8 +609,16 @@ function isInformationalResourceTitle(title: string) {
 const lessonBackbonePattern =
 	/\*\*(?:Applied studio|Build focus|Build path|Concept focus|Concept path|Course flow|Course path|Course position|Evidence gate|Evidence of proficiency|Evidence target|Evidence targets|Explanation|Focus|Goal|Hungry Hippo return|Investigation|Playable result|Practice route|Project selection|Project target|Readiness check|Readiness map|Result|Science explanation|Scope path|Selected checks|Shared phenomenon|Studio focus|Verification gate):\*\*|Core topics in this module:|Representative solutions|Check-?In #\d+|Check-in goal|\bReview\b/i;
 
-function hasLessonBackbone(item: { title: string; content: string }) {
+function hasLessonBackbone(item: {
+	title: string;
+	content: string;
+	contentKind?: string;
+}) {
 	return (
+		(item.contentKind === "reading" &&
+			wordCount(item.content) >= 120 &&
+			(item.content.match(/^## /gm)?.length ?? 0) >= 2 &&
+			/^## Worked\b/m.test(item.content)) ||
 		(/\*\*Method\*\*[\s\S]+\*\*Worked example\*\*/.test(item.content) &&
 			wordCount(item.content) >= 40) ||
 		lessonBackbonePattern.test(`${item.title}\n${item.content}`) ||

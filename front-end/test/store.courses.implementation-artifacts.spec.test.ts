@@ -305,7 +305,7 @@ describe("implemented course development artifacts", () => {
 				expect(text, courseId).toContain("Digital Resource Bank");
 				expect(text, courseId).toContain("PhET");
 				expect(text, courseId).toMatch(
-					/does not require (?:beakers|household materials|physical lab supplies)|No physical lab supplies are required|No required project depends|No case requires|without requiring hardware kits, physical sensors, special lab supplies/i
+					/does not require (?:beakers|household materials|physical lab supplies)|No physical lab supplies are required|No required project depends|No case requires|without requiring hardware kits, physical sensors, special lab supplies|Required investigations use supplied descriptions, diagrams and fictional records/i
 				);
 				expect(
 					course.modules.some(module =>
@@ -330,7 +330,7 @@ describe("implemented course development artifacts", () => {
 
 			expect(
 				allText(await requireCourse("elementary-science"))
-			).toContain("Decision: Keep One Course with K-2 and 3-5 Paths");
+			).toContain("Choosing a Grade-Band Route");
 		},
 		COURSE_SWEEP_TIMEOUT
 	);

@@ -3,6 +3,7 @@ import { applyAlgebraErrorAnalysisCases } from "./algebraErrorAnalysisCases";
 import { applyCourseImplementationArtifacts } from "./course-implementation-artifacts";
 import { applyEarlyElementaryAProjects } from "./earlyElementaryAProjects";
 import { applyEarlyElementaryBProjects } from "./earlyElementaryBProjects";
+import { applyElementaryScienceReferences } from "./elementaryScienceReferences";
 import { applyEntrepreneurshipReadings } from "./entrepreneurshipReadings";
 import { applyGrammarMechanicsReadings } from "./grammarMechanicsReadings";
 import { applyIntroPhysicsReferences } from "./introPhysicsReferences";
@@ -9881,6 +9882,7 @@ export function normalizeRawCourse(id: string, rawCourse: RawCourse) {
 		applyScratchBootcampReadings(course, rawCourse);
 	if (id === "middle-school-integrated-science")
 		applyMiddleSchoolScienceReferences(course);
+	if (id === "elementary-science") applyElementaryScienceReferences(course);
 	if (id === "intro-to-physics") applyIntroPhysicsReferences(course);
 	if (id === "physics-level-2") applyPhysicsLevel2References(course);
 	if (

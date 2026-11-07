@@ -58,7 +58,7 @@ const cases = [
 	{
 		id: "elementary-science",
 		source: elementaryScienceCourse,
-		readings: 8,
+		readings: 36,
 		additions: []
 	},
 	{
@@ -533,7 +533,6 @@ it.each(
 						algebra ||
 						algebra1 ||
 						[
-							"elementary-science",
 							"early-elementary-a-math",
 							"early-elementary-b-math",
 							"late-elementary-a-math",
@@ -575,7 +574,9 @@ it.each(
 							? 17
 							: id === "middle-school-integrated-science"
 								? 10
-								: count
+								: id === "elementary-science"
+									? 8
+									: count
 			);
 		for (const module of modules) {
 			if (id === "geometry-a")
@@ -611,6 +612,14 @@ it.each(
 			else if (id === "physics-level-2")
 				expect(module.readings, module.title).toHaveLength(
 					module.title.startsWith("PHY8 ") ? 2 : 1
+				);
+			else if (id === "elementary-science")
+				expect(module.readings).toHaveLength(
+					module.kind === "appendix"
+						? ["Standards Map", "Course Roadmap"].includes(module.title)
+							? 6
+							: 4
+						: 1
 				);
 			else if (id === "middle-school-integrated-science")
 				expect(module.readings).toHaveLength(
@@ -659,14 +668,14 @@ it.each(
 						modules,
 						reviewScope:
 							id === "elementary-science"
-								? "Eight teaching units:8readings,48coreactivities and16optionalprojects;all111published identities checked. Six reference appendices retain separate final review."
+								? "Eight teaching units and six reference appendices:36readings,48coreactivities,16optionalprojects and11optionalreferenceactivities;all111published identities checked."
 								: id === "middle-school-integrated-science"
-								? "Complete ten teaching units and five reference appendices:65readings,58complete optional/required activities and117input/response views per role/width profile;all123published identities retained."
-								: id === "early-elementary-a-reading"
-									? "Complete on-site explanations and briefs; the ten named reading texts remain unavailable."
-									: id === "early-elementary-b-picture-book"
-										? "Complete supplied teaching,practice,case inputs and briefs;original Gabby Tries text remains unavailable."
-										: "complete course reading and assignment view",
+									? "Complete ten teaching units and five reference appendices:65readings,58complete optional/required activities and117input/response views per role/width profile;all123published identities retained."
+									: id === "early-elementary-a-reading"
+										? "Complete on-site explanations and briefs; the ten named reading texts remain unavailable."
+										: id === "early-elementary-b-picture-book"
+											? "Complete supplied teaching,practice,case inputs and briefs;original Gabby Tries text remains unavailable."
+											: "complete course reading and assignment view",
 						internalModules: course.modules
 							.filter(module => module.internal)
 							.map(module => ({
