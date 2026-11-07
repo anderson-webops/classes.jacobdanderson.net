@@ -60,6 +60,26 @@ for (const example of examples) {
 					":" +
 					(role === "starter" ? "starter" : "reference") +
 					":native-java-recursion",
+				previousProject: role => ({
+					_id: "earlier-recursion-" + role,
+					title: "Earlier recursion work",
+					mode: "java",
+					files: [
+						{
+							name: "Main.java",
+							content: "// Earlier recursion attempt\n"
+						}
+					],
+					activeFileName: "Main.java",
+					courseID: "java-level-3",
+					courseProjectKey:
+						"java-level-3:" +
+						example.coreID +
+						":" +
+						(role === "starter" ? "starter" : "reference"),
+					createdAt: "2026-10-01T12:00:00.000Z",
+					updatedAt: "2026-10-01T12:00:00.000Z"
+				}),
 				flatFiles: true,
 				sharedFiles: worked
 					? ["Main.java", "ContractTests.java", "README.md"]

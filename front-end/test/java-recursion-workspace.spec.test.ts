@@ -122,6 +122,7 @@ it("retains published AJ4 identities and complete authored bodies after normaliz
 			}))
 		).toEqual(originals[section]);
 		for (const item of module[section]) {
+			expect(item.content).not.toMatch(/\b(?:instructor|tutor)\b/i);
 			expect(item.content).toBe(
 				raw[section].find(row => row.id === item.id)!.content.trim()
 			);

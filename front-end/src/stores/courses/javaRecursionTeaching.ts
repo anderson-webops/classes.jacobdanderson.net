@@ -102,7 +102,7 @@ export function completeJavaRecursionModule(
 				learningPath: "core",
 				ideImport: true,
 				projectLink: javaRecursionURL("AJ4-Call-Trace"),
-				content: `**Course flow:** State the input domain, base case, and quantity that strictly decreases; trace calls and returns, implement the two core projects, then choose optional trace work. During an instructor session, pause before each return and predict the next value. For independent study, compare the finished trace with the worked answer.
+				content: `**Course flow:** State the input domain, base case, and quantity that strictly decreases; trace calls and returns, implement the two core projects, then choose optional trace work. Pause before each return, predict the next value, and compare the finished trace with the worked answer.
 
 ### A complete recursive method
 
