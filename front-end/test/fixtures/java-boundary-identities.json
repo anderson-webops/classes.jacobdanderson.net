@@ -1,0 +1,70 @@
+{
+  "curriculum": [
+    {
+      "id": "design-patterns-in-java-dpj4-creational-patterns-ii-and-boundary-patterns-curriculum-creational-patterns-ii-and-boundary-patterns-core-concepts",
+      "aliases": [
+        "design-patterns-in-java-dpj4-creational-patterns-ii-and-boundary-patterns-curriculum-core-concepts-and-learning-sequence",
+        "core-concepts",
+        "design-patterns-in-java-dpj4-creational-patterns-ii-and-boundary-patterns-curriculum-core-concepts"
+      ],
+      "title": "Creational Patterns II and Boundary Patterns Core Concepts"
+    },
+    {
+      "id": "design-patterns-in-java-dpj4-creational-patterns-ii-and-boundary-patterns-curriculum-creational-patterns-ii-and-boundary-patterns-application-check",
+      "aliases": [
+        "design-patterns-in-java-dpj4-creational-patterns-ii-and-boundary-patterns-curriculum-application-misconceptions-and-readiness-check",
+        "application-check",
+        "design-patterns-in-java-dpj4-creational-patterns-ii-and-boundary-patterns-curriculum-application-check"
+      ],
+      "title": "Creational Patterns II and Boundary Patterns Application Check"
+    },
+    {
+      "id": "design-patterns-in-java-dpj4-creational-patterns-ii-and-boundary-patterns-curriculum-reflection-question-why-is-singleton-so-tempting",
+      "title": "Reflection Question: Why Is Singleton So Tempting?"
+    },
+    {
+      "id": "design-patterns-in-java-dpj4-creational-patterns-ii-and-boundary-patterns-curriculum-copy-global-state-and-boundary-risk-contract",
+      "title": "Copy, Global State, and Boundary Risk Contract"
+    },
+    {
+      "id": "design-patterns-in-java-dpj4-creational-patterns-ii-and-boundary-patterns-curriculum-core-project-creational-patterns-ii-and-boundary-patterns",
+      "aliases": [
+        "design-patterns-in-java-dpj4-creational-patterns-ii-and-boundary-patterns-curriculum-core-project",
+        "dpj4-creational-patterns-ii-and-boundary-patterns-core-project",
+        "design-patterns-in-java-dpj4-creational-patterns-ii-and-boundary-patterns-curriculum-dpj4-creational-patterns-ii-and-boundary-patterns-core-project"
+      ],
+      "title": "Core Project: Creational Patterns II and Boundary Patterns"
+    }
+  ],
+  "supplementalProjects": [
+    {
+      "id": "design-patterns-in-java-dpj4-creational-patterns-ii-and-boundary-patterns-supplemental-understanding-check-creational-patterns-ii-and-boundary-patterns",
+      "aliases": [
+        "design-patterns-in-java-dpj4-creational-patterns-ii-and-boundary-patterns-supplemental-dpj4-creational-patterns-ii-and-boundary-patterns-diagnostic-checkpoint",
+        "diagnostic-checkpoint-creational-patterns-ii-and-boundary-patterns",
+        "diagnostic-checkpoint",
+        "understanding-check",
+        "design-patterns-in-java-dpj4-creational-patterns-ii-and-boundary-patterns-supplemental-diagnostic-checkpoint-creational-patterns-ii-and-boundary-patterns",
+        "design-patterns-in-java-dpj4-creational-patterns-ii-and-boundary-patterns-supplemental-diagnostic-checkpoint",
+        "design-patterns-in-java-dpj4-creational-patterns-ii-and-boundary-patterns-supplemental-understanding-check"
+      ],
+      "title": "Understanding Check: Creational Patterns II and Boundary Patterns"
+    },
+    {
+      "id": "design-patterns-in-java-dpj4-creational-patterns-ii-and-boundary-patterns-supplemental-creational-patterns-ii-and-boundary-patterns-transfer-practice",
+      "aliases": [
+        "design-patterns-in-java-dpj4-creational-patterns-ii-and-boundary-patterns-supplemental-transfer-practice",
+        "design-patterns-in-java-dpj4-creational-patterns-ii-and-boundary-patterns-supplemental-transfer-practice-creational-patterns-ii-and-boundary-patterns"
+      ],
+      "title": "Creational Patterns II and Boundary Patterns Transfer Practice"
+    },
+    {
+      "id": "design-patterns-in-java-dpj4-creational-patterns-ii-and-boundary-patterns-supplemental-creational-patterns-ii-and-boundary-patterns-extension-practice",
+      "aliases": [
+        "design-patterns-in-java-dpj4-creational-patterns-ii-and-boundary-patterns-supplemental-extension-practice",
+        "design-patterns-in-java-dpj4-creational-patterns-ii-and-boundary-patterns-supplemental-extension-practice-creational-patterns-ii-and-boundary-patterns"
+      ],
+      "title": "Creational Patterns II and Boundary Patterns Extension Practice"
+    }
+  ]
+}
