@@ -258,7 +258,7 @@ This table supports first-pass Lewis-style sketches. The goal is to track valenc
 
 ## Heating Curve Data
 
-This simplified data describes a sample heated at a steady rate.
+This authored schematic follows pure water at approximately 1 atm. The invented times illustrate the order of stages; they do not represent constant heating power or measured transition energies.
 
 | Time (min) | Temperature (C) | Region            |
 | ---------: | --------------: | ----------------- |
@@ -275,7 +275,7 @@ This simplified data describes a sample heated at a steady rate.
 
 ## Phase Diagram Data
 
-This simplified map supports reasoning about state from temperature and pressure. The values are intentionally approximate and should be treated as a model, not a complete reference diagram.
+These approximate water phase points support coordinate reading. They are selected points rather than a complete boundary curve. The low-pressure ice-vapor boundary near -10 C is about 0.002 atm (0.20 kPa), far below 0.2 atm.
 
 | Point | Temperature (C) | Pressure (atm) | Region or Boundary                        |
 | ----- | --------------: | -------------: | ----------------------------------------- |
@@ -284,10 +284,12 @@ This simplified map supports reasoning about state from temperature and pressure
 | C     |             120 |            1.0 | gas region                                |
 | D     |               0 |            1.0 | melting/freezing boundary                 |
 | E     |             100 |            1.0 | boiling/condensing boundary               |
-| F     |             -10 |            0.2 | sublimation boundary model                |
+| F     |             -10 |          0.002 | approximate ice/vapor coexistence         |
 | G     |              25 |            3.0 | liquid remains favored at higher pressure |
 
-**Modeling note:** Locate the point, identify the region or boundary, then predict how moving right, left, up, or down changes the favored state.
+**Coordinate practice:** Name the phases at A, B and C. Interpret coexistence at D, E and F. Compare B with G at the same temperature, then explain why F cannot be used as a boundary for carbon dioxide. Selected points alone do not locate every transition along an arbitrary path.
+
+[Phase-change reference](https://openstax.org/books/chemistry-2e/pages/10-3-phase-transitions); [water and carbon dioxide phase diagrams](https://openstax.org/books/chemistry-2e/pages/10-4-phase-diagrams).
 
 ## Gas Law Scenarios
 
@@ -319,7 +321,7 @@ These scenarios pair with a gas-particle model. One variable should stay control
 | Substance Model | Simplified Attraction Evidence                      | Expected Property Pattern                                            |
 | --------------- | --------------------------------------------------- | -------------------------------------------------------------------- |
 | Water           | polar molecule; strong attraction between molecules | relatively high boiling point; dissolves many ionic/polar substances |
-| Carbon dioxide  | nonpolar linear molecule                            | low boiling/sublimation point under ordinary pressure                |
+| Carbon dioxide  | nonpolar linear molecule                            | at 1 atm, solid sublimes near -78.5 C; no liquid phase or normal boiling point                |
 | Ethanol         | polar region plus nonpolar carbon chain             | mixes with water; evaporates more readily than water                 |
 | Hexane-like oil | mostly nonpolar                                     | does not mix well with water; dissolves nonpolar substances better   |
 

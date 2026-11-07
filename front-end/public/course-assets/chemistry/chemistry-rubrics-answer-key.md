@@ -240,7 +240,7 @@ Common revision target: a formula gives atom count but not shape. The answer mus
 
 ## Heating Curve Key
 
-The flat sections at 0 C and 100 C represent phase changes. Energy is still transferred during those flat sections, but it changes particle arrangement and attractions rather than increasing average particle motion.
+For the schematic pure-water sample near 1 atm, the flat sections at 0 C and 100 C represent melting and boiling. Energy transfer changes intermolecular arrangement and potential energy while temperature and average molecular kinetic energy remain constant. The invented times do not establish heating power or transition-energy ratios.
 
 ## Phase Diagram Key
 
@@ -248,14 +248,15 @@ Strong phase-diagram reasoning treats the diagram as a map of conditions:
 
 1. Point A is solid, B is liquid, and C is gas in the simplified model.
 2. Point D is on the melting/freezing boundary.
-3. Point E is on the boiling/condensing boundary.
+3. Point E is on the boiling/condensing boundary. Point F is approximately on the ice/vapor boundary at -10 C and 0.002 atm; this pressure is about 0.20 kPa.
 4. Moving right usually increases temperature; moving up increases pressure.
 5. A response should state both coordinates before naming the state.
 
 Sample answer:
 
 1. At 25 C and 3 atm, the model favors liquid rather than gas because pressure is higher than ordinary 1 atm conditions.
-2. The exact boundary depends on the substance, so this simplified table should not be treated as a universal phase diagram.
+2. B and G both favor liquid water at 25 C, at 1 and 3 atm respectively. Increasing pressure along this comparison does not cross a phase boundary.
+3. The table describes water. Carbon dioxide has a different phase diagram and no stable liquid at 1 atm. Selected points do not establish all boundaries between them.
 
 ## Energy Phase and Gas Checkpoint Key
 
@@ -282,7 +283,7 @@ Common revision target: do not explain gas behavior by saying particles get bigg
 
 Property checks:
 
-1. Water should be predicted to have stronger attractions and a higher boiling point than carbon dioxide in ordinary introductory comparisons.
+1. At 1 atm, water boils near 100 C while solid carbon dioxide sublimes near -78.5 C. Carbon dioxide has no normal boiling point. Water and ethanol can instead be compared by normal boiling point: about 100 C and 78 C respectively.
 2. Ethanol is mixed: it has a polar region and a nonpolar carbon chain.
 3. Hexane-like oil is mostly nonpolar and does not mix well with water.
 
