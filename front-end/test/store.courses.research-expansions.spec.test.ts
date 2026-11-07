@@ -163,6 +163,35 @@ describe("research-backed course family expansions", () => {
 							`/course-assets/physics/${pack}`
 						);
 					}
+				} else if (courseId === "middle-school-integrated-science") {
+					const roadmapItems = [
+						...roadmapModule!.curriculum,
+						...roadmapModule!.supplementalProjects
+					];
+					for (const title of [
+						"Resource Map",
+						"Module Alignment Guide",
+						"Reference Map",
+						"Prerequisite Map",
+						"Resource Inventory"
+					]) {
+						const entry = roadmapItems.find(
+							item => item.title === `${courseLabel} ${title}`
+						);
+						expect(entry, title).toBeDefined();
+						expect(entry!.contentKind, title).toBe("reading");
+						expect(entry!.datasetLink, title).toBe(
+							"/course-assets/middle-school-science/middle-school-science-materials-pack.md"
+						);
+					}
+					for (const phrase of [
+						"ten sections matching MS1–MS10",
+						"distance adds path lengths",
+						"displacement compares endpoints",
+						"category count divided by sample total",
+						"A notebook or digital document is sufficient."
+					])
+						expect(roadmapText, courseId).toContain(phrase);
 				} else {
 					for (const label of [
 						"Map purpose",

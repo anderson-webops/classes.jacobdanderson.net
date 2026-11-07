@@ -1,9 +1,9 @@
 import { createPinia, setActivePinia } from "pinia";
 import { beforeEach, describe, expect, it } from "vitest";
+import { useCoursesStore } from "@/stores/courses";
 import { elementaryScienceCourse } from "@/stores/courses/elementary-science";
 import { introToPhysicsCourse } from "@/stores/courses/intro-to-physics";
 import { middleSchoolIntegratedScienceCourse } from "@/stores/courses/middle-school-integrated-science";
-import { useCoursesStore } from "@/stores/courses";
 
 function coreModules<T extends { kind?: string }>(modules: T[] = []) {
 	return modules.filter(module => module.kind !== "appendix");
@@ -81,8 +81,32 @@ describe("course catalog breadth", () => {
 		expect(JSON.stringify(elementary)).toContain(
 			"Physical supplies are optional only"
 		);
-		expect(JSON.stringify(middleSchool)).toContain(
-			"No specialized science equipment or required household experiments are needed"
+		const scienceResources = middleSchool?.modules.find(
+			module => module.title === "Digital Resource Bank"
+		);
+		const safety = scienceResources?.curriculum.find(
+			item => item.title === "Online Safety and Accessibility Check"
+		);
+		expect(safety?.content).toContain(
+			"Required investigations use supplied descriptions, diagrams and fictional records."
+		);
+		expect(safety?.content).toContain(
+			"No case requires chemicals, heat, electrical construction, organisms, outdoor sampling or personal health and family data."
+		);
+		const roadmap = middleSchool?.modules.find(
+			module => module.title === "Course Roadmap"
+		);
+		const roadmapItems = [
+			...(roadmap?.curriculum ?? []),
+			...(roadmap?.supplementalProjects ?? [])
+		];
+		const inventory = roadmapItems.find(
+			item =>
+				item.title ===
+				"Middle School Integrated Science Resource Inventory"
+		);
+		expect(inventory?.content).toContain(
+			"A notebook or digital document is sufficient."
 		);
 		expect(JSON.stringify([elementary, middleSchool])).toContain(
 			"specialized science equipment or household experiments are not required"
