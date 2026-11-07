@@ -1,4 +1,8 @@
 import {
+	javaBehavioralCoreID,
+	javaBehavioralReadingID
+} from "./javaBehavioralResources";
+import {
 	javaBoundaryCoreID,
 	javaBoundaryReadingID
 } from "./javaBoundaryResources";
@@ -143,6 +147,45 @@ export function javaNativeBuildInstructions(
 ): string[] | null {
 	const parts = (courseProjectKey ?? "").split(":");
 	const [course, item, role, extra] = parts;
+	if (
+		course === "design-patterns-in-java" &&
+		item === javaBehavioralReadingID &&
+		role === "starter" &&
+		parts.length === 4 &&
+		extra === "native-java-behavioral"
+	) {
+		return [
+			"Java 21 complete behavioral-pattern example",
+			"Export its three files and compile in this worked example's own folder.",
+			"javac --release 21 -Xlint:all -Werror Main.java ContractTests.java",
+			"java ContractTests",
+			"java Main",
+			"The complete example reports Behavioral worked contracts: 36 passed. Main prints LOCKED, READY, [-one|-two], a and b on separate lines.",
+			"These programs read no standard input. Run displays native Java 21 commands."
+		];
+	}
+	if (
+		course === "design-patterns-in-java" &&
+		[javaBehavioralReadingID, javaBehavioralCoreID].includes(item ?? "") &&
+		["starter", "reference"].includes(role ?? "") &&
+		parts.length === 4 &&
+		extra === "native-java-behavioral"
+	) {
+		return [
+			"Java 21 behavioral document workflow",
+			"Export all eleven files. Keep sources.txt and the src/behavior package tree together.",
+			"javac --release 21 -Xlint:all -Werror -d classes @sources.txt",
+			"java -cp classes ContractTests core",
+			"java -cp classes Main",
+			"java -cp classes ContractTests",
+			"Complete RuleContext.format, three private document transitions, ReportTemplate.render and ReviewQueue.iterator. Core reports 82 passed. Main prints the document phase, selected text, report and queue.",
+			"The final harness additionally checks optional ReviewQueue.matching and reports 91 passed. A completed core remains usable before the optional extension.",
+			role === "starter"
+				? "The untouched starter compiles and names an unfinished method."
+				: "The reference completes core and optional behavior. Keep the learner attempt and design evidence separate.",
+			"These programs read no standard input. Run displays native Java 21 commands."
+		];
+	}
 	if (
 		course === "design-patterns-in-java" &&
 		item === javaStructuralReadingID &&

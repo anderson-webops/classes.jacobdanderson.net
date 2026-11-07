@@ -1,3 +1,4 @@
+import { javaBehavioralURL } from "@/modules/javaBehavioralResources";
 import { javaStructuralURL } from "@/modules/javaStructuralResources";
 import { javaBoundaryURL } from "@/modules/javaBoundaryResources";
 import { javaCreationalURL } from "@/modules/javaCreationalResources";
@@ -151,7 +152,7 @@ describe("saved course progress identities", () => {
 					)
 				);
 				expect(owners, previousId).toHaveLength(1);
-				if (index <= 4) {
+				if (index <= 5) {
 					const current = owners![0];
 					expect(current.contentKind, previousId).toBe("assignment");
 					if (purpose === "Transfer") {
@@ -170,7 +171,9 @@ describe("saved course progress identities", () => {
 										? javaCreationalURL("starter")
 										: index === 3
 											? javaBoundaryURL("starter")
-											: javaStructuralURL("starter");
+											: index === 4
+												? javaStructuralURL("starter")
+												: javaBehavioralURL("starter");
 						expect(current.projectLink, previousId).toBe(starter);
 					}
 				} else {

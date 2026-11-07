@@ -1,5 +1,6 @@
 import type { RawCourse, RawCourseModuleItem } from "./types";
 import { buildImplementationLabGuidance } from "./implementationLabGuidance";
+import { completeJavaBehavioral } from "./javaBehavioralTeaching";
 import { completeJavaBoundary } from "./javaBoundaryTeaching";
 import { completeJavaCreational } from "./javaCreationalTeaching";
 import { completeJavaFoundations } from "./javaFoundationsTeaching";
@@ -1625,7 +1626,8 @@ const designPatternsJavaPrimaryModules =
 		.map(completeJavaFoundations)
 		.map(completeJavaCreational)
 		.map(completeJavaBoundary)
-		.map(completeJavaStructural);
+		.map(completeJavaStructural)
+		.map(completeJavaBehavioral);
 const designPatternsJavaStudios =
 	designPatternsInJavaSourceCourse.modules.filter(
 		module => !DESIGN_PATTERNS_JAVA_PRIMARY_TITLES.has(module.title)
