@@ -1,3 +1,4 @@
+import { javaRecursionProjects } from "./javaRecursionResources";
 import {
 	bronzeRequiredAssignment,
 	bronzeRequiredNativeInstructions
@@ -121,6 +122,29 @@ export function javaNativeBuildInstructions(
 ): string[] | null {
 	const parts = (courseProjectKey ?? "").split(":");
 	const [course, item, role, extra] = parts;
+	if (
+		course === "java-level-3" &&
+		javaRecursionProjects.some(project => project.id === item) &&
+		["starter", "reference"].includes(role ?? "") &&
+		parts.length === 4 &&
+		extra === "native-java-recursion"
+	) {
+		return [
+			"Java 21 recursion workflow",
+			"Save the attempt, download its ZIP, extract it, and open a terminal in the folder containing Main.java and ContractTests.java.",
+			"javac --release 21 -Xlint:all -Werror Main.java ContractTests.java",
+			"java ContractTests",
+			"java Main",
+			"Compile each project in its own folder. Both course projects define Main, so combining their files creates duplicate classes.",
+			role === "starter"
+				? "The untouched starter compiles, then reports UnsupportedOperationException for its unfinished methods. Implement the method bodies before expecting the contract harness to pass."
+				: "The reference harness checks the documented numerical and input-error contracts. A learner's recursive implementation and call/return trace remain separate completion evidence.",
+			item === javaRecursionProjects[1].id
+				? "The console accepts whitespace-separated integers until quit or end-of-input; an invalid or out-of-range token prints Invalid integer. and processing continues."
+				: "The console prints demonstrations of the five recursive methods. Full input domains, bounds and failure contracts are in README.md.",
+			"Run displays these native build instructions for this pack. Use the terminal's standard input for the console driver."
+		];
+	}
 	const bronze = bronzeRequiredAssignment(course ?? "", item ?? "");
 	if (
 		bronze?.pack.mode === "java" &&

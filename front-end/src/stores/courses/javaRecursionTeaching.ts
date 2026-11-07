@@ -15,7 +15,7 @@ const contracts = `| Method | Accepted input and result | Base case / smaller pr
 | fibonacci(n) | One-based terms 1..31: term 1 is 0, term 2 is 1. Other terms throw IllegalArgumentException. | Return 0 or 1 at terms 1 or 2; otherwise add terms n - 1 and n - 2. |
 | palindrome(word) | Non-null ASCII strings of at most 256 characters. Case, spaces, and punctuation count. Invalid input throws IllegalArgumentException. | Length 0 or 1 returns true; otherwise matching end characters and the inside substring. |`;
 
-const workflow = `Use Java 21 for the complete compile and contract-test workflow. Open the selected starter in the site IDE after confirming the import. Main.java contains the unfinished methods; ContractTests.java contains runnable checks; README.md documents the same input contract. Keep the reference in its separate project. The browser Java runner supports a bounded preview; native Java 21 is the acceptance route for the complete test harness and console input.
+const workflow = `Use Java 21 for the complete compile and contract-test workflow. Open the selected starter in the site IDE after confirming the import. Main.java contains the unfinished methods; ContractTests.java contains runnable checks; README.md documents the same input contract. Keep the reference in its separate project. The complete call-trace example runs in the bounded browser Java preview. For the two core packs, Run displays native build instructions; Java 21 runs the complete test harness and console driver.
 
 Download the project ZIP, extract it, and open a terminal in the directory containing Main.java:
 

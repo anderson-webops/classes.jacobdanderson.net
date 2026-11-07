@@ -100,10 +100,25 @@ for (const example of examples) {
 				verifyRun: async page => {
 					// Full contract harnesses run on native JDK 21 from the actual downloaded ZIPs.
 					// The simple worked example also exercises the site's bounded Java preview.
-					if (!worked) return;
 					await page
 						.locator("button.run-control:not([disabled])")
 						.click();
+					if (!worked) {
+						await page.waitForFunction(() =>
+							document
+								.querySelector(".output-panel")
+								?.textContent.includes(
+									"javac --release 21 -Xlint:all -Werror Main.java ContractTests.java"
+								)
+						);
+						assert.equal(
+							await page.$eval("button.run-control", button =>
+								button.textContent.trim()
+							),
+							"Build instructions"
+						);
+						return;
+					}
 					await page.waitForFunction(() =>
 						[...document.querySelectorAll(".output-line")].some(
 							line => line.textContent.trim() === "10"

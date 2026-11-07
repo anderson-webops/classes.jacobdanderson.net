@@ -1,3 +1,4 @@
+import { javaNativeBuildInstructions } from "@/modules/javaNativeBuildInstructions";
 import { runJavaIdeProject } from "@/modules/javaIdeRuntime";
 import { createHash, webcrypto } from "node:crypto";
 import { readFileSync } from "node:fs";
@@ -227,4 +228,30 @@ it("runs the complete worked example in the bounded site Java preview", () => {
 	expect(result.stderr).toEqual([]);
 	expect(result.stdout).toEqual(["10"]);
 	expect(result.runnableFileName).toBe("Main.java");
+});
+
+it("offers native contracts for the two core packs while preserving worked and legacy previews", () => {
+	for (const project of javaRecursionProjects) {
+		for (const role of ["starter", "reference"] as const) {
+			const legacy = "java-level-3:" + project.id + ":" + role;
+			expect(javaNativeBuildInstructions(legacy)).toBeNull();
+			const instructions = javaNativeBuildInstructions(
+				legacy + ":native-java-recursion"
+			)!;
+			expect(instructions.join("\n")).toContain(
+				"javac --release 21 -Xlint:all -Werror Main.java ContractTests.java"
+			);
+			expect(instructions).toContain("java ContractTests");
+			expect(instructions.join("\n")).toContain(
+				role === "starter"
+					? "UnsupportedOperationException"
+					: "input-error contracts"
+			);
+		}
+	}
+	expect(
+		javaNativeBuildInstructions(
+			"java-level-3:java-level-3-aj4-recursion-curriculum-recursion-core-concepts:starter:native-java-recursion"
+		)
+	).toBeNull();
 });
