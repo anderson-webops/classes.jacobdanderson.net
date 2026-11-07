@@ -1,4 +1,8 @@
 import {
+	javaCreationalCoreID,
+	javaCreationalReadingID
+} from "./javaCreationalResources";
+import {
 	javaFoundationsCoreID,
 	javaFoundationsReadingID
 } from "./javaFoundationsResources";
@@ -131,6 +135,46 @@ export function javaNativeBuildInstructions(
 ): string[] | null {
 	const parts = (courseProjectKey ?? "").split(":");
 	const [course, item, role, extra] = parts;
+	if (
+		course === "design-patterns-in-java" &&
+		item === javaCreationalReadingID &&
+		role === "starter" &&
+		parts.length === 4 &&
+		extra === "native-java-creational"
+	) {
+		return [
+			"Java 21 creation choices: complete worked example",
+			"Save and export the three files, then compile in this example's own folder.",
+			"javac --release 21 -Xlint:all -Werror Main.java ContractTests.java",
+			"java ContractTests",
+			"java Main",
+			"The complete example reports Creation worked contracts: 31 passed. Main compares constructors, a named static factory, Supplier, Factory Method, product families, and a fluent Builder.",
+			"These programs read no standard input. Run displays the native Java 21 commands."
+		];
+	}
+	if (
+		course === "design-patterns-in-java" &&
+		[javaCreationalReadingID, javaCreationalCoreID].includes(item ?? "") &&
+		["starter", "reference"].includes(role ?? "") &&
+		parts.length === 4 &&
+		extra === "native-java-creational"
+	) {
+		return [
+			"Java 21 packaged creation-pattern workflow",
+			"Save and export all fourteen files. Keep sources.txt and the src/creation tree together.",
+			"javac --release 21 -Xlint:all -Werror -d classes @sources.txt",
+			"java -cp classes ContractTests factories",
+			"java -cp classes ContractTests core",
+			"java -cp classes Main",
+			"java -cp classes ContractTests",
+			"Complete the two BoxedFactory methods and boxed creation hook, then the four Builder methods. The factories stage reports 635 passed and core reports 2101 passed. Main prints the boxed Notes report, Lines: 2, and End.",
+			"The final harness also checks optional toBuilder and reports 2105 passed. A completed core remains usable before that extension.",
+			role === "starter"
+				? "The untouched starter compiles, then names an unfinished method."
+				: "The reference completes core and optional behavior. Keep a separate learner attempt and pattern-choice evidence.",
+			"These programs read no standard input. Run displays native build commands."
+		];
+	}
 	if (
 		course === "design-patterns-in-java" &&
 		item === javaFoundationsReadingID &&

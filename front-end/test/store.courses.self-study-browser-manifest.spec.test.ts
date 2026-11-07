@@ -66,7 +66,8 @@ function isReviewedModule(id: string, title: string) {
 		: id === "design-patterns-in-java"
 			? [
 					"DPJ1 What Patterns Are and What They Are Not",
-					"DPJ2 Java Design Foundations"
+					"DPJ2 Java Design Foundations",
+					"DPJ3 Creational Patterns I"
 				].includes(title)
 			: true;
 }
@@ -74,7 +75,7 @@ const cases = [
 	{
 		id: "design-patterns-in-java",
 		source: designPatternsInJavaCourse,
-		readings: 2,
+		readings: 3,
 		additions: []
 	},
 	{
@@ -831,7 +832,8 @@ it.each(
 											: "design-patterns-in-java-dpj1-what-patterns-are-and-what-they-are-not",
 										...(id === "design-patterns-in-java"
 											? [
-													"design-patterns-in-java-dpj2-java-design-foundations"
+													"design-patterns-in-java-dpj2-java-design-foundations",
+													"design-patterns-in-java-dpj3-creational-patterns-i"
 												]
 											: [])
 									]
@@ -839,7 +841,7 @@ it.each(
 							: {}),
 						reviewScope:
 							id === "design-patterns-in-java"
-								? "DPJ1 and DPJ2 only: two complete readings, eleven core activities, six optional tasks and thirty-four case/answer views per profile. All134published identities checked; later units remain outside this teaching/runtime acceptance."
+								? "DPJ1 through DPJ3 only: three complete readings, sixteen core activities, nine optional tasks and fifty case/answer views per profile. All 134 published identities checked; later units remain outside this teaching/runtime acceptance."
 								: id === "java-level-3"
 									? "AJ4 only: one reading, two core projects, three optional tasks and ten input/response views per profile. All 217 course identities checked; other Java units are outside this teaching and runtime acceptance."
 									: id === "intro-to-environmental-science"

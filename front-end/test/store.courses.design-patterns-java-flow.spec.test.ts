@@ -98,7 +98,7 @@ describe("Design Patterns in Java learner flow", () => {
 			module => module.supplementalProjects.map(item => item.title)
 		);
 
-		expect(curriculumTitles).toHaveLength(81);
+		expect(curriculumTitles).toHaveLength(79);
 		expect(optionTitles).toHaveLength(51);
 		for (const title of [
 			"Core Project: What Patterns Are and What They Are Not",
