@@ -2,8 +2,18 @@ import type { RawCourse, RawCourseModule, RawCourseModuleItem } from "./types";
 import { pythonLevel1Course } from "./python-level-1";
 
 function copyItem(item: RawCourseModuleItem): RawCourseModuleItem {
+	const content =
+		item.title === "GrS2 Project 1: Basic Shapes"
+			? [
+					item.content,
+					"**Classroom project:** The examples above explain the drawing commands. The project button opens the prepared Triangle Motion framework. Keep its movement and redraw callbacks in place.",
+					"**Normal:** Complete `draw_triangle()` with three equal sides and 120-degree turns. Check that the outline closes before adding a fill.",
+					"**Hard:** Complete `add_triangle_detail()` with a detail that moves with the triangle. Verify all four arrow keys and the absence of travel lines."
+				].join("\n\n")
+			: item.content;
 	return {
 		...item,
+		content,
 		aliases: item.aliases ? [...item.aliases] : undefined
 	};
 }

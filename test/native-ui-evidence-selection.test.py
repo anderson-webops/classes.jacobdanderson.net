@@ -48,6 +48,20 @@ class NativeResultSelectionTests(unittest.TestCase):
                          "tracker/results/solution-large-standard.xcresult")
         self.assertEqual(selected["testId"], "TrackerUITests/testTrackerWorkflow()")
 
+    def test_selects_swiftdata_failure_with_its_tracker_ui_identifier(self):
+        with archive(course="swiftdata") as bundle:
+            selected = inspector.select_failed_result(bundle)
+        self.assertEqual(selected["course"], "swiftdata")
+        self.assertEqual(selected["result"],
+                         "swiftdata/results/solution-small-standard.xcresult")
+        self.assertEqual(selected["testId"], "TrackerUITests/testTrackerWorkflow()")
+        self.assertEqual(len(selected["selected"]), 2)
+
+    def test_rejects_mixed_tracker_and_swiftdata_proofs(self):
+        with archive(course="swiftdata", second_course="tracker") as bundle:
+            with self.assertRaises(AssertionError):
+                inspector.select_failed_result(bundle)
+
     def test_accepts_largest_text_profile(self):
         with archive(variant="largest-text") as bundle:
             selected = inspector.select_failed_result(bundle)

@@ -34,6 +34,7 @@ import { introToPhysicsCourse } from "@/stores/courses/intro-to-physics";
 import { physicsLevel2Course } from "@/stores/courses/physics-level-2";
 import { geometryACourse } from "@/stores/courses/geometry-a";
 import { geometryBCourse } from "@/stores/courses/geometry-b";
+import { middleSchoolIntegratedScienceCourse } from "@/stores/courses/middle-school-integrated-science";
 import { preAlgebraACourse } from "@/stores/courses/pre-algebra-a";
 import {
 	earlyElementaryMathACourse,
@@ -53,6 +54,12 @@ import {
 } from "@/stores/courses/source-library-courses";
 
 const cases = [
+	{
+		id: "middle-school-integrated-science",
+		source: middleSchoolIntegratedScienceCourse,
+		readings: 65,
+		additions: []
+	},
 	{
 		id: "early-elementary-b-picture-book",
 		source: earlyElementaryPictureBookCourse,
@@ -339,7 +346,13 @@ it.each(
 				expect(displayedPrompt, project.title).toBe(originalPrompt);
 		}
 		const card = (item: CourseModuleItem) => {
+			const completeAssignment = [
+				"middle-school-integrated-science",
+				"early-elementary-a-reading",
+				"early-elementary-b-picture-book"
+			].includes(id);
 			const fullBlocks = [
+				"middle-school-integrated-science",
 				"early-elementary-a-math",
 				"early-elementary-b-math",
 				"late-elementary-a-math",
@@ -357,7 +370,7 @@ it.each(
 			const selfChecks = fullBlocks
 				? [
 						...item.content.matchAll(
-							/\[(Check answers and reasoning|Project self-check)\]\(([^)]+)\)/g
+							/\[(Check answers and reasoning|Project self-check|Case inputs|Runoff inputs)\]\(([^)]+)\)/g
 						)
 					].map(([, label, href]) => {
 						const url = new URL(href, "https://example.invalid");
@@ -406,6 +419,7 @@ it.each(
 						)
 				: item.content;
 			if (
+				completeAssignment ||
 				[
 					"algebra-1a",
 					"algebra-1b",
@@ -437,34 +451,61 @@ it.each(
 			const container = document.createElement("div");
 			container.innerHTML = markdown.render(
 				normalizeInlineCourseMarkdown(
-					directive ??
-						([
-							"early-elementary-a-math",
-							"early-elementary-b-math",
-							"late-elementary-a-math",
-							"late-elementary-b-math",
-							"early-elementary-a-reading",
-							"early-elementary-b-picture-book",
-							"algebra-1a",
-							"algebra-1b",
-							"introduction-to-public-speaking",
-							"intro-to-physics",
-							"physics-level-2",
-							"pre-algebra-a",
-							"geometry-a",
-							"geometry-b",
-							"algebra-2a",
-							"algebra-2b"
-						].includes(id)
-							? fullAssignment
-							: "")
+					completeAssignment
+						? fullAssignment
+						: (directive ??
+								([
+									"early-elementary-a-math",
+									"early-elementary-b-math",
+									"late-elementary-a-math",
+									"late-elementary-b-math",
+									"early-elementary-a-reading",
+									"early-elementary-b-picture-book",
+									"algebra-1a",
+									"algebra-1b",
+									"introduction-to-public-speaking",
+									"intro-to-physics",
+									"physics-level-2",
+									"pre-algebra-a",
+									"geometry-a",
+									"geometry-b",
+									"algebra-2a",
+									"algebra-2b"
+								].includes(id)
+									? fullAssignment
+									: ""))
 				)
 			);
+			if (
+				completeAssignment &&
+				id !== "middle-school-integrated-science"
+			) {
+				const completion = item.content.split(
+					"**Completion evidence:**"
+				)[1];
+				if (item.learningPath === "core")
+					expect(completion, item.title).toBeTruthy();
+				if (completion) {
+					const evidence = document.createElement("div");
+					evidence.innerHTML = markdown.render(
+						normalizeInlineCourseMarkdown(completion)
+					);
+					expect(
+						container.textContent!.replace(/\s+/g, " ").trim(),
+						item.title
+					).toContain(
+						evidence.textContent!.replace(/\s+/g, " ").trim()
+					);
+				}
+			}
 			return {
 				id: item.id,
 				title: item.title,
 				learningPath: item.learningPath,
 				selfChecks,
+				assignmentTextScope: completeAssignment
+					? "complete"
+					: "directive",
 				directiveTextMode: fullBlocks ? "innerText" : "textContent",
 				requiredDirective: container
 					.textContent!.replace(/\s+/g, " ")
@@ -520,7 +561,9 @@ it.each(
 						? 8
 						: ["intro-to-physics", "physics-level-2"].includes(id)
 							? 17
-							: count
+							: id === "middle-school-integrated-science"
+								? 10
+								: count
 			);
 		for (const module of modules) {
 			if (id === "geometry-a")
@@ -557,6 +600,18 @@ it.each(
 				expect(module.readings, module.title).toHaveLength(
 					module.title.startsWith("PHY8 ") ? 2 : 1
 				);
+			else if (id === "middle-school-integrated-science")
+				expect(module.readings).toHaveLength(
+					module.kind === "appendix"
+						? ["Standards Map", "Course Roadmap"].includes(
+								module.title
+							)
+							? 6
+							: 4
+						: module.title.startsWith("MS9 ")
+							? 5
+							: 4
+				);
 			else if (!algebra && !algebra1)
 				expect(module.readings, module.title).toHaveLength(1);
 			else if (algebra && module.readings.length === 0)
@@ -591,11 +646,13 @@ it.each(
 						sourceProjects: sourceProjects.length,
 						modules,
 						reviewScope:
-							id === "early-elementary-a-reading"
-								? "Complete on-site explanations and briefs; the ten named reading texts remain unavailable."
-								: id === "early-elementary-b-picture-book"
-									? "Complete supplied teaching,practice,case inputs and briefs;original Gabby Tries text remains unavailable."
-									: "complete course reading and assignment view",
+							id === "middle-school-integrated-science"
+								? "Complete ten teaching units and five reference appendices:65readings,58complete optional/required activities and117input/response views per role/width profile;all123published identities retained."
+								: id === "early-elementary-a-reading"
+									? "Complete on-site explanations and briefs; the ten named reading texts remain unavailable."
+									: id === "early-elementary-b-picture-book"
+										? "Complete supplied teaching,practice,case inputs and briefs;original Gabby Tries text remains unavailable."
+										: "complete course reading and assignment view",
 						internalModules: course.modules
 							.filter(module => module.internal)
 							.map(module => ({

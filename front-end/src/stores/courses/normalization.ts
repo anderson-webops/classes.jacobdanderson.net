@@ -12,6 +12,7 @@ import { applyLateElementaryAProjects } from "./lateElementaryAProjects";
 import { applyLateElementaryBProjects } from "./lateElementaryBProjects";
 import { mapMarkdownProse } from "./markdownProse";
 import { applyMiddleSchoolLiteratureReadings } from "./middleSchoolLiteratureReadings";
+import { applyMiddleSchoolScienceReferences } from "./middleSchoolScienceReferences";
 import { applyMiddleSchoolWritingReadings } from "./middleSchoolWritingReadings";
 import { applyNovelWritingReadings } from "./novelWritingReadings";
 import { applyPhysicsLevel2References } from "./physicsLevel2References";
@@ -9878,6 +9879,8 @@ export function normalizeRawCourse(id: string, rawCourse: RawCourse) {
 		applyPublicSpeakingReadings(course, rawCourse);
 	if (id === "scratch-level-1-bootcamp")
 		applyScratchBootcampReadings(course, rawCourse);
+	if (id === "middle-school-integrated-science")
+		applyMiddleSchoolScienceReferences(course);
 	if (id === "intro-to-physics") applyIntroPhysicsReferences(course);
 	if (id === "physics-level-2") applyPhysicsLevel2References(course);
 	if (

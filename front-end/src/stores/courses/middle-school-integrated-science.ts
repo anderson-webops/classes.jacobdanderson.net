@@ -1,5 +1,6 @@
 import type { RawCourse, RawCourseModuleItem } from "./types";
 import { isPhetResourceUrl } from "../../modules/resourceUrls";
+import { middleSchoolScienceGuidance } from "./middleSchoolScienceGuidance";
 
 const middleSchoolIntegratedScienceSourceCourse: RawCourse = {
 	name: "Middle School Integrated Science",
@@ -62,12 +63,12 @@ const middleSchoolIntegratedScienceSourceCourse: RawCourse = {
 				{
 					title: "Organelles and Cell Jobs",
 					content:
-						"Cover the nucleus, cell membrane, cytoplasm, mitochondria, chloroplasts, cell wall, and vacuole. Keep the focus on the job of each structure and how cells meet life needs."
+						"The nucleus holds genetic material in the modeled plant and animal cells. The membrane regulates exchange, mitochondria participate in cellular energy transfer, and chloroplasts support photosynthesis. A wall provides support and a vacuole stores materials. These structures interact rather than acting as independent miniature organs."
 				},
 				{
 					title: "From Cells to Body Systems",
 					content:
-						"Connect cells, tissues, organs, and organ systems. Use the digestive, respiratory, circulatory, nervous, and muscular systems to show how specialized parts work together."
+						"Similar specialized cells form tissues; several tissues form an organ. Organ systems coordinate multiple organs. In the supplied runner case, digestion supplies nutrients, lungs exchange gases, blood transports materials, nervous signals coordinate responses, and muscles produce movement. Each system depends on the others."
 				},
 				{
 					title: "Guided Practice: System Interaction Case Study",
@@ -109,7 +110,7 @@ const middleSchoolIntegratedScienceSourceCourse: RawCourse = {
 				{
 					title: "Adaptations Are Population-Level Changes",
 					content:
-						"Clarify that individual organisms do not choose to evolve. Populations change over generations when inherited traits become more or less common."
+						"An adaptation is an inherited feature shaped by selection in a population's evolutionary history. Populations change across generations as inherited variants become more or less common. Individuals do not choose mutations or evolve a needed trait during their lives. A short-term individual response, such as a behavioral adjustment, is distinct from a change in inherited population frequencies."
 				},
 				{
 					title: "Guided Practice: Trait Data and Environmental Pressure",
@@ -151,7 +152,7 @@ const middleSchoolIntegratedScienceSourceCourse: RawCourse = {
 				{
 					title: "Biodiversity and Ecosystem Stability",
 					content:
-						"Connect biodiversity to resilience and ecosystem services. Use examples such as pollination, soil health, clean water, fisheries, and forests."
+						"Biodiversity includes variation among organisms and species. Resilience is a system's ability to retain or recover functions after disturbance. Different species can respond differently, so diverse communities may retain some functions when conditions change; diversity alone does not guarantee stability. Pollination, water filtration and soil processes are examples of ecosystem services that support human activity."
 				},
 				{
 					title: "Case Study: Human Impact and Tradeoffs",
@@ -188,12 +189,12 @@ const middleSchoolIntegratedScienceSourceCourse: RawCourse = {
 				{
 					title: "Weather, Air Masses, and Forecasting",
 					content:
-						"Cover temperature, pressure, humidity, fronts, wind, clouds, and precipitation. Use maps and forecasts to show how meteorologists infer future conditions from current data."
+						"An air mass has broadly similar temperature and moisture properties, and a front is a boundary between air masses. Air-pressure differences help drive wind. Clouds form when water vapor condenses into droplets or ice; precipitation falls from clouds when particles grow sufficiently. Maps combine measurements to support forecasts, while incomplete observations and changing conditions create uncertainty."
 				},
 				{
 					title: "Climate Patterns and Climate Change",
 					content:
-						"Distinguish weather from climate and short-term variation from long-term trends. Use graphs of temperature, precipitation, or carbon dioxide and discuss evidence-based reasoning."
+						"Weather records individual conditions and events; climate summarizes patterns over longer periods. A trend describes change across an ordered series, while shorter variations can occur within it. Detecting a temperature trend requires comparable records and a defined interval. Explaining its cause additionally requires evidence about mechanisms and possible drivers."
 				},
 				{
 					title: "Data Practice: Reading Earth Science Graphs",
@@ -361,7 +362,7 @@ const middleSchoolIntegratedScienceSourceCourse: RawCourse = {
 				{
 					title: "Electricity and Circuits",
 					content:
-						"Charge, current, voltage, resistance, conductors, insulators, series circuits, and parallel circuits can be modeled with virtual circuit builders rather than physical components."
+						"Electric charge is a property of matter. Current measures charge flow per unit time, voltage measures energy difference per unit charge, and resistance describes opposition to current. Conductors allow charge to move more readily than insulators. A series circuit has one path, while parallel branches offer separate paths; the supplied circuit states show how opening one path changes the whole circuit."
 				},
 				{
 					title: "Magnetism and Electromagnetism",
@@ -408,7 +409,7 @@ const middleSchoolIntegratedScienceSourceCourse: RawCourse = {
 				{
 					title: "Capstone Studio: Research, Model, Explain, Revise",
 					content:
-						"Choose a question from life science, Earth science, physical science, or space science. Build a model or analysis, explain evidence, receive feedback, and revise the final presentation."
+						"Complete a science presentation using a question and records from the supplied case packs. Include the question, source log, raw evidence, a labeled model or data display, a claim, two specific evidence points, reasoning, an alternative, and a limitation. Retain the first version, make a substantive revision, and explain which evidence changed the work. Present the completed artifact with a text description of each visual; a proposal or outline alone does not complete this project."
 				}
 			],
 			supplementalProjects: [
@@ -420,7 +421,7 @@ const middleSchoolIntegratedScienceSourceCourse: RawCourse = {
 				{
 					title: "Project: Middle School Science Capstone",
 					content:
-						"Create a final science presentation with a question, background, data or evidence, model, explanation, limitation, and next question. The format can be slides, a written brief, or a recorded explanation."
+						"Extend the completed core science capstone by connecting a second science domain or comparing a competing engineering design. Add a new evidence display, explain what it changes, and defend one uncertainty or tradeoff. The extension can be slides, a written brief, or a recorded explanation with transcript."
 				}
 			]
 		}
@@ -696,7 +697,7 @@ const MIDDLE_SCHOOL_SCIENCE_FLOW: Record<string, MiddleSchoolScienceFlow> = {
 			"Capstone defense and revision"
 		],
 		phenomenon:
-			"Repeated sky observations, model snapshots, planetary data, and spectra support several explanations while revealing that no single diagram can preserve geometry, motion, size, distance, and time scale at once.",
+			"A supplied idealized phase sequence, two explicit Earth-Moon models, planetary data, and spectral evidence cards support explanations while showing that one diagram cannot preserve geometry, motion, size, distance, and time scale at once. The modeled sequence is labeled separately from measured sky observations.",
 		corePath:
 			"Use repeated evidence to explain day and night, Moon phases, seasons, and orbital motion; compare planetary properties with consistent units; and complete a source-based capstone.",
 		stretchPath:
@@ -719,7 +720,7 @@ const MIDDLE_SCHOOL_SCIENCE_ADDITIONS: Record<string, RawCourseModuleItem[]> = {
 				"**Question-to-evidence chain:** Rewrite a broad question so it names a measurable outcome, one changed condition, a comparison, and a time or sample boundary. Mark independent variable, dependent variable, controls, constants, repeated observations, and any factor that differs unintentionally.",
 				"**Data integrity:** Keep raw values, units, missing entries, observation effort, and exclusions visible. Do not silently drop an inconvenient value or switch graph scales. A derived average or rate links back to the exact rows used.",
 				"**Decision check:** Classify each conclusion as description, association, possible mechanism, or causal claim. Match claim strength to the design rather than adding stronger verbs after seeing a pattern.",
-				"**Mastery check:** Repair the supplied pond comparison, explain why unequal observation time matters, and name one additional measure that would distinguish two plausible causes."
+				"**Check:** Repair the supplied pond comparison, explain why unequal observation time matters, and name one additional measure that would distinguish two plausible causes."
 			].join("\n\n"),
 			datasetLink: middleSchoolScienceMaterial(
 				"reasoning-models-and-data-cases"
@@ -735,7 +736,7 @@ const MIDDLE_SCHOOL_SCIENCE_ADDITIONS: Record<string, RawCourseModuleItem[]> = {
 				"**Representation choice:** Use a bar graph for category comparisons, a line graph for ordered time values, a scatterplot for paired quantitative variables, and a table when exact values matter more than visual trend. State why the chosen representation fits the question.",
 				"**Model critique:** Label the system boundary, represented parts, interactions, scale, time step, and omitted factors. A useful model can be simplified without being dishonest when its purpose and omissions are explicit.",
 				"**CER revision:** Quote or calculate two evidence points, connect them to a mechanism, compare one alternate explanation, and narrow the claim when the data cannot decide between alternatives.",
-				"**Mastery check:** Find the deliberate mismatch among the supplied table, graph, and caption; correct it; then write what evidence would change the revised claim."
+				"**Check:** Find the deliberate mismatch among the supplied table, graph, and caption; correct it; then write what evidence would change the revised claim."
 			].join("\n\n"),
 			datasetLink: middleSchoolScienceMaterial(
 				"reasoning-models-and-data-cases"
@@ -753,7 +754,7 @@ const MIDDLE_SCHOOL_SCIENCE_ADDITIONS: Record<string, RawCourseModuleItem[]> = {
 				"**Image routine:** Record specimen, image type, scale bar or stated magnification, visible structures, labels supplied by the source, and whether colors are natural, stained, or digitally assigned. Observation stays separate from the explanatory cell model.",
 				"**Comparison:** Plant, animal, and bacterial cells share cellular organization but differ in represented structures. Match membrane, cytoplasm, genetic material, mitochondria, chloroplast, cell wall, nucleus, and vacuole only where the supplied model supports them.",
 				"**Structure-function claim:** Name a structure, its relevant feature, its supported contribution, and the process or system that depends on it. Avoid one-to-one factory slogans when the interaction among structures matters.",
-				"**Mastery check:** Compare three supplied cells, correct one false-color observation, and identify one function the still image cannot demonstrate directly."
+				"**Check:** Compare three supplied cells, correct one false-color observation, and identify one function the still image cannot demonstrate directly."
 			].join("\n\n"),
 			datasetLink: middleSchoolScienceMaterial(
 				"cells-and-body-systems-cases"
@@ -770,7 +771,7 @@ const MIDDLE_SCHOOL_SCIENCE_ADDITIONS: Record<string, RawCourseModuleItem[]> = {
 				"**System map:** Use only the fictional runner case. Trace oxygen from environment to respiratory and circulatory pathways, nutrients from digestive pathways, chemical or electrical signals from nervous pathways, and movement through muscular and skeletal interactions.",
 				"**Causal chain:** For each arrow, name what moves, the source, destination, and why the transfer matters. More than one system can contribute to the same observable response.",
 				"**Privacy boundary:** No pulse, diet, diagnosis, disability, medical history, fitness, or body measurement is collected. Learners analyze the same supplied case and can respond with text, diagram, or narrated explanation.",
-				"**Mastery check:** Build a three-system chain, identify a missing transfer in the flawed model, and state one limitation that prevents the case from serving as medical advice."
+				"**Check:** Build a three-system chain, identify a missing transfer in the flawed model, and state one limitation that prevents the case from serving as medical advice."
 			].join("\n\n"),
 			datasetLink: middleSchoolScienceMaterial(
 				"cells-and-body-systems-cases"
@@ -788,7 +789,7 @@ const MIDDLE_SCHOOL_SCIENCE_ADDITIONS: Record<string, RawCourseModuleItem[]> = {
 				"**Model chain:** DNA is organized into chromosomes; a gene is a DNA region with a biological role; alleles are sequence variants; genotype records selected alleles; phenotype is an observed or measured outcome influenced by genotype, environment, development, and chance.",
 				"**Probability:** A probability predicts a distribution over many comparable events, not a guaranteed result for one offspring or organism. Small samples can differ noticeably from expected ratios.",
 				"**Trait boundary:** Use only fictional organisms and supplied records. Complex human traits, ability, identity, behavior, ancestry, and health are not reduced to single-gene classroom categories.",
-				"**Mastery check:** Repair a one-gene-destiny claim, compare expected and observed counts, and identify whether genotype, environment, both, or insufficient evidence best fits each supplied case."
+				"**Check:** Repair a one-gene-destiny claim, compare expected and observed counts, and identify whether genotype, environment, both, or insufficient evidence best fits each supplied case."
 			].join("\n\n"),
 			datasetLink: middleSchoolScienceMaterial(
 				"genetics-variation-and-selection-cases"
@@ -805,7 +806,7 @@ const MIDDLE_SCHOOL_SCIENCE_ADDITIONS: Record<string, RawCourseModuleItem[]> = {
 				"**Variation sources:** Mutation can introduce sequence variation, while recombination and reproduction reshuffle existing alleles. Environmental conditions affect which inherited variations influence survival and reproduction in a particular setting.",
 				"**Selection chain:** Begin with variation, identify the environmental condition, compare reproductive outcomes, follow frequencies across generations, and test whether the pattern is larger than expected sampling variation.",
 				"**Alternative explanations:** Drift, migration, measurement error, or a second environmental variable can also change observed frequencies. Natural selection is supported when the full evidence chain fits better than these alternatives.",
-				"**Mastery check:** Use exact beetle-frequency values, reject intentional or goal-directed evolution language, and state one additional dataset needed to separate selection from chance."
+				"**Check:** Use exact beetle-frequency values, reject intentional or goal-directed evolution language, and state one additional dataset needed to separate selection from chance."
 			].join("\n\n"),
 			datasetLink: middleSchoolScienceMaterial(
 				"genetics-variation-and-selection-cases"
@@ -823,7 +824,7 @@ const MIDDLE_SCHOOL_SCIENCE_ADDITIONS: Record<string, RawCourseModuleItem[]> = {
 				"**Arrow convention:** Arrows point from a food or energy source to the organism receiving transferred energy. Energy enters most course webs through producers and disperses as heat; atoms and nutrients move through organisms, waste, decomposers, and environmental reservoirs.",
 				"**Population evidence:** Report counts together with area, time, method, and effort. A carrying-capacity estimate can change when resources, habitat, competitors, predators, disease, or climate conditions change.",
 				"**Biodiversity evidence:** Species richness, relative abundance, and evenness answer different questions. Compare the same measure under comparable sampling before claiming one site is more diverse or stable.",
-				"**Mastery check:** Correct reversed arrows, normalize the unequal surveys, compare richness with evenness, and predict one direct plus one indirect effect of a population change."
+				"**Check:** Correct reversed arrows, normalize the unequal surveys, compare richness with evenness, and predict one direct plus one indirect effect of a population change."
 			].join("\n\n"),
 			datasetLink: middleSchoolScienceMaterial(
 				"ecosystems-and-human-impact-cases"
@@ -839,7 +840,7 @@ const MIDDLE_SCHOOL_SCIENCE_ADDITIONS: Record<string, RawCourseModuleItem[]> = {
 				"**Impact pathway:** Separate source or action, environmental release, transport, exposure pathway, measured ecological response, uncertainty, and possible consequence. A concentration at one station cannot automatically represent every organism, time, or location.",
 				"**Decision matrix:** Compare options using ecological benefit, cost, feasibility, timing, reversibility, uncertainty, and how burdens or benefits are distributed among supplied stakeholder groups.",
 				"**Monitoring:** Define an indicator, baseline, measurement schedule, threshold, and response if the intervention underperforms or creates an unintended effect.",
-				"**Mastery check:** Build one complete pathway from the estuary case, remove an unsupported health claim, select an option conditionally, and name a trigger for revising the recommendation."
+				"**Check:** Build one complete pathway from the estuary case, remove an unsupported health claim, select an option conditionally, and name a trigger for revising the recommendation."
 			].join("\n\n"),
 			datasetLink: middleSchoolScienceMaterial(
 				"ecosystems-and-human-impact-cases"
@@ -858,7 +859,7 @@ const MIDDLE_SCHOOL_SCIENCE_ADDITIONS: Record<string, RawCourseModuleItem[]> = {
 				"**Scale check:** Weather describes short-term atmospheric conditions; climate describes distributions and patterns over longer periods and regions. Record variable, location, time span, baseline, units, and data completeness before interpreting a trend.",
 				"**Claim ladder:** First detect a pattern, then compare possible drivers, then evaluate attribution evidence, then discuss projected or observed impacts. Evidence sufficient for one rung does not automatically establish the next.",
 				"**Variability and uncertainty:** Short-term variation can continue within a long-term trend. Uncertainty intervals, measurement limits, and model ranges refine claim strength rather than erasing well-supported patterns.",
-				"**Mastery check:** Write one bounded weather forecast, one climate trend claim, one attribution statement supported by multiple evidence lines, and one claim the supplied data cannot establish."
+				"**Check:** Write one bounded weather forecast, one climate trend claim, one attribution statement supported by multiple evidence lines, and one claim the supplied data cannot establish."
 			].join("\n\n"),
 			datasetLink: middleSchoolScienceMaterial(
 				"earth-weather-climate-and-geologic-cases"
@@ -875,7 +876,7 @@ const MIDDLE_SCHOOL_SCIENCE_ADDITIONS: Record<string, RawCourseModuleItem[]> = {
 				"**Multiple evidence lines:** Compare continental shapes cautiously, then add matching fossils and rock units, seafloor age and magnetic patterns, earthquake depth, volcano locations, and measured plate motion.",
 				"**Boundary model:** Divergent, convergent, and transform boundaries describe relative motion; specific hazards and landforms depend on plate type, geometry, material, rate, and local conditions. A plate is not identical to a continent.",
 				"**Deep-time scale:** Relative order, index fossils, radiometric ages supplied by the source, and cross-cutting relationships answer different chronology questions. Timelines and maps compress immense time and distance.",
-				"**Mastery check:** Use three independent lines of evidence to support one boundary interpretation, distinguish hazard from risk, and identify what the map or classroom model omits."
+				"**Check:** Use three independent lines of evidence to support one boundary interpretation, distinguish hazard from risk, and identify what the map or classroom model omits."
 			].join("\n\n"),
 			datasetLink: middleSchoolScienceMaterial(
 				"earth-weather-climate-and-geologic-cases"
@@ -894,7 +895,7 @@ const MIDDLE_SCHOOL_SCIENCE_ADDITIONS: Record<string, RawCourseModuleItem[]> = {
 				"**Representation ladder:** A particle picture uses a legend, a chemical symbol names an element, a formula records a composition, and an equation represents a modeled change. These representations are related but not interchangeable.",
 				"**Counting rule:** Subscripts count atoms within one represented particle; coefficients count repeated particles or formula units. Balance by changing coefficients, never by changing the identity encoded in a formula.",
 				"**System boundary:** Track atoms and measured mass inside the stated boundary. Apparent mass loss in an open system can reflect matter leaving the measurement region rather than destroyed atoms.",
-				"**Mastery check:** Translate one particle model into formulas, balance the visual reaction, verify each atom count, and explain why the sealed mass remains constant within measurement resolution."
+				"**Check:** Translate one particle model into formulas, balance the visual reaction, verify each atom count, and explain why the sealed mass remains constant within measurement resolution."
 			].join("\n\n"),
 			datasetLink: middleSchoolScienceMaterial(
 				"matter-atoms-and-reaction-cases"
@@ -910,7 +911,7 @@ const MIDDLE_SCHOOL_SCIENCE_ADDITIONS: Record<string, RawCourseModuleItem[]> = {
 				"**Evidence bundle:** Temperature, gas, color, light, odor, precipitate, conductivity, pH, or property change can contribute evidence, but each observation can have physical or measurement alternatives.",
 				"**Classification routine:** Record observations, identify the proposed new substance, connect particle or property evidence, compare a physical-change explanation, and classify as physical, chemical, or insufficient evidence.",
 				"**Safety and access:** All cases use supplied diagrams, measurements, and simulation states. No tasting, smelling, mixing, heating, household chemical, or improvised reaction is part of the course.",
-				"**Mastery check:** Classify the ambiguous cases without appearance shortcuts and choose the most informative follow-up measurement for each."
+				"**Check:** Classify the ambiguous cases without appearance shortcuts and choose the most informative follow-up measurement for each."
 			].join("\n\n"),
 			datasetLink: middleSchoolScienceMaterial(
 				"matter-atoms-and-reaction-cases"
@@ -929,7 +930,7 @@ const MIDDLE_SCHOOL_SCIENCE_ADDITIONS: Record<string, RawCourseModuleItem[]> = {
 				"**Energy account:** Define the system and time interval, identify initial and final energy stores, label transfers by heating, mechanical work, electrical work, or radiation, and include the surroundings when energy leaves the selected system.",
 				"**Conservation:** A device can transfer energy into less useful thermal stores without destroying it. Useful output and efficiency depend on the task and boundary, so every comparison states both.",
 				"**Cross-scale explanation:** Connect observable temperature or motion changes to a particle or interaction model while labeling which features are inferred rather than directly seen.",
-				"**Mastery check:** Balance a qualitative energy account for two supplied devices, find the missing surroundings transfer, and explain why low efficiency is not missing energy."
+				"**Check:** Balance a qualitative energy account for two supplied devices, find the missing surroundings transfer, and explain why low efficiency is not missing energy."
 			].join("\n\n"),
 			datasetLink: middleSchoolScienceMaterial(
 				"energy-heat-and-engineering-cases"
@@ -945,7 +946,7 @@ const MIDDLE_SCHOOL_SCIENCE_ADDITIONS: Record<string, RawCourseModuleItem[]> = {
 				"**Thermal distinction:** Temperature relates to average particle kinetic energy in the course model; thermal energy also depends on amount and composition. Heating is energy transfer caused by a temperature difference, not a material stored inside an object.",
 				"**Transfer mechanisms:** Conduction involves interactions within or between materials, convection involves bulk fluid motion, and radiation can transfer energy through empty space. More than one can operate in one system.",
 				"**Fair engineering test:** Compare common starting conditions, measurement times, and criteria. Use cost, mass, performance, safety, accessibility, and reliability together rather than naming one universally best design.",
-				"**Mastery check:** Interpret the container temperature table, identify dominant modeled transfers, apply the decision matrix, and revise the recommendation when one criterion weight changes."
+				"**Check:** Interpret the container temperature table, identify dominant modeled transfers, apply the decision matrix, and revise the recommendation when one criterion weight changes."
 			].join("\n\n"),
 			datasetLink: middleSchoolScienceMaterial(
 				"energy-heat-and-engineering-cases"
@@ -964,7 +965,7 @@ const MIDDLE_SCHOOL_SCIENCE_ADDITIONS: Record<string, RawCourseModuleItem[]> = {
 				"**Object first:** Name one object, draw only forces acting on that object, label each interaction source, and use a consistent arrow-length convention. Do not place the action-reaction partner on the same diagram.",
 				"**Net-force reasoning:** Combine forces by direction. Zero net force supports constant velocity in the simplified model; nonzero net force supports acceleration in the net-force direction, not necessarily motion in that direction.",
 				"**Interaction pairs:** Newton's third-law pair forces are equal and opposite interactions on different objects. They do not cancel on one object's free-body diagram.",
-				"**Mastery check:** Correct three supplied diagrams, calculate qualitative or numerical net force, and predict whether velocity changes while keeping direction and reference frame explicit."
+				"**Check:** Correct three supplied diagrams, calculate qualitative or numerical net force, and predict whether velocity changes while keeping direction and reference frame explicit."
 			].join("\n\n"),
 			datasetLink: middleSchoolScienceMaterial(
 				"forces-motion-and-graph-cases"
@@ -980,7 +981,7 @@ const MIDDLE_SCHOOL_SCIENCE_ADDITIONS: Record<string, RawCourseModuleItem[]> = {
 				"**Graph routine:** Read title, axes, units, scale, direction convention, and interval. On a position-time graph, slope represents velocity; on a velocity-time graph, vertical value represents velocity and change in that value indicates acceleration.",
 				"**Story consistency:** Match each story segment to table values, graph shape, velocity sign, and any net-force explanation. Returning to the start means position returns to zero, not that total distance is zero.",
 				"**Calculation boundary:** Average speed uses total distance over elapsed time; average velocity uses displacement over elapsed time. A single average can hide changes within the interval.",
-				"**Mastery check:** Locate the deliberate mismatch in the cart packet, correct it, calculate one interval and whole-trip quantity, and explain what the graph cannot reveal about the forces by itself."
+				"**Check:** Locate the deliberate mismatch in the cart packet, correct it, calculate one interval and whole-trip quantity, and explain what the graph cannot reveal about the forces by itself."
 			].join("\n\n"),
 			datasetLink: middleSchoolScienceMaterial(
 				"forces-motion-and-graph-cases"
@@ -999,7 +1000,7 @@ const MIDDLE_SCHOOL_SCIENCE_ADDITIONS: Record<string, RawCourseModuleItem[]> = {
 				"**Representation:** Label equilibrium, amplitude, wavelength, time or distance axis, frequency, and medium or field context. A spatial snapshot and a time trace can look similar while answering different questions.",
 				"**Property distinction:** Amplitude and frequency vary independently in the supplied cases. For sound, pitch is associated with frequency and perceived loudness relates to amplitude plus source, medium, distance, and receiver conditions.",
 				"**Information system:** Identify sender, encoding rule, signal, pathway, receiver, decoding rule, interference, error check, and accessible alternate route. The message is information represented by the wave, not the matter moving from sender to receiver.",
-				"**Mastery check:** Decode the pulse table, repair an amplitude-frequency mix-up, compare two interference cases, and revise the design so it does not rely on sound or color alone."
+				"**Check:** Decode the pulse table, repair an amplitude-frequency mix-up, compare two interference cases, and revise the design so it does not rely on sound or color alone."
 			].join("\n\n"),
 			datasetLink: middleSchoolScienceMaterial(
 				"waves-circuits-and-signals-cases"
@@ -1015,7 +1016,7 @@ const MIDDLE_SCHOOL_SCIENCE_ADDITIONS: Record<string, RawCourseModuleItem[]> = {
 				"**Circuit model:** Trace every closed conducting path, identify source and components, compare series and parallel arrangements, and explain what changes when one branch opens. Current is a rate around the circuit, while voltage represents an energy-per-charge difference.",
 				"**Controlled comparison:** Change one component or arrangement at a time and use the same source model. Brightness alone is a qualitative clue unless the supplied measurement defines the comparison.",
 				"**Field and device model:** Electric and magnetic fields represent interactions across space. Motors transfer electrical energy toward motion; generators transfer motion-related energy toward electrical pathways within the simplified model.",
-				"**Mastery check:** Explain the branch-failure data, correct the used-up-current claim, annotate one field model, and identify energy inputs, outputs, and losses in an electromagnet device."
+				"**Check:** Explain the branch-failure data, correct the used-up-current claim, annotate one field model, and identify energy inputs, outputs, and losses in an electromagnet device."
 			].join("\n\n"),
 			datasetLink: middleSchoolScienceMaterial(
 				"waves-circuits-and-signals-cases"
@@ -1031,10 +1032,10 @@ const MIDDLE_SCHOOL_SCIENCE_ADDITIONS: Record<string, RawCourseModuleItem[]> = {
 		{
 			title: "Sky Pattern, Gravity, Orbit, and Scale-Model Gate",
 			content: [
-				"**Observation before model:** Sequence dated or timed sky observations, then use geometry and motion models to explain the pattern. Label viewpoint, light source, illuminated half, observer location, direction, and time step.",
+				"**Observation and model:** Analyze the supplied timed phase-model sequence and label it as modeled data. A real sky log is an optional comparison with recorded dates. Use geometry to explain the sequence, labeling viewpoint, light source, illuminated half, observer location, direction, and time step.",
 				"**Gravity and orbit:** Gravity continually changes an orbiting object's velocity direction. The object has tangential motion and inward acceleration; orbit does not mean gravity disappears.",
 				"**Scale honesty:** State whether a model preserves order, relative size, distance, period, direction, or geometry. A classroom page cannot usually preserve all of them, and decorative spacing does not become measured distance.",
-				"**Mastery check:** Correct Moon-phase and season misconceptions, compare two orbital models, quantify one supplied scale ratio, and name what each representation omits."
+				"**Check:** Correct Moon-phase and season misconceptions, compare two orbital models, quantify one supplied scale ratio, and name what each representation omits."
 			].join("\n\n"),
 			datasetLink: middleSchoolScienceMaterial(
 				"space-systems-and-capstone-cases"
@@ -1104,8 +1105,27 @@ const MIDDLE_SCHOOL_SCIENCE_PROJECT_COMPLETION: Record<string, string> = {
 	"Project: Space Systems Model Critique":
 		"Core: compare what two supplied models represent, explain, distort, and omit for one space phenomenon. Stretch: add viewpoint, geometry, gravity, time, and quantitative scale analysis; correct a phase, season, or orbit misconception; and propose a better combined representation.",
 	"Project: Middle School Science Capstone":
-		"Core: include question, source log, data or model, claim, two evidence points, reasoning, limitation, and revision. Stretch: compare an alternative, quantify uncertainty or sensitivity, connect multiple science disciplines or engineering constraints, preserve before-and-after evidence, and defend what would change the conclusion."
+		"Core: extend the completed core capstone with a second science domain or competing design and a new evidence display. Stretch: quantify a sensitivity or uncertainty, compare the alternatives under a changed condition, and defend what would change the extended conclusion."
 };
+
+function middleSchoolScienceItemKind(title: string) {
+	return /^(?:Data Practice|Guided Practice|Case Study|Simulation Practice|Capstone Studio):/.test(
+		title
+	)
+		? ("assignment" as const)
+		: ("reading" as const);
+}
+
+function middleSchoolScienceTaskResources(
+	content: string,
+	flow: MiddleSchoolScienceFlow
+) {
+	const inputs = middleSchoolScienceMaterial(flow.materialSection);
+	const answers = middleSchoolScienceAnswerKey(flow.answerSection);
+	const viewer = (asset: string) =>
+		`/course-resource?asset=${encodeURIComponent(asset)}`;
+	return `${content}\n\n[Case inputs](${viewer(inputs)})\n\n[Project self-check](${viewer(answers)})`;
+}
 
 function middleSchoolScienceProjectPath(title: string) {
 	return /critique|case file|challenge|impact memo|capstone/i.test(title)
@@ -1117,30 +1137,26 @@ export const middleSchoolIntegratedScienceCourse: RawCourse = {
 	...middleSchoolIntegratedScienceSourceCourse,
 	modules: middleSchoolIntegratedScienceSourceCourse.modules.map(module => {
 		const flow = MIDDLE_SCHOOL_SCIENCE_FLOW[module.title];
+		const guidance = middleSchoolScienceGuidance.find(
+			unit => unit.module === module.title
+		);
+		if (!guidance)
+			throw new Error(`Missing science guidance: ${module.title}`);
 		const referenceIsMedia = isPhetResourceUrl(flow.referenceLink);
 		const curriculum = module.curriculum.map((item, index) => ({
 			...item,
-			content: [
+			content:
 				index === 0
-					? "**Teaching flow:** No specialized science equipment or required household experiments are needed; specialized science equipment or household experiments are not required for any core or stretch route. Begin with the supplied phenomenon, inspect evidence before vocabulary, complete the core route, and end by revising one claim, model, graph, or design decision."
-					: "",
-				item.content,
-				`**Supplied phenomenon:** ${flow.phenomenon}`,
-				`**Core route:** ${flow.corePath}`,
-				`**Stretch route:** ${flow.stretchPath}`,
-				`**Science explanation:** ${flow.evidenceGate}`,
-				`**Model and claim boundary:** ${flow.boundary}`,
-				`**Authoritative reference:** [Open the module reference](${flow.referenceLink}).`
-			]
-				.filter(Boolean)
-				.join("\n\n"),
+					? `**Method**\n\n${guidance.method}\n\n**Worked example**\n\n${guidance.worked}\n\n**Evidence check**\n\n${flow.evidenceGate}\n\n**Model limits**\n\n${flow.boundary}\n\n[Reference](${flow.referenceLink})`
+					: middleSchoolScienceItemKind(item.title) === "assignment"
+						? middleSchoolScienceTaskResources(item.content, flow)
+						: item.content,
+			contentKind: middleSchoolScienceItemKind(item.title),
+			preserveInstructions: true,
+			preserveAssignment: true,
 			datasetLink:
 				item.datasetLink ??
-				(index === 0
-					? referenceIsMedia
-						? middleSchoolScienceMaterial(flow.materialSection)
-						: flow.referenceLink
-					: middleSchoolScienceMaterial(flow.materialSection)),
+				middleSchoolScienceMaterial(flow.materialSection),
 			mediaLink:
 				item.mediaLink ??
 				(index === 0 && referenceIsMedia
@@ -1154,26 +1170,25 @@ export const middleSchoolIntegratedScienceCourse: RawCourse = {
 		const additions = MIDDLE_SCHOOL_SCIENCE_ADDITIONS[module.title].map(
 			item => ({
 				...item,
-				content: [
-					item.content,
-					`**Supplied phenomenon:** ${flow.phenomenon}`,
-					`**Core route:** ${flow.corePath}`,
-					`**Stretch route:** ${flow.stretchPath}`,
-					`**Science explanation:** ${flow.evidenceGate}`,
-					`**Model and claim boundary:** ${flow.boundary}`
-				].join("\n\n"),
+				content: middleSchoolScienceTaskResources(item.content, flow),
+				contentKind: "assignment" as const,
+				preserveInstructions: true,
+				preserveAssignment: true,
 				projectLink: item.projectLink ?? flow.referenceLink
 			})
 		);
 		const supplementalProjects = module.supplementalProjects.map(item => ({
 			...item,
-			content: [
-				item.content,
-				`**Supplied phenomenon:** ${flow.phenomenon}`,
-				`**Completion route:** ${MIDDLE_SCHOOL_SCIENCE_PROJECT_COMPLETION[item.title]}`,
-				`**Science explanation:** ${flow.evidenceGate}`,
-				`**Model and claim boundary:** ${flow.boundary}`
-			].join("\n\n"),
+			content: middleSchoolScienceTaskResources(
+				[
+					item.content,
+					`**Completion route:** ${MIDDLE_SCHOOL_SCIENCE_PROJECT_COMPLETION[item.title]}`
+				].join("\n\n"),
+				flow
+			),
+			contentKind: "assignment" as const,
+			preserveInstructions: true,
+			preserveAssignment: true,
 			datasetLink:
 				item.datasetLink ??
 				middleSchoolScienceMaterial(flow.materialSection),
