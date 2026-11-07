@@ -1,5 +1,5 @@
 import type { RawCourse, RawCourseModuleItem } from "./types";
-import { staticMediaUrl } from "./staticMedia";
+import { pendingStaticMediaNotice, staticMediaUrl } from "./staticMedia";
 
 const NASA_BIOMES = "https://earthobservatory.nasa.gov/biome";
 const NASA_GRASSLAND =
@@ -219,8 +219,10 @@ const introToEnvironmentalScienceSourceCourse: RawCourse = {
 				},
 				{
 					title: "Photosynthesis Diagram Reference",
-					content:
+					content: [
 						"In this photosynthesis model, light energy is captured by chlorophyll, carbon dioxide enters from the air, water moves through the plant, glucose stores usable chemical energy, and oxygen is released. Producers transform light energy into stored chemical energy that supports consumers and decomposers. The material inputs are carbon dioxide and water; light supplies energy rather than matter.",
+						pendingStaticMediaNotice(PHOTOSYNTHESIS_DIAGRAM)
+					].join("\n\n"),
 					mediaLink: staticMediaUrl(PHOTOSYNTHESIS_DIAGRAM)
 				},
 				{
