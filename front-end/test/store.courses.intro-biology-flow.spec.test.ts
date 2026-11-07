@@ -197,7 +197,7 @@ describe("Intro to Biology complete supplied teaching and cases", () => {
 			"No ingredient-specific exposure test is supplied"
 		);
 		expect(answers).toContain(
-			"cannot uniquely identify the cause-bearing ingredient"
+			"do not uniquely identify the cause-bearing ingredient"
 		);
 		const capstone =
 			introToBiologyCourse.modules[7].supplementalProjects[0];
