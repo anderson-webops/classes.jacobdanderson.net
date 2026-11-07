@@ -7,6 +7,10 @@ import {
 	javaBoundaryReadingID
 } from "./javaBoundaryResources";
 import {
+	javaCollaborationCoreID,
+	javaCollaborationReadingID
+} from "./javaCollaborationResources";
+import {
 	javaCreationalCoreID,
 	javaCreationalReadingID
 } from "./javaCreationalResources";
@@ -147,6 +151,47 @@ export function javaNativeBuildInstructions(
 ): string[] | null {
 	const parts = (courseProjectKey ?? "").split(":");
 	const [course, item, role, extra] = parts;
+	if (
+		course === "design-patterns-in-java" &&
+		item === javaCollaborationReadingID &&
+		role === "starter" &&
+		parts.length === 4 &&
+		extra === "native-java-collaboration"
+	) {
+		return [
+			"Java 21 complete collaboration-pattern example",
+			"Export its three files and compile in this worked example's own folder.",
+			"javac --release 21 -Xlint:all -Werror Main.java ContractTests.java",
+			"java ContractTests",
+			"java Main",
+			"The complete example reports Collaboration worked contracts: 50 passed. Main prints 0->2, true, false, 2->0, true, (2+3) and 5 on separate lines.",
+			"These programs read no standard input. Run displays native Java 21 commands."
+		];
+	}
+	if (
+		course === "design-patterns-in-java" &&
+		[javaCollaborationReadingID, javaCollaborationCoreID].includes(
+			item ?? ""
+		) &&
+		["starter", "reference"].includes(role ?? "") &&
+		parts.length === 4 &&
+		extra === "native-java-collaboration"
+	) {
+		return [
+			"Java 21 event, undo and visitor collaboration workflow",
+			"Export all thirteen files. Keep sources.txt and the src/editor package tree together.",
+			"javac --release 21 -Xlint:all -Werror -d classes @sources.txt",
+			"java -cp classes ContractTests core",
+			"java -cp classes Main",
+			"java -cp classes ContractTests",
+			"Complete snapshot restore, captured event dispatch, command execute/undo, validation, mediator replace/undo and group visiting. Core reports 130 passed. Main prints replacement/undo events, request results, Ready:0, the tree and 3.",
+			"The final harness additionally checks optional EventBus.subscribeOnce and reports 142 passed. A completed core remains usable before the optional extension.",
+			role === "starter"
+				? "The untouched starter compiles and names an unfinished method."
+				: "The reference completes core and optional behavior. Keep the learner attempt and design evidence separate.",
+			"These programs read no standard input. Run displays native Java 21 commands."
+		];
+	}
 	if (
 		course === "design-patterns-in-java" &&
 		item === javaBehavioralReadingID &&
