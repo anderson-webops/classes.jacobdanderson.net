@@ -108,8 +108,20 @@ describe("course catalog breadth", () => {
 		expect(inventory?.content).toContain(
 			"A notebook or digital document is sufficient."
 		);
-		expect(JSON.stringify([elementary, middleSchool])).toContain(
-			"specialized science equipment or household experiments are not required"
+		const elementaryResources = elementary?.modules.find(
+			module => module.title === "Digital Resource Bank"
+		);
+		const elementarySafety = elementaryResources?.curriculum.find(
+			item => item.title === "Online Safety and Accessibility Check"
+		);
+		expect(elementarySafety?.content).toContain(
+			"Required investigations use supplied descriptions, diagrams and fictional records."
+		);
+		expect(elementarySafety?.content).toContain(
+			"Physical supplies are optional only."
+		);
+		expect(elementarySafety?.content).toContain(
+			"a sound comparison uses vibration data"
 		);
 		expect(
 			elementaryScienceCourse.modules.every(module =>
