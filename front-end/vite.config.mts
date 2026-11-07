@@ -1,6 +1,7 @@
 // vite.config.ts
 import { execFileSync } from "node:child_process";
 import path from "node:path";
+import process from "node:process";
 import { fileURLToPath } from "node:url";
 import { unheadVueComposablesImports } from "@unhead/vue";
 import Vue from "@vitejs/plugin-vue";
@@ -47,7 +48,7 @@ function buildIdentity() {
 			: git(["describe", "--exact-match", "--tags", "HEAD"]));
 	return {
 		revision: /^[a-f0-9]{40}$/.test(revision) ? revision : "unknown",
-		release: /^v2\.[0-9]+\.[0-9]+$/.test(release) ? release : "unreleased"
+		release: /^v2\.\d+\.\d+$/.test(release) ? release : "unreleased"
 	};
 }
 
@@ -114,6 +115,7 @@ export default defineConfig(({ command }) => ({
 	test: {
 		include: ["test/**/*.test.ts"],
 		environment: "jsdom",
+		setupFiles: ["test/setupBrowserStorage.ts"],
 		testTimeout: 60000
 	},
 
