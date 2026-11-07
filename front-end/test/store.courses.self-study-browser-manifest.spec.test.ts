@@ -64,14 +64,18 @@ function isReviewedModule(id: string, title: string) {
 	return id === "java-level-3"
 		? title === "AJ4 Recursion"
 		: id === "design-patterns-in-java"
-			? title === "DPJ1 What Patterns Are and What They Are Not"
+			? [
+					"DPJ1 What Patterns Are and What They Are Not",
+					"DPJ2 Java Design Foundations",
+					"DPJ3 Creational Patterns I"
+				].includes(title)
 			: true;
 }
 const cases = [
 	{
 		id: "design-patterns-in-java",
 		source: designPatternsInJavaCourse,
-		readings: 1,
+		readings: 3,
 		additions: []
 	},
 	{
@@ -450,13 +454,18 @@ it.each(
 				expect(displayedPrompt, project.title).toBe(originalPrompt);
 		}
 		const card = (item: CourseModuleItem) => {
-			const javaRecursionTask =
-				(id === "java-level-3" &&
-					item.id.startsWith("java-level-3-aj4-recursion-")) ||
-				(id === "design-patterns-in-java" &&
-					item.id.startsWith("design-patterns-in-java-dpj1-"));
+			const focusedJavaTask =
+				["java-level-3", "design-patterns-in-java"].includes(id) &&
+				course.modules.some(
+					module =>
+						isReviewedModule(id, module.title) &&
+						[
+							...module.curriculum,
+							...module.supplementalProjects
+						].some(row => row.id === item.id)
+				);
 			const completeAssignment =
-				javaRecursionTask ||
+				focusedJavaTask ||
 				[
 					"intro-to-environmental-science",
 					"elementary-science",
@@ -467,7 +476,7 @@ it.each(
 					"early-elementary-b-picture-book"
 				].includes(id);
 			const fullBlocks =
-				javaRecursionTask ||
+				focusedJavaTask ||
 				[
 					"intro-to-environmental-science",
 					"elementary-science",
@@ -529,6 +538,7 @@ it.each(
 						};
 					})
 				: [];
+			if (focusedJavaTask) expect(selfChecks, item.id).toHaveLength(2);
 			// These authored labels become separate headings in assignment cards.
 			// Keep every body word while matching the displayed heading punctuation.
 			let fullAssignment = fullBlocks
@@ -825,13 +835,19 @@ it.each(
 									reviewedModuleIds: [
 										id === "java-level-3"
 											? "java-level-3-aj4-recursion"
-											: "design-patterns-in-java-dpj1-what-patterns-are-and-what-they-are-not"
+											: "design-patterns-in-java-dpj1-what-patterns-are-and-what-they-are-not",
+										...(id === "design-patterns-in-java"
+											? [
+													"design-patterns-in-java-dpj2-java-design-foundations",
+													"design-patterns-in-java-dpj3-creational-patterns-i"
+												]
+											: [])
 									]
 								}
 							: {}),
 						reviewScope:
 							id === "design-patterns-in-java"
-								? "DPJ1 opening only: one reading, five core activities, three optional tasks and sixteen case/answer views per profile. All published course identities checked; later units remain outside this teaching/runtime acceptance."
+								? "DPJ1 through DPJ3 only: three complete readings, sixteen core activities, nine optional tasks and fifty case/answer views per profile. All 134 published identities checked; later units remain outside this teaching/runtime acceptance."
 								: id === "java-level-3"
 									? "AJ4 only: one reading, two core projects, three optional tasks and ten input/response views per profile. All 217 course identities checked; other Java units are outside this teaching and runtime acceptance."
 									: id === "intro-to-environmental-science"

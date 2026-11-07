@@ -14,14 +14,22 @@ import {
 } from "@/modules/c17ProjectResources";
 import { cStarterCode, cWorkspaceReadme } from "@/modules/cIdeSource";
 import { codeIdeAccountRequest } from "@/modules/codeIdeAccountScope";
-
 import {
 	listGitHubProjectFiles,
 	loadGitHubProjectFile,
 	parseGitHubResource
 } from "@/modules/codePreview";
+
 import { courseReferenceExamples } from "@/modules/courseReferenceExamples";
 import { cppStarterCode, cppWorkspaceReadme } from "@/modules/cppIdeSource";
+import {
+	javaCreationalImportFiles,
+	javaCreationalResource
+} from "@/modules/javaCreationalResources";
+import {
+	javaFoundationsImportFiles,
+	javaFoundationsResource
+} from "@/modules/javaFoundationsResources";
 import {
 	javaPatternsImportFiles,
 	javaPatternsResource
@@ -3235,12 +3243,16 @@ export async function loadPythonIdeStarterFilesFromGitHub(
 		mode === "linux" ||
 		(mode === "java" &&
 			(javaRecursionResource(starterUrl) !== null ||
-				javaPatternsResource(starterUrl) !== null))
+				javaPatternsResource(starterUrl) !== null ||
+				javaFoundationsResource(starterUrl) !== null ||
+				javaCreationalResource(starterUrl) !== null))
 	) {
 		const selected =
 			mode === "java"
 				? (javaRecursionImportFiles(starterUrl) ??
-					javaPatternsImportFiles(starterUrl))
+					javaPatternsImportFiles(starterUrl) ??
+					javaFoundationsImportFiles(starterUrl) ??
+					javaCreationalImportFiles(starterUrl))
 				: mode === "swift"
 					? swiftImportFiles(starterUrl)
 					: mode === "web"

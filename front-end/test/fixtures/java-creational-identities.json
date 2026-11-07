@@ -1,0 +1,69 @@
+{
+  "curriculum": [
+    {
+      "id": "design-patterns-in-java-dpj3-creational-patterns-i-curriculum-creational-patterns-i-core-concepts",
+      "aliases": [
+        "design-patterns-in-java-dpj3-creational-patterns-i-curriculum-core-concepts-and-learning-sequence",
+        "core-concepts",
+        "design-patterns-in-java-dpj3-creational-patterns-i-curriculum-core-concepts"
+      ],
+      "title": "Creational Patterns I Core Concepts"
+    },
+    {
+      "id": "design-patterns-in-java-dpj3-creational-patterns-i-curriculum-builder",
+      "title": "Builder"
+    },
+    {
+      "id": "design-patterns-in-java-dpj3-creational-patterns-i-curriculum-pattern-selection-drill-factory-or-builder",
+      "title": "Pattern Selection Drill: Factory or Builder?"
+    },
+    {
+      "id": "design-patterns-in-java-dpj3-creational-patterns-i-curriculum-reflection-question-how-much-creation-logic-is-too-much",
+      "title": "Reflection Question: How Much Creation Logic Is Too Much?"
+    },
+    {
+      "id": "design-patterns-in-java-dpj3-creational-patterns-i-curriculum-creational-pattern-decision-matrix",
+      "title": "Creational Pattern Decision Matrix"
+    },
+    {
+      "id": "design-patterns-in-java-dpj3-creational-patterns-i-curriculum-core-project-creational-patterns-i",
+      "aliases": [
+        "design-patterns-in-java-dpj3-creational-patterns-i-curriculum-core-project",
+        "dpj3-creational-patterns-i-core-project",
+        "design-patterns-in-java-dpj3-creational-patterns-i-curriculum-dpj3-creational-patterns-i-core-project"
+      ],
+      "title": "Core Project: Creational Patterns I"
+    }
+  ],
+  "supplementalProjects": [
+    {
+      "id": "design-patterns-in-java-dpj3-creational-patterns-i-supplemental-understanding-check-creational-patterns-i",
+      "aliases": [
+        "design-patterns-in-java-dpj3-creational-patterns-i-supplemental-dpj3-creational-patterns-i-diagnostic-checkpoint",
+        "diagnostic-checkpoint-creational-patterns-i",
+        "diagnostic-checkpoint",
+        "understanding-check",
+        "design-patterns-in-java-dpj3-creational-patterns-i-supplemental-diagnostic-checkpoint-creational-patterns-i",
+        "design-patterns-in-java-dpj3-creational-patterns-i-supplemental-diagnostic-checkpoint",
+        "design-patterns-in-java-dpj3-creational-patterns-i-supplemental-understanding-check"
+      ],
+      "title": "Understanding Check: Creational Patterns I"
+    },
+    {
+      "id": "design-patterns-in-java-dpj3-creational-patterns-i-supplemental-creational-patterns-i-transfer-practice",
+      "aliases": [
+        "design-patterns-in-java-dpj3-creational-patterns-i-supplemental-transfer-practice",
+        "design-patterns-in-java-dpj3-creational-patterns-i-supplemental-transfer-practice-creational-patterns-i"
+      ],
+      "title": "Creational Patterns I Transfer Practice"
+    },
+    {
+      "id": "design-patterns-in-java-dpj3-creational-patterns-i-supplemental-creational-patterns-i-extension-practice",
+      "aliases": [
+        "design-patterns-in-java-dpj3-creational-patterns-i-supplemental-extension-practice",
+        "design-patterns-in-java-dpj3-creational-patterns-i-supplemental-extension-practice-creational-patterns-i"
+      ],
+      "title": "Creational Patterns I Extension Practice"
+    }
+  ]
+}

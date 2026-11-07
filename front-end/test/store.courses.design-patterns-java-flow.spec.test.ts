@@ -98,7 +98,7 @@ describe("Design Patterns in Java learner flow", () => {
 			module => module.supplementalProjects.map(item => item.title)
 		);
 
-		expect(curriculumTitles).toHaveLength(83);
+		expect(curriculumTitles).toHaveLength(79);
 		expect(optionTitles).toHaveLength(51);
 		for (const title of [
 			"Core Project: What Patterns Are and What They Are Not",
@@ -183,8 +183,8 @@ describe("Design Patterns in Java learner flow", () => {
 		expect(architecture).toContain("META-INF/services");
 		expect(architecture).toContain("zero, one, and multiple providers");
 		expect(architecture).toContain("not safe for concurrent use");
-		expect(resources).toContain("java/lang/Record.html");
-		expect(resources).toContain("jls-8.html#jls-8.1.1.2");
+		expect(foundations).toContain("java/lang/Record.html");
+		expect(foundations).toContain("jls-8.html#jls-8.1.1.2");
 		expect(resources).toContain("java/util/ServiceLoader.html");
 	});
 
