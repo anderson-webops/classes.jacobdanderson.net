@@ -1457,7 +1457,13 @@ function preserveEnvironmentalTeaching(
 	const content = item.content
 		.replace(/\*\*Project goal:\*\*/g, "**Project:**")
 		.replace(/\*\*Completion check:\*\*/g, "**Review:**")
-		.replace(/\*\*Mastery check:\*\*/g, "**Check:**");
+		.replace(/\*\*Mastery check:\*\*/g, "**Check:**")
+		.replace(
+			/\*\*Vocabulary:\*\*/g,
+			contentKind === "assignment"
+				? "**Working terms:**"
+				: "**Vocabulary:**"
+		);
 	const resource = (asset: string) =>
 		`/course-resource?asset=${encodeURIComponent(asset)}`;
 	return {
