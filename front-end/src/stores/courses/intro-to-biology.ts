@@ -1193,6 +1193,17 @@ function introBiologyMediaAlternative(mediaLink: string | undefined) {
 	return "**Accessible media alternative:** The Body Systems Scenario Cards supply text-described organs, interactions, and arrow meanings. Use those cards when the image is unavailable, difficult to perceive, or not useful for the selected representation.";
 }
 
+const INTRO_BIOLOGY_BACKGROUND: Record<string, string> = {
+	BIO1: "https://openstax.org/books/biology-2e/pages/33-1-animal-form-and-function",
+	BIO2: BIOLOGY_REFERENCES.openStaxMacromolecules,
+	BIO3: BIOLOGY_REFERENCES.niddkDigestion,
+	BIO4: "https://openstax.org/books/biology-2e/pages/5-2-passive-transport",
+	BIO5: BIOLOGY_REFERENCES.openStaxEnergy,
+	BIO6: "https://openstax.org/books/biology-2e/pages/37-3-regulation-of-body-processes",
+	BIO7: BIOLOGY_REFERENCES.niddkKidneys,
+	BIO8: BIOLOGY_REFERENCES.ngssLifeScience
+};
+
 export const introToBiologyCourse: RawCourse = {
 	...introToBiologySourceCourse,
 	modules: introToBiologySourceCourse.modules.map(module => {
@@ -1225,7 +1236,13 @@ export const introToBiologyCourse: RawCourse = {
 			curriculum: originals.map((item, index) => ({
 				...item,
 				content: [
-					index === 0 ? lesson.reading : lesson.tasks[index - 1],
+					index === 0
+						? `${lesson.reading}\n\n[Mechanism reference](${
+								INTRO_BIOLOGY_BACKGROUND[
+									module.title.split(" ")[0]
+								]
+							})`
+						: lesson.tasks[index - 1],
 					resources,
 					item.mediaLink
 						? pendingStaticMediaNotice(
@@ -1271,7 +1288,7 @@ export const introToBiologyCourse: RawCourse = {
 			"Claim-evidence-reasoning with uncertainty"
 		],
 		sourcePolicy:
-			"Preserves the BIO1-BIO8 Digestive Odyssey sequence while adding authoritative NGSS, NIDDK, OpenStax, and HHMI references; eight worked readings and complete supplied fictional cases; accessible media alternatives; and explicit medical, nutrition, privacy, and course-scope boundaries.",
+			"Preserves the BIO1-BIO8 Digestive Odyssey sequence while adding authoritative NGSS, NIDDK and OpenStax references; eight worked readings and complete supplied fictional cases; accessible media alternatives; and explicit medical, nutrition, privacy, and course-scope boundaries.",
 		assessmentCadence: [
 			"One model with a named boundary, scale, evidence source, and limitation per module",
 			"One curated media, supplied-data, or authoritative-reference evidence check per module",
@@ -1284,7 +1301,7 @@ export const introToBiologyCourse: RawCourse = {
 			"Supplied biology materials pack and answer-key rubric",
 			"Accessible diagrams and text alternatives",
 			"Authoritative public biology references",
-			"Optional HHMI digital models with noninteractive alternatives"
+			"Optional public models with noninteractive supplied alternatives"
 		],
 		safetyPolicy: [
 			"No required food handling, tasting, body measurement, or household experiment",

@@ -111,7 +111,7 @@ Digestion changes a large molecule into smaller products. Absorption moves a sub
 
 ## Worked membrane cases
 
-Case A specifies equal volumes and a membrane permeable to the neutral particles. Net simple diffusion initially goes from the 18-particle side toward the 4-particle side, while random movement occurs in both directions. Case B requires a channel or carrier for movement down the stated gradient: this is facilitated diffusion. Case C explicitly couples movement against the gradient to ATP use: it models active transport. A transport protein's presence alone does not prove active transport.
+Case A specifies equal volumes and a membrane permeable to the neutral particles. Net simple diffusion initially goes from the 18-particle side toward the 4-particle side, while random movement occurs in both directions. At equilibrium, random crossings continue while average net transfer is zero. Case B requires a channel or carrier for movement down the stated gradient: this is facilitated diffusion. Case C explicitly couples movement against the gradient to ATP use: it models active transport. A transport protein's presence alone does not prove active transport.
 
 **Osmosis** is net water movement across a selectively permeable membrane. Case E initially lets water, but not the solute, cross. With its other conditions held equal, water moves toward the side with the higher solute concentration. The supplied counts do not specify every later pressure or volume change.
 

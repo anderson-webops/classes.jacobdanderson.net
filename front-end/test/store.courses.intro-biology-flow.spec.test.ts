@@ -5,6 +5,17 @@ import { loadRawCourse } from "@/stores/courses/index";
 import { slugMarkdownHeading } from "@/modules/courseAssetPreview";
 import { completeIntroBiologyActivity } from "./middleSchoolScienceReview";
 
+const EXPECTED_SEQUENCE = [
+	"BIO1 Human Body Systems",
+	"BIO2 Nutrients and Macromolecules",
+	"BIO3 Digestive Process",
+	"BIO4 Digestion and Absorption",
+	"BIO5 Energy Use and Storage",
+	"BIO6 Regulation of Digestion",
+	"BIO7 Elimination and Excretion",
+	"BIO8 Digestive Odyssey Capstone"
+];
+
 const pack = fs.readFileSync(
 	"public/course-assets/biology/intro-biology-materials-pack.md",
 	"utf8"
@@ -31,6 +42,9 @@ describe("Intro to Biology complete supplied teaching and cases", () => {
 	it("retains eight units and all68published items with teaching before36core tasks", async () => {
 		const course = (await loadRawCourse("intro-to-biology"))!;
 		expect(course.modules).toHaveLength(8);
+		expect(course.modules.map(module => module.title)).toEqual(
+			EXPECTED_SEQUENCE
+		);
 		expect(
 			course.modules.flatMap(m => [
 				...m.curriculum,
@@ -193,6 +207,58 @@ describe("Intro to Biology complete supplied teaching and cases", () => {
 		expect(capstone.learningPath).toBe("choice");
 		expect(introToBiologyCourse.modules[0].curriculum[0].content).toContain(
 			"final core project can use the notes"
+		);
+	});
+	it("retains pacing, milestones and distinctive optional source project purposes", () => {
+		for (const module of introToBiologyCourse.modules) {
+			expect(module.estimatedTime).toMatch(/session/);
+			expect(module.keyBlocks!.length).toBeGreaterThanOrEqual(6);
+		}
+		const titles = introToBiologyCourse.modules.flatMap(m =>
+			m.supplementalProjects.map(i => i.title)
+		);
+		for (const title of [
+			"Project: Human Body Systems Map",
+			"Project: Dinner Mystery",
+			"Project: Salad Clue Report",
+			"Project: Cell Factory Diagram",
+			"Project: Alien Venn Diagram",
+			"Project: Digestive Odyssey Exhibit"
+		])
+			expect(titles).toContain(title);
+	});
+	it("retains accessible, private and introductory case-study boundaries", () => {
+		const metadata = introToBiologyCourse.developmentMetadata!;
+		expect(metadata.safetyPolicy.join(" ")).toContain(
+			"No personal diet, symptoms, diagnoses"
+		);
+		expect(metadata.safetyPolicy.join(" ")).toContain(
+			"No required food handling"
+		);
+		expect(metadata.courseBoundaries.join(" ")).toContain(
+			"rather than a complete biology survey"
+		);
+		const text = introToBiologyCourse.modules
+			.flatMap(m => m.curriculum)
+			.map(i => i.content)
+			.join(" ");
+		expect(text).toContain("text description");
+		expect(text).toContain("Accessible media alternative");
+	});
+	it("teaches the mechanism distinctions and exposes direct primary references", () => {
+		const text = introToBiologyCourse.modules
+			.map(m => m.curriculum[0].content)
+			.join(" ");
+		expect(text).toMatch(/Bile[\s\S]{0,150}not an enzyme/);
+		expect(text).toContain(
+			"random crossings continue while average net transfer is zero"
+		);
+		expect(text).toContain("organelles");
+		expect(text).toContain(
+			"niddk.nih.gov/health-information/kidney-disease/kidneys-how-they-work"
+		);
+		expect(text).toContain(
+			"openstax.org/books/biology-2e/pages/5-2-passive-transport"
 		);
 	});
 	it("rejects a truncated prompt, missing reading, wrong course or unrelated case link", () => {
