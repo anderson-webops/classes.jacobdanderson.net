@@ -23,6 +23,10 @@ import {
 import { courseReferenceExamples } from "@/modules/courseReferenceExamples";
 import { cppStarterCode, cppWorkspaceReadme } from "@/modules/cppIdeSource";
 import {
+	javaPatternsImportFiles,
+	javaPatternsResource
+} from "@/modules/javaPatternsResources";
+import {
 	javaRecursionImportFiles,
 	javaRecursionResource
 } from "@/modules/javaRecursionResources";
@@ -3229,11 +3233,14 @@ export async function loadPythonIdeStarterFilesFromGitHub(
 		mode === "c" ||
 		mode === "assembly" ||
 		mode === "linux" ||
-		(mode === "java" && javaRecursionResource(starterUrl) !== null)
+		(mode === "java" &&
+			(javaRecursionResource(starterUrl) !== null ||
+				javaPatternsResource(starterUrl) !== null))
 	) {
 		const selected =
 			mode === "java"
-				? javaRecursionImportFiles(starterUrl)
+				? (javaRecursionImportFiles(starterUrl) ??
+					javaPatternsImportFiles(starterUrl))
 				: mode === "swift"
 					? swiftImportFiles(starterUrl)
 					: mode === "web"

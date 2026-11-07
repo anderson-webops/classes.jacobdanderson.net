@@ -1,0 +1,69 @@
+{
+	"curriculum": [
+		{
+			"id": "design-patterns-in-java-dpj1-what-patterns-are-and-what-they-are-not-curriculum-what-patterns-are-and-what-they-are-not-core-concepts",
+			"aliases": [
+				"design-patterns-in-java-dpj1-what-patterns-are-and-what-they-are-not-curriculum-core-concepts-and-learning-sequence",
+				"core-concepts",
+				"design-patterns-in-java-dpj1-what-patterns-are-and-what-they-are-not-curriculum-core-concepts"
+			],
+			"title": "What Patterns Are and What They Are Not Core Concepts"
+		},
+		{
+			"id": "design-patterns-in-java-dpj1-what-patterns-are-and-what-they-are-not-curriculum-design-exercise-smell-or-reasonable-simplicity",
+			"title": "Design Exercise: Smell or Reasonable Simplicity?"
+		},
+		{
+			"id": "design-patterns-in-java-dpj1-what-patterns-are-and-what-they-are-not-curriculum-reflection-question-when-does-a-pattern-actually-help",
+			"title": "Reflection Question: When Does a Pattern Actually Help?"
+		},
+		{
+			"id": "design-patterns-in-java-dpj1-what-patterns-are-and-what-they-are-not-curriculum-java-pattern-course-contract-and-characterization-baseline",
+			"title": "Java Pattern Course Contract and Characterization Baseline"
+		},
+		{
+			"id": "design-patterns-in-java-dpj1-what-patterns-are-and-what-they-are-not-curriculum-one-change-scenario-before-one-abstraction",
+			"title": "One Change Scenario Before One Abstraction"
+		},
+		{
+			"id": "design-patterns-in-java-dpj1-what-patterns-are-and-what-they-are-not-curriculum-core-project-what-patterns-are-and-what-they-are-not",
+			"aliases": [
+				"design-patterns-in-java-dpj1-what-patterns-are-and-what-they-are-not-curriculum-core-project",
+				"dpj1-what-patterns-are-and-what-they-are-not-core-project",
+				"design-patterns-in-java-dpj1-what-patterns-are-and-what-they-are-not-curriculum-dpj1-what-patterns-are-and-what-they-are-not-core-project"
+			],
+			"title": "Core Project: What Patterns Are and What They Are Not"
+		}
+	],
+	"supplementalProjects": [
+		{
+			"id": "design-patterns-in-java-dpj1-what-patterns-are-and-what-they-are-not-supplemental-understanding-check-what-patterns-are-and-what-they-are-not",
+			"aliases": [
+				"design-patterns-in-java-dpj1-what-patterns-are-and-what-they-are-not-supplemental-dpj1-what-patterns-are-and-what-they-are-not-diagnostic-checkpoint",
+				"diagnostic-checkpoint-what-patterns-are-and-what-they-are-not",
+				"diagnostic-checkpoint",
+				"understanding-check",
+				"design-patterns-in-java-dpj1-what-patterns-are-and-what-they-are-not-supplemental-diagnostic-checkpoint-what-patterns-are-and-what-they-are-not",
+				"design-patterns-in-java-dpj1-what-patterns-are-and-what-they-are-not-supplemental-diagnostic-checkpoint",
+				"design-patterns-in-java-dpj1-what-patterns-are-and-what-they-are-not-supplemental-understanding-check"
+			],
+			"title": "Understanding Check: What Patterns Are and What They Are Not"
+		},
+		{
+			"id": "design-patterns-in-java-dpj1-what-patterns-are-and-what-they-are-not-supplemental-what-patterns-are-and-what-they-are-not-transfer-practice",
+			"aliases": [
+				"design-patterns-in-java-dpj1-what-patterns-are-and-what-they-are-not-supplemental-transfer-practice",
+				"design-patterns-in-java-dpj1-what-patterns-are-and-what-they-are-not-supplemental-transfer-practice-what-patterns-are-and-what-they-are-not"
+			],
+			"title": "What Patterns Are and What They Are Not Transfer Practice"
+		},
+		{
+			"id": "design-patterns-in-java-dpj1-what-patterns-are-and-what-they-are-not-supplemental-what-patterns-are-and-what-they-are-not-extension-practice",
+			"aliases": [
+				"design-patterns-in-java-dpj1-what-patterns-are-and-what-they-are-not-supplemental-extension-practice",
+				"design-patterns-in-java-dpj1-what-patterns-are-and-what-they-are-not-supplemental-extension-practice-what-patterns-are-and-what-they-are-not"
+			],
+			"title": "What Patterns Are and What They Are Not Extension Practice"
+		}
+	]
+}
