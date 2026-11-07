@@ -423,6 +423,7 @@ jobs:
           test/store.courses.catalog-identities.spec.test.ts
           test/store.courses.self-study-browser-manifest.spec.test.ts
           test/store.courses.middle-school-integrated-science-flow.spec.test.ts
+          test/store.courses.python-level-1-foundations.spec.test.ts
           test/store.courses.pygames-flow.spec.test.ts
           test/store.courses.early-elementary-a-flow.spec.test.ts
           test/store.courses.early-elementary-b-content.spec.test.ts

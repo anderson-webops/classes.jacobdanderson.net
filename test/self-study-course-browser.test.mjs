@@ -39,6 +39,12 @@ const courseIds = [
 ];
 const readingCounts = [22,19,19,20,8,13,15,31,10,13,14,16,20,14,9,4,27,22,37,38,11,6,11,65];
 assert.equal(readingCounts.length, courseIds.length);
+// These focused scopes review two foundation units, not either whole course.
+const focusedReadingCounts = {
+ "python-level-1": 1,
+ "python-level-1-classroom": 1
+};
+const allowedCourseIds = [...courseIds, ...Object.keys(focusedReadingCounts)];
 const requestedCourses = process.env.SELF_STUDY_BROWSER_COURSES;
 const sourceMode = process.env.SELF_STUDY_BROWSER_SOURCE_MODE ?? "build";
 assert.ok(["build", "dev"].includes(sourceMode));
@@ -47,10 +53,10 @@ const selectedCourseIds = requestedCourses
 	: courseIds;
 assert.ok(selectedCourseIds.length > 0);
 assert.equal(new Set(selectedCourseIds).size, selectedCourseIds.length);
-assert.ok(selectedCourseIds.every(id => courseIds.includes(id)));
+assert.ok(selectedCourseIds.every(id => allowedCourseIds.includes(id)));
 const expectedProfiles = selectedCourseIds.length * 4;
 const expectedReadingViews = selectedCourseIds.reduce(
-	(total, id) => total + readingCounts[courseIds.indexOf(id)] * 4,
+	(total, id) => total + (focusedReadingCounts[id] ?? readingCounts[courseIds.indexOf(id)]) * 4,
 	0
 );
 const digest = value => createHash("sha256").update(value).digest("hex");
@@ -62,7 +68,7 @@ function account(path, role) {
 		email: "learner@example.invalid",
 		age: 14,
 		state: "GA",
-		courseAccess: courseIds,
+		courseAccess: allowedCourseIds,
 		courseProgress: []
 	};
 	if (path === "/api/accounts/me") {
@@ -81,7 +87,7 @@ function account(path, role) {
 				age: 30,
 				state: "GA",
 				usersOfTutorLength: 1,
-				coursePermissions: courseIds,
+				coursePermissions: allowedCourseIds,
 				editTutors: false,
 				saveEdit: "Save"
 			}
@@ -639,6 +645,7 @@ test(
 									|| (["intro-to-physics", "physics-level-2"].includes(id) && /^(?:Standards Map|Course Roadmap)$/.test(module.title))
 									|| (id === "physics-level-2" && /^(?:PHY12|PHY16|PHY17|PHY23) /.test(module.title))
 									|| (id === "algebra-1a" && /^AA(?:1|11) /.test(module.title))
+									|| Object.hasOwn(focusedReadingCounts, id)
 									|| id === "early-elementary-b-picture-book"
 									|| (id === "early-elementary-a-reading" && /^(?:JoR1 |JoR2 |JoR5 |JoR Check-In|JoR6 )/.test(module.title))
 									|| (id === "late-elementary-b-math" && /^(?:LEB3 |LEB4 |LEB5 |LEB6 |LEB10 |LEB12 |LEB16 |LEB17 |LEB18 )/.test(module.title))
@@ -677,7 +684,7 @@ test(
 									name,
 									assignmentViews
 								);
-								if ((index === 0 && ["early-elementary-a-reading", "early-elementary-b-picture-book"].includes(id)) || module.projects.some(item => /^(?:Punctuation Treasure Hunt|Picture Book Assembly Portfolio)$/.test(item.title))) {
+								if ((Object.hasOwn(focusedReadingCounts, id) && module.title === "GrS2 Loops") || (index === 0 && ["early-elementary-a-reading", "early-elementary-b-picture-book"].includes(id)) || module.projects.some(item => /^(?:Punctuation Treasure Hunt|Picture Book Assembly Portfolio)$/.test(item.title))) {
 									await page.screenshot({ path: join(output, `${name}-${index + 1}-complete-projects.png`), fullPage: true });
 								}
 								await chooseView(page, 2);
