@@ -21,6 +21,10 @@ import {
 } from "@/modules/codePreview";
 import { courseReferenceExamples } from "@/modules/courseReferenceExamples";
 import { cppStarterCode, cppWorkspaceReadme } from "@/modules/cppIdeSource";
+import {
+	javaBehavioralImportFiles,
+	javaBehavioralResource
+} from "@/modules/javaBehavioralResources";
 
 import {
 	javaBoundaryImportFiles,
@@ -3255,7 +3259,8 @@ export async function loadPythonIdeStarterFilesFromGitHub(
 				javaFoundationsResource(starterUrl) !== null ||
 				javaCreationalResource(starterUrl) !== null ||
 				javaBoundaryResource(starterUrl) !== null ||
-				javaStructuralResource(starterUrl) !== null))
+				javaStructuralResource(starterUrl) !== null ||
+				javaBehavioralResource(starterUrl) !== null))
 	) {
 		const selected =
 			mode === "java"
@@ -3264,7 +3269,8 @@ export async function loadPythonIdeStarterFilesFromGitHub(
 					javaFoundationsImportFiles(starterUrl) ??
 					javaCreationalImportFiles(starterUrl) ??
 					javaBoundaryImportFiles(starterUrl) ??
-					javaStructuralImportFiles(starterUrl))
+					javaStructuralImportFiles(starterUrl) ??
+					javaBehavioralImportFiles(starterUrl))
 				: mode === "swift"
 					? swiftImportFiles(starterUrl)
 					: mode === "web"
