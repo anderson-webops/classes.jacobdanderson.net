@@ -48,7 +48,10 @@ function resourceText() {
 			item.projectLink,
 			item.solutionLink,
 			item.datasetLink,
-			item.mediaLink
+			item.mediaLink,
+			...[
+				...item.content.matchAll(/\[[^\]]+\]\((https?:\/\/[^)\s]+)\)/g)
+			].map(match => match[1])
 		])
 		.filter(Boolean)
 		.join("\n");

@@ -143,6 +143,22 @@ function viewer(asset: string) {
 	return `/course-resource?asset=${encodeURIComponent(asset)}`;
 }
 
+function neutralLabels(content: string) {
+	const labels: Record<string, string> = {
+		Output: "Record",
+		Requirements: "Task",
+		"Project goal": "Project",
+		"Completion check": "Review",
+		"Completion checks": "Review",
+		"Mastery check": "Check",
+		"Readiness evidence": "Readiness"
+	};
+	return content.replace(
+		/\*\*(Output|Requirements|Project goal|Completion checks?|Mastery check|Readiness evidence):\*\*/g,
+		(_, label: string) => `**${labels[label]}:**`
+	);
+}
+
 export function preserveIntroChemistryTeaching(
 	module: RawCourseModule
 ): RawCourseModule {
@@ -158,12 +174,14 @@ export function preserveIntroChemistryTeaching(
 		const override = itemSections[item.title];
 		const input = override
 			? `${pack}#${override[0]}`
-			: item.datasetLink?.startsWith("/course-assets/chemistry/")
+			: item.datasetLink?.startsWith("/course-assets/chemistry/") &&
+				  item.datasetLink.includes("#")
 				? item.datasetLink
 				: `${pack}#${fallback[0]}`;
 		const response = override
 			? `${answers}#${override[1]}`
-			: item.solutionLink?.startsWith("/course-assets/chemistry/")
+			: item.solutionLink?.startsWith("/course-assets/chemistry/") &&
+				  item.solutionLink.includes("#")
 				? item.solutionLink
 				: `${answers}#${fallback[1]}`;
 		const background = item.datasetLink?.startsWith("https:")
@@ -179,7 +197,7 @@ export function preserveIntroChemistryTeaching(
 					: "reading",
 			datasetLink: input,
 			solutionLink: response,
-			content: `${item.content}\n\n[Case inputs](${viewer(
+			content: `${neutralLabels(item.content)}\n\n[Case inputs](${viewer(
 				input
 			)})\n\n[Project self-check](${viewer(response)})${background}`
 		};
