@@ -1,0 +1,70 @@
+{
+  "curriculum": [
+    {
+      "id": "design-patterns-in-java-dpj5-structural-patterns-in-depth-curriculum-structural-patterns-in-depth-core-concepts",
+      "aliases": [
+        "design-patterns-in-java-dpj5-structural-patterns-in-depth-curriculum-core-concepts-and-learning-sequence",
+        "core-concepts",
+        "design-patterns-in-java-dpj5-structural-patterns-in-depth-curriculum-core-concepts"
+      ],
+      "title": "Structural Patterns in Depth Core Concepts"
+    },
+    {
+      "id": "design-patterns-in-java-dpj5-structural-patterns-in-depth-curriculum-structural-patterns-in-depth-application-check",
+      "aliases": [
+        "design-patterns-in-java-dpj5-structural-patterns-in-depth-curriculum-application-misconceptions-and-readiness-check",
+        "application-check",
+        "design-patterns-in-java-dpj5-structural-patterns-in-depth-curriculum-application-check"
+      ],
+      "title": "Structural Patterns in Depth Application Check"
+    },
+    {
+      "id": "design-patterns-in-java-dpj5-structural-patterns-in-depth-curriculum-reflection-question-which-structural-pattern-changes-the-client-view",
+      "title": "Reflection Question: Which Structural Pattern Changes the Client View?"
+    },
+    {
+      "id": "design-patterns-in-java-dpj5-structural-patterns-in-depth-curriculum-structural-pattern-identity-and-lifecycle-contract",
+      "title": "Structural Pattern Identity and Lifecycle Contract"
+    },
+    {
+      "id": "design-patterns-in-java-dpj5-structural-patterns-in-depth-curriculum-core-project-structural-patterns-in-depth",
+      "aliases": [
+        "design-patterns-in-java-dpj5-structural-patterns-in-depth-curriculum-core-project",
+        "dpj5-structural-patterns-in-depth-core-project",
+        "design-patterns-in-java-dpj5-structural-patterns-in-depth-curriculum-dpj5-structural-patterns-in-depth-core-project"
+      ],
+      "title": "Core Project: Structural Patterns in Depth"
+    }
+  ],
+  "supplementalProjects": [
+    {
+      "id": "design-patterns-in-java-dpj5-structural-patterns-in-depth-supplemental-understanding-check-structural-patterns-in-depth",
+      "aliases": [
+        "design-patterns-in-java-dpj5-structural-patterns-in-depth-supplemental-dpj5-structural-patterns-in-depth-diagnostic-checkpoint",
+        "diagnostic-checkpoint-structural-patterns-in-depth",
+        "diagnostic-checkpoint",
+        "understanding-check",
+        "design-patterns-in-java-dpj5-structural-patterns-in-depth-supplemental-diagnostic-checkpoint-structural-patterns-in-depth",
+        "design-patterns-in-java-dpj5-structural-patterns-in-depth-supplemental-diagnostic-checkpoint",
+        "design-patterns-in-java-dpj5-structural-patterns-in-depth-supplemental-understanding-check"
+      ],
+      "title": "Understanding Check: Structural Patterns in Depth"
+    },
+    {
+      "id": "design-patterns-in-java-dpj5-structural-patterns-in-depth-supplemental-structural-patterns-in-depth-transfer-practice",
+      "aliases": [
+        "design-patterns-in-java-dpj5-structural-patterns-in-depth-supplemental-transfer-practice",
+        "design-patterns-in-java-dpj5-structural-patterns-in-depth-supplemental-transfer-practice-structural-patterns-in-depth"
+      ],
+      "title": "Structural Patterns in Depth Transfer Practice"
+    },
+    {
+      "id": "design-patterns-in-java-dpj5-structural-patterns-in-depth-supplemental-structural-patterns-in-depth-extension-practice",
+      "aliases": [
+        "design-patterns-in-java-dpj5-structural-patterns-in-depth-supplemental-extension-practice",
+        "design-patterns-in-java-dpj5-structural-patterns-in-depth-supplemental-extension-practice-structural-patterns-in-depth"
+      ],
+      "title": "Structural Patterns in Depth Extension Practice"
+    }
+  ]
+}

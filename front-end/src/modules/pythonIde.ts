@@ -20,8 +20,8 @@ import {
 	parseGitHubResource
 } from "@/modules/codePreview";
 import { courseReferenceExamples } from "@/modules/courseReferenceExamples";
-
 import { cppStarterCode, cppWorkspaceReadme } from "@/modules/cppIdeSource";
+
 import {
 	javaBoundaryImportFiles,
 	javaBoundaryResource
@@ -46,6 +46,10 @@ import {
 	javascriptCourseResource,
 	loadJavaScriptCourseFiles
 } from "@/modules/javascriptCourseResources";
+import {
+	javaStructuralImportFiles,
+	javaStructuralResource
+} from "@/modules/javaStructuralResources";
 import { linuxStarterCode, linuxStarterFiles } from "@/modules/linuxIdeSource";
 import {
 	isLinuxProjectTextPath,
@@ -3250,7 +3254,8 @@ export async function loadPythonIdeStarterFilesFromGitHub(
 				javaPatternsResource(starterUrl) !== null ||
 				javaFoundationsResource(starterUrl) !== null ||
 				javaCreationalResource(starterUrl) !== null ||
-				javaBoundaryResource(starterUrl) !== null))
+				javaBoundaryResource(starterUrl) !== null ||
+				javaStructuralResource(starterUrl) !== null))
 	) {
 		const selected =
 			mode === "java"
@@ -3258,7 +3263,8 @@ export async function loadPythonIdeStarterFilesFromGitHub(
 					javaPatternsImportFiles(starterUrl) ??
 					javaFoundationsImportFiles(starterUrl) ??
 					javaCreationalImportFiles(starterUrl) ??
-					javaBoundaryImportFiles(starterUrl))
+					javaBoundaryImportFiles(starterUrl) ??
+					javaStructuralImportFiles(starterUrl))
 				: mode === "swift"
 					? swiftImportFiles(starterUrl)
 					: mode === "web"
