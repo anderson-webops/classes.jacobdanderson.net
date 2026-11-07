@@ -9960,16 +9960,25 @@ describe("course text quality normalization", () => {
 		expect(text).toContain("Project: Transform Our Environment Proposal");
 		expect(text).toContain("core biome");
 		expect(text).toContain("NASA biome reference");
-		expect(text).toMatch(/Pending media/i);
+		const photosynthesis = findItem(
+			course!,
+			/^Photosynthesis Diagram Reference$/
+		);
+		expect(photosynthesis.contentKind).toBe("reading");
+		expect(photosynthesis.preserveInstructions).toBe(true);
+		expect(photosynthesis.content).toContain(
+			"The material inputs are carbon dioxide and water; light supplies energy rather than matter."
+		);
+		expect(photosynthesis.content).toContain("oxygen is released");
+		expect(photosynthesis.content).not.toMatch(
+			/lists the pending|reserved space|once the asset is added|Until the diagram is uploaded/i
+		);
 		expect(text).not.toMatch(
 			/Juni|Recording Studio|Environmental Science Club|your instructor|Learning Targets/i
 		);
 		expect(mediaLinks).toEqual([
 			"https://static.classes.jacobdanderson.net/c009b919-101b-4a4d-8f19-74885e8f62c0_Photosynthesis-01_577acc78_670x451.png"
 		]);
-		expect(text).toContain(
-			"c009b919-101b-4a4d-8f19-74885e8f62c0_Photosynthesis-01_577acc78_670x451.png"
-		);
 	});
 
 	it("keeps Intro to Chemistry authored, deduplicated, and resource-specific", async () => {
