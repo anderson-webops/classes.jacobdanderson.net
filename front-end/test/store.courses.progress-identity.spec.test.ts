@@ -179,9 +179,13 @@ describe("saved course progress identities", () => {
 													? javaBehavioralURL(
 															"starter"
 														)
-													: javaCollaborationURL(
-															"starter"
-														);
+													: index === 6
+														? javaCollaborationURL(
+																"starter"
+															)
+														: javaArchitectureURL(
+																"starter"
+															);
 						expect(current.projectLink, previousId).toBe(starter);
 					}
 				} else {
