@@ -8,7 +8,7 @@ on:
       course:
         description: Course verification to run
         type: choice
-        options: [java-collaboration, java-behavioral, java-structural, java-boundary, java-creational, java-foundations, java-patterns, java-recursion, pygames, networking, ai-setup, self-study, physics-models, bootcamp, scratch-originals, scratch-readings, course-audit, scratch-tasks, tracker-evidence, native-release-evidence]
+        options: [java-architecture, java-collaboration, java-behavioral, java-structural, java-boundary, java-creational, java-foundations, java-patterns, java-recursion, pygames, networking, ai-setup, self-study, physics-models, bootcamp, scratch-originals, scratch-readings, course-audit, scratch-tasks, tracker-evidence, native-release-evidence]
         default: pygames
       browser_run_id:
         description: Networking browser export workflow run
@@ -372,13 +372,13 @@ jobs:
           retention-days: 14
 
   self-study:
-    if: inputs.course == 'java-collaboration' || inputs.course == 'java-behavioral' || inputs.course == 'java-structural' || inputs.course == 'java-boundary' || inputs.course == 'java-creational' || inputs.course == 'java-foundations' || inputs.course == 'java-patterns' || inputs.course == 'java-recursion' || inputs.course == 'self-study' || inputs.course == 'physics-models' || inputs.course == 'bootcamp' || inputs.course == 'scratch-originals' || inputs.course == 'scratch-readings' || inputs.course == 'course-audit' || inputs.course == 'scratch-tasks'
+    if: inputs.course == 'java-architecture' || inputs.course == 'java-collaboration' || inputs.course == 'java-behavioral' || inputs.course == 'java-structural' || inputs.course == 'java-boundary' || inputs.course == 'java-creational' || inputs.course == 'java-foundations' || inputs.course == 'java-patterns' || inputs.course == 'java-recursion' || inputs.course == 'self-study' || inputs.course == 'physics-models' || inputs.course == 'bootcamp' || inputs.course == 'scratch-originals' || inputs.course == 'scratch-readings' || inputs.course == 'course-audit' || inputs.course == 'scratch-tasks'
     runs-on: ubuntu-24.04
     timeout-minutes: 40
     env:
       CLASSES_FAMILY_TASK_ID: self-study-courses-${{ github.run_id }}
       SELF_STUDY_BROWSER_PROOF_DIR: ${{ github.workspace }}/output/self-study-browser
-      SELF_STUDY_BROWSER_COURSES: ${{ inputs.course == 'java-collaboration' && 'design-patterns-in-java' || inputs.course == 'java-behavioral' && 'design-patterns-in-java' || inputs.course == 'java-structural' && 'design-patterns-in-java' || inputs.course == 'java-boundary' && 'design-patterns-in-java' || inputs.course == 'java-creational' && 'design-patterns-in-java' || inputs.course == 'java-foundations' && 'design-patterns-in-java' || inputs.course == 'java-patterns' && 'design-patterns-in-java' || inputs.course == 'java-recursion' && 'java-level-3' || inputs.course == 'bootcamp' && 'scratch-level-1-bootcamp' || inputs.course == 'physics-models' && 'pre-algebra-a,intro-to-physics,physics-level-2' || inputs.course == 'self-study' && inputs.self_study_courses || '' }}
+      SELF_STUDY_BROWSER_COURSES: ${{ inputs.course == 'java-architecture' && 'design-patterns-in-java' || inputs.course == 'java-collaboration' && 'design-patterns-in-java' || inputs.course == 'java-behavioral' && 'design-patterns-in-java' || inputs.course == 'java-structural' && 'design-patterns-in-java' || inputs.course == 'java-boundary' && 'design-patterns-in-java' || inputs.course == 'java-creational' && 'design-patterns-in-java' || inputs.course == 'java-foundations' && 'design-patterns-in-java' || inputs.course == 'java-patterns' && 'design-patterns-in-java' || inputs.course == 'java-recursion' && 'java-level-3' || inputs.course == 'bootcamp' && 'scratch-level-1-bootcamp' || inputs.course == 'physics-models' && 'pre-algebra-a,intro-to-physics,physics-level-2' || inputs.course == 'self-study' && inputs.self_study_courses || '' }}
       PHYSICS2_BROWSER_PROOF_DIR: ${{ github.workspace }}/output/self-study-browser/physics-models
       SCRATCH_ORIGINAL_BROWSER_PROOF_DIR: ${{ github.workspace }}/output/self-study-browser/scratch-originals
       COURSE_CATALOG_PROOF_DIR: ${{ github.workspace }}/output/self-study-browser/catalog
@@ -422,6 +422,7 @@ jobs:
           npm exec -w front-end -- vitest run
           test/store.courses.catalog-identities.spec.test.ts
           test/store.courses.progress-identity.spec.test.ts
+          test/java-architecture-workspace.spec.test.ts
           test/java-collaboration-workspace.spec.test.ts
           test/java-behavioral-workspace.spec.test.ts
           test/java-structural-workspace.spec.test.ts
@@ -518,6 +519,18 @@ jobs:
         env:
           SCRATCH_BROWSER_READING_ONLY: '1'
         run: node scripts/classes-family-heavy-task.mjs -- node --test test/scratch-browser.test.mjs
+      - name: Verify Java architecture patterns course actions and packaged downloads
+        id: java_architecture_browser
+        if: always() && !cancelled() && inputs.course == 'java-architecture' && steps.course_build.outcome == 'success'
+        env:
+          JAVA_ARCHITECTURE_BROWSER_PROOF_DIR: ${{ github.workspace }}/output/self-study-browser/java-architecture
+          COURSE_IMPORT_SCREENSHOT_DIR: ${{ github.workspace }}/output/self-study-browser/java-architecture/screenshots
+        run: node scripts/classes-family-heavy-task.mjs -- node --test --test-concurrency=1 test/java-architecture-course-browser.test.mjs
+      - name: Compile actual Java architecture patterns ZIPs and verify optional scope
+        if: always() && !cancelled() && inputs.course == 'java-architecture' && steps.java_architecture_browser.outcome == 'success'
+        env:
+          JAVA_ARCHITECTURE_BROWSER_PROOF_DIR: ${{ github.workspace }}/output/self-study-browser/java-architecture
+        run: python3 -I -B test/java-architecture-exported-native.py
       - name: Verify Java collaboration patterns course actions and packaged downloads
         id: java_collaboration_browser
         if: always() && !cancelled() && inputs.course == 'java-collaboration' && steps.course_build.outcome == 'success'

@@ -35,7 +35,7 @@ import {
 	lessonContentSections
 } from "@/modules/courseLessonPresentation";
 import { unmatchedCourseProgress } from "@/modules/courseProgressHistory";
-import { javaCollaborationProjectKey } from "@/modules/javaCollaborationResources";
+import { javaArchitectureProjectKey } from "@/modules/javaArchitectureResources";
 import { javaRecursionProjectKey } from "@/modules/javaRecursionResources";
 import {
 	javascriptCourseProjectKey,
@@ -1770,7 +1770,7 @@ function ideStarterHref(item: CourseModuleItem, resource: ResourceLink) {
 												? javaRecursionProjectKey
 												: selectedCourse.value.id ===
 													  "design-patterns-in-java"
-													? javaCollaborationProjectKey
+													? javaArchitectureProjectKey
 													: selectedCourse.value
 																.id ===
 																"usaco-bronze" ||

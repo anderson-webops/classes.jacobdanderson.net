@@ -1,4 +1,8 @@
 import {
+	javaArchitectureCoreID,
+	javaArchitectureReadingID
+} from "./javaArchitectureResources";
+import {
 	javaBehavioralCoreID,
 	javaBehavioralReadingID
 } from "./javaBehavioralResources";
@@ -151,6 +155,49 @@ export function javaNativeBuildInstructions(
 ): string[] | null {
 	const parts = (courseProjectKey ?? "").split(":");
 	const [course, item, role, extra] = parts;
+	if (
+		course === "design-patterns-in-java" &&
+		item === javaArchitectureReadingID &&
+		role === "starter" &&
+		parts.length === 4 &&
+		extra === "native-java-architecture"
+	) {
+		return [
+			"Java 21 complete architecture example",
+			"Export its three files and compile in the worked example folder.",
+			"javac --release 21 -Xlint:all -Werror Main.java ContractTests.java",
+			"java ContractTests",
+			"java Main",
+			"The complete example reports Architecture worked contracts: 39 passed. Main prints 1:HI, [1=HI], 2:READY, [1=HI] and [1=HI, 2=READY] on separate lines.",
+			"These programs read no standard input. Run displays native Java 21 commands."
+		];
+	}
+	if (
+		course === "design-patterns-in-java" &&
+		[javaArchitectureReadingID, javaArchitectureCoreID].includes(
+			item ?? ""
+		) &&
+		["starter", "reference"].includes(role ?? "") &&
+		parts.length === 4 &&
+		extra === "native-java-architecture"
+	) {
+		return [
+			"Java 21 injected notebook architecture workflow",
+			"Export all fifteen files, preserving sources.txt, src/notes and META-INF/services/notes.plugins.TextPlugin exactly.",
+			"javac --release 21 -Xlint:all -Werror -d classes @sources.txt",
+			"jar --create --file notebook.jar -C classes . -C . META-INF",
+			"java -cp notebook.jar ContractTests core",
+			"java -cp notebook.jar Main",
+			"java -cp notebook.jar ContractTests",
+			"Complete repository lookup/view/save, ServiceLoader discovery and pipeline application, service create/replace and presentation refresh. Core reports 102 passed; Main prints available plugin ids, committed notes and explicit view snapshots.",
+			"The final harness additionally checks optional NoteService.copy and reports 112 passed. Core and Main remain usable before the optional extension.",
+			role === "starter"
+				? "The untouched starter compiles and names an unfinished method."
+				: "The reference completes core and optional behavior. Keep the learner attempt and design evidence separate.",
+			"These programs read no standard input. Run displays native Java 21 commands."
+		];
+	}
+
 	if (
 		course === "design-patterns-in-java" &&
 		item === javaCollaborationReadingID &&

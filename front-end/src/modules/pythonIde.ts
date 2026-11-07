@@ -22,6 +22,10 @@ import {
 import { courseReferenceExamples } from "@/modules/courseReferenceExamples";
 import { cppStarterCode, cppWorkspaceReadme } from "@/modules/cppIdeSource";
 import {
+	javaArchitectureImportFiles,
+	javaArchitectureResource
+} from "@/modules/javaArchitectureResources";
+import {
 	javaBehavioralImportFiles,
 	javaBehavioralResource
 } from "@/modules/javaBehavioralResources";
@@ -104,6 +108,8 @@ const C_EXTENSION_RE = /\.c$/i;
 const CPP_EXTENSION_RE = /\.(?:cc|cpp|cxx)$/i;
 const CODE_EXTENSION_RE = /\.(?:[sch]|cc|cpp|cxx|hpp|java|py)$/i;
 const SAFE_FILE_SEGMENT_RE = /^\w[\w.-]*$/;
+const JAVA_SERVICE_PROVIDER_PATH_RE =
+	/^META-INF\/services\/[A-Z_a-z]\w*(?:\.[A-Z_a-z]\w*)+$/;
 const NATIVE_WORKSHEET_FILE_RE =
 	/^(?:starter|solution)\/(?:analysis|trace)\.md$/i;
 const ROOT_TEXT_FILE_RE =
@@ -2948,6 +2954,7 @@ export function normalizePythonFileName(
 		.replace(/^\.\/+/, "")
 		.replace(/\/+/g, "/");
 	if (!cleaned) return "";
+	if (JAVA_SERVICE_PROVIDER_PATH_RE.test(cleaned)) return cleaned;
 	const segments = cleaned
 		.split("/")
 		.map(segment => segment.trim().replaceAll(WHITESPACE_RE, "_"))
@@ -3007,6 +3014,8 @@ export function isValidPythonFileName(
 	if (isPythonIdeRuntimeReservedPath(value)) return false;
 	if (mode === "swift") return isSwiftProjectTextPath(value);
 	if (mode === "web") return isWebProjectTextPath(value);
+	if (mode === "java" && JAVA_SERVICE_PROVIDER_PATH_RE.test(value))
+		return true;
 
 	if (
 		CODE_EXTENSION_RE.test(value) ||
@@ -3050,6 +3059,7 @@ export function isPythonIdeRunnableFile(
 
 export function isPythonIdeTextFile(value: string) {
 	return (
+		JAVA_SERVICE_PROVIDER_PATH_RE.test(value) ||
 		isSwiftProjectTextPath(value) ||
 		isWebProjectTextPath(value) ||
 		isRustProjectTextPath(value) ||
@@ -3265,7 +3275,8 @@ export async function loadPythonIdeStarterFilesFromGitHub(
 				javaBoundaryResource(starterUrl) !== null ||
 				javaStructuralResource(starterUrl) !== null ||
 				javaBehavioralResource(starterUrl) !== null ||
-				javaCollaborationResource(starterUrl) !== null))
+				javaCollaborationResource(starterUrl) !== null ||
+				javaArchitectureResource(starterUrl) !== null))
 	) {
 		const selected =
 			mode === "java"
@@ -3276,7 +3287,8 @@ export async function loadPythonIdeStarterFilesFromGitHub(
 					javaBoundaryImportFiles(starterUrl) ??
 					javaStructuralImportFiles(starterUrl) ??
 					javaBehavioralImportFiles(starterUrl) ??
-					javaCollaborationImportFiles(starterUrl))
+					javaCollaborationImportFiles(starterUrl) ??
+					javaArchitectureImportFiles(starterUrl))
 				: mode === "swift"
 					? swiftImportFiles(starterUrl)
 					: mode === "web"
