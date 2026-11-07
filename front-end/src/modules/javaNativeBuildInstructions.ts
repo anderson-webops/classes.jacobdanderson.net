@@ -17,6 +17,10 @@ import {
 } from "./javaPatternsResources";
 import { javaRecursionProjects } from "./javaRecursionResources";
 import {
+	javaStructuralCoreID,
+	javaStructuralReadingID
+} from "./javaStructuralResources";
+import {
 	bronzeRequiredAssignment,
 	bronzeRequiredNativeInstructions
 } from "./usacoBronzeRequiredPacks";
@@ -139,6 +143,45 @@ export function javaNativeBuildInstructions(
 ): string[] | null {
 	const parts = (courseProjectKey ?? "").split(":");
 	const [course, item, role, extra] = parts;
+	if (
+		course === "design-patterns-in-java" &&
+		item === javaStructuralReadingID &&
+		role === "starter" &&
+		parts.length === 4 &&
+		extra === "native-java-structural"
+	) {
+		return [
+			"Java 21 complete structural-pattern example",
+			"Export its three files and compile in this worked example's own folder.",
+			"javac --release 21 -Xlint:all -Werror Main.java ContractTests.java",
+			"java ContractTests",
+			"java Main",
+			"The complete example reports Structural worked contracts: 41 passed. Main prints [Ready,*WARNING: WAIT*,GO], ready@1, ready@2 and true on separate lines.",
+			"These programs read no standard input. Run displays native Java 21 commands."
+		];
+	}
+	if (
+		course === "design-patterns-in-java" &&
+		[javaStructuralReadingID, javaStructuralCoreID].includes(item ?? "") &&
+		["starter", "reference"].includes(role ?? "") &&
+		parts.length === 4 &&
+		extra === "native-java-structural"
+	) {
+		return [
+			"Java 21 structural scene workflow",
+			"Export all fourteen files. Keep sources.txt and the src/scene package tree together.",
+			"javac --release 21 -Xlint:all -Werror -d classes @sources.txt",
+			"java -cp classes ContractTests core",
+			"java -cp classes Main",
+			"java -cp classes ContractTests",
+			"Complete Circle.render, Group.render, Frame.render, LazyGraphic.render and GlyphPool.get first. Core reports 621 passed. Main prints the scene, two A:INK placements and true.",
+			"The final harness additionally checks optional Placement.shift and reports 628 passed. A completed core remains usable before the optional extension.",
+			role === "starter"
+				? "The untouched starter compiles and names an unfinished method."
+				: "The reference completes core and optional behavior. Keep the learner attempt and design evidence separate.",
+			"These programs read no standard input. Run displays native Java 21 commands."
+		];
+	}
 	if (
 		course === "design-patterns-in-java" &&
 		item === javaBoundaryReadingID &&
