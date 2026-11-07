@@ -106,7 +106,7 @@ export function completeJavaRecursionModule(
 
 ### A complete recursive method
 
-A recursive call pauses its caller. Each stack frame retains its parameter and the point where execution resumes. The base case produces a value without another call. A decreasing nonnegative integer or shorter structure proves that accepted inputs eventually reach that case.
+Recursive methods solve a problem by calling themselves on a smaller version of the same problem. A recursive call pauses its caller. Each stack frame retains its parameter and the point where execution resumes. The base case produces a value without another call. A decreasing nonnegative integer or shorter structure proves that accepted inputs eventually reach that case.
 
 \`\`\`java
 public class Main {
@@ -202,7 +202,7 @@ ${workflow}
 
 **Steps:** Reopen Recursion Practice and retain its saved implementation. Trace 0, 1000, -1234, and Integer.MIN_VALUE. For each, record the widened magnitude, each remaining prefix and final digit, and all return additions. Predict the effect of moving the cast after Math.abs. Explain why leading zero digits in the reduced prefix do not create extra recursion.
 
-**Completion evidence:** Provide four traces, the four sums, and a signed-overflow explanation. Add one regression assertion for Integer.MIN_VALUE without changing the existing public contract. The reference opens the core implementation; the self-check includes the complete numerical trace.${resources(
+**Completion evidence:** Provide four traces, the four sums, and a signed-overflow explanation. Add one regression assertion for Integer.MIN_VALUE without changing the existing public contract. The reference opens the completed sumDigits method; the self-check includes the complete numerical trace.${resources(
 					"digits"
 				)}`,
 				true,
