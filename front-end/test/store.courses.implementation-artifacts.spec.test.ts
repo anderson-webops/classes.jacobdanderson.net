@@ -735,7 +735,7 @@ describe("implemented course development artifacts", () => {
 
 			expect(phetCatalogMediaLinks, courseId).toEqual([]);
 			expect(JSON.stringify(course), courseId).toContain(
-				"phet.colorado.edu/en/simulations/filter?subjects="
+				"https://phet.colorado.edu/"
 			);
 		}
 	});
@@ -790,7 +790,7 @@ describe("implemented course development artifacts", () => {
 			"biointeractive.org/classroom-resources"
 		);
 		expect(scienceResourceText).toContain(
-			"https://climatekids.nasa.gov/weather-climate/"
+			"https://www.noaa.gov/jetstream/appendix/weather-glossary-p"
 		);
 		expect(scienceResourceText).toContain(
 			"https://askabiologist.asu.edu/activities"

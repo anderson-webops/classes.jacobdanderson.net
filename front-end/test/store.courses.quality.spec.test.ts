@@ -5972,7 +5972,11 @@ describe("course text quality normalization", () => {
 							!completeSpeakingPractice(id, module, item) &&
 							!completePhysicsPractice(id, module, item) &&
 							!completeElementaryPractice(id, module, item) &&
-							!completeElementaryScienceActivity(id, module, item) &&
+							!completeElementaryScienceActivity(
+								id,
+								module,
+								item
+							) &&
 							!completeMiddleSchoolScienceActivity(
 								id,
 								module,
@@ -6880,7 +6884,16 @@ describe("course text quality normalization", () => {
 		expect(elementaryCorpus).not.toMatch(
 			/same learning goal[\s\S]{0,120}same learning goal/i
 		);
-		expect(elementaryCorpus).toContain("shared online material");
+		const resourceInventory = findItem(
+			elementaryScience!,
+			/^Elementary Science Resource Inventory$/
+		);
+		expect(resourceInventory.datasetLink).toBe(
+			"/course-assets/elementary-science/elementary-science-materials-pack.md"
+		);
+		expect(fs.existsSync(`public${resourceInventory.datasetLink}`)).toBe(
+			true
+		);
 	});
 
 	it(
@@ -9520,8 +9533,22 @@ describe("course text quality normalization", () => {
 
 			expect(terseFormulaicCards).toEqual([]);
 			expect(corpus).toContain("**Anchor structure:**");
-			expect(corpus).toContain("**Data-story structure:**");
-			expect(corpus).toContain("**Gate sequence:**");
+			const elementary = await loadRawCourse("elementary-science");
+			expect(elementary).not.toBeNull();
+			const dataStory = findItem(
+				elementary!,
+				/^Grades 3-5 Project: Fair-Test Data Story$/
+			);
+			expect(dataStory.content).toContain("Growth is 4 and 1 cm");
+			expect(dataStory.content).toContain("fictional comparison");
+			const capstone = findItem(
+				elementary!,
+				/^Elementary Science Capstone Gate$/
+			);
+			expect(capstone.content).toContain("obscured-screen failure");
+			expect(capstone.content).toContain(
+				"optional continuation preserves that artifact"
+			);
 			expect(corpus).toContain("**Option A: Relic Runner:**");
 		},
 		COURSE_SWEEP_TIMEOUT
@@ -9801,7 +9828,15 @@ describe("course text quality normalization", () => {
 			expect(corpus).not.toMatch(
 				/motion[^.\n]{0,120}particles, formulas, reactions|graph[^.\n]{0,120}particles, formulas, reactions/i
 			);
-			expect(corpus).toContain("one labeled observation sketch");
+			const notebook = findItem(
+				courses[0]!,
+				/^K-2 Project: Picture Evidence Notebook$/
+			);
+			expect(notebook.content).toContain("Draw and label");
+			expect(notebook.content).toContain(
+				"Three details match the supplied scene"
+			);
+			expect(notebook.content).toContain("labelled as an inference");
 			expect(allCourseText(courses[1])).toContain("system boundary");
 			expect(corpus).toContain("unit-aware graph or diagram");
 			expect(corpus).toContain("coordinate or system definition");
