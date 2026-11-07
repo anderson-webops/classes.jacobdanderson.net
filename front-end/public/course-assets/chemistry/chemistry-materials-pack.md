@@ -489,7 +489,7 @@ Use this checklist before any chemistry project that relies on a simulation, dia
 
 ## Capstone Evidence Seeds
 
-These topics are starting points when a capstone needs a browser-based source set. Each topic still needs a narrowed claim and at least two evidence types.
+These topics are starting points when a capstone needs a browser-based source set. Each topic still needs a narrowed claim and at least two evidence types. The required CHM11 work produces one saved explanation and evidence log. Optional showcase work adapts that artifact for an audience; optional reaction modeling deepens its reaction or contrasts a separate reaction with its physical-change topic. Optional review uses either a shared artifact or an independent rereading of the saved work.
 
 | Topic               | Possible Evidence                                                                  | Useful Chemistry Ideas                                            | Better Narrow Claim                                                               |
 | ------------------- | ---------------------------------------------------------------------------------- | ----------------------------------------------------------------- | --------------------------------------------------------------------------------- |

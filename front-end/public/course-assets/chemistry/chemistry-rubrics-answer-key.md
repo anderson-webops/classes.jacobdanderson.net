@@ -438,3 +438,5 @@ Capstone example:
 4. Limitation: name the missing exact measurements.
 
 Common revision target: a capstone topic such as "batteries" or "cleaning" is too broad until narrowed to one claim, one evidence set, and one model.
+
+Optional extensions keep the saved required artifact as their starting point. A showcase identifies its audience and explains one presentation change; a reaction extension adds a supported reaction model or an explicit physical/chemical contrast; a review cites the artifact and applies one evidence-supported improvement. An independent review can meet the same criteria as a shared review.

@@ -1325,8 +1325,8 @@ const introToChemistrySourceCourse: RawCourse = {
 				{
 					title: "Project: Chemistry in Your World Showcase",
 					content: [
-						"**Project goal:** Explain one real-world chemistry phenomenon using course concepts, evidence, and a particle-level model. The showcase requires clear evidence-supported reasoning rather than a broad topic summary.",
-						"**Requirements:** Include a claim, evidence log, particle/model explanation, at least four course vocabulary terms, one diagram or simulation reference, one changed-condition prediction, and one limitation. The final artifact names which parts of the topic were covered in the intro course and which parts are advanced previews.",
+						"**Project goal:** Extend the saved required CHM11 capstone into an optional showcase for a chosen audience. Reuse its question, evidence log, particle model and revised explanation, then adapt their presentation to that audience.",
+						"**Requirements:** Keep the existing claim, evidence log, particle/model explanation, vocabulary, visual reference, prediction and limitation. Add an audience-specific introduction or annotated visual and explain one choice that makes the existing evidence easier for that audience to interpret.",
 						"**Analysis target:** The artifact is narrow enough that another person could disagree with the claim using evidence. Replace broad topics with testable claims, such as pressure changing carbonation behavior, ions affecting hard-water deposits, or electron transfer explaining corrosion.",
 						"**Completion checks:** The final artifact is self-contained, evidence-supported, equipment-free, and specific enough to be corrected or challenged."
 					].join("\n\n"),
@@ -1336,7 +1336,7 @@ const introToChemistrySourceCourse: RawCourse = {
 				{
 					title: "Project: Model Your Own Reaction",
 					content: [
-						"**Project goal:** Build a focused reaction-modeling capstone. Choose a real-world topic such as food, batteries, sports equipment, medicine, cleaning, corrosion, or environmental chemistry, then narrow it to one chemical reaction or process that can be explained safely with evidence.",
+						"**Project goal:** Extend the saved CHM11 capstone with a more detailed reaction model when its phenomenon includes a chemical reaction. A capstone about physical change can instead supply a contrast to a separate, narrow reaction case. Reuse the relevant evidence and label any additional source or model assumption.",
 						"**Requirements:** Identify the topic, the reaction or process, the reactants or starting substances, the products or ending substances, the reaction type if known, and the atomic- or particle-level rearrangement. Include a diagram, particle storyboard, equation, simulation, or object model that makes the invisible part of the reaction visible without requiring a home experiment.",
 						"**Activity prompt:** Decide whether the reaction could be recreated safely at home and explain why or why not. Regardless of that answer, design a safe demonstration model such as a drawing, particle storyboard, paper model, or annotated equation. The final explanation makes clear what the starting material was, what changed, what product formed, and why the reaction matters in the chosen real-world context.",
 						"**Completion checks:** The final work includes a narrowed topic, a reaction model, evidence, safety reasoning, real-world significance, and one course recap connection showing which earlier chemistry ideas were used."
@@ -1347,10 +1347,10 @@ const introToChemistrySourceCourse: RawCourse = {
 				{
 					title: "Project: Capstone Peer Review",
 					content: [
-						"**Project goal:** Review a capstone explanation using a rubric for claim clarity, evidence quality, chemistry accuracy, model use, safety, and next-step reasoning.",
+						"**Project goal:** Review the saved capstone explanation using the rubric for claim clarity, evidence quality, chemistry accuracy, model use, safety, and next-step reasoning. Review a shared artifact when one is available, or independently reread the saved explanation and evaluate it against the same criteria.",
 						"**Requirements:** Provide at least two strengths, two revision targets, and one question that would improve the investigation. Each comment points to a specific claim, data point, model, or vocabulary choice.",
 						"**Analysis target:** Sort feedback into accuracy, evidence, clarity, and scope. Accuracy feedback corrects chemistry; evidence feedback asks for a source or data; clarity feedback improves explanation; scope feedback narrows or expands the claim.",
-						"**Completion checks:** Feedback references the artifact directly and avoids vague comments such as good job or add more detail without naming what detail is missing."
+						"**Completion checks:** Feedback cites the exact claim or model being evaluated, explains two revision targets, and applies one supported improvement to the saved artifact. Independent review and shared review use the same evidence standard."
 					].join("\n\n"),
 					datasetLink: REFERENCES.ngssAppendices,
 					solutionLink: answerKey("capstone-rubric")
