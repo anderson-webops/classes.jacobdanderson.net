@@ -51,9 +51,67 @@ export const pythonLevel1Course: RawCourse = {
 			curriculum: [
 				{
 					title: "Introduction and Setup",
-					content: `Get comfortable with the coding environment, the Turtle canvas, the console, and project instructions. Learn what Python is used for and how Turtle programs are organized.
+					preserveInstructions: true,
+					content: `Python runs statements from top to bottom. A statement such as \`pen.forward(60)\` calls an action on the turtle named \`pen\`; \`60\` is its argument. The dot selects an action belonging to that turtle. Quoted text such as \`"orange"\` is a string. A line beginning with \`#\` is a comment and does not draw anything.
 
-Color reference: use Trinket's Turtle color table when choosing Turtle names, CSS names, hex codes, or RGB values: ${TURTLE_COLOR_REFERENCE}`,
+The editor contains the program, the canvas shows its drawing, and the console displays printed values or errors. In the site's Turtle environment, Run starts the program and Stop ends a running program. A fresh run begins the drawing again. The first two preview projects supply more code than is needed here; Turtle Exploration begins with the movement and pen commands.
+
+## Coordinates, direction and pen state
+
+The canvas center is \`(0, 0)\`. Positive x is right, negative x is left, positive y is up, and negative y is down. A new turtle faces right. \`forward(distance)\` moves in its current direction; \`left(angle)\` and \`right(angle)\` change that direction in degrees. \`goto(x, y)\` moves to a coordinate without changing the direction.
+
+The pen starts down, so movement leaves a line. Lift it before traveling to another part of a drawing, then lower it before drawing there. This complete example draws a filled rectangle:
+
+\`\`\`python
+import turtle
+
+screen = turtle.Screen()
+pen = turtle.Turtle()
+
+# Travel to the lower-left corner without drawing.
+pen.penup()
+pen.goto(-60, -30)
+pen.pendown()
+pen.color("black", "orange")
+pen.begin_fill()
+
+pen.forward(120)
+pen.left(90)
+pen.forward(60)
+pen.left(90)
+pen.forward(120)
+pen.left(90)
+pen.forward(60)
+pen.left(90)
+
+pen.end_fill()
+screen.mainloop()
+\`\`\`
+
+\`import turtle\` makes the library available. \`Screen()\` supplies the drawing area and \`Turtle()\` creates the drawing cursor. Assignment with \`=\` gives each object a name. Here \`color("black", "orange")\` chooses an outline and fill. Movement between \`begin_fill()\` and \`end_fill()\` defines the filled shape. \`mainloop()\` keeps the drawing window responsive.
+
+Trace the four movements before running:
+
+| After movement | Position | Direction before the next move |
+| --- | --- | --- |
+| First side | (60, -30) | Up after the first left turn |
+| Second side | (60, 30) | Left after the second turn |
+| Third side | (-60, 30) | Down after the third turn |
+| Fourth side | (-60, -30) | Right after the fourth turn |
+
+The turtle returns to its starting position and direction. Changing the first \`120\` alone leaves an open outline; changing both long sides to \`80\` produces a closed, narrower rectangle. These predictions connect the visible result to the exact statements.
+
+## Checks and repairs
+
+Run the unchanged example, then move the starting corner to \`(-100, -50)\`. Its opposite corner is now \`(20, 10)\`. Both values shift because the side lengths stay fixed. Add a second shape elsewhere by lifting the pen before the next \`goto()\`. A connecting line means the pen was down during travel.
+
+Names are case-sensitive: \`Pen\` and \`pen\` are different names. A missing quote or parenthesis can prevent the program from starting. Read the first error, compare its named line with the working example, repair one change and run again. A drawing with the wrong position can run without a syntax error; use the coordinate trace to find that kind of mistake.
+
+Continue with Turtle Exploration: draw a square, a triangle and a filled shape in a separate location. Explain the movement, turning and pen state for each. The recap and original drawing remain optional practice.
+
+Color reference: use Trinket's Turtle color table when choosing Turtle names, CSS names, hex codes, or RGB values: ${TURTLE_COLOR_REFERENCE}
+
+Command details: [Python Turtle reference](https://docs.python.org/3/library/turtle.html).`,
 					datasetLink: TURTLE_COMMAND_REFERENCE
 				},
 				{
@@ -88,8 +146,53 @@ Color reference: use Trinket's Turtle color table when choosing Turtle names, CS
 			curriculum: [
 				{
 					title: "GrS2 Project 1: Basic Shapes",
-					content:
-						"Learn how `for` loops repeat code and use them to draw a square, triangle, and circle more efficiently. Compare repeated code with loop-based code and explore how shape sides and turn angles work together.",
+					preserveInstructions: true,
+					content: `Learn how \`for\` loops repeat code and use them to draw a square, triangle, and circle more efficiently. Compare repeated code with loop-based code and explore how shape sides and turn angles work together.
+
+## Counted repetition
+
+A loop runs the same indented statements once for each supplied value. \`range(4)\` supplies \`0, 1, 2, 3\`: four values, with the stopping value 4 excluded. In \`for step in range(4):\`, \`step\` receives those values in order. The colon begins the loop body; indent every repeated statement by four spaces. The first unindented statement runs after the loop finishes.
+
+The rectangle lesson repeats movement and turning. A square has equal sides, so those two statements can share one loop:
+
+\`\`\`python
+import turtle
+
+screen = turtle.Screen()
+pen = turtle.Turtle()
+pen.penup()
+pen.goto(-40, -40)
+pen.pendown()
+
+for step in range(4):
+    pen.forward(80)
+    pen.left(90)
+
+pen.color("purple")
+screen.mainloop()
+\`\`\`
+
+Each iteration draws one side and turns once. Starting at \`(-40, -40)\`, the four endpoints are \`(40, -40)\`, \`(40, 40)\`, \`(-40, 40)\` and \`(-40, -40)\`. Only after all four sides does \`pen.color("purple")\` run, so it changes the cursor and future strokes; the existing square keeps its original color. Move that statement before the loop to draw purple sides.
+
+If \`pen.left(90)\` loses its indentation, all four forward moves happen before the single turn. The result is a straight 320-pixel line. If the loop header loses its colon, Python reports a syntax error before drawing.
+
+## Side counts and turn angles
+
+A simple regular polygon with n sides makes one complete turn while its outline closes. Each exterior turn is \`360 / n\` degrees. A square uses four turns of 90 degrees; an equilateral triangle uses three turns of 120 degrees. The triangle's interior angle is 60 degrees, while the turtle turns through its exterior angle.
+
+For the required triangle, travel pen-up to \`(80, -40)\`, face right with \`pen.setheading(0)\`, and use three 60-pixel sides with 120-degree left turns. Its last endpoint returns to \`(80, -40)\`. Use \`pen.circle(30)\` for the required circle after traveling to \`(-100, 40)\`; 30 is the radius. From the default rightward heading, this command places the circle's center 30 pixels above its starting point. A circle command already performs the curved drawing, so it does not need a surrounding polygon loop.
+
+## Small-case checks
+
+| Change to the square loop | Expected result |
+| --- | --- |
+| \`range(0)\` | No sides; the body never runs. |
+| \`range(1)\` | One 80-pixel side and one left turn. |
+| \`range(4)\` | Four sides, a closed square and the original heading. |
+
+Finish with the square, triangle and circle in separate places. Keep travel lines absent and identify which statements repeat. Change a side length or starting position, predict the endpoints, then compare the drawing with that prediction. Continue with Smiley Face and the original loop drawing as the remaining required projects. More Shapes and Bullseye are optional practice.
+
+Language details: [Python for loops and range](https://docs.python.org/3/tutorial/controlflow.html#for-statements).`,
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-1/tree/main/GrS2-Basic-Shapes/solution"
 				},
@@ -1086,7 +1189,7 @@ const PYTHON_LEVEL_1_FLOW: PythonLevel1FlowConfig[] = [
 			"GrS2 Project 3: Open Ended Project - Drawing with Loops"
 		],
 		projectThread:
-			"Use Basic Shapes to connect repetition count, side count, and turn angle. Smiley Face is a guided choice, while the original drawing is the independent challenge."
+			"Use Basic Shapes to connect repetition count, side count, and turn angle. Continue with the required Smiley Face and original drawing projects; use supplemental shape projects when more practice is useful."
 	},
 	{
 		title: "GrS3 Variables and Random Numbers",
