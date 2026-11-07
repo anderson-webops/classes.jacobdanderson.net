@@ -325,8 +325,12 @@ for size, model in devices:
                 args.proof.write_text(json.dumps(record, indent=2) + "\n")
 
             outcome = (
-                run_with_launch_recovery(execute_ui, recover_owned_device, retain_recovery, profile["bundleIdentifier"])
-                if args.course == "capstone" else execute_ui(0)
+                run_with_launch_recovery(
+                    execute_ui, recover_owned_device, retain_recovery, profile["bundleIdentifier"],
+                    "WelcomeProfileUITests/testProfileNavigationAndState()"
+                    if args.extended_welcome else "CanonicalCourseUITests/testCourseWorkflow()"
+                )
+                if args.course in ("capstone", "gallery") or args.extended_welcome else execute_ui(0)
             )
             status, summary, result = outcome["status"], outcome["summary"], Path(outcome["resultBundle"])
             passed = status == 0 and summary.get("totalTestCount") == summary.get("passedTests") == 1 \
