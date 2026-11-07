@@ -2,7 +2,7 @@ import type { RawCourse, RawCourseModule, RawCourseModuleItem } from "./types";
 import { pythonLevel1Course } from "./python-level-1";
 
 function copyItem(item: RawCourseModuleItem): RawCourseModuleItem {
-	const content =
+	let content =
 		item.title === "GrS2 Project 1: Basic Shapes"
 			? [
 					item.content,
@@ -11,6 +11,26 @@ function copyItem(item: RawCourseModuleItem): RawCourseModuleItem {
 					"**Hard:** Complete `add_triangle_detail()` with a detail that moves with the triangle. Verify all four arrow keys and the absence of travel lines."
 				].join("\n\n")
 			: item.content;
+
+	if (
+		item.title ===
+		"GrS3 Supplemental Project 3: Variables and Random Numbers Recap"
+	) {
+		content += `\n\n${[
+			"**Classroom project:** The prepared Turtle Studio scene remains the framework for this variable review.",
+			"**Normal:** In `normal_addition()`, assign 20 to `side_length`, calculate `next_length = side_length + 5`, and print both values with clear labels. The expected values are 20 and 25.",
+			"**Hard:** In `hard_addition()`, import `random`, choose an x-coordinate with `random.randint(-120, 120)`, lift `artist`'s pen, move to that x-coordinate at y=-110, and add a 12-pixel gold dot. Keep the shared star-drawing code intact."
+		].join("\n\n")}`;
+	}
+	if (item.title === "GrS13 Supplemental Project 3: Game Mechanics Recap") {
+		content = [
+			"Run the prepared three-walk reference first. Its separate walks stop after 100, 51 and 101 one-pixel moves. Position and direction reset between exercises; the final condition is `y > 50 or x < -100`.",
+			"**Normal:** In `normal_addition()`, evaluate that condition for (0, 51), (-101, 0), (-100, 50) and (101, 0), and print each point with its result. The expected results are true, true, false and false. Keep the shared drawing turtle unchanged.",
+			"**Hard:** In `hard_addition()`, write a helper accepting x, y, upper_y and left_x. Test upper_y=10 and left_x=-20 with (0, 11), (-21, 0) and (-20, 10): the expected results are true, true and false. Explain why the same coordinates can classify differently when the limits change.",
+			"**Original project files:** [Original exercise starter](https://github.com/instruction-material/Python-Level-1/tree/03134b0960cfc71a0114e35e4e58be17d44b17c4/Game-Mechanics-Recap/starter)"
+		].join("\n\n");
+	}
+
 	return {
 		...item,
 		content,

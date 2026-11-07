@@ -317,12 +317,17 @@ Test a typical color and size, the smallest accepted size, a value outside the a
 				},
 				{
 					title: "GrS3 Supplemental Project 3: Variables and Random Numbers Recap",
-					content:
-						"Summarize variables, random numbers, and basic data types. Explain how a variable stores a value, why descriptive variable names make Turtle drawings easier to adjust, and how `random.randint()` can choose a size, coordinate, or color value. Include examples of an integer, string, and boolean, then describe one bug that can happen when a value is the wrong type.",
-					projectLink:
-						"https://github.com/instruction-material/Python-Level-1/tree/main/Game-Mechanics-Recap/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-1/tree/main/Game-Mechanics-Recap/solution"
+					preserveInstructions: true,
+					preserveAssignment: true,
+					content: `Use the supplied cases to review variables, assignment, types and bounded randomness. Write each prediction before checking it.
+
+1. Trace \`length = 20\`, then \`length = length + 5\`, then \`print(length)\`. The right side uses the old value before assignment replaces it, so the printed result is 25.
+2. Classify \`20\`, \`"20"\` and \`True\` as integer, string and boolean. Adding 5 to the integer gives 25; adding it directly to the string raises a type error because text and a number are different kinds of values.
+3. For \`random.randint(10, 30)\`, identify which of 9, 10, 20, 30 and 31 can occur. Both endpoints are included, so 10, 20 and 30 are allowed. Repeated calls can return the same value.
+4. Replace copied side lengths with a variable named \`side_length\`. Explain which drawing statements should read that name so changing it updates every intended side.
+5. Choose one random property and one fixed property for a drawing. Record the permitted range and explain how a run can vary while keeping the intended design.
+
+Complete the explanations and one short variable-based drawing example. This recap reviews GrS3; coordinate-controlled stopping loops are optional practice in GrS13.`
 				},
 				{
 					title: "GrS3 Supplemental Project 4: Open Ended Project - Haphazard Artwork",
@@ -1009,6 +1014,20 @@ Keep the game state explicit: which stars are still unlit, how time is represent
 Build the game in layers: movement first, then bouncing balls, then player collision, then lives and ending behavior. This makes bugs easier to isolate because each mechanic can be tested before the next one is added.`,
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-1/tree/main/Grs13-Dodgeball/solution"
+				},
+				{
+					title: "GrS13 Supplemental Project 3: Game Mechanics Recap",
+					preserveInstructions: true,
+					preserveAssignment: true,
+					content: `Complete three finite movement exercises from the supplied starter. First move forward one pixel 100times using a counter and an explicit break. Reset position to (0, 0), face upward, and stop only when y is above 50. Reset again, face left, and stop when y is above 50 or x is below -100.
+
+Predict the final positions before running. The reference endpoints are (100, 0), (0, 51) and (-101, 0), with 100, 51 and 101 moves. At y = 50 and x = -100 the strict comparisons are still false. Test the combined condition with (0, 51), (-101, 0), (-100, 50) and (101, 0): the expected results are true, true, false and false.
+
+Explain which value changes on each iteration and why each loop eventually stops. Keep the three exercises separate by resetting both position and direction.`,
+					projectLink:
+						"https://github.com/instruction-material/Python-Level-1/tree/03134b0960cfc71a0114e35e4e58be17d44b17c4/Game-Mechanics-Recap/starter",
+					solutionLink:
+						"https://github.com/instruction-material/Python-Level-1/tree/03134b0960cfc71a0114e35e4e58be17d44b17c4/Game-Mechanics-Recap/solution"
 				}
 			]
 		},

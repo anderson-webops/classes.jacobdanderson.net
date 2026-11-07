@@ -34,7 +34,7 @@ function requireSourceModule(title: string) {
 	return module;
 }
 
-describe("Python Level 1 learner flow", () => {
+describe("python Level 1 learner flow", () => {
 	beforeEach(() => {
 		setActivePinia(createPinia());
 	});
@@ -84,7 +84,7 @@ describe("Python Level 1 learner flow", () => {
 		);
 
 		expect(requiredCount).toBe(66);
-		expect(choiceAndChallengeCount).toBe(57);
+		expect(choiceAndChallengeCount).toBe(58);
 
 		const loops = requireSourceModule("GrS2 Loops");
 		expect(loops.curriculum.map(item => item.title)).toEqual([
