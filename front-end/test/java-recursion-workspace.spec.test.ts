@@ -1,3 +1,4 @@
+import { runJavaIdeProject } from "@/modules/javaIdeRuntime";
 import { createHash, webcrypto } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
@@ -208,4 +209,22 @@ it("shares optional core attempts and keeps role and legacy projects independent
 			)
 		)
 	).toBeNull();
+});
+
+it("runs the complete worked example in the bounded site Java preview", () => {
+	const files = ["Main.java", "ContractTests.java", "README.md"].map(
+		name => ({
+			name,
+			content: sources["AJ4-Call-Trace/" + name].content,
+			encoding: "text" as const
+		})
+	);
+	const result = runJavaIdeProject({
+		mode: "java",
+		files,
+		activeFileName: "Main.java"
+	});
+	expect(result.stderr).toEqual([]);
+	expect(result.stdout).toEqual(["10"]);
+	expect(result.runnableFileName).toBe("Main.java");
 });
