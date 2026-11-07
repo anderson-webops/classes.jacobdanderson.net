@@ -324,7 +324,7 @@ Test a typical color and size, the smallest accepted size, a value outside the a
 1. Trace \`length = 20\`, then \`length = length + 5\`, then \`print(length)\`. The right side uses the old value before assignment replaces it, so the printed result is 25.
 2. Classify \`20\`, \`"20"\` and \`True\` as integer, string and boolean. Adding 5 to the integer gives 25; adding it directly to the string raises a type error because text and a number are different kinds of values.
 3. For \`random.randint(10, 30)\`, identify which of 9, 10, 20, 30 and 31 can occur. Both endpoints are included, so 10, 20 and 30 are allowed. Repeated calls can return the same value.
-4. Replace copied side lengths with a variable named \`side_length\`. Explain which drawing statements should read that name so changing it updates every intended side.
+4. Replace copied side lengths with a variable named \`side_length\`. Identify the drawing statements that read that name so changing it updates every intended side.
 5. Choose one random property and one fixed property for a drawing. Record the permitted range and explain how a run can vary while keeping the intended design.
 
 Complete the explanations and one short variable-based drawing example. This recap reviews GrS3; coordinate-controlled stopping loops are optional practice in GrS13.`

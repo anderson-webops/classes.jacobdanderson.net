@@ -2994,7 +2994,12 @@ describe("course text quality normalization", () => {
 		async () => {
 			const contentGroups = new Map<
 				string,
-				Array<{ isOriginalJuniScratch: boolean; label: string }>
+				Array<{
+					courseId: string;
+					isOriginalJuniScratch: boolean;
+					isSharedTurtleFoundation: boolean;
+					label: string;
+				}>
 			>();
 			const duplicateGroups: string[] = [];
 			const courses = await loadedCatalogCourses();
@@ -3015,6 +3020,16 @@ describe("course text quality normalization", () => {
 						const labels =
 							contentGroups.get(normalizedContent) ?? [];
 						labels.push({
+							courseId: entry.id,
+							isSharedTurtleFoundation:
+								[
+									"python-level-1",
+									"python-level-1-classroom"
+								].includes(entry.id) &&
+								module.id ===
+									"python-level-1-grs1-coordinates-and-movement" &&
+								item.id ===
+									"python-level-1-grs1-coordinates-and-movement-curriculum-introduction-and-setup",
 							isOriginalJuniScratch: isJuniScratchProjectTitle(
 								entry.id,
 								item.title
@@ -3027,9 +3042,16 @@ describe("course text quality normalization", () => {
 			}
 
 			for (const entries of contentGroups.values()) {
+				// This single concept reading is shared by two distinct teaching formats.
+				// Repeated rows in one format or reuse elsewhere still fail.
+				const sharedTurtleFoundation =
+					entries.length === 2 &&
+					new Set(entries.map(entry => entry.courseId)).size === 2 &&
+					entries.every(entry => entry.isSharedTurtleFoundation);
 				if (
 					entries.length < 2 ||
-					entries.every(entry => entry.isOriginalJuniScratch)
+					entries.every(entry => entry.isOriginalJuniScratch) ||
+					sharedTurtleFoundation
 				) {
 					continue;
 				}
