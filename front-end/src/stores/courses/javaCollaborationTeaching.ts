@@ -213,7 +213,7 @@ TextDocument owns a non-null String excluding CR and LF. Empty text is valid. Nu
 
 snapshot returns a fresh opaque Snapshot storing this document's identity and its current immutable String. The snapshot's constructor and fields are private. Implement restore to reject null, reject a different owner before changing text, then restore the captured value. A foreign snapshot causes IllegalArgumentException. Repeated restoration of the same valid snapshot is allowed.
 
-For document A containing a, capture a snapshot, replace with b, then restore: the same A object again contains a. A snapshot from another document is rejected even if its text is also a. This owner binding makes the restore boundary visible; it is an in-memory object contract without serialized persistence or distributed identity.
+For document A containing a, capture a snapshot, replace with b, then restore: the original document again contains a. A snapshot from another document is rejected even if its text is also a. This owner binding makes the restore boundary visible; it is an in-memory object contract without serialized persistence or distributed identity.
 
 ### Observer membership and lifetime
 
