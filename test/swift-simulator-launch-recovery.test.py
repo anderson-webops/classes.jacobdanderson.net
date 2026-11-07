@@ -5,6 +5,8 @@ import unittest
 from pathlib import Path
 
 from swift_simulator_launch_recovery import (
+    CANONICAL_TEST,
+    WELCOME_TEST,
     is_app_launch_timeout,
     run_with_launch_recovery,
 )
@@ -15,11 +17,14 @@ class LaunchRecoveryTests(unittest.TestCase):
         self.observed = json.loads(
             (Path(__file__).parent / "fixtures/swift-capstone-launch-failures.json").read_text()
         )
+        self.observed += json.loads(
+            (Path(__file__).parent / "fixtures/swift-welcome-gallery-launch-failures.json").read_text()
+        )
         self.passed = {"status": 0, "summary": {
             "totalTestCount": 1, "passedTests": 1, "failedTests": 0,
             "skippedTests": 0, "testFailures": []}}
 
-    def exercise(self, outcomes, bundle):
+    def exercise(self, outcomes, bundle, test_identifier=CANONICAL_TEST):
         trace = []
         retained = []
         def execute(attempt):
@@ -29,14 +34,15 @@ class LaunchRecoveryTests(unittest.TestCase):
             trace.append(("recover",))
         def retain(stage, result):
             retained.append((stage, result))
-        result = run_with_launch_recovery(execute, recover, retain, bundle)
+        result = run_with_launch_recovery(execute, recover, retain, bundle, test_identifier)
         return result, trace, retained
 
     def test_observed_failures_get_one_recovery_and_retain_both_attempts(self):
         for observed in self.observed:
             with self.subTest(job=observed["sourceJob"]):
-                self.assertTrue(is_app_launch_timeout(observed, observed["bundleIdentifier"]))
-                result, trace, retained = self.exercise([observed, self.passed], observed["bundleIdentifier"])
+                identifier = observed.get("expectedTestIdentifier", CANONICAL_TEST)
+                self.assertTrue(is_app_launch_timeout(observed, observed["bundleIdentifier"], identifier))
+                result, trace, retained = self.exercise([observed, self.passed], observed["bundleIdentifier"], identifier)
                 self.assertEqual(result, self.passed)
                 self.assertEqual(trace, [("execute", 0), ("recover",), ("execute", 1)])
                 self.assertEqual(retained, [("beforeRecovery", observed), ("afterRecovery", self.passed)])
@@ -84,6 +90,18 @@ class LaunchRecoveryTests(unittest.TestCase):
                                      lambda stage, result: retained.append((stage, result)),
                                      failed["bundleIdentifier"])
         self.assertEqual(retained, [("beforeRecovery", failed)])
+
+    def test_welcome_assertions_and_other_workflows_remain_failures(self):
+        welcome = next(item for item in self.observed if item.get("course") == "welcome")
+        self.assertFalse(is_app_launch_timeout(welcome, welcome["bundleIdentifier"]))
+        self.assertFalse(is_app_launch_timeout(welcome, welcome["bundleIdentifier"], "AnyTest/testAnything()"))
+        self.assertFalse(is_app_launch_timeout(self.observed[0], self.observed[0]["bundleIdentifier"], WELCOME_TEST))
+        failed = copy.deepcopy(welcome)
+        failed["summary"]["testFailures"][0]["failureText"] = "XCTAssertTrue failed: profile is missing"
+        result, trace, retained = self.exercise([failed], failed["bundleIdentifier"], WELCOME_TEST)
+        self.assertEqual(result, failed)
+        self.assertEqual(trace, [("execute", 0)])
+        self.assertEqual(retained, [])
 
 
 if __name__ == "__main__":

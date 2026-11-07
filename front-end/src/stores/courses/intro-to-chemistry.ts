@@ -1,4 +1,5 @@
 import type { RawCourse, RawCourseModuleItem } from "./types";
+import { preserveIntroChemistryTeaching } from "./introChemistryGuidance";
 
 const SIMULATIONS = {
 	balancingEquations:
@@ -102,7 +103,7 @@ const introToChemistrySourceCourse: RawCourse = {
 				{
 					title: "Chemistry as Evidence-Based Explanation",
 					content: [
-						"**Concept path:** Chemistry studies matter, the particles that make it up, and the evidence that shows when matter changes. A chemistry explanation usually connects three levels at once: what is visible at the human scale, what is modeled at the particle scale, and what measurements or references support the claim. This course uses notebooks, shared simulations, diagrams, short readings, and provided data tables rather than required household chemicals or physical lab supplies, so the focus stays on reasoning from safe evidence. A strong explanation separates observation from inference: seeing ice melt is an observation, while explaining faster particle motion and changing arrangement is a model-based inference.",
+						"**Concept path:** Chemistry studies matter, the particles that make it up, and the evidence that shows when matter changes. A chemistry explanation usually connects three levels at once: what is visible at the human scale, what is modeled at the particle scale, and what measurements or references support the claim. This course uses notebooks, shared simulations, diagrams, short readings, and provided data tables rather than required household chemicals or physical lab supplies, so the focus stays on reasoning from safe evidence. A strong explanation separates observation from inference: seeing ice melt is an observation, while explaining changing molecular arrangement is a model-based inference. During melting at constant pressure, energy can enter while temperature and average molecular kinetic energy remain constant.",
 						"**Learning path:** Start by choosing one visible phenomenon, then describe it twice: once as plain observation and once as a particle-level explanation. Keep a notebook page open while reading so each new idea can be sorted into observation, model, evidence, or claim. A useful routine is: name what changed, identify what evidence is available, choose a particle model, and write one sentence explaining how the model accounts for the evidence.",
 						"**Evidence activity:** Set up a chemistry notebook with four recurring sections: observation, particle model, evidence, and claim-evidence-reasoning. Use a simple example such as ice melting, salt dissolving, or a metal object rusting to separate what can be observed from what must be inferred.",
 						"**Output:** A one-page notebook template and a short explanation of why particle models can explain more than visible description alone.",
@@ -435,7 +436,7 @@ const introToChemistrySourceCourse: RawCourse = {
 					content: [
 						"**Concept path:** Columns on the periodic table are groups, rows are periods, and broad regions provide useful first predictions about properties. Metals are often conductive, malleable, and likely to form positive ions; nonmetals often form covalent bonds or negative ions; metalloids show mixed behavior depending on the situation. Special groups such as alkali metals, alkaline earth metals, halogens, and noble gases are useful because they summarize recurring patterns. These categories are not a substitute for evidence, but they help organize expectations before a specific property is measured or researched.",
 						"**Learning path:** Build a labeled map of the table rather than memorizing isolated locations. For each region or group, write one property pattern, one example element, and one caution about overgeneralizing. Then use the map to explain an unfamiliar element by position before checking a reference.",
-						"**Evidence activity:** Color-code a blank periodic table by major regions and write one evidence-based property statement for each region.",
+						"**Evidence activity:** Use the supplied selected-element table to make a labelled group/period map or text table. Distinguish regions with labels or patterns and give one supported property statement for each represented region.",
 						"**Reasoning focus:** Categories are useful because they summarize repeated evidence, not because the boundaries are magic. A metalloid can share some metal-like and nonmetal-like behavior, and a group trend can be stronger evidence than a single memorized fact.",
 						"**Output:** A region map and a vocabulary glossary for group, period, metal, nonmetal, metalloid, halogen, and noble gas. Add one caution explaining why region labels are predictions rather than complete descriptions.",
 						"**CER checkpoint:** Use table position to predict whether an unfamiliar element is more likely to behave like a metal or nonmetal."
@@ -696,7 +697,7 @@ const introToChemistrySourceCourse: RawCourse = {
 						"**Concept path:** Phase changes are physical changes caused by energy transfer and changing particle arrangement. Melting, freezing, vaporization, condensation, sublimation, and deposition change how particles move, how far apart they are, and how strongly they are held together, but the substance identity remains the same during ordinary phase change. During a phase change, added or removed energy may change arrangement rather than temperature, which is why heating curves can have flat regions. This helps explain why boiling water is still water rather than a chemical decomposition into new substances.",
 						"**Learning path:** Read phase changes as energy-and-arrangement changes. For each transition, name the starting state, ending state, direction of energy transfer, and what happens to spacing or motion. When reading a heating curve, describe sloped regions as temperature changes and flat regions as phase changes where energy is still being transferred.",
 						"**Evidence activity:** Interpret the heating curve data in the materials pack. Identify where temperature changes, where phase changes occur, and where energy is changing particle arrangement rather than only average motion.",
-						"**Worked example:** During a flat section at 100 C, the sample can still absorb energy while boiling. The temperature does not rise because the energy is changing state, not simply increasing average particle speed.",
+						"**Worked example:** For pure water at approximately 1 atm, a flat section near 100 C can show energy entering while liquid boils. The temperature does not rise because the energy is changing state, not simply increasing average particle speed.",
 						"**Output:** An annotated heating curve with phase labels and energy-transfer notes.",
 						"**CER checkpoint:** Explain why a flat section of a heating curve can still involve energy transfer."
 					].join("\n\n"),
@@ -706,10 +707,10 @@ const introToChemistrySourceCourse: RawCourse = {
 				{
 					title: "Intermolecular Attractions",
 					content: [
-						"**Concept path:** Intermolecular attractions are forces between particles, not the covalent or ionic bonds inside a particle. These attractions influence boiling point, evaporation rate, surface tension, viscosity, and solubility because particles with stronger attractions are harder to separate or rearrange. Introductory work focuses on comparing stronger and weaker attractions and connecting them to observable properties. The goal is not to memorize every force category immediately, but to reason that structure and polarity affect how particles interact in bulk matter.",
+						"**Concept path:** Intermolecular attractions act between molecules. They differ from covalent bonds within a molecule and from electrostatic bonding throughout an ionic lattice. These attractions influence boiling point, evaporation rate, surface tension, viscosity, and solubility because particles with stronger attractions are harder to separate or rearrange. Introductory work focuses on comparing stronger and weaker attractions and connecting them to observable properties. The goal is not to memorize every force category immediately, but to reason that structure and polarity affect how particles interact in bulk matter.",
 						"**Learning path:** Link structure to attraction, then attraction to property. For each substance, identify what evidence suggests stronger or weaker attractions, then predict a property such as boiling point, evaporation rate, or solubility. Make the reasoning explicit: stronger attractions usually require more energy to separate particles, so they often raise boiling point or slow evaporation.",
 						"**Evidence activity:** Compare water, carbon dioxide, ethanol, and a hexane-like oil model using the intermolecular property cards. Then connect the water-cohesion and surface-tension case to attraction evidence: a dome of water on a coin or a bead of water on a surface is visible behavior, while cohesion is the model that explains why nearby water molecules pull together.",
-						"**Worked example:** Water is predicted to have stronger attractions than carbon dioxide under ordinary conditions, so it has a much higher boiling point. Strong attractions also support surface tension and cohesion, but the evidence stays carefully stated: the visible water shape supports a model of molecular attraction; it does not directly show individual molecules.",
+						"**Worked example:** At 1 atm, water boils near 100 C, while solid carbon dioxide sublimes near -78.5 C without a liquid stage. These are different transitions, so carbon dioxide has no normal boiling point for that comparison. Water and ethanol provide a same-pressure boiling comparison: water boils near 100 C and ethanol near 78 C, consistent with their different intermolecular attractions. Strong attractions also support surface tension and cohesion, but the evidence stays carefully stated: the visible water shape supports a model of molecular attraction; it does not directly show individual molecules.",
 						"**Output:** A property-prediction table connecting attraction strength to visible behavior.",
 						"**CER checkpoint:** Explain why molecular structure can affect a bulk property such as boiling point."
 					].join("\n\n"),
@@ -897,7 +898,7 @@ const introToChemistrySourceCourse: RawCourse = {
 						"**Project goal:** Analyze elephant toothpaste as an equipment-free reaction-evidence case. The chemistry target is decomposition of hydrogen peroxide, gas production, catalysis, and foam as trapped oxygen gas.",
 						"**Requirements:** Use the provided video sources, diagrams, or a safe supervised observation. Identify the starting substances, the trigger or catalyst, the gas produced, why soap creates foam, and why changing amount can scale the visible result without changing the underlying chemistry.",
 						`**Source set:** Small-scale demo: ${REFERENCES.elephantToothpasteDemo}. Particle explanation clip: ${REFERENCES.elephantToothpasteAtomClip}. Scale-up demo: ${REFERENCES.elephantToothpasteScaleUp}. Use these as evidence sources, not as required physical experiments.`,
-						"**Activity prompt:** Compare the small-scale and large-scale elephant-toothpaste videos. Explain what is similar, what changes when the amount of material changes, and why the dramatic foam is interpreted through gas production and catalyst evidence rather than appearance alone.",
+						"**Activity prompt:** Compare supplied text models S and L, or add separately labelled observations from the optional small- and large-scale videos. Explain the common reaction, the changed reactant amount and why foam height alone does not measure gas yield.",
 						"**Completion checks:** The explanation uses catalyst, decomposition, oxygen, hydrogen peroxide, foam, rate, and evidence accurately, and it states why the catalyst changes reaction speed without being treated as the main product."
 					].join("\n\n"),
 					mediaLink: REFERENCES.elephantToothpasteDemo,
@@ -1018,7 +1019,7 @@ const introToChemistrySourceCourse: RawCourse = {
 					title: "Project: Making Invisible Ink Case Analysis",
 					content: [
 						"**Project goal:** Analyze invisible ink as a solution-and-reaction case. The focus is to distinguish the diluted lemon-juice solution from the later visible change that can occur when the message is revealed.",
-						"**Requirements:** Use the provided video source, written scenario, or safe supervised observation. Identify lemon juice and water as the starting mixture, define citric acid as the important solute in the simplified model, explain why dilution can make the dried mark harder to see, and connect browning or darkening to oxidation or heat-triggered chemical change.",
+						"**Requirements:** Use the provided video source, written scenario, or safe supervised observation. Identify lemon juice and water as the starting mixture, identify citric acid as one acidic solute among the dissolved organic materials in the simplified model, explain why dilution can make the dried mark harder to see, and connect browning or darkening to oxidation or heat-triggered chemical change.",
 						"**Activity prompt:** Answer whether ink is a liquid, whether becoming invisible changes state of matter, what materials are mixed, why water is added instead of only lemon juice, and whether the resulting invisible ink is classified as a mixture or solution.",
 						"**Completion checks:** The final explanation separates solution vocabulary from reaction evidence and does not claim that the liquid disappears."
 					].join("\n\n"),
@@ -1180,7 +1181,7 @@ const introToChemistrySourceCourse: RawCourse = {
 				{
 					title: "Reaction Energy and Rates",
 					content: [
-						"**Concept path:** Reaction energy and reaction rate answer different questions. Some reactions release energy to the surroundings, some absorb energy, and all reactions require particles to collide with enough energy and a useful orientation before bonds can rearrange. Rate describes how quickly reactants become products; energy describes what is transferred, required, or released. A reaction can be energetically favorable but slow if useful collisions are rare, and a faster reaction is not automatically more complete. Temperature, concentration, surface area, and catalysts can affect rate by changing collision frequency, collision energy, or reaction pathway.",
+						"**Concept path:** Reaction energy and reaction rate answer different questions. Some reactions release energy to the surroundings and some absorb energy. The introductory collision model explains many reactions through encounters with sufficient energy and an appropriate orientation. Rate describes how quickly reactants become products; energy describes what is transferred, required, or released. A reaction can be energetically favorable but slow if useful collisions are rare, and a faster reaction is not automatically more complete. Temperature, concentration, surface area, and catalysts can affect rate by changing collision frequency, collision energy, or reaction pathway.",
 						"**Learning path:** Separate energy claims from rate claims. Write one sentence about what energy evidence appears, such as heat, light, or cooling, and a separate sentence about how quickly the change occurs. If a factor such as temperature or catalyst is changed, explain whether it affects collision energy, collision frequency, or pathway. When a thermochemical value is supplied, multiply the heat released or absorbed per mole by the moles of product or reactant specified by that value, and state the product state when it matters.",
 						"**Evidence activity:** Compare two reaction descriptions from the materials pack: one that is warmed, cooled, or catalyzed, and one that releases heat or light. Identify the evidence for energy transfer, the evidence for rate change, and the limits of the description.",
 						"**Worked example:** A glow stick emits light and changes brightness over time. The light is evidence of energy transfer, while the fading brightness is evidence about rate and reactant use. For `2H₂ + O₂ → 2H₂O`, forming liquid water is exothermic; if `1 mol H₂O(l)` forms, about `285.8 kJ` is released, while forming `1 mol H₂O(g)` releases about `241.8 kJ`.",
@@ -1325,8 +1326,8 @@ const introToChemistrySourceCourse: RawCourse = {
 				{
 					title: "Project: Chemistry in Your World Showcase",
 					content: [
-						"**Project goal:** Explain one real-world chemistry phenomenon using course concepts, evidence, and a particle-level model. The showcase requires clear evidence-supported reasoning rather than a broad topic summary.",
-						"**Requirements:** Include a claim, evidence log, particle/model explanation, at least four course vocabulary terms, one diagram or simulation reference, one changed-condition prediction, and one limitation. The final artifact names which parts of the topic were covered in the intro course and which parts are advanced previews.",
+						"**Project goal:** Extend the saved required CHM11 capstone into an optional showcase for a chosen audience. Reuse its question, evidence log, particle model and revised explanation, then adapt their presentation to that audience.",
+						"**Requirements:** Keep the existing claim, evidence log, particle/model explanation, vocabulary, visual reference, prediction and limitation. Add an audience-specific introduction or annotated visual and explain one choice that makes the existing evidence easier for that audience to interpret.",
 						"**Analysis target:** The artifact is narrow enough that another person could disagree with the claim using evidence. Replace broad topics with testable claims, such as pressure changing carbonation behavior, ions affecting hard-water deposits, or electron transfer explaining corrosion.",
 						"**Completion checks:** The final artifact is self-contained, evidence-supported, equipment-free, and specific enough to be corrected or challenged."
 					].join("\n\n"),
@@ -1336,7 +1337,7 @@ const introToChemistrySourceCourse: RawCourse = {
 				{
 					title: "Project: Model Your Own Reaction",
 					content: [
-						"**Project goal:** Build a focused reaction-modeling capstone. Choose a real-world topic such as food, batteries, sports equipment, medicine, cleaning, corrosion, or environmental chemistry, then narrow it to one chemical reaction or process that can be explained safely with evidence.",
+						"**Project goal:** Extend the saved CHM11 capstone with a more detailed reaction model when its phenomenon includes a chemical reaction. A capstone about physical change can instead supply a contrast to a separate, narrow reaction case. Reuse the relevant evidence and label any additional source or model assumption.",
 						"**Requirements:** Identify the topic, the reaction or process, the reactants or starting substances, the products or ending substances, the reaction type if known, and the atomic- or particle-level rearrangement. Include a diagram, particle storyboard, equation, simulation, or object model that makes the invisible part of the reaction visible without requiring a home experiment.",
 						"**Activity prompt:** Decide whether the reaction could be recreated safely at home and explain why or why not. Regardless of that answer, design a safe demonstration model such as a drawing, particle storyboard, paper model, or annotated equation. The final explanation makes clear what the starting material was, what changed, what product formed, and why the reaction matters in the chosen real-world context.",
 						"**Completion checks:** The final work includes a narrowed topic, a reaction model, evidence, safety reasoning, real-world significance, and one course recap connection showing which earlier chemistry ideas were used."
@@ -1347,10 +1348,10 @@ const introToChemistrySourceCourse: RawCourse = {
 				{
 					title: "Project: Capstone Peer Review",
 					content: [
-						"**Project goal:** Review a capstone explanation using a rubric for claim clarity, evidence quality, chemistry accuracy, model use, safety, and next-step reasoning.",
+						"**Project goal:** Review the saved capstone explanation using the rubric for claim clarity, evidence quality, chemistry accuracy, model use, safety, and next-step reasoning. Review a shared artifact when one is available, or independently reread the saved explanation and evaluate it against the same criteria.",
 						"**Requirements:** Provide at least two strengths, two revision targets, and one question that would improve the investigation. Each comment points to a specific claim, data point, model, or vocabulary choice.",
 						"**Analysis target:** Sort feedback into accuracy, evidence, clarity, and scope. Accuracy feedback corrects chemistry; evidence feedback asks for a source or data; clarity feedback improves explanation; scope feedback narrows or expands the claim.",
-						"**Completion checks:** Feedback references the artifact directly and avoids vague comments such as good job or add more detail without naming what detail is missing."
+						"**Completion checks:** Feedback cites the exact claim or model being evaluated, explains two revision targets, and applies one supported improvement to the saved artifact. Independent review and shared review use the same evidence standard."
 					].join("\n\n"),
 					datasetLink: REFERENCES.ngssAppendices,
 					solutionLink: answerKey("capstone-rubric")
@@ -1789,7 +1790,7 @@ function decorateIntroChemistryModule(
 				"**Energy accounting:** Name the system and surroundings before using absorbed, released, endothermic, or exothermic. Temperature tracks average kinetic energy, while total thermal energy also depends on amount and particle interactions. Heat is energy transferred because of a temperature difference, not a substance stored inside matter.",
 				"**Graph contract:** A sloped heating-curve segment links energy input to rising average kinetic energy within one phase. A phase-change segment can remain at nearly constant temperature while energy changes particle arrangement and potential energy. Graph axes, direction, pressure assumptions, and substance identity remain visible.",
 				"**Attraction boundary:** Intermolecular attractions act between particles and differ from covalent, ionic, or metallic bonding within a substance model. Stronger attractions can support relative boiling, evaporation, viscosity, or solubility predictions, but molecular size, shape, temperature, and the comparison set still matter.",
-				"**Mastery check:** Explain one heating-curve segment, one phase-diagram point, one gas-variable change, and one property comparison using particles and energy. Reject language that particles expand, stop moving, want to escape, or contain heat."
+				"**Mastery check:** Evaluate three claims: heating always raises temperature; gas particles become larger; carbon dioxide boils at 1 atm. Correct each using the supplied heating and phase cases, then state one model limit."
 			].join("\n\n"),
 			datasetLink: material("energy-phase-and-gas-checkpoint"),
 			solutionLink: answerKey("energy-phase-and-gas-checkpoint-key"),
@@ -1934,7 +1935,7 @@ function decorateIntroChemistryModule(
 
 export const introToChemistryCourse: RawCourse = {
 	...introToChemistrySourceCourse,
-	modules: sequenceIntroChemistryModules(
-		introToChemistrySourceCourse.modules
-	).map(decorateIntroChemistryModule)
+	modules: sequenceIntroChemistryModules(introToChemistrySourceCourse.modules)
+		.map(decorateIntroChemistryModule)
+		.map(preserveIntroChemistryTeaching)
 };

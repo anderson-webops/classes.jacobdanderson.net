@@ -98,11 +98,11 @@ describe("Design Patterns in Java learner flow", () => {
 			module => module.supplementalProjects.map(item => item.title)
 		);
 
-		expect(curriculumTitles).toHaveLength(86);
+		expect(curriculumTitles).toHaveLength(70);
 		expect(optionTitles).toHaveLength(51);
 		for (const title of [
-			"DPJ1 What Patterns Are and What They Are Not: Core Project",
-			"DPJ5 Structural Patterns in Depth: Core Project",
+			"Core Project: What Patterns Are and What They Are Not",
+			"Core Project: Structural Patterns in Depth",
 			"DPJ10 Capstone Refactor: Core Project",
 			"Strategy Selection Refactor: Core Project",
 			"Structural Wrapper Refactor: Core Project",
@@ -111,9 +111,10 @@ describe("Design Patterns in Java learner flow", () => {
 			"Structural Wrapper Refactor Extension Practice",
 			"Architecture Judgment Capstone Extension Practice"
 		]) {
-			const collection = title.includes("DPJ")
-				? curriculumTitles
-				: optionTitles;
+			const collection =
+				title.includes("DPJ") || title.startsWith("Core Project:")
+					? curriculumTitles
+					: optionTitles;
 			expect(collection, title).toContain(title);
 		}
 		expect(moduleText("Optional Applied Java Pattern Studios")).toContain(
@@ -150,11 +151,17 @@ describe("Design Patterns in Java learner flow", () => {
 		]) {
 			expect(text, pattern).toContain(pattern);
 		}
-		expect(text).toContain("simplest viable alternative");
-		expect(text).toContain("added cost");
-		expect(text).toContain("removal trigger");
-		expect(text).toContain("simpler counterfactual");
-		expect(text).toContain("patterns are reusable design ideas");
+		expect(text).toContain("smallest useful change");
+		expect(text).toContain(
+			"navigation, indirection, testing, and future changes"
+		);
+		expect(text).toContain(
+			"chosen design, rejected alternative, cost, and a test"
+		);
+		expect(text).toContain("one plain method would be sufficient");
+		expect(text).toContain(
+			"A design pattern describes a recurring arrangement"
+		);
 	});
 
 	it("uses modern Java features when they are smaller than classic patterns", () => {
@@ -169,13 +176,15 @@ describe("Design Patterns in Java learner flow", () => {
 		expect(foundations).toContain("sealed interface");
 		expect(foundations).toContain("enum");
 		expect(foundations).toContain("lambdas");
-		expect(behavior).toContain("functional interface or method reference");
+		expect(behavior).toContain("functional interface");
+		expect(behavior).toContain("lambda");
+		expect(behavior).toContain("method reference");
 		expect(architecture).toContain("ServiceLoader");
 		expect(architecture).toContain("META-INF/services");
 		expect(architecture).toContain("zero, one, and multiple providers");
 		expect(architecture).toContain("not safe for concurrent use");
-		expect(resources).toContain("java/lang/Record.html");
-		expect(resources).toContain("jls-8.html#jls-8.1.1.2");
+		expect(foundations).toContain("java/lang/Record.html");
+		expect(foundations).toContain("jls-8.html#jls-8.1.1.2");
 		expect(resources).toContain("java/util/ServiceLoader.html");
 	});
 
@@ -188,9 +197,11 @@ describe("Design Patterns in Java learner flow", () => {
 		);
 		const capstone = moduleText("DPJ10 Capstone Refactor");
 
-		expect(setup).toContain("JUnit characterization tests");
-		expect(setup).toContain("green baseline");
-		expect(setup).toContain("one realistic future change");
+		expect(setup).toContain("java ContractTests base");
+		expect(setup).toContain("baseline harness reports 20052 passed");
+		expect(setup).toContain(
+			"overnight shipping for all regular/member customers"
+		);
 		expect(judgment).toContain("one behavior-preserving step per commit");
 		expect(judgment).toContain("files touched");
 		expect(judgment).toContain("duplicated rules");

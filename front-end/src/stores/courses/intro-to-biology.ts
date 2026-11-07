@@ -1,5 +1,10 @@
 import type { RawCourse, RawCourseModuleItem } from "./types";
-import { pendingStaticMediaNotice, staticMediaUrl } from "./staticMedia";
+import { introBiologyLessons } from "./introBiologyLessons";
+import {
+	pendingStaticMediaNotice,
+	staticMediaFilename,
+	staticMediaUrl
+} from "./staticMedia";
 
 const BIOLOGY_REFERENCES = {
 	hhmiMembraneTransport:
@@ -1174,57 +1179,6 @@ const INTRO_BIOLOGY_ADDITIONS: Record<string, RawCourseModuleItem[]> = {
 	]
 };
 
-const INTRO_BIOLOGY_PROJECT_COMPLETION: Record<string, string> = {
-	"Project: Human Body Systems Map":
-		"Add a system boundary, one material-flow arrow, one information-flow arrow, a text equivalent for the diagram, and a changed-condition prediction. Use the body-systems scenario key to verify that each arrow represents an interaction rather than proximity.",
-	"Project: Scenario Response Map":
-		"Separate supplied facts from inferred mechanisms, label the trigger and response time, and compare one alternative explanation. The final note states why the fictional scenario cannot diagnose or predict an individual.",
-	"Project: Travel Journal Launch":
-		"Create a legend for molecule, organ, system, evidence, inference, and unresolved-question entries. Use a fictional meal or the supplied table, preserve the initial model, and reserve space for later revision evidence.",
-	"Project: Dinner Mystery":
-		"Rank the four matches by confidence, cite the exact graph or molecule clue, and explain why one rejected alternative fits less well. Preserve ambiguity when the supplied evidence supports more than one dish.",
-	"Project: Nutrient Recipe Book":
-		"Use fictional recipes or the supplied table, give every molecule claim a source, and identify ingredients that contribute more than one category. Replace moralized nutrition language with composition and model language.",
-	"Project: Meal Journal Entry":
-		"Track at least one carbohydrate, protein, or lipid claim into a predicted smaller unit, mark the prediction as provisional, and identify what digestive evidence will be required before the route can be accepted.",
-	"Project: Digestive Anatomy Gallery":
-		"Distinguish gastrointestinal-path organs from accessory organs, add tissue or secretion evidence to three labels, and provide a text route from mouth to anus. Correct any diagram that routes food through the liver or pancreas.",
-	"Project: Ingestion Storyboard":
-		"Each frame identifies location, movement, mechanical action, chemical process when supported, and one unchanged quantity. Include peristalsis evidence and reject the explanation that gravity alone moves the meal.",
-	"Project: Digestive Travel Entry":
-		"Choose one meal component, trace its location and molecular form through at least four stages, and flag every point where the model lacks a named enzyme, secretion, or product.",
-	"Project: Nutrient Absorption Timeline":
-		"Add the epithelial boundary, gradient or transport evidence, first blood or lymph destination, and a diagram limitation to every timeline route. Do not label a transport mechanism without the evidence needed to distinguish it.",
-	"Project: Salad Clue Report":
-		"Build an evidence table with clue, pathway claim, confidence, and alternative explanation. The conclusion separates digestion from absorption and identifies which clue cannot resolve the exact transport mechanism.",
-	"Project: Model Strengths and Limits":
-		"Compare the two models at the same biological scale and question, then test both against one changed condition. The recommendation identifies useful information preserved, information hidden, and evidence needed to revise the weaker model.",
-	"Project: Cell Factory Diagram":
-		"Track carbon atoms and energy transfer in different visual channels, label oxygen and carbon dioxide roles, and describe ATP as a coupled transfer mechanism. Include one process compressed by the factory analogy.",
-	"Project: Three-Hour Energy Budget":
-		"Use only the fictional ledger, mark supplied values separately from estimates, and include an uncertainty range or qualitative alternative. The final note explains why the model cannot predict personal expenditure or storage.",
-	"Project: Energy Journal Entry":
-		"Trace one absorbed molecule into respiration and another into biosynthesis or storage, then identify carbon-containing outputs and energy-transfer evidence. Revise any statement that turns matter into energy.",
-	"Project: Regulation Flowchart":
-		"Label stimulus, detection or signaling evidence, information arrow, responding tissue, material response, and reduced deviation. Add one delayed-response prediction and one omitted pathway.",
-	"Project: Abstract Interaction Notes":
-		"Record population or model system, comparison, measured variable, result, and limitation before interpreting the abstract. Mark every statement as direct report, supported inference, or unsupported extension.",
-	"Project: Regulation Journal Entry":
-		"Connect the fictional meal to one feedback loop, distinguish signal from material transport, and state the time scale. Exclude symptoms, diagnoses, and advice from the explanation.",
-	"Project: Waste-System Trading Cards":
-		"Give each card an input, process, output, internal or external boundary, and evidence source. Add separate cards for carbon dioxide, nitrogen-containing waste, and undigested material so waste categories remain distinct.",
-	"Project: Alien Venn Diagram":
-		"State which alien features are supplied and which are inferred, preserve unknown categories, and test one changed anatomy condition. The comparison avoids assuming that a human arrangement is the only biologically possible solution.",
-	"Project: Final Waste Journal Entry":
-		"Trace one eliminated material and one excreted metabolic product from origin to boundary crossing. Include reabsorption where relevant and correct any route that treats urine as digested food.",
-	"Project: Digestive Odyssey Exhibit":
-		"Include the complete source log, cross-scale route, arrow legend, text equivalents, changed-condition prediction, and before-and-after model revision. Every major claim remains traceable to evidence.",
-	"Project: Biology CER Presentation":
-		"Use one narrow claim, two relevant pieces of evidence, a cross-scale reasoning chain, one alternative explanation, and one limitation. The defense states what finding would change the claim.",
-	"Project: Final Systems Reflection":
-		"Compare the first and final system boundaries, cite two concrete revisions, and identify a remaining question for genetics, evolution, ecology, cell biology, or microbiology. Do not present the Digestive Odyssey as a complete biology survey."
-};
-
 function introBiologyProjectPath(title: string) {
 	return /model strengths|abstract|CER|final systems|alien/i.test(title)
 		? ("challenge" as const)
@@ -1239,53 +1193,88 @@ function introBiologyMediaAlternative(mediaLink: string | undefined) {
 	return "**Accessible media alternative:** The Body Systems Scenario Cards supply text-described organs, interactions, and arrow meanings. Use those cards when the image is unavailable, difficult to perceive, or not useful for the selected representation.";
 }
 
+const INTRO_BIOLOGY_BACKGROUND: Record<string, string> = {
+	BIO1: "https://openstax.org/books/biology-2e/pages/33-1-animal-form-and-function",
+	BIO2: BIOLOGY_REFERENCES.openStaxMacromolecules,
+	BIO3: BIOLOGY_REFERENCES.niddkDigestion,
+	BIO4: "https://openstax.org/books/biology-2e/pages/5-2-passive-transport",
+	BIO5: BIOLOGY_REFERENCES.openStaxEnergy,
+	BIO6: "https://openstax.org/books/biology-2e/pages/37-3-regulation-of-body-processes",
+	BIO7: BIOLOGY_REFERENCES.niddkKidneys,
+	BIO8: BIOLOGY_REFERENCES.ngssLifeScience
+};
+
 export const introToBiologyCourse: RawCourse = {
 	...introToBiologySourceCourse,
 	modules: introToBiologySourceCourse.modules.map(module => {
 		const flow = INTRO_BIOLOGY_FLOW[module.title];
-		const curriculum = module.curriculum.map((item, index) => {
-			const mediaAlternative = introBiologyMediaAlternative(
-				item.mediaLink
+		const lesson = introBiologyLessons[module.title];
+		const originals = [
+			...module.curriculum,
+			...INTRO_BIOLOGY_ADDITIONS[module.title]
+		];
+		if (
+			!lesson ||
+			lesson.tasks.length !== originals.length - 1 ||
+			lesson.optional.length !== module.supplementalProjects.length
+		) {
+			throw new Error(
+				`Missing Intro to Biology teaching: ${module.title}`
 			);
-			return {
-				...item,
-				content: [
-					index === 0 ? `**Course flow:** ${flow.flowNote}` : "",
-					item.content,
-					`**Module evidence gate:** ${flow.evidenceGate}`,
-					`**Scale and boundary check:** ${flow.boundaryCheck}`,
-					mediaAlternative
-				]
-					.filter(Boolean)
-					.join("\n\n"),
-				datasetLink:
-					item.datasetLink ?? biologyMaterial(flow.materialSection),
-				learningPath: "core" as const
-			};
-		});
-		const supplementalProjects = module.supplementalProjects.map(item => ({
-			...item,
-			content: [
-				item.content,
-				`**Completion and extension gate:** ${INTRO_BIOLOGY_PROJECT_COMPLETION[item.title]}`,
-				`**Evidence boundary:** ${flow.boundaryCheck}`
-			].join("\n\n"),
-			datasetLink:
-				item.datasetLink ?? biologyMaterial(flow.materialSection),
-			solutionLink:
-				item.solutionLink ?? biologyAnswerKey(flow.answerSection),
-			learningPath: introBiologyProjectPath(item.title)
-		}));
-
+		}
+		const inputs = biologyMaterial(flow.materialSection);
+		const answers = biologyAnswerKey(flow.answerSection);
+		const resources = `\n\n[Case inputs](/course-resource?asset=${encodeURIComponent(
+			inputs
+		)})\n\n[Project self-check](/course-resource?asset=${encodeURIComponent(
+			answers
+		)})`;
 		return {
 			...module,
 			estimatedTime: flow.estimatedTime,
 			keyBlocks: flow.keyBlocks,
-			curriculum: [
-				...curriculum,
-				...INTRO_BIOLOGY_ADDITIONS[module.title]
-			],
-			supplementalProjects
+			curriculum: originals.map((item, index) => ({
+				...item,
+				content: [
+					index === 0
+						? `${lesson.reading}\n\n[Mechanism reference](${
+								INTRO_BIOLOGY_BACKGROUND[
+									module.title.split(" ")[0]
+								]
+							})`
+						: lesson.tasks[index - 1],
+					resources,
+					item.mediaLink
+						? pendingStaticMediaNotice(
+								staticMediaFilename(item.mediaLink)
+							)
+						: "",
+					introBiologyMediaAlternative(item.mediaLink)
+				]
+					.filter(Boolean)
+					.join("\n\n"),
+				contentKind:
+					index === 0
+						? ("reading" as const)
+						: ("assignment" as const),
+				preserveInstructions: true,
+				preserveAssignment: true,
+				datasetLink: inputs,
+				solutionLink: answers,
+				learningPath: "core" as const
+			})),
+			supplementalProjects: module.supplementalProjects.map(
+				(item, index) => ({
+					...item,
+					content: lesson.optional[index] + resources,
+					contentKind: "assignment" as const,
+					preserveInstructions: true,
+					preserveAssignment: true,
+					datasetLink: inputs,
+					solutionLink: answers,
+					learningPath: introBiologyProjectPath(item.title)
+				})
+			)
 		};
 	}),
 	developmentMetadata: {
@@ -1299,7 +1288,7 @@ export const introToBiologyCourse: RawCourse = {
 			"Claim-evidence-reasoning with uncertainty"
 		],
 		sourcePolicy:
-			"Preserves the BIO1-BIO8 Digestive Odyssey sequence while adding authoritative NGSS, NIDDK, OpenStax, and HHMI references; supplied equipment-free evidence packs; accessible media alternatives; and explicit medical, nutrition, privacy, and course-scope boundaries.",
+			"Preserves the BIO1-BIO8 Digestive Odyssey sequence while adding authoritative NGSS, NIDDK and OpenStax references; eight worked readings and complete supplied fictional cases; accessible media alternatives; and explicit medical, nutrition, privacy, and course-scope boundaries.",
 		assessmentCadence: [
 			"One model with a named boundary, scale, evidence source, and limitation per module",
 			"One curated media, supplied-data, or authoritative-reference evidence check per module",
@@ -1312,7 +1301,7 @@ export const introToBiologyCourse: RawCourse = {
 			"Supplied biology materials pack and answer-key rubric",
 			"Accessible diagrams and text alternatives",
 			"Authoritative public biology references",
-			"Optional HHMI digital models with noninteractive alternatives"
+			"Optional public models with noninteractive supplied alternatives"
 		],
 		safetyPolicy: [
 			"No required food handling, tasting, body measurement, or household experiment",

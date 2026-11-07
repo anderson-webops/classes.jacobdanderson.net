@@ -1150,7 +1150,9 @@ jobs:
             - name: Verify self-study readings and assignment pages
               env:
                   SELF_STUDY_BROWSER_PROOF_DIR: ${{ github.workspace }}/output/self-study-browser
-              run: node --test test/self-study-course-browser.test.mjs
+              run: |
+                  node --test test/self-study-browser-batches.test.mjs
+                  node scripts/verify-self-study-browser-batches.mjs
 
             - name: Retain self-study course page evidence
               if: always()

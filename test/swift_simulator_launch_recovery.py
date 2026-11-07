@@ -1,7 +1,11 @@
 """Bound recovery to explicit Xcode app-launch timeouts; preserve failed attempts."""
 
 
-def is_app_launch_timeout(outcome, bundle_identifier):
+CANONICAL_TEST = "CanonicalCourseUITests/testCourseWorkflow()"
+WELCOME_TEST = "WelcomeProfileUITests/testProfileNavigationAndState()"
+
+
+def is_app_launch_timeout(outcome, bundle_identifier, test_identifier=CANONICAL_TEST):
     summary = outcome["summary"]
     failures = summary.get("testFailures", [])
     if not (
@@ -9,13 +13,14 @@ def is_app_launch_timeout(outcome, bundle_identifier):
         and summary.get("totalTestCount") == summary.get("failedTests") == 1
         and summary.get("passedTests") == summary.get("skippedTests") == 0
         and len(failures) == 1
+        and test_identifier in (CANONICAL_TEST, WELCOME_TEST)
     ):
         return False
     failure = failures[0]
     text = failure.get("failureText", "")
     return (
         failure.get("testIdentifierString")
-        == "CanonicalCourseUITests/testCourseWorkflow()"
+        == test_identifier
         and bool(bundle_identifier)
         and bundle_identifier in text
         and (
@@ -27,9 +32,10 @@ def is_app_launch_timeout(outcome, bundle_identifier):
     )
 
 
-def run_with_launch_recovery(run_case, recover_device, retain_attempt, bundle_identifier):
+def run_with_launch_recovery(run_case, recover_device, retain_attempt, bundle_identifier,
+                             test_identifier=CANONICAL_TEST):
     first = run_case(0)
-    if not is_app_launch_timeout(first, bundle_identifier):
+    if not is_app_launch_timeout(first, bundle_identifier, test_identifier):
         return first
     retain_attempt("beforeRecovery", first)
     recover_device()

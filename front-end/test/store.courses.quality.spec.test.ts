@@ -13,6 +13,18 @@ import { createPinia, setActivePinia } from "pinia";
 import { useCoursesStore } from "@/stores/courses";
 import { introToPhysicsCourse } from "@/stores/courses/intro-to-physics";
 import { physicsLevel2Course } from "@/stores/courses/physics-level-2";
+import { earlyElementaryAMaterials } from "@/stores/courses/earlyElementaryAMaterials";
+import { earlyElementaryBMaterials } from "@/stores/courses/earlyElementaryBMaterials";
+import { lateElementaryAMaterials } from "@/stores/courses/lateElementaryAMaterials";
+import { lateElementaryBMaterials } from "@/stores/courses/lateElementaryBMaterials";
+import { joyOfReadingGuidance } from "@/stores/courses/joyOfReadingGuidance";
+import { pictureBookGuidance } from "@/stores/courses/pictureBookGuidance";
+import {
+	completeMiddleSchoolScienceActivity,
+	completeElementaryScienceActivity,
+	completeIntroBiologyActivity
+} from "./middleSchoolScienceReview";
+import { pictureBookTaskInputs } from "@/stores/courses/pictureBookTaskInputs";
 import {
 	pyGamesCoreResource,
 	pyGamesCoreSourceRevision
@@ -47,6 +59,82 @@ import {
 import { isGitHubUrl } from "@/modules/resourceUrls";
 
 const COURSE_SWEEP_TIMEOUT = 180000;
+const elementaryMaterials = {
+	"early-elementary-a-math": earlyElementaryAMaterials,
+	"early-elementary-b-math": earlyElementaryBMaterials,
+	"late-elementary-a-math": lateElementaryAMaterials,
+	"late-elementary-b-math": lateElementaryBMaterials
+};
+
+function completeElementaryPractice(
+	courseId: string,
+	module: RawCourseModule,
+	item: RawCourseModuleItem
+) {
+	if (!(courseId in elementaryMaterials)) return false;
+	const materials =
+		elementaryMaterials[courseId as keyof typeof elementaryMaterials];
+	const unit = materials.find(material =>
+		module.curriculum.some(
+			reading =>
+				reading.contentKind === "reading" &&
+				reading.content.includes(material.method) &&
+				reading.content.includes(material.worked)
+		)
+	);
+	const task =
+		unit &&
+		[...unit.tasks, unit.practice, unit.challenge].find(candidate =>
+			item.content.includes(candidate.prompt)
+		);
+	if (
+		!task ||
+		item.contentKind !== "assignment" ||
+		!item.preserveInstructions ||
+		!item.preserveAssignment
+	)
+		return false;
+	const href = item.content.match(/\[Project self-check\]\(([^)]+)\)/)?.[1];
+	if (!href) return false;
+	const asset = new URL(href, "https://example.invalid").searchParams.get(
+		"asset"
+	);
+	const folder = courseId.replace(/-math$/u, "");
+	const version = courseId === "early-elementary-a-math" ? "v2" : "v1";
+	const prefix = `/course-assets/${folder}/practice-checks-${version}.md`;
+	if (asset !== `${prefix}#${task.anchor}`) return false;
+	const text = fs.readFileSync(`public${prefix}`, "utf8");
+	const section = text
+		.split(/^## /m)
+		.find(part => slugMarkdownHeading(part.split("\n")[0]) === task.anchor);
+	expect(section, item.title).toBeDefined();
+	expect(
+		section!.slice(section!.indexOf("\n") + 1).trim().length,
+		item.title
+	).toBeGreaterThan(15);
+	return true;
+}
+
+function expectElementaryReadings(course: RawCourse, courseId: string) {
+	const materials =
+		elementaryMaterials[courseId as keyof typeof elementaryMaterials];
+	const modules = course.modules.filter(module => module.kind !== "appendix");
+	expect(modules, courseId).toHaveLength(materials.length);
+	for (const material of materials) {
+		const reading = modules
+			.flatMap(module => module.curriculum)
+			.find(
+				item =>
+					item.contentKind === "reading" &&
+					item.content.includes(material.method)
+			);
+		expect(reading, material.code).toBeDefined();
+		expect(reading!.content, material.code).toContain(material.worked);
+		expect(reading!.content, material.code).not.toContain(
+			"Break a typical problem"
+		);
+	}
+}
 const LEGACY_STATIC_HOST_IN_TEXT_RE =
 	/(^|[^a-z0-9.-])static\.junilearning\.com(?=$|[^a-z0-9.-])/i;
 const normalizedCoursePromises = new Map<
@@ -151,6 +239,8 @@ function wordCount(text: string) {
 }
 
 const authoredReadingCounts: Record<string, number> = {
+	"elementary-science": 8,
+	"intro-to-biology": 8,
 	"entrepreneurship-101": 10,
 	"middle-school-a-literature": 13,
 	"middle-school-b-writing": 14,
@@ -158,7 +248,10 @@ const authoredReadingCounts: Record<string, number> = {
 	"middle-school-c-grammar": 20,
 	"novel-writing": 14,
 	"introduction-to-public-speaking": 9,
-	"scratch-level-1-bootcamp": 4
+	"scratch-level-1-bootcamp": 4,
+	"early-elementary-a-reading": 8,
+	"early-elementary-b-picture-book": 13,
+	"middle-school-integrated-science": 41
 };
 
 const instructorActionPattern =
@@ -170,7 +263,9 @@ function hasAuthoredModuleReading(module: RawCourseModule) {
 			item.contentKind === "reading" &&
 			item.preserveInstructions &&
 			wordCount(item.content) >= 120 &&
-			/^## /m.test(item.content) &&
+			(/^## /m.test(item.content) ||
+				(/^\*\*Method\*\*/m.test(item.content) &&
+					/^\*\*Worked example\*\*/m.test(item.content))) &&
 			(/\b(?:worked|example|practice|original|model|scenario|input)\b/i.test(
 				item.content
 			) ||
@@ -221,11 +316,69 @@ function completeSourceActivity(
 	if (!original?.content.startsWith(prefix)) return false;
 	const body = original.content.slice(prefix.length);
 	const [directive, evidence] = body.split("**Completion evidence:**");
+	const supplied =
+		source.name === "Early Elementary B: Write Your Own Picture Book"
+			? pictureBookTaskInputs[item.title]
+			: undefined;
 	return (
-		item.content === body &&
+		item.content === body + (supplied ? `\n\n${supplied}` : "") &&
 		directive.trim().length > 0 &&
 		(evidence?.match(/^- \S.+/gm)?.length ?? 0) >= 1 &&
 		wordCount(evidence ?? "") >= 8
+	);
+}
+
+function completeAuthoredReadingPractice(
+	courseId: string,
+	module: RawCourseModule,
+	item: RawCourseModuleItem
+) {
+	if (
+		![
+			"early-elementary-a-reading",
+			"early-elementary-b-picture-book"
+		].includes(courseId) ||
+		item.contentKind !== "assignment" ||
+		!item.preserveInstructions ||
+		!item.preserveAssignment ||
+		!hasAuthoredModuleReading(module)
+	)
+		return false;
+	const materials =
+		courseId === "early-elementary-a-reading"
+			? joyOfReadingGuidance
+			: pictureBookGuidance;
+	const unit = materials.find(unit => unit.module === module.title);
+	if (
+		!unit ||
+		!module.curriculum.some(
+			reading =>
+				reading.contentKind === "reading" &&
+				reading.content.includes(unit.method) &&
+				reading.content.includes(unit.worked)
+		)
+	)
+		return false;
+	const task = [unit.practice, unit.challenge].find(task =>
+		item.content.includes(task.prompt)
+	);
+	if (!task || wordCount(task.prompt) < 25) return false;
+	const href = item.content.match(/\[Project self-check\]\(([^)]+)\)/)?.[1];
+	if (!href) return false;
+	const asset = new URL(href, "https://example.invalid").searchParams.get(
+		"asset"
+	);
+	const prefix = "/course-assets/" + courseId + "/practice-checks-v1.md";
+	if (asset !== prefix + "#" + task.anchor) return false;
+	const section = fs
+		.readFileSync("public" + prefix, "utf8")
+		.split(/^## /m)
+		.find(
+			section =>
+				slugMarkdownHeading(section.split("\n")[0]) === task.anchor
+		);
+	return Boolean(
+		section && section.slice(section.indexOf("\n") + 1).trim().length > 15
 	);
 }
 
@@ -458,8 +611,18 @@ function isInformationalResourceTitle(title: string) {
 const lessonBackbonePattern =
 	/\*\*(?:Applied studio|Build focus|Build path|Concept focus|Concept path|Course flow|Course path|Course position|Evidence gate|Evidence of proficiency|Evidence target|Evidence targets|Explanation|Focus|Goal|Hungry Hippo return|Investigation|Playable result|Practice route|Project selection|Project target|Readiness check|Readiness map|Result|Science explanation|Scope path|Selected checks|Shared phenomenon|Studio focus|Verification gate):\*\*|Core topics in this module:|Representative solutions|Check-?In #\d+|Check-in goal|\bReview\b/i;
 
-function hasLessonBackbone(item: { title: string; content: string }) {
+function hasLessonBackbone(item: {
+	title: string;
+	content: string;
+	contentKind?: string;
+}) {
 	return (
+		(item.contentKind === "reading" &&
+			wordCount(item.content) >= 120 &&
+			(item.content.match(/^## /gm)?.length ?? 0) >= 2 &&
+			/^## Worked\b/m.test(item.content)) ||
+		(/\*\*Method\*\*[\s\S]+\*\*Worked example\*\*/.test(item.content) &&
+			wordCount(item.content) >= 40) ||
 		lessonBackbonePattern.test(`${item.title}\n${item.content}`) ||
 		(wordCount(item.content) >= 300 &&
 			(item.content.match(/^## /gm)?.length ?? 0) >= 5 &&
@@ -2845,7 +3008,12 @@ describe("course text quality normalization", () => {
 		async () => {
 			const contentGroups = new Map<
 				string,
-				Array<{ isOriginalJuniScratch: boolean; label: string }>
+				Array<{
+					courseId: string;
+					isOriginalJuniScratch: boolean;
+					isSharedTurtleFoundation: boolean;
+					label: string;
+				}>
 			>();
 			const duplicateGroups: string[] = [];
 			const courses = await loadedCatalogCourses();
@@ -2866,6 +3034,16 @@ describe("course text quality normalization", () => {
 						const labels =
 							contentGroups.get(normalizedContent) ?? [];
 						labels.push({
+							courseId: entry.id,
+							isSharedTurtleFoundation:
+								[
+									"python-level-1",
+									"python-level-1-classroom"
+								].includes(entry.id) &&
+								module.id ===
+									"python-level-1-grs1-coordinates-and-movement" &&
+								item.id ===
+									"python-level-1-grs1-coordinates-and-movement-curriculum-introduction-and-setup",
 							isOriginalJuniScratch: isJuniScratchProjectTitle(
 								entry.id,
 								item.title
@@ -2878,9 +3056,16 @@ describe("course text quality normalization", () => {
 			}
 
 			for (const entries of contentGroups.values()) {
+				// This single concept reading is shared by two distinct teaching formats.
+				// Repeated rows in one format or reuse elsewhere still fail.
+				const sharedTurtleFoundation =
+					entries.length === 2 &&
+					new Set(entries.map(entry => entry.courseId)).size === 2 &&
+					entries.every(entry => entry.isSharedTurtleFoundation);
 				if (
 					entries.length < 2 ||
-					entries.every(entry => entry.isOriginalJuniScratch)
+					entries.every(entry => entry.isOriginalJuniScratch) ||
+					sharedTurtleFoundation
 				) {
 					continue;
 				}
@@ -5661,7 +5846,9 @@ describe("course text quality normalization", () => {
 						)
 				)
 			);
-			expect(sources.size).toBe(8);
+			expect(sources.size).toBe(
+				Object.keys(authoredReadingCounts).length
+			);
 			const thinItems = (await loadedCatalogCourses()).flatMap(
 				({ course, entry }) =>
 					(course?.modules ?? [])
@@ -5680,8 +5867,28 @@ describe("course text quality normalization", () => {
 								)
 								.filter(
 									item =>
+										!completeIntroBiologyActivity(
+											entry.id,
+											module,
+											item
+										) &&
+										!completeElementaryScienceActivity(
+											entry.id,
+											module,
+											item
+										) &&
+										!completeMiddleSchoolScienceActivity(
+											entry.id,
+											module,
+											item
+										) &&
 										!completeSourceActivity(
 											sources.get(entry.id),
+											module,
+											item
+										) &&
+										!completeAuthoredReadingPractice(
+											entry.id,
 											module,
 											item
 										) &&
@@ -5691,6 +5898,11 @@ describe("course text quality normalization", () => {
 											item
 										) &&
 										!completePhysicsPractice(
+											entry.id,
+											module,
+											item
+										) &&
+										!completeElementaryPractice(
 											entry.id,
 											module,
 											item
@@ -5759,8 +5971,25 @@ describe("course text quality normalization", () => {
 								item.content
 							) &&
 							!reviewedJavaScriptProjectReadme(id, item) &&
+							!completeAuthoredReadingPractice(
+								id,
+								module,
+								item
+							) &&
 							!completeSpeakingPractice(id, module, item) &&
-							!completePhysicsPractice(id, module, item);
+							!completePhysicsPractice(id, module, item) &&
+							!completeElementaryPractice(id, module, item) &&
+							!completeIntroBiologyActivity(id, module, item) &&
+							!completeElementaryScienceActivity(
+								id,
+								module,
+								item
+							) &&
+							!completeMiddleSchoolScienceActivity(
+								id,
+								module,
+								item
+							);
 
 						return shortWithoutReview
 							? [
@@ -6663,7 +6892,16 @@ describe("course text quality normalization", () => {
 		expect(elementaryCorpus).not.toMatch(
 			/same learning goal[\s\S]{0,120}same learning goal/i
 		);
-		expect(elementaryCorpus).toContain("shared online material");
+		const resourceInventory = findItem(
+			elementaryScience!,
+			/^Elementary Science Resource Inventory$/
+		);
+		expect(resourceInventory.datasetLink).toBe(
+			"/course-assets/elementary-science/elementary-science-materials-pack.md"
+		);
+		expect(fs.existsSync(`public${resourceInventory.datasetLink}`)).toBe(
+			true
+		);
 	});
 
 	it(
@@ -7104,7 +7342,9 @@ describe("course text quality normalization", () => {
 
 			const text = allCourseText(course);
 			const courseId = courseIds[index];
-			if (courseId in authoredReadingCounts) {
+			if (courseId in elementaryMaterials) {
+				expectElementaryReadings(course, courseId);
+			} else if (courseId in authoredReadingCounts) {
 				expectAuthoredReadings(course, courseId);
 			} else {
 				expect(text).toContain("**Concept path:**");
@@ -7113,7 +7353,74 @@ describe("course text quality normalization", () => {
 				expect(text).toContain("**Transfer move:**");
 				expect(text).toContain("**Extension choices:**");
 			}
-			if (courseId === "introduction-to-public-speaking") {
+			if (courseId in elementaryMaterials) {
+				for (const module of course.modules.filter(
+					module => module.kind !== "appendix"
+				)) {
+					for (const item of module.supplementalProjects) {
+						expect(
+							completeElementaryPractice(courseId, module, item),
+							item.title
+						).toBe(true);
+					}
+				}
+			} else if (courseId === "early-elementary-a-reading") {
+				const modules = course.modules.filter(
+					module => module.kind !== "appendix"
+				);
+				expect(modules).toHaveLength(8);
+				for (const module of modules) {
+					const activities = module.supplementalProjects.filter(
+						item =>
+							item.title.startsWith("Practice Map:") ||
+							item.title.startsWith("Extension Review:")
+					);
+					expect(activities).toHaveLength(2);
+					for (const item of activities) {
+						expect(
+							completeAuthoredReadingPractice(
+								courseId,
+								module,
+								item
+							),
+							item.title
+						).toBe(true);
+						const unit = joyOfReadingGuidance.find(
+							unit => unit.module === module.title
+						)!;
+						const task = [unit.practice, unit.challenge].find(
+							task => item.content.includes(task.prompt)
+						)!;
+						for (const content of [
+							item.content.replace(
+								task.prompt,
+								task.prompt.slice(0, 15)
+							),
+							item.content.replace(
+								task.anchor,
+								"missing-sample-response"
+							)
+						])
+							expect(
+								completeAuthoredReadingPractice(
+									courseId,
+									module,
+									{
+										...item,
+										content
+									}
+								),
+								item.title
+							).toBe(false);
+						expect(
+							completeAuthoredReadingPractice(courseId, module, {
+								...item,
+								preserveInstructions: false
+							})
+						).toBe(false);
+					}
+				}
+			} else if (courseId === "introduction-to-public-speaking") {
 				const modules = course.modules.filter(
 					module => !module.internal
 				);
@@ -7169,14 +7476,21 @@ describe("course text quality normalization", () => {
 		expect(allCourseText(publicSpeaking!)).toContain(
 			"Three-part outline with transitions and support for each main point."
 		);
-		expect(corpus).toContain("worked math record with diagrams");
-		expect(corpus).toContain("reading or writing record with claim");
-		expect(corpus).toContain("problem-solving record with inputs");
-		expect(nonProgrammingCorpus).toContain(
-			"the known quantities, needed representation"
+		expect(allCourseText(earlyMath!)).toContain("**Method**");
+		expect(allCourseText(earlyMath!)).toContain("**Worked example**");
+		expect(allCourseText(earlyReading!)).toContain(
+			"An inference is an idea drawn from clues"
 		);
-		expect(nonProgrammingCorpus).toContain(
-			"the passage or draft section, claim or writing goal"
+		expect(corpus).toContain("problem-solving record with inputs");
+		for (const material of earlyElementaryAMaterials) {
+			for (const task of material.tasks) {
+				expect(allCourseText(earlyMath!), task.title).toContain(
+					task.prompt
+				);
+			}
+		}
+		expect(allCourseText(earlyReading!)).toContain(
+			"A summary selects the events needed to understand the main problem and outcome."
 		);
 		expect(allCourseText(publicSpeaking!)).toContain(
 			"Audience: members sharing one model-building table."
@@ -7494,6 +7808,10 @@ describe("course text quality normalization", () => {
 		if (!course) return;
 
 		const text = allCourseText(course);
+		const original = await courseCatalog
+			.find(entry => entry.id === "early-elementary-a-math")!
+			.load();
+		const originalText = allCourseText(original);
 		const expectedAnchors = [
 			"Ladybug Number Bond Cases",
 			"Starfish Tank Regrouping",
@@ -7550,12 +7868,15 @@ describe("course text quality normalization", () => {
 		];
 
 		expect(text).not.toContain("Source Activity Anchors:");
-		expect(text).toContain("**Completion evidence:**");
+		expectElementaryReadings(course, "early-elementary-a-math");
+		expect(originalText).toContain("**Completion evidence:**");
 		for (const anchor of expectedAnchors) {
 			expect(text, anchor).toContain(anchor);
 		}
 		for (const originalReference of originalReferences) {
-			expect(text, originalReference).toContain(originalReference);
+			expect(originalText, originalReference).toContain(
+				originalReference
+			);
 		}
 
 		expect(text).not.toMatch(
@@ -7571,6 +7892,10 @@ describe("course text quality normalization", () => {
 		if (!course) return;
 
 		const text = allCourseText(course);
+		const original = await courseCatalog
+			.find(entry => entry.id === "early-elementary-b-math")!
+			.load();
+		const originalText = allCourseText(original);
 		const expectedAnchors = [
 			"Millionaire Block Strategy Review",
 			"Skee-Ball Record Challenge",
@@ -7630,12 +7955,15 @@ describe("course text quality normalization", () => {
 		];
 
 		expect(text).not.toContain("Source Activity Anchors:");
-		expect(text).toContain("**Completion evidence:**");
+		expectElementaryReadings(course, "early-elementary-b-math");
+		expect(originalText).toContain("**Completion evidence:**");
 		for (const anchor of expectedAnchors) {
 			expect(text, anchor).toContain(anchor);
 		}
 		for (const originalReference of originalReferences) {
-			expect(text, originalReference).toContain(originalReference);
+			expect(originalText, originalReference).toContain(
+				originalReference
+			);
 		}
 
 		expect(text).not.toMatch(
@@ -7651,6 +7979,10 @@ describe("course text quality normalization", () => {
 		if (!course) return;
 
 		const text = allCourseText(course);
+		const original = await courseCatalog
+			.find(entry => entry.id === "late-elementary-a-math")!
+			.load();
+		const originalText = allCourseText(original);
 		const expectedAnchors = [
 			"Prize Money Place-Value Exchange",
 			"Party Food Rounding and Store Distance",
@@ -7726,12 +8058,15 @@ describe("course text quality normalization", () => {
 		];
 
 		expect(text).not.toContain("Source Activity Anchors:");
-		expect(text).toContain("**Completion evidence:**");
+		expectElementaryReadings(course, "late-elementary-a-math");
+		expect(originalText).toContain("**Completion evidence:**");
 		for (const anchor of expectedAnchors) {
 			expect(text, anchor).toContain(anchor);
 		}
 		for (const originalReference of originalReferences) {
-			expect(text, originalReference).toContain(originalReference);
+			expect(originalText, originalReference).toContain(
+				originalReference
+			);
 		}
 
 		expect(text).not.toMatch(
@@ -7747,6 +8082,10 @@ describe("course text quality normalization", () => {
 		if (!course) return;
 
 		const text = allCourseText(course);
+		const original = await courseCatalog
+			.find(entry => entry.id === "late-elementary-b-math")!
+			.load();
+		const originalText = allCourseText(original);
 		const expectedAnchors = [
 			"Hot Dog Contest Equivalent Fractions",
 			"Chore Ribbon Fraction Ordering",
@@ -7828,12 +8167,15 @@ describe("course text quality normalization", () => {
 		];
 
 		expect(text).not.toContain("Source Activity Anchors:");
-		expect(text).toContain("**Completion evidence:**");
+		expectElementaryReadings(course, "late-elementary-b-math");
+		expect(originalText).toContain("**Completion evidence:**");
 		for (const anchor of expectedAnchors) {
 			expect(text, anchor).toContain(anchor);
 		}
 		for (const originalReference of originalReferences) {
-			expect(text, originalReference).toContain(originalReference);
+			expect(originalText, originalReference).toContain(
+				originalReference
+			);
 		}
 
 		expect(text).not.toMatch(
@@ -7988,7 +8330,9 @@ describe("course text quality normalization", () => {
 			const text = allCourseText(course);
 
 			expect(text, courseId).not.toContain("Source Activity Anchors:");
-			expect(text, courseId).toContain("**Completion evidence:**");
+			if (courseId in elementaryMaterials) {
+				expect(text, courseId).toContain("Project self-check");
+			} else expect(text, courseId).toContain("**Completion evidence:**");
 			for (const anchor of expectedAnchors) {
 				expect(text, `${courseId}: ${anchor}`).toContain(anchor);
 			}
@@ -8198,13 +8542,17 @@ describe("course text quality normalization", () => {
 
 			expect(teachingModules.length, courseId).toBeGreaterThanOrEqual(1);
 			expect(wordCount(text), courseId).toBeGreaterThan(600);
-			if (courseId in authoredReadingCounts) {
+			if (courseId in elementaryMaterials) {
+				expectElementaryReadings(course, courseId);
+			} else if (courseId in authoredReadingCounts) {
 				expectAuthoredReadings(course, courseId);
 			} else {
 				expect(text, courseId).toContain("**Concept path:**");
 				expect(text, courseId).toContain("Core topics in this module:");
 			}
-			expect(text, courseId).toContain("**Completion evidence:**");
+			if (courseId in elementaryMaterials) {
+				expect(text, courseId).toContain("Project self-check");
+			} else expect(text, courseId).toContain("**Completion evidence:**");
 			expect(text, courseId).not.toMatch(
 				/Juni|Recording Studio|your instructor|with your instructor|Whiteboard|Learning Targets|HQ Support|Slack/i
 			);
@@ -9193,8 +9541,22 @@ describe("course text quality normalization", () => {
 
 			expect(terseFormulaicCards).toEqual([]);
 			expect(corpus).toContain("**Anchor structure:**");
-			expect(corpus).toContain("**Data-story structure:**");
-			expect(corpus).toContain("**Gate sequence:**");
+			const elementary = await loadRawCourse("elementary-science");
+			expect(elementary).not.toBeNull();
+			const dataStory = findItem(
+				elementary!,
+				/^Grades 3-5 Project: Fair-Test Data Story$/
+			);
+			expect(dataStory.content).toContain("Growth is 4 and 1 cm");
+			expect(dataStory.content).toContain("fictional comparison");
+			const capstone = findItem(
+				elementary!,
+				/^Elementary Science Capstone Gate$/
+			);
+			expect(capstone.content).toContain("obscured-screen failure");
+			expect(capstone.content).toContain(
+				"optional continuation preserves that artifact"
+			);
 			expect(corpus).toContain("**Option A: Relic Runner:**");
 		},
 		COURSE_SWEEP_TIMEOUT
@@ -9474,8 +9836,16 @@ describe("course text quality normalization", () => {
 			expect(corpus).not.toMatch(
 				/motion[^.\n]{0,120}particles, formulas, reactions|graph[^.\n]{0,120}particles, formulas, reactions/i
 			);
-			expect(corpus).toContain("one labeled observation sketch");
-			expect(corpus).toContain("system boundary note");
+			const notebook = findItem(
+				courses[0]!,
+				/^K-2 Project: Picture Evidence Notebook$/
+			);
+			expect(notebook.content).toContain("Draw and label");
+			expect(notebook.content).toContain(
+				"Three details match the supplied scene"
+			);
+			expect(notebook.content).toContain("labelled as an inference");
+			expect(allCourseText(courses[1])).toContain("system boundary");
 			expect(corpus).toContain("unit-aware graph or diagram");
 			expect(corpus).toContain("coordinate or system definition");
 			expect(new Set(resourceBankBodies).size).toBe(
@@ -9525,9 +9895,11 @@ describe("course text quality normalization", () => {
 		expect(text).toContain("Project: Digestive Odyssey Exhibit");
 		expect(text).toContain("travel journal");
 		expect(text).toContain("No beakers, kits, dissections");
-		expect(text).toContain("Three scenario prompts anchor this module");
-		expect(text).toContain("A dinner-mystery graph can match guests");
-		expect(text).toContain("A comparison scenario describes an alien");
+		expect(text).toContain("Scenario A");
+		expect(text).toContain("allergy");
+		expect(text).toContain("calcium");
+		expect(text).toContain("16 simple-sugar");
+		expect(text).toContain("adult model");
 		expect(text).not.toContain("static.junilearning.com");
 		expect(text).not.toMatch(
 			/original source|original image filename|source mission|source scenario|source alien/i
@@ -9588,16 +9960,25 @@ describe("course text quality normalization", () => {
 		expect(text).toContain("Project: Transform Our Environment Proposal");
 		expect(text).toContain("core biome");
 		expect(text).toContain("NASA biome reference");
-		expect(text).toMatch(/Pending media/i);
+		const photosynthesis = findItem(
+			course!,
+			/^Photosynthesis Diagram Reference$/
+		);
+		expect(photosynthesis.contentKind).toBe("reading");
+		expect(photosynthesis.preserveInstructions).toBe(true);
+		expect(photosynthesis.content).toContain(
+			"The material inputs are carbon dioxide and water; light supplies energy rather than matter."
+		);
+		expect(photosynthesis.content).toContain("oxygen is released");
+		expect(photosynthesis.content).not.toMatch(
+			/lists the pending|reserved space|once the asset is added|Until the diagram is uploaded/i
+		);
 		expect(text).not.toMatch(
 			/Juni|Recording Studio|Environmental Science Club|your instructor|Learning Targets/i
 		);
 		expect(mediaLinks).toEqual([
 			"https://static.classes.jacobdanderson.net/c009b919-101b-4a4d-8f19-74885e8f62c0_Photosynthesis-01_577acc78_670x451.png"
 		]);
-		expect(text).toContain(
-			"c009b919-101b-4a4d-8f19-74885e8f62c0_Photosynthesis-01_577acc78_670x451.png"
-		);
 	});
 
 	it("keeps Intro to Chemistry authored, deduplicated, and resource-specific", async () => {

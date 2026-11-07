@@ -79,6 +79,30 @@ These cases connect familiar chemistry phenomena to evidence that can be inspect
 
 **Evidence note:** Each case needs one observation, one model, one chemistry term, and one limitation. A familiar demonstration becomes chemistry only when the evidence is connected to a particle-level or system-level explanation.
 
+### Supplied text models
+
+These authored states support the tasks without a live simulation or video. Their values are practice inputs rather than measurements of Juni's original clips.
+
+**States of water:** At approximately 1 atm, model S at -10 C has nearby H₂O molecules vibrating around fixed positions; L at 25 C has nearby molecules changing neighbors; G at 120 C has separated molecules moving through the container. At the melting boundary near 0 C, ice and liquid can coexist while energy enters. H₂O identity stays the same. Compare these states, then use the heating and gas-scenario tables for changed conditions.
+
+**Water tension:** The same fictional coin surface and equal drop volume give water counts 12,11,13 and oil counts 6,7,5 before overflow. Water forms a larger rounded dome in these supplied observations. Predict a typical count for each, cite the model's intermolecular-attraction explanation, and retain surface condition, drop size and small-sample limits. A larger coin changes geometry; these records do not determine its exact count.
+
+**Lava-lamp model:** Density means mass divided by volume. The model's water density is 1.00 g/mL and oil density 0.85 g/mL, so oil lies above water. They remain separate phases. Colored water without a bubble sinks through oil; water attached to sufficient gas rises as a combined system; after gas escapes, the water descends again. The gas changes the combined mass/volume ratio rather than changing water into oil. This model supplies no reaction mechanism for producing the bubble.
+
+**Oobleck model:** A cornstarch-in-water suspension flows during slow tilting, resists a sudden tap, and flows again after the force is released. The changed response concerns stress and flow, not evidence of new substances. The suspension contains solid grains in liquid; the simple single-substance solid/liquid labels omit that structure.
+
+**Carbonated-drink model:** Before opening, CO₂ exchanges between liquid and a pressurized headspace. After opening, headspace CO₂ partial pressure falls and net gas release produces bubbles. In the conceptual balloon diagram, escaping gas enters the flexible balloon. The source identifies CO₂ as already dissolved; bubbles alone would not distinguish release from a gas-producing reaction.
+
+**Elephant-toothpaste models S and L:** Both supplied diagrams show hydrogen peroxide becoming water and oxygen: 2H₂O₂ → 2H₂O + O₂. A catalase-containing yeast catalyst increases the modeled rate and soap traps oxygen as foam. L starts with three times as many peroxide particles as S and, under stipulated complete conversion, forms three times as many O₂ molecules. Foam height is not supplied as a gas-volume measurement. Optional original videos can add separately labeled observations; their catalyst and conditions need to be read from those sources.
+
+**Volcano model:** Before contact, the pictured acid and bicarbonate are separate. The reaction model is CH₃COOH + NaHCO₃ → CH₃COONa + H₂O + CO₂. New CO₂ forms bubbles. A real lava volcano involves molten rock and geological pressure, so this reaction demonstrates a different process.
+
+**Invisible-ink model:** Clarified lemon juice contains water, citric acid and other dissolved organic material. Adding water dilutes the mixture. Drying removes water and leaves a thin, less visible residue; invisibility does not make matter disappear. A separate supplied model R stipulates chemical conversion of residue during darkening. Color alone would not identify products or establish oxidation as the unique mechanism. No heating is part of this task.
+
+**Dissolution model:** In water, NaCl separates into Na⁺ and Cl⁻; NaNO₃ into Na⁺ and NO₃⁻; CuSO₄ into Cu²⁺ and SO₄²⁻; KBr into K⁺ and Br⁻. Polyatomic ions remain intact in this introductory model. Water's partially negative oxygen points toward a cation; partially positive hydrogen points toward an anion. Water molecules remain H₂O. An unspecified dissolved ink dye has no supplied ionic formula, so ion charge cannot be inferred from its color.
+
+**Separation models:** Size sorting separates large stones, gravel and sand. In the sand/salt model, water dissolves salt while sand remains solid; filtration retains sand but dissolved ions pass through. A separate evaporation diagram removes water and leaves salt. Oil/water layers can be separated as phases; filtration does not remove dissolved salt. These are reasoning diagrams rather than physical procedures.
+
 ## Project Reference Index
 
 These links support course projects as evidence sources, optional observation references, or comparison material. Video links are not required physical experiments.
@@ -122,6 +146,8 @@ Classify each card as non-matter, element, compound, homogeneous mixture, hetero
 | I    | Unknown clear liquid     | Clear appearance only                                 |
 | J    | Granite                  | Visible mineral grains                                |
 
+Card K is an unknown white powder described only by color and grain size. Classify I and K as insufficient composition evidence; name the missing evidence rather than guessing purity.
+
 ## Physical and Chemical Change Cards
 
 Classify each scenario as likely physical change, likely chemical change, or not enough evidence.
@@ -151,6 +177,29 @@ Simplified abundances support first-pass average atomic mass reasoning.
 
 **Practice note:** A simplified chlorine average is `(35 x 0.75) + (37 x 0.25) = 35.5`.
 
+### Supplied claims and notation practice
+
+Evaluate these three claims: (1) adding an electron to carbon-12 makes carbon-13; (2) neutral carbon-14 has 6 protons, 8 neutrons and 6 electrons; (3) every chlorine atom has mass number 35.5. Correct each false claim.
+
+Translate C-12, C-14, Na-23 with charge +1, Cl-35 with charge -1, O-16 with charge -2 and Mg-24 with charge +2 into proton/neutron/electron counts. Atomic numbers are C=6, Na=11, Cl=17, O=8 and Mg=12. Mass number counts protons plus neutrons; electrons equal proton count minus signed charge.
+
+### Nuclear-change comparison
+
+| Emission | Emitted entity | Daughter nucleus relative to parent |
+| --- | --- | --- |
+| Alpha | 2 protons and 2 neutrons | atomic number -2; mass number -4 |
+| Beta-minus | electron and antineutrino | neutron becomes proton; atomic number +1; mass number unchanged |
+| Beta-plus | positron and neutrino | proton becomes neutron; atomic number -1; mass number unchanged |
+| Gamma | photon | lower nuclear energy; both numbers unchanged |
+
+The beta electron is created in the decay process rather than taken from the electron cloud. Alpha usually has a short path in air, beta a longer path, and gamma is more penetrating; actual ranges depend on energy and material. Paper can stop alpha, suitable plastic attenuates beta, and dense shielding attenuates gamma. Positrons also produce annihilation photons. These comparisons explain models rather than specify a shielding design.
+
+Calculate daughter numbers for these supplied cases: polonium-212 (atomic number84) emits alpha; carbon-14 (6) emits beta-minus; fluorine-18 (9) emits beta-plus; an excited technetium-99 nucleus (43) emits gamma. Name the conserved or changed number in each case.
+
+A half-life is the interval over which half the parent nuclei are expected to remain. After three half-lives the expected fraction is (1/2)^3=1/8. Apply this to a fictional starting population of 800 parent nuclei. Individual decay times remain unpredictable.
+
+[Particle and nuclear-equation reference](https://openstax.org/books/chemistry-2e/pages/21-2-nuclear-equations); [radiation comparison](https://www.nrc.gov/facilities-safety/radiation-protection/radiation-and-its-health-effects/radiation-basics).
+
 ## Ion and Formula Cards
 
 These ions build neutral ionic formulas by balancing total positive and negative charge.
@@ -165,6 +214,18 @@ These ions build neutral ionic formulas by balancing total positive and negative
 | `NH₄⁺`       |     +1 | `NO₃⁻`       |     -1 |
 
 Example: `Mg²⁺` needs two `Cl⁻` ions, so the neutral formula is `MgCl₂`.
+
+### Five particle-count cases
+
+For each case, give the element, mass number and net charge. Atomic numbers 6, 8, 11, 12 and 17 identify carbon, oxygen, sodium, magnesium and chlorine respectively.
+
+| Case | Protons | Neutrons | Electrons |
+| --- | ---: | ---: | ---: |
+| P1 | 6 | 6 | 6 |
+| P2 | 11 | 12 | 10 |
+| P3 | 17 | 18 | 18 |
+| P4 | 8 | 8 | 10 |
+| P5 | 12 | 12 | 10 |
 
 ## Atomic Structure Checkpoint
 
@@ -228,6 +289,43 @@ More than one periodic-table source is useful when a task needs property detail,
 
 Then compare what each source adds: trend view, property note, standard naming, visual organization, or historical context. If a project uses a source, name the source and the exact fact it supported.
 
+### Selected element evidence
+
+This subset supplies the identities and positions used in the core tasks. Relative atomic masses are rounded for reference; calculation questions use their explicitly supplied practice values. Group is the column and period the row. Metal, nonmetal and metalloid are broad introductory regions.
+
+| Symbol | Name | Atomic number | Approximate relative atomic mass | Period | Group | Region |
+| --- | --- | ---: | ---: | ---: | ---: | --- |
+| H | hydrogen | 1 | 1.008 | 1 | 1 | nonmetal |
+| He | helium | 2 | 4.003 | 1 | 18 | nonmetal |
+| Li | lithium | 3 | 6.94 | 2 | 1 | metal |
+| Be | beryllium | 4 | 9.012 | 2 | 2 | metal |
+| B | boron | 5 | 10.81 | 2 | 13 | metalloid |
+| C | carbon | 6 | 12.01 | 2 | 14 | nonmetal |
+| N | nitrogen | 7 | 14.01 | 2 | 15 | nonmetal |
+| O | oxygen | 8 | 16.00 | 2 | 16 | nonmetal |
+| F | fluorine | 9 | 19.00 | 2 | 17 | nonmetal |
+| Ne | neon | 10 | 20.18 | 2 | 18 | nonmetal |
+| Na | sodium | 11 | 22.99 | 3 | 1 | metal |
+| Mg | magnesium | 12 | 24.31 | 3 | 2 | metal |
+| Al | aluminum | 13 | 26.98 | 3 | 13 | metal |
+| Si | silicon | 14 | 28.09 | 3 | 14 | metalloid |
+| S | sulfur | 16 | 32.06 | 3 | 16 | nonmetal |
+| Cl | chlorine | 17 | 35.45 | 3 | 17 | nonmetal |
+| Ar | argon | 18 | 39.95 | 3 | 18 | nonmetal |
+| K | potassium | 19 | 39.10 | 4 | 1 | metal |
+| Ca | calcium | 20 | 40.08 | 4 | 2 | metal |
+| Fe | iron | 26 | 55.85 | 4 | 8 | metal |
+| Cu | copper | 29 | 63.55 | 4 | 11 | metal |
+| Br | bromine | 35 | 79.90 | 4 | 17 | nonmetal |
+
+[NIST atomic numbers and standard weights](https://physics.nist.gov/cgi-bin/Compositions/stand_alone.pl).
+
+Group 1 metals Li, Na and K often form +1 ions; group 17 halogens F, Cl and Br often form -1 ions. Helium, neon and argon are group 18 noble gases with low ordinary chemical reactivity. Hydrogen's position does not make it an alkali metal.
+
+Property/use notes support a first profile set: carbon as graphite is used in pencil cores; iron is a major constituent of steel; copper conducts electricity in wiring; silicon's semiconductor behavior supports chips; neon gas emits light in signs; chlorine compounds are used in water treatment. At ordinary room conditions H, He, N, O, F, Ne, Cl and Ar are gases, Br is liquid, and the other listed elements are solids. These statements describe elements or named forms, not every compound containing them.
+
+A symbol-code example is Ca–Fe: calcium and iron spell “CaFe.” State which letters cannot be represented using the selected subset; a complete-table claim requires the linked full table.
+
 ## Bonding and Formula Cards
 
 | Formula | Element Types       | Likely Bonding Model | Useful Caution                              |
@@ -240,6 +338,8 @@ Then compare what each source adds: trend view, property note, standard naming, 
 | `CH₄`   | nonmetals           | covalent             | tetrahedral model                           |
 | `NH₃`   | nonmetals           | covalent             | lone pair affects shape                     |
 | `CaF₂`  | metal + nonmetal    | ionic                | charge balance controls ratio               |
+
+Additional sorting cards bring the set to twelve: Al₂O₃ and KBr have metal/nonmetal ion-ratio evidence; C and SiO₂ give composition without a specified phase or structure. C can represent different carbon allotropes, and SiO₂ commonly forms an extended network. A formula alone does not establish a separate covalent molecule. Place these last two in the structure-evidence-needed group.
 
 ## Lewis Structure Practice Set
 
@@ -258,7 +358,7 @@ This table supports first-pass Lewis-style sketches. The goal is to track valenc
 
 ## Heating Curve Data
 
-This simplified data describes a sample heated at a steady rate.
+This authored schematic follows pure water at approximately 1 atm. The invented times illustrate the order of stages; they do not represent constant heating power or measured transition energies.
 
 | Time (min) | Temperature (C) | Region            |
 | ---------: | --------------: | ----------------- |
@@ -275,7 +375,7 @@ This simplified data describes a sample heated at a steady rate.
 
 ## Phase Diagram Data
 
-This simplified map supports reasoning about state from temperature and pressure. The values are intentionally approximate and should be treated as a model, not a complete reference diagram.
+These approximate water phase points support coordinate reading. They are selected points rather than a complete boundary curve. The low-pressure ice-vapor boundary near -10 C is about 0.002 atm (0.20 kPa), far below 0.2 atm.
 
 | Point | Temperature (C) | Pressure (atm) | Region or Boundary                        |
 | ----- | --------------: | -------------: | ----------------------------------------- |
@@ -284,14 +384,16 @@ This simplified map supports reasoning about state from temperature and pressure
 | C     |             120 |            1.0 | gas region                                |
 | D     |               0 |            1.0 | melting/freezing boundary                 |
 | E     |             100 |            1.0 | boiling/condensing boundary               |
-| F     |             -10 |            0.2 | sublimation boundary model                |
+| F     |             -10 |          0.002 | approximate ice/vapor coexistence         |
 | G     |              25 |            3.0 | liquid remains favored at higher pressure |
 
-**Modeling note:** Locate the point, identify the region or boundary, then predict how moving right, left, up, or down changes the favored state.
+**Coordinate practice:** Name the phases at A, B and C. Interpret coexistence at D, E and F. Compare B with G at the same temperature, then explain why F cannot be used as a boundary for carbon dioxide. Selected points alone do not locate every transition along an arbitrary path.
+
+[Phase-change reference](https://openstax.org/books/chemistry-2e/pages/10-3-phase-transitions); [water and carbon dioxide phase diagrams](https://openstax.org/books/chemistry-2e/pages/10-4-phase-diagrams).
 
 ## Gas Law Scenarios
 
-These scenarios pair with a gas-particle model. One variable should stay controlled when possible before a claim is made.
+These scenarios use an ideal-gas comparison with the stated amount, temperature or volume held fixed. Temperature comparisons use absolute temperature; the model concerns particles of the same gas.
 
 | Scenario | Variable Changed             | Controlled Variables                    | Expected Collision-Level Reasoning                                 |
 | -------- | ---------------------------- | --------------------------------------- | ------------------------------------------------------------------ |
@@ -319,7 +421,7 @@ These scenarios pair with a gas-particle model. One variable should stay control
 | Substance Model | Simplified Attraction Evidence                      | Expected Property Pattern                                            |
 | --------------- | --------------------------------------------------- | -------------------------------------------------------------------- |
 | Water           | polar molecule; strong attraction between molecules | relatively high boiling point; dissolves many ionic/polar substances |
-| Carbon dioxide  | nonpolar linear molecule                            | low boiling/sublimation point under ordinary pressure                |
+| Carbon dioxide  | nonpolar linear molecule                            | at 1 atm, solid sublimes near -78.5 C; no liquid phase or normal boiling point                |
 | Ethanol         | polar region plus nonpolar carbon chain             | mixes with water; evaporates more readily than water                 |
 | Hexane-like oil | mostly nonpolar                                     | does not mix well with water; dissolves nonpolar substances better   |
 
@@ -334,6 +436,25 @@ These scenarios pair with a gas-particle model. One variable should stay control
 | `Zn + 2HCl → ZnCl₂ + H₂`      | single replacement                 |
 | acid + base → salt + water    | acid-base neutralization           |
 
+### Conservation practice
+
+Balance these eight skeleton equations without changing formulas:
+
+1. H₂ + O₂ → H₂O
+2. H₂O₂ → H₂O + O₂
+3. CH₄ + O₂ → CO₂ + H₂O
+4. AgNO₃ + NaCl → AgCl + NaNO₃
+5. Zn + HCl → ZnCl₂ + H₂
+6. HCl + NaOH → NaCl + H₂O
+7. Fe + O₂ → Fe₂O₃
+8. Al + O₂ → Al₂O₃
+
+The last two require coefficients greater than 2. Treat Fe₂O₃ as a simplified iron-oxide model; actual rust can contain hydrated oxides.
+
+### Three whole-particle batches
+
+Use 2H₂ + O₂ → 2H₂O. The supplied model forms complete reaction batches. Compare starts A=(6 H₂,2 O₂), B=(4 H₂,4 O₂) and C=(4 H₂,1 O₂). For each, calculate water molecules formed and each leftover count, then identify the limiting reactant. These are particle counts; formal mole/mass conversions occur in CHM9.
+
 ## Reaction Energy and Rate Cases
 
 These cases separate energy transfer evidence from rate evidence. A reaction can release energy and still be slow if useful collisions are rare.
@@ -342,7 +463,7 @@ These cases separate energy transfer evidence from rate evidence. A reaction can
 | ---- | ----------------------------------------------------------------- | ----------------------------------------------------- | ---------------------------------- | ----------------------------------------------- |
 | A    | A glow stick gives off light and fades over several hours         | light is emitted                                      | brightness decreases gradually     | does not show molecular mechanism               |
 | B    | A tablet reacts faster when crushed in water                      | no direct heat/light evidence stated                  | smaller pieces react faster        | surface area is inferred from the setup         |
-| C    | A catalyzed decomposition diagram shows faster gas production     | reaction pathway changes                              | gas appears sooner with catalyst   | catalyst identity is not specified              |
+| C    | A catalyzed decomposition diagram shows faster gas production     | no heat or light measurement is supplied               | gas appears sooner with catalyst   | catalyst identity is not specified              |
 | D    | A cold pack becomes colder after its packet is mixed in a diagram | thermal energy is absorbed from surroundings          | rate is not directly compared      | diagram does not provide exact temperature data |
 | E    | Rust forms slowly on iron exposed to moist air                    | new substance appears; energy transfer is not obvious | visible change takes days or weeks | oxygen/water conditions are simplified          |
 
@@ -370,11 +491,13 @@ These cases connect visible changes with electron-transfer language at an introd
 | A    | iron rusts in moist air         | iron atoms become iron ions in compounds | oxygen gains electron density in the product model | reddish-brown solid appears               |
 | B    | simple zinc/copper cell diagram | zinc metal forms zinc ions               | copper ions become copper metal                    | electron-flow arrow and metal deposit     |
 | C    | tarnishing silver model         | silver surface forms a compound          | another reactant gains electron density            | dull surface replaces shiny metal         |
-| D    | battery discharge diagram       | one electrode loses electrons            | the other side accepts electrons                   | current can power a device in the diagram |
+| D    | battery discharge diagram       | a reactant at one electrode loses electrons | a reactant at the other electrode accepts electrons                   | current can power a device in the diagram |
 
 **Evidence note:** Redox claims should name what loses electron density, what gains electron density, and what evidence suggests a substance changed.
 
 ## Concentration and pH Scenario Tables
+
+The qualitative concentration cases use the same solute at fixed temperature after dissolution reaches equilibrium. Visible solid remaining under those conditions supports a saturation claim. The illustrative pH values are aqueous cases near 25 C and vary with composition.
 
 | Scenario | Solute Change                 | Solution Volume Change | Prediction                         |
 | -------- | ----------------------------- | ---------------------- | ---------------------------------- |
@@ -391,6 +514,21 @@ These cases connect visible changes with electron-transfer language at an introd
 | Baking soda solution model |            8-9 | basic    |
 | Soap solution model        |          10-11 | basic    |
 
+### Six supplied concentration states
+
+Use a fictional solute whose capacity is 5 g per 100 mL of final solution at the fixed temperature. Compare each state with a baseline of 2 g fully dissolved in 100 mL. Conditions are stipulated model states, not preparation procedures.
+
+| State | Total solute | Final solution volume | Dissolved amount | Undissolved amount |
+| --- | ---: | ---: | ---: | ---: |
+| A | 4 g | 100 mL | 4 g | 0 g |
+| B | 2 g | 200 mL | 2 g | 0 g |
+| C | 4 g | 200 mL | 4 g | 0 g |
+| D | 8 g | 100 mL | 5 g | 3 g |
+| E | 1 g | 100 mL | 1 g | 0 g |
+| F | 8 g | 200 mL | 8 g | 0 g |
+
+Describe how dissolved amount per equal solution volume compares with baseline; identify which state has solid remaining at equilibrium. A simulation can supply an additional set of observations.
+
 ## Molar Mass and Stoichiometry Practice Set
 
 Approximate atomic masses for practice: H = 1, C = 12, O = 16, Na = 23, Cl = 35.5, Ca = 40.
@@ -405,6 +543,12 @@ Approximate atomic masses for practice: H = 1, C = 12, O = 16, Na = 23, Cl = 35.
 8. For `CH₄ + 2O₂ → CO₂ + 2H₂O`, identify the mole ratio from methane to water.
 9. From `2H₂ + O₂ → 2H₂O`, find moles of water from 3 mol oxygen.
 10. From `CH₄ + 2O₂ → CO₂ + 2H₂O`, set up grams methane to grams water. Do not solve until the units are arranged.
+
+### Supplied molarity states
+
+Molarity is dissolved moles divided by final solution liters. For 0.50 mol in 1.0 L, M=0.50 mol/L. Compare (A) 1.0 mol in 1.0 L, (B) 0.50 mol in 2.0 L, (C) 1.0 mol in 2.0 L and (D) 0.25 mol in 0.50 L with that baseline. Predict each ratio, calculate it, and distinguish solution volume from the volume of added solvent.
+
+For O₂ molar mass use 2×16=32 g/mol. Additional conversion inputs are 64 g O₂ to moles and 18 g H₂O to moles; the 2.5 mol CO₂ conversion above supplies the inverse direction.
 
 ## Water Formation Stoichiometry and Heat Case
 
@@ -470,6 +614,13 @@ Each flawed solution contains one main error.
 | C    | Converts grams directly to coefficients                  | skipped molar mass                     |
 | D    | Reports final answer as grams when target asks for moles | unit mismatch                          |
 
+### Two complete guided cases
+
+1. With excess oxygen, how many moles of water form from 4 mol H₂ in 2H₂ + O₂ → 2H₂O?
+2. With excess oxygen, how many grams of water form from 16 g CH₄ in CH₄ + 2O₂ → CO₂ + 2H₂O? Use H=1, C=12 and O=16 g/mol for the element contributions.
+
+For each, show the balanced ratio and units. Compare the valid calculation with error B or C.
+
 ## Investigation Safety Checklist
 
 Use this checklist before any chemistry project that relies on a simulation, diagram, data table, image set, video clip, or optional observation.
@@ -485,9 +636,15 @@ Use this checklist before any chemistry project that relies on a simulation, dia
 
 **Safety note:** If a project fails any safety or evidence check, replace the physical action with a simulation, provided dataset, diagram, or reference.
 
+### Three decision cards
+
+A: Interpret the supplied heating table and draw a graph. B: A proposed activity mixes two unlabelled household liquids and heats a sealed container. C: Describe a familiar object from a supplied photograph; an optional room-temperature observation can replace the photograph.
+
+Classify each as a core remote route, an unsuitable physical proposal to replace with supplied evidence, or an optional observation with an equivalent text/photo route. State the deciding evidence.
+
 ## Capstone Evidence Seeds
 
-These topics are starting points when a capstone needs a browser-based source set. Each topic still needs a narrowed claim and at least two evidence types.
+These topics are starting points when a capstone needs a browser-based source set. Each topic still needs a narrowed claim and at least two evidence types. The required CHM11 work produces one saved explanation and evidence log. Optional showcase work adapts that artifact for an audience; optional reaction modeling deepens its reaction or contrasts a separate reaction with its physical-change topic. Optional review uses either a shared artifact or an independent rereading of the saved work.
 
 | Topic               | Possible Evidence                                                                  | Useful Chemistry Ideas                                            | Better Narrow Claim                                                               |
 | ------------------- | ---------------------------------------------------------------------------------- | ----------------------------------------------------------------- | --------------------------------------------------------------------------------- |
@@ -511,3 +668,16 @@ These questions support review before the final capstone artifact is presented.
 6. What new evidence would change the conclusion?
 
 **Revision note:** If any answer depends on uncited evidence, unsafe physical work, or a broad topic instead of a narrow claim, revise before presenting.
+
+## Advanced Topic Case Cards
+
+Classify these supplied questions by primary topic, allowing overlap: explain atom conservation in water formation; calculate a carbon-14 daughter change; compare carbon functional-group models; connect polymer chain arrangement with flexibility; compare a corrosion process with a battery's electron transfer. The tasks ask for introductory models, not a full specialist mechanism.
+
+For a green-chemistry comparison, hypothetical options P and Q both meet the same one-use packaging function. Their common boundary covers material production only. Values are authored practice inputs.
+
+| Option | Process energy units per package | Waste g per package | Feedstock |
+| --- | ---: | ---: | --- |
+| P | 2 | 20 | renewable |
+| Q | 6 | 5 | nonrenewable |
+
+Compare energy and waste under this shared function. State whether either option is better on every given measure, then identify missing hazard, transport, durability and end-of-life data. Changing the priority can change a recommendation; renewable feedstock alone does not establish environmental superiority.

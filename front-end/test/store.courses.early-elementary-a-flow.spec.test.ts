@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { loadRawCourse } from "@/stores/courses/index";
+import { earlyElementaryAMaterials } from "@/stores/courses/earlyElementaryAMaterials";
 import { earlyElementaryMathACourse } from "@/stores/courses/source-library-courses";
 
 const EXPECTED_MODULE_SEQUENCE = [
@@ -112,6 +113,30 @@ describe("Early Elementary A math learner flow", () => {
 		).toContain("not a purchase endorsement");
 	});
 
+	it("assigns both complete escape cases outside the concept reading", async () => {
+		const course = await loadRawCourse("early-elementary-a-math");
+		const module = course!.modules.find(candidate =>
+			candidate.title.startsWith("EEA4 ")
+		)!;
+		expect(module.curriculum.map(item => item.title)).toEqual([
+			"Escape the Game Core Concepts",
+			"Escape the Game Character Budget",
+			"Liang Escape Route Grid"
+		]);
+		expect(module.curriculum[0].contentKind).toBe("reading");
+		for (const item of module.curriculum.slice(1)) {
+			expect(item.contentKind).toBe("assignment");
+			expect(item.preserveInstructions).toBe(true);
+			expect(item.content).toContain("Project self-check");
+		}
+		expect(module.curriculum[1].content).toContain(
+			"| Suit | Rocket | 45 |"
+		);
+		expect(module.curriculum[2].content).toContain(
+			"five squares across and 25 squares up"
+		);
+	});
+
 	it("keeps unavailable source-image bookkeeping out of the learner flow", async () => {
 		const course = await loadRawCourse("early-elementary-a-math");
 		expect(course).not.toBeNull();
@@ -132,5 +157,53 @@ describe("Early Elementary A math learner flow", () => {
 				module => module.title === "Pending Source Media Inventory"
 			)?.kind
 		).toBe("appendix");
+	});
+
+	it("supplies methods, cases and self-checks throughout the complete course", async () => {
+		const course = await loadRawCourse("early-elementary-a-math");
+		const modules = course!.modules.filter(
+			module => module.kind !== "appendix"
+		);
+		expect(modules).toHaveLength(22);
+		const core = modules.flatMap(module => module.curriculum);
+		const optional = modules.flatMap(module => module.supplementalProjects);
+		expect(
+			core.filter(item => item.contentKind === "reading")
+		).toHaveLength(22);
+		expect(
+			core.filter(item => item.contentKind === "assignment")
+		).toHaveLength(26);
+		expect(optional).toHaveLength(44);
+		for (const material of earlyElementaryAMaterials) {
+			expect(
+				core.some(item => item.content.includes(material.method))
+			).toBe(true);
+			expect(
+				core.some(item => item.content.includes(material.worked))
+			).toBe(true);
+			for (const task of material.tasks)
+				expect(
+					core.find(item => item.title === task.title)?.content
+				).toContain(task.prompt);
+		}
+		for (const item of [
+			...core.filter(item => item.contentKind === "assignment"),
+			...optional
+		]) {
+			expect(item.content).toContain("Project self-check");
+			expect(item.preserveInstructions).toBe(true);
+		}
+		const followerModule = modules.find(module =>
+			module.title.startsWith("EEA13 ")
+		)!;
+		expect(
+			followerModule.curriculum.map(item => item.content).join("\n")
+		).not.toMatch(/one billion|1,000,000,000|1295/);
+		expect(followerModule.supplementalProjects[1].content).toContain(
+			"1,000,000,000"
+		);
+		expect(followerModule.supplementalProjects[1].learningPath).toBe(
+			"challenge"
+		);
 	});
 });

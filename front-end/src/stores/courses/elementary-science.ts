@@ -1,5 +1,5 @@
 import type { RawCourse, RawCourseModuleItem } from "./types";
-import { isPhetResourceUrl } from "../../modules/resourceUrls";
+import { elementaryScienceLessons } from "./elementaryScienceLessons";
 
 const ELEMENTARY_SCIENCE_REFERENCES = {
 	nasaBiomes: "https://science.nasa.gov/kids/earth/mission-biomes/",
@@ -866,67 +866,76 @@ function elementaryScienceProjectPath(title: string) {
 		: ("choice" as const);
 }
 
+function elementaryScienceTaskResources(
+	content: string,
+	section: string,
+	answer: string
+) {
+	const viewer = (asset: string) =>
+		`/course-resource?asset=${encodeURIComponent(asset)}`;
+	return `${content}\n\n[Case inputs](${viewer(elementaryScienceMaterial(section))})\n\n[Project self-check](${viewer(elementaryScienceAnswerKey(answer))})`;
+}
+
 export const elementaryScienceCourse: RawCourse = {
 	...elementaryScienceSourceCourse,
 	modules: elementaryScienceSourceCourse.modules.map(module => {
 		const flow = ELEMENTARY_SCIENCE_FLOW[module.title];
-		const referenceIsMedia = isPhetResourceUrl(flow.referenceLink);
+		const lesson = elementaryScienceLessons[module.title];
+		if (!lesson || lesson.tasks.length !== 6) {
+			throw new Error(
+				`Missing Elementary Science teaching: ${module.title}`
+			);
+		}
 		const curriculum = module.curriculum.map((item, index) => ({
 			...item,
-			content: [
+			content:
 				index === 0
-					? `**Course flow:** Begin with the shared phenomenon, let both grade bands use the same evidence, and change the response complexity rather than changing who can participate.`
-					: "",
-				item.content,
-				`**Shared phenomenon:** ${flow.sharedPhenomenon}`,
-				`**K–2 route:** ${flow.k2Path}`,
-				`**Grades 3–5 route:** ${flow.upperPath}`,
-				`**Evidence gate:** ${flow.evidenceGate}`,
-				`**Misconception check:** ${flow.misconceptionCheck}`,
-				`**Authoritative reference:** [Open the module reference](${flow.referenceLink}).`
-			]
-				.filter(Boolean)
-				.join("\n\n"),
+					? `${lesson.reading}\n\n[Case inputs](/course-resource?asset=${encodeURIComponent(elementaryScienceMaterial(flow.materialSection))})\n\n[Background reference](${flow.referenceLink})`
+					: elementaryScienceTaskResources(
+							lesson.tasks[index - 1],
+							flow.materialSection,
+							flow.answerSection
+						),
+			contentKind:
+				index === 0 ? ("reading" as const) : ("assignment" as const),
+			preserveInstructions: true,
+			preserveAssignment: true,
 			datasetLink:
 				item.datasetLink ??
-				(index === 0
-					? referenceIsMedia
-						? elementaryScienceMaterial(flow.materialSection)
-						: flow.referenceLink
-					: elementaryScienceMaterial(flow.materialSection)),
-			mediaLink:
-				item.mediaLink ??
-				(index === 0 && referenceIsMedia
-					? flow.referenceLink
-					: undefined),
+				elementaryScienceMaterial(flow.materialSection),
 			solutionLink:
 				item.solutionLink ??
 				elementaryScienceAnswerKey(flow.answerSection),
 			learningPath: "core" as const
 		}));
 		const additions = ELEMENTARY_SCIENCE_ADDITIONS[module.title].map(
-			item => ({
+			(item, index) => ({
 				...item,
-				content: [
-					item.content,
-					`**Shared phenomenon:** ${flow.sharedPhenomenon}`,
-					`**K–2 route:** ${flow.k2Path}`,
-					`**Grades 3–5 route:** ${flow.upperPath}`,
-					`**Evidence gate:** ${flow.evidenceGate}`,
-					`**Misconception check:** ${flow.misconceptionCheck}`
-				].join("\n\n"),
-				projectLink: item.projectLink ?? flow.referenceLink
+				content: elementaryScienceTaskResources(
+					lesson.tasks[index + 4],
+					flow.materialSection,
+					flow.answerSection
+				),
+				contentKind: "assignment" as const,
+				preserveInstructions: true,
+				preserveAssignment: true,
+				projectLink: undefined,
+				datasetLink: elementaryScienceMaterial(flow.materialSection),
+				solutionLink: elementaryScienceAnswerKey(flow.answerSection)
 			})
 		);
 		const supplementalProjects = module.supplementalProjects.map(item => ({
 			...item,
-			content: [
-				item.content,
-				`**Shared phenomenon:** ${flow.sharedPhenomenon}`,
-				`**Two-band completion route:** ${ELEMENTARY_SCIENCE_PROJECT_COMPLETION[item.title]}`,
-				`**Evidence gate:** ${flow.evidenceGate}`,
-				`**Misconception check:** ${flow.misconceptionCheck}`
-			].join("\n\n"),
+			content: elementaryScienceTaskResources(
+				item.title === "Project: Elementary Science Capstone"
+					? "Continue the saved required capstone with one changed condition or second design. K–2: show the changed result in a second drawing and explain one difference. Grades 3–5: compare the original and changed evidence, revise the claim or design, and state a remaining limitation. Retain the original artifact and identify which added evidence changes the conclusion."
+					: `${item.content}\n\n${ELEMENTARY_SCIENCE_PROJECT_COMPLETION[item.title]}`,
+				flow.materialSection,
+				flow.answerSection
+			),
+			contentKind: "assignment" as const,
+			preserveInstructions: true,
+			preserveAssignment: true,
 			datasetLink:
 				item.datasetLink ??
 				elementaryScienceMaterial(flow.materialSection),

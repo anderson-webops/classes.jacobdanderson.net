@@ -7,6 +7,12 @@ import { createPinia, setActivePinia } from "pinia";
 import MarkdownIt from "markdown-it";
 import { expect, it } from "vitest";
 import published from "../../test/fixtures/catalog-published-identities.json";
+import elementaryAdditions from "../../test/fixtures/early-elementary-a-restored-identities.json";
+import elementaryBAdditions from "../../test/fixtures/early-elementary-b-restored-identities.json";
+import lateElementaryAAdditions from "../../test/fixtures/late-elementary-a-restored-identities.json";
+import lateElementaryBAdditions from "../../test/fixtures/late-elementary-b-restored-identities.json";
+import joyOfReadingAdditions from "../../test/fixtures/joy-of-reading-restored-identities.json";
+import pictureBookAdditions from "../../test/fixtures/picture-book-restored-identities.json";
 import ventureAdditions from "../../test/fixtures/entrepreneurship-restored-core-identities.json";
 import grammarAdditions from "../../test/fixtures/grammar-mechanics-restored-identities.json";
 import literatureAdditions from "../../test/fixtures/middle-school-literature-restored-identities.json";
@@ -28,8 +34,19 @@ import { introToPhysicsCourse } from "@/stores/courses/intro-to-physics";
 import { physicsLevel2Course } from "@/stores/courses/physics-level-2";
 import { geometryACourse } from "@/stores/courses/geometry-a";
 import { geometryBCourse } from "@/stores/courses/geometry-b";
+import { middleSchoolIntegratedScienceCourse } from "@/stores/courses/middle-school-integrated-science";
+import { introToBiologyCourse } from "@/stores/courses/intro-to-biology";
+import { introToChemistryCourse } from "@/stores/courses/intro-to-chemistry";
+import { introToEnvironmentalScienceCourse } from "@/stores/courses/intro-to-environmental-science";
+import { elementaryScienceCourse } from "@/stores/courses/elementary-science";
 import { preAlgebraACourse } from "@/stores/courses/pre-algebra-a";
 import {
+	earlyElementaryMathACourse,
+	earlyElementaryMathBCourse,
+	lateElementaryMathACourse,
+	lateElementaryMathBCourse,
+	earlyElementaryJoyOfReadingCourse,
+	earlyElementaryPictureBookCourse,
 	entrepreneurship101Course,
 	grammarMechanicsCourse,
 	introductionToPublicSpeakingCourse,
@@ -40,7 +57,102 @@ import {
 	scratchLevel1BootcampCourse
 } from "@/stores/courses/source-library-courses";
 
+import { designPatternsInJavaCourse } from "@/stores/courses/design-patterns-in-java";
+import { javaLevel3Course } from "@/stores/courses/java-level-3";
+
+function isReviewedModule(id: string, title: string) {
+	return id === "java-level-3"
+		? title === "AJ4 Recursion"
+		: id === "design-patterns-in-java"
+			? [
+					"DPJ1 What Patterns Are and What They Are Not",
+					"DPJ2 Java Design Foundations",
+					"DPJ3 Creational Patterns I",
+					"DPJ4 Creational Patterns II and Boundary Patterns",
+					"DPJ5 Structural Patterns in Depth",
+					"DPJ6 Behavioral Patterns I"
+				].includes(title)
+			: true;
+}
 const cases = [
+	{
+		id: "design-patterns-in-java",
+		source: designPatternsInJavaCourse,
+		readings: 6,
+		additions: []
+	},
+	{
+		id: "java-level-3",
+		source: javaLevel3Course,
+		readings: 1,
+		additions: []
+	},
+	{
+		id: "intro-to-environmental-science",
+		source: introToEnvironmentalScienceCourse,
+		readings: 27,
+		additions: []
+	},
+	{
+		id: "intro-to-chemistry",
+		source: introToChemistryCourse,
+		readings: 62,
+		additions: []
+	},
+	{
+		id: "intro-to-biology",
+		source: introToBiologyCourse,
+		readings: 8,
+		additions: []
+	},
+	{
+		id: "elementary-science",
+		source: elementaryScienceCourse,
+		readings: 36,
+		additions: []
+	},
+	{
+		id: "middle-school-integrated-science",
+		source: middleSchoolIntegratedScienceCourse,
+		readings: 65,
+		additions: []
+	},
+	{
+		id: "early-elementary-b-picture-book",
+		source: earlyElementaryPictureBookCourse,
+		readings: 13,
+		additions: pictureBookAdditions
+	},
+	{
+		id: "early-elementary-a-reading",
+		source: earlyElementaryJoyOfReadingCourse,
+		readings: 8,
+		additions: joyOfReadingAdditions
+	},
+	{
+		id: "late-elementary-b-math",
+		source: lateElementaryMathBCourse,
+		readings: 20,
+		additions: lateElementaryBAdditions
+	},
+	{
+		id: "late-elementary-a-math",
+		source: lateElementaryMathACourse,
+		readings: 19,
+		additions: lateElementaryAAdditions
+	},
+	{
+		id: "early-elementary-b-math",
+		source: earlyElementaryMathBCourse,
+		readings: 19,
+		additions: elementaryBAdditions
+	},
+	{
+		id: "early-elementary-a-math",
+		source: earlyElementaryMathACourse,
+		readings: 22,
+		additions: elementaryAdditions
+	},
 	{
 		id: "algebra-1a",
 		source: algebra1ACourse,
@@ -147,6 +259,30 @@ const cases = [
 const markdown = new MarkdownIt({ breaks: true, html: false, linkify: true });
 const digest = (value: string) =>
 	createHash("sha256").update(value).digest("hex");
+const chemistryModuleCounts: Record<string, [number, number, number]> = {
+	CHM1: [6, 1, 2],
+	CHM2: [5, 1, 4],
+	CHM3: [5, 2, 2],
+	CHM4: [5, 1, 3],
+	CHM5: [6, 1, 2],
+	CHM6: [5, 2, 3],
+	CHM7: [4, 1, 6],
+	CHM8: [3, 1, 6],
+	CHM9: [8, 1, 2],
+	CHM10: [5, 1, 2],
+	CHM11: [5, 2, 3],
+	Reference: [5, 0, 2]
+};
+const environmentalModuleCounts: Record<string, [number, number, number]> = {
+	ES1: [3, 3, 3],
+	ES2: [4, 2, 3],
+	ES3: [3, 2, 3],
+	ES4: [4, 2, 3],
+	ES5: [4, 2, 3],
+	ES6: [3, 2, 3],
+	ES7: [3, 2, 3],
+	ES8: [3, 2, 3]
+};
 const intentionalMathLineBreaks: Record<string, Record<string, number>> = {
 	"algebra-2a": {
 		"Applications and Parabola Geometry": 1,
@@ -258,7 +394,37 @@ it.each(
 			expect(identities.filter(item => item.id === added.id)).toEqual([
 				added
 			]);
+		if (
+			["intro-to-chemistry", "intro-to-environmental-science"].includes(
+				id
+			)
+		) {
+			for (const rawModule of source.modules) {
+				const displayedModule = course.modules.find(
+					module => module.title === rawModule.title
+				)!;
+				expect(displayedModule, rawModule.title).toBeDefined();
+				for (const section of [
+					"curriculum",
+					"supplementalProjects"
+				] as const) {
+					for (const rawItem of rawModule[section]) {
+						const displayed = displayedModule[section].find(
+							item => item.title === rawItem.title
+						)!;
+						expect(displayed, rawItem.title).toBeDefined();
+						expect(displayed.content, rawItem.title).toBe(
+							rawItem.content.trim()
+						);
+						expect(displayed.contentKind, rawItem.title).toBe(
+							rawItem.contentKind
+						);
+					}
+				}
+			}
+		}
 		const sourceProjects = source.modules
+			.filter(module => isReviewedModule(id, module.title))
 			.flatMap(module => [
 				...module.curriculum,
 				...module.supplementalProjects
@@ -291,19 +457,53 @@ it.each(
 				expect(displayedPrompt, project.title).toBe(originalPrompt);
 		}
 		const card = (item: CourseModuleItem) => {
-			const fullBlocks = [
-				"algebra-1a",
-				"algebra-1b",
-				"pre-algebra-a",
-				"geometry-a",
-				"geometry-b",
-				"algebra-2a",
-				"algebra-2b"
-			].includes(id);
+			const focusedJavaTask =
+				["java-level-3", "design-patterns-in-java"].includes(id) &&
+				course.modules.some(
+					module =>
+						isReviewedModule(id, module.title) &&
+						[
+							...module.curriculum,
+							...module.supplementalProjects
+						].some(row => row.id === item.id)
+				);
+			const completeAssignment =
+				focusedJavaTask ||
+				[
+					"intro-to-environmental-science",
+					"elementary-science",
+					"intro-to-biology",
+					"intro-to-chemistry",
+					"middle-school-integrated-science",
+					"early-elementary-a-reading",
+					"early-elementary-b-picture-book"
+				].includes(id);
+			const fullBlocks =
+				focusedJavaTask ||
+				[
+					"intro-to-environmental-science",
+					"elementary-science",
+					"intro-to-biology",
+					"intro-to-chemistry",
+					"middle-school-integrated-science",
+					"early-elementary-a-math",
+					"early-elementary-b-math",
+					"late-elementary-a-math",
+					"late-elementary-b-math",
+					"early-elementary-a-reading",
+					"early-elementary-b-picture-book",
+					"algebra-1a",
+					"algebra-1b",
+					"pre-algebra-a",
+					"geometry-a",
+					"geometry-b",
+					"algebra-2a",
+					"algebra-2b"
+				].includes(id);
 			const selfChecks = fullBlocks
 				? [
 						...item.content.matchAll(
-							/\[(Check answers and reasoning|Project self-check)\]\(([^)]+)\)/g
+							/\[(Check answers and reasoning|Project self-check|Case inputs|Runoff inputs)\]\(([^)]+)\)/g
 						)
 					].map(([, label, href]) => {
 						const url = new URL(href, "https://example.invalid");
@@ -341,6 +541,7 @@ it.each(
 						};
 					})
 				: [];
+			if (focusedJavaTask) expect(selfChecks, item.id).toHaveLength(2);
 			// These authored labels become separate headings in assignment cards.
 			// Keep every body word while matching the displayed heading punctuation.
 			let fullAssignment = fullBlocks
@@ -351,7 +552,14 @@ it.each(
 							"**Optional · Extension**"
 						)
 				: item.content;
-			if (id === "algebra-1a" || id === "algebra-1b") {
+			if (
+				completeAssignment ||
+				[
+					"algebra-1a",
+					"algebra-1b",
+					"early-elementary-a-math"
+				].includes(id)
+			) {
 				const sections = lessonContentSections(
 					item.content,
 					item.contentKind ?? "assignment"
@@ -377,28 +585,67 @@ it.each(
 			const container = document.createElement("div");
 			container.innerHTML = markdown.render(
 				normalizeInlineCourseMarkdown(
-					directive ??
-						([
-							"algebra-1a",
-							"algebra-1b",
-							"introduction-to-public-speaking",
-							"intro-to-physics",
-							"physics-level-2",
-							"pre-algebra-a",
-							"geometry-a",
-							"geometry-b",
-							"algebra-2a",
-							"algebra-2b"
-						].includes(id)
-							? fullAssignment
-							: "")
+					completeAssignment
+						? fullAssignment
+						: (directive ??
+								([
+									"early-elementary-a-math",
+									"early-elementary-b-math",
+									"late-elementary-a-math",
+									"late-elementary-b-math",
+									"early-elementary-a-reading",
+									"early-elementary-b-picture-book",
+									"algebra-1a",
+									"algebra-1b",
+									"introduction-to-public-speaking",
+									"intro-to-physics",
+									"physics-level-2",
+									"pre-algebra-a",
+									"geometry-a",
+									"geometry-b",
+									"algebra-2a",
+									"algebra-2b"
+								].includes(id)
+									? fullAssignment
+									: ""))
 				)
 			);
+			if (
+				completeAssignment &&
+				![
+					"middle-school-integrated-science",
+					"elementary-science",
+					"intro-to-biology",
+					"intro-to-environmental-science",
+					"intro-to-chemistry"
+				].includes(id)
+			) {
+				const completion = item.content.split(
+					"**Completion evidence:**"
+				)[1];
+				if (item.learningPath === "core")
+					expect(completion, item.title).toBeTruthy();
+				if (completion) {
+					const evidence = document.createElement("div");
+					evidence.innerHTML = markdown.render(
+						normalizeInlineCourseMarkdown(completion)
+					);
+					expect(
+						container.textContent!.replace(/\s+/g, " ").trim(),
+						item.title
+					).toContain(
+						evidence.textContent!.replace(/\s+/g, " ").trim()
+					);
+				}
+			}
 			return {
 				id: item.id,
 				title: item.title,
 				learningPath: item.learningPath,
 				selfChecks,
+				assignmentTextScope: completeAssignment
+					? "complete"
+					: "directive",
 				directiveTextMode: fullBlocks ? "innerText" : "textContent",
 				requiredDirective: container
 					.textContent!.replace(/\s+/g, " ")
@@ -411,7 +658,19 @@ it.each(
 			.filter(
 				module =>
 					!module.internal &&
-					(!(algebra || algebra1) || module.kind !== "appendix")
+					(!(
+						algebra ||
+						algebra1 ||
+						[
+							"early-elementary-a-math",
+							"early-elementary-b-math",
+							"late-elementary-a-math",
+							"late-elementary-b-math",
+							"early-elementary-a-reading",
+							"early-elementary-b-picture-book"
+						].includes(id)
+					) ||
+						module.kind !== "appendix")
 			)
 			.map(module => ({
 				id: module.id,
@@ -427,8 +686,15 @@ it.each(
 					.filter(item => !isLessonLearningItem(item))
 					.map(card)
 			}));
-		expect(modules.flatMap(module => module.readings)).toHaveLength(count);
-		if (algebra1)
+		expect(
+			modules
+				.filter(module => isReviewedModule(id, module.title))
+				.flatMap(module => module.readings)
+		).toHaveLength(count);
+		if (id === "design-patterns-in-java")
+			expect(modules.length).toBeGreaterThan(10);
+		else if (id === "java-level-3") expect(modules).toHaveLength(25);
+		else if (algebra1)
 			expect(modules).toHaveLength(id === "algebra-1a" ? 21 : 25);
 		else if (algebra)
 			expect(modules).toHaveLength(id === "algebra-2a" ? 15 : 12);
@@ -442,9 +708,19 @@ it.each(
 						? 8
 						: ["intro-to-physics", "physics-level-2"].includes(id)
 							? 17
-							: count
+							: id === "middle-school-integrated-science"
+								? 10
+								: [
+											"elementary-science",
+											"intro-to-environmental-science"
+									  ].includes(id)
+									? 8
+									: id === "intro-to-chemistry"
+										? 11
+										: count
 			);
 		for (const module of modules) {
+			if (!isReviewedModule(id, module.title)) continue;
 			if (id === "geometry-a")
 				expect(module.readings, module.title).toHaveLength(
 					module.title.startsWith("Check-In")
@@ -479,7 +755,49 @@ it.each(
 				expect(module.readings, module.title).toHaveLength(
 					module.title.startsWith("PHY8 ") ? 2 : 1
 				);
-			else if (!algebra && !algebra1)
+			else if (id === "elementary-science")
+				expect(module.readings).toHaveLength(
+					module.kind === "appendix"
+						? ["Standards Map", "Course Roadmap"].includes(
+								module.title
+							)
+							? 6
+							: 4
+						: 1
+				);
+			else if (id === "middle-school-integrated-science")
+				expect(module.readings).toHaveLength(
+					module.kind === "appendix"
+						? ["Standards Map", "Course Roadmap"].includes(
+								module.title
+							)
+							? 6
+							: 4
+						: module.title.startsWith("MS9 ")
+							? 5
+							: 4
+				);
+			else if (
+				[
+					"intro-to-chemistry",
+					"intro-to-environmental-science"
+				].includes(id)
+			) {
+				const expected = (
+					id === "intro-to-chemistry"
+						? chemistryModuleCounts
+						: environmentalModuleCounts
+				)[module.title.split(" ")[0]];
+				expect(expected, module.title).toBeDefined();
+				expect(
+					[
+						module.readings.length,
+						module.projects.length,
+						module.optional.length
+					],
+					module.title
+				).toEqual(expected);
+			} else if (!algebra && !algebra1)
 				expect(module.readings, module.title).toHaveLength(1);
 			else if (algebra && module.readings.length === 0)
 				expect(module.title).toMatch(/capstone/i);
@@ -512,8 +830,50 @@ it.each(
 						restoredIdentities: additions.length,
 						sourceProjects: sourceProjects.length,
 						modules,
+						...([
+							"java-level-3",
+							"design-patterns-in-java"
+						].includes(id)
+							? {
+									reviewedModuleIds: [
+										id === "java-level-3"
+											? "java-level-3-aj4-recursion"
+											: "design-patterns-in-java-dpj1-what-patterns-are-and-what-they-are-not",
+										...(id === "design-patterns-in-java"
+											? [
+													"design-patterns-in-java-dpj2-java-design-foundations",
+													"design-patterns-in-java-dpj3-creational-patterns-i",
+													"design-patterns-in-java-dpj4-creational-patterns-ii-and-boundary-patterns",
+													"design-patterns-in-java-dpj5-structural-patterns-in-depth",
+													"design-patterns-in-java-dpj6-behavioral-patterns-i"
+												]
+											: [])
+									]
+								}
+							: {}),
 						reviewScope:
-							"complete course reading and assignment view",
+							id === "design-patterns-in-java"
+								? "DPJ1 through DPJ6 only: six complete readings, every core/optional activity and linked input/answer case in those units. All 134 published identities checked; later units remain outside this teaching/runtime acceptance."
+								: id === "java-level-3"
+									? "AJ4 only: one reading, two core projects, three optional tasks and ten input/response views per profile. All 217 course identities checked; other Java units are outside this teaching and runtime acceptance."
+									: id === "intro-to-environmental-science"
+										? "Complete Environmental Science teaching and tasks:27readings,17coreactivities,24optionalactivities and82input/response views per profile;all68published identities retained. Original photosynthesis-image fidelity remains separate."
+										: id === "intro-to-chemistry"
+											? "Complete Chemistry teaching and tasks:62readings,14coreactivities,37optionalactivities and102input/response views per profile;all113published identities retained. Original video evidence remains distinct from authored text alternatives."
+											: id === "intro-to-biology"
+												? "Eight worked body-systems units:8readings,36coreactivities,24optionalprojects and120input/response views per profile;all68published identities retained. Original three legacy images remain separately identified."
+												: id === "elementary-science"
+													? "Eight teaching units and six reference appendices:36readings,48coreactivities,16optionalprojects and11optionalreferenceactivities;all111published identities checked."
+													: id ===
+														  "middle-school-integrated-science"
+														? "Complete ten teaching units and five reference appendices:65readings,58complete optional/required activities and117input/response views per role/width profile;all123published identities retained."
+														: id ===
+															  "early-elementary-a-reading"
+															? "Complete on-site explanations and briefs; the ten named reading texts remain unavailable."
+															: id ===
+																  "early-elementary-b-picture-book"
+																? "Complete supplied teaching,practice,case inputs and briefs;original Gabby Tries text remains unavailable."
+																: "complete course reading and assignment view",
 						internalModules: course.modules
 							.filter(module => module.internal)
 							.map(module => ({

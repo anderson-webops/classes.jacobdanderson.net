@@ -1,6 +1,9 @@
 import fs from "node:fs";
 import { describe, expect, it } from "vitest";
 import { introToBiologyCourse } from "@/stores/courses/intro-to-biology";
+import { loadRawCourse } from "@/stores/courses/index";
+import { slugMarkdownHeading } from "@/modules/courseAssetPreview";
+import { completeIntroBiologyActivity } from "./middleSchoolScienceReview";
 
 const EXPECTED_SEQUENCE = [
 	"BIO1 Human Body Systems",
@@ -13,96 +16,207 @@ const EXPECTED_SEQUENCE = [
 	"BIO8 Digestive Odyssey Capstone"
 ];
 
-function requireModule(title: string) {
-	const module = introToBiologyCourse.modules.find(
-		candidate => candidate.title === title
-	);
-	if (!module) throw new Error(`Expected Intro to Biology module ${title}.`);
-	return module;
-}
+const pack = fs.readFileSync(
+	"public/course-assets/biology/intro-biology-materials-pack.md",
+	"utf8"
+);
+const answers = fs.readFileSync(
+	"public/course-assets/biology/intro-biology-rubrics-answer-key.md",
+	"utf8"
+);
+const table = (heading: string) =>
+	pack
+		.split(heading)[1]
+		.split(/^###? /m)[0]
+		.split("\n")
+		.filter(line => line.startsWith("|"))
+		.slice(2)
+		.map(line =>
+			line
+				.split("|")
+				.slice(1, -1)
+				.map(cell => cell.trim())
+		);
 
-function moduleText(title: string) {
-	const module = requireModule(title);
-	return [...module.curriculum, ...module.supplementalProjects]
-		.map(item => `${item.title}\n${item.content}`)
-		.join("\n");
-}
-
-function allItems() {
-	return introToBiologyCourse.modules.flatMap(module => [
-		...module.curriculum,
-		...module.supplementalProjects
-	]);
-}
-
-function courseText() {
-	return introToBiologyCourse.modules
-		.map(module => `${module.title}\n${moduleText(module.title)}`)
-		.join("\n");
-}
-
-function resourceText() {
-	return allItems()
-		.flatMap(item => [
-			item.projectLink,
-			item.solutionLink,
-			item.datasetLink,
-			item.mediaLink
-		])
-		.filter(Boolean)
-		.join("\n");
-}
-
-function markdownHeadingSlugs(markdown: string) {
-	return new Set(
-		[...markdown.matchAll(/^#{1,6}\s+(.+)$/gm)].map(([, heading]) =>
-			heading
-				.toLowerCase()
-				.replace(/[`*_]/g, "")
-				.replace(/[^\p{L}\p{N}\s-]/gu, "")
-				.trim()
-				.replace(/\s+/g, "-")
-				.replace(/-+/g, "-")
-		)
-	);
-}
-
-describe("Intro to Biology learner flow", () => {
-	it("preserves the eight-stage Digestive Odyssey sequence", () => {
+describe("Intro to Biology complete supplied teaching and cases", () => {
+	it("retains eight units and all68published items with teaching before36core tasks", async () => {
+		const course = (await loadRawCourse("intro-to-biology"))!;
+		expect(course.modules).toHaveLength(8);
+		expect(course.modules.map(module => module.title)).toEqual(
+			EXPECTED_SEQUENCE
+		);
 		expect(
-			introToBiologyCourse.modules.map(module => module.title)
-		).toEqual(EXPECTED_SEQUENCE);
+			course.modules.flatMap(m => [
+				...m.curriculum,
+				...m.supplementalProjects
+			])
+		).toHaveLength(68);
+		expect(
+			course.modules
+				.flatMap(m => m.curriculum)
+				.filter(i => i.contentKind === "reading")
+		).toHaveLength(8);
+		expect(
+			course.modules
+				.flatMap(m => m.curriculum)
+				.filter(i => i.contentKind === "assignment")
+		).toHaveLength(36);
+		expect(
+			course.modules.flatMap(m => m.supplementalProjects)
+		).toHaveLength(24);
+		for (const module of course.modules) {
+			expect(module.curriculum[0].content).toContain("## Worked");
+			expect(
+				module.curriculum[0].content.split(/\s+/).length
+			).toBeGreaterThan(180);
+			expect(
+				module.curriculum.every(i => i.learningPath === "core")
+			).toBe(true);
+			expect(
+				module.supplementalProjects.every(i =>
+					["choice", "challenge"].includes(i.learningPath!)
+				)
+			).toBe(true);
+		}
 	});
-
-	it("gives every stage pacing, milestones, and explicit learning paths", () => {
-		for (const module of introToBiologyCourse.modules) {
-			expect(module.estimatedTime, module.title).toMatch(/session/);
-			expect(
-				module.keyBlocks?.length,
-				module.title
-			).toBeGreaterThanOrEqual(6);
-			expect(
-				module.curriculum.every(item => item.learningPath === "core"),
-				module.title
-			).toBe(true);
-			expect(
-				module.supplementalProjects.every(item =>
-					["choice", "challenge"].includes(item.learningPath ?? "")
-				),
-				module.title
-			).toBe(true);
-			expect(module.curriculum[0]?.content, module.title).toContain(
-				"**Course flow:**"
+	it("links every task to real input and response sections with one core check per task", () => {
+		for (const [index, module] of introToBiologyCourse.modules.entries()) {
+			for (const item of [
+				...module.curriculum.slice(1),
+				...module.supplementalProjects
+			]) {
+				expect(
+					completeIntroBiologyActivity(
+						"intro-to-biology",
+						module,
+						item
+					),
+					item.title
+				).toBe(true);
+				for (const link of [item.datasetLink!, item.solutionLink!]) {
+					const [file, anchor] = link.split("#");
+					const headings = [
+						...fs
+							.readFileSync("public" + file, "utf8")
+							.matchAll(/^## (.+)$/gm)
+					].map(m => slugMarkdownHeading(m[1]));
+					expect(headings, link).toContain(anchor);
+				}
+			}
+			const checks = answers
+				.split("### BIO" + (index + 1) + " core checks")[1]
+				.split("### Optional checks")[0];
+			expect([...checks.matchAll(/^\d\. /gm)]).toHaveLength(
+				module.curriculum.length - 1
 			);
 		}
 	});
-
-	it("preserves the distinctive source projects while making every card usable", () => {
-		const projectTitles = introToBiologyCourse.modules.flatMap(module =>
-			module.supplementalProjects.map(item => item.title)
+	it("supplies the guest graph and its limited matching rule", () => {
+		const values = table("For the Dinner Mystery").map(row =>
+			row.slice(1).map(Number)
 		);
-
-		expect(projectTitles).toHaveLength(24);
+		expect(values).toEqual([
+			[16, 2, 1],
+			[1, 14, 2],
+			[2, 1, 15],
+			[6, 7, 5]
+		]);
+		expect(
+			values.slice(0, 3).map(row => row.indexOf(Math.max(...row)))
+		).toEqual([0, 1, 2]);
+		expect(pack).toContain("For this puzzle only");
+		expect(answers).toContain("unknown, not zero");
+	});
+	it("supplies separate pH and substrate evidence without inventing an exact optimum", () => {
+		const rows = table("### Fictional E1 graph values");
+		const first = rows.slice(0, 4).map(row => row.map(Number));
+		expect(first).toEqual([
+			[2, 1],
+			[5, 6],
+			[7, 10],
+			[9, 3]
+		]);
+		expect(pack).toContain("an exact optimum between readings");
+		expect(pack).toMatch(/\| 4 \| 9 \|[\s\S]*\| 8 \| 9 \|/);
+		expect(answers).toContain("0, 4, 7, 9, 9");
+	});
+	it("states the volume assumption and an explicit counterexample for diffusion", () => {
+		expect(pack).toContain("equal volumes");
+		expect(18 / 9).toBeLessThan(4 / 1);
+		expect(answers).toContain(
+			"counts alone reverse the concentration ranking"
+		);
+		expect(pack).toContain("water, but not those solute particles");
+		expect(answers).toContain(
+			"A is simple diffusion; B facilitated diffusion; C ATP-coupled active transport; E osmosis"
+		);
+	});
+	it("supplies a balanced fictional energy allocation rather than a personal estimate", () => {
+		const allocations = table("### Fictional three-hour allocation").map(
+			row => Number(row[1])
+		);
+		expect(allocations).toEqual([45, 20, 15, 10, 10]);
+		expect(allocations.reduce((sum, n) => sum + n, 0)).toBe(100);
+		expect(answers).toContain("6 carbon, 12 hydrogen and 18 oxygen atoms");
+		expect(pack).toContain(
+			"neither calories nor measured human requirements"
+		);
+	});
+	it("supplies the complete feedback curve and a clearly fictional observational abstract", () => {
+		const rows = table("### Case A: Post-Meal Glucose Model").map(row =>
+			row.map(Number)
+		);
+		expect(rows).toEqual([
+			[0, 100],
+			[30, 160],
+			[60, 140],
+			[120, 110],
+			[180, 100]
+		]);
+		expect(pack).toContain(
+			"fictional teaching abstract, not a published-study summary"
+		);
+		expect(pack).toContain("12 in each group");
+		expect(pack).toContain("Hormone and immune activity were not measured");
+		expect(answers).toContain("difference of 3 relative units");
+	});
+	it("supplies kidney material accounts and an alien with stated and unknown anatomy", () => {
+		const rows = table("### Kidney boundary ledger");
+		expect(
+			rows.map(row => Number(row[1]) - Number(row[2]) + Number(row[3]))
+		).toEqual([5, 0, 3]);
+		expect(rows.map(row => Number(row[4]))).toEqual([5, 0, 3]);
+		expect(100 - 90).toBe(10);
+		expect(pack).toContain(
+			"Already small nutrient molecules enter through a surface"
+		);
+		expect(pack).toContain("earlier life stages are unspecified");
+	});
+	it("keeps the salad conclusion bounded and the optional capstone a saved continuation", () => {
+		expect(pack).toContain(
+			"No ingredient-specific exposure test is supplied"
+		);
+		expect(answers).toContain(
+			"do not uniquely identify the cause-bearing ingredient"
+		);
+		const capstone =
+			introToBiologyCourse.modules[7].supplementalProjects[0];
+		expect(capstone.content).toContain(
+			"Continue the saved required capstone"
+		);
+		expect(capstone.learningPath).toBe("choice");
+		expect(introToBiologyCourse.modules[0].curriculum[0].content).toContain(
+			"final core project can use the notes"
+		);
+	});
+	it("retains pacing, milestones and distinctive optional source project purposes", () => {
+		for (const module of introToBiologyCourse.modules) {
+			expect(module.estimatedTime).toMatch(/session/);
+			expect(module.keyBlocks!.length).toBeGreaterThanOrEqual(6);
+		}
+		const titles = introToBiologyCourse.modules.flatMap(m =>
+			m.supplementalProjects.map(i => i.title)
+		);
 		for (const title of [
 			"Project: Human Body Systems Map",
 			"Project: Dinner Mystery",
@@ -110,159 +224,67 @@ describe("Intro to Biology learner flow", () => {
 			"Project: Cell Factory Diagram",
 			"Project: Alien Venn Diagram",
 			"Project: Digestive Odyssey Exhibit"
-		]) {
-			expect(projectTitles, title).toContain(title);
-		}
-		for (const item of allItems()) {
-			expect(item.content.length, item.title).toBeGreaterThanOrEqual(650);
-			expect(
-				Boolean(
-					item.datasetLink ??
-					item.solutionLink ??
-					item.mediaLink ??
-					item.projectLink
-				),
-				item.title
-			).toBe(true);
-		}
+		])
+			expect(titles).toContain(title);
 	});
-
-	it("makes its human-biology case-study boundary and accessible evidence explicit", () => {
-		const setup = moduleText("BIO1 Human Body Systems");
-
-		expect(setup).toContain("introductory human-biology case study");
-		expect(setup).toContain(
-			"does not pretend that digestion alone is a complete survey"
+	it("retains accessible, private and introductory case-study boundaries", () => {
+		const metadata = introToBiologyCourse.developmentMetadata!;
+		expect(metadata.safetyPolicy.join(" ")).toContain(
+			"No personal diet, symptoms, diagnoses"
 		);
-		expect(setup).toContain("Color is never the only label");
-		expect(setup).toContain(
-			"never request comparisons of private body data"
+		expect(metadata.safetyPolicy.join(" ")).toContain(
+			"No required food handling"
 		);
-		expect(courseText()).toContain("**Accessible media alternative:**");
-		expect(courseText()).toContain(
-			"exclude personal diet, symptoms, diagnoses, body measurements"
+		expect(metadata.courseBoundaries.join(" ")).toContain(
+			"rather than a complete biology survey"
 		);
+		const text = introToBiologyCourse.modules
+			.flatMap(m => m.curriculum)
+			.map(i => i.content)
+			.join(" ");
+		expect(text).toContain("text description");
+		expect(text).toContain("Accessible media alternative");
 	});
-
-	it("connects digestion to cells, enzymes, and membrane transport", () => {
-		const digestion = moduleText("BIO3 Digestive Process");
-		const absorption = moduleText("BIO4 Digestion and Absorption");
-
-		expect(digestion).toContain(
-			"Food moves through an organ system, but digestion depends on tissue movement"
+	it("teaches the mechanism distinctions and exposes direct primary references", () => {
+		const text = introToBiologyCourse.modules
+			.map(m => m.curriculum[0].content)
+			.join(" ");
+		expect(text).toMatch(/Bile[\s\S]{0,150}not an enzyme/);
+		expect(text).toContain(
+			"random crossings continue while average net transfer is zero"
 		);
-		expect(digestion).toContain(
-			"Mechanical digestion changes size and mixing"
-		);
-		expect(digestion).toContain(
-			"bile supports lipid processing but is not"
-		);
-		expect(absorption).toContain(
-			"Simple diffusion and facilitated diffusion"
-		);
-		expect(absorption).toContain(
-			"many absorbed lipid products enter lymphatic pathways"
-		);
-		expect(absorption).toContain(
-			"equilibrium does not mean particles stop"
-		);
-		expect(resourceText()).toContain(
-			"biointeractive.org/classroom-resources/simulating-membrane-transport"
-		);
-	});
-
-	it("separates matter, energy, ATP, storage, and personal estimates", () => {
-		const energy = moduleText("BIO5 Energy Use and Storage");
-
-		expect(energy).toContain(
-			"Atoms are rearranged rather than converted into energy"
-		);
-		expect(energy).toContain(
-			"Energy is not created, stored as a substance inside ATP"
-		);
-		expect(energy).toContain(
-			"short-term transfer mechanism rather than a permanent battery"
-		);
-		expect(energy).toContain(
-			"no three-hour classroom model has enough information to predict an individual's exact"
-		);
-		expect(resourceText()).toContain(
-			"openstax.org/books/biology-2e/pages/6-1-energy-and-metabolism"
-		);
-	});
-
-	it("bounds feedback, abstract, microbiome, and medical claims", () => {
-		const regulation = moduleText("BIO6 Regulation of Digestion");
-
-		expect(regulation).toContain(
-			"Homeostasis is not a perfectly fixed state"
-		);
-		expect(regulation).toContain(
-			"Association, correlation, temporal order, and mechanism are different claims"
-		);
-		expect(regulation).toContain(
-			"does not prove that one organism caused the outcome"
-		);
-		expect(regulation).toContain(
-			"do not authorize diagnosis, treatment, supplement advice"
-		);
-	});
-
-	it("distinguishes elimination, excretion, filtration, and energy transfer", () => {
-		const waste = moduleText("BIO7 Elimination and Excretion");
-
-		expect(waste).toContain(
-			"Elimination removes material that remains in or is added to the digestive tract"
-		);
-		expect(waste).toContain("Excretion removes products of metabolism");
-		expect(waste).toContain(
-			"Heat leaving the body is energy transfer rather than matter excretion"
-		);
-		expect(waste).toContain(
-			"small materials and fluid can enter a nephron filtrate model"
-		);
-		expect(resourceText()).toContain(
+		expect(text).toContain("organelles");
+		expect(text).toContain(
 			"niddk.nih.gov/health-information/kidney-disease/kidneys-how-they-work"
 		);
+		expect(text).toContain(
+			"openstax.org/books/biology-2e/pages/5-2-passive-transport"
+		);
 	});
-
-	it("ships supplied evidence, answer keys, and a defensible capstone", () => {
-		const capstone = moduleText("BIO8 Digestive Odyssey Capstone");
-		const materials = fs.readFileSync(
-			"public/course-assets/biology/intro-biology-materials-pack.md",
-			"utf8"
-		);
-		const answers = fs.readFileSync(
-			"public/course-assets/biology/intro-biology-rubrics-answer-key.md",
-			"utf8"
-		);
-
-		expect(materials).toContain("## Body Systems Scenario Cards");
-		expect(materials).toContain(
-			"## Absorption and Membrane Transport Cases"
-		);
-		expect(materials).toContain("## Digestive Odyssey Capstone Packet");
-		expect(answers).toContain("## Common Evidence and Model Rubric");
-		expect(answers).toContain("## Capstone Defense Rubric");
-		for (const link of resourceText()
-			.split("\n")
-			.filter(link => link.startsWith("/course-assets/biology/"))) {
-			const [pathname, fragment] = link.split("#");
-			expect(fragment, link).toBeTruthy();
-			const source = fs.readFileSync(`public${pathname}`, "utf8");
-			expect(markdownHeadingSlugs(source), link).toContain(fragment);
-		}
-		expect(capstone).toContain(
-			"Every pathway arrow connects to a cited source"
-		);
-		expect(capstone).toContain("Preserve one before-and-after section");
-		expect(capstone).toContain(
-			"genetics, evolution, ecology, microbiology"
-		);
+	it("rejects a truncated prompt, missing reading, wrong course or unrelated case link", () => {
+		const module = introToBiologyCourse.modules[0],
+			item = module.curriculum[1];
 		expect(
-			introToBiologyCourse.developmentMetadata?.courseBoundaries.join(
-				"\n"
+			completeIntroBiologyActivity("intro-to-biology", module, {
+				...item,
+				content: item.content.slice(0, 60)
+			})
+		).toBe(false);
+		expect(
+			completeIntroBiologyActivity(
+				"intro-to-biology",
+				{ ...module, curriculum: module.curriculum.slice(1) },
+				item
 			)
-		).toContain("rather than a complete biology survey");
+		).toBe(false);
+		expect(
+			completeIntroBiologyActivity("another-course", module, item)
+		).toBe(false);
+		expect(
+			completeIntroBiologyActivity("intro-to-biology", module, {
+				...item,
+				content: item.content.replace("[Case inputs]", "[Other page]")
+			})
+		).toBe(false);
 	});
 });

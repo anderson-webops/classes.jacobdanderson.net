@@ -24,6 +24,8 @@ interface SourceActivityAnchor {
 	aliases?: string[];
 	id?: string;
 	learningPath?: CourseItemLearningPath;
+	preserveAssignment?: boolean;
+	preserveInstructions?: boolean;
 	projectLink?: string;
 	title: string;
 	prompt: string;
@@ -1077,9 +1079,18 @@ function createSourceActivityAnchorItems(
 			.map(anchor => ({
 				...(anchor.id ? { id: anchor.id } : {}),
 				...(anchor.aliases?.length ? { aliases: anchor.aliases } : {}),
+				...(anchor.preserveInstructions
+					? { preserveInstructions: true }
+					: {}),
+				...(anchor.preserveAssignment
+					? {
+							preserveAssignment: true,
+							contentKind: "assignment" as const
+						}
+					: {}),
 				title: anchor.title,
 				content: [
-					`**Project goal:** ${anchor.prompt}`,
+					`**${anchor.preserveAssignment ? "Goal" : "Project goal"}:** ${anchor.prompt}`,
 					"**Completion evidence:**",
 					...anchor.evidence.map(item => `- ${item}`)
 				].join("\n"),
@@ -2507,7 +2518,7 @@ const englishCourses = {
 			"JoR5 Figurative Language": [
 				{
 					title: "Figurative Language Drawing Set",
-					prompt: "Compare literal drawings with sentence context for idioms, similes, metaphors, and personification. Use phrases such as hard nut to crack, walk on eggshells, in a nutshell, as tall as a giraffe, The test was a breeze, and The wind whipped through my hair to infer the meaning of each type.",
+					prompt: "Compare literal pictures with these complete contexts: After several failed attempts, the puzzle was a hard nut to crack. To avoid upsetting a resting sibling, Kai had to walk on eggshells. In a nutshell, the trip went well. The sunflower was as tall as a giraffe. The test was a breeze, so the class finished early. The wind whipped through my hair. Compare the last sentence with The wind whispered a secret to the leaves. Explain intended meanings and justify idiom, simile, metaphor or personification labels. A phrase may fit more than one category; strong motion alone does not establish human behavior.",
 					evidence: [
 						"Drawing or written literal interpretation for each figurative phrase.",
 						"Definition of idiom, simile, metaphor, and personification using the phrase examples.",
@@ -2538,11 +2549,11 @@ const englishCourses = {
 			"JoR6 Master Project": [
 				{
 					title: "Master Project Choice and Evidence Plan",
-					prompt: "Preview the story-review and informational-report paths, confirm access to one selected text or an equivalent, and plan the summary or main idea, evidence, audience format, and revision check before building.",
+					prompt: "Choose one story-review, figurative-art, interview or news-report path and confirm access to its selected text. Plan the summary or main idea, at least three supporting details and audience format. Complete the selected response and document one revision.",
 					evidence: [
 						"Selected project path and accessible text.",
 						"Planning notes for summary or main idea, at least three supporting details, and the intended audience.",
-						"Completion checklist for the selected response format and one planned revision."
+						"Finished response in the selected format, with an evidence checklist and one documented revision."
 					]
 				},
 				{
@@ -4495,8 +4506,29 @@ const earlyElementaryAMathSourceAnchors: Record<
 	],
 	"EEA4 Module Project: Escape the Game": [
 		{
+			id: "early-elementary-a-math-eea4-module-project-escape-the-game-curriculum-escape-the-game-character-budget",
 			title: "Escape the Game Character Budget",
-			prompt: "Design a video-game character with a 100-point budget. Choose hair, suit, and extra features from the original point table, then calculate points used and points left.",
+			preserveAssignment: true,
+			preserveInstructions: true,
+			prompt: `Design a video-game character with a 100-point budget. Choose exactly one option from each category in this classroom point table:
+
+| Category | Option | Points |
+| --- | --- | ---: |
+| Hair | None | 0 |
+| Hair | Short | 10 |
+| Hair | Spiky | 20 |
+| Suit | Plain | 0 |
+| Suit | Armor | 35 |
+| Suit | Rocket | 45 |
+| Extra | None | 0 |
+| Extra | Map | 15 |
+| Extra | Shield | 25 |
+
+Draw and name the character. Add the three chosen prices, then subtract the total from 100. Change one choice and compare the new total and remaining points with the first design.
+
+For example, short hair and armor with no extra use 10 + 35 + 0 = 45 points. The budget has 100 - 45 = 55 points left. Check by adding 45 + 55 = 100.
+
+[Project self-check](/course-resource?asset=%2Fcourse-assets%2Fearly-elementary-a%2Fpractice-checks-v1.md%23character-budget&label=Character%20budget%20self-check)`,
 			evidence: [
 				"Character name and selected specs from each category.",
 				"Addition equation for total points used.",
@@ -4504,8 +4536,17 @@ const earlyElementaryAMathSourceAnchors: Record<
 			]
 		},
 		{
+			id: "early-elementary-a-math-eea4-module-project-escape-the-game-curriculum-liang-escape-route-grid",
 			title: "Liang Escape Route Grid",
-			prompt: "Plan a grid route from the bottom-left corner to the top-right corner. The route uses at least 20 right jumps, 15 left jumps, 30 up jumps, and 5 down jumps.",
+			preserveAssignment: true,
+			preserveInstructions: true,
+			prompt: `Draw a rectangular grid five squares across and 25 squares up. Start at the bottom-left corner and finish at the top-right corner. Each jump moves along one grid edge; the route stays inside the rectangle or on its boundary.
+
+The route uses at least 20 right jumps, 15 left jumps, 30 up jumps, and 5 down jumps. Keep a separate tally for each direction. A right jump followed by a left jump returns to the same point; an up jump followed by a down jump does the same.
+
+Find a route with the fewest total jumps that meets all four minimums. Mark the route in groups of jumps, count every group, and check both the final position and each directional total.
+
+[Project self-check](/course-resource?asset=%2Fcourse-assets%2Fearly-elementary-a%2Fpractice-checks-v1.md%23escape-route&label=Escape%20route%20self-check)`,
 			evidence: [
 				"Route sketch or coordinate-step list from start to exit.",
 				"Jump totals for right, left, up, and down directions.",
@@ -5179,7 +5220,7 @@ const lateElementaryAMathSourceAnchors: Record<string, SourceActivityAnchor[]> =
 				prompt: "Use the art-gallery lighting setup to place a light perpendicular to the ceiling, then rotate it left until it is 23 degrees from the ceiling and describe the new angle relationship.",
 				evidence: [
 					"Diagram of the original perpendicular light position.",
-					"Rotation record showing the 23-degree adjustment.",
+					"Rotation record showing a 67-degree turn from perpendicular and a final 23-degree ceiling angle.",
 					"Explanation of how the angle changed from a right angle."
 				]
 			}

@@ -3,14 +3,21 @@ import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { createPinia, setActivePinia } from "pinia";
 import { expect, it } from "vitest";
-import restoredEntrepreneurshipProjects from "../../test/fixtures/entrepreneurship-restored-core-identities.json";
-import restoredGrammarProjects from "../../test/fixtures/grammar-mechanics-restored-identities.json";
-import restoredLiteratureProjects from "../../test/fixtures/middle-school-literature-restored-identities.json";
-import restoredWritingProjects from "../../test/fixtures/middle-school-writing-restored-identities.json";
-import restoredSpeakingProjects from "../../test/fixtures/public-speaking-restored-identities.json";
 import { useAppStore } from "@/stores/app";
 import { useCoursesStore } from "@/stores/courses";
 import { courseCatalog } from "@/stores/courses/index";
+import elementaryAdditions from "../../test/fixtures/early-elementary-a-restored-identities.json";
+import elementaryBAdditions from "../../test/fixtures/early-elementary-b-restored-identities.json";
+import restoredEntrepreneurshipProjects from "../../test/fixtures/entrepreneurship-restored-core-identities.json";
+import restoredGrammarProjects from "../../test/fixtures/grammar-mechanics-restored-identities.json";
+import joyOfReadingAdditions from "../../test/fixtures/joy-of-reading-restored-identities.json";
+import lateElementaryAAdditions from "../../test/fixtures/late-elementary-a-restored-identities.json";
+import lateElementaryBAdditions from "../../test/fixtures/late-elementary-b-restored-identities.json";
+import restoredLiteratureProjects from "../../test/fixtures/middle-school-literature-restored-identities.json";
+import restoredWritingProjects from "../../test/fixtures/middle-school-writing-restored-identities.json";
+import pictureBookAdditions from "../../test/fixtures/picture-book-restored-identities.json";
+import restoredSpeakingProjects from "../../test/fixtures/public-speaking-restored-identities.json";
+import restoredPythonRecaps from "../../test/fixtures/python-level-1-restored-recap-identities.json";
 
 const baseline = JSON.parse(
 	readFileSync(
@@ -38,11 +45,18 @@ const addedIdentities: Record<
 	string,
 	{ moduleId: string; id: string; section: string }[]
 > = {
+	"early-elementary-a-math": elementaryAdditions,
+	"early-elementary-b-math": elementaryBAdditions,
+	"late-elementary-a-math": lateElementaryAAdditions,
+	"late-elementary-b-math": lateElementaryBAdditions,
+	"early-elementary-a-reading": joyOfReadingAdditions,
+	"early-elementary-b-picture-book": pictureBookAdditions,
 	"entrepreneurship-101": restoredEntrepreneurshipProjects,
 	"middle-school-c-grammar": restoredGrammarProjects,
 	"middle-school-a-literature": restoredLiteratureProjects,
 	"introduction-to-public-speaking": restoredSpeakingProjects,
 	...restoredWritingProjects,
+	...restoredPythonRecaps,
 	"scratch-level-1-classroom": [
 		{
 			moduleId: "scratch-classroom-6",
