@@ -3023,7 +3023,7 @@ for (const module of [
 export const javaLevel3Course: RawCourse = {
 	...javaLevel3SourceCourse,
 	modules: [
-		...javaLevel3PrimaryModules,
+		...javaLevel3PrimaryModules.map(completeJavaRecursionModule),
 		buildJavaLevel3PlacementArchive(javaLevel3PlacementArchiveModules),
 		buildAdvancedJavaEngineeringArchive(javaLevel3AdvancedModules),
 		{
@@ -3036,5 +3036,5 @@ export const javaLevel3Course: RawCourse = {
 				learningPath: "core"
 			}))
 		}
-	].map(completeJavaRecursionModule)
+	]
 };
