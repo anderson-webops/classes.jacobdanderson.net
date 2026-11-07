@@ -1,3 +1,4 @@
+import { javaArchitectureURL } from "@/modules/javaArchitectureResources";
 import { javaCollaborationURL } from "@/modules/javaCollaborationResources";
 import { javaBehavioralURL } from "@/modules/javaBehavioralResources";
 import { javaStructuralURL } from "@/modules/javaStructuralResources";
@@ -153,7 +154,7 @@ describe("saved course progress identities", () => {
 					)
 				);
 				expect(owners, previousId).toHaveLength(1);
-				if (index <= 6) {
+				if (index <= 7) {
 					const current = owners![0];
 					expect(current.contentKind, previousId).toBe("assignment");
 					if (purpose === "Transfer") {

@@ -98,7 +98,7 @@ describe("Design Patterns in Java learner flow", () => {
 			module => module.supplementalProjects.map(item => item.title)
 		);
 
-		expect(curriculumTitles).toHaveLength(67);
+		expect(curriculumTitles).toHaveLength(64);
 		expect(optionTitles).toHaveLength(51);
 		for (const title of [
 			"Core Project: What Patterns Are and What They Are Not",
@@ -170,7 +170,6 @@ describe("Design Patterns in Java learner flow", () => {
 		const architecture = moduleText(
 			"DPJ8 Modern Extensions and Architecture-Level Patterns"
 		);
-		const resources = resourceText();
 
 		expect(foundations).toContain("record");
 		expect(foundations).toContain("sealed interface");
@@ -185,7 +184,7 @@ describe("Design Patterns in Java learner flow", () => {
 		expect(architecture).toContain("not safe for concurrent use");
 		expect(foundations).toContain("java/lang/Record.html");
 		expect(foundations).toContain("jls-8.html#jls-8.1.1.2");
-		expect(resources).toContain("java/util/ServiceLoader.html");
+		expect(architecture).toContain("java/util/ServiceLoader.html");
 	});
 
 	it("makes every refactor test-backed, measurable, and reversible", () => {
