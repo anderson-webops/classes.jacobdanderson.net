@@ -8,7 +8,7 @@ on:
       course:
         description: Course verification to run
         type: choice
-        options: [pygames, networking, ai-setup, self-study, physics-models, bootcamp, scratch-originals, scratch-readings, course-audit, scratch-tasks, tracker-evidence, native-release-evidence]
+        options: [java-recursion, pygames, networking, ai-setup, self-study, physics-models, bootcamp, scratch-originals, scratch-readings, course-audit, scratch-tasks, tracker-evidence, native-release-evidence]
         default: pygames
       browser_run_id:
         description: Networking browser export workflow run
@@ -174,6 +174,7 @@ jobs:
           test/pygames-course-workflows.spec.test.ts
           test/store.courses.python-pygames-classroom.spec.test.ts
           test/store.courses.catalog-identities.spec.test.ts
+          test/java-recursion-workspace.spec.test.ts test/store.courses.java-level-3-flow.spec.test.ts
           --no-file-parallelism --maxWorkers=1
       - name: Build the complete site
         run: node scripts/classes-family-heavy-task.mjs -- npm run build
@@ -372,13 +373,13 @@ jobs:
           retention-days: 14
 
   self-study:
-    if: inputs.course == 'self-study' || inputs.course == 'physics-models' || inputs.course == 'bootcamp' || inputs.course == 'scratch-originals' || inputs.course == 'scratch-readings' || inputs.course == 'course-audit' || inputs.course == 'scratch-tasks'
+    if: inputs.course == 'java-recursion' || inputs.course == 'self-study' || inputs.course == 'physics-models' || inputs.course == 'bootcamp' || inputs.course == 'scratch-originals' || inputs.course == 'scratch-readings' || inputs.course == 'course-audit' || inputs.course == 'scratch-tasks'
     runs-on: ubuntu-24.04
     timeout-minutes: 40
     env:
       CLASSES_FAMILY_TASK_ID: self-study-courses-${{ github.run_id }}
       SELF_STUDY_BROWSER_PROOF_DIR: ${{ github.workspace }}/output/self-study-browser
-      SELF_STUDY_BROWSER_COURSES: ${{ inputs.course == 'bootcamp' && 'scratch-level-1-bootcamp' || inputs.course == 'physics-models' && 'pre-algebra-a,intro-to-physics,physics-level-2' || inputs.course == 'self-study' && inputs.self_study_courses || '' }}
+      SELF_STUDY_BROWSER_COURSES: ${{ inputs.course == 'java-recursion' && 'java-level-3' || inputs.course == 'bootcamp' && 'scratch-level-1-bootcamp' || inputs.course == 'physics-models' && 'pre-algebra-a,intro-to-physics,physics-level-2' || inputs.course == 'self-study' && inputs.self_study_courses || '' }}
       PHYSICS2_BROWSER_PROOF_DIR: ${{ github.workspace }}/output/self-study-browser/physics-models
       SCRATCH_ORIGINAL_BROWSER_PROOF_DIR: ${{ github.workspace }}/output/self-study-browser/scratch-originals
       COURSE_CATALOG_PROOF_DIR: ${{ github.workspace }}/output/self-study-browser/catalog
@@ -509,6 +510,17 @@ jobs:
         env:
           SCRATCH_BROWSER_READING_ONLY: '1'
         run: node scripts/classes-family-heavy-task.mjs -- node --test test/scratch-browser.test.mjs
+      - name: Verify Java recursion course actions and saved downloads
+        if: inputs.course == 'java-recursion'
+        env:
+          JAVA_RECURSION_BROWSER_PROOF_DIR: ${{ github.workspace }}/output/self-study-browser/java-recursion
+          COURSE_IMPORT_SCREENSHOT_DIR: ${{ github.workspace }}/output/self-study-browser/java-recursion/screenshots
+        run: node scripts/classes-family-heavy-task.mjs -- node --test --test-concurrency=1 test/java-recursion-course-browser.test.mjs
+      - name: Compile and test actual Java course downloads on JDK 21
+        if: inputs.course == 'java-recursion'
+        env:
+          JAVA_RECURSION_BROWSER_PROOF_DIR: ${{ github.workspace }}/output/self-study-browser/java-recursion
+        run: python3 -I -B test/java-recursion-exported-native.py
       - name: Retain self-study pages, audits and original failures
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a

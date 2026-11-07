@@ -35,6 +35,7 @@ import {
 	lessonContentSections
 } from "@/modules/courseLessonPresentation";
 import { unmatchedCourseProgress } from "@/modules/courseProgressHistory";
+import { javaRecursionProjectKey } from "@/modules/javaRecursionResources";
 import {
 	javascriptCourseProjectKey,
 	javascriptCourseResource
@@ -1764,14 +1765,19 @@ function ideStarterHref(item: CourseModuleItem, resource: ResourceLink) {
 											  "c-systems-engineering"
 											? c17CourseProjectKey
 											: selectedCourse.value.id ===
-														"usaco-bronze" ||
-												  selectedCourse.value.id ===
-														"usaco-bronze-on-demand"
-												? bronzeRequiredProjectKey
+												  "java-level-3"
+												? javaRecursionProjectKey
 												: selectedCourse.value.id ===
-													  "usaco-silver"
-													? silverJavaProjectKey
-													: goldHistoricalProjectKey)(
+															"usaco-bronze" ||
+													  selectedCourse.value
+															.id ===
+															"usaco-bronze-on-demand"
+													? bronzeRequiredProjectKey
+													: selectedCourse.value
+																.id ===
+														  "usaco-silver"
+														? silverJavaProjectKey
+														: goldHistoricalProjectKey)(
 			selectedCourse.value.id,
 			item.id,
 			resource.kind === "solution" ? "reference" : "starter",

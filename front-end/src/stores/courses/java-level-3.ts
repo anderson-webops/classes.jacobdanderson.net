@@ -3,6 +3,7 @@ import {
 	classroomReferenceItem,
 	gitCourseGuideLink
 } from "./classroomReferenceGuides";
+import { completeJavaRecursionModule } from "./javaRecursionTeaching";
 import { isCoreProjectTitle } from "./projectGrouping";
 import { buildProjectGuidance } from "./projectGuidance";
 import { pendingStaticMediaNotice, staticMediaUrl } from "./staticMedia";
@@ -3035,5 +3036,5 @@ export const javaLevel3Course: RawCourse = {
 				learningPath: "core"
 			}))
 		}
-	]
+	].map(completeJavaRecursionModule)
 };
