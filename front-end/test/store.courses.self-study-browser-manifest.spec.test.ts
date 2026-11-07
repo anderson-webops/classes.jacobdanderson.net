@@ -223,6 +223,20 @@ const cases = [
 const markdown = new MarkdownIt({ breaks: true, html: false, linkify: true });
 const digest = (value: string) =>
 	createHash("sha256").update(value).digest("hex");
+const chemistryModuleCounts: Record<string, [number, number, number]> = {
+	CHM1: [6, 1, 2],
+	CHM2: [5, 1, 4],
+	CHM3: [5, 2, 2],
+	CHM4: [5, 1, 3],
+	CHM5: [6, 1, 2],
+	CHM6: [5, 2, 3],
+	CHM7: [4, 1, 6],
+	CHM8: [3, 1, 6],
+	CHM9: [8, 1, 2],
+	CHM10: [5, 1, 2],
+	CHM11: [5, 2, 3],
+	Reference: [5, 0, 2]
+};
 const intentionalMathLineBreaks: Record<string, Record<string, number>> = {
 	"algebra-2a": {
 		"Applications and Parabola Geometry": 1,
@@ -351,6 +365,9 @@ it.each(
 						expect(displayed, rawItem.title).toBeDefined();
 						expect(displayed.content, rawItem.title).toBe(
 							rawItem.content.trim()
+						);
+						expect(displayed.contentKind, rawItem.title).toBe(
+							rawItem.contentKind
 						);
 					}
 				}
@@ -680,7 +697,19 @@ it.each(
 							? 5
 							: 4
 				);
-			else if (!algebra && !algebra1)
+			else if (id === "intro-to-chemistry") {
+				const expected =
+					chemistryModuleCounts[module.title.split(" ")[0]];
+				expect(expected, module.title).toBeDefined();
+				expect(
+					[
+						module.readings.length,
+						module.projects.length,
+						module.optional.length
+					],
+					module.title
+				).toEqual(expected);
+			} else if (!algebra && !algebra1)
 				expect(module.readings, module.title).toHaveLength(1);
 			else if (algebra && module.readings.length === 0)
 				expect(module.title).toMatch(/capstone/i);
