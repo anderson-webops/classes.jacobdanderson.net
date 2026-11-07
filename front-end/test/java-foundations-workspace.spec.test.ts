@@ -247,3 +247,71 @@ it("shares core continuations, keeps the reference separate and preserves DPJ1 k
 		expect(javaFoundationsImportFiles(url)).toBeNull();
 	}
 });
+
+it("offers the complete worked example to a learner and imports its three files", async () => {
+	setActivePinia(createPinia());
+	vi.stubGlobal("crypto", webcrypto);
+	const requested: string[] = [];
+	const prefix =
+		"https://raw.githubusercontent.com/" +
+		fixture.repository +
+		"/" +
+		fixture.revision +
+		"/";
+	vi.stubGlobal(
+		"fetch",
+		vi.fn(async (url: string) => {
+			expect(url.startsWith(prefix)).toBe(true);
+			const path = url.slice(prefix.length);
+			requested.push(path);
+			expect(sources[path], path).toBeDefined();
+			return new Response(sources[path].content);
+		})
+	);
+	const course = (await useCoursesStore().loadCourseById(
+		"design-patterns-in-java"
+	))!;
+	const reading = course.modules.find(
+		module => module.id === javaFoundationsModuleID
+	)!.curriculum[0];
+	expect(reading.projectLink).toBe(javaFoundationsURL("example"));
+	const files = await loadPythonIdeStarterFilesFromGitHub(
+		reading.projectLink!,
+		"java"
+	);
+	expect(files.map(file => file.name)).toEqual([
+		"Main.java",
+		"ContractTests.java",
+		"README.md"
+	]);
+	expect(requested).toEqual(
+		files.map(file => "DPJ2-Seam-Worked-Example/" + file.name)
+	);
+	const project = createPythonIdeProject("java", {
+		files,
+		courseProjectKey: javaFoundationsProjectKey(
+			"design-patterns-in-java",
+			javaFoundationsReadingID,
+			"starter",
+			reading.projectLink!
+		)
+	});
+	expect(project.activeFileName).toBe("Main.java");
+	expect(
+		javaNativeBuildInstructions(project.courseProjectKey)?.join("\n")
+	).toContain("Seam worked contracts: 14 passed");
+	expect(
+		javaNativeBuildInstructions(project.courseProjectKey)?.join("\n")
+	).toContain("Main.java ContractTests.java");
+	const archive = unzipSync(await createProjectArchive(project));
+	expect(Object.keys(archive)).toHaveLength(3);
+	for (const file of files) {
+		expect(file.content).toBe(
+			sources["DPJ2-Seam-Worked-Example/" + file.name].content
+		);
+		const path = Object.keys(archive).find(path =>
+			path.endsWith("/" + file.name)
+		)!;
+		expect(strFromU8(archive[path])).toBe(file.content);
+	}
+});

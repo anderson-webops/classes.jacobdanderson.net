@@ -98,7 +98,28 @@ with tempfile.TemporaryDirectory(prefix="java-foundations-exports-") as temporar
                     extension=run([JAVA,"-cp","classes","ContractTests"],cwd=output)
                     assert extension.returncode!=0 and "UnsupportedOperationException: Implement the locale-independent uppercase-title extension." in extension.stderr,extension
                 results.append({"role":role,"width":width,"variant":variant,"archive":str(archive),"sha256":hashlib.sha256(archive.read_bytes()).hexdigest(),"files":13,"result":outcome,"optionalIndependentOfCore":role=="solution"})
-assert len(results)==8
+
+    for width in [390,1280]:
+        for variant in ["exact","edited"]:
+            archive=SOURCE/"worked-example"/f"starter-{width}-{variant}.zip"
+            assert archive.is_file(),archive
+            output=Path(temporary)/f"worked-{width}-{variant}";output.mkdir()
+            with zipfile.ZipFile(archive) as zipped:
+                names=zipped.namelist();assert len(names)==len(set(names))==3
+                for filename in ["Main.java","ContractTests.java","README.md"]:
+                    matches=[name for name in names if name.endswith("/"+filename)];assert len(matches)==1
+                    data=zipped.read(matches[0]);original=FIXTURE["files"]["DPJ2-Seam-Worked-Example/"+filename]
+                    if variant=="exact":assert hashlib.sha256(data).hexdigest()==original["sha256"]
+                    else:
+                        suffix=f"\n// Saved foundations trace {width}\n" if filename=="Main.java" else f"\nSaved foundations trace {width}\n" if filename=="README.md" else ""
+                        assert data.decode()==original["content"]+suffix
+                    (output/filename).write_bytes(data)
+            run([JAVAC,"--release","21","-Xlint:all","-Werror","Main.java","ContractTests.java"],cwd=output,check=True)
+            contracts=run([JAVA,"ContractTests"],cwd=output,check=True)
+            assert contracts.stdout=="Seam worked contracts: 14 passed\n",contracts
+            demo=run([JAVA,"Main"],cwd=output,check=True);assert demo.stdout=="Ready\n",demo
+            results.append({"role":"starter","width":width,"variant":variant,"archive":str(archive),"sha256":hashlib.sha256(archive.read_bytes()).hexdigest(),"files":3,"result":contracts.stdout.strip(),"workedExample":True})
+assert len(results)==12
 proof={"accepted":True,"jdk":version.stdout.strip(),"actualBrowserArchives":results,
        "temporaryBuildsCleaned":True,"learnerRefactoringReasoningInferred":False}
 (SOURCE/"native-export-proof.json").write_text(json.dumps(proof,indent=2)+"\n")

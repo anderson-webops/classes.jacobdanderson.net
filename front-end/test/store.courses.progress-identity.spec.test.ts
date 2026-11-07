@@ -1,3 +1,6 @@
+import { javaFoundationsURL } from "@/modules/javaFoundationsResources";
+import { javaPatternsURL } from "@/modules/javaPatternsResources";
+import { javaRecursionURL } from "@/modules/javaRecursionResources";
 import { createPinia, setActivePinia } from "pinia";
 import { describe, expect, it } from "vitest";
 import { useCoursesStore } from "@/stores/courses";
@@ -145,12 +148,30 @@ describe("saved course progress identities", () => {
 					)
 				);
 				expect(owners, previousId).toHaveLength(1);
-				expect(owners?.[0].projectLink, previousId).toMatch(
-					new RegExp(
-						`-dpj${index + 1}-${historicalId(subject)}-supplemental-${number}/starter$`,
-						"u"
-					)
-				);
+				if (index <= 1) {
+					const current = owners![0];
+					expect(current.contentKind, previousId).toBe("assignment");
+					if (purpose === "Transfer") {
+						expect(current.projectLink, previousId).toBeUndefined();
+						expect(
+							current.solutionLink,
+							previousId
+						).toBeUndefined();
+					} else {
+						const starter =
+							index === 0
+								? javaPatternsURL("comparison", "starter")
+								: javaFoundationsURL("starter");
+						expect(current.projectLink, previousId).toBe(starter);
+					}
+				} else {
+					expect(owners?.[0].projectLink, previousId).toMatch(
+						new RegExp(
+							`-dpj${index + 1}-${historicalId(subject)}-supplemental-${number}/starter$`,
+							"u"
+						)
+					);
+				}
 				checkedIds++;
 			}
 		}
@@ -367,12 +388,33 @@ describe("saved course progress identities", () => {
 					)
 				);
 				expect(owners, previousId).toHaveLength(1);
-				expect(owners?.[0].projectLink, previousId).toMatch(
-					new RegExp(
-						`-${previousModuleId.slice("java-level-3-".length)}-supplemental-${practiceNumber}/starter$`,
-						"u"
-					)
-				);
+				if (moduleTitle === "AJ4 Recursion") {
+					const current = owners![0];
+					expect(current.contentKind, previousId).toBe("assignment");
+					if (purpose === "Transfer") {
+						expect(current.projectLink, previousId).toBe(
+							javaRecursionURL(
+								"AJ4-Recursion-Practice-Packs/starter"
+							)
+						);
+					} else {
+						expect(current.projectLink, previousId).toBeUndefined();
+						expect(
+							current.solutionLink,
+							previousId
+						).toBeUndefined();
+						expect(current.content, previousId).toContain(
+							"state-trace worksheet"
+						);
+					}
+				} else {
+					expect(owners?.[0].projectLink, previousId).toMatch(
+						new RegExp(
+							`-${previousModuleId.slice("java-level-3-".length)}-supplemental-${practiceNumber}/starter$`,
+							"u"
+						)
+					);
+				}
 				checkedIds++;
 			}
 		}

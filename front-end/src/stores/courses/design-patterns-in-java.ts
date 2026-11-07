@@ -1,6 +1,6 @@
-import { completeJavaFoundations } from "./javaFoundationsTeaching";
 import type { RawCourse, RawCourseModuleItem } from "./types";
 import { buildImplementationLabGuidance } from "./implementationLabGuidance";
+import { completeJavaFoundations } from "./javaFoundationsTeaching";
 import { completeJavaPatternsOpening } from "./javaPatternsOpeningTeaching";
 import { buildProjectGuidance } from "./projectGuidance";
 

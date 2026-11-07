@@ -421,6 +421,7 @@ jobs:
           node scripts/classes-family-heavy-task.mjs --
           npm exec -w front-end -- vitest run
           test/store.courses.catalog-identities.spec.test.ts
+          test/store.courses.progress-identity.spec.test.ts
           test/java-foundations-workspace.spec.test.ts
           test/java-patterns-workspace.spec.test.ts test/store.courses.design-patterns-java-flow.spec.test.ts
           test/java-recursion-workspace.spec.test.ts test/store.courses.java-level-3-flow.spec.test.ts

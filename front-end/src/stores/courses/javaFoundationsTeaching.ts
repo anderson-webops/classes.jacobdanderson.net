@@ -4,16 +4,15 @@ import {
 	javaFoundationsModuleID,
 	javaFoundationsURL
 } from "@/modules/javaFoundationsResources";
+
 function resources(section: string) {
 	const path =
 		"/course-assets/design-patterns-in-java/foundations-checks.md#";
-	return (
-		"\n\n[Case inputs](" +
-		courseAssetViewerUrl(path + section + "-inputs") +
-		") · [Project self-check](" +
-		courseAssetViewerUrl(path + section + "-answers") +
-		")"
-	);
+	return `\n\n[Case inputs](${courseAssetViewerUrl(
+		`${path + section}-inputs`
+	)}) · [Project self-check](${courseAssetViewerUrl(
+		`${path + section}-answers`
+	)})`;
 }
 function task(item: RawCourseModuleItem, section: string): RawCourseModuleItem {
 	return {
@@ -41,6 +40,46 @@ export function completeJavaFoundations(
 				],
 				title: "Java Design Foundations Core Concepts",
 				content: `**Course flow:** Compare the supplied ReportBlob with a package-based report publisher, trace one publication through its collaborators, complete the three core methods, and choose optional analysis or uppercase-title work. Predict output and failure paths before checking the worked answers.
+
+### A complete constructor-injection example
+
+A Message contains one non-null immutable String. Sender receives its Sink through the constructor and writes the message once. The demonstration supplies an in-memory destination with a method reference. This first example permits empty and multiline strings; the report project below adds its own line and list-ownership rules.
+
+\`\`\`java
+import java.util.Objects;
+public class Main {
+    public record Message(String text) {
+        public Message { Objects.requireNonNull(text, "text"); }
+    }
+    @FunctionalInterface
+    public interface Sink { void write(String text); }
+    public static final class Sender {
+        private final Sink sink;
+        public Sender(Sink sink) { this.sink = Objects.requireNonNull(sink, "sink"); }
+        public void send(Message message) {
+            sink.write(Objects.requireNonNull(message, "message").text());
+        }
+    }
+    public static String demonstration(String text) {
+        StringBuilder recorded = new StringBuilder();
+        new Sender(recorded::append).send(new Message(text));
+        return recorded.toString();
+    }
+    public static void main(String[] args) {
+        System.out.println(demonstration("Ready"));
+    }
+}
+\`\`\`
+
+Open the worked example to import Main.java, ContractTests.java, and README.md. Use Java 21 in its extracted folder:
+
+\`\`\`sh
+javac --release 21 -Xlint:all -Werror Main.java ContractTests.java
+java ContractTests
+java Main
+\`\`\`
+
+The harness reports Seam worked contracts: 14 passed, and Main prints Ready. Changing the message to Checked produces Checked. A null message is rejected before a sink call, and a sink failure propagates. The method reference recorded::append implements the single Sink operation. Run displays this example's native commands. Keep this example and the report project in separate folders because both define Main.
 
 ### Contracts and responsibility boundaries
 
@@ -247,7 +286,7 @@ A new external class implementing Outcome fails compilation because it is outsid
 
 ### Build and completion workflow
 
-The source button opens a confirmed 13-file import: Main.java, ContractTests.java, README.md, sources.txt, and nine Java files under src/report. Preserve the src tree and use Java 21 from the extracted project root:
+The core project’s starter button opens a confirmed 13-file import: Main.java, ContractTests.java, README.md, sources.txt, and nine Java files under src/report. Preserve the src tree and use Java 21 from the extracted project root:
 
 \`\`\`sh
 javac --release 21 -Xlint:all -Werror -d classes @sources.txt
@@ -259,12 +298,13 @@ The compiler's -d classes option creates package directories for compiled output
 
 The starter has three core methods to implement: Report construction, TextFormatter.format, and ReportPublisher.publish. The optional UppercaseTitleFormatter method is reached by java -cp classes ContractTests, which checks both core and extension and reports Complete foundations contracts: 654 passed. A finished core remains runnable while that optional method is unfinished.
 
-Keep the first learner attempt separate from the reference. The refactoring exercise, core project, and optional extension reuse the same learner project. The reading and related worked-code actions share a separate reference. Preserve a before/after responsibility map, dependency arrows, and a trace of one successful and one refused or failed path; passing output alone does not establish a useful design.
+Keep the first learner attempt separate from the reference. The refactoring exercise, core project, and optional extension reuse the same learner project. Reference actions share a separate project. Preserve a before/after responsibility map, dependency arrows, and a trace of one successful and one refused or failed path; passing output alone does not establish a useful design.
 `,
 				contentKind: "reading",
 				preserveInstructions: true,
 				learningPath: "core",
 				ideImport: true,
+				projectLink: javaFoundationsURL("example"),
 				solutionLink: javaFoundationsURL("solution")
 			},
 			task(

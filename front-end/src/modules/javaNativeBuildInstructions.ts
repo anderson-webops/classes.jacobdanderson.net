@@ -1,6 +1,6 @@
 import {
-	javaFoundationsReadingID,
-	javaFoundationsCoreID
+	javaFoundationsCoreID,
+	javaFoundationsReadingID
 } from "./javaFoundationsResources";
 import {
 	javaPatternsExtensionID,
@@ -131,6 +131,24 @@ export function javaNativeBuildInstructions(
 ): string[] | null {
 	const parts = (courseProjectKey ?? "").split(":");
 	const [course, item, role, extra] = parts;
+	if (
+		course === "design-patterns-in-java" &&
+		item === javaFoundationsReadingID &&
+		role === "starter" &&
+		parts.length === 4 &&
+		extra === "native-java-foundations"
+	) {
+		return [
+			"Java 21 worked constructor-injection example",
+			"Save and download its ZIP, extract it, and use a terminal in this example's own folder.",
+			"javac --release 21 -Xlint:all -Werror Main.java ContractTests.java",
+			"java ContractTests",
+			"java Main",
+			"The complete example has no unfinished methods. Its harness reports Seam worked contracts: 14 passed, and Main prints Ready.",
+			"This example reads no standard input. Keep its Main separate from the report project. Run displays the native Java 21 commands."
+		];
+	}
+
 	if (
 		course === "design-patterns-in-java" &&
 		[javaFoundationsReadingID, javaFoundationsCoreID].includes(

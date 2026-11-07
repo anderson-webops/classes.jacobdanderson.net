@@ -1,21 +1,22 @@
 import { githubRawUrl, parseGitHubResource } from "@/modules/codePreview";
 import { javaPatternsProjectKey } from "./javaPatternsResources";
+
 export const javaFoundationsRevision =
-	"36edc08edc3fc9cb138bb30eda588d17c906f612";
+	"8859cf8d9def175e2f6e9299e3e06c7a16a74f80";
 export const javaFoundationsModuleID =
 	"design-patterns-in-java-dpj2-java-design-foundations";
-export const javaFoundationsReadingID =
-	javaFoundationsModuleID +
-	"-curriculum-java-design-foundations-core-concepts";
-export const javaFoundationsCoreID =
-	javaFoundationsModuleID +
-	"-curriculum-core-project-java-design-foundations";
-export const javaFoundationsBlobID =
-	javaFoundationsModuleID +
-	"-curriculum-refactoring-exercise-untangle-a-responsibility-blob";
-export const javaFoundationsExtensionID =
-	javaFoundationsModuleID +
-	"-supplemental-java-design-foundations-extension-practice";
+export const javaFoundationsReadingID = `${
+	javaFoundationsModuleID
+}-curriculum-java-design-foundations-core-concepts`;
+export const javaFoundationsCoreID = `${
+	javaFoundationsModuleID
+}-curriculum-core-project-java-design-foundations`;
+export const javaFoundationsBlobID = `${
+	javaFoundationsModuleID
+}-curriculum-refactoring-exercise-untangle-a-responsibility-blob`;
+export const javaFoundationsExtensionID = `${
+	javaFoundationsModuleID
+}-supplemental-java-design-foundations-extension-practice`;
 export const javaFoundationsReferenceItems = [
 	"design-patterns-in-java-dpj2-java-design-foundations-curriculum-java-design-foundations-core-concepts",
 	"design-patterns-in-java-dpj2-java-design-foundations-curriculum-refactoring-exercise-untangle-a-responsibility-blob",
@@ -40,7 +41,14 @@ export const javaFoundationsFiles = [
 	"src/report/legacy/ReportBlob.java",
 	"src/report/examples/LanguageChoices.java"
 ] as const;
-export function javaFoundationsURL(role: "starter" | "solution") {
+export const javaFoundationsWorkedFiles = [
+	"Main.java",
+	"ContractTests.java",
+	"README.md"
+] as const;
+export function javaFoundationsURL(role: "starter" | "solution" | "example") {
+	if (role === "example")
+		return `https://github.com/instruction-material/Java-Level-3/tree/${javaFoundationsRevision}/DPJ2-Seam-Worked-Example`;
 	return `https://github.com/instruction-material/Java-Level-3/tree/${javaFoundationsRevision}/DPJ2-Report-Foundations-Packs/${role}`;
 }
 export function javaFoundationsResource(url: string) {
@@ -51,15 +59,19 @@ export function javaFoundationsResource(url: string) {
 		resource.owner.toLowerCase() !== "instruction-material" ||
 		resource.repo.toLowerCase() !== "java-level-3" ||
 		resource.ref !== javaFoundationsRevision
-	)
+	) {
 		return null;
+	}
 	const [pack, role, extra] = resource.path.split("/");
+	if (pack === "DPJ2-Seam-Worked-Example" && role === undefined)
+		return { resource, pack, role: "example" as const };
 	if (
 		pack !== "DPJ2-Report-Foundations-Packs" ||
 		extra !== undefined ||
 		(role !== "starter" && role !== "solution")
-	)
+	) {
 		return null;
+	}
 	return { resource, pack, role };
 }
 export function javaFoundationsProjectKey(
@@ -72,9 +84,11 @@ export function javaFoundationsProjectKey(
 	if (!selected || courseID !== "design-patterns-in-java")
 		return javaPatternsProjectKey(courseID, itemID, role, url);
 	const readingReference =
+		selected.role !== "example" &&
 		role === "reference" &&
 		(javaFoundationsReferenceItems as readonly string[]).includes(itemID);
 	const learnerContinuation =
+		selected.role !== "example" &&
 		role === "starter" &&
 		[javaFoundationsBlobID, javaFoundationsExtensionID].includes(itemID);
 	const maintainedID = readingReference
@@ -87,7 +101,11 @@ export function javaFoundationsProjectKey(
 export function javaFoundationsImportFiles(url: string) {
 	const selected = javaFoundationsResource(url);
 	if (!selected) return null;
-	return javaFoundationsFiles.map(name => {
+	const names =
+		selected.role === "example"
+			? javaFoundationsWorkedFiles
+			: javaFoundationsFiles;
+	return names.map(name => {
 		const path = `${selected.resource.path}/${name}`;
 		return {
 			name,
