@@ -36,6 +36,7 @@ import { geometryACourse } from "@/stores/courses/geometry-a";
 import { geometryBCourse } from "@/stores/courses/geometry-b";
 import { middleSchoolIntegratedScienceCourse } from "@/stores/courses/middle-school-integrated-science";
 import { introToBiologyCourse } from "@/stores/courses/intro-to-biology";
+import { introToChemistryCourse } from "@/stores/courses/intro-to-chemistry";
 import { elementaryScienceCourse } from "@/stores/courses/elementary-science";
 import { preAlgebraACourse } from "@/stores/courses/pre-algebra-a";
 import {
@@ -56,6 +57,12 @@ import {
 } from "@/stores/courses/source-library-courses";
 
 const cases = [
+	{
+		id: "intro-to-chemistry",
+		source: introToChemistryCourse,
+		readings: 62,
+		additions: []
+	},
 	{
 		id: "intro-to-biology",
 		source: introToBiologyCourse,
@@ -363,6 +370,7 @@ it.each(
 			const completeAssignment = [
 				"elementary-science",
 				"intro-to-biology",
+				"intro-to-chemistry",
 				"middle-school-integrated-science",
 				"early-elementary-a-reading",
 				"early-elementary-b-picture-book"
@@ -370,6 +378,7 @@ it.each(
 			const fullBlocks = [
 				"elementary-science",
 				"intro-to-biology",
+				"intro-to-chemistry",
 				"middle-school-integrated-science",
 				"early-elementary-a-math",
 				"early-elementary-b-math",
@@ -499,7 +508,8 @@ it.each(
 				![
 					"middle-school-integrated-science",
 					"elementary-science",
-					"intro-to-biology"
+					"intro-to-biology",
+					"intro-to-chemistry"
 				].includes(id)
 			) {
 				const completion = item.content.split(
@@ -680,18 +690,22 @@ it.each(
 						sourceProjects: sourceProjects.length,
 						modules,
 						reviewScope:
-							id === "intro-to-biology"
-								? "Eight worked body-systems units:8readings,36coreactivities,24optionalprojects and120input/response views per profile;all68published identities retained. Original three legacy images remain separately identified."
-								: id === "elementary-science"
-									? "Eight teaching units and six reference appendices:36readings,48coreactivities,16optionalprojects and11optionalreferenceactivities;all111published identities checked."
-									: id === "middle-school-integrated-science"
-										? "Complete ten teaching units and five reference appendices:65readings,58complete optional/required activities and117input/response views per role/width profile;all123published identities retained."
-										: id === "early-elementary-a-reading"
-											? "Complete on-site explanations and briefs; the ten named reading texts remain unavailable."
+							id === "intro-to-chemistry"
+								? "Complete Chemistry teaching and tasks:62readings,14coreactivities,37optionalactivities and102input/response views per profile;all113published identities retained. Original video evidence remains distinct from authored text alternatives."
+								: id === "intro-to-biology"
+									? "Eight worked body-systems units:8readings,36coreactivities,24optionalprojects and120input/response views per profile;all68published identities retained. Original three legacy images remain separately identified."
+									: id === "elementary-science"
+										? "Eight teaching units and six reference appendices:36readings,48coreactivities,16optionalprojects and11optionalreferenceactivities;all111published identities checked."
+										: id ===
+											  "middle-school-integrated-science"
+											? "Complete ten teaching units and five reference appendices:65readings,58complete optional/required activities and117input/response views per role/width profile;all123published identities retained."
 											: id ===
-												  "early-elementary-b-picture-book"
-												? "Complete supplied teaching,practice,case inputs and briefs;original Gabby Tries text remains unavailable."
-												: "complete course reading and assignment view",
+												  "early-elementary-a-reading"
+												? "Complete on-site explanations and briefs; the ten named reading texts remain unavailable."
+												: id ===
+													  "early-elementary-b-picture-book"
+													? "Complete supplied teaching,practice,case inputs and briefs;original Gabby Tries text remains unavailable."
+													: "complete course reading and assignment view",
 						internalModules: course.modules
 							.filter(module => module.internal)
 							.map(module => ({

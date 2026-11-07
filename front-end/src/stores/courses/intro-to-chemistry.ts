@@ -1,4 +1,5 @@
 import type { RawCourse, RawCourseModuleItem } from "./types";
+import { preserveIntroChemistryTeaching } from "./introChemistryGuidance";
 
 const SIMULATIONS = {
 	balancingEquations:
@@ -435,7 +436,7 @@ const introToChemistrySourceCourse: RawCourse = {
 					content: [
 						"**Concept path:** Columns on the periodic table are groups, rows are periods, and broad regions provide useful first predictions about properties. Metals are often conductive, malleable, and likely to form positive ions; nonmetals often form covalent bonds or negative ions; metalloids show mixed behavior depending on the situation. Special groups such as alkali metals, alkaline earth metals, halogens, and noble gases are useful because they summarize recurring patterns. These categories are not a substitute for evidence, but they help organize expectations before a specific property is measured or researched.",
 						"**Learning path:** Build a labeled map of the table rather than memorizing isolated locations. For each region or group, write one property pattern, one example element, and one caution about overgeneralizing. Then use the map to explain an unfamiliar element by position before checking a reference.",
-						"**Evidence activity:** Color-code a blank periodic table by major regions and write one evidence-based property statement for each region.",
+						"**Evidence activity:** Use the supplied selected-element table to make a labelled group/period map or text table. Distinguish regions with labels or patterns and give one supported property statement for each represented region.",
 						"**Reasoning focus:** Categories are useful because they summarize repeated evidence, not because the boundaries are magic. A metalloid can share some metal-like and nonmetal-like behavior, and a group trend can be stronger evidence than a single memorized fact.",
 						"**Output:** A region map and a vocabulary glossary for group, period, metal, nonmetal, metalloid, halogen, and noble gas. Add one caution explaining why region labels are predictions rather than complete descriptions.",
 						"**CER checkpoint:** Use table position to predict whether an unfamiliar element is more likely to behave like a metal or nonmetal."
@@ -897,7 +898,7 @@ const introToChemistrySourceCourse: RawCourse = {
 						"**Project goal:** Analyze elephant toothpaste as an equipment-free reaction-evidence case. The chemistry target is decomposition of hydrogen peroxide, gas production, catalysis, and foam as trapped oxygen gas.",
 						"**Requirements:** Use the provided video sources, diagrams, or a safe supervised observation. Identify the starting substances, the trigger or catalyst, the gas produced, why soap creates foam, and why changing amount can scale the visible result without changing the underlying chemistry.",
 						`**Source set:** Small-scale demo: ${REFERENCES.elephantToothpasteDemo}. Particle explanation clip: ${REFERENCES.elephantToothpasteAtomClip}. Scale-up demo: ${REFERENCES.elephantToothpasteScaleUp}. Use these as evidence sources, not as required physical experiments.`,
-						"**Activity prompt:** Compare the small-scale and large-scale elephant-toothpaste videos. Explain what is similar, what changes when the amount of material changes, and why the dramatic foam is interpreted through gas production and catalyst evidence rather than appearance alone.",
+						"**Activity prompt:** Compare supplied text models S and L, or add separately labelled observations from the optional small- and large-scale videos. Explain the common reaction, the changed reactant amount and why foam height alone does not measure gas yield.",
 						"**Completion checks:** The explanation uses catalyst, decomposition, oxygen, hydrogen peroxide, foam, rate, and evidence accurately, and it states why the catalyst changes reaction speed without being treated as the main product."
 					].join("\n\n"),
 					mediaLink: REFERENCES.elephantToothpasteDemo,
@@ -1018,7 +1019,7 @@ const introToChemistrySourceCourse: RawCourse = {
 					title: "Project: Making Invisible Ink Case Analysis",
 					content: [
 						"**Project goal:** Analyze invisible ink as a solution-and-reaction case. The focus is to distinguish the diluted lemon-juice solution from the later visible change that can occur when the message is revealed.",
-						"**Requirements:** Use the provided video source, written scenario, or safe supervised observation. Identify lemon juice and water as the starting mixture, define citric acid as the important solute in the simplified model, explain why dilution can make the dried mark harder to see, and connect browning or darkening to oxidation or heat-triggered chemical change.",
+						"**Requirements:** Use the provided video source, written scenario, or safe supervised observation. Identify lemon juice and water as the starting mixture, identify citric acid as one acidic solute among the dissolved organic materials in the simplified model, explain why dilution can make the dried mark harder to see, and connect browning or darkening to oxidation or heat-triggered chemical change.",
 						"**Activity prompt:** Answer whether ink is a liquid, whether becoming invisible changes state of matter, what materials are mixed, why water is added instead of only lemon juice, and whether the resulting invisible ink is classified as a mixture or solution.",
 						"**Completion checks:** The final explanation separates solution vocabulary from reaction evidence and does not claim that the liquid disappears."
 					].join("\n\n"),
@@ -1180,7 +1181,7 @@ const introToChemistrySourceCourse: RawCourse = {
 				{
 					title: "Reaction Energy and Rates",
 					content: [
-						"**Concept path:** Reaction energy and reaction rate answer different questions. Some reactions release energy to the surroundings, some absorb energy, and all reactions require particles to collide with enough energy and a useful orientation before bonds can rearrange. Rate describes how quickly reactants become products; energy describes what is transferred, required, or released. A reaction can be energetically favorable but slow if useful collisions are rare, and a faster reaction is not automatically more complete. Temperature, concentration, surface area, and catalysts can affect rate by changing collision frequency, collision energy, or reaction pathway.",
+						"**Concept path:** Reaction energy and reaction rate answer different questions. Some reactions release energy to the surroundings and some absorb energy. The introductory collision model explains many reactions through encounters with sufficient energy and an appropriate orientation. Rate describes how quickly reactants become products; energy describes what is transferred, required, or released. A reaction can be energetically favorable but slow if useful collisions are rare, and a faster reaction is not automatically more complete. Temperature, concentration, surface area, and catalysts can affect rate by changing collision frequency, collision energy, or reaction pathway.",
 						"**Learning path:** Separate energy claims from rate claims. Write one sentence about what energy evidence appears, such as heat, light, or cooling, and a separate sentence about how quickly the change occurs. If a factor such as temperature or catalyst is changed, explain whether it affects collision energy, collision frequency, or pathway. When a thermochemical value is supplied, multiply the heat released or absorbed per mole by the moles of product or reactant specified by that value, and state the product state when it matters.",
 						"**Evidence activity:** Compare two reaction descriptions from the materials pack: one that is warmed, cooled, or catalyzed, and one that releases heat or light. Identify the evidence for energy transfer, the evidence for rate change, and the limits of the description.",
 						"**Worked example:** A glow stick emits light and changes brightness over time. The light is evidence of energy transfer, while the fading brightness is evidence about rate and reactant use. For `2H₂ + O₂ → 2H₂O`, forming liquid water is exothermic; if `1 mol H₂O(l)` forms, about `285.8 kJ` is released, while forming `1 mol H₂O(g)` releases about `241.8 kJ`.",
@@ -1789,7 +1790,7 @@ function decorateIntroChemistryModule(
 				"**Energy accounting:** Name the system and surroundings before using absorbed, released, endothermic, or exothermic. Temperature tracks average kinetic energy, while total thermal energy also depends on amount and particle interactions. Heat is energy transferred because of a temperature difference, not a substance stored inside matter.",
 				"**Graph contract:** A sloped heating-curve segment links energy input to rising average kinetic energy within one phase. A phase-change segment can remain at nearly constant temperature while energy changes particle arrangement and potential energy. Graph axes, direction, pressure assumptions, and substance identity remain visible.",
 				"**Attraction boundary:** Intermolecular attractions act between particles and differ from covalent, ionic, or metallic bonding within a substance model. Stronger attractions can support relative boiling, evaporation, viscosity, or solubility predictions, but molecular size, shape, temperature, and the comparison set still matter.",
-				"**Mastery check:** Explain one heating-curve segment, one phase-diagram point, one gas-variable change, and one property comparison using particles and energy. Reject language that particles expand, stop moving, want to escape, or contain heat."
+				"**Mastery check:** Evaluate three claims: heating always raises temperature; gas particles become larger; carbon dioxide boils at 1 atm. Correct each using the supplied heating and phase cases, then state one model limit."
 			].join("\n\n"),
 			datasetLink: material("energy-phase-and-gas-checkpoint"),
 			solutionLink: answerKey("energy-phase-and-gas-checkpoint-key"),
@@ -1934,7 +1935,7 @@ function decorateIntroChemistryModule(
 
 export const introToChemistryCourse: RawCourse = {
 	...introToChemistrySourceCourse,
-	modules: sequenceIntroChemistryModules(
-		introToChemistrySourceCourse.modules
-	).map(decorateIntroChemistryModule)
+	modules: sequenceIntroChemistryModules(introToChemistrySourceCourse.modules)
+		.map(decorateIntroChemistryModule)
+		.map(preserveIntroChemistryTeaching)
 };

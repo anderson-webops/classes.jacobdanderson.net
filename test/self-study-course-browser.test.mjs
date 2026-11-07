@@ -43,6 +43,7 @@ assert.equal(readingCounts.length, courseIds.length);
 const focusedReadingCounts = {
 	"elementary-science": 36,
 	"intro-to-biology": 8,
+	"intro-to-chemistry": 62,
  "python-level-1": 1,
  "python-level-1-classroom": 1
 };
