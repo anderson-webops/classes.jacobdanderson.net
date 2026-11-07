@@ -424,6 +424,9 @@ jobs:
           test/store.courses.self-study-browser-manifest.spec.test.ts
           test/store.courses.middle-school-integrated-science-flow.spec.test.ts
           test/store.courses.elementary-science-flow.spec.test.ts test/store.courses.intro-biology-flow.spec.test.ts
+          test/store.courses.intro-chemistry-flow.spec.test.ts
+          test/store.courses.intro-environmental-science-flow.spec.test.ts
+          test/store.courses.depth.spec.test.ts test/store.courses.research-expansions.spec.test.ts
           test/store.courses.python-level-1-foundations.spec.test.ts
           test/store.courses.pygames-flow.spec.test.ts
           test/store.courses.early-elementary-a-flow.spec.test.ts
