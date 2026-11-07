@@ -1665,6 +1665,7 @@ DRAWING_SPEED = 0
 screen = turtle.Screen()
 screen.bgcolor(BACKGROUND_COLOR)
 screen.title("Classroom Turtle Studio")
+screen.setworldcoordinates(-320, -240, 320, 240)
 screen.tracer(0)
 
 artist = turtle.Turtle()

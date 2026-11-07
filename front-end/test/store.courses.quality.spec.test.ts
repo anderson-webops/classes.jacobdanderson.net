@@ -19,7 +19,11 @@ import { lateElementaryAMaterials } from "@/stores/courses/lateElementaryAMateri
 import { lateElementaryBMaterials } from "@/stores/courses/lateElementaryBMaterials";
 import { joyOfReadingGuidance } from "@/stores/courses/joyOfReadingGuidance";
 import { pictureBookGuidance } from "@/stores/courses/pictureBookGuidance";
-import { completeMiddleSchoolScienceActivity } from "./middleSchoolScienceReview";
+import {
+	completeMiddleSchoolScienceActivity,
+	completeElementaryScienceActivity,
+	completeIntroBiologyActivity
+} from "./middleSchoolScienceReview";
 import { pictureBookTaskInputs } from "@/stores/courses/pictureBookTaskInputs";
 import {
 	pyGamesCoreResource,
@@ -235,6 +239,8 @@ function wordCount(text: string) {
 }
 
 const authoredReadingCounts: Record<string, number> = {
+	"elementary-science": 8,
+	"intro-to-biology": 8,
 	"entrepreneurship-101": 10,
 	"middle-school-a-literature": 13,
 	"middle-school-b-writing": 14,
@@ -605,8 +611,16 @@ function isInformationalResourceTitle(title: string) {
 const lessonBackbonePattern =
 	/\*\*(?:Applied studio|Build focus|Build path|Concept focus|Concept path|Course flow|Course path|Course position|Evidence gate|Evidence of proficiency|Evidence target|Evidence targets|Explanation|Focus|Goal|Hungry Hippo return|Investigation|Playable result|Practice route|Project selection|Project target|Readiness check|Readiness map|Result|Science explanation|Scope path|Selected checks|Shared phenomenon|Studio focus|Verification gate):\*\*|Core topics in this module:|Representative solutions|Check-?In #\d+|Check-in goal|\bReview\b/i;
 
-function hasLessonBackbone(item: { title: string; content: string }) {
+function hasLessonBackbone(item: {
+	title: string;
+	content: string;
+	contentKind?: string;
+}) {
 	return (
+		(item.contentKind === "reading" &&
+			wordCount(item.content) >= 120 &&
+			(item.content.match(/^## /gm)?.length ?? 0) >= 2 &&
+			/^## Worked\b/m.test(item.content)) ||
 		(/\*\*Method\*\*[\s\S]+\*\*Worked example\*\*/.test(item.content) &&
 			wordCount(item.content) >= 40) ||
 		lessonBackbonePattern.test(`${item.title}\n${item.content}`) ||
@@ -5853,6 +5867,16 @@ describe("course text quality normalization", () => {
 								)
 								.filter(
 									item =>
+										!completeIntroBiologyActivity(
+											entry.id,
+											module,
+											item
+										) &&
+										!completeElementaryScienceActivity(
+											entry.id,
+											module,
+											item
+										) &&
 										!completeMiddleSchoolScienceActivity(
 											entry.id,
 											module,
@@ -5955,6 +5979,12 @@ describe("course text quality normalization", () => {
 							!completeSpeakingPractice(id, module, item) &&
 							!completePhysicsPractice(id, module, item) &&
 							!completeElementaryPractice(id, module, item) &&
+							!completeIntroBiologyActivity(id, module, item) &&
+							!completeElementaryScienceActivity(
+								id,
+								module,
+								item
+							) &&
 							!completeMiddleSchoolScienceActivity(
 								id,
 								module,
@@ -6862,7 +6892,16 @@ describe("course text quality normalization", () => {
 		expect(elementaryCorpus).not.toMatch(
 			/same learning goal[\s\S]{0,120}same learning goal/i
 		);
-		expect(elementaryCorpus).toContain("shared online material");
+		const resourceInventory = findItem(
+			elementaryScience!,
+			/^Elementary Science Resource Inventory$/
+		);
+		expect(resourceInventory.datasetLink).toBe(
+			"/course-assets/elementary-science/elementary-science-materials-pack.md"
+		);
+		expect(fs.existsSync(`public${resourceInventory.datasetLink}`)).toBe(
+			true
+		);
 	});
 
 	it(
@@ -9502,8 +9541,22 @@ describe("course text quality normalization", () => {
 
 			expect(terseFormulaicCards).toEqual([]);
 			expect(corpus).toContain("**Anchor structure:**");
-			expect(corpus).toContain("**Data-story structure:**");
-			expect(corpus).toContain("**Gate sequence:**");
+			const elementary = await loadRawCourse("elementary-science");
+			expect(elementary).not.toBeNull();
+			const dataStory = findItem(
+				elementary!,
+				/^Grades 3-5 Project: Fair-Test Data Story$/
+			);
+			expect(dataStory.content).toContain("Growth is 4 and 1 cm");
+			expect(dataStory.content).toContain("fictional comparison");
+			const capstone = findItem(
+				elementary!,
+				/^Elementary Science Capstone Gate$/
+			);
+			expect(capstone.content).toContain("obscured-screen failure");
+			expect(capstone.content).toContain(
+				"optional continuation preserves that artifact"
+			);
 			expect(corpus).toContain("**Option A: Relic Runner:**");
 		},
 		COURSE_SWEEP_TIMEOUT
@@ -9783,7 +9836,15 @@ describe("course text quality normalization", () => {
 			expect(corpus).not.toMatch(
 				/motion[^.\n]{0,120}particles, formulas, reactions|graph[^.\n]{0,120}particles, formulas, reactions/i
 			);
-			expect(corpus).toContain("one labeled observation sketch");
+			const notebook = findItem(
+				courses[0]!,
+				/^K-2 Project: Picture Evidence Notebook$/
+			);
+			expect(notebook.content).toContain("Draw and label");
+			expect(notebook.content).toContain(
+				"Three details match the supplied scene"
+			);
+			expect(notebook.content).toContain("labelled as an inference");
 			expect(allCourseText(courses[1])).toContain("system boundary");
 			expect(corpus).toContain("unit-aware graph or diagram");
 			expect(corpus).toContain("coordinate or system definition");
@@ -9834,9 +9895,11 @@ describe("course text quality normalization", () => {
 		expect(text).toContain("Project: Digestive Odyssey Exhibit");
 		expect(text).toContain("travel journal");
 		expect(text).toContain("No beakers, kits, dissections");
-		expect(text).toContain("Three scenario prompts anchor this module");
-		expect(text).toContain("A dinner-mystery graph can match guests");
-		expect(text).toContain("A comparison scenario describes an alien");
+		expect(text).toContain("Scenario A");
+		expect(text).toContain("allergy");
+		expect(text).toContain("calcium");
+		expect(text).toContain("16 simple-sugar");
+		expect(text).toContain("adult model");
 		expect(text).not.toContain("static.junilearning.com");
 		expect(text).not.toMatch(
 			/original source|original image filename|source mission|source scenario|source alien/i

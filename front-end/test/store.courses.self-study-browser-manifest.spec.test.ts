@@ -35,6 +35,8 @@ import { physicsLevel2Course } from "@/stores/courses/physics-level-2";
 import { geometryACourse } from "@/stores/courses/geometry-a";
 import { geometryBCourse } from "@/stores/courses/geometry-b";
 import { middleSchoolIntegratedScienceCourse } from "@/stores/courses/middle-school-integrated-science";
+import { introToBiologyCourse } from "@/stores/courses/intro-to-biology";
+import { elementaryScienceCourse } from "@/stores/courses/elementary-science";
 import { preAlgebraACourse } from "@/stores/courses/pre-algebra-a";
 import {
 	earlyElementaryMathACourse,
@@ -54,6 +56,18 @@ import {
 } from "@/stores/courses/source-library-courses";
 
 const cases = [
+	{
+		id: "intro-to-biology",
+		source: introToBiologyCourse,
+		readings: 8,
+		additions: []
+	},
+	{
+		id: "elementary-science",
+		source: elementaryScienceCourse,
+		readings: 36,
+		additions: []
+	},
 	{
 		id: "middle-school-integrated-science",
 		source: middleSchoolIntegratedScienceCourse,
@@ -347,11 +361,15 @@ it.each(
 		}
 		const card = (item: CourseModuleItem) => {
 			const completeAssignment = [
+				"elementary-science",
+				"intro-to-biology",
 				"middle-school-integrated-science",
 				"early-elementary-a-reading",
 				"early-elementary-b-picture-book"
 			].includes(id);
 			const fullBlocks = [
+				"elementary-science",
+				"intro-to-biology",
 				"middle-school-integrated-science",
 				"early-elementary-a-math",
 				"early-elementary-b-math",
@@ -478,7 +496,11 @@ it.each(
 			);
 			if (
 				completeAssignment &&
-				id !== "middle-school-integrated-science"
+				![
+					"middle-school-integrated-science",
+					"elementary-science",
+					"intro-to-biology"
+				].includes(id)
 			) {
 				const completion = item.content.split(
 					"**Completion evidence:**"
@@ -563,7 +585,9 @@ it.each(
 							? 17
 							: id === "middle-school-integrated-science"
 								? 10
-								: count
+								: id === "elementary-science"
+									? 8
+									: count
 			);
 		for (const module of modules) {
 			if (id === "geometry-a")
@@ -599,6 +623,16 @@ it.each(
 			else if (id === "physics-level-2")
 				expect(module.readings, module.title).toHaveLength(
 					module.title.startsWith("PHY8 ") ? 2 : 1
+				);
+			else if (id === "elementary-science")
+				expect(module.readings).toHaveLength(
+					module.kind === "appendix"
+						? ["Standards Map", "Course Roadmap"].includes(
+								module.title
+							)
+							? 6
+							: 4
+						: 1
 				);
 			else if (id === "middle-school-integrated-science")
 				expect(module.readings).toHaveLength(
@@ -646,13 +680,18 @@ it.each(
 						sourceProjects: sourceProjects.length,
 						modules,
 						reviewScope:
-							id === "middle-school-integrated-science"
-								? "Complete ten teaching units and five reference appendices:65readings,58complete optional/required activities and117input/response views per role/width profile;all123published identities retained."
-								: id === "early-elementary-a-reading"
-									? "Complete on-site explanations and briefs; the ten named reading texts remain unavailable."
-									: id === "early-elementary-b-picture-book"
-										? "Complete supplied teaching,practice,case inputs and briefs;original Gabby Tries text remains unavailable."
-										: "complete course reading and assignment view",
+							id === "intro-to-biology"
+								? "Eight worked body-systems units:8readings,36coreactivities,24optionalprojects and120input/response views per profile;all68published identities retained. Original three legacy images remain separately identified."
+								: id === "elementary-science"
+									? "Eight teaching units and six reference appendices:36readings,48coreactivities,16optionalprojects and11optionalreferenceactivities;all111published identities checked."
+									: id === "middle-school-integrated-science"
+										? "Complete ten teaching units and five reference appendices:65readings,58complete optional/required activities and117input/response views per role/width profile;all123published identities retained."
+										: id === "early-elementary-a-reading"
+											? "Complete on-site explanations and briefs; the ten named reading texts remain unavailable."
+											: id ===
+												  "early-elementary-b-picture-book"
+												? "Complete supplied teaching,practice,case inputs and briefs;original Gabby Tries text remains unavailable."
+												: "complete course reading and assignment view",
 						internalModules: course.modules
 							.filter(module => module.internal)
 							.map(module => ({
