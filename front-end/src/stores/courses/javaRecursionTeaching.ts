@@ -1,4 +1,5 @@
 import type { RawCourseModule, RawCourseModuleItem } from "./types";
+import { courseAssetViewerUrl } from "@/modules/courseAssetPreview";
 import {
 	javaRecursionContinuations,
 	javaRecursionModuleID,
@@ -72,9 +73,9 @@ function task(
 }
 function resources(section: string) {
 	const asset = "/course-assets/java-level-3/recursion-checks.md#";
-	return `\n\n[Case inputs](/course-resource-viewer?asset=${encodeURIComponent(
+	return `\n\n[Case inputs](${courseAssetViewerUrl(
 		`${asset + section}-inputs`
-	)}) · [Project self-check](/course-resource-viewer?asset=${encodeURIComponent(
+	)}) · [Project self-check](${courseAssetViewerUrl(
 		`${asset + section}-answers`
 	)})`;
 }

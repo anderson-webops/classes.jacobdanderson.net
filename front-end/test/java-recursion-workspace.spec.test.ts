@@ -137,9 +137,15 @@ it("retains published AJ4 identities and complete authored bodies after normaliz
 	expect(module.supplementalProjects).toHaveLength(3);
 	for (const section of ["curriculum", "supplementalProjects"] as const) {
 		for (const item of module[section]) {
-			for (const [, href] of item.content.matchAll(
-				/\[[^\]]+\]\((\/course-resource-viewer[^)]+)\)/g
-			)) {
+			const checks = [
+				...item.content.matchAll(
+					/\[[^\]]+\]\((\/course-resource\?[^)]+)\)/g
+				)
+			];
+			expect(checks).toHaveLength(
+				item.contentKind === "assignment" ? 2 : 0
+			);
+			for (const [, href] of checks) {
 				const asset = new URL(
 					href,
 					"https://example.invalid"

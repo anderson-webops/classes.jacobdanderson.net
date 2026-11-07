@@ -511,13 +511,14 @@ jobs:
           SCRATCH_BROWSER_READING_ONLY: '1'
         run: node scripts/classes-family-heavy-task.mjs -- node --test test/scratch-browser.test.mjs
       - name: Verify Java recursion course actions and saved downloads
-        if: inputs.course == 'java-recursion'
+        id: java_recursion_browser
+        if: always() && !cancelled() && inputs.course == 'java-recursion' && steps.course_build.outcome == 'success'
         env:
           JAVA_RECURSION_BROWSER_PROOF_DIR: ${{ github.workspace }}/output/self-study-browser/java-recursion
           COURSE_IMPORT_SCREENSHOT_DIR: ${{ github.workspace }}/output/self-study-browser/java-recursion/screenshots
         run: node scripts/classes-family-heavy-task.mjs -- node --test --test-concurrency=1 test/java-recursion-course-browser.test.mjs
       - name: Compile and test actual Java course downloads on JDK 21
-        if: inputs.course == 'java-recursion'
+        if: always() && !cancelled() && inputs.course == 'java-recursion' && steps.java_recursion_browser.outcome == 'success'
         env:
           JAVA_RECURSION_BROWSER_PROOF_DIR: ${{ github.workspace }}/output/self-study-browser/java-recursion
         run: python3 -I -B test/java-recursion-exported-native.py
