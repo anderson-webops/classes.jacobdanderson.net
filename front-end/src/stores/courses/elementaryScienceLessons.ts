@@ -151,7 +151,7 @@ Grades 3–5: check every criterion, explain a tradeoff, distinguish observation
 				"K–2: classify ice before melting, flowing water and air using shape or available-space evidence. Grades 3–5: explain why pourable sand is still made of solid grains and why unseen gas is matter.",
 				"K–2: choose cloth or clear plastic for seeing through a dry cover and point to the useful property. Grades 3–5: compare the same three property columns for plastic, cloth and aluminum in the viewing-cover case.",
 				"K–2: match a towel to absorbency and a window to transparency. Grades 3–5: use the supplied ratings to explain why the material favored for the cover need not be favored for the wipe.",
-				"K–2: name the cover option that passes the see-through requirement. Grades 3–5: apply all three cover requirements, reject two alternatives with their failed values and describe the supplied changed-transparency condition.",
+				"K–2: name the cover option that passes the see-through requirement. Grades 3–5: apply all three cover requirements, reject two alternatives with their failed values and describe the supplied changed-flexibility condition.",
 				"K–2: compare melted-and-cooled wax with torn paper without claiming the original shape always returns. Grades 3–5: classify wax, salt water and rust using an explicitly stated recovery process or limit.",
 				"K–2: say what is still present when visible salt grains disappear. Grades 3–5: distinguish visible evidence from particle-model explanation and repair the claim that a solid's particles never move."
 			]
@@ -165,7 +165,7 @@ Opposite forces can balance. A book resting on a table has downward gravity and 
 
 ## Worked motion graph
 
-The cart is at 0, 1, 3, 5 and 7 m at times 0, 1, 2, 3 and 4 s. Its one-second position changes are 1, 2, 2 and 2 m. During the final intervals it moves at a steady 2 m per second. On a position-time graph, plot time horizontally and position vertically. Equal rises over equal time intervals show steady motion. A flat segment would mean unchanged position, not that all forces vanished.
+The cart is at 0, 1, 3, 5 and 7 m at times 0, 1, 2, 3 and 4 s. Its one-second position changes are 1, 2, 2 and 2 m. Assuming the supplied forward-only motion, the final three intervals each have an average speed of 2 m per second. These sampled positions do not show every speed change between readings. On a position-time graph, plot time horizontally and position vertically. Equal rises over equal sampled time intervals show equal average speeds; continuous steady motion needs a model assumption or more evidence. A flat segment would mean unchanged position, not that all forces vanished.
 
 ## How machines change a task
 
@@ -240,7 +240,7 @@ Grades 3–5: use consistent units, label model limits and defend a claim with e
 				"K–2: order sunrise, midday, sunset and night using the supplied descriptions. Grades 3–5: compare the two model days, explain the repeated illumination pattern with rotation and identify a feature the model leaves out.",
 				"K–2: choose two supplied objects and name one shared property and one difference. Grades 3–5: compare four consistently defined properties, explaining AU and the central body for each listed orbital period.",
 				"K–2: distinguish Earth's turning from its trip around the Sun. Grades 3–5: explain why Moon phases and eclipses have different causes and use the supplied phase descriptions to show a changing view of the lit half.",
-				"K–2: select Model A for ordering planets or Model B for comparing sizes. Grades 3–5: compare what both models preserve and omit; explain why one page cannot use the same ordinary scale for both planet size and interplanetary distance.",
+				"K–2: select Model A for ordering planets or Model B for comparing sizes. Grades 3–5: compare what both models preserve and omit; explain why a small readable diagram usually uses different scales for planet size and interplanetary distance.",
 				"K–2: complete one required capstone with a question, a labelled drawing or sort, two supplied details, one because sentence and an improvement. Grades 3–5: use the capstone packet to add a data display, claim/evidence/reasoning, limitation and preserved before-and-after revision.",
 				"K–2: identify what changed between the supplied signal design's first and revised versions. Grades 3–5: distinguish criteria, constraints, test results and remaining limits, then apply that comparison to the saved required capstone."
 			]

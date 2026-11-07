@@ -95,7 +95,7 @@ A material recommendation is conditional on criteria and constraints. Clear plas
 
 ## Forces and Machines Key
 
-Force arrows represent pushes or pulls on the selected object. Balanced forces mean zero net force in the simplified case, not necessarily zero motion. A position-time graph describes position over time; a flat section means unchanged position, while equal position changes over equal time indicate constant speed.
+Force arrows represent pushes or pulls on the selected object. Balanced forces mean zero net force in the simplified case, not necessarily zero motion. A position-time graph describes position over time; a flat section means unchanged position, while equal position changes over sampled equal time intervals indicate equal average speeds in the supplied forward-only case. The samples alone do not establish steady speed between readings.
 
 The machine table shows lower supplied force ratings paired with longer effort distances or setup needs. It supports a force-distance tradeoff, not the claim that machines create energy or remove all work.
 
@@ -103,7 +103,7 @@ The machine table shows lower supplied force ratings paired with longer effort d
 
 1. Gravity pulls the book down and the table supports it upward. The cart can receive a forward applied push and opposing resistance. Draw arrows on the receiving object and identify their source when stated.
 2. The cart's interval changes are 1, 2, 2 and 2 m over successive one-second intervals. The final three average speeds are each 2 m/s in this supplied table.
-3. The resting book can have balanced vertical forces; the final cart intervals have balanced horizontal forces and constant motion. If resistance exceeds the forward push, the net horizontal force opposes the cart's forward motion, changing its velocity.
+3. The resting book can have balanced vertical forces; the final cart states model balanced horizontal forces and constant motion. That modeled balance is supplied separately from the sampled position data. If resistance exceeds the forward push, the net horizontal force opposes the cart's forward motion, changing its velocity.
 4. Plot (0,0), (1,1), (2,3), (3,5) and (4,7), with time in seconds and position in metres. A separate horizontal segment describes unchanged position. Graph height is position; change in position over time describes average speed.
 5. The cards identify ramp, lever, fixed pulley, wheel and axle, wedge and screw. The single fixed pulley changes pull direction without multiplying force. The lever needs its pivot; the ramp uses a sloping path.
 6. Direct lift fails the force limit (5 > 3). Long ramp fails the distance limit (4 > 3). Short ramp passes (force 3, distance 2). Lever passes the numeric limits (2, 3) only with a stable pivot. The shifting-pivot test rejects that available lever setup; the short ramp remains a supported alternative.
@@ -134,7 +134,7 @@ Solar-system models trade accuracy dimensions. A model can preserve planet order
 1. The model order is sunrise → midday → sunset → night. Both days repeat it as the marked point rotates into and out of illumination. Actual daylight length depends on location and season, which the simplified case omits.
 2. An AU is approximately the average Earth–Sun distance. Mars is 1.52 − 1.00 = 0.52 AU farther from the Sun than Earth in the rounded comparison; its diameter is 0.53 of Earth's and its year 1.88 Earth years. The Moon's listed 0.075-year orbit is around Earth, not the Sun.
 3. Rotation is turning about an axis; orbit is motion around another body. Moon phases show changing views of its sunlit half as it orbits Earth, over about 29.5 days. A lunar eclipse instead requires Earth's shadow to fall on the Moon in a particular alignment.
-4. Model A supports order, and Model B supports relative size. Each omits or distorts other features. A page using a useful planet-size scale cannot ordinarily also show true interplanetary distances on that same scale.
+4. Model A supports order, and Model B supports relative size. Each omits or distorts other features. A small readable page usually needs different size and distance scales. One accurate scale is possible, but may make planets too small to distinguish or distances too large for the page.
 5. Accept one required capstone that cites actual supplied evidence, explains the representation and preserves a revision. Grade-band responses differ in depth rather than requiring two artifacts. The signal worked record demonstrates question, evidence, reasoning, improvement and remaining limit.
 6. In the worked record, text is the design change; correct receipt in quiet and visible-screen noise is the criterion; use of the supplied speaker/screen is the constraint. The obscured-screen failure remains a limit. Apply the same distinctions to the saved capstone. Its optional continuation adds a changed condition or new evidence to that artifact.
 

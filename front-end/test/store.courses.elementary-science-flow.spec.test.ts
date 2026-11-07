@@ -230,6 +230,30 @@ describe("Elementary Science supplied teaching and two-band activities", () => {
 		expect(cover.filter(row => Number(row[1]) >= 4)).toEqual([]);
 		expect(pack).toContain("no material satisfying all four requirements");
 		expect(answers).toContain("does not invent data");
+		const task = elementaryScienceCourse.modules[4].curriculum[4];
+		expect(task.content).toContain("changed-flexibility condition");
+		expect(task.content).not.toContain("changed-transparency condition");
+	});
+	it("keeps sampled motion and a readable model scale within their evidence limits", () => {
+		const positions = tableAfter("### Cart story").map(row =>
+			Number(row[1].split(" ")[0])
+		);
+		expect(
+			positions
+				.slice(1)
+				.map((position, index) => position - positions[index])
+		).toEqual([1, 2, 2, 2]);
+		const motion = elementaryScienceCourse.modules[5].curriculum[0].content;
+		expect(motion).toContain("average speed");
+		expect(motion).toContain(
+			"do not show every speed change between readings"
+		);
+		expect(pack).toContain("cart moves only forward");
+		expect(answers).toContain(
+			"samples alone do not establish steady speed"
+		);
+		expect(pack).toContain("single accurate scale is possible");
+		expect(answers).toContain("One accurate scale is possible");
 	});
 	it("supplies six machines and a failed pivot that changes the design answer", () => {
 		const machines = tableAfter("### Six machine object cards");

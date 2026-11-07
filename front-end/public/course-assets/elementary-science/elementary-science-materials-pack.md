@@ -227,7 +227,7 @@ For every reversible or irreversible claim, state what counts as recovering the 
 | 3 s  |                 5 m | simplified balanced horizontal-force case  |
 | 4 s  |                 7 m | simplified balanced horizontal-force case  |
 
-In the simplified final intervals, unchanged speed can coexist with balanced horizontal forces. A flat position-time graph would indicate unchanged position, not automatically no forces.
+The cart moves only forward in this fictional record. The force column describes selected model states, not continuous measurements between every position reading. In the simplified final balanced-force model, unchanged speed can coexist with balanced horizontal forces. A flat position-time graph would indicate unchanged position, not automatically no forces.
 
 ### Force-arrow cards
 
@@ -359,7 +359,7 @@ Sunlight illuminates about half the Moon. In the new-Moon alignment the lit half
 
 One AU is approximately the average Earth–Sun distance. The period column uses the central body named in “Orbit around.” The Moon's 0.075-Earth-year period is around Earth; its distance column still refers to the Sun. Do not interpret that value as the Moon's year around the Sun or confuse it with the 29.5-day phase cycle.
 
-Use NASA Space Place for age-appropriate source reading before replacing rounded values. A card may preserve property comparisons but cannot preserve both planetary sizes and interplanetary distances on one ordinary page.
+Use NASA Space Place for age-appropriate source reading before replacing rounded values. A small readable card normally uses different scales for planetary sizes and interplanetary distances. A single accurate scale is possible, but planets may become too small to distinguish or the distances too large for the page.
 
 ### Model critique cards
 
@@ -404,3 +404,4 @@ No physical build is required. A drawing, storyboard, simulation state, or paper
 - [National Park Service sound explanation](https://www.nps.gov/subjects/sound/understandingsound.htm)
 - [NASA Moon phases](https://science.nasa.gov/moon/moon-phases/)
 - [NASA Solar System learning resources](https://spaceplace.nasa.gov/menu/solar-system/)
+- [NASA JPL model scale and distance](https://www.jpl.nasa.gov/edu/resources/project/make-a-scale-solar-system/)
