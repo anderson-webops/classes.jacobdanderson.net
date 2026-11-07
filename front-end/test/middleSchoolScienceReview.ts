@@ -1,4 +1,6 @@
 import fs from "node:fs";
+import { introToBiologyCourse } from "@/stores/courses/intro-to-biology";
+import { introBiologyLessons } from "@/stores/courses/introBiologyLessons";
 import { elementaryScienceCourse } from "@/stores/courses/elementary-science";
 import { elementaryScienceLessons } from "@/stores/courses/elementaryScienceLessons";
 import type {
@@ -17,9 +19,11 @@ function completeScienceActivity(
 	item: RawCourseModuleItem
 ) {
 	if (
-		!["middle-school-integrated-science", "elementary-science"].includes(
-			courseId
-		) ||
+		![
+			"middle-school-integrated-science",
+			"elementary-science",
+			"intro-to-biology"
+		].includes(courseId) ||
 		item.contentKind !== "assignment" ||
 		!item.preserveInstructions ||
 		!item.preserveAssignment
@@ -28,7 +32,9 @@ function completeScienceActivity(
 	const source =
 		courseId === "elementary-science"
 			? elementaryScienceCourse
-			: middleSchoolIntegratedScienceCourse;
+			: courseId === "intro-to-biology"
+				? introToBiologyCourse
+				: middleSchoolIntegratedScienceCourse;
 	const originalModule = source.modules.find(
 		candidate => candidate.title === module.title
 	);
@@ -44,14 +50,23 @@ function completeScienceActivity(
 	if (
 		!original ||
 		original.content !== item.content ||
-		(courseId !== "elementary-science" && !guidance) ||
+		(!["elementary-science", "intro-to-biology"].includes(courseId) &&
+			!guidance) ||
 		!module.curriculum.some(
 			reading =>
 				reading.contentKind === "reading" &&
-				(courseId === "elementary-science"
-					? Boolean(elementaryScienceLessons[module.title]) &&
+				(courseId === "elementary-science" ||
+				courseId === "intro-to-biology"
+					? Boolean(
+							(courseId === "intro-to-biology"
+								? introBiologyLessons
+								: elementaryScienceLessons)[module.title]
+						) &&
 						reading.content.includes(
-							elementaryScienceLessons[module.title].reading
+							(courseId === "intro-to-biology"
+								? introBiologyLessons
+								: elementaryScienceLessons)[module.title]
+								.reading
 						)
 					: reading.content.includes(guidance!.method) &&
 						reading.content.includes(guidance!.worked))
@@ -70,7 +85,9 @@ function completeScienceActivity(
 			!file.startsWith(
 				courseId === "elementary-science"
 					? "/course-assets/elementary-science/"
-					: "/course-assets/middle-school-science/"
+					: courseId === "intro-to-biology"
+						? "/course-assets/biology/"
+						: "/course-assets/middle-school-science/"
 			) ||
 			!anchor
 		)
@@ -110,6 +127,17 @@ export function completeElementaryScienceActivity(
 ) {
 	return (
 		courseId === "elementary-science" &&
+		completeScienceActivity(courseId, module, item)
+	);
+}
+
+export function completeIntroBiologyActivity(
+	courseId: string,
+	module: RawCourseModule,
+	item: RawCourseModuleItem
+) {
+	return (
+		courseId === "intro-to-biology" &&
 		completeScienceActivity(courseId, module, item)
 	);
 }

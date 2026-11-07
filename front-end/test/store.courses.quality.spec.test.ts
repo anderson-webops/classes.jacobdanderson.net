@@ -21,7 +21,8 @@ import { joyOfReadingGuidance } from "@/stores/courses/joyOfReadingGuidance";
 import { pictureBookGuidance } from "@/stores/courses/pictureBookGuidance";
 import {
 	completeMiddleSchoolScienceActivity,
-	completeElementaryScienceActivity
+	completeElementaryScienceActivity,
+	completeIntroBiologyActivity
 } from "./middleSchoolScienceReview";
 import { pictureBookTaskInputs } from "@/stores/courses/pictureBookTaskInputs";
 import {
@@ -239,6 +240,7 @@ function wordCount(text: string) {
 
 const authoredReadingCounts: Record<string, number> = {
 	"elementary-science": 8,
+	"intro-to-biology": 8,
 	"entrepreneurship-101": 10,
 	"middle-school-a-literature": 13,
 	"middle-school-b-writing": 14,
@@ -5865,6 +5867,11 @@ describe("course text quality normalization", () => {
 								)
 								.filter(
 									item =>
+										!completeIntroBiologyActivity(
+											entry.id,
+											module,
+											item
+										) &&
 										!completeElementaryScienceActivity(
 											entry.id,
 											module,
@@ -5972,6 +5979,7 @@ describe("course text quality normalization", () => {
 							!completeSpeakingPractice(id, module, item) &&
 							!completePhysicsPractice(id, module, item) &&
 							!completeElementaryPractice(id, module, item) &&
+							!completeIntroBiologyActivity(id, module, item) &&
 							!completeElementaryScienceActivity(
 								id,
 								module,
@@ -9887,9 +9895,11 @@ describe("course text quality normalization", () => {
 		expect(text).toContain("Project: Digestive Odyssey Exhibit");
 		expect(text).toContain("travel journal");
 		expect(text).toContain("No beakers, kits, dissections");
-		expect(text).toContain("Three scenario prompts anchor this module");
-		expect(text).toContain("A dinner-mystery graph can match guests");
-		expect(text).toContain("A comparison scenario describes an alien");
+		expect(text).toContain("Scenario A");
+		expect(text).toContain("allergy");
+		expect(text).toContain("calcium");
+		expect(text).toContain("16 simple-sugar");
+		expect(text).toContain("adult model");
 		expect(text).not.toContain("static.junilearning.com");
 		expect(text).not.toMatch(
 			/original source|original image filename|source mission|source scenario|source alien/i

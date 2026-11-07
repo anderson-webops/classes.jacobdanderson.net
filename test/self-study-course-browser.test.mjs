@@ -42,6 +42,7 @@ assert.equal(readingCounts.length, courseIds.length);
 // Reading counts for explicitly selected teaching scopes.
 const focusedReadingCounts = {
 	"elementary-science": 36,
+	"intro-to-biology": 8,
  "python-level-1": 1,
  "python-level-1-classroom": 1
 };
