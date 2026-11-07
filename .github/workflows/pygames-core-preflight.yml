@@ -422,6 +422,8 @@ jobs:
           npm exec -w front-end -- vitest run
           test/store.courses.catalog-identities.spec.test.ts
           test/store.courses.self-study-browser-manifest.spec.test.ts
+          test/store.courses.middle-school-integrated-science-flow.spec.test.ts
+          test/store.courses.pygames-flow.spec.test.ts
           test/store.courses.early-elementary-a-flow.spec.test.ts
           test/store.courses.early-elementary-b-content.spec.test.ts
           test/store.courses.late-elementary-a-content.spec.test.ts
@@ -481,7 +483,9 @@ jobs:
         run: node scripts/classes-family-heavy-task.mjs -- npm run build
       - name: Verify all self-study course pages in both roles and sizes
         if: inputs.course != 'scratch-originals' && inputs.course != 'scratch-tasks'
-        run: node scripts/classes-family-heavy-task.mjs -- node --test test/self-study-course-browser.test.mjs
+        run: |
+          node --test test/self-study-browser-batches.test.mjs
+          node scripts/classes-family-heavy-task.mjs -- node scripts/verify-self-study-browser-batches.mjs
       - name: Verify the Physics Level 2 Python models against independent values
         id: physics_native
         if: always() && !cancelled() && inputs.course == 'physics-models' && steps.course_build.outcome == 'success'
