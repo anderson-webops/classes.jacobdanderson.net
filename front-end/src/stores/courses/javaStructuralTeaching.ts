@@ -214,7 +214,7 @@ Call the loader at most once per render call. After successful loading, reuse th
 
 ### Intrinsic and extrinsic state
 
-GlyphPool contains Tone values INK and ACCENT and immutable Glyph(char symbol, Tone tone) records. A valid symbol is A through Z. Null tone causes NullPointerException; an invalid symbol causes IllegalArgumentException. get validates before changing the pool and returns the same reference for repeated equal (symbol,tone) keys within that pool. Different tones use different keys. There are 26 times 2, or 52, possible keys; size counts requested distinct keys.
+GlyphPool contains Tone values INK and ACCENT and immutable Glyph records with a char symbol and a Tone value. A valid symbol is A through Z. Null tone causes NullPointerException; an invalid symbol causes IllegalArgumentException. get validates before changing the pool and returns the same reference for repeated equal (symbol,tone) keys within that pool. Different tones use different keys. There are 26 times 2, or 52, possible keys; size counts requested distinct keys.
 
 The private Key record supplies value equality and hashing. A Map finds the cached value by key. computeIfAbsent can create a value only when a key has no non-null mapping. The general Map contract supplies no synchronization guarantee; this HashMap-based pool is used within one thread. Shared values remain immutable so one context cannot change all others.
 
