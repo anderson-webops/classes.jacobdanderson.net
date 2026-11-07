@@ -364,10 +364,27 @@ describe("Middle School Integrated Science learner flow", () => {
 						expect(item.contentKind, item.title).toBe(
 							practice ? "assignment" : "reading"
 						);
-						expect(item.preserveInstructions, item.title).toBe(
-							true
-						);
-						expect(item.preserveAssignment, item.title).toBe(true);
+						if (stage === raw) {
+							expect(item.preserveInstructions, item.title).toBe(
+								true
+							);
+							expect(item.preserveAssignment, item.title).toBe(
+								true
+							);
+						} else {
+							const rawModule = raw.modules.find(
+								candidate => candidate.title === title
+							)!;
+							const original = [
+								...rawModule.curriculum,
+								...rawModule.supplementalProjects
+							].find(
+								candidate => candidate.title === item.title
+							)!;
+							expect(item.content, item.title).toBe(
+								original.content
+							);
+						}
 						expect(item.content, item.title).not.toMatch(
 							/each module cites|modules need|course is ready|needs a clearer project target/i
 						);

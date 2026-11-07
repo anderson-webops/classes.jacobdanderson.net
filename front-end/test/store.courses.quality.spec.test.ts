@@ -9762,7 +9762,7 @@ describe("course text quality normalization", () => {
 				/motion[^.\n]{0,120}particles, formulas, reactions|graph[^.\n]{0,120}particles, formulas, reactions/i
 			);
 			expect(corpus).toContain("one labeled observation sketch");
-			expect(corpus).toContain("system boundary note");
+			expect(allCourseText(courses[1])).toContain("system boundary");
 			expect(corpus).toContain("unit-aware graph or diagram");
 			expect(corpus).toContain("coordinate or system definition");
 			expect(new Set(resourceBankBodies).size).toBe(
