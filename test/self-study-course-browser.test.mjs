@@ -41,7 +41,7 @@ const readingCounts = [22,19,19,20,8,13,15,31,10,13,14,16,20,14,9,4,27,22,37,38,
 assert.equal(readingCounts.length, courseIds.length);
 // Reading counts for explicitly selected teaching scopes.
 const focusedReadingCounts = {
- "design-patterns-in-java":6,
+ "design-patterns-in-java":10,
  "java-level-3": 1,
 	"intro-to-environmental-science": 27,
 	"elementary-science": 36,
@@ -311,7 +311,34 @@ async function checkCards(page, module, expected, optional, resourceViews, profi
 				assert.equal(comparisonTables.length, 2, `${check.heading}: both original and changed cases`);
 				assert.ok(comparisonTables.every(table => table.columns === 3 && table.fits), `${check.heading}: all compared values fit the viewer`);
 			}
-			resourceViews.push({ item: item.id, asset: check.asset, fullTextSHA256: digest(check.expectedText), titleLayout, ...(comparisonTables ? { comparisonTables } : {}) });
+
+			let priceTokens;
+			if (/\/(?:judgment|capstone)-checks\.md#core-answers$/.test(check.asset)) {
+				const expected = check.asset.includes("/judgment-")
+					? ["2300", "2000", "2480", "2160", "2700"]
+					: ["200", "280", "180", "300"];
+				priceTokens = await page.$eval(".course-resource-card .item-content-markdown", (element, values) => {
+					const available = element.getBoundingClientRect();
+					return values.map(value => {
+						const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
+						const matches = [];
+						while (walker.nextNode()) {
+							const node = walker.currentNode;
+							if (node.parentElement.closest("pre,code")) continue;
+							for (const match of node.textContent.matchAll(new RegExp("\\b" + value + "\\b", "g"))) {
+								const range = document.createRange();
+								range.setStart(node, match.index);
+								range.setEnd(node, match.index + value.length);
+								const rectangles = Array.from(range.getClientRects()).filter(rect => rect.width > 0);
+								matches.push(rectangles.length === 1 && rectangles[0].left >= available.left - 1 && rectangles[0].right <= available.right + 1);
+							}
+						}
+						return { value, occurrences: matches.length, unbrokenAndVisible: matches.length > 0 && matches.every(Boolean) };
+					});
+				}, expected);
+				assert.ok(priceTokens.every(token => token.unbrokenAndVisible), check.heading + ": complete price values fit on one line");
+			}
+			resourceViews.push({ item: item.id, asset: check.asset, fullTextSHA256: digest(check.expectedText), titleLayout, ...(comparisonTables ? { comparisonTables } : {}), ...(priceTokens ? { priceTokens } : {}) });
 			if (check.label === "Project self-check" || check.asset.endsWith("#optional-percent-changes")) {
 				await page.screenshot({ path: join(process.env.SELF_STUDY_BROWSER_PROOF_DIR ?? "output/self-study-browser", `${profileName}-${item.id}-self-check.png`), fullPage: true });
 			}

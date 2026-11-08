@@ -70,7 +70,11 @@ function isReviewedModule(id: string, title: string) {
 					"DPJ3 Creational Patterns I",
 					"DPJ4 Creational Patterns II and Boundary Patterns",
 					"DPJ5 Structural Patterns in Depth",
-					"DPJ6 Behavioral Patterns I"
+					"DPJ6 Behavioral Patterns I",
+					"DPJ7 Behavioral Patterns II",
+					"DPJ8 Modern Extensions and Architecture-Level Patterns",
+					"DPJ9 Pattern Selection and Refactoring Judgment",
+					"DPJ10 Capstone Refactor"
 				].includes(title)
 			: true;
 }
@@ -78,7 +82,7 @@ const cases = [
 	{
 		id: "design-patterns-in-java",
 		source: designPatternsInJavaCourse,
-		readings: 6,
+		readings: 10,
 		additions: []
 	},
 	{
@@ -845,7 +849,11 @@ it.each(
 													"design-patterns-in-java-dpj3-creational-patterns-i",
 													"design-patterns-in-java-dpj4-creational-patterns-ii-and-boundary-patterns",
 													"design-patterns-in-java-dpj5-structural-patterns-in-depth",
-													"design-patterns-in-java-dpj6-behavioral-patterns-i"
+													"design-patterns-in-java-dpj6-behavioral-patterns-i",
+													"design-patterns-in-java-dpj7-behavioral-patterns-ii",
+													"design-patterns-in-java-dpj8-modern-extensions-and-architecture-level-patterns",
+													"design-patterns-in-java-dpj9-pattern-selection-and-refactoring-judgment",
+													"design-patterns-in-java-dpj10-capstone-refactor"
 												]
 											: [])
 									]
@@ -853,7 +861,7 @@ it.each(
 							: {}),
 						reviewScope:
 							id === "design-patterns-in-java"
-								? "DPJ1 through DPJ6 only: six complete readings, every core/optional activity and linked input/answer case in those units. All 134 published identities checked; later units remain outside this teaching/runtime acceptance."
+								? "DPJ1 through DPJ10 only: ten complete readings, every core/optional activity and linked input/answer case in those units. All 134 published identities checked; optional studios and appendices remain outside this teaching/runtime acceptance."
 								: id === "java-level-3"
 									? "AJ4 only: one reading, two core projects, three optional tasks and ten input/response views per profile. All 217 course identities checked; other Java units are outside this teaching and runtime acceptance."
 									: id === "intro-to-environmental-science"

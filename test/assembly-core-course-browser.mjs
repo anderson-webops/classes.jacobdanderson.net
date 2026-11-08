@@ -546,6 +546,10 @@ export async function runAssemblyCoreCourseWorkflow(t, definition) {
 									?.content === content
 						);
 					}
+					const editingEvidence = await definition.afterEdit?.(page, {
+						role, width, edits,
+						readProject: predicate => project(page, key, predicate)
+					});
 					const edited = await project(page, key);
 					await page.reload({ waitUntil: "domcontentloaded" });
 					await page.waitForSelector(".cm-content");
@@ -659,6 +663,7 @@ export async function runAssemblyCoreCourseWorkflow(t, definition) {
 						width,
 						revision: fixture.revision,
 						...(workflowEvidence ? { workflowEvidence } : {}),
+						...(editingEvidence ? { editingEvidence } : {}),
 						...(definition.localSource ? { sourceKind: "versioned-course-assets", revisionKind: fixture.revisionKind } : {}),
 						key,
 						coreAction: core.href,
