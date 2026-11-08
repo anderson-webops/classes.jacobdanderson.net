@@ -10,6 +10,7 @@ import { completeJavaFoundations } from "./javaFoundationsTeaching";
 import { completeJavaJudgment } from "./javaJudgmentTeaching";
 import { completeJavaPatternsOpening } from "./javaPatternsOpeningTeaching";
 import { completeJavaStructural } from "./javaStructuralTeaching";
+import { completeJavaStudios } from "./javaStudioTeaching";
 import { buildProjectGuidance } from "./projectGuidance";
 
 const designPatternsInJavaSourceCourse: RawCourse = {
@@ -1645,6 +1646,8 @@ export const designPatternsInJavaCourse: RawCourse = {
 	...designPatternsInJavaSourceCourse,
 	modules: [
 		...designPatternsJavaPrimaryModules,
-		buildDesignPatternsJavaStudioAppendix(designPatternsJavaStudios)
+		completeJavaStudios(
+			buildDesignPatternsJavaStudioAppendix(designPatternsJavaStudios)
+		)
 	]
 };

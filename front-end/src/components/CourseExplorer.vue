@@ -35,12 +35,12 @@ import {
 	lessonContentSections
 } from "@/modules/courseLessonPresentation";
 import { unmatchedCourseProgress } from "@/modules/courseProgressHistory";
-import { javaCapstoneProjectKey } from "@/modules/javaCapstoneResources";
 import { javaRecursionProjectKey } from "@/modules/javaRecursionResources";
 import {
 	javascriptCourseProjectKey,
 	javascriptCourseResource
 } from "@/modules/javascriptCourseResources";
+import { javaStudioProjectKey } from "@/modules/javaStudioResources";
 import { linuxCourseProjectKey } from "@/modules/linuxProjectResources";
 import { fetchManagedLearners } from "@/modules/managedLearners";
 import { networkCourseProjectKey } from "@/modules/networkProjectResources";
@@ -1770,7 +1770,7 @@ function ideStarterHref(item: CourseModuleItem, resource: ResourceLink) {
 												? javaRecursionProjectKey
 												: selectedCourse.value.id ===
 													  "design-patterns-in-java"
-													? javaCapstoneProjectKey
+													? javaStudioProjectKey
 													: selectedCourse.value
 																.id ===
 																"usaco-bronze" ||

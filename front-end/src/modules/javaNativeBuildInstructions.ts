@@ -40,6 +40,7 @@ import {
 	javaStructuralCoreID,
 	javaStructuralReadingID
 } from "./javaStructuralResources";
+import { javaStudioNativeInstructions } from "./javaStudioResources";
 import {
 	bronzeRequiredAssignment,
 	bronzeRequiredNativeInstructions
@@ -161,6 +162,8 @@ const fruitFeastItem =
 export function javaNativeBuildInstructions(
 	courseProjectKey?: string
 ): string[] | null {
+	const studioInstructions = javaStudioNativeInstructions(courseProjectKey);
+	if (studioInstructions) return studioInstructions;
 	const parts = (courseProjectKey ?? "").split(":");
 	const [course, item, role, extra] = parts;
 	if (
