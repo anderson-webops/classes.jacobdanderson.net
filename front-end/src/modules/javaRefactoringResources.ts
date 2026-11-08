@@ -3,6 +3,10 @@ import {
 	javaComposingProjectKey,
 	javaComposingResource
 } from "./javaComposingResources";
+import {
+	javaRefactoringUnitProjectKey,
+	javaRefactoringUnitResource
+} from "./javaRefactoringUnits";
 
 export const javaRefactoringRevision =
 	"56cc9b14b8162f17bc5eeb2f70ed7c0dbcc83251";
@@ -61,6 +65,8 @@ export function javaRefactoringProjectKey(
 	role: "starter" | "reference",
 	url: string
 ) {
+	if (javaRefactoringUnitResource(url))
+		return javaRefactoringUnitProjectKey(courseID, itemID, role, url);
 	if (javaComposingResource(url))
 		return javaComposingProjectKey(courseID, itemID, role, url);
 	const selected = javaRefactoringResource(url);
