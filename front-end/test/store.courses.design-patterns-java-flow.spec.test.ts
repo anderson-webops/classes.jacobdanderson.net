@@ -117,8 +117,16 @@ describe("Design Patterns in Java learner flow", () => {
 					: optionTitles;
 			expect(collection, title).toContain(title);
 		}
+		const studios = designPatternsInJavaCourse.modules.find(
+			module => module.title === "Optional Applied Java Pattern Studios"
+		)!;
+		expect(studios.supplementalProjects).toHaveLength(21);
+		expect(
+			new Set(studios.supplementalProjects.map(item => item.projectLink))
+				.size
+		).toBe(3);
 		expect(moduleText("Optional Applied Java Pattern Studios")).toContain(
-			"complete applied practice collection"
+			"helper-only"
 		);
 	});
 

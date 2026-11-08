@@ -41,11 +41,11 @@ import {
 	javaCollaborationImportFiles,
 	javaCollaborationResource
 } from "@/modules/javaCollaborationResources";
-
 import {
 	javaCreationalImportFiles,
 	javaCreationalResource
 } from "@/modules/javaCreationalResources";
+
 import {
 	javaFoundationsImportFiles,
 	javaFoundationsResource
@@ -70,6 +70,10 @@ import {
 	javaStructuralImportFiles,
 	javaStructuralResource
 } from "@/modules/javaStructuralResources";
+import {
+	javaStudioImportFiles,
+	javaStudioResource
+} from "@/modules/javaStudioResources";
 import { linuxStarterCode, linuxStarterFiles } from "@/modules/linuxIdeSource";
 import {
 	isLinuxProjectTextPath,
@@ -3286,7 +3290,8 @@ export async function loadPythonIdeStarterFilesFromGitHub(
 				javaCollaborationResource(starterUrl) !== null ||
 				javaArchitectureResource(starterUrl) !== null ||
 				javaJudgmentResource(starterUrl) !== null ||
-				javaCapstoneResource(starterUrl) !== null))
+				javaCapstoneResource(starterUrl) !== null ||
+				javaStudioResource(starterUrl) !== null))
 	) {
 		const selected =
 			mode === "java"
@@ -3300,7 +3305,8 @@ export async function loadPythonIdeStarterFilesFromGitHub(
 					javaCollaborationImportFiles(starterUrl) ??
 					javaArchitectureImportFiles(starterUrl) ??
 					javaJudgmentImportFiles(starterUrl) ??
-					javaCapstoneImportFiles(starterUrl))
+					javaCapstoneImportFiles(starterUrl) ??
+					javaStudioImportFiles(starterUrl))
 				: mode === "swift"
 					? swiftImportFiles(starterUrl)
 					: mode === "web"
