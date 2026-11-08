@@ -31,7 +31,7 @@ export function completeJavaCapstone(module: RawCourseModule): RawCourseModule {
 				ideImport: true,
 				projectLink: javaCapstoneURL("starter"),
 				solutionLink: javaCapstoneURL("solution"),
-				content: `**Course flow:** Run a complete dispatch application, diagnose its duplicated computation and mixed responsibilities, then refactor it through recoverable checkpoints. The reading, characterization gate, implementation, architecture review, core project and optional batch continue one saved learner project. Written reviews record the evidence for each design choice.
+				content: `**Course flow:** Run a complete dispatch application, diagnose its duplicated computation and mixed responsibilities, then refactor it through recoverable checkpoints. The reading, characterization gate, implementation, architecture review, core project and optional batch continue one saved project. Written reviews record the evidence for each design choice.
 
 ### The capstone's purpose
 

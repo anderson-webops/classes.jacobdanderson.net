@@ -103,7 +103,7 @@ describe("Design Patterns in Java learner flow", () => {
 		for (const title of [
 			"Core Project: What Patterns Are and What They Are Not",
 			"Core Project: Structural Patterns in Depth",
-			"DPJ10 Capstone Refactor: Core Project",
+			"Core Project: Capstone Refactor",
 			"Strategy Selection Refactor: Core Project",
 			"Structural Wrapper Refactor: Core Project",
 			"Architecture Judgment Capstone: Core Project",
