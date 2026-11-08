@@ -42,6 +42,7 @@ for (const studio of families) {
 					fixturePath: "./fixtures/java-studios-sources.json",
 					roles: [role],
 					continuationIDs,
+					itemModules: studio.itemModules,
 					sourceUrl: selected =>
 						`https://github.com/${fixture.repository}/tree/${
 							fixture.revision

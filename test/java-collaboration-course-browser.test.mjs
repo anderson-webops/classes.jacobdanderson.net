@@ -9,6 +9,16 @@ const fixture = JSON.parse(
 		"utf8"
 	)
 );
+const appendixIDs = [
+	"design-patterns-in-java-project-practice-guide-supplemental-practice-project-add-observer-events-to-a-small-model",
+	"design-patterns-in-java-project-practice-guide-supplemental-practice-project-implement-command-based-undo"
+];
+const itemModules = {
+	"design-patterns-in-java-project-practice-guide-supplemental-practice-project-add-observer-events-to-a-small-model":
+		"design-patterns-in-java-project-practice-guide",
+	"design-patterns-in-java-project-practice-guide-supplemental-practice-project-implement-command-based-undo":
+		"design-patterns-in-java-project-practice-guide"
+};
 const moduleID = "design-patterns-in-java-dpj7-behavioral-patterns-ii";
 const coreID = moduleID + "-curriculum-core-project-behavioral-patterns-ii";
 const readingID = moduleID + "-curriculum-behavioral-patterns-ii-core-concepts";
@@ -28,9 +38,10 @@ test(
 			mode: "java",
 			sourceRepository: "Java-Level-3",
 			fixturePath: "./fixtures/java-collaboration-sources.json",
+			itemModules,
 			continuationsByRole: {
-				starter: [blobID, extensionID],
-				solution: [readingID, blobID, extensionID]
+				starter: [blobID, extensionID, ...appendixIDs],
+				solution: [readingID, blobID, extensionID, ...appendixIDs]
 			},
 			sourceUrl: role =>
 				"https://github.com/" +

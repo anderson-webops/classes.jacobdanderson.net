@@ -422,6 +422,7 @@ jobs:
           npm exec -w front-end -- vitest run
           test/store.courses.catalog-identities.spec.test.ts
           test/store.courses.progress-identity.spec.test.ts
+          test/java-pattern-references.spec.test.ts
           test/java-studios-workspace.spec.test.ts
           test/java-capstone-workspace.spec.test.ts
           test/java-judgment-workspace.spec.test.ts
@@ -573,13 +574,13 @@ jobs:
         run: python3 -I -B test/java-architecture-exported-native.py
       - name: Verify Java collaboration patterns course actions and packaged downloads
         id: java_collaboration_browser
-        if: always() && !cancelled() && inputs.course == 'java-collaboration' && steps.course_build.outcome == 'success'
+        if: always() && !cancelled() && (inputs.course == 'java-collaboration' || inputs.course == 'java-studios') && steps.course_build.outcome == 'success'
         env:
           JAVA_COLLABORATION_BROWSER_PROOF_DIR: ${{ github.workspace }}/output/self-study-browser/java-collaboration
           COURSE_IMPORT_SCREENSHOT_DIR: ${{ github.workspace }}/output/self-study-browser/java-collaboration/screenshots
         run: node scripts/classes-family-heavy-task.mjs -- node --test --test-concurrency=1 test/java-collaboration-course-browser.test.mjs
       - name: Compile actual Java collaboration patterns ZIPs and verify optional scope
-        if: always() && !cancelled() && inputs.course == 'java-collaboration' && steps.java_collaboration_browser.outcome == 'success'
+        if: always() && !cancelled() && (inputs.course == 'java-collaboration' || inputs.course == 'java-studios') && steps.java_collaboration_browser.outcome == 'success'
         env:
           JAVA_COLLABORATION_BROWSER_PROOF_DIR: ${{ github.workspace }}/output/self-study-browser/java-collaboration
         run: python3 -I -B test/java-collaboration-exported-native.py
@@ -621,13 +622,13 @@ jobs:
         run: python3 -I -B test/java-boundary-exported-native.py
       - name: Verify Java creational patterns course actions and packaged downloads
         id: java_creational_browser
-        if: always() && !cancelled() && inputs.course == 'java-creational' && steps.course_build.outcome == 'success'
+        if: always() && !cancelled() && (inputs.course == 'java-creational' || inputs.course == 'java-studios') && steps.course_build.outcome == 'success'
         env:
           JAVA_CREATIONAL_BROWSER_PROOF_DIR: ${{ github.workspace }}/output/self-study-browser/java-creational
           COURSE_IMPORT_SCREENSHOT_DIR: ${{ github.workspace }}/output/self-study-browser/java-creational/screenshots
         run: node scripts/classes-family-heavy-task.mjs -- node --test --test-concurrency=1 test/java-creational-course-browser.test.mjs
       - name: Compile actual Java creational patterns ZIPs and verify optional scope
-        if: always() && !cancelled() && inputs.course == 'java-creational' && steps.java_creational_browser.outcome == 'success'
+        if: always() && !cancelled() && (inputs.course == 'java-creational' || inputs.course == 'java-studios') && steps.java_creational_browser.outcome == 'success'
         env:
           JAVA_CREATIONAL_BROWSER_PROOF_DIR: ${{ github.workspace }}/output/self-study-browser/java-creational
         run: python3 -I -B test/java-creational-exported-native.py
