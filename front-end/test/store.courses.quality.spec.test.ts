@@ -6370,7 +6370,10 @@ describe("course text quality normalization", () => {
 		expect(corpus).toContain("Strategy Selection Refactor Studio");
 		expect(corpus).toContain("Structural Wrapper Refactor Studio");
 		expect(corpus).toContain("Architecture Judgment Capstone Studio");
-		expect(corpus).toContain("Brittle Object Model Refactor Studio");
+		expect(corpus).toContain(
+			"Pattern Selection and Refactoring Judgment Core Concepts"
+		);
+		expect(corpus).toContain("Checkout.quote and receipt");
 		expect(corpus).toContain(
 			"Strategy Selection Refactor Transfer Practice"
 		);
