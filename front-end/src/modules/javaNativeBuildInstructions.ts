@@ -18,6 +18,7 @@ import {
 	javaCollaborationCoreID,
 	javaCollaborationReadingID
 } from "./javaCollaborationResources";
+import { javaComposingNativeInstructions } from "./javaComposingResources";
 import {
 	javaCreationalCoreID,
 	javaCreationalReadingID
@@ -163,6 +164,9 @@ const fruitFeastItem =
 export function javaNativeBuildInstructions(
 	courseProjectKey?: string
 ): string[] | null {
+	const composingInstructions =
+		javaComposingNativeInstructions(courseProjectKey);
+	if (composingInstructions) return composingInstructions;
 	const refactoringInstructions =
 		javaRefactoringNativeInstructions(courseProjectKey);
 	if (refactoringInstructions) return refactoringInstructions;

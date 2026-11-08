@@ -1,4 +1,8 @@
 import { githubRawUrl, parseGitHubResource } from "@/modules/codePreview";
+import {
+	javaComposingProjectKey,
+	javaComposingResource
+} from "./javaComposingResources";
 
 export const javaRefactoringRevision =
 	"56cc9b14b8162f17bc5eeb2f70ed7c0dbcc83251";
@@ -57,6 +61,8 @@ export function javaRefactoringProjectKey(
 	role: "starter" | "reference",
 	url: string
 ) {
+	if (javaComposingResource(url))
+		return javaComposingProjectKey(courseID, itemID, role, url);
 	const selected = javaRefactoringResource(url);
 	if (
 		!selected ||

@@ -6303,7 +6303,11 @@ describe("course text quality normalization", () => {
 		expect(corpus).not.toMatch(/\bMini Lab\b/);
 		expect(corpus).toContain("Refactoring Clinic 11: Practice Studio");
 		expect(corpus).toContain("Refactoring Clinic 17 Extension Practice");
-		expect(corpus).toContain("Calculation Pipeline Refactor Studio");
+  const composing = course!.modules.find(module => module.title === "DPR2 Composing Methods")!;
+  expect(composing.curriculum.map(item => item.title)).toContain("Composing Methods Application Check");
+  const composingText = allCourseText({ ...course!, modules: [composing] });
+  for (const contract of ["ComposedReport", "MethodObjectReport", "13218", "supplier", "exception", "long"])
+   expect(composingText).toContain(contract);
 		expect(corpus).toContain("Characterization Test Refactor Studio");
 		expect(corpus).toContain("Composing Methods Transfer Practice");
 		expect(corpus).toContain(
