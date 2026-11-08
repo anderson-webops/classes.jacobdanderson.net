@@ -39,7 +39,7 @@ One Checkout.java file can contain multiple duplicate rules, so files touched al
 
 ## Decision inputs
 
-For fixed pricing, compare private helpers with ShippingPolicy and separate strategy classes. Then consider caller-selected per-request shipping. Complete DECISIONS.md with a simpler alternative, measurable benefit, cost and removal trigger.
+For fixed pricing, compare private helpers with ShippingPolicy and separate strategy classes. Then consider caller-selected per-request shipping. Complete `DECISIONS.md` with a simpler alternative, measurable benefit, cost and removal trigger.
 
 ## Decision answers
 
@@ -63,14 +63,14 @@ Compute subtotal, shipping, total and receipt for REGULAR 9 STANDARD; REGULAR 10
 
 ## Core answers
 
-| Order               | Subtotal | Shipping | Total |
-| ------------------- | -------: | -------: | ----: |
-| REGULAR 9 STANDARD  |     1800 |      500 |  2300 |
-| REGULAR 10 STANDARD |     2000 |        0 |  2000 |
-| MEMBER 11 STANDARD  |     1980 |      500 |  2480 |
-| MEMBER 12 STANDARD  |     2160 |        0 |  2160 |
-| MEMBER 10 EXPRESS   |     1800 |      900 |  2700 |
-| MEMBER 0 EXPRESS    |        0 |        0 |     0 |
+| Order               | Subtotal + shipping | Total |
+| ------------------- | ------------------: | ----: |
+| Regular 9 standard  |          1800 + 500 |  2300 |
+| Regular 10 standard |            2000 + 0 |  2000 |
+| Member 11 standard  |          1980 + 500 |  2480 |
+| Member 12 standard  |            2160 + 0 |  2160 |
+| Member 10 express   |          1800 + 900 |  2700 |
+| Member 0 express    |               0 + 0 |     0 |
 
 The first receipt is `REGULAR|STANDARD|9|1800|500|2300`. Null order raises NullPointerException. Order rejects quantities outside 0..100 and null enum fields. Totals rejects negative components and detects overflowing addition.
 
@@ -82,7 +82,7 @@ REGULAR|STANDARD|10|2000|0|2000
 2700
 ```
 
-Preserve legacy and independent tests. Review target rule ownership and DECISIONS.md separately. Core passes with optional quoteWith unfinished.
+Preserve legacy and independent tests. Review target rule ownership and `DECISIONS.md` separately. Core passes with optional quoteWith unfinished.
 
 ## Understanding inputs
 
@@ -112,4 +112,4 @@ Predict MEMBER 10 STANDARD with policy 250; zero MEMBER EXPRESS with policy 100;
 
 The first returns 1800+250=2050; ordinary quote remains 1800+500=2300. Zero units with policy 100 gives 100. Invoke exactly once for every valid non-null order/policy, including zero quantity. Fees 0/10000 are accepted; -1/10001 raise IllegalArgumentException after one call.
 
-Null order/policy raises NullPointerException before invocation. Callback exceptions propagate after the invocation; prior effects remain. Core stays `Core judgment contracts: 2435 passed`; complete reports `Complete judgment contracts: 2445 passed`. Core also passes with optional quoteWith still throwing. Keep the actual variation and removal trigger in DECISIONS.md.
+Null order/policy raises NullPointerException before invocation. Callback exceptions propagate after the invocation; prior effects remain. Core stays `Core judgment contracts: 2435 passed`; complete reports `Complete judgment contracts: 2445 passed`. Core also passes with optional quoteWith still throwing. Keep the actual variation and removal trigger in `DECISIONS.md`.

@@ -55,7 +55,7 @@ Record the desired property, observable contract, simpler counterfactual, cost a
 
 ### Complete comparison example
 
-This is the complete public Main.java. Its separate three-file folder also includes ContractTests.java and README.md.
+This is the complete public Main.java. Its separate three-file folder also includes ContractTests.java and \`README.md\`.
 
 \`\`\`java
 import java.util.Locale;
@@ -109,7 +109,7 @@ Characterization records existing observable behavior before changing structure.
 
 The assigned checkout preserves LegacyCheckout as a comparison baseline and uses an independently written pricing table as an oracle. Agreement between two copied implementations alone could preserve the same mistake in both. The harness checks every allowed combination against the table: 101 quantities times 2 tiers times 3 deliveries equals 606 orders.
 
-The exported pack has nine files: Main.java, ContractTests.java, DECISIONS.md, README.md, sources.txt, and four package files under src/checkout: Checkout.java, LegacyCheckout.java, Order.java and Totals.java. Keep package paths intact. All Java uses Java 21 and bounded integer cents. The program reads no standard input and writes no files.
+The exported pack has nine files: Main.java, ContractTests.java, \`DECISIONS.md\`, \`README.md\`, sources.txt, and four package files under src/checkout: Checkout.java, LegacyCheckout.java, Order.java and Totals.java. Keep package paths intact. All Java uses Java 21 and bounded integer cents. The program reads no standard input and writes no files.
 
 Order is an immutable record: units is 0 through 100 inclusive; tier is REGULAR or MEMBER; delivery is PICKUP, STANDARD or EXPRESS. An out-of-range quantity raises IllegalArgumentException. A null enum field raises NullPointerException. Totals stores nonnegative subtotal and shipping, and computes total with checked integer addition. Negative components are rejected; an overflowing sum raises ArithmeticException. Sharing these immutable values does not create a mutable ownership alias.
 
@@ -172,7 +172,7 @@ Define each count before reporting it. Count duplicated rules within the two leg
 
 Compare target files touched to change one price or the standard threshold, duplicated rules in target quote/receipt, added types and constructor dependencies, test setup and caller navigation. A private helper can reduce rule locations without adding an interface. Fewer lines can still make a rule harder to inspect; more classes can still make replacement easier. Explain the observed tradeoff.
 
-In DECISIONS.md record the pressure, preserved contract, chosen design, simpler counterfactual, baseline/final counts with definitions, a concrete change scenario and its cost. Include checks, small commits and rollback identity. A removal trigger names when extra machinery stops earning its maintenance cost, such as removing injection when only one fixed policy remains and callers no longer select behavior.
+In \`DECISIONS.md\` record the pressure, preserved contract, chosen design, simpler counterfactual, baseline/final counts with definitions, a concrete change scenario and its cost. Include checks, small commits and rollback identity. A removal trigger names when extra machinery stops earning its maintenance cost, such as removing injection when only one fixed policy remains and callers no longer select behavior.
 
 ### Optional per-call shipping policy
 
@@ -243,7 +243,7 @@ Explain why 2435 passing checks can coexist with duplicated target methods. **Co
 					learningPath: "core",
 					preserveInstructions: true,
 					preserveAssignment: true,
-					content: `Complete DECISIONS.md in the saved checkout. Record the duplication/change pressure, observable behavior, selected helper or policy design, simpler counterfactual, added types/indirection and removal trigger.
+					content: `Complete \`DECISIONS.md\` in the saved checkout. Record the duplication/change pressure, observable behavior, selected helper or policy design, simpler counterfactual, added types/indirection and removal trigger.
 
 Compare the ordinary helper core with a proposed shipping Strategy hierarchy. Identify the additional requirement that would justify caller-selected policies, then sketch that seam without making it a core requirement. **Completion evidence:** Keep the count definitions, bounded behavior table, tradeoff, change scenario and rollback identity. This is the decision record for the shared project; it assigns no separate starter.`
 				},
@@ -288,7 +288,7 @@ java -cp classes ContractTests core
 java -cp classes Main
 \`\`\`
 
-Baseline reports 1221 passed and core reports 2435 passed. Main's three exact lines are in Core Concepts. Optional quoteWith remains independent. **Completion evidence:** Keep source, boundary table, complete check output, small change checkpoints and DECISIONS.md explaining rule ownership, the simpler alternative and measured costs before consulting the separate reference.`
+Baseline reports 1221 passed and core reports 2435 passed. Main's three exact lines are in Core Concepts. Optional quoteWith remains independent. **Completion evidence:** Keep source, boundary table, complete check output, small change checkpoints and \`DECISIONS.md\` explaining rule ownership, the simpler alternative and measured costs before consulting the separate reference.`
 				},
 				"core"
 			)
