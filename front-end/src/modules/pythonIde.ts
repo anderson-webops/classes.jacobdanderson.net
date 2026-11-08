@@ -63,6 +63,10 @@ import {
 	javaRecursionResource
 } from "@/modules/javaRecursionResources";
 import {
+	javaRefactoringImportFiles,
+	javaRefactoringResource
+} from "@/modules/javaRefactoringResources";
+import {
 	javascriptCourseResource,
 	loadJavaScriptCourseFiles
 } from "@/modules/javascriptCourseResources";
@@ -3291,7 +3295,8 @@ export async function loadPythonIdeStarterFilesFromGitHub(
 				javaArchitectureResource(starterUrl) !== null ||
 				javaJudgmentResource(starterUrl) !== null ||
 				javaCapstoneResource(starterUrl) !== null ||
-				javaStudioResource(starterUrl) !== null))
+				javaStudioResource(starterUrl) !== null ||
+				javaRefactoringResource(starterUrl) !== null))
 	) {
 		const selected =
 			mode === "java"
@@ -3306,7 +3311,8 @@ export async function loadPythonIdeStarterFilesFromGitHub(
 					javaArchitectureImportFiles(starterUrl) ??
 					javaJudgmentImportFiles(starterUrl) ??
 					javaCapstoneImportFiles(starterUrl) ??
-					javaStudioImportFiles(starterUrl))
+					javaStudioImportFiles(starterUrl) ??
+					javaRefactoringImportFiles(starterUrl))
 				: mode === "swift"
 					? swiftImportFiles(starterUrl)
 					: mode === "web"
