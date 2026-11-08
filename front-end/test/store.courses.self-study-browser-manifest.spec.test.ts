@@ -58,31 +58,26 @@ import {
 } from "@/stores/courses/source-library-courses";
 
 import { designPatternsInJavaCourse } from "@/stores/courses/design-patterns-in-java";
+import { designPatternsInJavaPart2Course } from "@/stores/courses/design-patterns-in-java-part-2";
 import { javaLevel3Course } from "@/stores/courses/java-level-3";
 
 function isReviewedModule(id: string, title: string) {
-	return id === "java-level-3"
-		? title === "AJ4 Recursion"
-		: id === "design-patterns-in-java"
-			? [
-					"DPJ1 What Patterns Are and What They Are Not",
-					"DPJ2 Java Design Foundations",
-					"DPJ3 Creational Patterns I",
-					"DPJ4 Creational Patterns II and Boundary Patterns",
-					"DPJ5 Structural Patterns in Depth",
-					"DPJ6 Behavioral Patterns I",
-					"DPJ7 Behavioral Patterns II",
-					"DPJ8 Modern Extensions and Architecture-Level Patterns",
-					"DPJ9 Pattern Selection and Refactoring Judgment",
-					"DPJ10 Capstone Refactor"
-				].includes(title)
-			: true;
+	if (id === "java-level-3") return title === "AJ4 Recursion";
+	if (id === "design-patterns-in-java-part-2")
+		return title === "DPR1 Code Smells and Safe Refactoring Workflow";
+	return true;
 }
 const cases = [
 	{
+		id: "design-patterns-in-java-part-2",
+		source: designPatternsInJavaPart2Course,
+		readings: 1,
+		additions: []
+	},
+	{
 		id: "design-patterns-in-java",
 		source: designPatternsInJavaCourse,
-		readings: 10,
+		readings: 32,
 		additions: []
 	},
 	{
@@ -462,7 +457,11 @@ it.each(
 		}
 		const card = (item: CourseModuleItem) => {
 			const focusedJavaTask =
-				["java-level-3", "design-patterns-in-java"].includes(id) &&
+				[
+					"java-level-3",
+					"design-patterns-in-java",
+					"design-patterns-in-java-part-2"
+				].includes(id) &&
 				course.modules.some(
 					module =>
 						isReviewedModule(id, module.title) &&
@@ -695,9 +694,49 @@ it.each(
 				.filter(module => isReviewedModule(id, module.title))
 				.flatMap(module => module.readings)
 		).toHaveLength(count);
-		if (id === "design-patterns-in-java")
-			expect(modules.length).toBeGreaterThan(10);
-		else if (id === "java-level-3") expect(modules).toHaveLength(25);
+		if (id === "design-patterns-in-java") {
+			expect(modules).toHaveLength(14);
+			const activities = modules.flatMap(module => [
+				...module.projects,
+				...module.optional
+			]);
+			expect(activities).toHaveLength(102);
+			expect(
+				modules.flatMap(module => [
+					...module.readings,
+					...module.projects,
+					...module.optional
+				])
+			).toHaveLength(134);
+			expect(
+				activities.every(
+					item => item.assignmentTextScope === "complete"
+				)
+			).toBe(true);
+			expect(activities.flatMap(item => item.selfChecks)).toHaveLength(
+				204
+			);
+		} else if (id === "design-patterns-in-java-part-2") {
+			expect(modules).toHaveLength(14);
+			const reviewed = modules.filter(module =>
+				isReviewedModule(id, module.title)
+			);
+			expect(reviewed).toHaveLength(1);
+			expect(reviewed[0].readings).toHaveLength(1);
+			const activities = [
+				...reviewed[0].projects,
+				...reviewed[0].optional
+			];
+			expect(activities).toHaveLength(8);
+			expect(
+				activities.every(
+					item => item.assignmentTextScope === "complete"
+				)
+			).toBe(true);
+			expect(activities.flatMap(item => item.selfChecks)).toHaveLength(
+				16
+			);
+		} else if (id === "java-level-3") expect(modules).toHaveLength(25);
 		else if (algebra1)
 			expect(modules).toHaveLength(id === "algebra-1a" ? 21 : 25);
 		else if (algebra)
@@ -725,7 +764,16 @@ it.each(
 			);
 		for (const module of modules) {
 			if (!isReviewedModule(id, module.title)) continue;
-			if (id === "geometry-a")
+			if (id === "design-patterns-in-java") {
+				const expected =
+					{
+						"Optional Applied Java Pattern Studios": 7,
+						"Standards Map": 5,
+						"Course Roadmap": 6,
+						"Project Practice Guide": 4
+					}[module.title] ?? 1;
+				expect(module.readings, module.title).toHaveLength(expected);
+			} else if (id === "geometry-a")
 				expect(module.readings, module.title).toHaveLength(
 					module.title.startsWith("Check-In")
 						? 0
@@ -836,52 +884,44 @@ it.each(
 						modules,
 						...([
 							"java-level-3",
+							"design-patterns-in-java-part-2",
 							"design-patterns-in-java"
 						].includes(id)
 							? {
-									reviewedModuleIds: [
-										id === "java-level-3"
-											? "java-level-3-aj4-recursion"
-											: "design-patterns-in-java-dpj1-what-patterns-are-and-what-they-are-not",
-										...(id === "design-patterns-in-java"
-											? [
-													"design-patterns-in-java-dpj2-java-design-foundations",
-													"design-patterns-in-java-dpj3-creational-patterns-i",
-													"design-patterns-in-java-dpj4-creational-patterns-ii-and-boundary-patterns",
-													"design-patterns-in-java-dpj5-structural-patterns-in-depth",
-													"design-patterns-in-java-dpj6-behavioral-patterns-i",
-													"design-patterns-in-java-dpj7-behavioral-patterns-ii",
-													"design-patterns-in-java-dpj8-modern-extensions-and-architecture-level-patterns",
-													"design-patterns-in-java-dpj9-pattern-selection-and-refactoring-judgment",
-													"design-patterns-in-java-dpj10-capstone-refactor"
-												]
-											: [])
-									]
+									reviewedModuleIds: modules
+										.filter(module =>
+											isReviewedModule(id, module.title)
+										)
+										.map(module => module.id)
 								}
 							: {}),
 						reviewScope:
 							id === "design-patterns-in-java"
-								? "DPJ1 through DPJ10 only: ten complete readings, every core/optional activity and linked input/answer case in those units. All 134 published identities checked; optional studios and appendices remain outside this teaching/runtime acceptance."
-								: id === "java-level-3"
-									? "AJ4 only: one reading, two core projects, three optional tasks and ten input/response views per profile. All 217 course identities checked; other Java units are outside this teaching and runtime acceptance."
-									: id === "intro-to-environmental-science"
-										? "Complete Environmental Science teaching and tasks:27readings,17coreactivities,24optionalactivities and82input/response views per profile;all68published identities retained. Original photosynthesis-image fidelity remains separate."
-										: id === "intro-to-chemistry"
-											? "Complete Chemistry teaching and tasks:62readings,14coreactivities,37optionalactivities and102input/response views per profile;all113published identities retained. Original video evidence remains distinct from authored text alternatives."
-											: id === "intro-to-biology"
-												? "Eight worked body-systems units:8readings,36coreactivities,24optionalprojects and120input/response views per profile;all68published identities retained. Original three legacy images remain separately identified."
-												: id === "elementary-science"
-													? "Eight teaching units and six reference appendices:36readings,48coreactivities,16optionalprojects and11optionalreferenceactivities;all111published identities checked."
+								? "Complete primary course: ten teaching units, applied studios and three reference appendices. All 134 published identities covered by 32 complete readings, 102 activities and 204 input/answer case views per role/width profile."
+								: id === "design-patterns-in-java-part-2"
+									? "DPR1 only: one complete reading, eight activities and sixteen input/answer case views per role/width profile. All 159 published course identities checked; the other refactoring units and clinics remain outside this teaching/runtime acceptance."
+									: id === "java-level-3"
+										? "AJ4 only: one reading, two core projects, three optional tasks and ten input/response views per profile. All 217 course identities checked; other Java units are outside this teaching and runtime acceptance."
+										: id ===
+											  "intro-to-environmental-science"
+											? "Complete Environmental Science teaching and tasks:27readings,17coreactivities,24optionalactivities and82input/response views per profile;all68published identities retained. Original photosynthesis-image fidelity remains separate."
+											: id === "intro-to-chemistry"
+												? "Complete Chemistry teaching and tasks:62readings,14coreactivities,37optionalactivities and102input/response views per profile;all113published identities retained. Original video evidence remains distinct from authored text alternatives."
+												: id === "intro-to-biology"
+													? "Eight worked body-systems units:8readings,36coreactivities,24optionalprojects and120input/response views per profile;all68published identities retained. Original three legacy images remain separately identified."
 													: id ===
-														  "middle-school-integrated-science"
-														? "Complete ten teaching units and five reference appendices:65readings,58complete optional/required activities and117input/response views per role/width profile;all123published identities retained."
+														  "elementary-science"
+														? "Eight teaching units and six reference appendices:36readings,48coreactivities,16optionalprojects and11optionalreferenceactivities;all111published identities checked."
 														: id ===
-															  "early-elementary-a-reading"
-															? "Complete on-site explanations and briefs; the ten named reading texts remain unavailable."
+															  "middle-school-integrated-science"
+															? "Complete ten teaching units and five reference appendices:65readings,58complete optional/required activities and117input/response views per role/width profile;all123published identities retained."
 															: id ===
-																  "early-elementary-b-picture-book"
-																? "Complete supplied teaching,practice,case inputs and briefs;original Gabby Tries text remains unavailable."
-																: "complete course reading and assignment view",
+																  "early-elementary-a-reading"
+																? "Complete on-site explanations and briefs; the ten named reading texts remain unavailable."
+																: id ===
+																	  "early-elementary-b-picture-book"
+																	? "Complete supplied teaching,practice,case inputs and briefs;original Gabby Tries text remains unavailable."
+																	: "complete course reading and assignment view",
 						internalModules: course.modules
 							.filter(module => module.internal)
 							.map(module => ({
