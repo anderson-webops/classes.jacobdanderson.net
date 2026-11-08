@@ -45,11 +45,11 @@ import {
 	javaCreationalImportFiles,
 	javaCreationalResource
 } from "@/modules/javaCreationalResources";
-
 import {
 	javaFoundationsImportFiles,
 	javaFoundationsResource
 } from "@/modules/javaFoundationsResources";
+
 import {
 	javaJudgmentImportFiles,
 	javaJudgmentResource
@@ -115,6 +115,10 @@ import {
 	webCourseResource,
 	webImportFiles
 } from "@/modules/webProjectResources";
+import {
+	javaComposingImportFiles,
+	javaComposingResource
+} from "./javaComposingResources";
 
 const WHITESPACE_RE = /\s+/g;
 const FILE_EXTENSION_RE = /\.[\dA-Z]+$/i;
@@ -3296,7 +3300,8 @@ export async function loadPythonIdeStarterFilesFromGitHub(
 				javaJudgmentResource(starterUrl) !== null ||
 				javaCapstoneResource(starterUrl) !== null ||
 				javaStudioResource(starterUrl) !== null ||
-				javaRefactoringResource(starterUrl) !== null))
+				javaRefactoringResource(starterUrl) !== null ||
+				javaComposingResource(starterUrl) !== null))
 	) {
 		const selected =
 			mode === "java"
@@ -3312,7 +3317,8 @@ export async function loadPythonIdeStarterFilesFromGitHub(
 					javaJudgmentImportFiles(starterUrl) ??
 					javaCapstoneImportFiles(starterUrl) ??
 					javaStudioImportFiles(starterUrl) ??
-					javaRefactoringImportFiles(starterUrl))
+					javaRefactoringImportFiles(starterUrl) ??
+					javaComposingImportFiles(starterUrl))
 				: mode === "swift"
 					? swiftImportFiles(starterUrl)
 					: mode === "web"

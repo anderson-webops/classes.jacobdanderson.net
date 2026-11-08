@@ -1,6 +1,7 @@
 import type { ImplementationLabSection } from "./implementationLabGuidance";
 import type { RawCourse, RawCourseModuleItem } from "./types";
 import { buildImplementationLabGuidance } from "./implementationLabGuidance";
+import { completeJavaComposingMethods } from "./javaComposingMethodsTeaching";
 import { completeJavaRefactoringOpening } from "./javaRefactoringOpeningTeaching";
 import { buildProjectGuidance } from "./projectGuidance";
 
@@ -1915,7 +1916,8 @@ const designPatternsJavaPart2PrimaryModules =
 			DESIGN_PATTERNS_JAVA_PART_2_PRIMARY_TITLES.has(module.title)
 		)
 		.map(decorateDesignPatternsJavaPart2Module)
-		.map(completeJavaRefactoringOpening);
+		.map(completeJavaRefactoringOpening)
+		.map(completeJavaComposingMethods);
 const designPatternsJavaPart2Clinics =
 	designPatternsInJavaPart2SourceCourse.modules.filter(
 		module => !DESIGN_PATTERNS_JAVA_PART_2_PRIMARY_TITLES.has(module.title)
