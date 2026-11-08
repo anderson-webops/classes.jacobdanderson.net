@@ -15,8 +15,12 @@
 			"design-patterns-in-java-optional-applied-java-pattern-studios-supplemental-review-strategy-selection-refactor",
 			"design-patterns-in-java-optional-applied-java-pattern-studios-supplemental-extension-challenge-strategy-selection-refactor",
 			"design-patterns-in-java-optional-applied-java-pattern-studios-supplemental-strategy-selection-refactor-transfer-practice",
-			"design-patterns-in-java-optional-applied-java-pattern-studios-supplemental-strategy-selection-refactor-extension-practice"
-		]
+			"design-patterns-in-java-optional-applied-java-pattern-studios-supplemental-strategy-selection-refactor-extension-practice",
+			"design-patterns-in-java-project-practice-guide-supplemental-practice-project-refactor-if-else-behavior-into-strategy"
+		],
+		"itemModules": {
+			"design-patterns-in-java-project-practice-guide-supplemental-practice-project-refactor-if-else-behavior-into-strategy": "design-patterns-in-java-project-practice-guide"
+		}
 	},
 	{
 		"key": "wrapper",
@@ -35,7 +39,8 @@
 			"design-patterns-in-java-optional-applied-java-pattern-studios-supplemental-extension-challenge-structural-wrapper-refactor",
 			"design-patterns-in-java-optional-applied-java-pattern-studios-supplemental-structural-wrapper-refactor-transfer-practice",
 			"design-patterns-in-java-optional-applied-java-pattern-studios-supplemental-structural-wrapper-refactor-extension-practice"
-		]
+		],
+		"itemModules": {}
 	},
 	{
 		"key": "architecture",
@@ -53,7 +58,11 @@
 			"design-patterns-in-java-optional-applied-java-pattern-studios-supplemental-review-architecture-judgment-capstone",
 			"design-patterns-in-java-optional-applied-java-pattern-studios-supplemental-extension-challenge-architecture-judgment-capstone",
 			"design-patterns-in-java-optional-applied-java-pattern-studios-supplemental-architecture-judgment-capstone-transfer-practice",
-			"design-patterns-in-java-optional-applied-java-pattern-studios-supplemental-architecture-judgment-capstone-extension-practice"
-		]
+			"design-patterns-in-java-optional-applied-java-pattern-studios-supplemental-architecture-judgment-capstone-extension-practice",
+			"design-patterns-in-java-project-practice-guide-supplemental-practice-project-refactor-a-mini-app-with-tests-before-and-after"
+		],
+		"itemModules": {
+			"design-patterns-in-java-project-practice-guide-supplemental-practice-project-refactor-a-mini-app-with-tests-before-and-after": "design-patterns-in-java-project-practice-guide"
+		}
 	}
 ]

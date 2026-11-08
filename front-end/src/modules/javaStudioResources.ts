@@ -1,5 +1,28 @@
 import { githubRawUrl, parseGitHubResource } from "@/modules/codePreview";
 import { javaCapstoneProjectKey } from "./javaCapstoneResources";
+import {
+	javaCollaborationCoreID,
+	javaCollaborationProjectKey,
+	javaCollaborationURL
+} from "./javaCollaborationResources";
+import {
+	javaCreationalCoreID,
+	javaCreationalProjectKey,
+	javaCreationalURL
+} from "./javaCreationalResources";
+
+export const javaPatternAppendixProjectFamily: Record<string, string> = {
+	"design-patterns-in-java-project-practice-guide-supplemental-practice-project-refactor-if-else-behavior-into-strategy":
+		"strategy",
+	"design-patterns-in-java-project-practice-guide-supplemental-practice-project-add-observer-events-to-a-small-model":
+		"collaboration",
+	"design-patterns-in-java-project-practice-guide-supplemental-practice-project-convert-duplicate-constructors-to-factory":
+		"creational",
+	"design-patterns-in-java-project-practice-guide-supplemental-practice-project-implement-command-based-undo":
+		"collaboration",
+	"design-patterns-in-java-project-practice-guide-supplemental-practice-project-refactor-a-mini-app-with-tests-before-and-after":
+		"architecture"
+};
 
 export const javaStudioRevision = "863f2ba2ad2fe6c8c20681e3fdff6eeeb7170be9";
 export const javaStudios = [
@@ -174,11 +197,38 @@ export function javaStudioProjectKey(
 	role: "starter" | "reference",
 	url: string
 ) {
+	const appendixFamily = javaPatternAppendixProjectFamily[itemID];
+	const sourceRole = role === "starter" ? "starter" : "solution";
+	if (courseID === "design-patterns-in-java") {
+		if (
+			appendixFamily === "collaboration" &&
+			url === javaCollaborationURL(sourceRole)
+		) {
+			return javaCollaborationProjectKey(
+				courseID,
+				javaCollaborationCoreID,
+				role,
+				url
+			);
+		}
+		if (
+			appendixFamily === "creational" &&
+			url === javaCreationalURL(sourceRole)
+		) {
+			return javaCreationalProjectKey(
+				courseID,
+				javaCreationalCoreID,
+				role,
+				url
+			);
+		}
+	}
 	const selected = javaStudioResource(url);
 	if (
 		!selected ||
 		courseID !== "design-patterns-in-java" ||
-		!(selected.studio.items as readonly string[]).includes(itemID)
+		(!(selected.studio.items as readonly string[]).includes(itemID) &&
+			appendixFamily !== selected.studio.key)
 	) {
 		return javaCapstoneProjectKey(courseID, itemID, role, url);
 	}
