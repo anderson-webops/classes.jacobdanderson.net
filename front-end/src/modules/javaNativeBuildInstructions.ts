@@ -23,6 +23,10 @@ import {
 	javaFoundationsReadingID
 } from "./javaFoundationsResources";
 import {
+	javaJudgmentCoreID,
+	javaJudgmentReadingID
+} from "./javaJudgmentResources";
+import {
 	javaPatternsExtensionID,
 	javaPatternsPricingID,
 	javaPatternsReadingID
@@ -155,6 +159,48 @@ export function javaNativeBuildInstructions(
 ): string[] | null {
 	const parts = (courseProjectKey ?? "").split(":");
 	const [course, item, role, extra] = parts;
+	if (
+		course === "design-patterns-in-java" &&
+		item === javaJudgmentReadingID &&
+		role === "starter" &&
+		parts.length === 4 &&
+		extra === "native-java-judgment"
+	) {
+		return [
+			"Java 21 complete refactoring-judgment example",
+			"Export its three files and compile in the worked example folder.",
+			"javac --release 21 -Xlint:all -Werror Main.java ContractTests.java",
+			"java ContractTests",
+			"java Main",
+			"The example reports Judgment worked contracts: 49 passed. Main prints NOTICE: HELLO three times, once per implementation.",
+			"These programs read no standard input. Run displays native Java 21 commands."
+		];
+	}
+	if (
+		course === "design-patterns-in-java" &&
+		[javaJudgmentReadingID, javaJudgmentCoreID].includes(item ?? "") &&
+		["starter", "reference"].includes(role ?? "") &&
+		parts.length === 4 &&
+		extra === "native-java-judgment"
+	) {
+		return [
+			"Java 21 behavior-preserving checkout workflow",
+			"Export all nine files, including DECISIONS.md and the src/checkout package tree.",
+			"javac --release 21 -Xlint:all -Werror -d classes @sources.txt",
+			"java -cp classes ContractTests base",
+			"java -cp classes Main base",
+			"java -cp classes ContractTests core",
+			"java -cp classes Main",
+			"java -cp classes ContractTests",
+			"Baseline reports 1221 passed before target work. Complete Checkout.quote/receipt; core reports 2435 passed. Main prints the two matching REGULAR|STANDARD|10|2000|0|2000 receipts and 2700.",
+			"The final harness additionally checks optional Checkout.quoteWith and reports 2445 passed. Keep the decision record and structural comparison alongside passing behavior tests.",
+			role === "starter"
+				? "The untouched starter compiles and names the unfinished quote; baseline mode already runs."
+				: "The reference completes core and optional behavior. Keep the learner attempt separate.",
+			"These programs read no standard input. Run displays native Java 21 commands."
+		];
+	}
+
 	if (
 		course === "design-patterns-in-java" &&
 		item === javaArchitectureReadingID &&

@@ -72,7 +72,8 @@ function isReviewedModule(id: string, title: string) {
 					"DPJ5 Structural Patterns in Depth",
 					"DPJ6 Behavioral Patterns I",
 					"DPJ7 Behavioral Patterns II",
-					"DPJ8 Modern Extensions and Architecture-Level Patterns"
+					"DPJ8 Modern Extensions and Architecture-Level Patterns",
+					"DPJ9 Pattern Selection and Refactoring Judgment"
 				].includes(title)
 			: true;
 }
@@ -849,7 +850,8 @@ it.each(
 													"design-patterns-in-java-dpj5-structural-patterns-in-depth",
 													"design-patterns-in-java-dpj6-behavioral-patterns-i",
 													"design-patterns-in-java-dpj7-behavioral-patterns-ii",
-													"design-patterns-in-java-dpj8-modern-extensions-and-architecture-level-patterns"
+													"design-patterns-in-java-dpj8-modern-extensions-and-architecture-level-patterns",
+													"design-patterns-in-java-dpj9-pattern-selection-and-refactoring-judgment"
 												]
 											: [])
 									]
@@ -857,7 +859,7 @@ it.each(
 							: {}),
 						reviewScope:
 							id === "design-patterns-in-java"
-								? "DPJ1 through DPJ8 only: eight complete readings, every core/optional activity and linked input/answer case in those units. All 134 published identities checked; later units remain outside this teaching/runtime acceptance."
+								? "DPJ1 through DPJ9 only: nine complete readings, every core/optional activity and linked input/answer case in those units. All 134 published identities checked; later units remain outside this teaching/runtime acceptance."
 								: id === "java-level-3"
 									? "AJ4 only: one reading, two core projects, three optional tasks and ten input/response views per profile. All 217 course identities checked; other Java units are outside this teaching and runtime acceptance."
 									: id === "intro-to-environmental-science"
