@@ -36,6 +36,7 @@ import {
 } from "@/modules/courseLessonPresentation";
 import { unmatchedCourseProgress } from "@/modules/courseProgressHistory";
 import { javaRecursionProjectKey } from "@/modules/javaRecursionResources";
+import { javaRefactoringProjectKey } from "@/modules/javaRefactoringResources";
 import {
 	javascriptCourseProjectKey,
 	javascriptCourseResource
@@ -1773,16 +1774,22 @@ function ideStarterHref(item: CourseModuleItem, resource: ResourceLink) {
 													? javaStudioProjectKey
 													: selectedCourse.value
 																.id ===
-																"usaco-bronze" ||
-														  selectedCourse.value
-																.id ===
-																"usaco-bronze-on-demand"
-														? bronzeRequiredProjectKey
+														  "design-patterns-in-java-part-2"
+														? javaRefactoringProjectKey
 														: selectedCourse.value
 																	.id ===
-															  "usaco-silver"
-															? silverJavaProjectKey
-															: goldHistoricalProjectKey)(
+																	"usaco-bronze" ||
+															  selectedCourse
+																	.value
+																	.id ===
+																	"usaco-bronze-on-demand"
+															? bronzeRequiredProjectKey
+															: selectedCourse
+																		.value
+																		.id ===
+																  "usaco-silver"
+																? silverJavaProjectKey
+																: goldHistoricalProjectKey)(
 			selectedCourse.value.id,
 			item.id,
 			resource.kind === "solution" ? "reference" : "starter",

@@ -36,6 +36,7 @@ import {
 	javaPatternsReadingID
 } from "./javaPatternsResources";
 import { javaRecursionProjects } from "./javaRecursionResources";
+import { javaRefactoringNativeInstructions } from "./javaRefactoringResources";
 import {
 	javaStructuralCoreID,
 	javaStructuralReadingID
@@ -162,6 +163,9 @@ const fruitFeastItem =
 export function javaNativeBuildInstructions(
 	courseProjectKey?: string
 ): string[] | null {
+	const refactoringInstructions =
+		javaRefactoringNativeInstructions(courseProjectKey);
+	if (refactoringInstructions) return refactoringInstructions;
 	const studioInstructions = javaStudioNativeInstructions(courseProjectKey);
 	if (studioInstructions) return studioInstructions;
 	const parts = (courseProjectKey ?? "").split(":");
