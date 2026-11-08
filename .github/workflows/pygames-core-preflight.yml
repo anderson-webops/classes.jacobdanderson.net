@@ -445,6 +445,7 @@ jobs:
           test/store.courses.early-elementary-b-content.spec.test.ts
           test/store.courses.late-elementary-a-content.spec.test.ts
           test/store.courses.late-elementary-b-content.spec.test.ts
+          test/orbit-experiment.spec.test.ts
           test/store.courses.joy-of-reading-flow.spec.test.ts
           test/store.courses.joy-of-reading-content.spec.test.ts
           test/store.courses.picture-book-content.spec.test.ts

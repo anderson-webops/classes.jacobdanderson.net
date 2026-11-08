@@ -9,6 +9,7 @@ import { test } from "node:test";
 import { fileURLToPath } from "node:url";
 import puppeteer from "puppeteer";
 import { createServer, preview } from "vite";
+import { checkOrbitExperiment } from "./orbit-experiment-browser.mjs";
 
 const root = fileURLToPath(new URL("../front-end/", import.meta.url));
 const courseIds = [
@@ -736,6 +737,15 @@ test(
 									optional
 								});
 							}
+							let orbitExperiment;
+							if (id === "late-elementary-b-math") {
+								const index = fixture.modules.findIndex(module => module.title.startsWith("LEB18 "));
+								const module = fixture.modules[index];
+								const groupIndex = fixture.modules.slice(0, index).filter(candidate => candidate.kind === module.kind).length;
+								await chooseModule(page, module, groupIndex);
+								await chooseView(page, 1);
+								orbitExperiment = await checkOrbitExperiment(page, output, name);
+							}
 							assert.equal(writes, 0);
 							if (id === "middle-school-integrated-science") assert.equal(resourceViews.length, 117);
 							if (id === "pre-algebra-a") assert.equal(resourceViews.length, 23);
@@ -764,6 +774,7 @@ test(
 								resourceViews,
 								assignmentViews,
 								assignments,
+								orbitExperiment,
 								internalModulesExcluded:
 									fixture.internalModules,
 								referenceModulesSeparate: references,
