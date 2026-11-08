@@ -209,7 +209,7 @@ def main():
             page += 1
             assert page <= 10
         producer = select_failed_producer(repository, run, artifact, jobs)
-        upload_log = execute(["gh", "api", "repos/" + repository
+        upload_log = execute(["gh", "api", "--allow-escape-sequences", "repos/" + repository
                               + "/actions/jobs/" + str(producer["job"]["id"]) + "/logs"],
                              "producer-upload-log").stdout.decode()
         verify_failed_upload(upload_log, artifact)
@@ -223,7 +223,7 @@ def main():
         record["producerConclusion"] = run["conclusion"]
         record["artifactName"] = artifact["name"]
         execute(
-            ["gh", "api", "repos/" + repository + "/actions/artifacts/"
+            ["gh", "api", "--allow-escape-sequences", "repos/" + repository + "/actions/artifacts/"
              + args.artifact_id + "/zip"],
             "original-artifact",
         )
