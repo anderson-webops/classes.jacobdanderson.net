@@ -6334,11 +6334,19 @@ describe("course text quality normalization", () => {
 
 		expect(projectItems).toHaveLength(3);
 		expect(new Set(projectItems.map(item => item.content)).size).toBe(3);
-		expect(projectItems[0].content).toContain("Java project");
+		expect(projectItems[0].projectLink).toMatch(
+			/DPJ8-Notebook-Architecture-Packs\/starter$/
+		);
+		expect(projectItems[0].content).toContain("ContractTests core");
 		expect(projectItems[1].title).toContain("Transfer Practice");
-		expect(projectItems[1].content).toContain("Transfer Practice");
+		expect(projectItems[1].projectLink).toBeUndefined();
+		expect(projectItems[1].content).toContain(
+			"complete explicit-injection worked example"
+		);
 		expect(projectItems[2].title).toContain("Extension Practice");
-		expect(projectItems[2].content).toContain("Extension Practice");
+		expect(projectItems[2].projectLink).toBe(projectItems[0].projectLink);
+		expect(projectItems[2].content).toContain("NoteService.copy");
+		expect(projectItems[2].content).toContain("Complete core first");
 	});
 
 	it("keeps Design Patterns in Java labels pattern-specific", async () => {
