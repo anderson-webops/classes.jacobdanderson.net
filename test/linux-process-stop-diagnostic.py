@@ -23,7 +23,7 @@ insert="""                stopped_wait = terminal.command("wait %1\\nprintf 'STO
                 assert "STOP_WAIT_STATUS=" + str(128 + signal.SIGSTOP) in stopped_wait
 """
 assert original.decode().count(needle)==1
-patched=original.decode().replace(needle,insert+needle)
+patched=original.decode() if "STOP_WAIT_STATUS=" in original.decode() else original.decode().replace(needle,insert+needle)
 patched=patched.replace('"jobs": jobs, "foregroundStatus": 130,','"jobs": jobs, "stoppedWaitStatus": 128 + signal.SIGSTOP, "foregroundStatus": 130,')
 packs=json.loads((ROOT/"test/fixtures/linux-owned-labs-contracts.json").read_text())
 selected=[p for p in packs if p["pack"] in [
@@ -36,7 +36,7 @@ with tempfile.TemporaryDirectory(prefix="linux-stopped-job-evidence-") as tempor
     for label,content in [("original",original),("wait-1",patched.encode()),("wait-2",patched.encode())]:
         folder=base/label;folder.mkdir();(folder/"test").mkdir()
         for pack in selected:
-            assert pack["revision"]==identity["revision"]
+            assert pack["revision"]==identity.get("sourceRevision",identity["revision"])
             for name,data in pack["files"].items():
                 content_bytes=data["content"].encode()
                 assert hashlib.sha256(content_bytes).hexdigest()==data["sha256"]
@@ -75,7 +75,7 @@ with tempfile.TemporaryDirectory(prefix="linux-stopped-job-evidence-") as tempor
             stops=[row for row in data["observations"] if row["kind"]=="pipeline-job-control"]
             assert len(stops)==3 and all(row["stoppedWaitStatus"]==128+signal.SIGSTOP for row in stops)
         results.append(result)
-proof={"sourceIdentity":identity,"results":results,"candidateAcceptedTwice":True,
+proof={"sourceIdentity":identity,"explicitStopWaitAlreadyPresent":"STOP_WAIT_STATUS=" in original.decode(),"results":results,"candidateAcceptedTwice":True,
        "originalPublishedSourceAcceptanceInferred":False,"temporaryBuildsCleaned":True}
 (args.output/"comparison.json").write_text(json.dumps(proof,indent=2)+"\n")
 print(json.dumps(proof),flush=True)
