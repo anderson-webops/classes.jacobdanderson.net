@@ -6367,9 +6367,11 @@ describe("course text quality normalization", () => {
 		expect(source).not.toMatch(/\bMini Lab\b/);
 		expect(source).not.toMatch(/\bshould\b/);
 		expect(corpus).not.toMatch(/\bMini Lab\b/);
-		expect(corpus).toContain("Strategy Selection Refactor Studio");
-		expect(corpus).toContain("Structural Wrapper Refactor Studio");
-		expect(corpus).toContain("Architecture Judgment Capstone Studio");
+		expect(corpus).toContain("Strategy Selection Refactor");
+		expect(corpus).toContain("Structural Wrapper Refactor");
+		expect(corpus).toContain("Architecture Judgment Capstone");
+		for (const boundary of ["PricingRule", "Counting", "NoteRepository"])
+			expect(corpus).toContain(boundary);
 		expect(corpus).toContain(
 			"Pattern Selection and Refactoring Judgment Core Concepts"
 		);

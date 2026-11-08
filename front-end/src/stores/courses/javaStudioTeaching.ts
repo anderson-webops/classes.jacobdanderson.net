@@ -47,7 +47,7 @@ const lessons: Record<
 		key: "strategy",
 		section: "extension-review",
 		content:
-			"Review optional injection using a recording rule, a negative-returning rule and an exception marker. Report the exact argument, invocation count, return or exception identity, then run an ordinary FLAT quote afterward. Include invalid quantity plus null rule to establish validation order.\n\nExplain whether a stateless lambda or a named class best expresses each callback. Revisit the removal trigger if the only remaining variation is one fixed arithmetic function.\n"
+			"Review optional injection using a recording rule, a negative-returning rule and an exception marker. Report the exact argument, invocation count, return or exception identity, then run an ordinary FLAT quote afterward. Include invalid quantity plus null rule to establish validation order.\n\n**Completion evidence:** Explain whether a stateless lambda or a named class best expresses each callback. Revisit the removal trigger if the only remaining variation is one fixed arithmetic function.\n"
 	},
 	"Structural Wrapper Refactor: Core Concepts": {
 		key: "wrapper",
@@ -77,7 +77,7 @@ const lessons: Record<
 		key: "wrapper",
 		section: "extension",
 		content:
-			"Implement optional invalidate(key). Validate first, remove only that key's cached value and return whether it existed. A disabled cache returns false. Do not load from Source or change attempts. An empty-string cached value still counts as an existing entry. Other keys remain cached.\n\nUse the same saved ReadDesk project. Check an existing key, an absent key, repeated invalidation, invalid input and the no-cache configuration. Record attempts and source calls before and after.\n"
+			"Implement optional invalidate(key). Validate first, remove only that key's cached value and return whether it existed. A disabled cache returns false. Do not load from Source or change attempts. An empty-string cached value still counts as an existing entry. Other keys remain cached.\n\n**Completion evidence:** Use the same saved ReadDesk project. Check an existing key, an absent key, repeated invalidation, invalid input and the no-cache configuration. Record attempts and source calls before and after.\n"
 	},
 	"Structural Wrapper Refactor Transfer Practice": {
 		key: "wrapper",
@@ -89,7 +89,7 @@ const lessons: Record<
 		key: "wrapper",
 		section: "extension-review",
 		content:
-			"Review selective invalidation with two cached keys, including one empty string. Remove one entry, repeat removal and read the other. Show that invalidation does not call Source or increase attempts and that the unrelated key remains a cache hit.\n\nCompare full clearCache with one-key invalidation. Explain whether per-instance cache ownership remains adequate for the stated change scenario, and record the cost of any proposed broader lifetime.\n"
+			"Review selective invalidation with two cached keys, including one empty string. Remove one entry, repeat removal and read the other. Show that invalidation does not call Source or increase attempts and that the unrelated key remains a cache hit.\n\n**Completion evidence:** Compare full clearCache with one-key invalidation. Explain whether per-instance cache ownership remains adequate for the stated change scenario, and record the cost of any proposed broader lifetime.\n"
 	},
 	"Architecture Judgment Capstone: Core Concepts": {
 		key: "architecture",
@@ -125,13 +125,13 @@ const lessons: Record<
 		key: "architecture",
 		section: "transfer",
 		content:
-			"Written transfer: two clients both read version 2, then sequentially edit using expected version 2. Predict each result, final version and edit event count. Propose the repository operation required if those writes were actually concurrent.\n\nThe existing port uses separate find and save. Explain why a new storage adapter alone cannot guarantee atomic conflict detection. State the needed compare-and-update contract, and keep that behavior change separate from this behavior-preserving refactor.\n"
+			"Written transfer: two clients both read version 2, then sequentially edit using expected version 2. Predict each result, final version and edit event count. Propose the repository operation required if those writes were actually concurrent.\n\n**Completion evidence:** The existing port uses separate find and save. Explain why a new storage adapter alone cannot guarantee atomic conflict detection. State the needed compare-and-update contract, and keep that behavior change separate from this behavior-preserving refactor.\n"
 	},
 	"Architecture Judgment Capstone Extension Practice": {
 		key: "architecture",
 		section: "extension-review",
 		content:
-			"Review removal by preserving a second note, removing the first, retrying removal and recreating the first. Record the snapshot before removal, current insertion order, versions and audit events. Repeat with a sink that throws on REMOVED; check actual stored state after the exception.\n\nExplain the distinction between a reported audit failure and a storage rollback. Propose an explicit transaction/delivery contract before claiming stronger guarantees, and state the extra machinery that contract would require.\n"
+			"Review removal by preserving a second note, removing the first, retrying removal and recreating the first. Record the snapshot before removal, current insertion order, versions and audit events. Repeat with a sink that throws on REMOVED; check actual stored state after the exception.\n\n**Completion evidence:** Explain the distinction between a reported audit failure and a storage rollback. Propose an explicit transaction/delivery contract before claiming stronger guarantees, and state the extra machinery that contract would require.\n"
 	}
 };
 export function completeJavaStudios(module: RawCourseModule): RawCourseModule {
