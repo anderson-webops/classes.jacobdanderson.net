@@ -84,12 +84,10 @@ Compute the rendered prefix, per-copy rate and total for EMAIL NORMAL copies2; E
 
 ## Core answers
 
-| Request         | Calculation               | Total cents |
-| --------------- | ------------------------- | ----------: |
-| EMAIL NORMAL, 2 | EMAIL: Hi; 100 × 2        |         200 |
-| EMAIL URGENT, 2 | URGENT EMAIL: Hi; 140 × 2 |         280 |
-| SMS NORMAL, 3   | SMS: Hi; 60 × 3           |         180 |
-| SMS URGENT, 3   | URGENT SMS: Hi; 100 × 3   |         300 |
+- **EMAIL NORMAL, 2 copies:** `EMAIL: Hi`; 100 × 2 = **200 cents**.
+- **EMAIL URGENT, 2 copies:** `URGENT EMAIL: Hi`; 140 × 2 = **280 cents**.
+- **SMS NORMAL, 3 copies:** `SMS: Hi`; 60 × 3 = **180 cents**.
+- **SMS URGENT, 3 copies:** `URGENT SMS: Hi`; 100 × 3 = **300 cents**.
 
 A duplicate send id raises IllegalArgumentException before computation or another notification. A valid missing id yields Optional.empty; null request raises NullPointerException. Copies 0/21 are invalid;1/20 are included. Empty text is valid and whitespace is preserved.
 

@@ -63,14 +63,12 @@ Compute subtotal, shipping, total and receipt for REGULAR 9 STANDARD; REGULAR 10
 
 ## Core answers
 
-| Order               | Subtotal + shipping | Total |
-| ------------------- | ------------------: | ----: |
-| Regular 9 standard  |          1800 + 500 |  2300 |
-| Regular 10 standard |            2000 + 0 |  2000 |
-| Member 11 standard  |          1980 + 500 |  2480 |
-| Member 12 standard  |            2160 + 0 |  2160 |
-| Member 10 express   |          1800 + 900 |  2700 |
-| Member 0 express    |               0 + 0 |     0 |
+- **Regular 9 standard:** 1800 subtotal + 500 shipping = **2300 total**.
+- **Regular 10 standard:** 2000 subtotal + 0 shipping = **2000 total**.
+- **Member 11 standard:** 1980 subtotal + 500 shipping = **2480 total**.
+- **Member 12 standard:** 2160 subtotal + 0 shipping = **2160 total**.
+- **Member 10 express:** 1800 subtotal + 900 shipping = **2700 total**.
+- **Member 0 express:** 0 subtotal + 0 shipping = **0 total**.
 
 The first receipt is `REGULAR|STANDARD|9|1800|500|2300`. Null order raises NullPointerException. Order rejects quantities outside 0..100 and null enum fields. Totals rejects negative components and detects overflowing addition.
 

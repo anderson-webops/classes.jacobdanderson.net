@@ -85,7 +85,7 @@ export function javaCapstoneResource(url: string) {
 	) {
 		return null;
 	}
-	return { resource, pack, role };
+	return { resource, pack, role } as const;
 }
 export function javaCapstoneProjectKey(
 	courseID: string,
