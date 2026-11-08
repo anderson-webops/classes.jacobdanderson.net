@@ -1626,7 +1626,7 @@ export const pyGamesCourse: RawCourse = hideBroadPyGamesRootPairs({
 				{
 					title: "Bonus Concepts for Assets",
 					content:
-						"If the project uses images or sounds outside the provided asset bank, prototype with temporary assets first and then replace them with final files later. Resize image files so they match practical sprite sizes, crop or normalize sounds when needed, and explore the PyGame Zero documentation for ideas such as more advanced input, music control, and simple particle effects that can make the Master Project feel more polished."
+						"Prototype with the supplied asset bank before replacing sprites or sounds. A custom sprite needs a practical pixel size and a compatible resource name. PNG supports transparent pixels; an opaque background must be removed before export. A still sprite can spin by changing its Actor angle during update(). The [transparent sprites and rotation example](/course-assets/references/pgzero-golf-terrain-and-sound.md#transparent-sprites-and-rotation) uses the supplied alien image and explains export, naming, rotation and collision checks. Crop or normalize sound files when needed, and keep particles or other visual effects separate from the working game logic."
 				},
 				{
 					title: "Master Project Presentation",

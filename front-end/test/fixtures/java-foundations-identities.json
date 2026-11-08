@@ -1,0 +1,73 @@
+{
+	"curriculum": [
+		{
+			"id": "design-patterns-in-java-dpj2-java-design-foundations-curriculum-java-design-foundations-core-concepts",
+			"aliases": [
+				"design-patterns-in-java-dpj2-java-design-foundations-curriculum-core-concepts-and-learning-sequence",
+				"core-concepts",
+				"design-patterns-in-java-dpj2-java-design-foundations-curriculum-core-concepts"
+			],
+			"title": "Java Design Foundations Core Concepts"
+		},
+		{
+			"id": "design-patterns-in-java-dpj2-java-design-foundations-curriculum-refactoring-exercise-untangle-a-responsibility-blob",
+			"title": "Refactoring Exercise: Untangle a Responsibility Blob"
+		},
+		{
+			"id": "design-patterns-in-java-dpj2-java-design-foundations-curriculum-design-review-favoring-explicit-package-structure",
+			"title": "Design Review: Favoring Explicit Package Structure"
+		},
+		{
+			"id": "design-patterns-in-java-dpj2-java-design-foundations-curriculum-reflection-question-what-makes-a-good-seam-in-java",
+			"title": "Reflection Question: What Makes a Good Seam in Java?"
+		},
+		{
+			"id": "design-patterns-in-java-dpj2-java-design-foundations-curriculum-modern-java-types-before-classic-pattern-machinery",
+			"title": "Modern Java Types Before Classic Pattern Machinery"
+		},
+		{
+			"id": "design-patterns-in-java-dpj2-java-design-foundations-curriculum-package-dependency-and-test-seam-contract",
+			"title": "Package Dependency and Test-Seam Contract"
+		},
+		{
+			"id": "design-patterns-in-java-dpj2-java-design-foundations-curriculum-core-project-java-design-foundations",
+			"aliases": [
+				"design-patterns-in-java-dpj2-java-design-foundations-curriculum-core-project",
+				"dpj2-java-design-foundations-core-project",
+				"design-patterns-in-java-dpj2-java-design-foundations-curriculum-dpj2-java-design-foundations-core-project"
+			],
+			"title": "Core Project: Java Design Foundations"
+		}
+	],
+	"supplementalProjects": [
+		{
+			"id": "design-patterns-in-java-dpj2-java-design-foundations-supplemental-understanding-check-java-design-foundations",
+			"aliases": [
+				"design-patterns-in-java-dpj2-java-design-foundations-supplemental-dpj2-java-design-foundations-diagnostic-checkpoint",
+				"diagnostic-checkpoint-java-design-foundations",
+				"diagnostic-checkpoint",
+				"understanding-check",
+				"design-patterns-in-java-dpj2-java-design-foundations-supplemental-diagnostic-checkpoint-java-design-foundations",
+				"design-patterns-in-java-dpj2-java-design-foundations-supplemental-diagnostic-checkpoint",
+				"design-patterns-in-java-dpj2-java-design-foundations-supplemental-understanding-check"
+			],
+			"title": "Understanding Check: Java Design Foundations"
+		},
+		{
+			"id": "design-patterns-in-java-dpj2-java-design-foundations-supplemental-java-design-foundations-transfer-practice",
+			"aliases": [
+				"design-patterns-in-java-dpj2-java-design-foundations-supplemental-transfer-practice",
+				"design-patterns-in-java-dpj2-java-design-foundations-supplemental-transfer-practice-java-design-foundations"
+			],
+			"title": "Java Design Foundations Transfer Practice"
+		},
+		{
+			"id": "design-patterns-in-java-dpj2-java-design-foundations-supplemental-java-design-foundations-extension-practice",
+			"aliases": [
+				"design-patterns-in-java-dpj2-java-design-foundations-supplemental-extension-practice",
+				"design-patterns-in-java-dpj2-java-design-foundations-supplemental-extension-practice-java-design-foundations"
+			],
+			"title": "Java Design Foundations Extension Practice"
+		}
+	]
+}

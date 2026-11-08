@@ -1,4 +1,30 @@
 import {
+	javaBehavioralCoreID,
+	javaBehavioralReadingID
+} from "./javaBehavioralResources";
+import {
+	javaBoundaryCoreID,
+	javaBoundaryReadingID
+} from "./javaBoundaryResources";
+import {
+	javaCreationalCoreID,
+	javaCreationalReadingID
+} from "./javaCreationalResources";
+import {
+	javaFoundationsCoreID,
+	javaFoundationsReadingID
+} from "./javaFoundationsResources";
+import {
+	javaPatternsExtensionID,
+	javaPatternsPricingID,
+	javaPatternsReadingID
+} from "./javaPatternsResources";
+import { javaRecursionProjects } from "./javaRecursionResources";
+import {
+	javaStructuralCoreID,
+	javaStructuralReadingID
+} from "./javaStructuralResources";
+import {
 	bronzeRequiredAssignment,
 	bronzeRequiredNativeInstructions
 } from "./usacoBronzeRequiredPacks";
@@ -121,6 +147,258 @@ export function javaNativeBuildInstructions(
 ): string[] | null {
 	const parts = (courseProjectKey ?? "").split(":");
 	const [course, item, role, extra] = parts;
+	if (
+		course === "design-patterns-in-java" &&
+		item === javaBehavioralReadingID &&
+		role === "starter" &&
+		parts.length === 4 &&
+		extra === "native-java-behavioral"
+	) {
+		return [
+			"Java 21 complete behavioral-pattern example",
+			"Export its three files and compile in this worked example's own folder.",
+			"javac --release 21 -Xlint:all -Werror Main.java ContractTests.java",
+			"java ContractTests",
+			"java Main",
+			"The complete example reports Behavioral worked contracts: 36 passed. Main prints LOCKED, READY, [-one|-two], a and b on separate lines.",
+			"These programs read no standard input. Run displays native Java 21 commands."
+		];
+	}
+	if (
+		course === "design-patterns-in-java" &&
+		[javaBehavioralReadingID, javaBehavioralCoreID].includes(item ?? "") &&
+		["starter", "reference"].includes(role ?? "") &&
+		parts.length === 4 &&
+		extra === "native-java-behavioral"
+	) {
+		return [
+			"Java 21 behavioral document workflow",
+			"Export all eleven files. Keep sources.txt and the src/behavior package tree together.",
+			"javac --release 21 -Xlint:all -Werror -d classes @sources.txt",
+			"java -cp classes ContractTests core",
+			"java -cp classes Main",
+			"java -cp classes ContractTests",
+			"Complete RuleContext.format, three private document transitions, ReportTemplate.render and ReviewQueue.iterator. Core reports 82 passed. Main prints the document phase, selected text, report and queue.",
+			"The final harness additionally checks optional ReviewQueue.matching and reports 91 passed. A completed core remains usable before the optional extension.",
+			role === "starter"
+				? "The untouched starter compiles and names an unfinished method."
+				: "The reference completes core and optional behavior. Keep the learner attempt and design evidence separate.",
+			"These programs read no standard input. Run displays native Java 21 commands."
+		];
+	}
+	if (
+		course === "design-patterns-in-java" &&
+		item === javaStructuralReadingID &&
+		role === "starter" &&
+		parts.length === 4 &&
+		extra === "native-java-structural"
+	) {
+		return [
+			"Java 21 complete structural-pattern example",
+			"Export its three files and compile in this worked example's own folder.",
+			"javac --release 21 -Xlint:all -Werror Main.java ContractTests.java",
+			"java ContractTests",
+			"java Main",
+			"The complete example reports Structural worked contracts: 41 passed. Main prints [Ready,*WARNING: WAIT*,GO], ready@1, ready@2 and true on separate lines.",
+			"These programs read no standard input. Run displays native Java 21 commands."
+		];
+	}
+	if (
+		course === "design-patterns-in-java" &&
+		[javaStructuralReadingID, javaStructuralCoreID].includes(item ?? "") &&
+		["starter", "reference"].includes(role ?? "") &&
+		parts.length === 4 &&
+		extra === "native-java-structural"
+	) {
+		return [
+			"Java 21 structural scene workflow",
+			"Export all fourteen files. Keep sources.txt and the src/scene package tree together.",
+			"javac --release 21 -Xlint:all -Werror -d classes @sources.txt",
+			"java -cp classes ContractTests core",
+			"java -cp classes Main",
+			"java -cp classes ContractTests",
+			"Complete Circle.render, Group.render, Frame.render, LazyGraphic.render and GlyphPool.get first. Core reports 621 passed. Main prints the scene, two A:INK placements and true.",
+			"The final harness additionally checks optional Placement.shift and reports 628 passed. A completed core remains usable before the optional extension.",
+			role === "starter"
+				? "The untouched starter compiles and names an unfinished method."
+				: "The reference completes core and optional behavior. Keep the learner attempt and design evidence separate.",
+			"These programs read no standard input. Run displays native Java 21 commands."
+		];
+	}
+	if (
+		course === "design-patterns-in-java" &&
+		item === javaBoundaryReadingID &&
+		role === "starter" &&
+		parts.length === 4 &&
+		extra === "native-java-boundary"
+	) {
+		return [
+			"Java 21 complete boundary-pattern example",
+			"Export its three files and compile in this worked example's own folder.",
+			"javac --release 21 -Xlint:all -Werror Main.java ContractTests.java",
+			"java ContractTests",
+			"java Main",
+			"The complete example reports Boundary worked contracts: 24 passed. Main prints 1, 2, T, Ready and Done on separate lines.",
+			"These programs read no standard input. Run displays native Java 21 commands."
+		];
+	}
+	if (
+		course === "design-patterns-in-java" &&
+		[javaBoundaryReadingID, javaBoundaryCoreID].includes(item ?? "") &&
+		["starter", "reference"].includes(role ?? "") &&
+		parts.length === 4 &&
+		extra === "native-java-boundary"
+	) {
+		return [
+			"Java 21 prototype, adapter and facade workflow",
+			"Export all ten files. Keep sources.txt and the src/boundary package tree together.",
+			"javac --release 21 -Xlint:all -Werror -d classes @sources.txt",
+			"java -cp classes ContractTests core",
+			"java -cp classes Main",
+			"java -cp classes ContractTests",
+			"Complete OrderDraft.copy, PriceAdapter.total and QuoteFacade.quote first. Core reports 4064 passed. Main prints Class order: 6 units = USD 18.00.",
+			"The final harness additionally checks optional copyWithTitle and reports 4071 passed. A completed core remains usable before the optional extension.",
+			role === "starter"
+				? "The untouched starter compiles and names an unfinished method."
+				: "The reference completes core and optional behavior. Keep the learner attempt and design evidence separate.",
+			"These programs read no standard input. Run displays native Java 21 commands."
+		];
+	}
+	if (
+		course === "design-patterns-in-java" &&
+		item === javaCreationalReadingID &&
+		role === "starter" &&
+		parts.length === 4 &&
+		extra === "native-java-creational"
+	) {
+		return [
+			"Java 21 creation choices: complete worked example",
+			"Save and export the three files, then compile in this example's own folder.",
+			"javac --release 21 -Xlint:all -Werror Main.java ContractTests.java",
+			"java ContractTests",
+			"java Main",
+			"The complete example reports Creation worked contracts: 31 passed. Main compares constructors, a named static factory, Supplier, Factory Method, product families, and a fluent Builder.",
+			"These programs read no standard input. Run displays the native Java 21 commands."
+		];
+	}
+	if (
+		course === "design-patterns-in-java" &&
+		[javaCreationalReadingID, javaCreationalCoreID].includes(item ?? "") &&
+		["starter", "reference"].includes(role ?? "") &&
+		parts.length === 4 &&
+		extra === "native-java-creational"
+	) {
+		return [
+			"Java 21 packaged creation-pattern workflow",
+			"Save and export all fourteen files. Keep sources.txt and the src/creation tree together.",
+			"javac --release 21 -Xlint:all -Werror -d classes @sources.txt",
+			"java -cp classes ContractTests factories",
+			"java -cp classes ContractTests core",
+			"java -cp classes Main",
+			"java -cp classes ContractTests",
+			"Complete the two BoxedFactory methods and boxed creation hook, then the four Builder methods. The factories stage reports 635 passed and core reports 2101 passed. Main prints the boxed Notes report, Lines: 2, and End.",
+			"The final harness also checks optional toBuilder and reports 2105 passed. A completed core remains usable before that extension.",
+			role === "starter"
+				? "The untouched starter compiles, then names an unfinished method."
+				: "The reference completes core and optional behavior. Keep a separate learner attempt and pattern-choice evidence.",
+			"These programs read no standard input. Run displays native build commands."
+		];
+	}
+	if (
+		course === "design-patterns-in-java" &&
+		item === javaFoundationsReadingID &&
+		role === "starter" &&
+		parts.length === 4 &&
+		extra === "native-java-foundations"
+	) {
+		return [
+			"Java 21 worked constructor-injection example",
+			"Save and download its ZIP, extract it, and use a terminal in this example's own folder.",
+			"javac --release 21 -Xlint:all -Werror Main.java ContractTests.java",
+			"java ContractTests",
+			"java Main",
+			"The complete example has no unfinished methods. Its harness reports Seam worked contracts: 14 passed, and Main prints Ready.",
+			"This example reads no standard input. Keep its Main separate from the report project. Run displays the native Java 21 commands."
+		];
+	}
+
+	if (
+		course === "design-patterns-in-java" &&
+		[javaFoundationsReadingID, javaFoundationsCoreID].includes(
+			item ?? ""
+		) &&
+		["starter", "reference"].includes(role ?? "") &&
+		parts.length === 4 &&
+		extra === "native-java-foundations"
+	) {
+		return [
+			"Java 21 packaged foundations workflow",
+			"Save and download the ZIP, extract it, and use a terminal in its project root. Keep sources.txt and the src package tree intact.",
+			"javac --release 21 -Xlint:all -Werror -d classes @sources.txt",
+			"java -cp classes ContractTests core",
+			"java -cp classes Main",
+			"java -cp classes ContractTests",
+			"Complete the three core methods first. Core checks report 649 passed, and Main prints Weekly report, Ready, Checked on separate lines. The complete harness additionally checks the optional uppercase-title method and reports 654 passed.",
+			role === "starter"
+				? "The untouched starter compiles, then reports a named UnsupportedOperationException. An unfinished optional extension must leave completed core work usable."
+				: "The reference supplies complete core and optional methods. Package arrows and the refactoring explanation remain separate completion evidence.",
+			"These programs read no standard input. Run displays native build instructions; the full compiler and contract checks run in Java 21."
+		];
+	}
+
+	if (
+		course === "design-patterns-in-java" &&
+		[
+			javaPatternsPricingID,
+			javaPatternsReadingID,
+			javaPatternsExtensionID
+		].includes(item ?? "") &&
+		["starter", "reference"].includes(role ?? "") &&
+		parts.length === 4 &&
+		extra === "native-java-patterns"
+	) {
+		const pricing = item === javaPatternsPricingID;
+		return [
+			"Java 21 design-patterns workflow",
+			"Save the attempt, download its ZIP, extract it, and open a terminal in the project folder.",
+			pricing
+				? "javac --release 21 -Xlint:all -Werror Main.java PricingStrategy.java BulkPricingStrategy.java ContractTests.java"
+				: "javac --release 21 -Xlint:all -Werror Main.java ContractTests.java",
+			...(!pricing ? ["java ContractTests base"] : []),
+			"java ContractTests",
+			"java Main",
+			pricing
+				? "Main prints 18.0. The completed pricing harness reports 10014 passed."
+				: "Main prints 1800, 2420, 1620, 2240 on separate lines. The baseline reports 20052 passed; the full reference reports 28070 passed.",
+			role === "starter"
+				? `The starter compiles. Its full harness rejects the named unfinished method until it is implemented.${pricing ? "" : " The comparison baseline already passes in the extension starter."}`
+				: "The reference checks input and pricing/shipping behavior. A design decision and explanation remain separate completion evidence.",
+			"Each project defines Main; compile projects in separate folders. Run displays these native instructions. README.md contains the complete contract."
+		];
+	}
+	if (
+		course === "java-level-3" &&
+		javaRecursionProjects.some(project => project.id === item) &&
+		["starter", "reference"].includes(role ?? "") &&
+		parts.length === 4 &&
+		extra === "native-java-recursion"
+	) {
+		return [
+			"Java 21 recursion workflow",
+			"Save the attempt, download its ZIP, extract it, and open a terminal in the folder containing Main.java and ContractTests.java.",
+			"javac --release 21 -Xlint:all -Werror Main.java ContractTests.java",
+			"java ContractTests",
+			"java Main",
+			"Compile each project in its own folder. Both course projects define Main, so combining their files creates duplicate classes.",
+			role === "starter"
+				? "The untouched starter compiles, then reports UnsupportedOperationException for its unfinished methods. Implement the method bodies before expecting the contract harness to pass."
+				: "The reference harness checks the documented numerical and input-error contracts. A learner's recursive implementation and call/return trace remain separate completion evidence.",
+			item === javaRecursionProjects[1].id
+				? "The console accepts whitespace-separated integers until quit or end-of-input; an invalid or out-of-range token prints Invalid integer. and processing continues."
+				: "The console prints demonstrations of the five recursive methods. Full input domains, bounds and failure contracts are in README.md.",
+			"Run displays these native build instructions for this pack. Use the terminal's standard input for the console driver."
+		];
+	}
 	const bronze = bronzeRequiredAssignment(course ?? "", item ?? "");
 	if (
 		bronze?.pack.mode === "java" &&

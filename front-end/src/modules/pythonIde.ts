@@ -13,7 +13,6 @@ import {
 	c17ImportFiles
 } from "@/modules/c17ProjectResources";
 import { cStarterCode, cWorkspaceReadme } from "@/modules/cIdeSource";
-
 import { codeIdeAccountRequest } from "@/modules/codeIdeAccountScope";
 import {
 	listGitHubProjectFiles,
@@ -23,9 +22,38 @@ import {
 import { courseReferenceExamples } from "@/modules/courseReferenceExamples";
 import { cppStarterCode, cppWorkspaceReadme } from "@/modules/cppIdeSource";
 import {
+	javaBehavioralImportFiles,
+	javaBehavioralResource
+} from "@/modules/javaBehavioralResources";
+
+import {
+	javaBoundaryImportFiles,
+	javaBoundaryResource
+} from "@/modules/javaBoundaryResources";
+import {
+	javaCreationalImportFiles,
+	javaCreationalResource
+} from "@/modules/javaCreationalResources";
+import {
+	javaFoundationsImportFiles,
+	javaFoundationsResource
+} from "@/modules/javaFoundationsResources";
+import {
+	javaPatternsImportFiles,
+	javaPatternsResource
+} from "@/modules/javaPatternsResources";
+import {
+	javaRecursionImportFiles,
+	javaRecursionResource
+} from "@/modules/javaRecursionResources";
+import {
 	javascriptCourseResource,
 	loadJavaScriptCourseFiles
 } from "@/modules/javascriptCourseResources";
+import {
+	javaStructuralImportFiles,
+	javaStructuralResource
+} from "@/modules/javaStructuralResources";
 import { linuxStarterCode, linuxStarterFiles } from "@/modules/linuxIdeSource";
 import {
 	isLinuxProjectTextPath,
@@ -1665,6 +1693,7 @@ DRAWING_SPEED = 0
 screen = turtle.Screen()
 screen.bgcolor(BACKGROUND_COLOR)
 screen.title("Classroom Turtle Studio")
+screen.setworldcoordinates(-320, -240, 320, 240)
 screen.tracer(0)
 
 artist = turtle.Turtle()
@@ -3223,21 +3252,37 @@ export async function loadPythonIdeStarterFilesFromGitHub(
 		mode === "rust" ||
 		mode === "c" ||
 		mode === "assembly" ||
-		mode === "linux"
+		mode === "linux" ||
+		(mode === "java" &&
+			(javaRecursionResource(starterUrl) !== null ||
+				javaPatternsResource(starterUrl) !== null ||
+				javaFoundationsResource(starterUrl) !== null ||
+				javaCreationalResource(starterUrl) !== null ||
+				javaBoundaryResource(starterUrl) !== null ||
+				javaStructuralResource(starterUrl) !== null ||
+				javaBehavioralResource(starterUrl) !== null))
 	) {
 		const selected =
-			mode === "swift"
-				? swiftImportFiles(starterUrl)
-				: mode === "web"
-					? webImportFiles(starterUrl)
-					: mode === "rust"
-						? rustImportFiles(starterUrl)
-						: mode === "linux"
-							? (linuxImportFiles(starterUrl) ??
-								networkImportFiles(starterUrl))
-							: mode === "assembly"
-								? assemblyImportFiles(starterUrl)
-								: c17ImportFiles(starterUrl);
+			mode === "java"
+				? (javaRecursionImportFiles(starterUrl) ??
+					javaPatternsImportFiles(starterUrl) ??
+					javaFoundationsImportFiles(starterUrl) ??
+					javaCreationalImportFiles(starterUrl) ??
+					javaBoundaryImportFiles(starterUrl) ??
+					javaStructuralImportFiles(starterUrl) ??
+					javaBehavioralImportFiles(starterUrl))
+				: mode === "swift"
+					? swiftImportFiles(starterUrl)
+					: mode === "web"
+						? webImportFiles(starterUrl)
+						: mode === "rust"
+							? rustImportFiles(starterUrl)
+							: mode === "linux"
+								? (linuxImportFiles(starterUrl) ??
+									networkImportFiles(starterUrl))
+								: mode === "assembly"
+									? assemblyImportFiles(starterUrl)
+									: c17ImportFiles(starterUrl);
 		if (!selected) {
 			throw new Error(
 				`${getPythonIdeModeLabel(mode)} source has no verified site import. Use its documented native workflow.`

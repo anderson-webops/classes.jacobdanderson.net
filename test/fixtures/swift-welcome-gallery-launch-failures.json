@@ -1,0 +1,110 @@
+[
+  {
+    "sourceJob": 128224095742,
+    "sourceRun": 42314106277,
+    "course": "welcome",
+    "case": "solution-large-standard",
+    "bundleIdentifier": "org.example.classes.swiftwelcome.solution.standard",
+    "expectedTestIdentifier": "WelcomeProfileUITests/testProfileNavigationAndState()",
+    "status": 65,
+    "summary": {
+      "devicesAndConfigurations": [
+        {
+          "device": {
+            "architecture": "arm64",
+            "deviceId": "BAA3A942-F459-45DB-9C19-A58AE9B217E0",
+            "deviceName": "swift-welcome-ios-42314106277-large",
+            "modelName": "iPhone 17 Pro Max",
+            "osBuildNumber": "23F77",
+            "osVersion": "26.5",
+            "platform": "iOS Simulator"
+          },
+          "expectedFailures": 0,
+          "failedTests": 1,
+          "passedTests": 0,
+          "skippedTests": 0,
+          "testPlanConfiguration": {
+            "configurationId": "1",
+            "configurationName": "Test Scheme Action"
+          }
+        }
+      ],
+      "environmentDescription": "WelcomeSolution \u00b7 Built with macOS 26.6.2",
+      "expectedFailures": 0,
+      "failedTests": 1,
+      "finishTime": 1794010893.287,
+      "passedTests": 0,
+      "result": "Failed",
+      "skippedTests": 0,
+      "startTime": 1794010745.51,
+      "statistics": [],
+      "testFailures": [
+        {
+          "failureText": "Failed to launch <XCUIApplicationImpl: 0x10585fdc0 org.example.classes.swiftwelcome.solution.standard at /Users/runner/work/classes.jacobdanderson.net/classes.jacobdanderson.net/output/swift-welcome-ios/work/derived/standard/Build/Products/Debug-iphonesimulator/WelcomeSolution.app> via Xcode: Timed out while launching application via Xcode.",
+          "targetName": "WelcomeSolutionUITests",
+          "testIdentifier": 1,
+          "testIdentifierString": "WelcomeProfileUITests/testProfileNavigationAndState()",
+          "testIdentifierURL": "test://com.apple.xcode/WelcomeExport/WelcomeSolutionUITests/WelcomeProfileUITests/testProfileNavigationAndState",
+          "testName": "testProfileNavigationAndState()"
+        }
+      ],
+      "title": "Test - WelcomeSolution",
+      "topInsights": [],
+      "totalTestCount": 1
+    }
+  },
+  {
+    "sourceJob": 128234615146,
+    "sourceRun": 42314106277,
+    "course": "gallery",
+    "case": "solution-small-standard",
+    "bundleIdentifier": "org.example.classes.swiftgallery.solution.standard",
+    "expectedTestIdentifier": "CanonicalCourseUITests/testCourseWorkflow()",
+    "status": 65,
+    "summary": {
+      "devicesAndConfigurations": [
+        {
+          "device": {
+            "architecture": "arm64",
+            "deviceId": "39F7134E-33FD-442C-BE46-9B94765368B1",
+            "deviceName": "swift-gallery-ios-42314106277-small",
+            "modelName": "iPhone SE (3rd generation)",
+            "osBuildNumber": "23F77",
+            "osVersion": "26.5",
+            "platform": "iOS Simulator"
+          },
+          "expectedFailures": 0,
+          "failedTests": 1,
+          "passedTests": 0,
+          "skippedTests": 0,
+          "testPlanConfiguration": {
+            "configurationId": "1",
+            "configurationName": "Test Scheme Action"
+          }
+        }
+      ],
+      "environmentDescription": "MediaGallerySolution \u00b7 Built with macOS 26.6.2",
+      "expectedFailures": 0,
+      "failedTests": 1,
+      "finishTime": 1794011928.621,
+      "passedTests": 0,
+      "result": "Failed",
+      "skippedTests": 0,
+      "startTime": 1794011769.357,
+      "statistics": [],
+      "testFailures": [
+        {
+          "failureText": "Failed to launch <XCUIApplicationImpl: 0x10545dc40 org.example.classes.swiftgallery.solution.standard at /Users/runner/work/_temp/swift-canonical-ios/gallery/work/derived/standard/Build/Products/Debug-iphonesimulator/MediaGallerySolution.app> via Xcode: Timed out while launching application via Xcode.",
+          "targetName": "MediaGallerySolutionUITests",
+          "testIdentifier": 1,
+          "testIdentifierString": "CanonicalCourseUITests/testCourseWorkflow()",
+          "testIdentifierURL": "test://com.apple.xcode/MediaGalleryExport/MediaGallerySolutionUITests/CanonicalCourseUITests/testCourseWorkflow",
+          "testName": "testCourseWorkflow()"
+        }
+      ],
+      "title": "Test - MediaGallerySolution",
+      "topInsights": [],
+      "totalTestCount": 1
+    }
+  }
+]

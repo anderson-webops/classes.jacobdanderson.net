@@ -1,0 +1,42 @@
+[
+	{
+		"moduleId": "early-elementary-b-math-eeb8-module-project-using-science-for-good",
+		"id": "early-elementary-b-math-eeb8-module-project-using-science-for-good-curriculum-fritz-four-week-dosage-budget",
+		"section": "core"
+	},
+	{
+		"moduleId": "early-elementary-b-math-eeb8-module-project-using-science-for-good",
+		"id": "early-elementary-b-math-eeb8-module-project-using-science-for-good-curriculum-fritz-updated-dosage-plan",
+		"section": "core"
+	},
+	{
+		"moduleId": "early-elementary-b-math-eeb11-module-project-investing-for-the-future",
+		"id": "early-elementary-b-math-eeb11-module-project-investing-for-the-future-curriculum-pear-investment-allocation",
+		"section": "core"
+	},
+	{
+		"moduleId": "early-elementary-b-math-eeb11-module-project-investing-for-the-future",
+		"id": "early-elementary-b-math-eeb11-module-project-investing-for-the-future-curriculum-bear-flag-factory-area-budget",
+		"section": "core"
+	},
+	{
+		"moduleId": "early-elementary-b-math-eeb14-represent-and-interpret-data",
+		"id": "early-elementary-b-math-eeb14-represent-and-interpret-data-curriculum-zoo-anniversary-scaled-graphs",
+		"section": "core"
+	},
+	{
+		"moduleId": "early-elementary-b-math-eeb14-represent-and-interpret-data",
+		"id": "early-elementary-b-math-eeb14-represent-and-interpret-data-curriculum-zoo-straw-measurement-line-plot",
+		"section": "core"
+	},
+	{
+		"moduleId": "early-elementary-b-math-eeb17-module-project-2001-a-warehouse-odyssey",
+		"id": "early-elementary-b-math-eeb17-module-project-2001-a-warehouse-odyssey-curriculum-amazon-warehouse-restock-survey",
+		"section": "core"
+	},
+	{
+		"moduleId": "early-elementary-b-math-eeb17-module-project-2001-a-warehouse-odyssey",
+		"id": "early-elementary-b-math-eeb17-module-project-2001-a-warehouse-odyssey-curriculum-warehouse-robot-area-proposal",
+		"section": "core"
+	}
+]

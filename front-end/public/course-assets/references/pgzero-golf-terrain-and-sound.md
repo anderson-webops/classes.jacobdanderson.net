@@ -127,6 +127,43 @@ its button, play-state and stopped-ball checks. Keep the contact test and
 continuous volume changes in `update()`, so they continue between clicks.
 Retain `draw()` for display.
 
+## Transparent sprites and rotation
+
+A PNG can store transparent pixels. An opaque black or white background remains
+visible until those pixels are removed in an image editor and the result is
+exported with transparency. A checkerboard painted into an image is still part
+of the image; renaming a JPEG to PNG does not remove its background. Keep the
+original file and inspect the exported copy over both light and dark backgrounds.
+
+Put the exported sprite at `images/star.png`, with the `images` folder beside
+the game file, and load it with `Actor("star")`. Resource names use lowercase letters,
+numbers and underscores, beginning with a letter. The extension is omitted from
+the Actor name. A single still image can rotate through code; an animated image
+file is unnecessary for a spinning sprite. [Image resources and rotation](https://pygame-zero.readthedocs.io/en/stable/builtins.html).
+
+This complete example uses `images/alien.png` from the supplied course assets.
+Run it in PyGame mode or with `pgzrun sprite_rotation.py`:
+
+```python
+WIDTH = 400
+HEIGHT = 300
+sprite = Actor("alien", center=(200, 150))
+
+def draw():
+    screen.fill((30, 60, 90))
+    sprite.draw()
+
+def update():
+    sprite.angle = (sprite.angle + 2) % 360
+```
+
+Increasing `angle` turns counterclockwise around the anchor, which defaults to
+the center. The example advances two degrees per update; its speed depends on
+the frame rate. Replace `"alien"` with `"star"` after the new image is available.
+Rotation changes the Actor's bounding rectangle, so recheck wall and collision
+behavior. Transparent corners still lie inside that rectangle; a circular
+collision rule needs its own geometric test.
+
 ## Verify and explain
 
 Trace entering, staying, leaving and reentering sand; remaining still inside;

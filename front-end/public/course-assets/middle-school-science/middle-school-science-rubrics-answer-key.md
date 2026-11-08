@@ -37,6 +37,8 @@ A still image can support structure comparison but cannot directly show photosyn
 
 The fictional runner pathway links respiratory exchange, circulatory transport, digestive inputs, cellular energy-transfer reactions, nervous signaling, and muscular-skeletal movement. Arrows label what moves and in which direction. The case is a model and cannot diagnose or compare a learner's health.
 
+Repair the draft by taking food through digestive pathways, with absorbed nutrients entering circulation. Oxygen moves from lung exchange surfaces into blood and then toward active tissues. Nervous signaling coordinates muscle contraction; the heart supplies circulation. A diagram can separate these pathways without claiming that systems work independently.
+
 ## Genetics Variation and Selection Key
 
 Genotype records selected inherited variants. Phenotype is an observed or measured outcome shaped by genotype, environment, development, and chance. One gene does not guarantee one complex outcome, and classroom probability does not predict an individual with certainty.
@@ -53,6 +55,8 @@ Food-web arrows point source → receiver. Energy enters through producers in th
 
 The survey table is not directly comparable because site area and effort differ. North reports 24 individuals/hour across 100 m², Central 19/hour across 100 m², and South 11.25/hour across 50 m². These rough rates still do not correct every detectability or habitat difference.
 
+In the separate equal-effort samples, X and Y each have richness 4 and 40 individuals. X has four shares of 25%; Y has 85%, 5%, 5% and 5%. X is more even. The earlier site totals do not give per-species abundances, so they cannot determine evenness.
+
 The runoff table supports a pathway from nutrient-rich release toward higher nitrate and algae indices plus lower fish counts near and downstream from the channel. It does not establish human exposure, individual health outcomes, or one exclusive ecological mechanism.
 
 A decision can favor different options under different criteria. A complete recommendation names the weights, burden and benefit distribution, indicator, baseline, threshold, and response. Monitoring alone gathers information but does not directly reduce the release.
@@ -60,6 +64,8 @@ A decision can favor different options under different criteria. A complete reco
 ## Earth Weather Climate and Geologic Key
 
 The seven-day sequence shows falling pressure and rising humidity before the largest precipitation on day 4, then rising pressure and drying conditions. This supports a bounded forecast discussion, not a climate conclusion.
+
+The baseline decades have mean anomaly (−0.3 + 0.0 + 0.3) / 3 = 0.0 °C, consistent with the stated equal weighting. The 2011–2020 average is 14.0 + 0.7 = 14.7 °C. The first-to-last change is 0.7 − (−0.6) = 1.3 °C; shifting the reference average changes anomaly values while preserving this difference. The missing year could bias the earliest average if that year differed from the nine observed years, and its effect cannot be calculated from the supplied table.
 
 The fictional temperature anomaly increases across the five decadal periods. That is detection evidence for the supplied region. Attribution requires independent evidence about drivers, mechanisms, competing explanations, and model agreement. A single storm cannot confirm or refute a long-term climate trend.
 
@@ -117,6 +123,8 @@ P1 and P3 encode 0 under the supplied amplitude rule; P2 and P4 encode 1. P1/P2 
 
 Packets A and B contain an even total number of 1s. Packet C has odd parity and flags a possible error. One parity bit cannot correct the bit or detect every possible multi-bit error.
 
+The controlled change A → C flips one bit and changes the parity. A → D flips two bits: D still contains two ones, so even parity accepts a changed payload. This demonstrates an undetected error without implying that a receiver knows which bits changed.
+
 In the supplied series circuit, removing one lamp opens the only path. In the parallel circuit, the other branch remains complete. Current is not used up by the first component, and brightness alone is not a precise current or power measurement.
 
 Field lines are a representation of direction and relative pattern, not physical threads. Motor and generator models trace energy transfer plus thermal and sound losses. A robust communication design includes error checking and a text, shape, pattern, or visual route that does not require sound or color perception.
@@ -124,6 +132,10 @@ Field lines are a representation of direction and relative pattern, not physical
 ## Space Systems and Capstone Key
 
 Earth rotation explains day and night. Moon phases arise from changing Sun-moon-Earth geometry and the visible fraction of the Moon's illuminated half; eclipses require particular shadow alignments. Seasons arise mainly from axial tilt changing Sun angle and day length, not Earth-Sun distance.
+
+Model A gives new, first-quarter, full, third-quarter and new phases from the changing viewing direction. Its projected directions alone cannot establish an eclipse because tilt and shadow geometry are omitted. Its times and appearances are modeled inputs, rather than records of actual sky observations.
+
+Model B gives Moon diameter 3,480 ÷ 12,742 = 0.2731 cm, or about 2.73 mm, and center separation 384,400 ÷ 12,742 = 30.17 cm, or about 30.2 cm. It supports approximate size and distance comparison but cannot explain phases without light direction and an observer. A combined model needs these features and a sequence, while identifying its remaining limits.
 
 Orbiting objects remain under gravitational acceleration. Tangential motion plus inward acceleration produces a curved path. “No gravity in space” is incorrect.
 

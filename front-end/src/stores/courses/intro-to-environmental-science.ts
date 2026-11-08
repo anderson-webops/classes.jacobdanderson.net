@@ -220,8 +220,7 @@ const introToEnvironmentalScienceSourceCourse: RawCourse = {
 				{
 					title: "Photosynthesis Diagram Reference",
 					content: [
-						"This section lists the pending photosynthesis diagram file. The static media URL is kept with the lesson so the visual can appear here once the asset is added.",
-						"Until the diagram is uploaded, use the reserved space to connect the process verbally: light energy is captured by chlorophyll, carbon dioxide enters from the air, water moves through the plant, glucose stores usable chemical energy, and oxygen is released. The important ecosystem idea is that producers convert non-food inputs into food-web energy that consumers and decomposers depend on.",
+						"In this photosynthesis model, light energy is captured by chlorophyll, carbon dioxide enters from the air, water moves through the plant, glucose stores usable chemical energy, and oxygen is released. Producers transform light energy into stored chemical energy that supports consumers and decomposers. The material inputs are carbon dioxide and water; light supplies energy rather than matter.",
 						pendingStaticMediaNotice(PHOTOSYNTHESIS_DIAGRAM)
 					].join("\n\n"),
 					mediaLink: staticMediaUrl(PHOTOSYNTHESIS_DIAGRAM)
@@ -1078,7 +1077,7 @@ const INTRO_ENVIRONMENTAL_FLOW: Record<string, IntroEnvironmentalFlow> = {
 		evidenceGate:
 			"Identify the reported measure, pathway, represented population or habitat, data coverage, competing sources, beneficiaries, burden bearers, and indicator that would show whether an intervention works.",
 		boundaryCheck:
-			"A reported release is not exposure, dose, risk, or observed health outcome; maps show overlap rather than causation; and no learner provides health or demographic data.",
+			"A reported release is not exposure, dose, risk, or observed health outcome. Mapped overlap alone does not establish causation. Analyses use supplied aggregate cases and exclude personal health and demographic data.",
 		referenceLink: ENVIRONMENTAL_REFERENCES.epaTri,
 		materialSection: "pollution-and-distribution-case",
 		answerSection: "pollution-and-distribution-key"
@@ -1226,7 +1225,7 @@ const INTRO_ENVIRONMENTAL_ADDITIONS: Record<string, RawCourseModuleItem[]> = {
 		{
 			title: "Weather, Climate, Trend, and Attribution Ladder",
 			content: [
-				"**Claim ladder:** First establish that an event occurred. Then ask whether its frequency or intensity differs from a historical baseline, whether a broader climate trend changes its likelihood, which forcing contributes to that trend, what impacts follow, and which response is preferred. Each rung needs different evidence.",
+				"**Claim ladder:** First establish that an event occurred. Evaluate whether its frequency or intensity differs from a historical baseline, whether a broader climate trend changes its likelihood, which forcing contributes to that trend, what impacts follow, and which response is preferred. Each rung needs different evidence.",
 				"**Scale discipline:** Weather describes conditions over short times and specific places; climate describes distributions and patterns over longer periods and regions. A station series needs consistent units, a declared baseline, quality control, coverage notes, and attention to station or method changes.",
 				"**Attribution discipline:** Trend detection does not identify cause. Attribution combines physical mechanisms, observations, models, and comparison of possible causes. A supported attribution claim still does not determine one policy because feasibility, tradeoffs, values, and distribution require additional analysis.",
 				"**Mastery check:** Place six supplied statements on the claim ladder, match each to the evidence it requires, and reject one inference that skips a rung."
@@ -1335,7 +1334,7 @@ const INTRO_ENVIRONMENTAL_ADDITIONS: Record<string, RawCourseModuleItem[]> = {
 		{
 			title: "Local Observation Privacy and Accessible Alternatives Gate",
 			content: [
-				"**Choice of case:** A learner may use the supplied fictional local environment, a generalized public place, an identifying-detail-free memory sketch, or a teacher-selected image. Outdoor travel, photography, geolocation, and disclosure of a home or school area are never required.",
+				"**Choice of case:** A learner may use the supplied fictional local environment, a generalized public place, an identifying-detail-free memory sketch, or a supplied image. Outdoor travel, photography, geolocation, and disclosure of a home or school area are never required.",
 				"**Privacy:** Exclude exact addresses, routes, schedules, faces, license plates, private property details, household routines, and embedded location metadata. A generalized land-cover or ecosystem description is enough for every comparison and assessment.",
 				"**Accessibility:** Every visual has a text-equivalent route using the scenario table, labeled descriptions, or a structured list. Color, audio, movement, outdoor access, camera access, and map interaction are never the only way to identify evidence.",
 				"**Mastery check:** Audit one tour artifact for identifying details and inaccessible cues, replace them with generalized evidence, and verify that another learner could interpret the comparison from text alone."
@@ -1447,6 +1446,37 @@ function introEnvironmentalMediaAlternative(mediaLink: string | undefined) {
 	return "**Accessible media alternative:** The Food Web and Biodiversity Cases provide a text-described producer, consumer, decomposer, and reservoir pathway. Use that supplied case when the pending photosynthesis image is unavailable or unhelpful; no color, image inspection, or asset download is required.";
 }
 
+function preserveEnvironmentalTeaching(
+	item: RawCourseModuleItem,
+	contentKind: "reading" | "assignment",
+	flow: IntroEnvironmentalFlow
+): RawCourseModuleItem {
+	const input = item.datasetLink?.startsWith("/course-assets/")
+		? item.datasetLink
+		: environmentalMaterial(flow.materialSection);
+	const response =
+		item.solutionLink ?? environmentalAnswerKey(flow.answerSection);
+	const content = item.content
+		.replace(/\*\*Project goal:\*\*/g, "**Project:**")
+		.replace(/\*\*Completion check:\*\*/g, "**Review:**")
+		.replace(/\*\*Mastery check:\*\*/g, "**Check:**")
+		.replace(
+			/\*\*Vocabulary:\*\*/g,
+			contentKind === "assignment"
+				? "**Working terms:**"
+				: "**Vocabulary:**"
+		);
+	const resource = (asset: string) =>
+		`/course-resource?asset=${encodeURIComponent(asset)}`;
+	return {
+		...item,
+		contentKind,
+		preserveInstructions: true,
+		preserveAssignment: true,
+		content: `${content}\n\n[Case inputs](${resource(input)})\n\n[Project self-check](${resource(response)})`
+	};
+}
+
 export const introToEnvironmentalScienceCourse: RawCourse = {
 	...introToEnvironmentalScienceSourceCourse,
 	modules: introToEnvironmentalScienceSourceCourse.modules.map(module => {
@@ -1499,8 +1529,23 @@ export const introToEnvironmentalScienceCourse: RawCourse = {
 			...module,
 			estimatedTime: flow.estimatedTime,
 			keyBlocks: flow.keyBlocks,
-			curriculum: [...curriculum, ...additions],
-			supplementalProjects
+			curriculum: [
+				...curriculum.map(item =>
+					preserveEnvironmentalTeaching(
+						item,
+						item.title === "Core Biome Research Log"
+							? "assignment"
+							: "reading",
+						flow
+					)
+				),
+				...additions.map(item =>
+					preserveEnvironmentalTeaching(item, "assignment", flow)
+				)
+			],
+			supplementalProjects: supplementalProjects.map(item =>
+				preserveEnvironmentalTeaching(item, "assignment", flow)
+			)
 		};
 	}),
 	developmentMetadata: {

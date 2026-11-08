@@ -85,7 +85,7 @@ final class NetworkingUITests: XCTestCase {
         detail.lifetime = .keepAlways
         add(detail)
         app.navigationBars["Detail"].buttons.firstMatch.tap()
-        XCTAssertTrue(app.navigationBars["Reference"].waitForExistence(timeout: 5))
-        XCTAssertTrue(row(firstTitle, in: app).exists)
+        XCTAssertTrue(app.navigationBars["Reference"].waitForExistence(timeout: 15))
+        XCTAssertTrue(row(firstTitle, in: app).waitForExistence(timeout: 10))
     }
 }

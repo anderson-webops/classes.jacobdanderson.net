@@ -95,6 +95,12 @@ Student R is a fictional model, not a learner health record.
 
 The case does not diagnose fitness, disease, disability, or individual health.
 
+### Draft system model to repair
+
+This deliberately flawed draft says: "Food passes through the windpipe into the blood. Oxygen moves directly from air to leg muscles without circulatory transport. The heart tells each muscle when to contract."
+
+Use the runner evidence to replace each incorrect pathway. Label the transported material or signal, its source and its destination, and explain the missing role of the digestive, respiratory, circulatory or nervous system.
+
 ## Genetics Variation and Selection Cases
 
 ### Representation glossary
@@ -162,6 +168,19 @@ Energy disperses as heat through transfers. Atoms and nutrients continue through
 
 Species richness is the number of species observed. Relative abundance describes proportions among species. Evenness describes how similar those proportions are. These values require comparable sampling before site-level conclusions.
 
+### Equal-effort community comparison
+
+These separate fictional samples use equal area, duration and method. They do not replace the unequal-effort site records above.
+
+| Species | Community X | Community Y |
+| ------- | ----------: | ----------: |
+| reed    |          10 |          34 |
+| sedge   |          10 |           2 |
+| rush    |          10 |           2 |
+| grass   |          10 |           2 |
+
+Calculate each community's richness, total individuals and species proportions. Compare evenness, then explain why the earlier site summary alone cannot establish evenness.
+
 ### Runoff pathway case
 
 After a large storm, a drainage channel carries nutrient-rich runoff into the estuary. The following fictional station means are reported:
@@ -203,15 +222,17 @@ The sequence supports weather description and bounded forecasting. It cannot est
 
 ### Fictional regional climate series
 
-Temperature values are anomalies relative to a stated 1981–2010 baseline.
+A temperature anomaly is the period's average temperature minus the average for a reference period. This fictional series uses a 1981–2010 baseline of 14.0 °C, with the same station and equal weighting of each complete year. An average of 13.4 °C therefore has an anomaly of 13.4 − 14.0 = −0.6 °C. A negative anomaly means cooler than the baseline, rather than below freezing. [NASA's anomaly definition](https://data.giss.nasa.gov/gistemp/maps/index.html) uses the same subtraction; the values below are instructional data.
 
 | Period    | Mean temperature anomaly | Annual precipitation | Complete station years |
 | --------- | -----------------------: | -------------------: | ---------------------: |
-| 1971–1980 |                  -0.4 °C |               812 mm |                9 of 10 |
-| 1981–1990 |                  -0.1 °C |               825 mm |               10 of 10 |
-| 1991–2000 |                   0.2 °C |               819 mm |               10 of 10 |
-| 2001–2010 |                   0.5 °C |               838 mm |               10 of 10 |
-| 2011–2020 |                   0.9 °C |               844 mm |               10 of 10 |
+| 1971–1980 |                  -0.6 °C |               812 mm |                9 of 10 |
+| 1981–1990 |                  -0.3 °C |               825 mm |               10 of 10 |
+| 1991–2000 |                   0.0 °C |               819 mm |               10 of 10 |
+| 2001–2010 |                   0.3 °C |               838 mm |               10 of 10 |
+| 2011–2020 |                   0.7 °C |               844 mm |               10 of 10 |
+
+Calculate the mean anomaly across the three baseline decades, the average temperature for 2011–2020, and the temperature change between the first and last periods. Explain how the missing year limits the earliest period's comparison.
 
 The series supports trend detection in the fictional region. Attribution requires additional evidence about possible drivers and mechanisms.
 
@@ -379,6 +400,9 @@ Message packets use four data bits followed by one parity bit. The parity bit ma
 | A      | 1 0 1 0 0     | even parity                |
 | B      | 1 1 0 1 1     | even parity                |
 | C      | 1 0 0 0 0     | odd parity; possible error |
+| D      | 0 1 1 0 0     | even parity; changed data  |
+
+For two controlled noise cases, start from A. Case C flips the third bit; case D flips the first and second bits. Compare which changes the parity check detects. The receiver ordinarily does not know which bits changed; these before-and-after records are supplied for analysis.
 
 The parity check detects some errors but cannot correct every error or identify every multi-bit error.
 
@@ -413,6 +437,34 @@ Audio signals have waveform and bit-table alternatives. Visual signals use text,
 - orbit: tangential motion and inward gravitational acceleration produce a curved path.
 
 Moon phases are not caused by Earth's shadow, and seasons are not caused mainly by changing Earth-Sun distance.
+
+### Phase Model A: viewing geometry
+
+This classroom projection places Earth at (0, 0), with the Sun far in the positive-x direction. Moon positions mark directions, not real size or distance. Incoming sunlight illuminates the Sun-facing half of the Moon. The table samples an idealized cycle; its times are approximate model days, rather than dated sky measurements.
+
+| Model day | Moon position | Phase         | Fraction of apparent disk lit |
+| --------- | ------------- | ------------- | ----------------------------: |
+| 0.0       | (1, 0)        | new           |                           0.0 |
+| 7.4       | (0, 1)        | first quarter |                           0.5 |
+| 14.8      | (-1, 0)       | full          |                           1.0 |
+| 22.1      | (0, -1)       | third quarter |                           0.5 |
+| 29.5      | (1, 0)        | new           |                           0.0 |
+
+The phase depends on which part of the illuminated half is visible from Earth. The projection leaves out the Moon's orbital tilt, so its apparent alignments cannot predict eclipses. A real observation log would record dates, times, place or stated observing context, and actual observed appearances. [NASA's Moon phase explanation](https://science.nasa.gov/moon/moon-phases/) describes the geometry and approximate cycle.
+
+### Scale Model B: Earth and Moon
+
+Use rounded instructional inputs: Earth diameter 12,742 km, Moon diameter 3,480 km, and mean Earth-Moon center separation 384,400 km. Use a scale of 1 cm for Earth's diameter. Draw or describe two circles with their centers separated by the calculated distance.
+
+| Model quantity    | Calculation         | Rounded model value  |
+| ----------------- | ------------------- | -------------------- |
+| Earth diameter    | 12,742 ÷ 12,742 cm  | 1.00 cm              |
+| Moon diameter     | 3,480 ÷ 12,742 cm   | 0.273 cm, or 2.73 mm |
+| center separation | 384,400 ÷ 12,742 cm | 30.2 cm              |
+
+These inputs use the course's Earth diameter and the rounded lunar size and distance in [NASA's Moon facts](https://science.nasa.gov/moon/facts/). Model B preserves these approximate size and distance ratios. It does not contain sunlight direction, orbital tilt or a time sequence.
+
+Compare A and B for an explanation of Moon phases. Identify what each represents, what it omits, and which features a combined explanation would need. Keep model-derived values separate from measured observations.
 
 ### Planet comparison data
 

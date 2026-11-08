@@ -1,0 +1,70 @@
+{
+  "curriculum": [
+    {
+      "id": "design-patterns-in-java-dpj6-behavioral-patterns-i-curriculum-behavioral-patterns-i-core-concepts",
+      "aliases": [
+        "design-patterns-in-java-dpj6-behavioral-patterns-i-curriculum-core-concepts-and-learning-sequence",
+        "core-concepts",
+        "design-patterns-in-java-dpj6-behavioral-patterns-i-curriculum-core-concepts"
+      ],
+      "title": "Behavioral Patterns I Core Concepts"
+    },
+    {
+      "id": "design-patterns-in-java-dpj6-behavioral-patterns-i-curriculum-behavioral-patterns-i-application-check",
+      "aliases": [
+        "design-patterns-in-java-dpj6-behavioral-patterns-i-curriculum-application-misconceptions-and-readiness-check",
+        "application-check",
+        "design-patterns-in-java-dpj6-behavioral-patterns-i-curriculum-application-check"
+      ],
+      "title": "Behavioral Patterns I Application Check"
+    },
+    {
+      "id": "design-patterns-in-java-dpj6-behavioral-patterns-i-curriculum-reflection-question-where-does-the-decision-live-now",
+      "title": "Reflection Question: Where Does the Decision Live Now?"
+    },
+    {
+      "id": "design-patterns-in-java-dpj6-behavioral-patterns-i-curriculum-functional-strategy-and-explicit-state-alternatives",
+      "title": "Functional Strategy and Explicit-State Alternatives"
+    },
+    {
+      "id": "design-patterns-in-java-dpj6-behavioral-patterns-i-curriculum-core-project-behavioral-patterns-i",
+      "aliases": [
+        "design-patterns-in-java-dpj6-behavioral-patterns-i-curriculum-core-project",
+        "dpj6-behavioral-patterns-i-core-project",
+        "design-patterns-in-java-dpj6-behavioral-patterns-i-curriculum-dpj6-behavioral-patterns-i-core-project"
+      ],
+      "title": "Core Project: Behavioral Patterns I"
+    }
+  ],
+  "supplementalProjects": [
+    {
+      "id": "design-patterns-in-java-dpj6-behavioral-patterns-i-supplemental-understanding-check-behavioral-patterns-i",
+      "aliases": [
+        "design-patterns-in-java-dpj6-behavioral-patterns-i-supplemental-dpj6-behavioral-patterns-i-diagnostic-checkpoint",
+        "diagnostic-checkpoint-behavioral-patterns-i",
+        "diagnostic-checkpoint",
+        "understanding-check",
+        "design-patterns-in-java-dpj6-behavioral-patterns-i-supplemental-diagnostic-checkpoint-behavioral-patterns-i",
+        "design-patterns-in-java-dpj6-behavioral-patterns-i-supplemental-diagnostic-checkpoint",
+        "design-patterns-in-java-dpj6-behavioral-patterns-i-supplemental-understanding-check"
+      ],
+      "title": "Understanding Check: Behavioral Patterns I"
+    },
+    {
+      "id": "design-patterns-in-java-dpj6-behavioral-patterns-i-supplemental-behavioral-patterns-i-transfer-practice",
+      "aliases": [
+        "design-patterns-in-java-dpj6-behavioral-patterns-i-supplemental-transfer-practice",
+        "design-patterns-in-java-dpj6-behavioral-patterns-i-supplemental-transfer-practice-behavioral-patterns-i"
+      ],
+      "title": "Behavioral Patterns I Transfer Practice"
+    },
+    {
+      "id": "design-patterns-in-java-dpj6-behavioral-patterns-i-supplemental-behavioral-patterns-i-extension-practice",
+      "aliases": [
+        "design-patterns-in-java-dpj6-behavioral-patterns-i-supplemental-extension-practice",
+        "design-patterns-in-java-dpj6-behavioral-patterns-i-supplemental-extension-practice-behavioral-patterns-i"
+      ],
+      "title": "Behavioral Patterns I Extension Practice"
+    }
+  ]
+}

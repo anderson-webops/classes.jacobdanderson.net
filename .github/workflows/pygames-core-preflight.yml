@@ -1,6 +1,6 @@
 name: Course preflight
 
-run-name: ${{ inputs.course == 'tracker-evidence' && 'Retained Tracker failure evidence' || inputs.course == 'scratch-tasks' && 'Published Scratch project tasks' || inputs.course == 'course-audit' && 'Course audit follow-ups' || inputs.course == 'scratch-readings' && 'Scratch and self-study readings' || inputs.course == 'scratch-originals' && 'Original Scratch imports' || inputs.course == 'bootcamp' && 'Scratch Bootcamp pages' || inputs.course == 'self-study' && 'Self-study course pages' || inputs.course == 'physics-models' && 'Physics model workflows' || inputs.course == 'networking' && 'Swift Networking source evidence' || inputs.course == 'ai-setup' && 'AI setup reading' || 'PyGames core preflight' }}
+run-name: ${{ inputs.course == 'native-release-evidence' && 'Native release file verification' || inputs.course == 'tracker-evidence' && 'Retained Tracker failure evidence' || inputs.course == 'scratch-tasks' && 'Published Scratch project tasks' || inputs.course == 'course-audit' && 'Course audit follow-ups' || inputs.course == 'scratch-readings' && 'Scratch and self-study readings' || inputs.course == 'scratch-originals' && 'Original Scratch imports' || inputs.course == 'bootcamp' && 'Scratch Bootcamp pages' || inputs.course == 'self-study' && 'Self-study course pages' || inputs.course == 'physics-models' && 'Physics model workflows' || inputs.course == 'networking' && 'Swift Networking source evidence' || inputs.course == 'ai-setup' && 'AI setup reading' || 'PyGames core preflight' }}
 
 on:
   workflow_dispatch:
@@ -8,7 +8,7 @@ on:
       course:
         description: Course verification to run
         type: choice
-        options: [pygames, networking, ai-setup, self-study, physics-models, bootcamp, scratch-originals, scratch-readings, course-audit, scratch-tasks, tracker-evidence]
+        options: [java-behavioral, java-structural, java-boundary, java-creational, java-foundations, java-patterns, java-recursion, pygames, networking, ai-setup, self-study, physics-models, bootcamp, scratch-originals, scratch-readings, course-audit, scratch-tasks, tracker-evidence, native-release-evidence]
         default: pygames
       browser_run_id:
         description: Networking browser export workflow run
@@ -34,10 +34,75 @@ permissions:
   contents: read
 
 concurrency:
-  group: pygames-core-preflight-${{ github.ref }}-${{ inputs.course == 'tracker-evidence' && 'evidence' || 'validation' }}
+  group: pygames-core-preflight-${{ github.ref }}-${{ (inputs.course == 'tracker-evidence' || inputs.course == 'native-release-evidence') && 'evidence' || 'validation' }}
   cancel-in-progress: false
 
 jobs:
+
+  native-release-evidence:
+    if: inputs.course == 'native-release-evidence'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      actions: read
+      attestations: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /scripts/verify-native-release-evidence.py
+            /test/native-release-evidence-selection.test.py
+      - name: Verify native producer selection boundaries
+        run: python3 -B test/native-release-evidence-selection.test.py
+      - name: Authenticate the native CI producer and annotated tag
+        id: producer
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NATIVE_RUN_ID: ${{ inputs.native_run_id }}
+          NATIVE_ARTIFACT_ID: ${{ inputs.native_artifact_id }}
+          NATIVE_SHA256: ${{ inputs.native_artifact_sha256 }}
+        run: >-
+          python3 scripts/verify-native-release-evidence.py
+          --run-id "$NATIVE_RUN_ID" --artifact-id "$NATIVE_ARTIFACT_ID"
+          --sha256 "$NATIVE_SHA256" --output output/native-release-evidence --describe
+      - name: Read the independently trusted release source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ steps.producer.outputs.tag }}
+          path: .native-trusted
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /package.json
+            /package-lock.json
+            /front-end/package.json
+            /back-end/package.json
+            /back-end/package-lock.json
+            /scripts/verify-native-source.sh
+            /scripts/verify-native-release.mjs
+            /deploy/native/
+      - name: Verify the unchanged archive, every payload file and both signed subjects
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NATIVE_RUN_ID: ${{ inputs.native_run_id }}
+          NATIVE_ARTIFACT_ID: ${{ inputs.native_artifact_id }}
+          NATIVE_SHA256: ${{ inputs.native_artifact_sha256 }}
+        run: >-
+          python3 scripts/verify-native-release-evidence.py
+          --run-id "$NATIVE_RUN_ID" --artifact-id "$NATIVE_ARTIFACT_ID"
+          --sha256 "$NATIVE_SHA256" --output output/native-release-evidence
+          --trusted .native-trusted
+      - name: Retain native release verification
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: native-release-independent-evidence
+          path: output/native-release-evidence/
+          if-no-files-found: error
+          retention-days: 14
 
   tracker-evidence:
     if: inputs.course == 'tracker-evidence'
@@ -50,6 +115,8 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
+      - name: Verify bounded retained native result selection
+        run: python3 test/native-ui-evidence-selection.test.py
       - name: Inspect the unchanged original native failure
         env:
           GH_TOKEN: ${{ github.token }}
@@ -305,13 +372,13 @@ jobs:
           retention-days: 14
 
   self-study:
-    if: inputs.course == 'self-study' || inputs.course == 'physics-models' || inputs.course == 'bootcamp' || inputs.course == 'scratch-originals' || inputs.course == 'scratch-readings' || inputs.course == 'course-audit' || inputs.course == 'scratch-tasks'
+    if: inputs.course == 'java-behavioral' || inputs.course == 'java-structural' || inputs.course == 'java-boundary' || inputs.course == 'java-creational' || inputs.course == 'java-foundations' || inputs.course == 'java-patterns' || inputs.course == 'java-recursion' || inputs.course == 'self-study' || inputs.course == 'physics-models' || inputs.course == 'bootcamp' || inputs.course == 'scratch-originals' || inputs.course == 'scratch-readings' || inputs.course == 'course-audit' || inputs.course == 'scratch-tasks'
     runs-on: ubuntu-24.04
     timeout-minutes: 40
     env:
       CLASSES_FAMILY_TASK_ID: self-study-courses-${{ github.run_id }}
       SELF_STUDY_BROWSER_PROOF_DIR: ${{ github.workspace }}/output/self-study-browser
-      SELF_STUDY_BROWSER_COURSES: ${{ inputs.course == 'bootcamp' && 'scratch-level-1-bootcamp' || inputs.course == 'physics-models' && 'pre-algebra-a,intro-to-physics,physics-level-2' || inputs.course == 'self-study' && inputs.self_study_courses || '' }}
+      SELF_STUDY_BROWSER_COURSES: ${{ inputs.course == 'java-behavioral' && 'design-patterns-in-java' || inputs.course == 'java-structural' && 'design-patterns-in-java' || inputs.course == 'java-boundary' && 'design-patterns-in-java' || inputs.course == 'java-creational' && 'design-patterns-in-java' || inputs.course == 'java-foundations' && 'design-patterns-in-java' || inputs.course == 'java-patterns' && 'design-patterns-in-java' || inputs.course == 'java-recursion' && 'java-level-3' || inputs.course == 'bootcamp' && 'scratch-level-1-bootcamp' || inputs.course == 'physics-models' && 'pre-algebra-a,intro-to-physics,physics-level-2' || inputs.course == 'self-study' && inputs.self_study_courses || '' }}
       PHYSICS2_BROWSER_PROOF_DIR: ${{ github.workspace }}/output/self-study-browser/physics-models
       SCRATCH_ORIGINAL_BROWSER_PROOF_DIR: ${{ github.workspace }}/output/self-study-browser/scratch-originals
       COURSE_CATALOG_PROOF_DIR: ${{ github.workspace }}/output/self-study-browser/catalog
@@ -354,7 +421,29 @@ jobs:
           node scripts/classes-family-heavy-task.mjs --
           npm exec -w front-end -- vitest run
           test/store.courses.catalog-identities.spec.test.ts
+          test/store.courses.progress-identity.spec.test.ts
+          test/java-behavioral-workspace.spec.test.ts
+          test/java-structural-workspace.spec.test.ts
+          test/java-boundary-workspace.spec.test.ts
+          test/java-creational-workspace.spec.test.ts
+          test/java-foundations-workspace.spec.test.ts
+          test/java-patterns-workspace.spec.test.ts test/store.courses.design-patterns-java-flow.spec.test.ts
+          test/java-recursion-workspace.spec.test.ts test/store.courses.java-level-3-flow.spec.test.ts
           test/store.courses.self-study-browser-manifest.spec.test.ts
+          test/store.courses.middle-school-integrated-science-flow.spec.test.ts
+          test/store.courses.elementary-science-flow.spec.test.ts test/store.courses.intro-biology-flow.spec.test.ts
+          test/store.courses.intro-chemistry-flow.spec.test.ts
+          test/store.courses.intro-environmental-science-flow.spec.test.ts
+          test/store.courses.depth.spec.test.ts test/store.courses.research-expansions.spec.test.ts
+          test/store.courses.python-level-1-foundations.spec.test.ts
+          test/store.courses.pygames-flow.spec.test.ts
+          test/store.courses.early-elementary-a-flow.spec.test.ts
+          test/store.courses.early-elementary-b-content.spec.test.ts
+          test/store.courses.late-elementary-a-content.spec.test.ts
+          test/store.courses.late-elementary-b-content.spec.test.ts
+          test/store.courses.joy-of-reading-flow.spec.test.ts
+          test/store.courses.joy-of-reading-content.spec.test.ts
+          test/store.courses.picture-book-content.spec.test.ts
           test/components.courseexplorer-inventory.spec.test.ts
           test/modules.course-lesson-presentation.spec.test.ts
           test/modules.authored-reading.spec.test.ts
@@ -407,7 +496,9 @@ jobs:
         run: node scripts/classes-family-heavy-task.mjs -- npm run build
       - name: Verify all self-study course pages in both roles and sizes
         if: inputs.course != 'scratch-originals' && inputs.course != 'scratch-tasks'
-        run: node scripts/classes-family-heavy-task.mjs -- node --test test/self-study-course-browser.test.mjs
+        run: |
+          node --test test/self-study-browser-batches.test.mjs
+          node scripts/classes-family-heavy-task.mjs -- node scripts/verify-self-study-browser-batches.mjs
       - name: Verify the Physics Level 2 Python models against independent values
         id: physics_native
         if: always() && !cancelled() && inputs.course == 'physics-models' && steps.course_build.outcome == 'success'
@@ -426,6 +517,90 @@ jobs:
         env:
           SCRATCH_BROWSER_READING_ONLY: '1'
         run: node scripts/classes-family-heavy-task.mjs -- node --test test/scratch-browser.test.mjs
+      - name: Verify Java behavioral patterns course actions and packaged downloads
+        id: java_behavioral_browser
+        if: always() && !cancelled() && inputs.course == 'java-behavioral' && steps.course_build.outcome == 'success'
+        env:
+          JAVA_BEHAVIORAL_BROWSER_PROOF_DIR: ${{ github.workspace }}/output/self-study-browser/java-behavioral
+          COURSE_IMPORT_SCREENSHOT_DIR: ${{ github.workspace }}/output/self-study-browser/java-behavioral/screenshots
+        run: node scripts/classes-family-heavy-task.mjs -- node --test --test-concurrency=1 test/java-behavioral-course-browser.test.mjs
+      - name: Compile actual Java behavioral patterns ZIPs and verify optional scope
+        if: always() && !cancelled() && inputs.course == 'java-behavioral' && steps.java_behavioral_browser.outcome == 'success'
+        env:
+          JAVA_BEHAVIORAL_BROWSER_PROOF_DIR: ${{ github.workspace }}/output/self-study-browser/java-behavioral
+        run: python3 -I -B test/java-behavioral-exported-native.py
+      - name: Verify Java structural patterns course actions and packaged downloads
+        id: java_structural_browser
+        if: always() && !cancelled() && inputs.course == 'java-structural' && steps.course_build.outcome == 'success'
+        env:
+          JAVA_STRUCTURAL_BROWSER_PROOF_DIR: ${{ github.workspace }}/output/self-study-browser/java-structural
+          COURSE_IMPORT_SCREENSHOT_DIR: ${{ github.workspace }}/output/self-study-browser/java-structural/screenshots
+        run: node scripts/classes-family-heavy-task.mjs -- node --test --test-concurrency=1 test/java-structural-course-browser.test.mjs
+      - name: Compile actual Java structural patterns ZIPs and verify optional scope
+        if: always() && !cancelled() && inputs.course == 'java-structural' && steps.java_structural_browser.outcome == 'success'
+        env:
+          JAVA_STRUCTURAL_BROWSER_PROOF_DIR: ${{ github.workspace }}/output/self-study-browser/java-structural
+        run: python3 -I -B test/java-structural-exported-native.py
+      - name: Verify Java boundary patterns course actions and packaged downloads
+        id: java_boundary_browser
+        if: always() && !cancelled() && inputs.course == 'java-boundary' && steps.course_build.outcome == 'success'
+        env:
+          JAVA_BOUNDARY_BROWSER_PROOF_DIR: ${{ github.workspace }}/output/self-study-browser/java-boundary
+          COURSE_IMPORT_SCREENSHOT_DIR: ${{ github.workspace }}/output/self-study-browser/java-boundary/screenshots
+        run: node scripts/classes-family-heavy-task.mjs -- node --test --test-concurrency=1 test/java-boundary-course-browser.test.mjs
+      - name: Compile actual Java boundary patterns ZIPs and verify optional scope
+        if: always() && !cancelled() && inputs.course == 'java-boundary' && steps.java_boundary_browser.outcome == 'success'
+        env:
+          JAVA_BOUNDARY_BROWSER_PROOF_DIR: ${{ github.workspace }}/output/self-study-browser/java-boundary
+        run: python3 -I -B test/java-boundary-exported-native.py
+      - name: Verify Java creational patterns course actions and packaged downloads
+        id: java_creational_browser
+        if: always() && !cancelled() && inputs.course == 'java-creational' && steps.course_build.outcome == 'success'
+        env:
+          JAVA_CREATIONAL_BROWSER_PROOF_DIR: ${{ github.workspace }}/output/self-study-browser/java-creational
+          COURSE_IMPORT_SCREENSHOT_DIR: ${{ github.workspace }}/output/self-study-browser/java-creational/screenshots
+        run: node scripts/classes-family-heavy-task.mjs -- node --test --test-concurrency=1 test/java-creational-course-browser.test.mjs
+      - name: Compile actual Java creational patterns ZIPs and verify optional scope
+        if: always() && !cancelled() && inputs.course == 'java-creational' && steps.java_creational_browser.outcome == 'success'
+        env:
+          JAVA_CREATIONAL_BROWSER_PROOF_DIR: ${{ github.workspace }}/output/self-study-browser/java-creational
+        run: python3 -I -B test/java-creational-exported-native.py
+      - name: Verify Java foundations course actions and packaged downloads
+        id: java_foundations_browser
+        if: always() && !cancelled() && inputs.course == 'java-foundations' && steps.course_build.outcome == 'success'
+        env:
+          JAVA_FOUNDATIONS_BROWSER_PROOF_DIR: ${{ github.workspace }}/output/self-study-browser/java-foundations
+          COURSE_IMPORT_SCREENSHOT_DIR: ${{ github.workspace }}/output/self-study-browser/java-foundations/screenshots
+        run: node scripts/classes-family-heavy-task.mjs -- node --test --test-concurrency=1 test/java-foundations-course-browser.test.mjs
+      - name: Compile actual Java foundations ZIPs and verify optional scope
+        if: always() && !cancelled() && inputs.course == 'java-foundations' && steps.java_foundations_browser.outcome == 'success'
+        env:
+          JAVA_FOUNDATIONS_BROWSER_PROOF_DIR: ${{ github.workspace }}/output/self-study-browser/java-foundations
+        run: python3 -I -B test/java-foundations-exported-native.py
+      - name: Verify Java Patterns course actions and saved downloads
+        id: java_patterns_browser
+        if: always() && !cancelled() && inputs.course == 'java-patterns' && steps.course_build.outcome == 'success'
+        env:
+          JAVA_PATTERNS_BROWSER_PROOF_DIR: ${{ github.workspace }}/output/self-study-browser/java-patterns
+          COURSE_IMPORT_SCREENSHOT_DIR: ${{ github.workspace }}/output/self-study-browser/java-patterns/screenshots
+        run: node scripts/classes-family-heavy-task.mjs -- node --test --test-concurrency=1 test/java-patterns-course-browser.test.mjs
+      - name: Compile and test actual Java Patterns browser ZIPs on JDK 21
+        if: always() && !cancelled() && inputs.course == 'java-patterns' && steps.java_patterns_browser.outcome == 'success'
+        env:
+          JAVA_PATTERNS_BROWSER_PROOF_DIR: ${{ github.workspace }}/output/self-study-browser/java-patterns
+        run: python3 -I -B test/java-patterns-exported-native.py
+      - name: Verify Java recursion course actions and saved downloads
+        id: java_recursion_browser
+        if: always() && !cancelled() && inputs.course == 'java-recursion' && steps.course_build.outcome == 'success'
+        env:
+          JAVA_RECURSION_BROWSER_PROOF_DIR: ${{ github.workspace }}/output/self-study-browser/java-recursion
+          COURSE_IMPORT_SCREENSHOT_DIR: ${{ github.workspace }}/output/self-study-browser/java-recursion/screenshots
+        run: node scripts/classes-family-heavy-task.mjs -- node --test --test-concurrency=1 test/java-recursion-course-browser.test.mjs
+      - name: Compile and test actual Java course downloads on JDK 21
+        if: always() && !cancelled() && inputs.course == 'java-recursion' && steps.java_recursion_browser.outcome == 'success'
+        env:
+          JAVA_RECURSION_BROWSER_PROOF_DIR: ${{ github.workspace }}/output/self-study-browser/java-recursion
+        run: python3 -I -B test/java-recursion-exported-native.py
       - name: Retain self-study pages, audits and original failures
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a

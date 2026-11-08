@@ -1,15 +1,23 @@
 import type { RawCourse, RawCourseModule, RawCourseModuleItem } from "./types";
 import { applyAlgebraErrorAnalysisCases } from "./algebraErrorAnalysisCases";
 import { applyCourseImplementationArtifacts } from "./course-implementation-artifacts";
+import { applyEarlyElementaryAProjects } from "./earlyElementaryAProjects";
+import { applyEarlyElementaryBProjects } from "./earlyElementaryBProjects";
+import { applyElementaryScienceReferences } from "./elementaryScienceReferences";
 import { applyEntrepreneurshipReadings } from "./entrepreneurshipReadings";
 import { applyGrammarMechanicsReadings } from "./grammarMechanicsReadings";
 import { applyIntroPhysicsReferences } from "./introPhysicsReferences";
+import { applyJoyOfReadingGuidance } from "./joyOfReadingProjects";
 import { isJuniScratchProjectTitle } from "./juniScratchProjects";
+import { applyLateElementaryAProjects } from "./lateElementaryAProjects";
+import { applyLateElementaryBProjects } from "./lateElementaryBProjects";
 import { mapMarkdownProse } from "./markdownProse";
 import { applyMiddleSchoolLiteratureReadings } from "./middleSchoolLiteratureReadings";
+import { applyMiddleSchoolScienceReferences } from "./middleSchoolScienceReferences";
 import { applyMiddleSchoolWritingReadings } from "./middleSchoolWritingReadings";
 import { applyNovelWritingReadings } from "./novelWritingReadings";
 import { applyPhysicsLevel2References } from "./physicsLevel2References";
+import { applyPictureBookGuidance } from "./pictureBookProjects";
 import { buildProjectGuidance } from "./projectGuidance";
 import { applyPublicSpeakingReadings } from "./publicSpeakingReadings";
 import { applyPyGamesCourseWorkflows } from "./pyGamesCourseWorkflows";
@@ -9830,6 +9838,18 @@ export function normalizeRawCourse(id: string, rawCourse: RawCourse) {
 	}
 	restoreScratchProjectInstructions(course, preservedScratchInstructions);
 	applyAlgebraErrorAnalysisCases(id, course);
+	if (id === "early-elementary-a-math")
+		applyEarlyElementaryAProjects(course, rawCourse);
+	if (id === "early-elementary-b-math")
+		applyEarlyElementaryBProjects(course, rawCourse);
+	if (id === "late-elementary-a-math")
+		applyLateElementaryAProjects(course, rawCourse);
+	if (id === "late-elementary-b-math")
+		applyLateElementaryBProjects(course, rawCourse);
+	if (id === "early-elementary-a-reading")
+		applyJoyOfReadingGuidance(course, rawCourse);
+	if (id === "early-elementary-b-picture-book")
+		applyPictureBookGuidance(course, rawCourse);
 	applyScratchConceptReadings(course, id, rawCourse);
 	applyPyGamesCourseWorkflows(course, id);
 	applyRustCargoCourseWorkflows(course, id);
@@ -9860,6 +9880,9 @@ export function normalizeRawCourse(id: string, rawCourse: RawCourse) {
 		applyPublicSpeakingReadings(course, rawCourse);
 	if (id === "scratch-level-1-bootcamp")
 		applyScratchBootcampReadings(course, rawCourse);
+	if (id === "middle-school-integrated-science")
+		applyMiddleSchoolScienceReferences(course);
+	if (id === "elementary-science") applyElementaryScienceReferences(course);
 	if (id === "intro-to-physics") applyIntroPhysicsReferences(course);
 	if (id === "physics-level-2") applyPhysicsLevel2References(course);
 	if (

@@ -163,6 +163,64 @@ describe("research-backed course family expansions", () => {
 							`/course-assets/physics/${pack}`
 						);
 					}
+				} else if (courseId === "middle-school-integrated-science") {
+					const roadmapItems = [
+						...roadmapModule!.curriculum,
+						...roadmapModule!.supplementalProjects
+					];
+					for (const title of [
+						"Resource Map",
+						"Module Alignment Guide",
+						"Reference Map",
+						"Prerequisite Map",
+						"Resource Inventory"
+					]) {
+						const entry = roadmapItems.find(
+							item => item.title === `${courseLabel} ${title}`
+						);
+						expect(entry, title).toBeDefined();
+						expect(entry!.contentKind, title).toBe("reading");
+						expect(entry!.datasetLink, title).toBe(
+							"/course-assets/middle-school-science/middle-school-science-materials-pack.md"
+						);
+					}
+					for (const phrase of [
+						"ten sections matching MS1–MS10",
+						"distance adds path lengths",
+						"displacement compares endpoints",
+						"category count divided by sample total",
+						"A notebook or digital document is sufficient."
+					])
+						expect(roadmapText, courseId).toContain(phrase);
+				} else if (courseId === "elementary-science") {
+					const roadmapItems = [
+						...roadmapModule!.curriculum,
+						...roadmapModule!.supplementalProjects
+					];
+					for (const title of [
+						"Resource Map",
+						"Module Alignment Guide",
+						"Reference Map",
+						"Prerequisite Map",
+						"Resource Inventory"
+					]) {
+						const entry = roadmapItems.find(
+							item => item.title === `${courseLabel} ${title}`
+						);
+						expect(entry, title).toBeDefined();
+						expect(entry!.contentKind, title).toBe("reading");
+						expect(entry!.datasetLink, title).toBe(
+							"/course-assets/elementary-science/elementary-science-materials-pack.md"
+						);
+					}
+					for (const phrase of [
+						"ES1–ES8",
+						"interval changes of 1, 2, 2 and 2 m",
+						"A bar graph of plant growth requires the subtraction in ES1",
+						"No physical supplies beyond paper are required",
+						"Each required activity links a local case-input section and an answer section"
+					])
+						expect(roadmapText, courseId).toContain(phrase);
 				} else {
 					for (const label of [
 						"Map purpose",

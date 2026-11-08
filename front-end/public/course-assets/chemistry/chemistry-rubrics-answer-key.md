@@ -79,6 +79,14 @@ Strong case explanations connect a visible observation to a model and name the e
 
 Common revision target: do not treat a dramatic demonstration as the explanation. The response should name the observation, chemistry idea, evidence, and model limit.
 
+For the supplied states, S/L/G retain H₂O identity while arrangement and motion differ. Ice and water can coexist at the melting boundary. A textual particle comparison meets the same target as simulation screenshots.
+
+The fictional drop-count means are water12 and oil6; predictions retain equal-drop and surface assumptions. Coin geometry changes do not determine a new count from these inputs alone. Oil's model density is lower than water's; adding a gas bubble can lower the combined density enough to rise, and losing gas reverses that model motion.
+
+Oobleck's slow-flow/tap/release pattern supports a stress-dependent suspension model. It does not establish a new substance or a permanent solid phase. Carbonation releases previously dissolved CO₂; the volcano model instead forms CO₂ in a reaction. Their bubbles require different causal explanations.
+
+Use the supplied text states when a video or simulation is unavailable, and keep any observed original-video features separately attributed.
+
 ## Reaction Projects Key
 
 Strong reaction-project responses include:
@@ -99,6 +107,8 @@ Strong reaction-project responses include:
    - The classroom volcano is an analogy and does not use the same process as real molten-rock volcanism.
 
 Common revision target: do not use dramatic appearance as the proof. The response should identify reactants, products or likely products, reaction evidence, and the limitation of the model or demonstration.
+
+In supplied models S/L, catalase in yeast is the modeled catalyst. Three times the reacting peroxide count yields three times the O₂ count under complete conversion, while foam height is not a calibrated gas measurement. Other video catalysts require their own source observations. The volcano equation preserves C,H,O and Na; actual rust and volcanoes have more detailed structures and mechanisms than these introductory models.
 
 ## Solutions Projects Key
 
@@ -122,6 +132,10 @@ Strong solutions-project responses include:
 
 Common revision target: do not say a dissolved substance disappears. It is distributed at a particle scale that is not visible directly.
 
+Drying the ink model removes water and leaves residue. The later stipulated reaction is a separate change; color alone cannot identify its chemical mechanism. Citric acid is one component, not a complete description of lemon juice.
+
+For KBr, water oxygen faces K⁺ and water hydrogens face Br⁻. NaNO₃ and CuSO₄ retain their polyatomic ions in the supplied model. An unspecified ink dye cannot be assigned an ionic formula from color. Filtration retains sand but permits dissolved ions through; an evaporation model removes solvent rather than making dissolved salt vanish.
+
 ## Matter and Classification Key
 
 Classification checks:
@@ -131,7 +145,7 @@ Classification checks:
 3. Salt water, brass, and air are homogeneous mixtures.
 4. Trail mix and granite are heterogeneous mixtures.
 5. Light is not matter in this context.
-6. The unknown clear liquid is not enough information because appearance alone does not prove pure substance or mixture.
+6. The unknown clear liquid I and white powder K provide insufficient composition evidence. Appearance alone does not establish a pure substance or mixture.
 
 ## Physical and Chemical Change Key
 
@@ -145,6 +159,12 @@ Classification checks:
 
 Carbon-12, carbon-13, and carbon-14 are all carbon because they have six protons. They differ by neutron count and mass number. The simplified chlorine average is 35.5 because `(35 x 0.75) + (37 x 0.25) = 35.5`.
 
+The claim set is false, true, false. Adding an electron changes charge, not isotope; carbon-14's stated neutral counts are correct; chlorine's average is not an individual atom's mass number.
+
+For the six notation cases, (protons,neutrons,electrons) are C-12=(6,6,6), C-14=(6,8,6), Na-23⁺=(11,12,10), Cl-35⁻=(17,18,18), O-16²⁻=(8,8,10), Mg-24²⁺=(12,12,10).
+
+The supplied daughter (atomic number,mass number) pairs are alpha=(82,208), beta-minus=(7,14), beta-plus=(8,18), gamma=(43,99): lead-208,nitrogen-14,oxygen-18 and technetium-99 respectively. Gamma changes nuclear energy without changing these counts. After three half-lives, 800/8=100 parent nuclei are expected, or 12.5%; an individual decay time is not predicted.
+
 ## Atomic Structure Checkpoint Key
 
 | Item | Expected Reasoning                                                                                                                    |
@@ -156,6 +176,8 @@ Carbon-12, carbon-13, and carbon-14 are all carbon because they have six protons
 | E    | The periodic-table mass is an abundance-weighted average of naturally occurring isotopes, not the mass number of every chlorine atom. |
 
 Common revision target: if the element name changes when only electrons change, the response is confusing ion charge with element identity.
+
+For particle-count cases P1–P5, the answers are carbon-12 neutral, sodium-23 charge +1, chlorine-35 charge -1, oxygen-16 charge -2 and magnesium-24 charge +2. Show mass number=p+n and charge=p−e separately.
 
 ## Ion Formula Key
 
@@ -214,6 +236,10 @@ For symbol-word work:
 
 Common revision target: do not cite "the periodic table" as a source without naming which table or which fact was checked.
 
+A complete local seven-element record uses H=(1,about1.008), C=(6,about12.01), O=(8,about16.00), Na=(11,about22.99), Cl=(17,about35.45), Fe=(26,about55.85) and Ne=(10,about20.18), pairing atomic number with approximate relative atomic mass. The first is a proton count; the second is an isotope-weighted mass value.
+
+For a region map, Li/Na/K and Be/Mg/Ca are metals; C/N/O/F and the halogens are nonmetals; B/Si supply metalloid examples. Noble gases He/Ne/Ar occupy group18. Labels or a text table communicate the same evidence as a colored map. Ca–Fe names calcium and iron; a missing-letter conclusion must state whether it concerns this subset or the complete table.
+
 ## Bonding and Formula Key
 
 Core checks:
@@ -222,6 +248,8 @@ Core checks:
 2. Nonmetal plus nonmetal formulas are usually introduced as covalent.
 3. `NaCl` and `MgCl₂` should be described as formula units, not separate molecules.
 4. Water and carbon dioxide both have three atoms, but water is bent while carbon dioxide is linear.
+
+The extended twelve-card sort adds ionic Al₂O₃ and KBr. C and SiO₂ need structural context before being called separate covalent molecules. Carbon allotropes and common silica networks show why composition and molecular structure are different claims.
 
 ## Lewis Structure Key
 
@@ -240,7 +268,7 @@ Common revision target: a formula gives atom count but not shape. The answer mus
 
 ## Heating Curve Key
 
-The flat sections at 0 C and 100 C represent phase changes. Energy is still transferred during those flat sections, but it changes particle arrangement and attractions rather than increasing average particle motion.
+For the schematic pure-water sample near 1 atm, the flat sections at 0 C and 100 C represent melting and boiling. Energy transfer changes intermolecular arrangement and potential energy while temperature and average molecular kinetic energy remain constant. The invented times do not establish heating power or transition-energy ratios.
 
 ## Phase Diagram Key
 
@@ -248,14 +276,15 @@ Strong phase-diagram reasoning treats the diagram as a map of conditions:
 
 1. Point A is solid, B is liquid, and C is gas in the simplified model.
 2. Point D is on the melting/freezing boundary.
-3. Point E is on the boiling/condensing boundary.
+3. Point E is on the boiling/condensing boundary. Point F is approximately on the ice/vapor boundary at -10 C and 0.002 atm; this pressure is about 0.20 kPa.
 4. Moving right usually increases temperature; moving up increases pressure.
 5. A response should state both coordinates before naming the state.
 
 Sample answer:
 
 1. At 25 C and 3 atm, the model favors liquid rather than gas because pressure is higher than ordinary 1 atm conditions.
-2. The exact boundary depends on the substance, so this simplified table should not be treated as a universal phase diagram.
+2. B and G both favor liquid water at 25 C, at 1 and 3 atm respectively. Increasing pressure along this comparison does not cross a phase boundary.
+3. The table describes water. Carbon dioxide has a different phase diagram and no stable liquid at 1 atm. Selected points do not establish all boundaries between them.
 
 ## Energy Phase and Gas Checkpoint Key
 
@@ -282,7 +311,7 @@ Common revision target: do not explain gas behavior by saying particles get bigg
 
 Property checks:
 
-1. Water should be predicted to have stronger attractions and a higher boiling point than carbon dioxide in ordinary introductory comparisons.
+1. At 1 atm, water boils near 100 C while solid carbon dioxide sublimes near -78.5 C. Carbon dioxide has no normal boiling point. Water and ethanol can instead be compared by normal boiling point: about 100 C and 78 C respectively.
 2. Ethanol is mixed: it has a polar region and a nonpolar carbon chain.
 3. Hexane-like oil is mostly nonpolar and does not mix well with water.
 
@@ -296,6 +325,10 @@ Reaction-type checks:
 4. `AgNO₃ + NaCl → AgCl + NaNO₃` is double replacement and precipitation.
 5. `Zn + 2HCl → ZnCl₂ + H₂` is single replacement.
 6. Acid plus base producing salt and water is neutralization.
+
+The eight conservation-practice coefficient lists, in written formula order, are (2,1,2), (2,2,1), (1,2,1,2), (1,1,1,1), (1,2,1,1), (1,1,1,1), (4,3,2) and (4,3,2). Recount each element on both sides. Fe₂O₃ is the stipulated simplified product.
+
+For particle batches A,B,C, water counts are4,4,2. Leftovers (H₂,O₂) are (2,0),(0,2),(2,0). Limiting reactants are oxygen,hydrogen,oxygen. Complete-particle batch counts and formal mole amounts are distinct representations.
 
 ## Reaction Energy and Rate Key
 
@@ -347,6 +380,8 @@ Worked reasoning examples:
 3. If solute and volume both double, the ratio can stay about the same.
 4. A pH change of 1 is not a small linear step; pH is logarithmic, so explanations should avoid treating pH 3 and pH 4 as one ordinary unit apart.
 
+Relative to baseline2g/100mL, dissolved concentration is doubled in A, halved in B, unchanged in C, multiplied by2.5 in D, halved in E and doubled in F. D alone retains3g solid after equilibrium. F dissolves all8g because its doubled solution volume permits10g at the stipulated temperature. More total solute and more dissolved solute are distinct when solid remains.
+
 ## Molar Mass and Stoichiometry Key
 
 Core checks:
@@ -370,6 +405,10 @@ Worked setup examples:
 6. `2.5 mol CO₂ × (44 g / 1 mol) = 110 g CO₂`.
 
 Common revision target: coefficients from balanced equations compare moles, not grams directly. A grams-to-grams problem must go grams → moles → mole ratio → moles → grams.
+
+Practice item9 gives6mol H₂O from3mol O₂ with enough hydrogen. For item10, the methane-to-water coefficient ratio is2mol H₂O/1mol CH₄.
+
+Molarity states A–D are1.0,0.25,0.50,0.50mol/L. Divide by final solution volume. O₂ has32g/mol with the supplied practice values, so64g O₂ is2mol and18g H₂O is1mol.
 
 ## Water Formation Stoichiometry and Heat Key
 
@@ -418,6 +457,8 @@ Stoichiometry error checks:
 3. Case C skips molar mass before using coefficients.
 4. Case D gives the wrong final unit.
 
+Guided case1: 4mol H₂×(2mol H₂O/2mol H₂)=4mol H₂O. Guided case2:16g CH₄×(1mol CH₄/16g CH₄)×(2mol H₂O/1mol CH₄)×(18g H₂O/1mol H₂O)=36g H₂O. Excess oxygen is an explicit input; no limiting-oxygen calculation is implied.
+
 ## Capstone Rubric
 
 | Category           | Strong Evidence                                                                                               |
@@ -437,3 +478,15 @@ Capstone example:
 4. Limitation: name the missing exact measurements.
 
 Common revision target: a capstone topic such as "batteries" or "cleaning" is too broad until narrowed to one claim, one evidence set, and one model.
+
+Optional extensions keep the saved required artifact as their starting point. A showcase identifies its audience and explains one presentation change; a reaction extension adds a supported reaction model or an explicit physical/chemical contrast; a review cites the artifact and applies one evidence-supported improvement. An independent review can meet the same criteria as a shared review.
+
+## Safety and Equity Checkpoint Key
+
+A is a core supplied-data route. B requires replacement with an existing model or table because substances and pressure/heat conditions are uncontrolled. C is optional observation; the supplied photograph preserves the same core task. A justified answer identifies the evidence route and retains the required conceptual output.
+
+## Advanced Topic Case Key
+
+Atom conservation is core introductory chemistry; carbon-14 daughter changes use nuclear chemistry; functional groups introduce organic chemistry; polymer flexibility connects materials and organic structure; corrosion/battery comparisons use redox and electrochemistry. Overlap is expected when the evidence warrants it.
+
+P uses fewer production-energy units, while Q produces less waste per equal package function. Neither wins on every supplied measure. Renewable feedstock does not settle the hazard or lifecycle comparison; transport,durability,hazard and end-of-life remain unknown. A conditional choice states its priority and shared boundary.

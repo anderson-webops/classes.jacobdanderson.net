@@ -12,6 +12,12 @@ import { createServer, preview } from "vite";
 
 const root = fileURLToPath(new URL("../front-end/", import.meta.url));
 const courseIds = [
+ "early-elementary-a-math",
+ "early-elementary-b-math",
+ "late-elementary-a-math",
+ "late-elementary-b-math",
+ "early-elementary-a-reading",
+ "early-elementary-b-picture-book",
 	"algebra-1a",
 	"algebra-1b",
 	"entrepreneurship-101",
@@ -28,10 +34,23 @@ const courseIds = [
 	"physics-level-2",
 	"pre-algebra-a",
 	"geometry-a",
-	"geometry-b"
+	"geometry-b",
+	"middle-school-integrated-science"
 ];
-const readingCounts = [15, 31, 10, 13, 14, 16, 20, 14, 9, 4, 27, 22, 37, 38, 11, 6, 11];
+const readingCounts = [22,19,19,20,8,13,15,31,10,13,14,16,20,14,9,4,27,22,37,38,11,6,11,65];
 assert.equal(readingCounts.length, courseIds.length);
+// Reading counts for explicitly selected teaching scopes.
+const focusedReadingCounts = {
+ "design-patterns-in-java":6,
+ "java-level-3": 1,
+	"intro-to-environmental-science": 27,
+	"elementary-science": 36,
+	"intro-to-biology": 8,
+	"intro-to-chemistry": 62,
+ "python-level-1": 1,
+ "python-level-1-classroom": 1
+};
+const allowedCourseIds = [...courseIds, ...Object.keys(focusedReadingCounts)];
 const requestedCourses = process.env.SELF_STUDY_BROWSER_COURSES;
 const sourceMode = process.env.SELF_STUDY_BROWSER_SOURCE_MODE ?? "build";
 assert.ok(["build", "dev"].includes(sourceMode));
@@ -40,10 +59,10 @@ const selectedCourseIds = requestedCourses
 	: courseIds;
 assert.ok(selectedCourseIds.length > 0);
 assert.equal(new Set(selectedCourseIds).size, selectedCourseIds.length);
-assert.ok(selectedCourseIds.every(id => courseIds.includes(id)));
+assert.ok(selectedCourseIds.every(id => allowedCourseIds.includes(id)));
 const expectedProfiles = selectedCourseIds.length * 4;
 const expectedReadingViews = selectedCourseIds.reduce(
-	(total, id) => total + readingCounts[courseIds.indexOf(id)] * 4,
+	(total, id) => total + (focusedReadingCounts[id] ?? readingCounts[courseIds.indexOf(id)]) * 4,
 	0
 );
 const digest = value => createHash("sha256").update(value).digest("hex");
@@ -55,7 +74,7 @@ function account(path, role) {
 		email: "learner@example.invalid",
 		age: 14,
 		state: "GA",
-		courseAccess: courseIds,
+		courseAccess: allowedCourseIds,
 		courseProgress: []
 	};
 	if (path === "/api/accounts/me") {
@@ -74,7 +93,7 @@ function account(path, role) {
 				age: 30,
 				state: "GA",
 				usersOfTutorLength: 1,
-				coursePermissions: courseIds,
+				coursePermissions: allowedCourseIds,
 				editTutors: false,
 				saveEdit: "Save"
 			}
@@ -191,7 +210,7 @@ async function checkTableLayout(
 	return result;
 }
 
-async function checkCards(page, module, expected, optional, resourceViews, profileName) {
+async function checkCards(page, module, expected, optional, resourceViews, profileName, assignmentViews) {
 	const rows = await page.$$eval(
 		"#course-reader-panel .lesson-list > .lesson-item",
 		items =>
@@ -218,19 +237,20 @@ async function checkCards(page, module, expected, optional, resourceViews, profi
 		);
 		if (item.requiredDirective) {
 			await page.waitForFunction(
-				({ id, required, textMode }) => {
+				({ id, required, textMode, scope }) => {
 					const row = document.getElementById(id);
-					return row
+					const actual = row
 						?.querySelector(".assignment-content")?.[textMode]
 						.replace(/\s+/g, " ")
-						.trim()
-						.includes(required);
+						.trim();
+					return scope === "complete" ? actual === required : actual?.includes(required);
 				},
 				{},
 				{
 					id: rows[index].id,
 					required: item.requiredDirective,
-					textMode: item.directiveTextMode ?? "textContent"
+					textMode: item.directiveTextMode ?? "textContent",
+					scope: item.assignmentTextScope
 				}
 			).catch(async (error) => {
 				const actual = await page.$eval(
@@ -242,6 +262,19 @@ async function checkCards(page, module, expected, optional, resourceViews, profi
 					`${item.title}: complete assignment text did not match.\nExpected: ${item.requiredDirective}\nActual: ${actual}`,
 					{ cause: error }
 				);
+			});
+			const actual = await page.$eval(
+				`#${rows[index].id} .assignment-content`,
+				(element, mode) => element[mode].replace(/\s+/g, " ").trim(),
+				item.directiveTextMode ?? "textContent"
+			);
+			assignmentViews.push({
+				module: module.id,
+				item: item.id,
+				section: optional ? "optional" : "core",
+				scope: item.assignmentTextScope ?? "directive",
+				expectedTextSHA256: digest(item.requiredDirective),
+				renderedTextSHA256: digest(actual)
 			});
 		}
 		for (const check of item.selfChecks ?? []) {
@@ -378,6 +411,7 @@ test(
 						const readings = [];
 						const assignments = [];
 						const resourceViews = [];
+						const assignmentViews = [];
 						try {
 							await page.setViewport({ width, height: 900 });
 							page.setDefaultTimeout(20000);
@@ -617,6 +651,13 @@ test(
 									|| (["intro-to-physics", "physics-level-2"].includes(id) && /^(?:Standards Map|Course Roadmap)$/.test(module.title))
 									|| (id === "physics-level-2" && /^(?:PHY12|PHY16|PHY17|PHY23) /.test(module.title))
 									|| (id === "algebra-1a" && /^AA(?:1|11) /.test(module.title))
+									|| Object.hasOwn(focusedReadingCounts, id)
+									|| id === "early-elementary-b-picture-book"
+									|| (id === "early-elementary-a-reading" && /^(?:JoR1 |JoR2 |JoR5 |JoR Check-In|JoR6 )/.test(module.title))
+									|| (id === "late-elementary-b-math" && /^(?:LEB3 |LEB4 |LEB5 |LEB6 |LEB10 |LEB12 |LEB16 |LEB17 |LEB18 )/.test(module.title))
+									|| (id === "late-elementary-a-math" && /^(?:LEA1 |LEA4 |LEA9 |LEA12 |LEA13 |LEA16 |LEA17 )/.test(module.title))
+									|| (id === "early-elementary-b-math" && /^(?:EEB8 |EEB9 |EEB11 |EEB12 |EEB13 |EEB16 |EEB17 )/.test(module.title))
+									|| (id === "early-elementary-a-math" && /^(?:EEA1 |EEA13 |EEA15 |EEA16 |EEA19 )/.test(module.title))
 									|| (id === "algebra-1b" && /^AB(?:1|19) /.test(module.title))
 									|| module.readings.some(
 										item => item.images.length
@@ -646,8 +687,12 @@ test(
 									module.projects,
 									false,
 									resourceViews,
-									name
+									name,
+									assignmentViews
 								);
+								if ((Object.hasOwn(focusedReadingCounts, id) && module.title === "GrS2 Loops") || (index === 0 && ["early-elementary-a-reading", "early-elementary-b-picture-book"].includes(id)) || module.projects.some(item => /^(?:Punctuation Treasure Hunt|Picture Book Assembly Portfolio)$/.test(item.title))) {
+									await page.screenshot({ path: join(output, `${name}-${index + 1}-complete-projects.png`), fullPage: true });
+								}
 								await chooseView(page, 2);
 								const optional = await checkCards(
 									page,
@@ -655,7 +700,8 @@ test(
 									module.optional,
 									true,
 									resourceViews,
-									name
+									name,
+									assignmentViews
 								);
 								assignments.push({
 									module: module.id,
@@ -664,9 +710,16 @@ test(
 								});
 							}
 							assert.equal(writes, 0);
+							if (id === "middle-school-integrated-science") assert.equal(resourceViews.length, 117);
 							if (id === "pre-algebra-a") assert.equal(resourceViews.length, 23);
 							if (id === "geometry-a") assert.equal(resourceViews.length, 17);
 							if (id === "geometry-b") assert.equal(resourceViews.length, 13);
+							if (id === "early-elementary-a-math") assert.equal(resourceViews.length, 70);
+							if (id === "early-elementary-b-math") assert.equal(resourceViews.length, 61);
+							if (id === "late-elementary-a-math") assert.equal(resourceViews.length, 62);
+							if (id === "late-elementary-b-math") assert.equal(resourceViews.length, 66);
+							if (id === "early-elementary-a-reading") assert.equal(resourceViews.length, 17);
+ if (id === "early-elementary-b-picture-book") assert.equal(resourceViews.length, 26);
 							if (id === "algebra-1a") assert.equal(resourceViews.length, 7);
 							if (id === "algebra-1b") assert.equal(resourceViews.length, 3);
 							if (id === "algebra-2a") assert.equal(resourceViews.length, 4);
@@ -682,6 +735,7 @@ test(
 								reviewedModuleIds: fixture.reviewedModuleIds,
 								completeReadings: readings,
 								resourceViews,
+								assignmentViews,
 								assignments,
 								internalModulesExcluded:
 									fixture.internalModules,
