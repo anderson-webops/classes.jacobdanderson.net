@@ -81,7 +81,7 @@ const cases = [
 	{
 		id: "design-patterns-in-java",
 		source: designPatternsInJavaCourse,
-		readings: 8,
+		readings: 9,
 		additions: []
 	},
 	{
