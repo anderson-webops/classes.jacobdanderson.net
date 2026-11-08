@@ -3,6 +3,7 @@ import { buildImplementationLabGuidance } from "./implementationLabGuidance";
 import { completeJavaArchitecture } from "./javaArchitectureTeaching";
 import { completeJavaBehavioral } from "./javaBehavioralTeaching";
 import { completeJavaBoundary } from "./javaBoundaryTeaching";
+import { completeJavaCapstone } from "./javaCapstoneTeaching";
 import { completeJavaCollaboration } from "./javaCollaborationTeaching";
 import { completeJavaCreational } from "./javaCreationalTeaching";
 import { completeJavaFoundations } from "./javaFoundationsTeaching";
@@ -1633,7 +1634,8 @@ const designPatternsJavaPrimaryModules =
 		.map(completeJavaBehavioral)
 		.map(completeJavaCollaboration)
 		.map(completeJavaArchitecture)
-		.map(completeJavaJudgment);
+		.map(completeJavaJudgment)
+		.map(completeJavaCapstone);
 const designPatternsJavaStudios =
 	designPatternsInJavaSourceCourse.modules.filter(
 		module => !DESIGN_PATTERNS_JAVA_PRIMARY_TITLES.has(module.title)

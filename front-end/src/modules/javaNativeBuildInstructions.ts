@@ -11,6 +11,10 @@ import {
 	javaBoundaryReadingID
 } from "./javaBoundaryResources";
 import {
+	javaCapstoneCoreID,
+	javaCapstoneReadingID
+} from "./javaCapstoneResources";
+import {
 	javaCollaborationCoreID,
 	javaCollaborationReadingID
 } from "./javaCollaborationResources";
@@ -159,6 +163,35 @@ export function javaNativeBuildInstructions(
 ): string[] | null {
 	const parts = (courseProjectKey ?? "").split(":");
 	const [course, item, role, extra] = parts;
+	if (
+		course === "design-patterns-in-java" &&
+		[javaCapstoneCoreID, javaCapstoneReadingID].includes(item ?? "") &&
+		["starter", "reference"].includes(role ?? "") &&
+		parts.length === 4 &&
+		extra === "native-java-capstone"
+	) {
+		return [
+			"Java 21 runnable dispatch capstone",
+			"Export the complete role folder:13 starter files or 18 reference files,including DECISIONS.md and CHECKPOINTS.md.",
+			"javac --release 21 -Xlint:all -Werror -d classes @sources.txt",
+			"java -cp classes ContractTests base",
+			"java -cp classes ContractTests core",
+			"java -cp classes Main base",
+			"java -cp classes Main",
+			"Baseline reports 2433 passed; core reports 4854 passed. Both Main modes print EMAIL: Hi, sent:a, 200, sent:b and [a, b] on separate lines.",
+			"The starter already runs and passes core. Structural improvement needs source review and the decision record.",
+			...(role === "reference"
+				? [
+						"java -cp classes ArchitectureTests",
+						"The reference's injected-boundary harness reports 30 passed."
+					]
+				: []),
+			"After optional batching:java -cp classes ContractTests",
+			"The complete reference reports 4869 passed; core stays independent of the optional method.",
+			"These programs read no standard input or network messages. Run displays native Java 21 commands."
+		];
+	}
+
 	if (
 		course === "design-patterns-in-java" &&
 		item === javaJudgmentReadingID &&
