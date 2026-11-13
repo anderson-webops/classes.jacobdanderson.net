@@ -198,7 +198,10 @@ final class CanonicalCourseUITests: XCTestCase {
             let task = app.switches["Prepare TestFlight build"]
             reveal(task, in: app)
             XCTAssertEqual(task.value as? String, "0")
-            task.coordinate(withNormalizedOffset: CGVector(dx: 0.9, dy: 0.5)).tap()
+            retain("Capstone switch before press", in: app)
+            // The captured 50 ms contact landed inside this switch without changing its value.
+            task.coordinate(withNormalizedOffset: CGVector(dx: 0.9, dy: 0.5))
+                .press(forDuration: 0.15)
             let checked = NSPredicate(format: "value == %@", "1")
             expectation(for: checked, evaluatedWith: task)
             waitForExpectations(timeout: 5)
