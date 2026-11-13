@@ -1176,6 +1176,25 @@ jobs:
                   if-no-files-found: error
                   retention-days: 14
 
+            - name: Verify the recovered checkpoint original-source IDE workflows
+              env:
+                  JAVASCRIPT_CHECKPOINT_BROWSER_DIR: output/javascript-checkpoint-browser
+              run: node scripts/classes-family-heavy-task.mjs -- node --test test/javascript-checkpoint-course-browser.test.mjs
+
+            - name: Verify actual checkpoint exports offline and at narrow widths
+              env:
+                  JAVASCRIPT_CHECKPOINT_BROWSER_DIR: output/javascript-checkpoint-browser
+              run: node scripts/classes-family-heavy-task.mjs -- node --test test/javascript-checkpoint-exported-browser.test.mjs
+
+            - name: Retain original checkpoint project workflow evidence
+              if: always()
+              uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+              with:
+                  name: javascript-checkpoint-source-workflows
+                  path: output/javascript-checkpoint-browser
+                  if-no-files-found: error
+                  retention-days: 14
+
             - name: Verify private IDE diagnostics in the browser
               run: node --test test/ide-diagnostics-browser.test.mjs
 
