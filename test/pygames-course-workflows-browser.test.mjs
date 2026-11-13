@@ -457,6 +457,7 @@ nodeTest(
 		const browserSessions = [];
 		let currentBrowserSession;
 		let browserStderrListener;
+		let crashSession;
 		async function closeBrowser(reason) {
 			const closing = browser;
 			const session = currentBrowserSession;
@@ -464,6 +465,10 @@ nodeTest(
 			browser = null;
 			currentBrowserSession = null;
 			const child = closing.process();
+			if (crashSession) {
+				await crashSession.detach().catch(() => {});
+				crashSession = null;
+			}
 			await closing.close();
 			if (browserStderrListener) {
 				child?.stderr?.off("data", browserStderrListener);
@@ -570,6 +575,14 @@ nodeTest(
 				const session = currentBrowserSession;
 				session.stderrTail = "";
 				session.lifecycle = [];
+				session.targetCrashes = [];
+				crashSession = await browser.target().createCDPSession();
+				crashSession.on("Target.targetCrashed", (crash) => {
+					const detail = { ...crash, at: new Date().toISOString() };
+					session.targetCrashes.push(detail);
+					console.log(JSON.stringify({ event: "target-crashed", taskId, ...detail }));
+				});
+				await crashSession.send("Target.setDiscoverTargets", { discover: true });
 				browserStderrListener = (chunk) => {
 					session.stderrTail = (session.stderrTail + String(chunk)).slice(-16_384);
 				};
@@ -972,10 +985,13 @@ nodeTest(
 						const frame = await pythonFrame(page);
 						try {
 							checkpoint("await-rendered-canvas");
-							const paintHandle = await frame.waitForFunction(
-								readPygamesFirstPaint,
-								{ timeout: 90000 }
-							);
+							const rendererCrashed = new Promise((resolve, reject) => {
+								page.once("error", reject);
+							});
+							const paintHandle = await Promise.race([
+								frame.waitForFunction(readPygamesFirstPaint, { timeout: 90000 }),
+								rendererCrashed
+							]);
 							const firstPaint = await paintHandle.jsonValue();
 							await paintHandle.dispose();
 							checkpoint("retain-rendered-canvas");
