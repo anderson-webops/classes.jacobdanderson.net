@@ -2,7 +2,7 @@ export const javascriptWeatherResources = [
 	{
 		courseId: "javascript-level-2-javascript-master",
 		project: "what-should-i-bring",
-		title: "What Should I Bring",
+		title: "What Should I Bring?",
 		version: 1,
 		role: "starter",
 		urls: [
@@ -106,7 +106,7 @@ export const javascriptWeatherResources = [
 	{
 		courseId: "javascript-level-2-javascript-master",
 		project: "what-should-i-bring",
-		title: "What Should I Bring",
+		title: "What Should I Bring?",
 		version: 1,
 		role: "reference",
 		urls: [

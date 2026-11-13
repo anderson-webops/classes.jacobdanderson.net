@@ -408,11 +408,11 @@ const javascriptLevel2SourceCourse: RawCourse = {
 				{
 					title: "Materialize and D3 Interaction",
 					preserveInstructions: true,
-					content: `**Concept path:** Create a webpage that recommends an item for the weather. The starter supplies the assignment comment and an empty page body. Materialize styles the controls, while D3 selects elements and handles events; the local pack includes the libraries and pictures needed to run the project.
+					content: `Create a webpage that recommends an item for the weather. The starter supplies the assignment comment and an empty page body. Materialize styles the controls, while D3 selects elements and handles events; the local pack includes the libraries and pictures needed to run the project.
 
-**Practice targets:** Brainstorm at least five weather situations and choose an item to bring for each. Examples include rain, snow, strong wind, hot sunshine, and cool weather. Build a labeled weather control and a visible recommendation area. Use Materialize to style the control or result, then use a D3 selection and an event handler to read the chosen weather and update the recommendation text. Keep the weather-to-item choices in one mapping or conditional sequence so each situation has a deliberate result.
+Brainstorm at least five weather situations and choose an item to bring for each. Examples include rain, snow, strong wind, hot sunshine, and cool weather. Build a labeled weather control and a visible recommendation area. Use Materialize to style the control or result, then use a D3 selection and an event handler to read the chosen weather and update the recommendation text. Keep the weather-to-item choices in one mapping or conditional sequence so each situation has a deliberate result.
 
-**Evidence target:** Record the five weather inputs and their expected recommendations. Select every situation, then switch back to one already tried; each selection must replace the previous recommendation with the matching item. Refresh the page and verify that the control and result still work. The weather choices and recommendation remain readable on a narrow screen.`,
+Record the five weather inputs and their expected recommendations. Select every situation, then switch back to one already tried; each selection must replace the previous recommendation with the matching item. Refresh the page and verify that the control and result still work. The weather choices and recommendation remain readable on a narrow screen.`,
 					projectLink:
 						"https://codepen.io/junilearning/pen/81d62c84dfa32d88f17d0e012229bf0c",
 					solutionLink:
