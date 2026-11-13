@@ -76,6 +76,34 @@ for (const project of projects) {
 					["index.html", "styles.css", "script.js"].includes(filename)
 						? editedWeatherSource(select(role), filename, original)
 						: undefined,
+				afterImport: async (_page, { saved }) => {
+					const guide = saved.files.find(
+						file => file.name === "README.md"
+					).content;
+					for (const token of [
+						"Materialize",
+						"weather situations",
+						"hot, rain, snow, cold and wind"
+					])
+						assert.ok(
+							guide.includes(token),
+							"Imported weather guide: " + token
+						);
+					for (const name of [
+						"CASES.md",
+						"vendor/d3.min.js",
+						"vendor/materialize.min.css",
+						"assets/windbreaker.svg"
+					])
+						assert.ok(
+							saved.files.some(file => file.name === name),
+							name
+						);
+					return {
+						completeWeatherGuideImported: true,
+						localLibrariesAndFiveCaseInputsPresent: true
+					};
+				},
 				taskFile: "README.md",
 				continuationIDs: [selected[0].itemId],
 				projectKey: role =>
@@ -99,8 +127,8 @@ for (const project of projects) {
 				}),
 				instructionTokens: [
 					"index.html",
-					"Materialize",
-					"weather situations"
+					"README.md",
+					"without a server"
 				],
 				starterToken: "index.html",
 				referenceToken: "index.html",
