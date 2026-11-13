@@ -2304,8 +2304,10 @@ describe("course text quality normalization", () => {
 		expect(corpus).toContain("sprite responsibilities");
 		expect(corpus).toContain("green-flag state");
 		expect(corpus).toContain(
-			"trigger a second sprite to start moving only after that message is received"
+			"Broadcast the next dancer's message after that final glide."
 		);
+		expect(corpus).toContain("Those receivers run together");
+		expect(corpus).toContain("one collection per contact");
 		expect(legacyScratchFocusCount).toBeLessThan(25);
 		expect(corpus).not.toMatch(
 			/module's core concept, a concrete worked example, and a testable artifact/i
@@ -6303,11 +6305,25 @@ describe("course text quality normalization", () => {
 		expect(corpus).not.toMatch(/\bMini Lab\b/);
 		expect(corpus).toContain("Refactoring Clinic 11: Practice Studio");
 		expect(corpus).toContain("Refactoring Clinic 17 Extension Practice");
-  const composing = course!.modules.find(module => module.title === "DPR2 Composing Methods")!;
-  expect(composing.curriculum.map(item => item.title)).toContain("Composing Methods Application Check");
-  const composingText = allCourseText({ ...course!, modules: [composing] });
-  for (const contract of ["ComposedReport", "MethodObjectReport", "13218", "supplier", "exception", "long"])
-   expect(composingText).toContain(contract);
+		const composing = course!.modules.find(
+			module => module.title === "DPR2 Composing Methods"
+		)!;
+		expect(composing.curriculum.map(item => item.title)).toContain(
+			"Composing Methods Application Check"
+		);
+		const composingText = allCourseText({
+			...course!,
+			modules: [composing]
+		});
+		for (const contract of [
+			"ComposedReport",
+			"MethodObjectReport",
+			"13218",
+			"supplier",
+			"exception",
+			"long"
+		])
+			expect(composingText).toContain(contract);
 		expect(corpus).toContain("Characterization Test Refactor Studio");
 		expect(corpus).toContain("Composing Methods Transfer Practice");
 		expect(corpus).toContain(
