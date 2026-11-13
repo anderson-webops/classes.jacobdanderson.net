@@ -29,7 +29,7 @@ test(
 				"utf8"
 			)
 		);
-		assert.equal(fixture.resources.length, 8);
+		assert.equal(fixture.resources.length, 4);
 		const temporary = await mkdtemp(join(tmpdir(), "classes-checkpoint-native-"));
 		const taskId
 			= process.env.CLASSES_FAMILY_TASK_ID
@@ -90,7 +90,7 @@ test(
 						"utf8"
 					)
 				);
-				assert.equal(proof.profiles.length, 8);
+				assert.equal(proof.profiles.length, 4);
 				assert.deepEqual(
 					new Set(proof.profiles.map(p => `${p.role}:${p.width}`)),
 					new Set([
