@@ -140,7 +140,7 @@ const javascriptLevel1SourceCourse: RawCourse = {
 					title: "Check-In #1: Additional Practice Project",
 					preserveInstructions: true,
 					content:
-						"Build a three-round guessing game. At the start of each round, choose one secret integer from 0 through 19 with `Math.floor(Math.random() * 20)`. Keep that secret for all three guesses. Each guess earns `Math.abs(guess - secret)` points; add all three distances to the round score and all three round scores to the total. Lower scores are better. For secret 10 and guesses 7, 10, and 15, the round score is 3 + 0 + 5 = 8. Show each round score and the final total. An invalid entry should allow a retry; Cancel should end the game. Those input-handling rules are local usability additions to the original exercise.",
+						"Build a three-round guessing game. At the start of each round, choose one secret integer from 0 through 19 with `Math.floor(Math.random() * 20)`. Keep that secret for all three guesses. Each guess earns `Math.abs(guess - secret)` points; add all three distances to the round score and all three round scores to the total. Lower scores are better. For secret 10 and guesses 7, 10, and 15, the round score is 3 + 0 + 5 = 8. Show each round score and the final total. Retry an invalid entry and end the game on Cancel. Those input-handling rules are local usability additions to the original exercise.",
 					projectLink:
 						"https://codepen.io/junilearning/pen/b04e9208251c84d123c97daf37972988",
 					solutionLink:
@@ -212,9 +212,10 @@ const javascriptLevel1SourceCourse: RawCourse = {
 				},
 				{
 					title: "Check-In #2: Animations and JavaScript Components",
+					contentKind: "assignment",
 					preserveInstructions: true,
 					content:
-						"Draw a red 50-by-50 square at (100, 100) on a 500-by-500 SVG with D3. Animate its width and height to 100 over two seconds. On `mouseover`, transition its fill to green; on `mouseout`, restore red. Add a Materialize modal with a trigger and a close control, then initialize it with `M.Modal.init(document.querySelectorAll('.modal'))`. Check that the modal opens and closes and the trigger can be reached with the keyboard. Continue in the HTML & CSS checkpoint project."
+						"Draw a red 50-by-50 square at (100, 100) on a 500-by-500 SVG with D3. Animate its width and height to 100 over two seconds. On `mouseover`, transition its fill to green; on `mouseout`, restore red. Add a Materialize modal with a trigger and a close control, then initialize it with `M.Modal.init(document.querySelectorAll('.modal'))`. Check that the modal opens and closes and the trigger can be reached with the keyboard. Verify that Escape closes the dialog. Continue in the HTML & CSS checkpoint project."
 				},
 				{
 					title: "Check-In #2: Website Layout",
