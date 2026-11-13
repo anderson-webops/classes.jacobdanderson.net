@@ -221,7 +221,9 @@ const javascriptLevel1SourceCourse: RawCourse = {
 				{
 					title: "Check-In #2: Additional Practice Project",
 					content:
-						"Replicate the snowflake pattern with D3 shapes and animation. Break the snowflake into repeated arms or segments, use a loop or helper to avoid manually duplicating every piece, and animate at least one property such as rotation, opacity, size, or position so the final result shows both structure and motion.",
+						"Reproduce the supplied eight-by-eight snowflake-icon pattern using HTML and CSS. Match these rows from top to bottom; # marks an icon and . marks an empty cell:\n\n```text\n###.....\n####....\n#####...\n.#####..\n..#####.\n...#####\n....####\n.....###\n```\n\n1. Create 64 tiles in row order and place the 34 snowflake icons at the marked positions.\n2. Use eight equal CSS Grid rows and columns and center each icon within its tile. The supplied Material Icons font uses ac_unit for the snowflake.\n3. Keep the grid square and inside the viewport at both narrow and wide widths. Compare the occupied cells row by row, save the project and reopen the same attempt.\n\nThe starter README contains the target and run instructions; compare the reference after completing the grid.\n\n[Project self-check](/course-resource?asset=%2Fcourse-assets%2Fjavascript-level-1%2Fsnowflake-pattern-checks.md%23pattern-answers)",
+					datasetLink:
+						"/course-assets/javascript-level-1/snowflake-pattern-checks.md#pattern-inputs",
 					projectLink: "https://codepen.io/junilearning/pen/vYGWvaq",
 					solutionLink:
 						"https://codepen.io/junilearning/pen/084c3032877fa7f9c828bba2c5798551"
