@@ -407,11 +407,11 @@ const javascriptLevel2SourceCourse: RawCourse = {
 				},
 				{
 					title: "Materialize and D3 Interaction",
-					content: `**Concept path:** Materialize provides prebuilt interface styling, while D3 can attach behavior to selected page elements. Together they make it possible to create a styled control that changes visible state.
+					content: `**Concept path:** The original What Should I Bring starter asks for a webpage that recommends an item for the weather. Its JavaScript contains the assignment comment; the HTML and CSS start empty. The Pen already loads Materialize 1.0.0 for styling and D3 5.16.0 for selecting elements and handling events.
 
-**Practice targets:** Add a Materialize button or card, select it with D3, and attach a click handler using \`d3.select().on("click", handler)\`. The handler can update text, color, count, or another visible property.
+**Practice targets:** Brainstorm at least five weather situations and choose an item to bring for each. Examples include rain, snow, strong wind, hot sunshine, and cool weather. Build a labeled weather control and a visible recommendation area. Use Materialize to style the control or result, then use a D3 selection and an event handler to read the chosen weather and update the recommendation text. Keep the weather-to-item choices in one mapping or conditional sequence so each situation has a deliberate result.
 
-**Evidence target:** The interaction works after a page refresh, the selected element is specific enough to avoid affecting unrelated elements, and the visible state changes every time the event fires.`,
+**Evidence target:** Record the five weather inputs and their expected recommendations. Select every situation, then switch back to one already tried; each selection must replace the previous recommendation with the matching item. Refresh the page and verify that the control and result still work. The weather choices and recommendation remain readable on a narrow screen.`,
 					projectLink:
 						"https://codepen.io/junilearning/pen/81d62c84dfa32d88f17d0e012229bf0c",
 					solutionLink:
