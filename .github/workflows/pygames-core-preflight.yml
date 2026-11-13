@@ -10,6 +10,10 @@ on:
         type: choice
         options: [javascript-checkpoints, javascript-snowflake, dependency-repair, java-ownership-move, java-composing, java-refactoring, java-studios, java-capstone, java-judgment, java-architecture, java-collaboration, java-behavioral, java-structural, java-boundary, java-creational, java-foundations, java-patterns, java-recursion, pygames, networking, ai-setup, self-study, physics-models, bootcamp, scratch-originals, scratch-readings, course-audit, scratch-tasks, tracker-evidence, native-release-evidence]
         default: pygames
+      full_source_runtime:
+        description: Also verify every pinned original PyGames runtime profile
+        type: boolean
+        default: false
       browser_run_id:
         description: Networking browser export workflow run
         type: string
@@ -420,6 +424,21 @@ jobs:
         env:
           PYGAMES_CORE_BROWSER_PROOF_DIR: output/pygames-core-exports
         run: node scripts/classes-family-heavy-task.mjs -- node --test test/pygames-core-browser.test.mjs
+      - name: Verify all pinned original PyGames course and runtime profiles
+        if: inputs.full_source_runtime
+        env:
+          PYGAMES_BROWSER_EXPORT_PROOF_DIR: output/pygames-exports
+          CLASSES_FAMILY_HEAVY_TIMEOUT_MS: 2100000
+        run: node scripts/classes-family-heavy-task.mjs -- node --test test/pygames-course-workflows-browser.test.mjs
+      - name: Retain original PyGames course and runtime evidence
+        if: always() && inputs.full_source_runtime
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: pygames-original-runtime-workflows
+          path: output/pygames-exports/
+          if-no-files-found: error
+          retention-days: 14
+
       - name: Retain PyGames core browser evidence
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
