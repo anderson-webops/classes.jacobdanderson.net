@@ -3,7 +3,7 @@ export const javascriptLyricsResources = [
 		courseId: "javascript-level-2-javascript-master",
 		project: "finish-the-lyrics",
 		title: "Finish the Lyrics",
-		version: 1,
+		version: 2,
 		role: "starter",
 		urls: [
 			"https://codepen.io/junilearning/pen/2d400625754c49aedbb72402eed3ba8f",
@@ -38,8 +38,8 @@ export const javascriptLyricsResources = [
 			{
 				name: "SOURCES.md",
 				path: "fundamentals-v1/finish-the-lyrics/starter/SOURCES.md.txt",
-				byteLength: 2126,
-				sha256: "a5fed2c5cf968608b8204b0b3cecec95658869c6a57fa18f0468096823b003e9"
+				byteLength: 2401,
+				sha256: "ae4bc2fde22295c26fe15d821a461b11d0ed21560760eb1f4db66d3e91684d49"
 			},
 			{
 				name: "index.html",
@@ -50,8 +50,8 @@ export const javascriptLyricsResources = [
 			{
 				name: "script.js",
 				path: "fundamentals-v1/finish-the-lyrics/starter/script.js.txt",
-				byteLength: 990,
-				sha256: "bb5c7b3ac8e06ee669df9efa339c0a37dbc26b913791dd8c6cf238b1aaf00ffe"
+				byteLength: 992,
+				sha256: "1e5238eea1df6fc2bed1f8700395bef590ce567e6ee2b06a27f6db99443edb73"
 			},
 			{
 				name: "styles.css",
@@ -71,7 +71,7 @@ export const javascriptLyricsResources = [
 		courseId: "javascript-level-2-javascript-master",
 		project: "finish-the-lyrics",
 		title: "Finish the Lyrics",
-		version: 1,
+		version: 2,
 		role: "reference",
 		urls: [
 			"https://codepen.io/junilearning/pen/5e36bb6a04a440e18fb502b1cd635628",
@@ -106,8 +106,8 @@ export const javascriptLyricsResources = [
 			{
 				name: "SOURCES.md",
 				path: "fundamentals-v1/finish-the-lyrics/reference/SOURCES.md.txt",
-				byteLength: 2126,
-				sha256: "a5fed2c5cf968608b8204b0b3cecec95658869c6a57fa18f0468096823b003e9"
+				byteLength: 2401,
+				sha256: "ae4bc2fde22295c26fe15d821a461b11d0ed21560760eb1f4db66d3e91684d49"
 			},
 			{
 				name: "index.html",
@@ -118,8 +118,8 @@ export const javascriptLyricsResources = [
 			{
 				name: "script.js",
 				path: "fundamentals-v1/finish-the-lyrics/reference/script.js.txt",
-				byteLength: 1575,
-				sha256: "5e10601fc1624b25006dc8cb8b7ccd23b0910abaf95a3503627b8574a0012afd"
+				byteLength: 1577,
+				sha256: "671d3fe582b3b8bcc0b6c9c7f16f7728fd0d0365f49ec07da7ce811de1a28861"
 			},
 			{
 				name: "styles.css",

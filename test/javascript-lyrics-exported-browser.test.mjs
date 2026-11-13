@@ -22,7 +22,7 @@ test(
 	{ timeout: 300000 },
 	async () => {
 		const output =
-			process.env.JAVASCRIPT_WEATHER_BROWSER_DIR ||
+			process.env.JAVASCRIPT_LYRICS_BROWSER_DIR ||
 			"output/javascript-lyrics-browser";
 		const fixture = JSON.parse(
 			await readFile(

@@ -37,11 +37,11 @@ function printToScreen(text) {
     .attr("id", "quiz-score")
     .attr("role", "status")
     .style("color", color)
-    .style("transform", "translateX(-1rem)")
+    .style("transform", "translateX(-16px)")
     .style("opacity", 0)
     .text(text);
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   output.transition().duration(reducedMotion ? 0 : 1000)
-    .style("transform", "translateX(0)")
+    .style("transform", "translateX(0px)")
     .style("opacity", 1);
 }

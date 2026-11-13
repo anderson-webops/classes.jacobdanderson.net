@@ -133,7 +133,7 @@ for (const project of projects) {
 				starterToken: "index.html",
 				referenceToken: "index.html",
 				readyToken: "Open index.html",
-				outputEnv: "JAVASCRIPT_WEATHER_BROWSER_DIR",
+				outputEnv: "JAVASCRIPT_LYRICS_BROWSER_DIR",
 				outputSubdirectory: project,
 				defaultOutput: "output/javascript-lyrics-browser"
 			});

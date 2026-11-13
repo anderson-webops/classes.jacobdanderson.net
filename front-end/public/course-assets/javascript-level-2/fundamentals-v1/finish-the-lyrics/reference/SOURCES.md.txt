@@ -19,3 +19,5 @@ starter: 2b0098b95d08b07aa74ea97b033e3bd5b584988aa6d5ec6950995888936ac2e5
 reference: 0de185a5b5cad49785bd4c3d22fccfb6a65a3e1de692c8cf4fcfc49abf30680f
 
 LICENSE-original.txt reproduces the original starter export's MIT notice unchanged. The private reference export contained no separate license file; its provenance is recorded above. The three local sayings and revised implementation were authored for this pack.
+
+Version 2 uses absolute pixel transform offsets. Actual downloaded v1 runs showed that D3's CSS-transform interpolator cannot resolve rem units through DOMMatrix; the score existed but remained at opacity zero. The one-second entrance and reduced-motion route are retained.
