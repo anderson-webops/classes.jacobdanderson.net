@@ -130,7 +130,7 @@ it("limits sharing to the assigned introduction and preserves role boundaries", 
 			"starter",
 			sourceUrl
 		)
-	).toBe(`${firstCourse}:setup-item:starter:introduction:v1`);
+	).toBe(`${firstCourse}:setup-item:starter:introduction:v2`);
 	expect(() =>
 		javascriptCourseProjectKey(
 			secondCourse,
@@ -322,7 +322,7 @@ it.each(["learner", "instructor"] as const)(
 			expect(params.get("mode")).toBe("web");
 			expect(params.get("starterUrl")).toBe(sourceUrl);
 			expect(params.get("projectKey")).toBe(
-				`${secondCourse}:${item.id}:starter:introduction:v1`
+				`${secondCourse}:${item.id}:starter:introduction:v2`
 			);
 		} finally {
 			wrapper.unmount();

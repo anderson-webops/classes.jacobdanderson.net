@@ -130,7 +130,7 @@ for (const resource of fixture.resources) {
 				}
 			],
 			courseID: fixture.courseId,
-			courseProjectKey: key.replace(/:v2$/u, ":v1")
+			courseProjectKey: key.replace(/:v3$/u, ":v2")
 		});
 		expect(earlier.courseProjectKey).not.toBe(key);
 		const project = createPythonIdeProject("web", {

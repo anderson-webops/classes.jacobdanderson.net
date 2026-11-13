@@ -470,6 +470,22 @@ jobs:
               id: unit_dependencies
               run: npm ci
 
+            - name: Verify maintained course library security patches
+              env:
+                  VENDORED_D3_PROOF_FILE: ${{ github.workspace }}/output/vendored-d3-security/proof.json
+              run: |
+                  node scripts/verify-vendored-d3.mjs
+                  node --test --test-concurrency=1 scripts/check-vendored-d3-regressions.mjs
+
+            - name: Retain course library security proof
+              if: always()
+              uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+              with:
+                  name: vendored-d3-security
+                  path: output/vendored-d3-security/
+                  if-no-files-found: warn
+                  retention-days: 14
+
             - name: Unit tests
               env:
                   VITEST_WATCH: "false"
