@@ -5,6 +5,7 @@ export const javaOwnershipUnit = {
 	courseID: "design-patterns-in-java-part-2",
 	revision: "c52d7badc93d4c15e921b5e8e515d03047fe1a05",
 	pack: "DPR3-Contact-Ownership-Packs",
+	layout: "src/contacts, src/dates and ClientCompatibility.java",
 	moduleID:
 		"design-patterns-in-java-part-2-dpr3-moving-features-between-objects",
 	readingID:
@@ -65,7 +66,74 @@ export const javaOwnershipUnit = {
 		"Run displays native Java 21 commands. These programs read no standard input."
 	]
 } as const;
-export const javaRefactoringUnits = [javaOwnershipUnit] as const;
+export const javaValueDataUnit = {
+	id: "value-data",
+	courseID: "design-patterns-in-java-part-2",
+	revision: "3b76c2d4d865499a2dd305b47635298c30dc27a9",
+	pack: "DPR4-Value-Data-Packs",
+	layout: "src/supplies and ClientCompatibility.java",
+	moduleID: "design-patterns-in-java-part-2-dpr4-organizing-data",
+	readingID:
+		"design-patterns-in-java-part-2-dpr4-organizing-data-curriculum-organizing-data-core-concepts",
+	coreID: "design-patterns-in-java-part-2-dpr4-organizing-data-curriculum-core-project-organizing-data",
+	sourceItems: [
+		"design-patterns-in-java-part-2-dpr4-organizing-data-curriculum-organizing-data-core-concepts",
+		"design-patterns-in-java-part-2-dpr4-organizing-data-curriculum-data-modeling-lab-upgrade-a-weak-domain-model",
+		"design-patterns-in-java-part-2-dpr4-organizing-data-curriculum-value-semantics-and-collection-ownership",
+		"design-patterns-in-java-part-2-dpr4-organizing-data-curriculum-data-migration-and-compatibility-check",
+		"design-patterns-in-java-part-2-dpr4-organizing-data-curriculum-core-project-organizing-data",
+		"design-patterns-in-java-part-2-dpr4-organizing-data-supplemental-organizing-data-transfer-practice",
+		"design-patterns-in-java-part-2-dpr4-organizing-data-supplemental-organizing-data-extension-practice"
+	],
+	files: {
+		starter: [
+			"CHECKPOINTS.md",
+			"ClientCompatibility.java",
+			"ContractTests.java",
+			"DECISIONS.md",
+			"Main.java",
+			"README.md",
+			"sources.txt",
+			"src/supplies/ItemCode.java",
+			"src/supplies/LegacySupplyRequest.java",
+			"src/supplies/RequestCodec.java",
+			"src/supplies/RequestLine.java",
+			"src/supplies/ServiceLevel.java",
+			"src/supplies/SupplyRequest.java"
+		],
+		solution: [
+			"CHECKPOINTS.md",
+			"ClientCompatibility.java",
+			"ContractTests.java",
+			"DECISIONS.md",
+			"Main.java",
+			"README.md",
+			"sources.txt",
+			"src/supplies/ItemCode.java",
+			"src/supplies/LegacySupplyRequest.java",
+			"src/supplies/RequestCodec.java",
+			"src/supplies/RequestLine.java",
+			"src/supplies/ServiceLevel.java",
+			"src/supplies/SupplyRequest.java"
+		]
+	},
+	instructions: [
+		"Java 21 value data and compatible transport",
+		"javac --release 21 -Xlint:all -Werror -d classes @sources.txt",
+		"java -cp classes ContractTests base",
+		"java -cp classes ContractTests core",
+		"java -cp classes Main base",
+		"java -cp classes Main",
+		"Baseline reports 1673 passed; completed core reports 1704 passed. The unmodified starter intentionally fails core until the typed-value tasks are finished.",
+		"After optional duplicate-line merging: java -cp classes ContractTests",
+		"The complete reference reports 1709 passed; core remains independent of merging.",
+		"Keep the baseline, ClientCompatibility.java and package tree unchanged. These programs read no standard input; Run displays native Java 21 commands."
+	]
+} as const;
+export const javaRefactoringUnits = [
+	javaOwnershipUnit,
+	javaValueDataUnit
+] as const;
 type Role = "starter" | "solution";
 export function javaRefactoringUnitURL(id: string, role: Role) {
 	const unit = javaRefactoringUnits.find(unit => unit.id === id);
@@ -148,7 +216,7 @@ export function javaRefactoringUnitNativeInstructions(
 	const files = unit.files[role === "starter" ? "starter" : "solution"];
 	return [
 		unit.instructions[0],
-		`Export all ${files.length} role files, including src/contacts, src/dates and ClientCompatibility.java.`,
+		`Export all ${files.length} role files, including ${unit.layout}.`,
 		...unit.instructions.slice(1)
 	];
 }

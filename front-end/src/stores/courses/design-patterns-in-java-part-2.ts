@@ -4,6 +4,7 @@ import { buildImplementationLabGuidance } from "./implementationLabGuidance";
 import { completeJavaComposingMethods } from "./javaComposingMethodsTeaching";
 import { completeJavaOwnershipMove } from "./javaOwnershipMoveTeaching";
 import { completeJavaRefactoringOpening } from "./javaRefactoringOpeningTeaching";
+import { completeJavaValueData } from "./javaValueDataTeaching";
 import { buildProjectGuidance } from "./projectGuidance";
 
 const refactoringClinicContexts = {
@@ -1919,7 +1920,8 @@ const designPatternsJavaPart2PrimaryModules =
 		.map(decorateDesignPatternsJavaPart2Module)
 		.map(completeJavaRefactoringOpening)
 		.map(completeJavaComposingMethods)
-		.map(completeJavaOwnershipMove);
+		.map(completeJavaOwnershipMove)
+		.map(completeJavaValueData);
 const designPatternsJavaPart2Clinics =
 	designPatternsInJavaPart2SourceCourse.modules.filter(
 		module => !DESIGN_PATTERNS_JAVA_PART_2_PRIMARY_TITLES.has(module.title)
