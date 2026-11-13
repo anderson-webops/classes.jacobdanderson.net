@@ -171,7 +171,7 @@ it("preserves all9published identities and complete eight input/self-check pairs
 		"LAB|0|",
 		"ClientCompatibility",
 		"final field alone",
-		"numeric hash calculation"
+		"existing hash calculation"
 	])
 		expect(module.curriculum[0].content).toContain(evidence);
 });
