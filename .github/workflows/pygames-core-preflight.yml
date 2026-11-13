@@ -797,6 +797,8 @@ jobs:
           test/store.courses.scratch-bootcamp-content.spec.test.ts
           test/store.courses.algebra2-self-study.spec.test.ts
           test/store.courses.scratch-level-1-flow.spec.test.ts
+          test/store.courses.scratch-level-2-flow.spec.test.ts
+          test/store.courses.scratch-support-display.spec.test.ts
           test/store.courses.scratch-juni-instructions.spec.test.ts
           test/modules.scratch-originals.spec.test.ts
           test/components.scratch-original-import.spec.test.ts
