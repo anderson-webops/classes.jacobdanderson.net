@@ -25,6 +25,7 @@ import { javascriptOperatorsResources } from "@/modules/javascriptOperatorsResou
 import { javascriptRestaurantResources } from "@/modules/javascriptRestaurantResources";
 import { javascriptShopResources } from "@/modules/javascriptShopResources";
 import { javascriptSnowflakeResources } from "@/modules/javascriptSnowflakeResources";
+import { javascriptWeatherResources } from "@/modules/javascriptWeatherResources";
 
 const courseId = "javascript-level-1-javascript-superstar";
 const base = "/course-assets/javascript-level-1/";
@@ -71,7 +72,8 @@ const roles: readonly CourseRole[] = [
 	...javascriptMasterFunctionsResources,
 	...javascriptMasterConditionalsResources,
 	...javascriptMasterCanvasResources,
-	...javascriptMasterArraysResources
+	...javascriptMasterArraysResources,
+	...javascriptWeatherResources
 ];
 
 export function javascriptCourseResource(

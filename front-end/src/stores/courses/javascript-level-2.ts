@@ -407,7 +407,8 @@ const javascriptLevel2SourceCourse: RawCourse = {
 				},
 				{
 					title: "Materialize and D3 Interaction",
-					content: `**Concept path:** The original What Should I Bring starter asks for a webpage that recommends an item for the weather. Its JavaScript contains the assignment comment; the HTML and CSS start empty. The Pen already loads Materialize 1.0.0 for styling and D3 5.16.0 for selecting elements and handling events.
+					preserveInstructions: true,
+					content: `**Concept path:** Create a webpage that recommends an item for the weather. The starter supplies the assignment comment and an empty page body. Materialize styles the controls, while D3 selects elements and handles events; the local pack includes the libraries and pictures needed to run the project.
 
 **Practice targets:** Brainstorm at least five weather situations and choose an item to bring for each. Examples include rain, snow, strong wind, hot sunshine, and cool weather. Build a labeled weather control and a visible recommendation area. Use Materialize to style the control or result, then use a D3 selection and an event handler to read the chosen weather and update the recommendation text. Keep the weather-to-item choices in one mapping or conditional sequence so each situation has a deliberate result.
 
