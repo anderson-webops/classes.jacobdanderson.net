@@ -111,6 +111,8 @@ jobs:
           npm ls --all --workspaces=false
           npm audit --include=optional --workspaces=false --json > ../output/security-dependency-repair/backend-full.json
           npm audit --include=optional --omit=dev --workspaces=false --json > ../output/security-dependency-repair/backend-production.json
+      - name: Recheck types after build-generated declarations
+        run: node scripts/classes-family-heavy-task.mjs -- npm run typecheck
       - name: Retain the exact validated candidate bytes
         run: |
           python3 - <<'PY'
@@ -118,7 +120,14 @@ jobs:
           out=pathlib.Path("output/security-dependency-repair")
           files=["back-end/package.json","package-lock.json","back-end/package-lock.json"]
           changed=subprocess.check_output(["git","diff","--name-only"],text=True).splitlines()
-          assert set(changed)==set(files),changed
+          (out/"candidate.diff").write_bytes(subprocess.check_output(["git","diff","--binary"]))
+          generated="front-end/src/components.d.ts"
+          declaration_changes=[name for name in changed if name==generated]
+          if declaration_changes:
+              dest=out/"generated"/generated
+              dest.parent.mkdir(parents=True,exist_ok=True)
+              shutil.copyfile(generated,dest)
+              (out/"generated-declaration-before.txt").write_bytes(subprocess.check_output(["git","show","HEAD:"+generated]))
           hashes={}
           for name in files:
               src=pathlib.Path(name)
@@ -126,13 +135,14 @@ jobs:
               dest.parent.mkdir(parents=True,exist_ok=True)
               shutil.copyfile(src,dest)
               hashes[name]=hashlib.sha256(src.read_bytes()).hexdigest()
+          assert set(files)<=set(changed) and set(changed)-set(files)<=set(declaration_changes),changed
           for name in ["root-full","root-production","backend-full","backend-production"]:
               assert json.loads((out/(name+".json")).read_text())["metadata"]["vulnerabilities"]["total"]==0
           for name in ["package-lock.json","back-end/package-lock.json"]:
               lock=json.loads(pathlib.Path(name).read_text())
               assert lock["packages"]["node_modules/mongoose"]["version"]=="9.12.1"
           before=json.loads((out/"before.json").read_text())
-          (out/"accepted.json").write_text(json.dumps({"accepted":True,"source":before["source"],"candidateHashes":hashes,"cleanRootInstall":True,"cleanStandaloneBackendInstall":True,"lint":True,"typecheck":True,"build":True,"backendTests":True,"frontendUnitTests":True,"fourZeroVulnerabilityAudits":True,"publishedOrDeployed":False},indent=2)+"\n")
+          (out/"accepted.json").write_text(json.dumps({"accepted":True,"source":before["source"],"candidateHashes":hashes,"cleanRootInstall":True,"cleanStandaloneBackendInstall":True,"lint":True,"typecheck":True,"build":True,"backendTests":True,"frontendUnitTests":True,"fourZeroVulnerabilityAudits":True,"generatedDeclarationReviewPending":declaration_changes,"publishedOrDeployed":False},indent=2)+"\n")
           PY
           cp /tmp/classes-family-heavy-tasks.log output/security-dependency-repair/processes.jsonl
       - name: Retain candidate files and validation evidence
