@@ -17,3 +17,30 @@ starter: 6e6b33e35fa8a3be82aef87df4eefbd0e8a89e2521502756c7ff9be2abe4d880
 reference: ebaf6146e6b444c48a9b9ed7de5f090a4f84c8856c7359e01e4bcf0f15ad7c01
 
 Local illustrations and operational notes were authored for this pack. Saved/exported files include all runtime dependencies.
+
+## Original starter notice
+
+The following notice is reproduced unchanged from the official starter ZIP. The private reference export supplied no separate license file.
+
+The MIT License (MIT)
+
+Copyright (c) 2026 Juni Learning (https://codepen.io/junilearning/pen/rNLjwje)
+Fork of an original work JAM1 Project 5: What Should I Bring? (https://codepen.io/Gaster623/pen/abNBZBb)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

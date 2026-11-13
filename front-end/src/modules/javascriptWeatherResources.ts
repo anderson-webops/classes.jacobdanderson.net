@@ -3,7 +3,7 @@ export const javascriptWeatherResources = [
 		courseId: "javascript-level-2-javascript-master",
 		project: "what-should-i-bring",
 		title: "What Should I Bring?",
-		version: 1,
+		version: 2,
 		role: "starter",
 		urls: [
 			"https://codepen.io/junilearning/pen/81d62c84dfa32d88f17d0e012229bf0c",
@@ -38,8 +38,8 @@ export const javascriptWeatherResources = [
 			{
 				name: "SOURCES.md",
 				path: "fundamentals-v1/what-should-i-bring/starter/SOURCES.md.txt",
-				byteLength: 1779,
-				sha256: "5d83eb000524c8c693b492f7e929a4563ae4ef3030c2c469f196051bfb00f424"
+				byteLength: 3180,
+				sha256: "c6d1e3ea838740f8b951a497094270b71389f89abaeed5a01c01712724eba057"
 			},
 			{
 				name: "assets/boots.svg",
@@ -107,7 +107,7 @@ export const javascriptWeatherResources = [
 		courseId: "javascript-level-2-javascript-master",
 		project: "what-should-i-bring",
 		title: "What Should I Bring?",
-		version: 1,
+		version: 2,
 		role: "reference",
 		urls: [
 			"https://codepen.io/junilearning/pen/6014e92e4707defd82249fb10b43d70d",
@@ -142,8 +142,8 @@ export const javascriptWeatherResources = [
 			{
 				name: "SOURCES.md",
 				path: "fundamentals-v1/what-should-i-bring/reference/SOURCES.md.txt",
-				byteLength: 1779,
-				sha256: "5d83eb000524c8c693b492f7e929a4563ae4ef3030c2c469f196051bfb00f424"
+				byteLength: 3180,
+				sha256: "c6d1e3ea838740f8b951a497094270b71389f89abaeed5a01c01712724eba057"
 			},
 			{
 				name: "assets/boots.svg",
