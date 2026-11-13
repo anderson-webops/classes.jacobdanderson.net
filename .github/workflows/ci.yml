@@ -2568,18 +2568,29 @@ jobs:
                   npm install --global npm@12.0.1
                   node scripts/classes-family-heavy-task.mjs -- npm ci
             - name: Verify exact data source and historical refactoring identities
-              run: node scripts/classes-family-heavy-task.mjs -- npm exec -w front-end -- vitest run test/java-value-data-workspace.spec.test.ts test/java-ownership-move-workspace.spec.test.ts --no-file-parallelism --maxWorkers=1
+              run: node scripts/classes-family-heavy-task.mjs -- npm exec -w front-end -- vitest run test/java-value-data-workspace.spec.test.ts test/java-ownership-move-workspace.spec.test.ts test/java-conditional-flow-workspace.spec.test.ts --no-file-parallelism --maxWorkers=1
             - name: Build the course and IDE
               run: node scripts/classes-family-heavy-task.mjs -- npm run -w front-end build
             - name: Exercise actual role imports, saved edits and continuations
               run: node scripts/classes-family-heavy-task.mjs -- node --test --test-concurrency=1 test/java-value-data-course-browser.test.mjs
             - name: Compile every original and actual edited Java export
               run: python3 -I -B test/java-value-data-exported-native.py
+            - name: Exercise conditional imports, separate optional attempts and saved continuations
+              env:
+                  JAVA_CONDITIONAL_FLOW_BROWSER_PROOF_DIR: output/java-conditional-flow
+                  COURSE_IMPORT_SCREENSHOT_DIR: output/java-conditional-flow/screenshots
+              run: node scripts/classes-family-heavy-task.mjs -- node --test --test-concurrency=1 test/java-conditional-flow-course-browser.test.mjs
+            - name: Compile every original and edited conditional export
+              env:
+                  JAVA_CONDITIONAL_FLOW_BROWSER_PROOF_DIR: output/java-conditional-flow
+              run: node scripts/classes-family-heavy-task.mjs -- python3 -I -B test/java-conditional-flow-exported-native.py
             - name: Retain exact data source, browser and native evidence
               if: always()
               uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
               with:
                   name: java-value-data-workflows
-                  path: output/java-value-data/
+                  path: |
+                      output/java-value-data/
+                      output/java-conditional-flow/
                   if-no-files-found: error
                   retention-days: 14

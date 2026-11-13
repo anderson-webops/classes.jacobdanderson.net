@@ -130,9 +130,88 @@ export const javaValueDataUnit = {
 		"Keep the baseline, ClientCompatibility.java and package tree unchanged. These programs read no standard input; Run displays native Java 21 commands."
 	]
 } as const;
+export const javaConditionalFlowUnit = {
+	id: "conditional-flow",
+	courseID: "design-patterns-in-java-part-2",
+	revision: "865d2215718312720de63ed79cdb3a192cbea350",
+	pack: "DPR5-Conditional-Flow-Packs",
+	layout: "src/lab, src/lab/optional and sources.txt",
+	moduleID:
+		"design-patterns-in-java-part-2-dpr5-simplifying-conditional-expressions",
+	readingID:
+		"design-patterns-in-java-part-2-dpr5-simplifying-conditional-expressions-curriculum-simplifying-conditional-expressions-core-concepts",
+	coreID: "design-patterns-in-java-part-2-dpr5-simplifying-conditional-expressions-curriculum-core-project-simplifying-conditional-expressions",
+	sourceItems: [
+		"design-patterns-in-java-part-2-dpr5-simplifying-conditional-expressions-curriculum-simplifying-conditional-expressions-application-check",
+		"design-patterns-in-java-part-2-dpr5-simplifying-conditional-expressions-curriculum-decision-table-and-branch-equivalence-contract",
+		"design-patterns-in-java-part-2-dpr5-simplifying-conditional-expressions-curriculum-core-project-simplifying-conditional-expressions",
+		"design-patterns-in-java-part-2-dpr5-simplifying-conditional-expressions-supplemental-simplifying-conditional-expressions-extension-practice"
+	],
+	independentItems: [
+		"design-patterns-in-java-part-2-dpr5-simplifying-conditional-expressions-supplemental-simplifying-conditional-expressions-extension-practice"
+	],
+	files: {
+		starter: [
+			"src/lab/GatePolicy.java",
+			"README.md",
+			"REFACTORING.md",
+			"sources.txt",
+			"src/lab/AdmissionPolicy.java",
+			"src/lab/AuditTrail.java",
+			"src/lab/BookingClient.java",
+			"src/lab/BookingData.java",
+			"src/lab/CoreChecks.java",
+			"src/lab/CoreDemo.java",
+			"src/lab/Inputs.java",
+			"src/lab/LegacyGate.java",
+			"src/lab/optional/FeePolicies.java",
+			"src/lab/optional/LegacyOptionalWorkflow.java",
+			"src/lab/optional/OptionalChecks.java",
+			"src/lab/optional/OptionalDemo.java",
+			"src/lab/optional/OptionalWorkflow.java",
+			"src/lab/optional/StatusReporter.java"
+		],
+		solution: [
+			"src/lab/GatePolicy.java",
+			"README.md",
+			"REFACTORING.md",
+			"sources.txt",
+			"src/lab/AdmissionPolicy.java",
+			"src/lab/AuditTrail.java",
+			"src/lab/BookingClient.java",
+			"src/lab/BookingData.java",
+			"src/lab/CoreChecks.java",
+			"src/lab/CoreDemo.java",
+			"src/lab/Inputs.java",
+			"src/lab/LegacyGate.java",
+			"src/lab/optional/FeePolicies.java",
+			"src/lab/optional/LegacyOptionalWorkflow.java",
+			"src/lab/optional/OptionalChecks.java",
+			"src/lab/optional/OptionalDemo.java",
+			"src/lab/optional/OptionalWorkflow.java",
+			"src/lab/optional/StatusReporter.java"
+		]
+	},
+	instructions: [
+		"Java 21 conditional-flow refactoring",
+		'javac --release 21 -encoding UTF-8 -Xlint:all -Werror -d out "@sources.txt"',
+		"java -ea -cp out lab.CoreDemo baseline",
+		"java -ea -cp out lab.CoreChecks baseline",
+		"java -ea -cp out lab.CoreChecks core",
+		"java -da -cp out lab.CoreChecks core",
+		"java -ea -cp out lab.CoreChecks assertions",
+		"java -da -cp out lab.CoreChecks assertions",
+		"Baseline and completed core cover 144000 rows and 576017 explicit checks. The untouched starter core is intentionally unfinished.",
+		"Optional: java -ea -cp out lab.optional.OptionalChecks baseline",
+		"Optional completed workflow: java -ea -cp out lab.optional.OptionalChecks full",
+		"Run displays native Java commands. These programs read no standard input. The full solution covers 720 fee pairs and 720 workflow cases.",
+		"The optional project has a separate saved attempt. Copy the completed GatePolicy.java from the core attempt before implementing optional fee/reporting TODOs."
+	]
+} as const;
 export const javaRefactoringUnits = [
 	javaOwnershipUnit,
-	javaValueDataUnit
+	javaValueDataUnit,
+	javaConditionalFlowUnit
 ] as const;
 type Role = "starter" | "solution";
 export function javaRefactoringUnitURL(id: string, role: Role) {
@@ -175,7 +254,12 @@ export function javaRefactoringUnitProjectKey(
 	}
 	return [
 		courseID,
-		role === "starter" ? selected.unit.coreID : selected.unit.readingID,
+		"independentItems" in selected.unit &&
+		(selected.unit.independentItems as readonly string[]).includes(itemID)
+			? itemID
+			: role === "starter"
+				? selected.unit.coreID
+				: selected.unit.readingID,
 		role,
 		`native-java-${selected.unit.id}`
 	].join(":");
@@ -209,7 +293,11 @@ export function javaRefactoringUnitNativeInstructions(
 	if (
 		!unit ||
 		(role !== "starter" && role !== "reference") ||
-		item !== (role === "starter" ? unit.coreID : unit.readingID)
+		(item !== (role === "starter" ? unit.coreID : unit.readingID) &&
+			!(
+				"independentItems" in unit &&
+				(unit.independentItems as readonly string[]).includes(item)
+			))
 	) {
 		return null;
 	}
