@@ -371,7 +371,7 @@ const javascriptLevel2SourceCourse: RawCourse = {
 					title: "JSM1 Project 2: Double or Nothing",
 					content: `**Project target:** Build a risk-and-reward coin-flip game. Each successful flip doubles the current dollars, and a losing flip ends the round with zero.
 
-**Build path:** Represent the current dollars with a variable, use \`Math.random()\` to simulate heads or tails, and prompt after each successful round to continue or stop. Keep the random flip, user choice, and score update as separate pieces of logic so each part can be tested.
+**Build path:** Start with 1000 virtual dollars. Before each flip, prompt for Y to play or N to stop; Cancel also stops and preserves the balance. Retry other entries without flipping. Use \`Math.floor(Math.random() * 2)\`: 0 means heads and doubles the balance, while 1 means tails, sets the balance to zero, and ends the game. Keep the choice, flip, and balance update separate.
 
 **Evidence target:** A win doubles the displayed value, a loss resets the round correctly, stopping preserves the current total, and the game prints a final message for every ending path.`,
 					projectLink:
@@ -385,9 +385,9 @@ const javascriptLevel2SourceCourse: RawCourse = {
 					title: "Drawing in JavaScript",
 					content: `**Concept path:** SVG describes shapes as elements in the page, and D3 helps create or update those elements from JavaScript data. Unlike canvas, SVG shapes remain as individual DOM nodes that can be selected and styled.
 
-**Practice targets:** Create an SVG area, append at least one rectangle and one circle, and assign random colors from a small palette. Store shape settings in data objects before rendering so the drawing logic depends on data rather than repeated hard-coded calls.
+**Practice targets:** Recreate the original 100 Squares project with D3: begin with one 50-by-50 square, make a row of 10, then use nested loops for 10 rows and 10 columns. Use a 1000-by-1000 SVG. Set each square's x and y positions to \`50 + column * 75\` and \`50 + row * 75\`. Choose red, green, and blue channel values from 1 through 255 and form a complete \`rgb(r, g, b)\` color string. Scale the SVG to fit narrower screens while retaining its coordinates.
 
-**Evidence target:** The page contains visible SVG shapes, refreshing or rerunning can change color, and changing one data object changes the matching shape without rewriting the render code.`,
+**Evidence target:** The SVG contains exactly 100 rectangles with 10 distinct x positions and 10 distinct y positions. The first square begins at (50, 50), the last at (725, 725), and every square is 50-by-50. Rerunning changes colors while preserving the grid; narrow screens retain the full drawing.`,
 					projectLink:
 						"https://codepen.io/junilearning/pen/90973aa93a04ccb12c61f3a85280daed",
 					solutionLink:
@@ -397,7 +397,7 @@ const javascriptLevel2SourceCourse: RawCourse = {
 					title: "HTML & CSS",
 					content: `**Concept path:** HTML gives page content structure, while CSS controls presentation. JavaScript can generate or modify page content, but the result remains easier to maintain when markup, style, and behavior each have a clear job.
 
-**Practice targets:** Build a small table with headings, rows, and cells. Style borders, spacing, font size, and alternating rows with CSS. Add at least one class that communicates meaning, such as a highlighted row or a warning value.
+**Practice targets:** Build the Favorite Restaurants table with columns Name, Favorite Menu Item, and Photo or Illustration. Include three real or fictional restaurant rows, give each column a header, and add descriptive alternative text to each image. Use a photo or a self-made illustration for each row. Style spacing, font size, image width, and alternating rows with CSS; keep the full table readable on a narrow screen.
 
 **Evidence target:** The table is readable without JavaScript console output, CSS selectors are specific enough to avoid accidental global changes, and the alternating-row styling still works after adding another row.`,
 					projectLink:
