@@ -12,6 +12,7 @@ import { javascriptFirstModuleResources } from "@/modules/javascriptFirstModuleR
 import { javascriptGridLayoutResources } from "@/modules/javascriptGridLayoutResources";
 import { javascriptHtmlCssResources } from "@/modules/javascriptHtmlCssResources";
 import { javascriptLoopsResources } from "@/modules/javascriptLoopsResources";
+import { javascriptLyricsResources } from "@/modules/javascriptLyricsResources";
 import { javascriptMasterArraysResources } from "@/modules/javascriptMasterArraysResources";
 import { javascriptMasterCanvasResources } from "@/modules/javascriptMasterCanvasResources";
 import { javascriptMasterConditionalsResources } from "@/modules/javascriptMasterConditionalsResources";
@@ -73,6 +74,7 @@ const roles: readonly CourseRole[] = [
 	...javascriptMasterConditionalsResources,
 	...javascriptMasterCanvasResources,
 	...javascriptMasterArraysResources,
+	...javascriptLyricsResources,
 	...javascriptWeatherResources
 ];
 

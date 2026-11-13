@@ -1193,6 +1193,25 @@ jobs:
                   JAVASCRIPT_WEATHER_BROWSER_DIR: output/javascript-weather-browser
               run: node scripts/classes-family-heavy-task.mjs -- node --test test/javascript-weather-exported-browser.test.mjs
 
+            - name: Verify lyrics project consent, saved edits and actual downloads
+              env:
+                  JAVASCRIPT_LYRICS_BROWSER_DIR: output/javascript-lyrics-browser
+              run: node scripts/classes-family-heavy-task.mjs -- node --test test/javascript-lyrics-course-browser.test.mjs
+
+            - name: Run actual lyrics downloads through score and cancellation cases
+              env:
+                  JAVASCRIPT_LYRICS_BROWSER_DIR: output/javascript-lyrics-browser
+              run: node scripts/classes-family-heavy-task.mjs -- node --test test/javascript-lyrics-exported-browser.test.mjs
+
+            - name: Retain lyrics source, saved downloads and offline evidence
+              if: always()
+              uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+              with:
+                  name: javascript-lyrics-workflows
+                  path: output/javascript-lyrics-browser/
+                  if-no-files-found: warn
+                  retention-days: 14
+
             - name: Retain weather source, saved downloads and offline evidence
               if: always()
               uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a

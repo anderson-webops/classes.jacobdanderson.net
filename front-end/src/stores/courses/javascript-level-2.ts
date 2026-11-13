@@ -341,11 +341,12 @@ const javascriptLevel2SourceCourse: RawCourse = {
 				},
 				{
 					title: "JSM1 Project 1: Finish the Lyrics",
-					content: `**Project target:** Build a lyric guessing game that asks three prompts, checks each answer, tracks score, and prints a final result. The project combines strings, prompt input, conditionals, and simple state updates.
+					preserveInstructions: true,
+					content: `Build a three-question guessing game using short lyric snippets, quotations, original sayings or jokes. Ask each question with prompt(), compare its answer, count correct answers and call the supplied printToScreen(text) helper to show the final score. The local pack includes index.html, styles.css, script.js, the helper and D3.
 
-**Build path:** Store the lyric snippets and accepted answers in variables or arrays. Normalize guesses with trimming and a consistent case before comparing. Update a correct-answer count after each guess, then print both the number correct and a short result message.
+Choose one accepted word for each blank. Check that an answer is not null before trimming it and converting case: cancelling a prompt returns null. Count a cancelled, blank or unmatched answer as incorrect and continue to the next question. Increment the score only for a match; refresh to begin a new attempt.
 
-**Evidence target:** Three different prompts appear, exact or normalized matching is consistent, the score changes only when an answer is accepted, and the final output reports both the score and total number of questions.`,
+Record the prompts, accepted words and expected scores in CASES.md. Check all-correct, all-wrong and mixed answers, case/whitespace variants, and cancellation at each question. Every attempt must ask three questions and display one final score with the correct total. Reopen the saved project to verify its files and narrow-screen result.`,
 					projectLink:
 						"https://codepen.io/junilearning/pen/2d400625754c49aedbb72402eed3ba8f",
 					solutionLink:
@@ -422,11 +423,10 @@ Record the five weather inputs and their expected recommendations. Select every 
 			supplementalProjects: [
 				{
 					title: "Fundamentals Review: Extension Challenge",
-					content: buildSupportSectionGuidance({
-						courseFamily: "JavaScript",
-						moduleTitle: "Fundamentals Review",
-						section: "extension"
-					}),
+					preserveInstructions: true,
+					content: `Compare exact answer matching with trimmed, case-insensitive matching in a separate copy of the completed three-question game. For the first question, keep the accepted word program; answer the other two with easier and clear. Try program, PROGRAM, a space-padded program, an empty answer, a cancelled prompt and wrong.
+
+Record predicted and observed scores for both policies in CASES.md. Keep the null check before either comparison. The reference uses trimmed, case-insensitive matching; README.md supplies the exact-policy expression and the worked comparison table. Explain which inputs each policy accepts and choose a policy for the intended game.`,
 					projectLink:
 						"https://codepen.io/junilearning/pen/2d400625754c49aedbb72402eed3ba8f",
 					solutionLink:
