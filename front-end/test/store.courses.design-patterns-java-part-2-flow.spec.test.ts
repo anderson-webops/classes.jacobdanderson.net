@@ -168,9 +168,9 @@ describe("Design Patterns in Java Part 2 learner flow", () => {
 			"evaluation order",
 			"numeric conversion",
 			"temporary delegating bridge",
-			"equals` and `hashCode",
-			"collection-ownership policy",
-			"round-trip data",
+			"equals() and hashCode()",
+			"creates an ordered snapshot",
+			"old byte format",
 			"decision table",
 			"source compatibility",
 			"documented deprecation path",
@@ -180,7 +180,7 @@ describe("Design Patterns in Java Part 2 learner flow", () => {
 		]) {
 			expect(text, contract).toContain(contract);
 		}
-		expect(text).toContain("record for a shallowly immutable");
+		expect(text).toContain("A final field alone does not protect array contents");
 		expect(text).toContain("`Optional` return");
 		expect(text).toContain("sealed hierarchy");
 		expect(resourceText()).toContain("java/util/Optional.html");
