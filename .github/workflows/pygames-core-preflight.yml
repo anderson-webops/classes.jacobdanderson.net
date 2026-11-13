@@ -8,7 +8,7 @@ on:
       course:
         description: Course verification to run
         type: choice
-        options: [javascript-checkpoints, javascript-snowflake, dependency-repair, java-ownership-move, java-composing, java-refactoring, java-studios, java-capstone, java-judgment, java-architecture, java-collaboration, java-behavioral, java-structural, java-boundary, java-creational, java-foundations, java-patterns, java-recursion, pygames, networking, ai-setup, self-study, physics-models, bootcamp, scratch-originals, scratch-readings, course-audit, scratch-tasks, tracker-evidence, native-release-evidence]
+        options: [course-choices, javascript-checkpoints, javascript-snowflake, dependency-repair, java-ownership-move, java-composing, java-refactoring, java-studios, java-capstone, java-judgment, java-architecture, java-collaboration, java-behavioral, java-structural, java-boundary, java-creational, java-foundations, java-patterns, java-recursion, pygames, networking, ai-setup, self-study, physics-models, bootcamp, scratch-originals, scratch-readings, course-audit, scratch-tasks, tracker-evidence, native-release-evidence]
         default: pygames
       full_source_runtime:
         description: Also verify every pinned original PyGames runtime profile
@@ -38,11 +38,68 @@ permissions:
   contents: read
 
 concurrency:
-  group: pygames-core-preflight-${{ github.ref }}-${{ (inputs.course == 'tracker-evidence' || inputs.course == 'native-release-evidence') && 'evidence' || 'validation' }}
+  group: pygames-core-preflight-${{ github.ref }}-${{ inputs.course == 'course-choices' && 'course-choices' || (inputs.course == 'tracker-evidence' || inputs.course == 'native-release-evidence') && 'evidence' || 'validation' }}
   cancel-in-progress: false
 
 jobs:
 
+
+  course-choices:
+    if: inputs.course == 'course-choices'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    env:
+      CLASSES_FAMILY_TASK_ID: course-choices-${{ github.run_id }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: 24.18.0
+          cache: npm
+      - name: Pin npm and verify the root clean install
+        run: |
+          npm i -g npm@12.0.1
+          test "$(npm --version)" = "12.0.1"
+          node scripts/classes-family-heavy-task.mjs -- npm ci
+      - name: Require root and production dependency audits
+        run: |
+          mkdir -p output/course-choices-validation/audits
+          npm audit --include=optional --json > output/course-choices-validation/audits/root-full.json
+          npm audit --include=optional --omit=dev --json > output/course-choices-validation/audits/root-production.json
+      - name: Verify the standalone backend graph and both audits
+        working-directory: back-end
+        run: |
+          node ../scripts/classes-family-heavy-task.mjs -- npm ci --include=optional --strict-allow-scripts --workspaces=false
+          npm ls --all --workspaces=false
+          npm audit --include=optional --workspaces=false --json > ../output/course-choices-validation/audits/backend-full.json
+          npm audit --include=optional --omit=dev --workspaces=false --json > ../output/course-choices-validation/audits/backend-production.json
+      - name: Verify public choices, retained subjects, paths and historical identities
+        run: >-
+          node scripts/classes-family-heavy-task.mjs --
+          npm exec -w front-end -- vitest run
+          test/course-choice-visibility.spec.test.ts
+          test/store.courses.public-pathways.spec.test.ts
+          test/components.courseexplorer-inventory.spec.test.ts
+          test/store.courses.catalog-identities.spec.test.ts
+          test/store.courses.progress-identity.spec.test.ts
+          --no-file-parallelism --maxWorkers=1
+          --reporter=default --reporter=json
+          --outputFile=../output/course-choices-validation/tests.json
+      - name: Lint, typecheck and build both workspaces
+        run: |
+          node scripts/classes-family-heavy-task.mjs -- npm run lint
+          node scripts/classes-family-heavy-task.mjs -- npm run typecheck
+          node scripts/classes-family-heavy-task.mjs -- npm run build
+      - name: Retain course choice and dependency validation
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: course-choices-validation
+          path: output/course-choices-validation/
+          if-no-files-found: error
+          retention-days: 14
 
   javascript-checkpoints:
     if: inputs.course == 'javascript-checkpoints'

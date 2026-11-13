@@ -74,6 +74,7 @@ import {
 } from "@/modules/webProjectResources";
 import { useAppStore } from "@/stores/app";
 import { useCoursesStore } from "@/stores/courses";
+import { isListedCourse } from "@/stores/courses/index";
 import {
 	hasPendingStaticMediaNotice,
 	isKnownPendingStaticMediaUrl,
@@ -281,12 +282,18 @@ const courseGroupingOwner = computed<
 });
 
 const courseList = computed(() => {
-	if (props.publicCatalog) return allCourses.value;
-	if (isAllLearnersContext.value) return allCourses.value;
+	const listedCourses = allCourses.value.filter(course =>
+		isListedCourse(course.id)
+	);
+	if (props.publicCatalog) return listedCourses;
+	if (isAllLearnersContext.value) return listedCourses;
 	const allowed = new Set(permittedCourseIds.value);
 	return orderedCoursesByLearnerStatus(
 		props.browseAll
-			? allCourses.value
+			? allCourses.value.filter(
+					course =>
+						isListedCourse(course.id) || allowed.has(course.id)
+				)
 			: allCourses.value.filter(course => allowed.has(course.id)),
 		courseGroupingOwner.value,
 		{ includeOther: props.browseAll }
