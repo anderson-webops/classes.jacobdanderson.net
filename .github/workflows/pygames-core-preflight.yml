@@ -8,7 +8,7 @@ on:
       course:
         description: Course verification to run
         type: choice
-        options: [java-ownership-move, java-composing, java-refactoring, java-studios, java-capstone, java-judgment, java-architecture, java-collaboration, java-behavioral, java-structural, java-boundary, java-creational, java-foundations, java-patterns, java-recursion, pygames, networking, ai-setup, self-study, physics-models, bootcamp, scratch-originals, scratch-readings, course-audit, scratch-tasks, tracker-evidence, native-release-evidence]
+        options: [dependency-repair, java-ownership-move, java-composing, java-refactoring, java-studios, java-capstone, java-judgment, java-architecture, java-collaboration, java-behavioral, java-structural, java-boundary, java-creational, java-foundations, java-patterns, java-recursion, pygames, networking, ai-setup, self-study, physics-models, bootcamp, scratch-originals, scratch-readings, course-audit, scratch-tasks, tracker-evidence, native-release-evidence]
         default: pygames
       browser_run_id:
         description: Networking browser export workflow run
@@ -38,6 +38,111 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+
+
+  dependency-repair:
+    if: inputs.course == 'dependency-repair'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      CLASSES_FAMILY_TASK_ID: course-audit-dependency-repair
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: 24.18.0
+          cache: npm
+          registry-url: https://registry.npmjs.org/
+      - name: Pin npm version
+        run: |
+          npm i -g npm@12.0.1
+          test "$(npm --version)" = "12.0.1"
+      - name: Record original graphs and dependency freshness
+        run: |
+          mkdir -p output/security-dependency-repair/before
+          python3 - <<'PY'
+          import hashlib,json,pathlib,shutil,subprocess
+          out=pathlib.Path("output/security-dependency-repair")
+          files=["package.json","front-end/package.json","back-end/package.json","package-lock.json","back-end/package-lock.json"]
+          inventory={}
+          for name in files:
+              src=pathlib.Path(name)
+              dest=out/"before"/name
+              dest.parent.mkdir(parents=True,exist_ok=True)
+              shutil.copyfile(src,dest)
+              value=json.loads(src.read_text())
+              inventory[name]={"sha256":hashlib.sha256(src.read_bytes()).hexdigest(),"dependencies":value.get("dependencies",{}),"devDependencies":value.get("devDependencies",{})}
+          (out/"before.json").write_text(json.dumps({"source":subprocess.check_output(["git","rev-parse","HEAD"],text=True).strip(),"graphs":inventory},indent=2)+"\n")
+          PY
+          set +e
+          npm outdated --workspaces --long --json > output/security-dependency-repair/freshness-before.json
+          status=$?
+          set -e
+          test "$status" -eq 0 -o "$status" -eq 1
+      - name: Prepare the supported Mongoose update and both lockfiles
+        run: |
+          node scripts/classes-family-heavy-task.mjs -- npm install -w back-end mongoose@9.12.1 --package-lock-only --ignore-scripts --no-fund --no-audit
+          cd back-end
+          node ../scripts/classes-family-heavy-task.mjs -- npm install --package-lock-only --ignore-scripts --no-fund --no-audit --workspaces=false
+      - name: Verify the clean root install and complete dependency tree
+        run: |
+          node scripts/classes-family-heavy-task.mjs -- npm ci
+          npm run check:dependencies
+          npm run test:lock-provenance
+      - name: Require clean full and production root audits
+        run: |
+          npm audit --include=optional --json > output/security-dependency-repair/root-full.json
+          npm audit --include=optional --omit=dev --json > output/security-dependency-repair/root-production.json
+      - name: Verify lint, types, build and application tests
+        run: |
+          node scripts/classes-family-heavy-task.mjs -- npm run lint
+          node scripts/classes-family-heavy-task.mjs -- npm run typecheck
+          node scripts/classes-family-heavy-task.mjs -- npm run build
+          node scripts/classes-family-heavy-task.mjs -- npm run -w back-end test
+          node scripts/classes-family-heavy-task.mjs -- npm run -w front-end test:unit
+          npm run test:braces-security
+          node --test --test-timeout=10000 test/dependency-advisory-regressions.test.mjs
+      - name: Verify the standalone backend locked install and audits
+        working-directory: back-end
+        run: |
+          node ../scripts/classes-family-heavy-task.mjs -- npm ci --include=optional --strict-allow-scripts --workspaces=false
+          npm ls --all --workspaces=false
+          npm audit --include=optional --workspaces=false --json > ../output/security-dependency-repair/backend-full.json
+          npm audit --include=optional --omit=dev --workspaces=false --json > ../output/security-dependency-repair/backend-production.json
+      - name: Retain the exact validated candidate bytes
+        run: |
+          python3 - <<'PY'
+          import hashlib,json,pathlib,shutil,subprocess
+          out=pathlib.Path("output/security-dependency-repair")
+          files=["back-end/package.json","package-lock.json","back-end/package-lock.json"]
+          changed=subprocess.check_output(["git","diff","--name-only"],text=True).splitlines()
+          assert set(changed)==set(files),changed
+          hashes={}
+          for name in files:
+              src=pathlib.Path(name)
+              dest=out/"candidate"/name
+              dest.parent.mkdir(parents=True,exist_ok=True)
+              shutil.copyfile(src,dest)
+              hashes[name]=hashlib.sha256(src.read_bytes()).hexdigest()
+          for name in ["root-full","root-production","backend-full","backend-production"]:
+              assert json.loads((out/(name+".json")).read_text())["metadata"]["vulnerabilities"]["total"]==0
+          for name in ["package-lock.json","back-end/package-lock.json"]:
+              lock=json.loads(pathlib.Path(name).read_text())
+              assert lock["packages"]["node_modules/mongoose"]["version"]=="9.12.1"
+          before=json.loads((out/"before.json").read_text())
+          (out/"accepted.json").write_text(json.dumps({"accepted":True,"source":before["source"],"candidateHashes":hashes,"cleanRootInstall":True,"cleanStandaloneBackendInstall":True,"lint":True,"typecheck":True,"build":True,"backendTests":True,"frontendUnitTests":True,"fourZeroVulnerabilityAudits":True,"publishedOrDeployed":False},indent=2)+"\n")
+          PY
+          cp /tmp/classes-family-heavy-tasks.log output/security-dependency-repair/processes.jsonl
+      - name: Retain candidate files and validation evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: security-dependency-repair
+          path: output/security-dependency-repair/
+          if-no-files-found: error
+          retention-days: 14
 
   native-release-evidence:
     if: inputs.course == 'native-release-evidence'
