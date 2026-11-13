@@ -82,6 +82,7 @@ jobs:
           test/course-choice-visibility.spec.test.ts
           test/store.courses.public-pathways.spec.test.ts
           test/components.courseexplorer-inventory.spec.test.ts
+          test/components.courseexplorer.spec.test.ts
           test/store.courses.catalog-identities.spec.test.ts
           test/store.courses.progress-identity.spec.test.ts
           --no-file-parallelism --maxWorkers=1
@@ -799,6 +800,7 @@ jobs:
           test/store.courses.scratch-level-1-flow.spec.test.ts
           test/store.courses.scratch-level-2-flow.spec.test.ts
           test/store.courses.scratch-support-display.spec.test.ts
+          test/course-choice-visibility.spec.test.ts
           test/store.courses.scratch-juni-instructions.spec.test.ts
           test/modules.scratch-originals.spec.test.ts
           test/components.scratch-original-import.spec.test.ts
