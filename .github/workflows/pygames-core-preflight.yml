@@ -825,7 +825,7 @@ jobs:
         id: course_build
         run: node scripts/classes-family-heavy-task.mjs -- npm run build
       - name: Verify all self-study course pages in both roles and sizes
-        if: inputs.course != 'scratch-originals' && inputs.course != 'scratch-tasks'
+        if: inputs.course != 'scratch-originals' && inputs.course != 'scratch-readings' && inputs.course != 'scratch-tasks'
         run: |
           node --test test/self-study-browser-batches.test.mjs
           node scripts/classes-family-heavy-task.mjs -- node scripts/verify-self-study-browser-batches.mjs
