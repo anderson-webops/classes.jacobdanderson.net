@@ -75,7 +75,7 @@ const courseOptions = computed(() =>
 );
 const courseNameMap = computed<Record<string, string>>(
 	() =>
-		courseOptions.value?.reduce(
+		courses.value?.reduce(
 			(map, course) => {
 				map[course.id] = course.name;
 				return map;

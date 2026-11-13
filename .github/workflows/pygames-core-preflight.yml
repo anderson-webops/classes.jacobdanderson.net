@@ -80,6 +80,7 @@ jobs:
           node scripts/classes-family-heavy-task.mjs --
           npm exec -w front-end -- vitest run
           test/course-choice-visibility.spec.test.ts
+          test/components.role-workspaces.spec.test.ts
           test/store.courses.public-pathways.spec.test.ts
           test/components.courseexplorer-inventory.spec.test.ts
           test/components.courseexplorer.spec.test.ts
