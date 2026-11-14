@@ -1,4 +1,4 @@
-# Small Talk: objects and property comparisons
+# Small Talk
 
 Build a fictional conversation using exactly two declared variables: aboutMe and aboutYou.
 Both are objects. Use at least five corresponding profile properties, including a string, an integer

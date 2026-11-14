@@ -20,8 +20,8 @@ export const javascriptSmallTalkResources = [
 			{
 				name: "README.md",
 				path: "small-talk-v1/starter/README.md.txt",
-				byteLength: 3584,
-				sha256: "80e245275bc60f511680f67501d598cdc3ece7fbe601004924f159d2e0211aef"
+				byteLength: 3550,
+				sha256: "eeabd90334e0cc9d933abc78984e2f13c6aaed889ac7afb10a38ac5893594698"
 			},
 			{
 				name: "SOURCES.md",
@@ -70,8 +70,8 @@ export const javascriptSmallTalkResources = [
 			{
 				name: "README.md",
 				path: "small-talk-v1/reference/README.md.txt",
-				byteLength: 3584,
-				sha256: "80e245275bc60f511680f67501d598cdc3ece7fbe601004924f159d2e0211aef"
+				byteLength: 3550,
+				sha256: "eeabd90334e0cc9d933abc78984e2f13c6aaed889ac7afb10a38ac5893594698"
 			},
 			{
 				name: "SOURCES.md",

@@ -153,12 +153,27 @@ it("limits sharing to the assigned introduction and preserves role boundaries", 
 			"https://codepen.io/junilearning/pen/eYpBWWX"
 		)
 	).toBeNull();
+	const smallTalkUrl =
+		"https://codepen.io/junilearning/pen/c8c02ee2db01eeb4c5f408d9a1f58815";
+	expect(pythonIdeModeForCourseResource(secondCourse, smallTalkUrl)).toBe(
+		"web"
+	);
+	expect(javascriptCourseResource(smallTalkUrl, secondCourse)).toMatchObject({
+		courseId: secondCourse,
+		project: "small-talk",
+		role: "starter"
+	});
 	expect(
-		pythonIdeModeForCourseResource(
-			secondCourse,
-			"https://codepen.io/junilearning/pen/c8c02ee2db01eeb4c5f408d9a1f58815"
-		)
+		pythonIdeModeForCourseResource(firstCourse, smallTalkUrl)
 	).toBeNull();
+	expect(() =>
+		javascriptCourseProjectKey(
+			firstCourse,
+			"setup-item",
+			"starter",
+			smallTalkUrl
+		)
+	).toThrow(/course role/);
 });
 
 function collectCapturedUrls(value: unknown, urls: Set<string>) {
