@@ -2625,7 +2625,7 @@ jobs:
                   npm install --global npm@12.0.1
                   node scripts/classes-family-heavy-task.mjs -- npm ci
             - name: Verify exact data source and historical refactoring identities
-              run: node scripts/classes-family-heavy-task.mjs -- npm exec -w front-end -- vitest run test/java-value-data-workspace.spec.test.ts test/java-ownership-move-workspace.spec.test.ts test/java-conditional-flow-workspace.spec.test.ts --no-file-parallelism --maxWorkers=1
+              run: node scripts/classes-family-heavy-task.mjs -- npm exec -w front-end -- vitest run test/java-value-data-workspace.spec.test.ts test/java-ownership-move-workspace.spec.test.ts test/java-conditional-flow-workspace.spec.test.ts test/java-method-calls-workspace.spec.test.ts --no-file-parallelism --maxWorkers=1
             - name: Build the course and IDE
               run: node scripts/classes-family-heavy-task.mjs -- npm run -w front-end build
             - name: Exercise actual role imports, saved edits and continuations
@@ -2641,6 +2641,15 @@ jobs:
               env:
                   JAVA_CONDITIONAL_FLOW_BROWSER_PROOF_DIR: output/java-conditional-flow
               run: node scripts/classes-family-heavy-task.mjs -- python3 -I -B test/java-conditional-flow-exported-native.py
+            - name: Exercise method-call imports, compatibility clients and optional attempts
+              env:
+                  JAVA_METHOD_CALLS_BROWSER_PROOF_DIR: output/java-method-calls
+                  COURSE_IMPORT_SCREENSHOT_DIR: output/java-method-calls/screenshots
+              run: node scripts/classes-family-heavy-task.mjs -- node --test --test-concurrency=1 test/java-method-calls-course-browser.test.mjs
+            - name: Compile every original and edited method-call export
+              env:
+                  JAVA_METHOD_CALLS_BROWSER_PROOF_DIR: output/java-method-calls
+              run: node scripts/classes-family-heavy-task.mjs -- python3 -I -B test/java-method-calls-exported-native.py
             - name: Retain exact data source, browser and native evidence
               if: always()
               uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
@@ -2649,5 +2658,6 @@ jobs:
                   path: |
                       output/java-value-data/
                       output/java-conditional-flow/
+                      output/java-method-calls/
                   if-no-files-found: error
                   retention-days: 14
