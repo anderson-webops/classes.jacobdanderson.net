@@ -933,6 +933,7 @@ Print a location/CEO sentence and a products sentence for each object. All prope
 			supplementalProjects: [
 				{
 					title: "JSM6 Supplemental Project 1: My Favorite Businesses II",
+					preserveInstructions: true,
 					content: `Extend My Favorite Businesses into a searchable directory. Copy at least three business objects, retaining name, location, CEO and products. Add logo_image and display_image. This optional project practices object data, Materialize autocomplete and D3 rendering.
 
 **Build:** Complete the local starter’s business array and renderBusiness function. The included HTML/CSS, libraries and six local example images run offline. Generate autocomplete names and logos from the same array. Choosing a suggestion or submitting Show business renders one card from the selected object.
