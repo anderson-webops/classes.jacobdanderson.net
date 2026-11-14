@@ -189,8 +189,8 @@ export const javascriptApiProjectResources = [
 			{
 				name: "fixtures.js",
 				path: "fox-generator-v1/starter/fixtures.js.txt",
-				byteLength: 870011,
-				sha256: "f90f1dff7eb3eba9177ddb7c42c47832b4441065fab0017da6735c07c93b6d87"
+				byteLength: 870007,
+				sha256: "569ec0cdde213450ecd13734d0a8d3e44b90e5c172f792a5288c6ae08d80f714"
 			},
 			{
 				name: "index.html",
@@ -258,8 +258,8 @@ export const javascriptApiProjectResources = [
 			{
 				name: "fixtures.js",
 				path: "fox-generator-v1/reference/fixtures.js.txt",
-				byteLength: 870011,
-				sha256: "f90f1dff7eb3eba9177ddb7c42c47832b4441065fab0017da6735c07c93b6d87"
+				byteLength: 870007,
+				sha256: "569ec0cdde213450ecd13734d0a8d3e44b90e5c172f792a5288c6ae08d80f714"
 			},
 			{
 				name: "index.html",
