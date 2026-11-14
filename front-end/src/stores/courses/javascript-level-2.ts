@@ -1047,11 +1047,16 @@ The first drawn positions include (1,1) and (481,181). For the circle that begin
 				},
 				{
 					title: "JSM7 Project 3: Paddle",
-					content: `**Project target:** Build a keyboard-controlled paddle that moves smoothly left and right. This creates the control foundation for later canvas games.
+					preserveInstructions: true,
+					content: `**Project target:** Build a keyboard-controlled black paddle on a 500-by-500 canvas. The local starter supplies the canvas, model and drawing loop; complete the input handlers and movement helper.
 
-**Build path:** Store paddle position, width, speed, and key state. On \`keydown\`, mark the matching direction active; on \`keyup\`, mark it inactive. In the animation loop, update the paddle position based on active keys and keep it inside the canvas bounds.
+**Input and geometry:** The paddle starts at (0,0), measures 100 by 20 and moves 10 logical units per animation frame. Focus the canvas before using Left or Right. Track ArrowLeft and ArrowRight on keydown/keyup, prevent their default action while focused, and clear held state when the canvas/window loses focus or the document becomes hidden.
 
-**Evidence target:** The paddle begins moving when an arrow key is held, stops when the key is released, cannot leave the canvas, and remains responsive when switching directions quickly.`,
+**Build path:** Compute direction as Number(right) - Number(left). Add direction * speed to x, then clamp x between 0 and canvas.width - paddle.width. Both directions held cancel. Update before clearing and drawing each frame. Key release leaves the paddle at its current position.
+
+**Worked checks:** From 200, one left frame gives 190 and one right frame gives 210. From 395, right gives 400; from 5, left gives 0. Holding either direction cannot move past 0 or 400. Both keys held at 200 leave 200. Releasing a key or leaving the page stops movement.
+
+**Local files and evidence:** Accept the selected source import in the site IDE. Open index.html to run the exported files without a server. README.md explains the state and frame model; CASES.md supplies fixed checks. Show both directions, both limits, release and focus-loss behavior, and explain how the loop uses key state.`,
 					projectLink:
 						"https://codepen.io/junilearning/pen/8ccc67de1bc03e5f2c81f78a411adee1",
 					solutionLink:

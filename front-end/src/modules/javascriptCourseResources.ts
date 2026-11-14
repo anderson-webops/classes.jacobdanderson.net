@@ -26,6 +26,7 @@ import { javascriptMoreHtmlCssResources } from "@/modules/javascriptMoreHtmlCssR
 import { javascriptNestedLoopsResources } from "@/modules/javascriptNestedLoopsResources";
 import { javascriptNewsResources } from "@/modules/javascriptNewsResources";
 import { javascriptOperatorsResources } from "@/modules/javascriptOperatorsResources";
+import { javascriptPaddleResources } from "@/modules/javascriptPaddleResources";
 import { javascriptRefactoryResources } from "@/modules/javascriptRefactoryResources";
 import { javascriptRestaurantResources } from "@/modules/javascriptRestaurantResources";
 import { javascriptShopResources } from "@/modules/javascriptShopResources";
@@ -88,7 +89,8 @@ const roles: readonly CourseRole[] = [
 	...javascriptBusinessDirectoryResources,
 	...javascriptHundredSquaresResources,
 	...javascriptRefactoryResources,
-	...javascriptWhichCardResources
+	...javascriptWhichCardResources,
+	...javascriptPaddleResources
 ];
 
 export function javascriptCourseResource(

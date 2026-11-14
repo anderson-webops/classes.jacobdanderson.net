@@ -521,6 +521,14 @@ jobs:
         run: |
           node scripts/classes-family-heavy-task.mjs -- node --test test/javascript-which-card-course-browser.test.mjs
           node scripts/classes-family-heavy-task.mjs -- node --test test/javascript-which-card-exported-browser.test.mjs
+      - name: Verify Paddle source roles and keyboard state boundaries
+        run: npm exec -w front-end -- vitest run test/javascript-paddle-workspace.spec.test.ts --no-file-parallelism --maxWorkers=1
+      - name: Verify actual Paddle imports and offline keyboard behavior
+        env:
+          JAVASCRIPT_PADDLE_BROWSER_DIR: output/javascript-paddle-browser
+        run: |
+          node scripts/classes-family-heavy-task.mjs -- node --test test/javascript-paddle-course-browser.test.mjs
+          node scripts/classes-family-heavy-task.mjs -- node --test test/javascript-paddle-exported-browser.test.mjs
       - name: Retain source, actual exports and rendered evidence
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
@@ -530,6 +538,7 @@ jobs:
             output/javascript-hundred-squares-browser/
             output/javascript-refactory-browser/
             output/javascript-which-card-browser/
+            output/javascript-paddle-browser/
           if-no-files-found: error
           retention-days: 14
 
