@@ -363,14 +363,11 @@ board, and why a bounded random run may finish without a match.
 			curriculum: [
 				{
 					title: "Check-In #2 Overview",
-					contentKind: "assignment",
-					preserveAssignment: true,
-					ideImport: true,
-					preserveInstructions: true,
-					content:
-						"# Check-In 2\n\nConnect helper functions, canvas events, structured API data and database queries. Continue the same Core workspace through Helpers, APIs and Databases. A separate Move Analyzer combines the event and data work. The complete README, fixture, SQL schema, rows and worked cases travel with each project.\n\nBegin with local inputs, predict and record the results, then compare the reference. Optional live requests use the supplied cache and timeout helper. Keep one changed-input prediction and observed result for each task.",
-					projectLink:
-						"/course-assets/javascript-level-2/master-checkpoint-two-v1/starter/index.html.txt",
+					content: `**Review scope:** This checkpoint connects helper functions, event listeners, DOM updates, arrays, objects, APIs, and database vocabulary. The central question is how a browser program responds when input, events, or remote data change the available state.
+
+**Working pattern:** Keep each feature small enough to test independently. A helper function can be checked with fixed inputs, an event listener can be checked with a visible log or page update, and an API request can be checked by inspecting the returned object before building display logic.
+
+**Evidence target:** A complete checkpoint has at least one event-driven page change, one remote-data example, one organized data structure, and one explanation of how a value moved from input or response data into visible output.`,
 					solutionLink:
 						"https://codepen.io/junilearning/pen/7b72b5cd25d5372e9097f68de4b66db6"
 				},

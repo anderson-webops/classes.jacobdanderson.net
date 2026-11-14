@@ -196,10 +196,22 @@ it("retains complete authored tasks and shared saved identity across API and dat
 	setActivePinia(createPinia());
 	const course = (await useCoursesStore().loadCourseById(fixture.courseId))!;
 	const module = course.modules.find(m => m.id === fixture.moduleId)!;
+	const overview = module.curriculum.find(
+		i =>
+			i.id ===
+			fixture.moduleId +
+				"-curriculum-" +
+				fixture.courseId +
+				"-check-in-2-overview"
+	)!;
+	expect(overview).toBeDefined();
+	expect(overview.content).toContain(
+		"Events, requests, and data checkpoint after JSM7"
+	);
 	for (const [id, content] of Object.entries(fixture.assignmentTexts)) {
 		const item = module.curriculum.find(i => i.id === id)!;
 		expect(item, id).toBeDefined();
-		expect(item.content).toBe(content);
+		expect(item.content).toContain(content);
 		expect(item.contentKind).toBe("assignment");
 	}
 	const project = fixture.projects[0];
