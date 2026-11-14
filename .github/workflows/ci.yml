@@ -1193,6 +1193,16 @@ jobs:
                   JAVASCRIPT_WEATHER_BROWSER_DIR: output/javascript-weather-browser
               run: node scripts/classes-family-heavy-task.mjs -- node --test test/javascript-weather-exported-browser.test.mjs
 
+            - name: Verify 100 Squares project consent, saved edits and actual downloads
+              env:
+                  JAVASCRIPT_HUNDRED_SQUARES_BROWSER_DIR: output/javascript-hundred-squares-browser
+              run: node scripts/classes-family-heavy-task.mjs -- node --test test/javascript-hundred-squares-course-browser.test.mjs
+
+            - name: Run actual 100 Squares downloads offline through original grid geometry and color cases
+              env:
+                  JAVASCRIPT_HUNDRED_SQUARES_BROWSER_DIR: output/javascript-hundred-squares-browser
+              run: node scripts/classes-family-heavy-task.mjs -- node --test test/javascript-hundred-squares-exported-browser.test.mjs
+
             - name: Verify Businesses project consent, saved edits and actual downloads
               env:
                   JAVASCRIPT_BUSINESSES_BROWSER_DIR: output/javascript-businesses-browser
@@ -1247,6 +1257,15 @@ jobs:
               with:
                   name: javascript-businesses-workflows
                   path: output/javascript-businesses-browser/
+                  if-no-files-found: warn
+                  retention-days: 14
+
+            - name: Retain 100 Squares source, saved downloads and offline evidence
+              if: always()
+              uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+              with:
+                  name: javascript-hundred-squares-workflows
+                  path: output/javascript-hundred-squares-browser/
                   if-no-files-found: warn
                   retention-days: 14
 

@@ -12,6 +12,7 @@ import { javascriptDynamicEventsResources } from "@/modules/javascriptDynamicEve
 import { javascriptFirstModuleResources } from "@/modules/javascriptFirstModuleResources";
 import { javascriptGridLayoutResources } from "@/modules/javascriptGridLayoutResources";
 import { javascriptHtmlCssResources } from "@/modules/javascriptHtmlCssResources";
+import { javascriptHundredSquaresResources } from "@/modules/javascriptHundredSquaresResources";
 import { javascriptLoopsResources } from "@/modules/javascriptLoopsResources";
 import { javascriptLyricsResources } from "@/modules/javascriptLyricsResources";
 import { javascriptMasterArraysResources } from "@/modules/javascriptMasterArraysResources";
@@ -79,7 +80,8 @@ const roles: readonly CourseRole[] = [
 	...javascriptLyricsResources,
 	...javascriptWeatherResources,
 	...javascriptSmallTalkResources,
-	...javascriptBusinessesResources
+	...javascriptBusinessesResources,
+	...javascriptHundredSquaresResources
 ];
 
 export function javascriptCourseResource(
