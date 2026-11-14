@@ -25,6 +25,7 @@ import { javascriptLyricsResources } from "@/modules/javascriptLyricsResources";
 import { javascriptMasterArraysResources } from "@/modules/javascriptMasterArraysResources";
 import { javascriptMasterCanvasResources } from "@/modules/javascriptMasterCanvasResources";
 import { javascriptMasterCheckpointOneResources } from "@/modules/javascriptMasterCheckpointOneResources";
+import { javascriptMasterCheckpointTwoResources } from "@/modules/javascriptMasterCheckpointTwoResources";
 import { javascriptMasterConditionalsResources } from "@/modules/javascriptMasterConditionalsResources";
 import { javascriptMasterFunctionsResources } from "@/modules/javascriptMasterFunctionsResources";
 import { javascriptMasterFundamentalsResources } from "@/modules/javascriptMasterFundamentalsResources";
@@ -90,6 +91,7 @@ const roles: readonly CourseRole[] = [
 	...javascriptShopResources,
 	...javascriptMasterFundamentalsResources,
 	...javascriptMasterCheckpointOneResources,
+	...javascriptMasterCheckpointTwoResources,
 	...javascriptMasterFunctionsResources,
 	...javascriptMasterConditionalsResources,
 	...javascriptMasterCanvasResources,

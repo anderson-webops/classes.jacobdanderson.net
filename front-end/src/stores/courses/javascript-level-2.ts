@@ -363,47 +363,49 @@ board, and why a bounded random run may finish without a match.
 			curriculum: [
 				{
 					title: "Check-In #2 Overview",
-					content: `**Review scope:** This checkpoint connects helper functions, event listeners, DOM updates, arrays, objects, APIs, and database vocabulary. The central question is how a browser program responds when input, events, or remote data change the available state.
-
-**Working pattern:** Keep each feature small enough to test independently. A helper function can be checked with fixed inputs, an event listener can be checked with a visible log or page update, and an API request can be checked by inspecting the returned object before building display logic.
-
-**Evidence target:** A complete checkpoint has at least one event-driven page change, one remote-data example, one organized data structure, and one explanation of how a value moved from input or response data into visible output.`,
+					preserveInstructions: true,
+					content:
+						"# Check-In 2\n\nConnect helper functions, canvas events, structured API data and database queries. Continue the same Core workspace through Helpers, APIs and Databases. A separate Move Analyzer combines the event and data work. The complete README, fixture, SQL schema, rows and worked cases travel with each project.\n\nBegin with local inputs, predict and record the results, then compare the reference. Optional live requests use the supplied cache and timeout helper. Keep one changed-input prediction and observed result for each task.",
+					projectLink:
+						"/course-assets/javascript-level-2/master-checkpoint-two-v1/starter/index.html.txt",
 					solutionLink:
 						"https://codepen.io/junilearning/pen/7b72b5cd25d5372e9097f68de4b66db6"
 				},
 				{
 					title: "Check-In #2: Helper Functions and Event Listeners",
-					content: `**Concept path:** Helper functions reduce repeated code by naming one small operation. Event listeners connect browser actions to JavaScript functions, so a program can respond after the page loads.
-
-**Practice targets:** Refactor the starter code so repeated drawing, formatting, or calculation logic lives in named helpers. Add a canvas click listener that reads the event coordinates and logs both x and y. If the canvas is positioned with CSS, account for the canvas bounding rectangle before interpreting the click location.
-
-**Evidence target:** The refactored code has less repetition, the helper names describe their jobs, and clicking different canvas positions produces different coordinate output that matches the visible location.`,
+					preserveInstructions: true,
+					content:
+						"# Helpers and Canvas Events\n\nOpen the Core starter and complete sumEvens and canvasPoint in helpers.js. The supplied page connects the button and canvas click events to those functions; script.js contains those listeners.\n\nImplement sumEvens(values) with a named helper and a reduce total starting\nat 0. Preserve the input array. The original arrays [2,1,6,91,-1] and\n[0,3,2,91,-1] give 8 and 2. Also check [] gives 0, [1,2] gives 2,\n[-3,2] gives 2, and [-4,2] gives -2. Starting reduce without 0 would\nfail for [] and incorrectly include an odd first element.\n\nImplement canvasPoint(event,canvas). Read canvas.getBoundingClientRect(),\nsubtract rect.left and rect.top from clientX and clientY, then multiply\neach coordinate by its buffer-size/display-size ratio:\nx = (clientX - left) * canvas.width / rect.width\ny = (clientY - top) * canvas.height / rect.height\nA 500 by 500 buffer displayed at 250 by 250, with left=40 and top=60,\nmaps click (165,185) to (250,250). The top-left maps to (0,0).\nThe page deliberately scales the canvas. Click near the center and an edge,\nthen compare the visible position with the reported buffer coordinates.\n\n\nRetain expected and observed results for all six arrays, confirm the original inputs remain unchanged, and record two canvas clicks. Explain why helper return values can be reused and why client coordinates need both translation and scaling.",
 					projectLink:
-						"https://codepen.io/junilearning/pen/f6a04f3b9405ba212662f72a776bc0cd"
+						"https://codepen.io/junilearning/pen/f6a04f3b9405ba212662f72a776bc0cd",
+					solutionLink:
+						"/course-assets/javascript-level-2/master-checkpoint-two-v1/reference/index.html.txt"
 				},
 				{
 					title: "Check-In #2: APIs",
-					content: `**Concept path:** An API is a structured way for one program to request data from another program. In browser JavaScript, \`fetch\` starts the request and the response must be converted to usable data before the values can be read.
-
-**Practice targets:** Begin with the supplied PokéAPI-shaped fixture, inspect its top-level object, validate \`results\`, and display the first move name. Then optionally request \`https://pokeapi.co/api/v2/move/?limit=20\`, check \`response.ok\`, parse JSON, validate the same shape, and use an \`AbortController\` timeout. Keep loading, request, validation, state, and display code separate.
-
-**Evidence target:** The fixture route always produces the expected first name. A successful optional request uses the same rendering path, repeated reads use the cached result, and offline, timeout, non-OK, or malformed-data cases produce a visible message without erasing the last valid state.`
+					preserveInstructions: true,
+					content:
+						'# API Responses\n\nContinue the saved Core project and complete firstMove in helpers.js. fixture.js supplies this authored practice object:\n\n    {"results":[{"name":"pound","url":"https://pokeapi.co/api/v2/move/1/"},{"name":"karate-chop","url":"https://pokeapi.co/api/v2/move/2/"}]}\n\nfixture.js is a small authored practice object shaped like a move-list\nresponse. It is supplied with this project, rather than fetched on opening.\nImplement firstMove(data): call checkpointRemote.validateList(data) and\nreturn data.results[0].name. The fixture\'s first name is pound. Invalid,\nmissing or empty results must produce a useful error instead of a crash.\n\nUse practice fixture to display that result. Request 20 move names is\noptional and performs one public GET to the documented move-list endpoint.\nThe supplied remote.js checks response.ok, parses JSON, validates before\ncaching, and uses AbortController to abort after five seconds. Inspect how\nloading, request, validation, state and display have separate responsibilities.\nRepeated successful reads use the page\'s memory cache. Reload clears it.\nAn offline, non-OK, malformed or timeout response must retain the last valid\nname and source label while displaying an error. Avoid private records.\n\n\nRetain the fixture\'s expected and observed result, invalid-data expectations and one changed first name. For an optional live request, keep the displayed source and recovery result. Explain how the validated object reaches the page.',
+					projectLink:
+						"/course-assets/javascript-level-2/master-checkpoint-two-v1/starter/index.html.txt",
+					solutionLink:
+						"/course-assets/javascript-level-2/master-checkpoint-two-v1/reference/index.html.txt"
 				},
 				{
 					title: "Check-In #2: Databases",
-					content: `**Concept path:** Databases store related records so programs can create, read, update, and delete persistent data. SQL queries describe what data to retrieve and how tables relate.
-
-**Practice targets:** Define \`SELECT\`, \`WHERE\`, and \`JOIN\` using the supplied books-and-bookshelves rows. Draw a two-table schema locally, identify primary and foreign keys, predict each supplied query result, and map create, read, update, and delete to local app state. Optionally reproduce the diagram in dbdiagram after the local artifact is complete.
-
-**Evidence target:** The schema makes the relationship and constraints visible, each query prediction matches the supplied result, CRUD examples distinguish changing stored data from merely rendering it, and no hosted database, account, or real record is required.`
+					preserveInstructions: true,
+					content:
+						"# Books and bookshelves\n\nThese are fictional records supplied for this exercise. A database persists\nstored rows; rendering those rows into the page only changes a view.\n\nbookshelves\n\n| id | label |\n| --- | --- |\n| 1 | Fiction |\n| 2 | Science |\n\nbooks\n\n| id | title | shelf_id |\n| --- | --- | --- |\n| 10 | Moon Map | 1 |\n| 11 | River Robots | 1 |\n| 12 | Seed Lab | 2 |\n\nDraw two boxes for these tables. Each id is a primary key, unique within\nits table. Each books.shelf_id is a foreign key referring to bookshelves.id.\nOne shelf has many books; every book here belongs to one existing shelf.\nlibrary.sql supplies the schema, constraints, rows and two read queries.\nYou can predict their results without installing a database.\n\nSELECT chooses output columns; FROM chooses source rows; WHERE filters\nrows. Query A selects title from books with shelf_id=1, ordered by id:\nMoon Map\nRiver Robots\n\nJOIN combines rows whose shelf IDs match. Query B returns:\nMoon Map | Fiction\nRiver Robots | Fiction\nSeed Lab | Science\n\nWrite each predicted result before comparing it with these worked results.\nThen explain the same join as a JavaScript lookup by shelf_id.\n\nCRUD describes create, read, update and delete:\nCREATE: INSERT INTO books VALUES (13,'Star Garden',2);\nREAD: SELECT title FROM books WHERE id=13; gives Star Garden.\nUPDATE: UPDATE books SET shelf_id=1 WHERE id=13;\nREAD the join again: Star Garden now pairs with Fiction.\nDELETE: DELETE FROM books WHERE id=13;\nREAD again: the three original books remain.\n\nTreat this as one sequence beginning from library.sql. Changing only a\ndisplayed title leaves a stored row unchanged. Changing an in-memory\nJavaScript array lasts only in that program until deliberately saved;\na SQL UPDATE changes stored data. Explain which action each example performs.\nAn insert using shelf_id=99 fails the foreign-key constraint. A repeated\nprimary-key id fails its uniqueness constraint. Record both predictions.\n\nIf SQLite is available, run library.sql in a temporary database, then the\nCRUD sequence above. Otherwise retain the diagram, query predictions and\nworked comparisons as the complete local artifact. An optional online\nschema diagram can reproduce these fictional tables after this work.\n\n\nKeep the two-table diagram, predictions for both queries, the CRUD sequence and the two constraint predictions. Continue with the same Core files; this worksheet needs no account or private data.",
+					projectLink:
+						"/course-assets/javascript-level-2/master-checkpoint-two-v1/starter/index.html.txt",
+					solutionLink:
+						"/course-assets/javascript-level-2/master-checkpoint-two-v1/reference/index.html.txt"
 				},
 				{
 					title: "Check-In #2: Additional Practice Project",
-					content: `**Project target:** Build a small move analyzer that counts types from a supplied PokéAPI-shaped fixture and displays the total for a form-selected type. An optional public GET refresh may replace the fixture after the local route works. The project combines resilient data loading, array/object traversal, input handling, and safe page output.
-
-**Build path:** Validate the fixture, normalize the form value so capitalization does not break comparison, and store counts in an object where each key is a type and each value is the number of matching moves. For an optional live refresh, check status, abort after a short timeout, cache the response, validate shape, and fall back to the fixture.
-
-**Evidence target:** The page displays correct counts for at least two types, handles unknown and empty values, remains usable offline or after malformed remote data, and includes a privacy-safe page trace naming whether fixture or live data produced the result.`,
+					preserveInstructions: true,
+					content:
+						'# Move Analyzer\n\nBuild a page that groups move objects by their nested type.name and counts\nthe form-selected type. The complete local fixture and page controls are\nsupplied. Open index.html directly and complete moves.js.\n\nfixture.js contains six authored practice records with fictional move names\nand the same nested name/type.name structure used by PokéAPI move objects.\nThe expected counts are fire=2, water=2, normal=1 and electric=1. This is a\nsix-record sample; its counts do not describe the complete API collection.\n\nImplement countTypes(moves): call moveData.validateMoves, loop over moves,\nread each move.type.name, and increment the matching counter. Return the\ncounts without changing the supplied array. Object.create(null) gives a\ndictionary without inherited property names. The four counts sum to six.\n\nImplement countForType(counts,input): convert input to a string, trim spaces\nand lowercase it. Empty input produces Enter a move type; an unrecognized\ntype produces an Unknown move type message. moveData.types supplies the\nrecognized types. A valid type absent from the sample has count0.\nReturn {type:key,count:number} and let the supplied interface render it with\ntextContent. Avoid a prompt loop or HTML interpolation.\n\nUse six-move practice fixture, then submit Fire, water, " WATER ", grass,\nan empty input and an unknown type. Expected: 2,2,2,0,empty-input message,\nunknown-type message. Compare the visible counts with the same six records\nand check that their names and nested types remain unchanged.\n\n## Optional live data\n\nRequest moves 1 through 6 is an explicit optional action. The supplied\ndata.js reads these six fixed IDs sequentially, one GET at a time. Every\nresponse must have a move name and a recognized type.name. remote.js\nchecks HTTP status, parses JSON, validates before caching and aborts each\nrequest after five seconds. Six requests are the fixed maximum for a new\ncomplete sample. A second successful read reuses those cached responses\nuntil reload. No requests run just by opening or typing into the page.\n\nCounts become current only after all six records succeed. If any request\nfails, the last valid sample, counts and source label remain visible with\nan error. A failed response is not cached. Describe what happens for offline,\ntimeout, non-OK and malformed responses; use the local fixture whenever a\nlive request is unavailable. Compare types within the actual returned sample,\nrather than assuming it matches the practice fixture or all available moves.\n\n## Completion\n\nKeep the six practice inputs and results, original data, counts summing to\nsix, source label and a changed fixture with its predicted counts. If using\nlive data, retain its visible source and a failed-refresh recovery result.\nExplain why ready must wait for every selected request, why one last-numbered\nrequest finishing does not establish that others finished, and how caching\nand the fixed request bound keep this project responsive.\n',
 					projectLink:
 						"https://codepen.io/junilearning/pen/a320051c74a1a5baa1358818c5bca5bc",
 					solutionLink:
