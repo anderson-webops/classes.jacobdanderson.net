@@ -1193,6 +1193,16 @@ jobs:
                   JAVASCRIPT_WEATHER_BROWSER_DIR: output/javascript-weather-browser
               run: node scripts/classes-family-heavy-task.mjs -- node --test test/javascript-weather-exported-browser.test.mjs
 
+            - name: Verify Small Talk project consent, saved edits and actual downloads
+              env:
+                  JAVASCRIPT_SMALL_TALK_BROWSER_DIR: output/javascript-small-talk-browser
+              run: node scripts/classes-family-heavy-task.mjs -- node --test test/javascript-small-talk-course-browser.test.mjs
+
+            - name: Run actual Small Talk downloads offline through all21input cases
+              env:
+                  JAVASCRIPT_SMALL_TALK_BROWSER_DIR: output/javascript-small-talk-browser
+              run: node scripts/classes-family-heavy-task.mjs -- node --test test/javascript-small-talk-exported-browser.test.mjs
+
             - name: Verify lyrics project consent, saved edits and actual downloads
               env:
                   JAVASCRIPT_LYRICS_BROWSER_DIR: output/javascript-lyrics-browser
@@ -1209,6 +1219,15 @@ jobs:
               with:
                   name: javascript-lyrics-workflows
                   path: output/javascript-lyrics-browser/
+                  if-no-files-found: warn
+                  retention-days: 14
+
+            - name: Retain Small Talk source, saved downloads and offline evidence
+              if: always()
+              uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+              with:
+                  name: javascript-small-talk-workflows
+                  path: output/javascript-small-talk-browser/
                   if-no-files-found: warn
                   retention-days: 14
 
