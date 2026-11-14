@@ -608,6 +608,7 @@ it.each(
 									"algebra-1a",
 									"algebra-1b",
 									"introduction-to-public-speaking",
+                                    "middle-school-c-grammar",
 									"intro-to-physics",
 									"physics-level-2",
 									"pre-algebra-a",
@@ -648,6 +649,11 @@ it.each(
 					);
 				}
 			}
+            if (id === "middle-school-c-grammar" &&
+                (item.title.startsWith("Practice Map:") || item.title.startsWith("Extension Review:"))) {
+                expect(container.textContent!.trim().length, item.title).toBeGreaterThan(170);
+                expect(container.textContent, item.title).not.toContain("speech outline");
+            }
 			return {
 				id: item.id,
 				title: item.title,
