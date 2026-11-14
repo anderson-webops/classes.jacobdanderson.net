@@ -82,8 +82,8 @@ export const javascriptMasterCheckpointTwoResources = [
 			{
 				name: "styles.css",
 				path: "master-checkpoint-two-v1/starter/styles.css.txt",
-				byteLength: 375,
-				sha256: "5da17c89e6ab20a6ea8a1c4213776827d63e1f34d0e415c60e04b70ea1f40136"
+				byteLength: 490,
+				sha256: "f38d5c9930e54ace36c8ee04ede3f4ee69195c3fcda62af731a554bea9c78a81"
 			}
 		]
 	},
@@ -170,8 +170,8 @@ export const javascriptMasterCheckpointTwoResources = [
 			{
 				name: "styles.css",
 				path: "master-checkpoint-two-v1/reference/styles.css.txt",
-				byteLength: 375,
-				sha256: "5da17c89e6ab20a6ea8a1c4213776827d63e1f34d0e415c60e04b70ea1f40136"
+				byteLength: 490,
+				sha256: "f38d5c9930e54ace36c8ee04ede3f4ee69195c3fcda62af731a554bea9c78a81"
 			}
 		]
 	},
@@ -252,8 +252,8 @@ export const javascriptMasterCheckpointTwoResources = [
 			{
 				name: "styles.css",
 				path: "master-checkpoint-two-moves-v1/starter/styles.css.txt",
-				byteLength: 375,
-				sha256: "5da17c89e6ab20a6ea8a1c4213776827d63e1f34d0e415c60e04b70ea1f40136"
+				byteLength: 490,
+				sha256: "f38d5c9930e54ace36c8ee04ede3f4ee69195c3fcda62af731a554bea9c78a81"
 			}
 		]
 	},
@@ -334,8 +334,8 @@ export const javascriptMasterCheckpointTwoResources = [
 			{
 				name: "styles.css",
 				path: "master-checkpoint-two-moves-v1/reference/styles.css.txt",
-				byteLength: 375,
-				sha256: "5da17c89e6ab20a6ea8a1c4213776827d63e1f34d0e415c60e04b70ea1f40136"
+				byteLength: 490,
+				sha256: "f38d5c9930e54ace36c8ee04ede3f4ee69195c3fcda62af731a554bea9c78a81"
 			}
 		]
 	}
