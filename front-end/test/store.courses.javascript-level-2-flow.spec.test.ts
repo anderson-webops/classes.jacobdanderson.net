@@ -132,6 +132,22 @@ describe("JavaScript Level 2 learner flow", () => {
 			expect(module.kind, module.title).toBe("module");
 			expect(module.estimatedTime, module.title).toMatch(/session/u);
 			expect(module.keyBlocks, module.title).toHaveLength(6);
+			if (module.title === "JSM10 APIs and Requests") {
+				expect(module.curriculum[0].contentKind).toBe("reading");
+				for (const concept of [
+					"fetch",
+					"promise",
+					"await",
+					"try",
+					"catch",
+					"finally",
+					"JSON",
+					"cancellation"
+				]) {
+					expect(module.curriculum[0].content).toContain(concept);
+				}
+				continue;
+			}
 			expect(module.curriculum[0].content, module.title).toContain(
 				"**Course flow:**"
 			);

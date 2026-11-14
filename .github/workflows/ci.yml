@@ -1203,6 +1203,16 @@ jobs:
                   JAVASCRIPT_HUNDRED_SQUARES_BROWSER_DIR: output/javascript-hundred-squares-browser
               run: node scripts/classes-family-heavy-task.mjs -- node --test test/javascript-hundred-squares-exported-browser.test.mjs
 
+            - name: Verify API project imports and saved response workspaces
+              env:
+                  JAVASCRIPT_API_PROJECTS_BROWSER_DIR: output/javascript-api-projects-browser
+              run: node scripts/classes-family-heavy-task.mjs -- node --test --test-concurrency=1 test/javascript-api-projects-course-browser.test.mjs
+
+            - name: Run API project exports with offline data and locally fulfilled failure cases
+              env:
+                  JAVASCRIPT_API_PROJECTS_BROWSER_DIR: output/javascript-api-projects-browser
+              run: node scripts/classes-family-heavy-task.mjs -- node --test --test-concurrency=1 test/javascript-api-projects-exported-browser.test.mjs
+
             - name: Verify canvas game imports, saved edits and actual downloads
               env:
                   JAVASCRIPT_CANVAS_GAMES_BROWSER_DIR: output/javascript-canvas-games-browser
@@ -1285,6 +1295,15 @@ jobs:
               with:
                   name: javascript-business-directory-workflows
                   path: output/javascript-business-directory-browser/
+                  if-no-files-found: warn
+                  retention-days: 14
+
+            - name: Retain API project source, downloads and response evidence
+              if: always()
+              uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+              with:
+                  name: javascript-api-projects-workflows
+                  path: output/javascript-api-projects-browser/
                   if-no-files-found: warn
                   retention-days: 14
 

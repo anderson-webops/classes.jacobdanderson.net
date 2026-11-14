@@ -1,4 +1,5 @@
 import type { RawCourse } from "./types";
+import javascriptApiResponsesReading from "@/assets/course-guides/javascript-api-projects/apis.md?raw";
 import javascriptColorfulCards2DReading from "@/assets/course-guides/javascript-master-arrays/colorful-cards-2d.md?raw";
 import javascriptColorfulCardsReading from "@/assets/course-guides/javascript-master-arrays/colorful-cards.md?raw";
 import javascriptForayIntoArraysReading from "@/assets/course-guides/javascript-master-arrays/foray-into-arrays.md?raw";
@@ -1336,19 +1337,20 @@ Accept the selected starter or reference import in the site IDE. README.md conta
 			curriculum: [
 				{
 					title: "APIs",
-					content: `**Concept path:** API requests are asynchronous because the browser must wait for another service to respond. \`fetch\` returns a promise, and the response body must be parsed, commonly with \`.json()\`, before the data can be used.
-
-**Practice targets:** Load a supplied JSON fixture through the same validation and rendering functions used by an optional public GET request. For the live route, check \`response.ok\`, parse JSON, validate the required fields, abort after a short timeout, cache repeated reads, and expose loading, success, empty, stale, and failure states.
-
-**Evidence target:** The page remains usable with the network disabled, distinguishes every request state, keeps the last valid result during a failed refresh, and reads only validated fields. No API key, browser write credential, personal input, or unbounded retry is present.`
+					contentKind: "reading",
+					preserveInstructions: true,
+					content: javascriptApiResponsesReading
 				},
 				{
 					title: "JSM10 Project 1: Programming Jokes",
-					content: `**Project target:** Display programming jokes from the supplied fixture, then optionally refresh from the preserved public joke endpoint. The project practices promise handling, response validation, state, and data-driven rendering without making network availability a completion requirement.
+					preserveInstructions: true,
+					content: `Display one programming joke as a setup followed by its punchline. The supplied set has ten actual programming jokes from the original API project's public data. Saved responses cycle through those records. Live API requests use the original programming/random endpoint; a successful response may be an object or a one-item array. Keep its two pieces of text together.
 
-**Build path:** Validate whether the fixture or response contains an array or object, normalize it into one joke record, and render setup and punchline with \`textContent\`. Add a button that uses one active request, checks status, aborts after a timeout, and returns to fixture data when the endpoint is unavailable or changed.
+Complete loadJokeResponse, normalizeJoke and renderJoke in script.js. In the asynchronous loader, await fixtureResponse for saved data or await requestJson for the live endpoint, then return the validated record from its data field. Normalize an array by selecting its first record, reject empty data, and require nonempty setup and punchline strings of at most 500 characters. The supplied request.js checks HTTP status, JSON content type, a 512 KiB response limit and a four-second deadline. Parse and validate before changing the page. Use textContent and replace the previous two paragraphs instead of accumulating old output. A supplied color rule keeps the original colored-text idea while retaining readable contrast.
 
-**Evidence target:** The fixture always renders, repeated clicks do not create overlapping requests, malformed or failed responses display a readable status while keeping valid content, and text from the data cannot become page markup.`,
+Select Saved responses and load several jokes without a network. Then select Live API and inspect the request in the browser tools. One active request is allowed; Cancel aborts it. A failed or malformed refresh keeps the previous joke and shows a status. Random endpoints deliberately request a fresh value, while the shared helper retains a bounded cache for deterministic lookups. Check CASES.md before comparing the completed reference. Open index.html without a server.
+
+Accept the selected role in the site IDE. README.md contains the full assignment;CASES.md supplies the checks. Save,export and reopen the same files.`,
 					projectLink:
 						"https://codepen.io/junilearning/pen/55981d32b9659656bb8cc4a17a0526bc",
 					solutionLink:
@@ -1356,11 +1358,14 @@ Accept the selected starter or reference import in the site IDE. README.md conta
 				},
 				{
 					title: "JSM10 Project 2: Random Fox Generator",
-					content: `**Project target:** Build an image-card generator from a supplied fictional-animal fixture, then optionally refresh the image URL from the preserved random-fox endpoint.
+					preserveInstructions: true,
+					content: `Add a fox photograph whenever the load button succeeds. Each valid response appends a fox photograph to the gallery. The gallery retains the newest twelve entries. Saved responses cycle through three real, public-domain fox photographs; their credits and source pages are included. Live API uses the original randomfox.ca/floof/ endpoint when available.
 
-**Build path:** Validate the data object and parse the candidate URL with the \`URL\` API. Permit only HTTPS from the reviewed fixture or provider origin, update one existing \`img\`, provide meaningful alt text from trusted local copy, and keep the old card visible while one cancelable request is pending.
+Complete loadFoxResponse, validateFox and appendFox in script.js. The asynchronous loader selects fixtureResponse or requestJson and returns the validated object before image decoding begins. Require an object with a valid image field. Saved image values must match the supplied fixtures; live values must use HTTPS, the exact randomfox.ca origin and an images/number.jpg, .jpeg or .png path. Reject query strings, fragments and unrelated origins. The supplied request helper checks status, JSON parsing, byte size and a four-second deadline. The supplied image helper waits for successful decoding before the new figure is attached, so broken images cannot displace valid ones.
 
-**Evidence target:** The local fixture works offline; valid refreshes update image and status together; an invalid protocol, unexpected origin, failed image load, timeout, or malformed response preserves a readable fallback and does not inject remote text or markup.`,
+Create meaningful alt text from trusted local copy, keep image proportions with CSS, and append a text credit link. Remove the oldest figure only after a thirteenth valid result is ready. Verify the gallery offline, then use Cancel and the failure cases in CASES.md. Failed requests or image loads keep earlier photographs. Photographs use their natural proportions at both display widths. Open index.html without a server.
+
+Accept the selected role in the site IDE. README.md contains the full assignment;CASES.md supplies the checks. Save,export and reopen the same files.`,
 					projectLink:
 						"https://codepen.io/junilearning/pen/93750fc08b5b2268a1d78b296295e2e8",
 					solutionLink:
@@ -1368,11 +1373,14 @@ Accept the selected starter or reference import in the site IDE. README.md conta
 				},
 				{
 					title: "JSM10 Project 3: Pokedex",
-					content: `**Project target:** Build a small creature index that searches a supplied PokéAPI-shaped fixture and optionally refreshes a selected Pokémon with PokéAPI. The project combines form controls, cached public GET data, validation, error handling, and structured display.
+					preserveInstructions: true,
+					content: `Search the original 893-entry Pokémon index by name or numeric ID. Every entry includes its real name, one or two types, six base statistics and the corresponding supplied sprite. The local dataset is derived from pinned public PokéAPI CSV files and sprite sources, so every indexed lookup works offline. The datalist contains all 893 names. Live API optionally refreshes one selected record; loading the page never launches 893 requests.
 
-**Build path:** Use a labeled input and datalist, normalize the search term, look up local data first, and render name, id, type, and an approved image URL. The optional refresh checks status, timeout, shape, and provider origin, caches successful records, and follows PokéAPI fair-use guidance.
+Complete loadPokemonResponse, normalizePokemon and renderPokemon in script.js. The asynchronous loader selects the saved record or one live request, waits for validation, and returns its data plus cache status. Require an ID from 1 through 893, a normalized name, one or two type records, six numeric base statistics and a valid sprite. The complete reference accepts the supplied PNG data URLs locally and the exact reviewed PokéAPI sprite path for a live response. Render one result with DOM text, a labeled sprite and a definition list of statistics; replace previous details so repeated searches do not accumulate stale fields.
 
-**Evidence target:** Valid local searches render the correct details, invalid searches produce a clear inline message, the image and text update together, repeated searches use cached data, and the interface remains usable offline or after a failed or malformed request.`,
+The supplied request.js checks HTTP status, JSON type, a 512 KiB response cap, one active request and a four-second timeout. Successful live records enter a bounded sixty-second cache. Repeating the same lookup uses it; a failed refresh retains the previous record. Try bulbasaur, pikachu, 25 and 893, then an unknown name. Inspect CASES.md, including markup-shaped input, invalid records, sprite failure and cached reads. Open index.html without a server.
+
+Accept the selected role in the site IDE. README.md contains the full assignment;CASES.md supplies the checks. Save,export and reopen the same files.`,
 					projectLink:
 						"https://codepen.io/junilearning/pen/35923b1d6dee01a5f3004d67836eca46",
 					solutionLink:
@@ -1382,11 +1390,14 @@ Accept the selected starter or reference import in the site IDE. README.md conta
 			supplementalProjects: [
 				{
 					title: "JSM10 Supplemental Project 1: Funny Meter",
-					content: `**Project target:** Build a joke-rating interface that loads a supplied set of fictional jokes, presents them one at a time, and records a rating for each. An optional public GET refresh may replace the fixture after the local state flow passes.
+					preserveInstructions: true,
+					content: `Rate exactly ten programming jokes, one at a time. This optional project extends the single-joke reader: the completed normalizeJoke helper is supplied, and the new work is validating the batch and recording decisions. Saved responses contain ten actual programming jokes. The Live API option uses the original programming/ten endpoint when available.
 
-**Build path:** Validate and cap the joke array, track the current index and ratings, advance only after a rating is recorded, and show a final summary. The optional request checks status, timeout, response shape, and active-request state before replacing the fixture.
+Complete loadTenJokesResponse, normalizeTenJokes and recordRating in script.js. The asynchronous loader awaits the saved response or the live programming/ten endpoint before creating the session. Require an array of exactly ten valid jokes, assign a stable session ID to each position, and reuse normalizeJoke for each setup and punchline. Store each accepted rating with the current joke's ID. Accept only yes or no; invalid input leaves the current position unchanged. The next joke is determined by the number of recorded ratings, not by an independently incremented prompt counter.
 
-**Evidence target:** The bounded fixture completes offline, each rating stays attached to the correct record, navigation does not skip or repeat accidentally, invalid ratings are rejected, and a failed refresh cannot erase an in-progress local session.`,
+The supplied renderer shows progress, the current joke and two native answer buttons. After ten answers it displays liked/disliked counts and whether the set was liked, disliked or tied. Buttons stop accepting ratings at completion. Restart clears ratings for the current set; a failed live refresh preserves it, and another load cannot erase a partly rated session. Use CASES.md to complete all-yes, all-no and tied sessions, plus invalid/duplicate/after-completion cases. Open index.html without a server.
+
+Accept the selected role in the site IDE. README.md contains the full assignment;CASES.md supplies the checks. Save,export and reopen the same files.`,
 					projectLink:
 						"https://codepen.io/junilearning/pen/bf88ab46e0b7314e0b0999ba35363519",
 					solutionLink:
@@ -2376,7 +2387,7 @@ function decorateJavaScriptLevel2Module(
 		curriculum: module.curriculum.map((item, index) => ({
 			...item,
 			content:
-				index === 0
+				index === 0 && module.title !== "JSM10 APIs and Requests"
 					? `**Course flow:** ${flow.stage}. ${flow.route}
 
 **Standards route:** ${flow.standardsRoute}
