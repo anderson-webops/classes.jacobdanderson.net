@@ -369,8 +369,8 @@ export const javascriptCanvasGamesResources = [
 			{
 				name: "README.md",
 				path: "starfield-v1/starter/README.md.txt",
-				byteLength: 1446,
-				sha256: "574a4df1338070f0d347a5979415c1f5520f0766d1dbeb5fb2bf2e7e41ee958d"
+				byteLength: 1304,
+				sha256: "62324fa56a903d2a00fa58c44313cdbed8af4c442813bf009a47ceaa89641916"
 			},
 			{
 				name: "SOURCES.md",
@@ -426,8 +426,8 @@ export const javascriptCanvasGamesResources = [
 			{
 				name: "README.md",
 				path: "starfield-v1/reference/README.md.txt",
-				byteLength: 1447,
-				sha256: "d9266e80e1e1dbc0ab9d6bc191805189c52ee26f774dac6e7aa62cc4b08e08f7"
+				byteLength: 1305,
+				sha256: "f6ba4fdab792ba2605813b6ed5379e08900b2668ce334838e8e987ab00205ed9"
 			},
 			{
 				name: "SOURCES.md",

@@ -1281,7 +1281,7 @@ Accept the selected starter or reference import in the site IDE. README.md conta
 
 Complete stepGame and resizeStars in script.js. At thirty simulation ticks per second, a star moves velocity divided by thirty pixels per tick. When its y coordinate exceeds the field height, replace that entry with a new star at y=0. Preserve the array length. On resize, scale existing positions by new width/old width and new height/old height before storing the new dimensions. A single animation loop draws the black background and then the white squares.
 
-In CASES.md, trace a star with velocity=30 from y=10 to y=11 after one tick. A star that moves past the bottom returns to the top without increasing density. Resize the window and confirm that all stars remain within the new field. Restart creates a fresh field without adding another loop. The assignment follows Juni Learning's visible Starfield task; its original reference credits the CodeProject article recorded in SOURCES.md.
+In CASES.md, trace a star with velocity=30 from y=10 to y=11 after one tick. A star that moves past the bottom returns to the top without increasing density. Resize the window and confirm that all stars remain within the new field. Restart creates a fresh field without adding another loop.
 
 Accept the selected starter or reference import in the site IDE. README.md contains the full assignment and CASES.md supplies the boundary checks. Open index.html without a server. Save edits,export the ZIP and reopen the saved project to compare the same files.`,
 					projectLink:
