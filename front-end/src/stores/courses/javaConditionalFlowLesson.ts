@@ -23,8 +23,7 @@ Refactor a lab-booking decision while preserving its result and observable work.
 
 ## Inputs and outputs
 
-\`Request\` has \`machine\`, \`member\`, \`minutes\`, \`closed\`, \`supervised\` and \`busy\`.
-A present \`Member\` has \`suspended\`, \`revoked\` and \`trainingLevel\`. A missing member represents a guest. Minutes are whole numbers from 1 through 240; present members have training levels 0 through 5.
+\`Request\` has \`machine\`, \`member\`, \`minutes\`, \`closed\`, \`supervised\` and \`busy\`. A present \`Member\` has \`suspended\`, \`revoked\` and \`trainingLevel\`. A missing member represents a guest. Minutes are whole numbers from 1 through 240; present members have training levels 0 through 5.
 
 | Machine | Required training | Maximum booking minutes |
 | --- | ---: | ---: |
@@ -62,9 +61,7 @@ For a valid request, the first matching row wins:
 
 These are fictional exercise rules. \`LegacyGate.java\` preserves their nested baseline.
 
-The training probe records \`training:actual>=required\` and returns that comparison. Supervision skips it. An unsupervised STANDARD booking still records training even though every valid level passes.
-Availability records \`availability:busy=true\` or \`availability:busy=false\` and returns the opposite of \`busy\`. Probe it only after readiness succeeds.
-Every valid evaluation appends exactly one final \`decision:reason\` event after its probes. An earlier denial prevents later probes.
+The training probe records \`training:actual>=required\` and returns that comparison. Supervision skips it. An unsupervised STANDARD booking still records training even though every valid level passes. Availability records \`availability:busy=true\` or \`availability:busy=false\` and returns the opposite of \`busy\`. Probe it only after readiness succeeds. Every valid evaluation appends exactly one final \`decision:reason\` event after its probes. An earlier denial prevents later probes.
 
 Worked observations:
 
@@ -85,8 +82,7 @@ Predict outcomes before editing; record comparisons in \`REFACTORING.md\`. Keep 
 
 ## Optional extension
 
-Implement the marked methods in \`optional/FeePolicies.java\` and \`optional/OptionalWorkflow.java\`.
-The supplied factory selects a \`Policy\` variant. Put each algorithm in that variant; the bounded factory dispatch remains at the composition point.
+Implement the marked methods in \`optional/FeePolicies.java\` and \`optional/OptionalWorkflow.java\`. The supplied factory selects a \`Policy\` variant. Put each algorithm in that variant; the bounded factory dispatch remains at the composition point.
 
 | Machine | Credits for valid duration m | Boundary examples |
 | --- | --- | --- |
@@ -96,9 +92,7 @@ The supplied factory selects a \`Policy\` variant. Put each algorithm in that va
 
 Fee methods accept all durations 1–240 independently of admission limits. The factory rejects a missing machine with \`IllegalArgumentException("machine")\`. Each fee method rejects invalid duration with \`IllegalArgumentException("minutes")\`. \`LegacyOptionalWorkflow\` supplies the original fee/reporter behavior.
 
-The workflow uses the refactored policy and returns \`Outcome(decision, credits)\`. Compute fees only for approvals; denials cost zero.
-A supplied reporter receives \`started\` before admission, followed by \`completed(decision, credits)\` or \`failed(error)\` before the original runtime exception is rethrown. Reporter callbacks in this exercise complete normally.
-Normalize an absent reporter once to \`StatusReporter.none()\`. Make ordinary calls through it. The observer is optional; the audit remains required and guests remain denied. Preserve the core audit.
+The workflow uses the refactored policy and returns \`Outcome(decision, credits)\`. Compute fees only for approvals; denials cost zero. A supplied reporter receives \`started\` before admission, followed by \`completed(decision, credits)\` or \`failed(error)\` before the original runtime exception is rethrown. Reporter callbacks in this exercise complete normally. Normalize an absent reporter once to \`StatusReporter.none()\`. Make ordinary calls through it. The observer is optional; the audit remains required and guests remain denied. Preserve the core audit.
 
 Worked workflow: the approved LASER 60 case costs 126 credits. A recording reporter sees \`started\` then \`completed:approved:126\`. An absent reporter changes neither result nor audit. A missing request reports \`started\` then \`failed:IllegalArgumentException:request\`; existing audit history remains unchanged.
 
@@ -113,8 +107,7 @@ java -ea -cp out lab.CoreChecks baseline
 java -ea -cp out lab.optional.OptionalChecks baseline
 \`\`\`
 
-Run Java only after compilation succeeds. Success has exit status 0; inspect \`$?\` in a POSIX shell or \`$LASTEXITCODE\` in PowerShell.
-The untouched starter compiles and baseline modes pass. Its unfinished core/optional modes intentionally fail with a \`TODO\` exception.
+Run Java only after compilation succeeds. Success has exit status 0; inspect \`$?\` in a POSIX shell or \`$LASTEXITCODE\` in PowerShell. The untouched starter compiles and baseline modes pass. Its unfinished core/optional modes intentionally fail with a \`TODO\` exception.
 
 After completing the core, recompile and run:
 
