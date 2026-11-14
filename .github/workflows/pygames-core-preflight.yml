@@ -1453,7 +1453,7 @@ jobs:
           ref: b18be61c865ae45d4ab15dc1b633c1c83d50da12
           path: .ai-work/ai-studio-source
           persist-credentials: false
-      - name: Execute all seven independent source regression suites
+      - name: Execute all 25 independent source regression suites
         run: >-
           node scripts/classes-family-heavy-task.mjs --
           bash .ai-work/ai-studio-source/verify-course-source.sh

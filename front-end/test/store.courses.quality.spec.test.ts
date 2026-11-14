@@ -4390,52 +4390,91 @@ describe("course text quality normalization", () => {
 		expect(course).not.toBeNull();
 		if (!course) return;
 
-		const expectedFocusByLab = new Map([
-			[13, "frontier instrumentation"],
-			[14, "depth limits"],
-			[15, "uniform-cost or A* cost accounting"],
-			[16, "greedy versus A* comparisons"],
-			[17, "game or puzzle search evaluation"]
+		const expectedCases = new Map<
+			number,
+			{ transfer: string[]; extension: string[] }
+		>([
+			[
+				13,
+				{
+					transfer: ['"path": ["A", "C", "G"]', "C → A"],
+					extension: ['"peak_frontier": 4', '"expanded": 8']
+				}
+			],
+			[
+				14,
+				{
+					transfer: ['"0": "cutoff"', '"3": "found"'],
+					extension: ['"attempts": 4', '"visits": 12']
+				}
+			],
+			[
+				15,
+				{
+					transfer: ['"A_pops": 2', '"cost": 4'],
+					extension: [
+						'"admissible_cost": 4',
+						'"overestimate_cost": 9'
+					]
+				}
+			],
+			[
+				16,
+				{
+					transfer: ['"greedy": 21', '"astar": 4'],
+					extension: ['"greedy": 4', '"astar": 4']
+				}
+			],
+			[
+				17,
+				{
+					transfer: ['"moves": [3, 2, 1, null]', "unreachable"],
+					extension: [
+						'"reachable": 12',
+						'"max_shortest_moves": 6',
+						'"false_zero_scores": 2'
+					]
+				}
+			]
 		]);
 		const checkedLabs: number[] = [];
-
-		for (const [labNumber, focus] of expectedFocusByLab) {
+		for (const [labNumber, cases] of expectedCases) {
 			const module = course.modules.find(
 				module =>
 					module.title ===
-					`AI Search Lab ${labNumber}: Practice Studio`
+					"AI Search Lab " + labNumber + ": Practice Studio"
 			);
-			expect(module, `AI Search Lab ${labNumber}`).toBeDefined();
+			expect(module, "AI Search Lab " + labNumber).toBeDefined();
 			if (!module) continue;
-
 			const transfer = module.supplementalProjects.find(
 				item =>
 					item.title ===
-					`Transfer Practice: AI Search Lab ${labNumber}`
+					"Transfer Practice: AI Search Lab " + labNumber
 			);
 			const extension = module.supplementalProjects.find(
 				item =>
 					item.title ===
-					`Extension Practice: AI Search Lab ${labNumber}`
+					"Extension Practice: AI Search Lab " + labNumber
 			);
 			expect(transfer, module.title).toBeDefined();
 			expect(extension, module.title).toBeDefined();
 			if (!transfer || !extension) continue;
-
-			expect(transfer.content, transfer.title).toContain(
-				"transfer-practice search lab"
-			);
-			expect(extension.content, extension.title).toContain(
-				"extension-practice search lab"
-			);
-			expect(transfer.content, transfer.title).toContain(focus);
-			expect(extension.content, extension.title).toContain(focus);
+			for (const [item, tokens] of [
+				[transfer, cases.transfer],
+				[extension, cases.extension]
+			] as const) {
+				expect(item.content, item.title).toContain(
+					"## Expected result"
+				);
+				expect(item.content, item.title).toContain("solve_extension");
+				for (const token of tokens)
+					expect(item.content, item.title).toContain(token);
+			}
 			expect(transfer.content, module.title).not.toEqual(
 				extension.content
 			);
 			checkedLabs.push(labNumber);
 		}
-
 		expect(checkedLabs).toEqual([13, 14, 15, 16, 17]);
 	});
 
