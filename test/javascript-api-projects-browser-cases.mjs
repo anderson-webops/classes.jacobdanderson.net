@@ -40,7 +40,7 @@ export async function fulfillApiProjectRequest(request, resource, traffic) {
 			? url.href === "https://randomfox.ca/floof/"
 			: url.href === `https://official-joke-api.appspot.com/jokes/programming/${project === "funny-meter" ? "ten" : "random"}`;
 	const sprite = project === "pokedex" && url.origin === "https://raw.githubusercontent.com" && /^\/PokeAPI\/sprites\/master\/sprites\/pokemon\/\d+\.png$/.test(url.pathname);
-	const foxImage = project === "fox-generator" && url.href === "https://randomfox.ca/images/1.jpg";
+	const foxImage = project === "fox-generator" && url.origin === "https://randomfox.ca" && /^\/images\/[12]\.jpg$/.test(url.pathname) && !url.search && !url.hash;
 	if (!api && !sprite && !foxImage) return false;
 	assert.equal(request.method(), "GET");
 	traffic.calls.push({ url: request.url(), method: request.method(), kind: api ? "json" : "image", mode: traffic.mode });
@@ -63,7 +63,7 @@ export async function fulfillApiProjectRequest(request, resource, traffic) {
 		body = { ...entry, sprites: { front_default: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${entry.id}.png` } };
 	}
 	else if (project === "fox-generator") {
-		body = { image: "https://randomfox.ca/images/1.jpg", link: "https://randomfox.ca/" };
+		body = { image: traffic.imageFailure ? "https://randomfox.ca/images/2.jpg" : "https://randomfox.ca/images/1.jpg", link: "https://randomfox.ca/" };
 	}
 	else {
 		body = project === "funny-meter" ? entries : [entries[1]];

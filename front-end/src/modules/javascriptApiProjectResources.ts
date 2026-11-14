@@ -387,8 +387,8 @@ export const javascriptApiProjectResources = [
 			{
 				name: "styles.css",
 				path: "pokedex-v1/starter/styles.css.txt",
-				byteLength: 870,
-				sha256: "5ecd76ca60e151b6e5063ed527aea00714f2f1f79c0c99f5dc50ec0e07932e12"
+				byteLength: 969,
+				sha256: "26772dcaffa56d129c80d6884614bd2ab00dad4562cc6bdcae59a7a1c8f84bcb"
 			}
 		]
 	},
@@ -492,8 +492,8 @@ export const javascriptApiProjectResources = [
 			{
 				name: "styles.css",
 				path: "pokedex-v1/reference/styles.css.txt",
-				byteLength: 870,
-				sha256: "5ecd76ca60e151b6e5063ed527aea00714f2f1f79c0c99f5dc50ec0e07932e12"
+				byteLength: 969,
+				sha256: "26772dcaffa56d129c80d6884614bd2ab00dad4562cc6bdcae59a7a1c8f84bcb"
 			}
 		]
 	},
