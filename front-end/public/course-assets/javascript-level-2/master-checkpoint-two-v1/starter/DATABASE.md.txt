@@ -45,7 +45,7 @@ READ the join again: Star Garden now pairs with Fiction.
 DELETE: DELETE FROM books WHERE id=13;
 READ again: the three original books remain.
 
-Treat this as one sequence beginning from library.sql. Changing only a
+Run this sequence beginning from library.sql. Changing only a
 displayed title leaves a stored row unchanged. Changing an in-memory
 JavaScript array lasts only in that program until deliberately saved;
 a SQL UPDATE changes stored data. Explain which action each example performs.

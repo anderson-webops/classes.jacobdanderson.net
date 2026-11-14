@@ -22,8 +22,8 @@ export const javascriptMasterCheckpointTwoResources = [
 			{
 				name: "DATABASE.md",
 				path: "master-checkpoint-two-v1/starter/DATABASE.md.txt",
-				byteLength: 2230,
-				sha256: "938d9b66e6bf4e6600f80fbc7bf8bfaf33b9e25918ff9e80298c523674c34498"
+				byteLength: 2221,
+				sha256: "b62519601ccd74e34530da526536a78dfcee225c95a1e1833ae6955e0c9b2b25"
 			},
 			{
 				name: "LICENSE-original.txt",
@@ -110,8 +110,8 @@ export const javascriptMasterCheckpointTwoResources = [
 			{
 				name: "DATABASE.md",
 				path: "master-checkpoint-two-v1/reference/DATABASE.md.txt",
-				byteLength: 2230,
-				sha256: "938d9b66e6bf4e6600f80fbc7bf8bfaf33b9e25918ff9e80298c523674c34498"
+				byteLength: 2221,
+				sha256: "b62519601ccd74e34530da526536a78dfcee225c95a1e1833ae6955e0c9b2b25"
 			},
 			{
 				name: "LICENSE-original.txt",
