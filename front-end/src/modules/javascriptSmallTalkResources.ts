@@ -44,8 +44,8 @@ export const javascriptSmallTalkResources = [
 			{
 				name: "styles.css",
 				path: "small-talk-v1/starter/styles.css.txt",
-				byteLength: 302,
-				sha256: "f25b5684efca85be01af730643146b62ca1b422429ed96d067cadec330849f69"
+				byteLength: 327,
+				sha256: "490307fff9b85e4706df001eb0e6a3521104dbbf33b34093f123692a37160647"
 			}
 		]
 	},
@@ -94,8 +94,8 @@ export const javascriptSmallTalkResources = [
 			{
 				name: "styles.css",
 				path: "small-talk-v1/reference/styles.css.txt",
-				byteLength: 302,
-				sha256: "f25b5684efca85be01af730643146b62ca1b422429ed96d067cadec330849f69"
+				byteLength: 327,
+				sha256: "490307fff9b85e4706df001eb0e6a3521104dbbf33b34093f123692a37160647"
 			}
 		]
 	}

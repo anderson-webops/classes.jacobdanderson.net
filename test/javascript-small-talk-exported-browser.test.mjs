@@ -224,7 +224,10 @@ test(
 							document.body.style.zoom = "";
 							return result;
 						});
-						assert.ok(zoomedReflow.accepted, label);
+						assert.ok(
+							zoomedReflow.accepted,
+							label + ": " + JSON.stringify(zoomedReflow)
+						);
 						assert.deepEqual(errors, []);
 						assert.equal(outsideRequests, 0);
 						const screenshot = join(
