@@ -545,6 +545,20 @@ jobs:
         run: |
           node scripts/classes-family-heavy-task.mjs -- node --test test/javascript-juggling-paddle-course-browser.test.mjs
           node scripts/classes-family-heavy-task.mjs -- node --test test/javascript-juggling-paddle-exported-browser.test.mjs
+      - name: Verify complete Wordsmith imports and pinned classroom framework
+        run: >-
+          npm exec -w front-end -- vitest run
+          test/python-wordsmith-import.spec.test.ts
+          test/python-wordsmith-course.spec.test.ts
+          test/codePreview.spec.test.ts
+          test/python-ide.module.spec.test.ts
+          test/store.courses.python-level-2-flow.spec.test.ts
+          test/store.courses.python-pygames-classroom.spec.test.ts
+          --no-file-parallelism --maxWorkers=1
+      - name: Verify actual Wordsmith role imports, saved scoring edits and complete dictionary exports
+        env:
+          PYTHON_WORDSMITH_BROWSER_DIR: output/python-wordsmith-browser
+        run: node scripts/classes-family-heavy-task.mjs -- node --test --test-concurrency=1 test/python-wordsmith-course-browser.test.mjs
       - name: Retain source, actual exports and rendered evidence
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
@@ -557,6 +571,7 @@ jobs:
             output/javascript-paddle-browser/
             output/javascript-coastal-cruise-browser/
             output/javascript-juggling-paddle-browser/
+            output/python-wordsmith-browser/
           if-no-files-found: error
           retention-days: 14
 
