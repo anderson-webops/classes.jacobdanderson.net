@@ -812,7 +812,8 @@ export const aiLevel1Course: RawCourse = {
 				},
 				{
 					title: "AI Search Lab 13: Guided Example",
-					content: aiStudioGuide1
+					content: aiStudioGuide1,
+					contentKind: "reading"
 				},
 				{
 					title: "AI Search Lab 13: Core Project",
@@ -879,7 +880,8 @@ export const aiLevel1Course: RawCourse = {
 				},
 				{
 					title: "AI Search Lab 14: Guided Example",
-					content: aiStudioGuide2
+					content: aiStudioGuide2,
+					contentKind: "reading"
 				},
 				{
 					title: "AI Search Lab 14: Core Project",
@@ -946,7 +948,8 @@ export const aiLevel1Course: RawCourse = {
 				},
 				{
 					title: "AI Search Lab 15: Guided Example",
-					content: aiStudioGuide3
+					content: aiStudioGuide3,
+					contentKind: "reading"
 				},
 				{
 					title: "AI Search Lab 15: Core Project",
@@ -1013,7 +1016,8 @@ export const aiLevel1Course: RawCourse = {
 				},
 				{
 					title: "AI Search Lab 16: Guided Example",
-					content: aiStudioGuide4
+					content: aiStudioGuide4,
+					contentKind: "reading"
 				},
 				{
 					title: "AI Search Lab 16: Core Project",
@@ -1080,7 +1084,8 @@ export const aiLevel1Course: RawCourse = {
 				},
 				{
 					title: "AI Search Lab 17: Guided Example",
-					content: aiStudioGuide5
+					content: aiStudioGuide5,
+					contentKind: "reading"
 				},
 				{
 					title: "AI Search Lab 17: Core Project",
@@ -1148,7 +1153,8 @@ export const aiLevel1Course: RawCourse = {
 				},
 				{
 					title: "Unbeatable TicTacToe AI 1: Guided Example",
-					content: aiStudioGuide6
+					content: aiStudioGuide6,
+					contentKind: "reading"
 				},
 				{
 					title: "Unbeatable TicTacToe AI 1: Core Project",
@@ -1234,7 +1240,8 @@ export const aiLevel1Course: RawCourse = {
 				},
 				{
 					title: "The Marble Game AI: Guided Example",
-					content: aiStudioGuide7
+					content: aiStudioGuide7,
+					contentKind: "reading"
 				},
 				{
 					title: "The Marble Game AI: Core Project",

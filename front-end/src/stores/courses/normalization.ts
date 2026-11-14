@@ -1,4 +1,5 @@
 import type { RawCourse, RawCourseModule, RawCourseModuleItem } from "./types";
+import { applyAiStudioReadings } from "./aiStudioReadings";
 import { applyAlgebraErrorAnalysisCases } from "./algebraErrorAnalysisCases";
 import { applyCourseImplementationArtifacts } from "./course-implementation-artifacts";
 import { applyEarlyElementaryAProjects } from "./earlyElementaryAProjects";
@@ -9875,6 +9876,7 @@ export function normalizeRawCourse(id: string, rawCourse: RawCourse) {
 	applyWebDeploymentWorkflow(course, id);
 	preserveMathArchiveProgress(course, id);
 	preserveDesignPatternsJavaProgress(course, id);
+	if (id === "ai-level-1") applyAiStudioReadings(course, rawCourse);
 	if (id === "smart-money-personal-finance")
 		applySmartMoneyReadings(course, rawCourse);
 	if (id === "entrepreneurship-101")

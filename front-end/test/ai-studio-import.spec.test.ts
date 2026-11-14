@@ -3,6 +3,7 @@ import { readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { strFromU8, unzipSync } from "fflate";
 import { createPinia, setActivePinia } from "pinia";
+import MarkdownIt from "markdown-it";
 import { afterEach, expect, it, vi } from "vitest";
 import { resetCodePreviewCaches } from "@/modules/codePreview";
 import { createProjectArchive } from "@/modules/projectArchive";
@@ -15,6 +16,8 @@ import {
 	saveLocalPythonProjects
 } from "@/modules/pythonIde";
 import { useCoursesStore } from "@/stores/courses";
+import { aiLevel1Course } from "@/stores/courses/ai-level-1";
+import { formatAuthoredReading } from "@/stores/courses/authoredReading";
 import { useAppStore } from "@/stores/app";
 
 const fixture = JSON.parse(
@@ -67,6 +70,24 @@ it("retains seven published studio tasks while supplying concrete worked cases a
 				i.aliases?.includes(project.readingTitle)
 		)!;
 		expect(reading, project.key).toBeTruthy();
+		const authored = aiLevel1Course.modules
+			.flatMap(m => m.curriculum)
+			.find(i => i.title === project.readingTitle)!;
+		expect(reading.content).toBe(
+			formatAuthoredReading(authored.content).trim()
+		);
+		expect(reading.contentKind).toBe("reading");
+		const rendered = new MarkdownIt().render(reading.content);
+		expect(rendered).toContain("<h2>Worked case");
+		if (project.key === "search-13" || project.key === "search-14")
+			expect((rendered.match(/<tr>/g) || []).length).toBe(
+				project.key === "search-13" ? 7 : 5
+			);
+		if (project.key === "search-15" || project.key === "search-16")
+			expect((rendered.match(/A\*/g) || []).length).toBe(
+				project.key === "search-15" ? 7 : 6
+			);
+
 		expect(reading.content).toContain("## Worked case");
 		expect(reading.content).toContain("## Build and verify");
 		expect(reading.content).not.toContain(
