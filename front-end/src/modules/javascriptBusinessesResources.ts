@@ -32,8 +32,8 @@ export const javascriptBusinessesResources = [
 			{
 				name: "README.md",
 				path: "businesses-v1/starter/README.md.txt",
-				byteLength: 3264,
-				sha256: "0c6ffd15bddd35779c02231ca24f3485b6f4fd6ddb3e7fa486415b5799c99e12"
+				byteLength: 2899,
+				sha256: "8e4c1574e72cae0f07d94eaa1abbad691a217642c6ce10540256405e8691196d"
 			},
 			{
 				name: "SOURCES.md",
@@ -100,8 +100,8 @@ export const javascriptBusinessesResources = [
 			{
 				name: "README.md",
 				path: "businesses-v1/reference/README.md.txt",
-				byteLength: 3264,
-				sha256: "0c6ffd15bddd35779c02231ca24f3485b6f4fd6ddb3e7fa486415b5799c99e12"
+				byteLength: 2899,
+				sha256: "8e4c1574e72cae0f07d94eaa1abbad691a217642c6ce10540256405e8691196d"
 			},
 			{
 				name: "SOURCES.md",

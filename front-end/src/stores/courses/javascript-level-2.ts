@@ -897,7 +897,7 @@ Use these fictional records for the supplied four-key path. Another dataset may 
 
 Print a location/CEO sentence and a products sentence for each object. All property values are nonempty strings except the products array. The imported \`README.md\` and \`CASES.md\` supply complete inputs and six expected paragraphs. The blank starter retains the original assignment and supplied display helper.
 
-**Complete when:** All three business descriptions include every property and all products in array order. Adding a fourth valid object produces eight paragraphs without another hard-coded print call; changing a property or product changes its corresponding summary. Explain which loop visits businesses and which visits products. Verify the supplied helper's text remains readable on mobile and at 200% zoom, and markup characters display literally.`,
+**Complete when:** All three business descriptions include every property and all products in array order. Adding a fourth valid object produces eight paragraphs without another hard-coded print call; changing a property or product changes its corresponding summary. Explain which loop visits businesses and which visits products.`,
 					projectLink:
 						"https://codepen.io/junilearning/pen/bcc6527a03ffb7ca42b705ff3f3910dd",
 					solutionLink:

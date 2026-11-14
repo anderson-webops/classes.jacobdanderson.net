@@ -62,11 +62,6 @@ statement outside the loop. Change one existing property's value and one product
 same renderer must reflect both edits. Explain which loop visits business objects and which
 visits product entries. Keep the supplied helper below its boundary.
 
-Confirm that long input wraps on a narrow screen and at 200% zoom. A name containing markup
-characters must display those characters literally. A reduced-motion preference removes the
-entrance motion while retaining every output line. These checks concern the supplied helper;
-the required learner work remains the objects, loops, property reads and descriptions.
-
 ## Source and declared adaptation
 
 SOURCES.md records both original CodePen URLs, captured settings and source hashes.
