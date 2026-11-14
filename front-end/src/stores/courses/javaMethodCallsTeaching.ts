@@ -90,7 +90,7 @@ const entries: Array<
 		preserveInstructions: true,
 		learningPath: "core",
 		content:
-			"Finish the three required TODOs in DispatchService and CompatibilityDesk. Preserve LegacyDesk, ClientCompatibility, supplied types/log and checks. Run ContractChecks baseline and core, with core under -ea and -da; compare both Main modes. Core reports 576 rows and 9266 explicit checks and works independently of the optional queue.\n\n**Completion evidence:** Retain commands, summaries and REFACTORING.md. Include two queries/no-write, one write per send, immutable earlier snapshot, shared history across configurations and latest duplicate-label lookup. Explain the API changes using the fourteen techniques and identify the choices that belong at a compatibility boundary.",
+			"Finish the three required TODOs in DispatchService and CompatibilityDesk. Preserve LegacyDesk, ClientCompatibility, supplied types/log and checks. Run ContractChecks baseline and core, with core under -ea and -da; compare both Main modes. Core reports 576 rows and 9266 explicit checks and works independently of the optional queue.\n\n**Completion evidence:** Retain commands, summaries and `REFACTORING.md`. Include two queries/no-write, one write per send, immutable earlier snapshot, shared history across configurations and latest duplicate-label lookup. Explain the API changes using the fourteen techniques and identify the choices that belong at a compatibility boundary.",
 		caseSection: "core",
 		sourceProject: true,
 		preserveAssignment: true
