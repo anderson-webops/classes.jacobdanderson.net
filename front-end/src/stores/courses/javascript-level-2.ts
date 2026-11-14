@@ -919,11 +919,11 @@ Print a location/CEO sentence and a products sentence for each object. All prope
 				},
 				{
 					title: "JSM6 Project 3: Inflate and Deflate",
-					content: `**Project target:** Animate a ball object that grows and shrinks while changing color. The project uses object state to control radius, color, and animation phase.
-
-**Build path:** Store the ball's x position, y position, radius, color, and growth direction in an object. Write \`draw\`, \`inflate\`, and \`deflate\` functions, then call them from a \`requestAnimationFrame\` loop. Switch from inflating to deflating at a maximum radius and back again at a minimum radius.
-
-**Evidence target:** The ball stays centered while its radius changes, the color changes with the current phase, and the animation continues without the radius becoming negative or growing forever.`,
+					contentKind: "assignment",
+					preserveInstructions: true,
+					preserveAssignment: true,
+					content:
+						'Create a ball object with x, y, radius and color. Animate it growing to one size, changing color, shrinking to another size, then repeating.\n\n**Canvas setup:** Add <canvas id="my-canvas"></canvas> in HTML. In JavaScript, obtain that element with document.getElementById("my-canvas") and its 2 D context with getContext("2 d"). The starter has empty HTML/CSS and a JavaScript entry area; no external library is needed.\n\n**Build:** Write drawBall to begin a path, set the fill color, draw a full circle from the ball properties and fill it. Write inflate and deflate to change radius and color. In one pumpBall loop, clear the previous frame, select the phase, update the ball, draw it and schedule the next callback with requestAnimationFrame. Start that loop once.\n\n**Worked reference:** The canvas is 1000 by 800. The ball begins at (300,300), radius 20, green. Inflation adds 5 and uses green; deflation subtracts 5 and uses red. A separate inflating boolean stores the phase. The loop switches to deflation when the current radius is greater than 200 and to inflation when it is less than 10, then performs the update.\n\nThe first drawn radius is 25. Near the upper turn, rendered states are 200 green,205 green,200 red. Near the lower turn, they are 10 red,5 red,10 green. Those strict comparisons happen before a 5 unit step, so the reference\u2019s actual extrema are 5 and 205. A version intended to stop exactly at 10 and 200 needs explicit clamping or a different switching rule.\n\n**Check:** Show both colors and both direction changes over repeated cycles. Keep the center fixed, keep the radius positive and bounded, and clear the previous frame. Explain the reference\u2019s first drawn radius and both three-frame turn traces.',
 					projectLink:
 						"https://codepen.io/junilearning/pen/d0195323eaa77fa2a273961fa3df61c3",
 					solutionLink:
