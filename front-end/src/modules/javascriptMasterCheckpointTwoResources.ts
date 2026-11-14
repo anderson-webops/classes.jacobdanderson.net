@@ -179,9 +179,9 @@ export const javascriptMasterCheckpointTwoResources = [
 		courseId: "javascript-level-2-javascript-master",
 		project: "master-checkpoint-two-moves",
 		title: "Move Analyzer",
-		itemId: "javascript-level-2-javascript-master-check-in-2-curriculum-check-in-2-additional-practice-project",
+		itemId: "javascript-level-2-javascript-master-check-in-2-curriculum-javascript-level-2-javascript-master-check-in-2-practice-project",
 		workspaceItemId:
-			"javascript-level-2-javascript-master-check-in-2-curriculum-check-in-2-additional-practice-project",
+			"javascript-level-2-javascript-master-check-in-2-curriculum-javascript-level-2-javascript-master-check-in-2-practice-project",
 		version: 1,
 		role: "starter",
 		urls: [
@@ -261,9 +261,9 @@ export const javascriptMasterCheckpointTwoResources = [
 		courseId: "javascript-level-2-javascript-master",
 		project: "master-checkpoint-two-moves",
 		title: "Move Analyzer",
-		itemId: "javascript-level-2-javascript-master-check-in-2-curriculum-check-in-2-additional-practice-project",
+		itemId: "javascript-level-2-javascript-master-check-in-2-curriculum-javascript-level-2-javascript-master-check-in-2-practice-project",
 		workspaceItemId:
-			"javascript-level-2-javascript-master-check-in-2-curriculum-check-in-2-additional-practice-project",
+			"javascript-level-2-javascript-master-check-in-2-curriculum-javascript-level-2-javascript-master-check-in-2-practice-project",
 		version: 1,
 		role: "reference",
 		urls: [

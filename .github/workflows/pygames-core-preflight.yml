@@ -629,6 +629,19 @@ jobs:
           npm exec -w front-end -- vitest run test/javascript-master-checkpoint-one-workspace.spec.test.ts test/store.courses.javascript-level-2-flow.spec.test.ts test/store.courses.catalog-identities.spec.test.ts --no-file-parallelism --maxWorkers=1
           node scripts/classes-family-heavy-task.mjs -- node --test --test-concurrency=1 test/javascript-master-checkpoint-one-course-browser.test.mjs
           node scripts/classes-family-heavy-task.mjs -- node --test --test-concurrency=1 test/javascript-master-checkpoint-one-exported-browser.test.mjs
+      - name: Check out the exact corrected legacy AI references
+        if: inputs.self_study_courses == 'javascript-master-checkpoint-two'
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          repository: instruction-material/AI-Level-1
+          ref: 372bffae4417395d527ccfd69ebd2530c2072619
+          path: .ai-work/ai-legacy-depth-source
+          persist-credentials: false
+      - name: Verify all source suites including legacy depth-limit regressions
+        if: inputs.self_study_courses == 'javascript-master-checkpoint-two'
+        run: >-
+          node scripts/classes-family-heavy-task.mjs --
+          bash .ai-work/ai-legacy-depth-source/verify-course-source.sh
       - name: Verify complete second checkpoint, SQL cases and actual exported API workflows
         if: inputs.self_study_courses == 'javascript-master-checkpoint-two'
         env:
@@ -636,7 +649,7 @@ jobs:
         run: |
           node --test test/javascript-master-checkpoint-two-source.test.mjs
           python3 test/javascript-master-checkpoint-two-database.py --proof output/javascript-master-checkpoint-two-browser/database-proof.json
-          npm exec -w front-end -- vitest run test/javascript-master-checkpoint-two-workspace.spec.test.ts test/store.courses.javascript-level-2-flow.spec.test.ts test/store.courses.catalog-identities.spec.test.ts --no-file-parallelism --maxWorkers=1 --reporter=default --reporter=json --outputFile=../output/javascript-master-checkpoint-two-browser/tests.json
+          npm exec -w front-end -- vitest run test/ai-legacy-depth-import.spec.test.ts test/javascript-master-checkpoint-two-workspace.spec.test.ts test/store.courses.javascript-level-2-flow.spec.test.ts test/store.courses.catalog-identities.spec.test.ts --no-file-parallelism --maxWorkers=1 --reporter=default --reporter=json --outputFile=../output/javascript-master-checkpoint-two-browser/tests.json
           node scripts/classes-family-heavy-task.mjs -- node --test --test-concurrency=1 test/javascript-master-checkpoint-two-course-browser.test.mjs
           node scripts/classes-family-heavy-task.mjs -- node --test --test-concurrency=1 test/javascript-master-checkpoint-two-exported-browser.test.mjs
       - name: Retain source, actual exports and rendered evidence

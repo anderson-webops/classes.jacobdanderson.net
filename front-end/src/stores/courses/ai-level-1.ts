@@ -398,7 +398,7 @@ export const aiLevel1Course: RawCourse = {
 						hasReference: false
 					}),
 					projectLink:
-						"https://github.com/instruction-material/AI-Level-1/tree/b18be61c865ae45d4ab15dc1b633c1c83d50da12/FAI9-Implement-DLS"
+						"https://github.com/instruction-material/AI-Level-1/tree/372bffae4417395d527ccfd69ebd2530c2072619/FAI9-Implement-DLS"
 				}
 			],
 			supplementalProjects: [
@@ -407,14 +407,14 @@ export const aiLevel1Course: RawCourse = {
 					content:
 						"Add depth limits deliberately and observe what gets missed, what gets found, and what the algorithm spends time revisiting. This is a good lab for understanding search control rather than only search success.",
 					projectLink:
-						"https://github.com/instruction-material/AI-Level-1/tree/b18be61c865ae45d4ab15dc1b633c1c83d50da12/FAI9-Implement-DLS"
+						"https://github.com/instruction-material/AI-Level-1/tree/372bffae4417395d527ccfd69ebd2530c2072619/FAI9-Implement-DLS"
 				},
 				{
 					title: "Project: Implement IDS",
 					content:
 						"Layer repeated depth-limited searches into an iterative-deepening workflow and compare its behavior to plain DFS. Identify when the extra repeated work is worth it.",
 					projectLink:
-						"https://github.com/instruction-material/AI-Level-1/tree/b18be61c865ae45d4ab15dc1b633c1c83d50da12/FAI9-Implement-IDS"
+						"https://github.com/instruction-material/AI-Level-1/tree/372bffae4417395d527ccfd69ebd2530c2072619/FAI9-Implement-IDS"
 				},
 				{
 					title: "Project: Implement UCS",
