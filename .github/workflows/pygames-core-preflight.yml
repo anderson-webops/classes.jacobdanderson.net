@@ -478,6 +478,17 @@ jobs:
           npm ls --all --workspaces=false
           npm audit --include=optional --workspaces=false --json > ../output/javascript-hundred-squares-browser/audits/backend-full.json
           npm audit --include=optional --omit=dev --workspaces=false --json > ../output/javascript-hundred-squares-browser/audits/backend-production.json
+      - name: Verify new checkpoint and legacy import contracts before the full corpus
+        if: inputs.self_study_courses == 'javascript-master-checkpoint-two'
+        working-directory: front-end
+        run: >-
+          node ../scripts/classes-family-heavy-task.mjs --
+          npm exec -- vitest run
+          test/ai-legacy-depth-import.spec.test.ts
+          test/javascript-master-checkpoint-two-workspace.spec.test.ts
+          --no-file-parallelism --maxWorkers=1
+          --reporter=default --reporter=json
+          --outputFile=../output/javascript-master-checkpoint-two-browser/tests.json
       - name: Verify JavaScript source roles, originals, saved projects and published identities
         working-directory: front-end
         run: >-
@@ -649,7 +660,6 @@ jobs:
         run: |
           node --test test/javascript-master-checkpoint-two-source.test.mjs
           python3 test/javascript-master-checkpoint-two-database.py --proof output/javascript-master-checkpoint-two-browser/database-proof.json
-          npm exec -w front-end -- vitest run test/ai-legacy-depth-import.spec.test.ts test/javascript-master-checkpoint-two-workspace.spec.test.ts test/store.courses.javascript-level-2-flow.spec.test.ts test/store.courses.catalog-identities.spec.test.ts --no-file-parallelism --maxWorkers=1 --reporter=default --reporter=json --outputFile=../output/javascript-master-checkpoint-two-browser/tests.json
           node scripts/classes-family-heavy-task.mjs -- node --test --test-concurrency=1 test/javascript-master-checkpoint-two-course-browser.test.mjs
           node scripts/classes-family-heavy-task.mjs -- node --test --test-concurrency=1 test/javascript-master-checkpoint-two-exported-browser.test.mjs
       - name: Retain source, actual exports and rendered evidence

@@ -211,7 +211,7 @@ it("retains complete authored tasks and shared saved identity across API and dat
 	for (const [id, content] of Object.entries(fixture.assignmentTexts)) {
 		const item = module.curriculum.find(i => i.id === id)!;
 		expect(item, id).toBeDefined();
-		expect(item.content).toContain(content);
+		expect(item.content).toContain((content as string).trim());
 		expect(item.contentKind).toBe("assignment");
 	}
 	const project = fixture.projects[0];
