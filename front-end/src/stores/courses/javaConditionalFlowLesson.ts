@@ -114,7 +114,7 @@ java -ea -cp out lab.optional.OptionalChecks baseline
 \`\`\`
 
 Run Java only after compilation succeeds. Success has exit status 0; inspect \`$?\` in a POSIX shell or \`$LASTEXITCODE\` in PowerShell.
-The untouched starter compiles and baseline modes pass. Its unfinished core/optional modes intentionally fail with a TODO exception.
+The untouched starter compiles and baseline modes pass. Its unfinished core/optional modes intentionally fail with a \`TODO\` exception.
 
 After completing the core, recompile and run:
 
