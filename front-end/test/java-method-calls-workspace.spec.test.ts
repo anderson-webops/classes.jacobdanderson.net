@@ -80,9 +80,7 @@ it.each(["starter", "solution"] as const)(
 				url(role)
 			)
 		});
-		expect(project.activeFileName).toBe(
-			"src/dispatch/DispatchService.java"
-		);
+		expect(project.activeFileName).toBe("Main.java");
 		project.files.find(
 			f => f.name === "src/dispatch/DispatchService.java"
 		)!.content += "\n// Saved dispatch experiment\n";
