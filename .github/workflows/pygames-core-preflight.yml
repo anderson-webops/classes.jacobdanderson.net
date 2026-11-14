@@ -1457,7 +1457,15 @@ jobs:
         run: >-
           node scripts/classes-family-heavy-task.mjs --
           bash .ai-work/ai-studio-source/verify-course-source.sh
-      - name: Verify actual consent, edited Python execution and saved ZIPs
+      - name: Verify representative core and multi-file optional workflows first
+        env:
+          AI_STUDIO_PROJECTS: search-13,optional-05
+        run: >-
+          node scripts/classes-family-heavy-task.mjs --
+          node --test test/ai-studio-course-browser.test.mjs
+      - name: Verify the remaining 23 complete project workflows
+        env:
+          AI_STUDIO_EXCLUDE_PROJECTS: search-13,optional-05
         run: >-
           node scripts/classes-family-heavy-task.mjs --
           node --test test/ai-studio-course-browser.test.mjs

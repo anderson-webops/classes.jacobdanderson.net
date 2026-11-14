@@ -15,11 +15,37 @@ async function selectView(page, label) {
 		button.click();
 	}, label);
 }
-for (const project of allAiStudioProjects) {
+function projectKeys(value) {
+	const keys = value ? value.split(",").map(key => key.trim()) : [];
+	assert.equal(new Set(keys).size, keys.length, "Repeated AI project filter");
+	for (const key of keys)
+		assert.ok(allAiStudioProjects.some(project => project.key === key), `Unknown AI project filter: ${key}`);
+	return keys;
+}
+const included = projectKeys(process.env.AI_STUDIO_PROJECTS);
+const excluded = projectKeys(process.env.AI_STUDIO_EXCLUDE_PROJECTS);
+const selectedProjects = allAiStudioProjects.filter(project =>
+	(!included.length || included.includes(project.key)) && !excluded.includes(project.key)
+);
+assert.ok(selectedProjects.length, "The AI browser selection must contain at least one project");
+
+for (const project of selectedProjects) {
 	const file = (role, name) => fixture.files[`${project.folder}/${role}/${name}`];
 	test(`AI ${project.key}: actual consent, edited Python execution, saved continuations and ZIPs`, { timeout: 600000 }, async (t) => {
 		await runAssemblyCoreCourseWorkflow(t, {
 			kind: `ai-${project.key}`,
+			previousProject: () => ({
+				_id: `earlier-ai-${project.key}`,
+				title: "Earlier work",
+				mode: "python",
+				files: [{ name: "main.py", content: "# earlier work\n", encoding: "text" }],
+				activeFileName: "main.py",
+				courseID: fixture.courseId,
+				courseProjectKey: `${fixture.courseId}:earlier-ai-${project.key}:starter`,
+				createdAt: "2026-10-01T12:00:00.000Z",
+				updatedAt: "2026-10-01T12:00:00.000Z"
+			}),
+
 			courseID: fixture.courseId,
 			moduleID: project.moduleId,
 			coreID: project.itemId,
