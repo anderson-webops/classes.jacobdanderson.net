@@ -933,11 +933,15 @@ Print a location/CEO sentence and a products sentence for each object. All prope
 			supplementalProjects: [
 				{
 					title: "JSM6 Supplemental Project 1: My Favorite Businesses II",
-					content: `**Project target:** Extend the business data project into a richer interface with images, cards, and autocomplete. The focus is connecting object data to reusable UI rendering.
+					content: `Extend My Favorite Businesses into a searchable directory. Copy at least three business objects, retaining name, location, CEO and products. Add logo_image and display_image. This optional project practices object data, Materialize autocomplete and D3 rendering.
 
-**Build path:** Add image URLs and product data to the business objects. Render each business into a Materialize card, then configure autocomplete choices from the same business data. Selecting a business fills the page with the matching card details.
+**Build:** Complete the local starter’s business array and renderBusiness function. The included HTML/CSS, libraries and six local example images run offline. Generate autocomplete names and logos from the same array. Choosing a suggestion or submitting Show business renders one card from the selected object.
 
-**Evidence target:** The autocomplete options are generated from the data array, cards render from object properties rather than copied markup, and missing images or unknown names produce a safe fallback.`,
+**Input rules:** Trim surrounding spaces and use exact names. Hide the previous card and show “No business found.” for blank or unknown input. Render data as text. Show an image fallback if a display image fails.
+
+**Worked inputs:** Cedar Trail Outfitters → Fairhaven, Rowan Patel, Daypack/Trail Bottle/Rain Shell. Sunrise Bakery → Mapleton, Avery Kim, Sourdough/Blueberry Muffin/Cinnamon Roll. Harbor Books → Lakeside, Morgan Reed, Mystery Novel/Nature Guide/Sketchbook. These are fictional records.
+
+**Check:** Choose an autocomplete result; submit every name, then No Such Business and blank input; change a display image to images/missing.svg. The current card, clear no-match state and image fallback should remain usable without exceptions. The imported \`README.md\` and \`CASES.md\` include setup and all expected results. Save, reopen and export the completed project.`,
 					projectLink:
 						"https://codepen.io/junilearning/pen/50854534e6dccd9c7bedc0a2d01aded7",
 					solutionLink:

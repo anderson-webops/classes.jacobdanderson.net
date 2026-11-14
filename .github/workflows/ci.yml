@@ -1213,6 +1213,16 @@ jobs:
                   JAVASCRIPT_BUSINESSES_BROWSER_DIR: output/javascript-businesses-browser
               run: node scripts/classes-family-heavy-task.mjs -- node --test test/javascript-businesses-exported-browser.test.mjs
 
+            - name: Verify Business directory project consent, saved edits and actual downloads
+              env:
+                  JAVASCRIPT_BUSINESS_DIRECTORY_BROWSER_DIR: output/javascript-business-directory-browser
+              run: node scripts/classes-family-heavy-task.mjs -- node --test test/javascript-business-directory-course-browser.test.mjs
+
+            - name: Run actual Business directory downloads offline through object/product and reduced-motion cases
+              env:
+                  JAVASCRIPT_BUSINESS_DIRECTORY_BROWSER_DIR: output/javascript-business-directory-browser
+              run: node scripts/classes-family-heavy-task.mjs -- node --test test/javascript-business-directory-exported-browser.test.mjs
+
             - name: Verify Small Talk project consent, saved edits and actual downloads
               env:
                   JAVASCRIPT_SMALL_TALK_BROWSER_DIR: output/javascript-small-talk-browser
@@ -1257,6 +1267,14 @@ jobs:
               with:
                   name: javascript-businesses-workflows
                   path: output/javascript-businesses-browser/
+                  if-no-files-found: warn
+                  retention-days: 14
+            - name: Retain Business directory source, saved downloads and offline evidence
+              if: always()
+              uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+              with:
+                  name: javascript-business-directory-workflows
+                  path: output/javascript-business-directory-browser/
                   if-no-files-found: warn
                   retention-days: 14
 
