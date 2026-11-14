@@ -728,20 +728,20 @@ it.each(
 			const reviewed = modules.filter(module =>
 				isReviewedModule(id, module.title)
 			);
-			expect(reviewed).toHaveLength(5);
-			expect(reviewed.flatMap(module => module.readings)).toHaveLength(5);
+			expect(reviewed).toHaveLength(6);
+			expect(reviewed.flatMap(module => module.readings)).toHaveLength(6);
 			const activities = reviewed.flatMap(module => [
 				...module.projects,
 				...module.optional
 			]);
-			expect(activities).toHaveLength(37);
+			expect(activities).toHaveLength(45);
 			expect(
 				activities.every(
 					item => item.assignmentTextScope === "complete"
 				)
 			).toBe(true);
 			expect(activities.flatMap(item => item.selfChecks)).toHaveLength(
-				74
+				90
 			);
 		} else if (id === "java-level-3") expect(modules).toHaveLength(25);
 		else if (algebra1)
