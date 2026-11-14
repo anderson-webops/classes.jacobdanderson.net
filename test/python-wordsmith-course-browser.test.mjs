@@ -48,6 +48,17 @@ for (const classroom of [false, true]) {
 			courseID,
 			moduleID,
 			coreID,
+			previousProject: () => ({
+				_id: "earlier-wordsmith-project",
+				title: "Earlier work",
+				mode: "python",
+				files: [{ name: "main.py", content: "# earlier work\\n", encoding: "text" }],
+				activeFileName: "main.py",
+				courseID,
+				courseProjectKey: `${courseID}:earlier-wordsmith:starter`,
+				createdAt: "2026-10-01T12:00:00.000Z",
+				updatedAt: "2026-10-01T12:00:00.000Z"
+			}),
 			mode: "python",
 			sourceRepository: fixture.repository,
 			fixturePath: "./fixtures/python-wordsmith-sources.json",

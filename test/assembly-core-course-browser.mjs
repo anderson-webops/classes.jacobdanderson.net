@@ -95,9 +95,9 @@ export async function runAssemblyCoreCourseWorkflow(t, definition) {
 				(element, { role, sourceUrl }) =>
 					[...element.querySelectorAll("a.is-ide-starter")]
 						.find((link) => {
-							const source = new URL(link.href).searchParams.get(
-								"starterUrl"
-							);
+							const params = new URL(link.href).searchParams;
+							const source = params.get("starterUrl")
+								?? (params.get("classroomSource") ? `https://github.com/instruction-material/${params.get("classroomSource")}` : null);
 							return sourceUrl
 								? source === sourceUrl
 								: source?.endsWith(`/${role}`);
@@ -455,7 +455,7 @@ export async function runAssemblyCoreCourseWorkflow(t, definition) {
 					assert.equal(params.get("projectKey"), key);
 					assert.equal(params.get("mode"), mode);
 					assert.equal(
-						params.get("starterUrl"),
+						params.get("starterUrl") ?? (params.get("classroomSource") ? `https://github.com/instruction-material/${params.get("classroomSource")}` : null),
 						definition.sourceUrl?.(role)
 						?? `https://github.com/instruction-material/${sourceRepository}/tree/${fixture.revision}/${pack}/${role}`
 					);
