@@ -5,10 +5,17 @@ import process from "node:process";
 // eslint-disable-next-line test/no-import-node-test -- Actual assigned Python source workflows.
 import { test } from "node:test";
 import MarkdownIt from "markdown-it";
-import { editedAiStudioSource, aiStudioFixture as fixture, studioChecks } from "./ai-studio-browser-cases.mjs";
+import { allAiStudioProjects, editedAiStudioSource, expectedAiStudioOutput, aiStudioFixture as fixture } from "./ai-studio-browser-cases.mjs";
 import { runAssemblyCoreCourseWorkflow } from "./assembly-core-course-browser.mjs";
 
-for (const project of fixture.projects) {
+async function selectView(page, label) {
+	await page.evaluate((value) => {
+		const button = [...document.querySelectorAll(".lesson-view-toggle button")].find(el => el.textContent.trim() === value);
+		if (!button) throw new Error(`Missing course view ${value}`);
+		button.click();
+	}, label);
+}
+for (const project of allAiStudioProjects) {
 	const file = (role, name) => fixture.files[`${project.folder}/${role}/${name}`];
 	test(`AI ${project.key}: actual consent, edited Python execution, saved continuations and ZIPs`, { timeout: 600000 }, async (t) => {
 		await runAssemblyCoreCourseWorkflow(t, {
@@ -28,7 +35,7 @@ for (const project of fixture.projects) {
 			nativeInstructions: false,
 			flatFiles: true,
 			sharedFiles: [],
-			fileCount: 2,
+			fileCount: role => Object.keys(fixture.files).filter(path => path.startsWith(`${project.folder}/${role}/`)).length,
 			initialFile: "main.py",
 			primaryFile: "main.py",
 			taskFile: "README.md",
@@ -38,8 +45,9 @@ for (const project of fixture.projects) {
 			continuationIDs: [project.itemId],
 			projectKey: role => `${fixture.courseId}:${project.itemId}:${role === "starter" ? "starter" : "reference"}`,
 			beforeImport: async (page, { role, width }) => {
+				if (project.kind !== "optional") await selectView(page, "Learn");
 				const selector = `#${project.moduleId}-${project.readingId} .item-content-markdown`;
-				await page.waitForSelector(selector);
+				await page.waitForFunction(value => document.querySelector(value)?.querySelector("h2"), { timeout: 10000 }, selector);
 				const html = new MarkdownIt().render(project.readingText);
 				const expected = await page.evaluate((value) => {
 					const element = document.createElement("div");
@@ -50,7 +58,7 @@ for (const project of fixture.projects) {
 					text: element.textContent.replace(/\s+/g, " ").trim(),
 					html: element.innerHTML,
 					overflow: element.scrollWidth > element.clientWidth + 1,
-					clipped: /line-clamp/.test(getComputedStyle(element).display)
+					clipped: Number.parseInt(getComputedStyle(element).webkitLineClamp, 10) > 0
 				}));
 				assert.equal(actual.text, expected);
 				assert.equal(actual.overflow, false);
@@ -60,12 +68,16 @@ for (const project of fixture.projects) {
 				const output = join(process.env.AI_STUDIO_BROWSER_DIR ?? "output/ai-studio-browser", project.key);
 				await writeFile(join(output, `reading-${role}-${width}.json`), `${JSON.stringify({ expected, actual }, null, 2)}\n`);
 				await (await page.$(selector)).screenshot({ path: join(output, `reading-${role}-${width}.png`) });
+				if (project.kind !== "optional") {
+					await selectView(page, "Projects");
+					await page.waitForSelector(`#${project.moduleId}-${project.itemId}`);
+				}
 				return { completeWorkedReading: true, literalSearchNotation: true, textLength: actual.text.length };
 			},
 			// Original ZIPs are executed separately in the native export contract.
 			verifyRun: async () => {},
 			afterEdit: async (page) => {
-				const expected = `Studio result: ${studioChecks[project.key].result}`;
+				const expected = expectedAiStudioOutput(project);
 				await page.locator("button.run-control:not([disabled])").click();
 				await page.waitForFunction(value => document.querySelector(".output-panel")?.textContent.includes(value), { timeout: 90000 }, expected);
 				const output = await page.$eval(".output-panel", element => element.textContent);

@@ -4,7 +4,7 @@ The board is a nine-cell row-major tuple of X, O and -. X moves first. A move pl
 
 ## Worked cases
 
-With board (X,X,-,O,-,-,-,-,-), O must block at index 2. Any other move lets X complete the top row. With (X,X,-,O,O,-,X,-,-), O can win now at index 5; taking a win takes priority over blocking. For (X,-,-,-,O,-,-,-,X), O must choose an edge (index 1 under the stated tie rule) to avoid X's fork. A fork creates two winning threats, so blocking just one line on the next turn is too late.
+With board (X,X,-,-,O,-,-,-,-), O must block at index 2. Any other move lets X complete the top row. With (X,X,-,O,O,-,X,-,-), O can win now at index 5; taking a win takes priority over blocking. For (X,-,-,-,O,-,-,-,X), O must choose an edge (index 1 under the stated tie rule) to avoid X's fork. A fork creates two winning threats, so blocking just one line on the next turn is too late.
 
 Score terminal states from O's perspective: O win +1, X win -1, draw 0. At an O turn maximize successor scores; at an X turn minimize them. For the empty board the minimax value is 0, meaning perfect play draws. A score is an outcome under optimal future play, not a prediction that a human will choose perfectly.
 

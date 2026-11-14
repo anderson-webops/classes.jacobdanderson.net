@@ -109,7 +109,55 @@ it("retains seven published studio tasks while supplying concrete worked cases a
 		);
 });
 
-for (const project of fixture.projects) {
+it("preserves eighteen optional task identities with complete specific inputs and source pairs", async () => {
+	setActivePinia(createPinia());
+	useAppStore().setCurrentTutor({
+		_id: "ai-optional-tutor",
+		name: "Tutor",
+		email: "tutor@example.invalid",
+		age: 30,
+		state: "GA",
+		usersOfTutorLength: 0,
+		coursePermissions: ["ai-level-1"],
+		editTutors: false,
+		saveEdit: "Save"
+	});
+	const course = await useCoursesStore().loadCourseById("ai-level-1");
+	const records = [];
+	for (const project of fixture.optionalProjects) {
+		const starter = prefix + project.folder + "/starter";
+		const module = course!.modules.find(m =>
+			m.supplementalProjects.some(i => i.projectLink === starter)
+		)!;
+		expect(module, project.key).toBeTruthy();
+		const item = module.supplementalProjects.find(
+			i => i.projectLink === starter
+		)!;
+		const authored = aiLevel1Course.modules
+			.flatMap(m => m.supplementalProjects)
+			.find(i => i.projectLink === starter)!;
+		expect(item.solutionLink).toBe(prefix + project.folder + "/solution");
+		expect(item.contentKind).toBe("assignment");
+		expect(item.content).toBe(authored.content.trim());
+		expect(item.content).toContain("## Expected result");
+		expect(item.content).not.toContain("produces a notebook or script");
+		records.push({
+			key: project.key,
+			moduleId: module.id,
+			itemId: item.id,
+			readingId: item.id,
+			readingText: item.content
+		});
+	}
+	expect(new Set(records.map(r => r.itemId)).size).toBe(18);
+	if (process.env.AI_OPTIONAL_CATALOG_PROOF_FILE)
+		writeFileSync(
+			process.env.AI_OPTIONAL_CATALOG_PROOF_FILE,
+			JSON.stringify(records, null, 2) + "\n"
+		);
+});
+
+for (const project of [...fixture.projects, ...fixture.optionalProjects]) {
 	for (const role of ["starter", "solution"]) {
 		it(
 			"imports, saves, reopens and exports exact " +
@@ -121,10 +169,13 @@ for (const project of fixture.projects) {
 				vi.stubGlobal("crypto", webcrypto);
 				const folder = project.folder + "/" + role;
 				const expected = Object.fromEntries(
-					["main.py", "README.md"].map(name => [
-						name,
-						fixture.files[folder + "/" + name]
-					])
+					[
+						"main.py",
+						"README.md",
+						...(fixture.files[folder + "/studio.py"]
+							? ["studio.py"]
+							: [])
+					].map(name => [name, fixture.files[folder + "/" + name]])
 				);
 				const requests: string[] = [];
 				vi.stubGlobal(
@@ -186,7 +237,7 @@ for (const project of fixture.projects) {
 					prefix + folder,
 					"data"
 				);
-				expect(imported).toHaveLength(2);
+				expect(imported).toHaveLength(Object.keys(expected).length);
 				for (const file of imported) {
 					expect(file.content).toBe(expected[file.name].content);
 					expect(hash(file.content)).toBe(expected[file.name].sha256);
@@ -210,14 +261,16 @@ for (const project of fixture.projects) {
 				)!;
 				expect(reopened.files).toEqual(savedProject.files);
 				const archive = unzipSync(await createProjectArchive(reopened));
-				expect(Object.keys(archive)).toHaveLength(2);
+				expect(Object.keys(archive)).toHaveLength(
+					Object.keys(expected).length
+				);
 				for (const file of reopened.files) {
 					const name = Object.keys(archive).find(
 						n => n === file.name || n.endsWith("/" + file.name)
 					)!;
 					expect(strFromU8(archive[name])).toBe(file.content);
 				}
-				expect(requests).toHaveLength(3);
+				expect(requests).toHaveLength(Object.keys(expected).length + 1);
 			}
 		);
 	}

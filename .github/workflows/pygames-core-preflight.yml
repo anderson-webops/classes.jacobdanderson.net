@@ -1450,7 +1450,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           repository: instruction-material/AI-Level-1
-          ref: 7048f14701ab053c843319f8673a95d4759bf37c
+          ref: b18be61c865ae45d4ab15dc1b633c1c83d50da12
           path: .ai-work/ai-studio-source
           persist-credentials: false
       - name: Execute all seven independent source regression suites

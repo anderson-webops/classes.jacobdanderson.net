@@ -24,3 +24,28 @@ export function applyAiStudioReadings(course: RawCourse, source: RawCourse) {
 		item.preserveInstructions = true;
 	}
 }
+
+export function applyAiOptionalAssignments(
+	course: RawCourse,
+	source: RawCourse
+) {
+	const authored = source.modules
+		.flatMap(module => module.supplementalProjects)
+		.filter(item => item.preserveInstructions && item.preserveAssignment);
+	for (const original of authored) {
+		const item = course.modules
+			.flatMap(module => module.supplementalProjects)
+			.find(candidate => candidate.projectLink === original.projectLink);
+		if (!item) {
+			throw new Error(
+				`Missing AI optional assignment: ${original.title}`
+			);
+		}
+		Object.assign(item, {
+			content: original.content.trim(),
+			contentKind: "assignment",
+			preserveInstructions: true,
+			preserveAssignment: true
+		});
+	}
+}

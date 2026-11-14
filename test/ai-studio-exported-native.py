@@ -58,11 +58,11 @@ def execute(directory, out, label, stdin=""):
     return result
 
 
-def unpack(archive, target):
+def unpack(archive, target, expected_names):
     with zipfile.ZipFile(archive) as bundle:
         names = bundle.namelist()
-        assert len(names) == 2, names
-        assert {Path(name).name for name in names} == {"main.py", "README.md"}
+        assert len(names) == len(expected_names), names
+        assert {Path(name).name for name in names} == expected_names
         files = {}
         for name in names:
             assert not Path(name).is_absolute() and ".." not in Path(name).parts
@@ -88,7 +88,8 @@ def main():
             raw = (args.source / path).read_bytes()
             assert sha(raw) == file["sha256"] and raw.decode() == file["content"], path
     results = []
-    for project in FIXTURE["projects"]:
+    projects = FIXTURE["projects"] + FIXTURE["optionalProjects"]
+    for project in projects:
         directory = args.browser / project["key"]
         proof = json.loads((directory / ("data-ai-" + project["key"] + "-course-proof.json")).read_text())
         profiles = proof["profiles"]
@@ -114,7 +115,8 @@ def main():
                 assert sha(archive.read_bytes()) == profile[kind + "ArchiveSha256"]
                 with tempfile.TemporaryDirectory(prefix="ai-studio-export-") as name:
                     target = Path(name)
-                    files = unpack(archive, target)
+                    expected_names = {Path(path).name for path in FIXTURE["files"] if path.startswith(project["folder"] + "/" + role + "/")}
+                    files = unpack(archive, target, expected_names)
                     if kind == "exact":
                         for basename, raw in files.items():
                             expected = FIXTURE["files"][project["folder"] + "/" + role + "/" + basename]
@@ -123,8 +125,11 @@ def main():
                         reference = FIXTURE["files"][project["folder"] + "/solution/main.py"]["content"]
                         prefix = reference.split('if __name__ == "__main__":\n')[0]
                         assert files["main.py"].decode().startswith(prefix)
-                        expected_readme = FIXTURE["files"][project["folder"] + "/" + role + "/README.md"]
-                        assert sha(files["README.md"]) == expected_readme["sha256"]
+                        for basename, raw in files.items():
+                            if basename == "main.py":
+                                continue
+                            expected = FIXTURE["files"][project["folder"] + "/" + role + "/" + basename]
+                            assert sha(raw) == expected["sha256"]
                     stdin = "bad\n1\n2\n3\n4\n5\n6\n7\n8\n9\n" if project["key"] == "tic-tac-toe" else "bad\n0\n4\n1\n2\n3\n"
                     result = execute(target, out, label + "-" + kind, stdin)
                     if kind == "exact" and role == "starter":
@@ -132,16 +137,20 @@ def main():
                     else:
                         assert result["exitCode"] == 0 and "Traceback" not in result["stderr"], result
                         if kind == "edited":
-                            assert result["stdout"].strip() == "Studio result: " + EXPECTED[project["key"]], result
+                            expected_output = project["expectedEditedOutput"] if project.get("kind") == "optional" else "Studio result: " + EXPECTED[project["key"]]
+                            assert result["stdout"].strip() == expected_output, result
+                        elif project.get("kind") == "optional":
+                            assert result["stdout"].strip() == project["originalOutput"], result
                         elif project["key"] in ("tic-tac-toe", "marble-game"):
                             assert "Winner:" in result["stdout"], result
                     results.append(dict(project=project["key"], role=role, width=width, kind=kind,
                                         archiveSha256=sha(archive.read_bytes()), exitCode=result["exitCode"],
                                         stdout=result["stdout"], stderr=result["stderr"]))
-    assert len(results) == 56
-    args.proof.write_text(json.dumps(dict(source=FIXTURE["revision"], actualArchives=56,
+    expected_count = len(projects) * 8
+    assert len(results) == expected_count
+    args.proof.write_text(json.dumps(dict(source=FIXTURE["revision"], actualArchives=expected_count,
                                           nativeExecutions=results), indent=2) + "\n")
-    print("Verified 56 actual AI ZIP exports, including 28 edited native executions.")
+    print(f"Verified {expected_count} actual AI ZIP exports, including {expected_count // 2} edited native executions.")
 
 
 if __name__ == "__main__":
