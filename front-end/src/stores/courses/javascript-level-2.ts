@@ -1127,11 +1127,16 @@ The first drawn positions include (1,1) and (481,181). For the circle that begin
 				},
 				{
 					title: "JSM8 Project 1: Circles Collide",
-					content: `**Project target:** Animate two circles moving toward each other and detect the moment they collide. This project connects motion state with a geometric condition.
+					preserveInstructions: true,
+					content: `Accept the selected role import in the site IDE. Open index.html to run exported files without a server. The 800-by-500 canvas begins with black circles at (50,250) and (500,250), both radius 20. Every 10 ms, move the first center one unit right and the second one unit left. They pass through each other; this assignment detects contact rather than simulating an elastic bounce.
 
-**Build path:** Store each circle's center, radius, velocity, and color. Update positions on a timed loop or animation frame, calculate center distance, and change fill color once the distance is less than or equal to the combined radii.
+Complete updateCircles and circlesTouch in the starter. The drawing loop is supplied. Calculate dx=a.x-b.x,dy=a.y-b.y and radius=a.size+b.size. Pythagoras gives distance squared=dx*dx+dy*dy. Contact or overlap means distance squared <= radius*radius. Change both circles to blue while true and black when separated. The size property is the radius.
 
-**Evidence target:** The circles change color at the collision boundary, not before they visibly meet and not after they pass through each other. Adjusting speed or radius still produces correct collision timing.`,
+Initially the distance is450. After 204 ticks it is42: black. Tick 205 gives centers255 and295, distance40: blue at exact contact. Tick 225 gives the same center: blue. Tick 245 touches again after passing;tick 246 separates and is black.
+
+The original reference uses strict horizontal overlap on a shared row and logs every tick. This complete reference applies the lesson's inclusive contact rule on both axes and keeps the original canvas, colors and movement. Different y values and unequal radii work. Faster motion may skip an entire contact interval between samples; continuous collision detection is a separate extension.
+
+Save a working checkpoint and demonstrate separated,touching,overlapping and separated-again states. CASES.md includes exact inputs and outputs.`,
 					projectLink:
 						"https://codepen.io/junilearning/pen/d4a36001e0d9b6e58c640ca0f280284a",
 					solutionLink:
@@ -1139,11 +1144,16 @@ The first drawn positions include (1,1) and (481,181). For the circle that begin
 				},
 				{
 					title: "JSM8 Project 2: Rectangular Collision",
-					content: `**Project target:** Generate rectangles and detect whether they overlap. The core idea is that rectangles collide when their x-ranges and y-ranges overlap at the same time.
+					preserveInstructions: true,
+					content: `Accept the selected role import in the site IDE. Open index.html to run exported files without a server. Draw two random rectangles on the 550-by-500 canvas and display whether they touch or overlap. Reload for a new pair. The starter supplies random generation,drawing and result display;complete rectanglesTouch.
 
-**Build path:** Create rectangle objects with x, y, width, height, and color. Draw each rectangle, calculate left/right/top/bottom edges, and compare edges to detect overlap. Display a message showing whether the current rectangles collide.
+Each rectangle stores x,y,width,height and color. Generate width and height as integers 100..299 first. Choose x in 50..canvas.width-50-width and y in 50..canvas.height-50-height,including both endpoints. This leaves a 50-unit margin and keeps every edge visible. RGB components are integers 0..254,matching the original palette.
 
-**Evidence target:** The collision result matches visible overlap, touching edges are handled according to a documented rule, and random rectangles can be regenerated without breaking the check.`,
+Compute left=x,right=x+width,top=y,bottom=y+height. The x ranges touch/overlap if a.right>=b.left AND a.left<=b.right. Apply the same test vertically,and combine all four comparisons with AND. Edge and corner contact count as collision;separation on either axis means false. No rotation or negative dimensions are used.
+
+For a=(50,50,100,100) and b=(150,75,100,100),the rectangles touch at x150: true. Move b.x to151:false. For b=(75,150,100,100),they touch horizontally along y150:true. The original reference uses strict overlap and can clip randomly generated rectangles;this version follows the original task's touching rule and bounds both shapes.
+
+Show overlapping,edge-touching,corner-touching,contained and separated cases from CASES.md. Save the chosen fixed inputs when explaining a result.`,
 					projectLink:
 						"https://codepen.io/junilearning/pen/1c22a392782c8551073c92fe3e825849",
 					solutionLink:
@@ -1151,11 +1161,16 @@ The first drawn positions include (1,1) and (481,181). For the circle that begin
 				},
 				{
 					title: "JSM8 Project 3: The Bouncy Ball",
-					content: `**Project target:** Simulate a bouncing ball with velocity, gravity, friction, and wall collisions. The project turns simple physics ideas into repeated state updates.
+					preserveInstructions: true,
+					content: `Accept the selected role import in the site IDE. Open index.html to run exported files without a server. The 480-by-320 canvas starts with a green ball at(240,290),radius 15,dx2 anddy-5. Each 10 ms tick applies gravity 0.08,then moves by velocity,handles collisions and draws. Damping is 0.8;stopSpeed is 0.1. Complete updateBall in the supplied drawing framework.
 
-**Build path:** Store position and velocity on both axes. Add gravity to vertical velocity each frame, update position, reverse velocity when the ball hits the ground or walls, and apply friction or damping so bounces gradually change.
+A center stays within x 15..465 and y 15..305. After movement,clamp an outward-moving ball to the crossed wall and reverse the perpendicular velocity,multiplying by 0.8. At the floor also multiply dx by 0.8. Positive dy moves downward. A top hit also loses speed,as the original assignment requires for every wall.
 
-**Evidence target:** The ball accelerates downward, bounces at boundaries, loses or preserves energy according to the chosen damping value, and does not sink through the floor or disappear past the canvas edges.`,
+When the new floor rebound magnitude is below 0.1,set dy=0 and grounded=true. A grounded ball stays at y305,receives no gravity and loses horizontal speed by 0.8 per tick. When its horizontal magnitude is below 0.1,set dx=dy=0 and resting=true. Return immediately on future resting ticks. This stable ground/rest state prevents gravity from restarting a stopped ball.
+
+The original reference applies gravity after its zero-velocity condition and omits top-wall damping. This implementation preserves the initial canvas,green ball,velocities,gravity and damping while making update order,bounds and stable rest explicit.
+
+Show an ascent,a damped rebound,the floor and eventual rest. CASES.md gives exact next-state checks and changed-speed boundary cases. Keyboard controls and scoring are optional extensions.`,
 					projectLink:
 						"https://codepen.io/junilearning/pen/1e97468ca0197dcf6ca6d933e175b6fb",
 					solutionLink:

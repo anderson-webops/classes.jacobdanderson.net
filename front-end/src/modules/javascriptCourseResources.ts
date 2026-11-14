@@ -6,6 +6,7 @@ import { javascriptBusinessDirectoryResources } from "@/modules/javascriptBusine
 import { javascriptBusinessesResources } from "@/modules/javascriptBusinessesResources";
 import { javascriptCheckpointResources } from "@/modules/javascriptCheckpointResources";
 import { javascriptCoastalCruiseResources } from "@/modules/javascriptCoastalCruiseResources";
+import { javascriptCollisionResources } from "@/modules/javascriptCollisionResources";
 import { javascriptCombiningResources } from "@/modules/javascriptCombiningResources";
 import { javascriptConditionalsResources } from "@/modules/javascriptConditionalsResources";
 import { javascriptDrawingResources } from "@/modules/javascriptDrawingResources";
@@ -94,7 +95,8 @@ const roles: readonly CourseRole[] = [
 	...javascriptWhichCardResources,
 	...javascriptPaddleResources,
 	...javascriptCoastalCruiseResources,
-	...javascriptJugglingPaddleResources
+	...javascriptJugglingPaddleResources,
+	...javascriptCollisionResources
 ];
 
 export function javascriptCourseResource(
