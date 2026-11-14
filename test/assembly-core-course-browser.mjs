@@ -93,9 +93,11 @@ export async function runAssemblyCoreCourseWorkflow(t, definition) {
 			const href = await page.$eval(
 				card,
 				(element, { role, sourceUrl }) =>
-					[...element.querySelectorAll("a.is-ide-starter")]
+					[...element.querySelectorAll("a[href]")]
 						.find((link) => {
-							const params = new URL(link.href).searchParams;
+							const url = new URL(link.href);
+							if (url.pathname !== "/ide") return false;
+							const params = url.searchParams;
 							const source = params.get("starterUrl")
 								?? (params.get("classroomSource") ? `https://github.com/instruction-material/${params.get("classroomSource")}` : null);
 							return sourceUrl
@@ -108,7 +110,7 @@ export async function runAssemblyCoreCourseWorkflow(t, definition) {
 			if (href) {
 				return {
 					href,
-					selector: `${card} a.is-ide-starter[href=${JSON.stringify(href)}]`
+					selector: `${card} a[href=${JSON.stringify(href)}]`
 				};
 			}
 		}
