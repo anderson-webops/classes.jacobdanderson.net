@@ -1022,11 +1022,18 @@ The first drawn positions include (1,1) and (481,181). For the circle that begin
 				},
 				{
 					title: "JSM7 Project 2: Which Card",
-					content: `**Project target:** Extend the Colorful Cards project so clicking a card reports which card was selected. The project combines canvas geometry, event coordinates, and array data.
+					preserveInstructions: true,
+					content: `**Project target:** Add a click handler to the five-card drawing so each selected card logs its color. The local starter supplies the drawing prerequisite and leaves the handler unfinished.
 
-**Build path:** Reuse the card data from the previous project, add a canvas click listener, convert the click coordinates, and compare the click point with each card's rectangle. Print the selected color or a clear message when the click misses every card.
+**Drawing inputs:** Use \`<canvas id="my-canvas"></canvas>\`, its 2D context and a 1200-by-800 drawing size. The colors, in order, are green, red, blue, yellow and cyan. Card i has x = i * 200, y = 150, width = 150 and height = 100. Left edges are 0, 200, 400, 600 and 800, with 50-unit gaps.
 
-**Evidence target:** Clicking inside each card reports the correct color, clicking the gap between cards does not produce a false match, and changing card size or spacing only requires updating the card data or constants.`,
+**Build path:** Read \`canvas.getBoundingClientRect()\` and convert x = (event.clientX - rect.left) * canvas.width / rect.width and y = (event.clientY - rect.top) * canvas.height / rect.height. This handles offsets, scrolling and responsive scaling. Match both coordinates against the drawing geometry: left/top included, right/bottom excluded. Log the matched color once; gap or background clicks log no color.
+
+**Worked cases:** Centers (75,200), (275,200), (475,200), (675,200) and (875,200) select the palette in order. (1,151) selects green; (150,200), (175,200) and (75,260) select none. Repeat centers and gaps after resizing or scrolling.
+
+**Source correction:** The original reference shifts its hit boxes by 10 units and uses client coordinates directly. Match the actual rectangles and convert coordinates while preserving its palette, row and console behavior.
+
+**Local files and evidence:** Accept the selected source import in the site IDE. Open index.html to run the exported files without a server. README.md gives the setup and mapping; CASES.md supplies fixed cases. The viewer mirrors console colors in its Click log. Show correct centers, edges, gaps and background results on a narrow or scrolled page.`,
 					projectLink:
 						"https://codepen.io/junilearning/pen/88140a4225b8cfb5468e91fbccfaa100",
 					solutionLink:

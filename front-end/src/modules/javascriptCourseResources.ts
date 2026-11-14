@@ -33,6 +33,8 @@ import { javascriptSmallTalkResources } from "@/modules/javascriptSmallTalkResou
 import { javascriptSnowflakeResources } from "@/modules/javascriptSnowflakeResources";
 import { javascriptWeatherResources } from "@/modules/javascriptWeatherResources";
 
+import { javascriptWhichCardResources } from "@/modules/javascriptWhichCardResources";
+
 const courseId = "javascript-level-1-javascript-superstar";
 const base = "/course-assets/javascript-level-1/";
 const masterBase = "/course-assets/javascript-level-2/";
@@ -85,7 +87,8 @@ const roles: readonly CourseRole[] = [
 	...javascriptBusinessesResources,
 	...javascriptBusinessDirectoryResources,
 	...javascriptHundredSquaresResources,
-	...javascriptRefactoryResources
+	...javascriptRefactoryResources,
+	...javascriptWhichCardResources
 ];
 
 export function javascriptCourseResource(
