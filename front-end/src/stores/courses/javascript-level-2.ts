@@ -950,11 +950,18 @@ Print a location/CEO sentence and a products sentence for each object. All prope
 				},
 				{
 					title: "JSM6 Supplemental Project 2: Circle March",
-					content: `**Project target:** Animate a grid of circles moving together across the canvas. The project practices arrays of objects, repeated drawing, and coordinated state updates.
+					preserveInstructions: true,
+					content: `Create an array of circle objects and animate them diagonally from the top left toward the bottom right. Store x, y, radius and color in each object; wrap each coordinate at its own canvas boundary.
 
-**Build path:** Store each circle as an object with position, radius, color, and velocity. Draw the full grid each frame, then update every circle's position before the next frame. Add wraparound or boundary logic so the animation remains on screen.
+**Setup:** Add \`<canvas id="canvas" width="500" height="200"></canvas>\` in HTML. In JavaScript, obtain that element with \`document.getElementById("canvas")\` and its drawing context with \`getContext("2d")\`. The original starter has empty HTML/CSS and a JavaScript comment area. No external library is needed.
 
-**Evidence target:** The grid contains multiple circles generated from data, every circle updates through the same loop, and the animation can run for many frames without drifting into an unusable state.`,
+**Build:** Draw each object as a filled circle using its properties. In one animation loop, clear the previous frame, update every circle’s coordinates, apply horizontal and vertical wrapping, draw all circles and schedule the next callback with requestAnimationFrame. Start the loop once.
+
+**Worked reference:** The canvas is 500 by 200. Nested loops create 25 columns and 10 rows: x = column × 20, y = row × 20, radius = 5. Each of the 250 circles receives an RGB color once during setup. Every frame adds 1 to both x and y. When x is greater than 500, subtract 500; when y is greater than 200, subtract 200. The reference uses fixed increments; it has no velocity property.
+
+The first drawn positions include (1,1) and (481,181). For the circle that begins at (480,180), frame 20 draws (500,200) and frame 21 draws (1,1). The strict greater-than rules retain the boundary coordinate for one frame. A circle may be partly clipped at an edge because its radius is 5.
+
+**Check:** Use the worked inputs to trace both coordinate updates and both wrap conditions. Verify the whole array is drawn each frame, colors remain attached to their circles, the old frame is cleared, and only one callback chain runs through repeated wraps.`,
 					projectLink:
 						"https://codepen.io/junilearning/pen/7ac4e84b6d1ce34caa732bc0945c6255",
 					solutionLink:
