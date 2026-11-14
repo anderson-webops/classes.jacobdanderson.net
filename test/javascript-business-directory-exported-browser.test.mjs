@@ -222,12 +222,32 @@ test(
 									<= innerWidth + 1,
 								scrollWidth:
 									document.documentElement.scrollWidth,
-								viewport: innerWidth
+								viewport: innerWidth,
+								offenders: [
+									...document.querySelectorAll(
+										"main, h1, form, input, button, article, .autocomplete-content, img, p"
+									)
+								]
+									.map(element => ({
+										tag: element.tagName,
+										id: element.id,
+										width: element.getBoundingClientRect()
+											.width,
+										right: element.getBoundingClientRect()
+											.right
+									}))
+									.filter(
+										element =>
+											element.right > innerWidth + 1
+									)
 							};
 							document.body.style.zoom = "";
 							return result;
 						});
-						assert.ok(zoomedReflow.accepted, label);
+						assert.ok(
+							zoomedReflow.accepted,
+							`${label}: ${JSON.stringify(zoomedReflow)}`
+						);
 						assert.deepEqual(errors, []);
 						assert.equal(outsideRequests, 0);
 						const screenshot = join(

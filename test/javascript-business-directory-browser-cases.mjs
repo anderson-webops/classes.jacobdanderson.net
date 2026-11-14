@@ -176,6 +176,11 @@ export async function inspectBusinessDirectory(page, resource, kind, url) {
 		),
 		true
 	);
+	await page.waitForFunction(() =>
+		[...document.querySelectorAll(".autocomplete-content")].every(
+			element => getComputedStyle(element).display === "none"
+		)
+	);
 	return {
 		cases,
 		completeLocalImagesAndLibraries: true,

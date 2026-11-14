@@ -98,8 +98,8 @@ export const javascriptBusinessDirectoryResources = [
 			{
 				name: "styles.css",
 				path: "business-directory-v1/starter/styles.css.txt",
-				byteLength: 543,
-				sha256: "23cbad8738e7789ee97123847413aec17b6512eac2808a7e8437bab7d5da22db"
+				byteLength: 736,
+				sha256: "75f65a51f3ed72b72031d9ebf4248324d913bf1e3961f9f09aca17c0bb1d4df4"
 			},
 			{
 				name: "vendor/d3.min.js",
@@ -220,8 +220,8 @@ export const javascriptBusinessDirectoryResources = [
 			{
 				name: "styles.css",
 				path: "business-directory-v1/reference/styles.css.txt",
-				byteLength: 543,
-				sha256: "23cbad8738e7789ee97123847413aec17b6512eac2808a7e8437bab7d5da22db"
+				byteLength: 736,
+				sha256: "75f65a51f3ed72b72031d9ebf4248324d913bf1e3961f9f09aca17c0bb1d4df4"
 			},
 			{
 				name: "vendor/d3.min.js",
