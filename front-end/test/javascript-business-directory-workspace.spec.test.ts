@@ -159,7 +159,7 @@ for (const role of ["learner", "instructor"] as const) {
 			const item = module.supplementalProjects.find(
 				i => i.id === fixture.itemId
 			)!;
-			expect(item.learningPath).toBe("optional");
+			expect(item.learningPath).toBe("choice");
 			expect(item.title).toBe(
 				"JSM6 Supplemental Project 1: My Favorite Businesses II"
 			);
