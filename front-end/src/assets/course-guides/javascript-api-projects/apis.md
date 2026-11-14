@@ -1,6 +1,6 @@
 API requests are asynchronous because the browser must wait for another service to respond. An API supplies data through a request. These projects use HTTP GET: the browser asks for a resource and receives a response. The response has a status, headers and a body. JSON represents values such as objects, arrays, strings and numbers; receiving JSON does not guarantee that its fields match the application.
 
-## Wait for the result
+## Worked request
 
 `fetch` returns a promise. A promise describes work that may finish later or fail. `await` waits for that result inside an `async` function. Parsing the response body is another asynchronous operation. Without the wait, the next line receives a promise instead of the requested data.
 
@@ -22,6 +22,8 @@ async function showLiveJoke() {
 ```
 
 `try` handles the success path. A rejected request or a thrown validation error moves control into `catch`. A `finally` block runs after either outcome, so it can re-enable a loading button. The complete project wraps loading in that structure.
+
+Trace a valid one-joke array through the example: requestJson waits for the HTTP response, readJson parses the body, and normalizeJoke selects the first array element. The returned data record supplies both paragraphs to renderJoke. Loading finishes with one setup and its paired punchline. For an empty array, normalizeJoke throws before rendering; catch displays the problem and the previous joke stays visible. The caller's finally block restores the loading control in both cases.
 
 ## Identify the shape
 
