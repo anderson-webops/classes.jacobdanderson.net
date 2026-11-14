@@ -90,7 +90,7 @@ def main():
     results = []
     for project in FIXTURE["projects"]:
         directory = args.browser / project["key"]
-        proof = json.loads((directory / ("python-ai-" + project["key"] + "-course-proof.json")).read_text())
+        proof = json.loads((directory / ("data-ai-" + project["key"] + "-course-proof.json")).read_text())
         profiles = proof["profiles"]
         assert len(profiles) == 4
         widths = {profile["width"] for profile in profiles}

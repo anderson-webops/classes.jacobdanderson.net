@@ -16,7 +16,7 @@ for (const project of fixture.projects) {
 			courseID: fixture.courseId,
 			moduleID: project.moduleId,
 			coreID: project.itemId,
-			mode: "python",
+			mode: "data",
 			sourceRepository: fixture.repository,
 			pack: project.folder,
 			fixturePath: "./fixtures/ai-studio-sources.json",

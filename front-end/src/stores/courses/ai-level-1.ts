@@ -718,7 +718,7 @@ export const aiLevel1Course: RawCourse = {
 				{
 					title: "Canonical Variants for Game AI",
 					content:
-						"Use `FAI7-Updated-Tic-Tac-Toe-AI` as the main optional advanced Tic-Tac-Toe follow-up and keep `FAI7-Unbeatable-Tic-Tac-Toe-AI-1` as an archive duplicate rather than a separate public requirement. Do the same for the marble-game branch by using the clean playable variant and hiding the `COPY` folder."
+						"Compare eager game-tree construction with cached Tic-Tac-Toe evaluation and bottom-up marble evaluation. Use timing and candidate-score logs to account for memory, repeated states, and runtime. The updated Tic-Tac-Toe example supplies a separate optional strategy comparison after the core studio."
 				},
 				{
 					title: "How to Use the Extra Repo Folders",

@@ -11,6 +11,7 @@ import {
 	createPythonIdeProject,
 	loadLocalPythonProjectsAsync,
 	loadPythonIdeStarterFilesFromGitHub,
+	pythonIdeModeForCourseId,
 	saveLocalPythonProjects
 } from "@/modules/pythonIde";
 import { useCoursesStore } from "@/stores/courses";
@@ -36,6 +37,7 @@ afterEach(async () => {
 });
 
 it("retains seven published studio tasks while supplying concrete worked cases and distinct role actions", async () => {
+	expect(pythonIdeModeForCourseId("ai-level-1")).toBe("data");
 	setActivePinia(createPinia());
 	useAppStore().setCurrentTutor({
 		_id: "ai-studio-tutor",
@@ -161,7 +163,7 @@ for (const project of fixture.projects) {
 				);
 				const imported = await loadPythonIdeStarterFilesFromGitHub(
 					prefix + folder,
-					"python"
+					"data"
 				);
 				expect(imported).toHaveLength(2);
 				for (const file of imported) {
@@ -174,7 +176,7 @@ for (const project of fixture.projects) {
 				expect(code.includes("NotImplementedError")).toBe(
 					role === "starter"
 				);
-				const savedProject = createPythonIdeProject("python", {
+				const savedProject = createPythonIdeProject("data", {
 					courseID: "ai-level-1",
 					files: imported
 				});
