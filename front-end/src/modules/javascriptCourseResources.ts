@@ -25,6 +25,7 @@ import { javascriptNewsResources } from "@/modules/javascriptNewsResources";
 import { javascriptOperatorsResources } from "@/modules/javascriptOperatorsResources";
 import { javascriptRestaurantResources } from "@/modules/javascriptRestaurantResources";
 import { javascriptShopResources } from "@/modules/javascriptShopResources";
+import { javascriptSmallTalkResources } from "@/modules/javascriptSmallTalkResources";
 import { javascriptSnowflakeResources } from "@/modules/javascriptSnowflakeResources";
 import { javascriptWeatherResources } from "@/modules/javascriptWeatherResources";
 
@@ -75,7 +76,8 @@ const roles: readonly CourseRole[] = [
 	...javascriptMasterCanvasResources,
 	...javascriptMasterArraysResources,
 	...javascriptLyricsResources,
-	...javascriptWeatherResources
+	...javascriptWeatherResources,
+	...javascriptSmallTalkResources
 ];
 
 export function javascriptCourseResource(

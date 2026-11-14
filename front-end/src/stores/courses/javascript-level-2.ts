@@ -826,11 +826,17 @@ Record predicted and observed scores for both policies in CASES.md. Keep the nul
 				},
 				{
 					title: "JSM6 Project 1: Small Talk",
-					content: `**Project target:** Build a small comparison program that stores profile data in objects and responds based on shared properties. The project practices prompts, object construction, property access, and ternary expressions.
+					contentKind: "assignment",
+					preserveInstructions: true,
+					preserveAssignment: true,
+					ideImport: true,
+					content: `Create exactly two declared variables, \`aboutMe\` and \`aboutYou\`, both objects. Give both at least five corresponding properties, including string, integer and boolean values. Assign prompted input directly to the second object's properties. Keep working values in those properties; use ternary expressions for simple comparison messages.
 
-**Build path:** Create one object with fixed profile data and another object from prompted input. Compare at least three properties such as favorite color, hobby, or preferred food. Use short ternary expressions for simple match messages, then print a friendly summary.
+The supplied path compares six fictional profile fields: name, city, age, school, favoriteSubject and pineappleOnPizza. Use Riley, Oakville, 20, Example School, coding and true for the fixed profile. Request the other profile's fields in that order, then display a summary with \`textContent\`. A custom profile may retain the original five-property minimum and document corresponding examples.
 
-**Evidence target:** The prompted object contains the expected keys, comparisons are case-normalized when appropriate, and the output changes when one shared property matches versus when none match.`,
+Trim text and compare city, school and subject without case differences. Cancel or blank input skips that field and continues. A completed age is a whole number from 0 through 120. Normalize pizza answers yes/no to boolean values. Report other age or pizza answers and mark the field skipped. The imported \`README.md\` supplies the complete input rules and worked cases; \`script.js\` retains the original blank assignment area.
+
+**Complete when:** The two objects have corresponding keys and correctly typed completed values; each comparison changes for matching versus differing input. Show a matching run, a differing run, whitespace/case input, invalid input, and cancellation at each question without stopping later questions or displaying \`null\`/\`NaN\`. Explain why a skipped field differs from age zero or a false pizza preference.`,
 					projectLink:
 						"https://codepen.io/junilearning/pen/c8c02ee2db01eeb4c5f408d9a1f58815",
 					solutionLink:
