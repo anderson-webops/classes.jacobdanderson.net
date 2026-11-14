@@ -46,7 +46,7 @@ for (const group of ["core", "optional"]) {
 				editFiles: edits,
 				primaryFile: primary,
 				taskFile: "README.md",
-				initialFile: primary,
+				initialFile: "src/dispatch/DispatchService.java",
 				fileCount: 18,
 				expectedFile: (selected, name) => fixture.files[`${unit.pack}/${selected}/${name}`],
 				editContent: ({ original, filename, width }) => {
