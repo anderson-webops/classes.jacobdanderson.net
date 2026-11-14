@@ -84,16 +84,12 @@ for (const project of projects) {
 					["index.html", "styles.css", "script.js"].includes(filename)
 						? editedApiProjectSource(select(role), filename, original)
 						: undefined,
-				afterImport: async (page, { role, width, saved }) => {
-					const guide = saved.files.find(file => file.name === "README.md").content;
-					for (const token of ["index.html", "CASES.md"]) assert.ok(guide.includes(token));
-					if (project !== "programming-jokes") return { completeApiProjectInputs: true };
-					const ideURL = page.url();
+				beforeImport: async (page, { role, width }) => {
+					if (project !== "programming-jokes") return;
 					const card = `#${fixture.moduleId}-${fixture.reading.id}`;
-					await page.goto(
-						new URL(`/courses${card}`, ideURL).href,
-						{ waitUntil: "domcontentloaded" }
-					);
+					const learn = ".lesson-view-toggle button:nth-child(3)";
+					await page.locator(learn).click();
+					await page.waitForSelector(`${learn}[aria-pressed='true']`);
 					await page.waitForSelector(`${card} .item-content-markdown`);
 					const reading = await page.$eval(
 						`${card} .item-content-markdown`,
@@ -118,9 +114,15 @@ for (const project of projects) {
 						),
 						fullPage: true
 					});
-					await page.goto(ideURL, { waitUntil: "domcontentloaded" });
-					await page.waitForSelector("select[aria-label='Active project file']");
-					return { completeApiProjectInputs: true, fullReadingRendered: reading };
+					const projects = ".lesson-view-toggle button:nth-child(1)";
+					await page.locator(projects).click();
+					await page.waitForSelector(`${projects}[aria-pressed='true']`);
+					return { fullReadingRendered: reading };
+				},
+				afterImport: async (_page, { saved }) => {
+					const guide = saved.files.find(file => file.name === "README.md").content;
+					for (const token of ["index.html", "CASES.md"]) assert.ok(guide.includes(token));
+					return { completeApiProjectInputs: true };
 				},
 				taskFile: "README.md",
 				continuationIDs: [selected[0].itemId],

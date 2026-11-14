@@ -463,6 +463,10 @@ export async function runAssemblyCoreCourseWorkflow(t, definition) {
 					);
 					assert.equal(requests.length, 0);
 					assert.equal(directoryRequests.length, 0);
+					const lessonEvidence = await definition.beforeImport?.(
+						page,
+						{ role, width }
+					);
 					catalog = false;
 					if (definition.sameTab) {
 						await page.$eval(core.selector, (link) => {
@@ -750,6 +754,7 @@ export async function runAssemblyCoreCourseWorkflow(t, definition) {
 						width,
 						revision: fixture.revision,
 						directoryRequests,
+						...(lessonEvidence ? { lessonEvidence } : {}),
 						...(workflowEvidence ? { workflowEvidence } : {}),
 						...(editingEvidence ? { editingEvidence } : {}),
 						...(definition.localSource
