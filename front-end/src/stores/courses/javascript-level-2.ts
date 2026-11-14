@@ -911,11 +911,10 @@ Print a location/CEO sentence and a products sentence for each object. All prope
 				},
 				{
 					title: "Animations in the Canvas",
-					content: `**Concept path:** Canvas animation works by repeatedly clearing the previous frame, updating state, and drawing the next frame. \`requestAnimationFrame\` schedules drawing in sync with the browser.
-
-**Practice targets:** Create an object with position and velocity, update its position each frame, clear the canvas with \`clearRect\`, and redraw the object. Keep update logic separate from drawing logic so movement can be changed without rewriting the visual code.
-
-**Evidence target:** The animation moves smoothly, old frames do not leave trails unless trails are intentional, and pausing or changing velocity affects future frames predictably.`,
+					contentKind: "reading",
+					preserveInstructions: true,
+					content:
+						"The original worked example animates one black square on an 800-by-500 canvas. The square is 50 units wide and high, with its top at y = 50. Its state is stored in x and direction; move returns x + 1 when the direction is right and x - 1 otherwise.\n\nEach moveSquare call clears the whole canvas, draws at the current x, updates x, changes direction when the updated position reaches 0 or 500, and schedules the next call with requestAnimationFrame. Calling moveSquare once starts one animation chain.\n\n**Worked trace:** The first call draws at x = 0, then updates x to 1. A call drawing at 499 updates x to 500 and selects left. The next call draws at 500 and updates to 499. The later call drawing at 1 while moving left updates to 0 and selects right; the next draw is at 0. The turning positions are 0 and 500, even though the canvas extends to 800.\n\nClearing before every draw removes the previous square. Updating after drawing determines which position appears in the current frame. This example moves one unit per callback.",
 					projectLink: "https://codepen.io/junilearning/pen/zYBjpZE"
 				},
 				{
