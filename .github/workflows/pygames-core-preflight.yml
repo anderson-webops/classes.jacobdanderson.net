@@ -537,6 +537,14 @@ jobs:
         run: |
           node scripts/classes-family-heavy-task.mjs -- node --test test/javascript-coastal-cruise-course-browser.test.mjs
           node scripts/classes-family-heavy-task.mjs -- node --test test/javascript-coastal-cruise-exported-browser.test.mjs
+      - name: Verify Juggling Paddle roles and radius-aware bounce cases
+        run: npm exec -w front-end -- vitest run test/javascript-juggling-paddle-workspace.spec.test.ts --no-file-parallelism --maxWorkers=1
+      - name: Verify actual Juggling Paddle imports and offline game flow
+        env:
+          JAVASCRIPT_JUGGLING_PADDLE_BROWSER_DIR: output/javascript-juggling-paddle-browser
+        run: |
+          node scripts/classes-family-heavy-task.mjs -- node --test test/javascript-juggling-paddle-course-browser.test.mjs
+          node scripts/classes-family-heavy-task.mjs -- node --test test/javascript-juggling-paddle-exported-browser.test.mjs
       - name: Retain source, actual exports and rendered evidence
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
@@ -548,6 +556,7 @@ jobs:
             output/javascript-which-card-browser/
             output/javascript-paddle-browser/
             output/javascript-coastal-cruise-browser/
+            output/javascript-juggling-paddle-browser/
           if-no-files-found: error
           retention-days: 14
 

@@ -15,6 +15,7 @@ import { javascriptFirstModuleResources } from "@/modules/javascriptFirstModuleR
 import { javascriptGridLayoutResources } from "@/modules/javascriptGridLayoutResources";
 import { javascriptHtmlCssResources } from "@/modules/javascriptHtmlCssResources";
 import { javascriptHundredSquaresResources } from "@/modules/javascriptHundredSquaresResources";
+import { javascriptJugglingPaddleResources } from "@/modules/javascriptJugglingPaddleResources";
 import { javascriptLoopsResources } from "@/modules/javascriptLoopsResources";
 import { javascriptLyricsResources } from "@/modules/javascriptLyricsResources";
 import { javascriptMasterArraysResources } from "@/modules/javascriptMasterArraysResources";
@@ -92,7 +93,8 @@ const roles: readonly CourseRole[] = [
 	...javascriptRefactoryResources,
 	...javascriptWhichCardResources,
 	...javascriptPaddleResources,
-	...javascriptCoastalCruiseResources
+	...javascriptCoastalCruiseResources,
+	...javascriptJugglingPaddleResources
 ];
 
 export function javascriptCourseResource(

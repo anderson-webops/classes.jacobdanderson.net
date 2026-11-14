@@ -1083,11 +1083,16 @@ The first drawn positions include (1,1) and (481,181). For the circle that begin
 				},
 				{
 					title: "JSM7 Supplemental Project 2: Juggling Paddle",
-					content: `**Project target:** Combine paddle controls with a falling ball to create a small juggling challenge. The project introduces collision checks between moving objects.
+					preserveInstructions: true,
+					content: `**Project target:** Extend the working paddle with a red ball that falls, bounces upward when it hits the paddle, turns downward at its upper endpoint, and falls off the screen on a miss. The local starter supplies the preceding paddle setup.
 
-**Build path:** Animate the ball with vertical velocity, control the paddle with keyboard input, and check whether the ball overlaps the paddle when it reaches paddle height. Reverse or reset the ball on a successful hit; end or mark a miss when the ball falls below the screen.
+**Model:** Use a 500-by-500 canvas. The black paddle starts at (200,300), is 100 by 20 and moves 10 units per frame. The ball starts at (250,100), has radius 10, fixed x=250 and vertical speed 1 unit per frame. isFalling controls its direction; its upward endpoint is center y=50. This uses fixed-speed motion. Scoring, lives and restart are optional remixes.
 
-**Evidence target:** The ball bounces only when it overlaps the paddle, misses are detected reliably, and score or lives update based on hit and miss events.`,
+**Build path:** Move the bounded paddle from held-key state. During descent, use the actual paddle rectangle and ball radius to find the contact surface, then detect crossing from oldY to nextY. A centered hit occurs at y=290 because 290+10=300. Clamp to that contact and turn upward. During ascent, turn downward when nextY reaches or crosses 50. A missed ball continues below the canvas; a ball already below the paddle does not bounce back. Update state before drawing.
+
+**Worked checks:** From y=289 while falling, the next frame is y=290 and rising. From y=50.5 while rising, the next frame is y=50 and falling. Moving the paddle to x=0 causes a miss. README.md derives the rounded-corner contact formula and CASES.md covers changed radius, paddle position and step size.
+
+**Local files and evidence:** Accept the selected source import in the site IDE. Open index.html to run the exported files without a server. Focus the canvas before using Left or Right. Show a hit, upward travel, the downward return at y=50 and a miss that leaves the screen; explain both direction changes and the circle-radius check.`,
 					projectLink:
 						"https://codepen.io/junilearning/pen/9c003b58d7ca7770e49f9243dbecb00f",
 					solutionLink:
