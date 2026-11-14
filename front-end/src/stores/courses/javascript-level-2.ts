@@ -852,11 +852,52 @@ Trim text and compare city, school and subject without case differences. Cancel 
 				},
 				{
 					title: "JSM6 Project 2: My Favorite Businesses",
-					content: `**Project target:** Model favorite businesses as objects and render a readable summary for each one. The project combines arrays, objects, loops, and template strings.
+					contentKind: "assignment",
+					preserveInstructions: true,
+					preserveAssignment: true,
+					ideImport: true,
+					content: `Create an array containing at least three business objects. Each object needs a name plus at least three other properties; one must be a products array containing at least three entries. Iterate over the objects and their product arrays. Use one or two \`printToScreen()\` calls per business to describe every property in one or two sentences.
 
-**Build path:** Create an array of business objects with properties such as name, category, location, rating, and products. Loop through the array and build a template-string summary for each business. Include a nested products array when a business sells more than one item.
+Use these fictional records for the supplied four-key path. Another dataset may keep the original minimums and document corresponding expected results.
 
-**Evidence target:** The page displays every business from the data array, adding a new business object adds a new rendered summary, and product lists render without hard-coded output for a specific business.`,
+\`\`\`json
+[
+  {
+    "name": "Cedar Trail Outfitters",
+    "location": "Fairhaven",
+    "CEO": "Rowan Patel",
+    "products": [
+      "Daypack",
+      "Trail Bottle",
+      "Rain Shell"
+    ]
+  },
+  {
+    "name": "Sunrise Bakery",
+    "location": "Mapleton",
+    "CEO": "Avery Kim",
+    "products": [
+      "Sourdough",
+      "Blueberry Muffin",
+      "Cinnamon Roll"
+    ]
+  },
+  {
+    "name": "Harbor Books",
+    "location": "Lakeside",
+    "CEO": "Morgan Reed",
+    "products": [
+      "Mystery Novel",
+      "Nature Guide",
+      "Sketchbook"
+    ]
+  }
+]
+\`\`\`
+
+Print a location/CEO sentence and a products sentence for each object. All property values are nonempty strings except the products array. The imported \`README.md\` and \`CASES.md\` supply complete inputs and six expected paragraphs. The blank starter retains the original assignment and supplied display helper.
+
+**Complete when:** All three business descriptions include every property and all products in array order. Adding a fourth valid object produces eight paragraphs without another hard-coded print call; changing a property or product changes its corresponding summary. Explain which loop visits businesses and which visits products. Verify the supplied helper's text remains readable on mobile and at 200% zoom, and markup characters display literally.`,
 					projectLink:
 						"https://codepen.io/junilearning/pen/bcc6527a03ffb7ca42b705ff3f3910dd",
 					solutionLink:

@@ -1193,6 +1193,16 @@ jobs:
                   JAVASCRIPT_WEATHER_BROWSER_DIR: output/javascript-weather-browser
               run: node scripts/classes-family-heavy-task.mjs -- node --test test/javascript-weather-exported-browser.test.mjs
 
+            - name: Verify Businesses project consent, saved edits and actual downloads
+              env:
+                  JAVASCRIPT_BUSINESSES_BROWSER_DIR: output/javascript-businesses-browser
+              run: node scripts/classes-family-heavy-task.mjs -- node --test test/javascript-businesses-course-browser.test.mjs
+
+            - name: Run actual Businesses downloads offline through object/product and reduced-motion cases
+              env:
+                  JAVASCRIPT_BUSINESSES_BROWSER_DIR: output/javascript-businesses-browser
+              run: node scripts/classes-family-heavy-task.mjs -- node --test test/javascript-businesses-exported-browser.test.mjs
+
             - name: Verify Small Talk project consent, saved edits and actual downloads
               env:
                   JAVASCRIPT_SMALL_TALK_BROWSER_DIR: output/javascript-small-talk-browser
@@ -1228,6 +1238,15 @@ jobs:
               with:
                   name: javascript-small-talk-workflows
                   path: output/javascript-small-talk-browser/
+                  if-no-files-found: warn
+                  retention-days: 14
+
+            - name: Retain Businesses source, saved downloads and offline evidence
+              if: always()
+              uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+              with:
+                  name: javascript-businesses-workflows
+                  path: output/javascript-businesses-browser/
                   if-no-files-found: warn
                   retention-days: 14
 
