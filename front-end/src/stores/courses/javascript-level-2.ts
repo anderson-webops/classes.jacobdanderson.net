@@ -388,11 +388,11 @@ Record the prompts, accepted words and expected scores in CASES.md. Check all-co
 					preserveInstructions: true,
 					preserveAssignment: true,
 					ideImport: true,
-					content: `**Concept path:** SVG describes shapes as elements in the page, and D3 helps create or update those elements from JavaScript data. Unlike canvas, SVG shapes remain as individual DOM nodes that can be selected and styled.
+					content: `SVG describes shapes as elements in the page, and D3 helps create or update those elements from JavaScript data. Unlike canvas, SVG shapes remain as individual DOM nodes that can be selected and styled.
 
-**Practice targets:** Recreate the original 100 Squares project with D3: begin with one 50-by-50 square, make a row of 10, then use nested loops for 10 rows and 10 columns. Use a 1000-by-1000 SVG. Set each square's x and y positions to \`50 + column * 75\` and \`50 + row * 75\`. Choose red, green, and blue channel values from 1 through 255 and form a complete \`rgb(r, g, b)\` color string. Scale the SVG to fit narrower screens while retaining its coordinates.
+Recreate the original 100 Squares project with D3: begin with one 50-by-50 square, make a row of 10, then use nested loops for 10 rows and 10 columns. Use a 1000-by-1000 SVG. Set each square's x and y positions to \`50 + column * 75\` and \`50 + row * 75\`. Choose red, green, and blue channel values from 1 through 255 and form a complete \`rgb(r, g, b)\` color string. Scale the SVG to fit narrower screens while retaining its coordinates.
 
-**Evidence target:** The SVG contains exactly 100 rectangles with 10 distinct x positions and 10 distinct y positions. The first square begins at (50, 50), the last at (725, 725), and every square is 50-by-50. Rerunning changes colors while preserving the grid; narrow screens retain the full drawing.
+**Check:** The SVG contains exactly 100 rectangles with 10 distinct x positions and 10 distinct y positions. The first square begins at (50, 50), the last at (725, 725), and every square is 50-by-50. Rerunning changes colors while preserving the grid; narrow screens retain the full drawing.
 
 The imported \`README.md\` includes SVG setup and a worked one-square example. \`CASES.md\` supplies fixed coordinate and color checks.`,
 					projectLink:
