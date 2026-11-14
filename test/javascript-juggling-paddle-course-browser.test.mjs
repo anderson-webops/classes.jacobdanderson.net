@@ -86,8 +86,8 @@ for (const project of projects) {
 					).content;
 					for (const token of [
 						"500",
-						"ArrowLeft",
-						"400",
+						"isFalling",
+						"contactY",
 						"CASES.md"
 					]) {
 						assert.ok(
