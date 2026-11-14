@@ -117,7 +117,7 @@ describe("Design Patterns in Java Part 2 learner flow", () => {
 		expect(optionTitles).toHaveLength(79);
 		for (const title of [
 			"Core Project: Code Smells and Safe Refactoring Workflow",
-			"DPR5 Simplifying Conditional Expressions: Core Project",
+			"Core Project: Simplifying Conditional Expressions",
 			"DPR10 Capstone Refactoring Studio: Core Project",
 			"Refactoring Clinic 11: Core Project",
 			"Refactoring Clinic 12: Core Project",
