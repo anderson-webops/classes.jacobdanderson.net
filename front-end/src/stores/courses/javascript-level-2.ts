@@ -1031,8 +1031,6 @@ The first drawn positions include (1,1) and (481,181). For the circle that begin
 
 **Worked cases:** Centers (75,200), (275,200), (475,200), (675,200) and (875,200) select the palette in order. (1,151) selects green; (150,200), (175,200) and (75,260) select none. Repeat centers and gaps after resizing or scrolling.
 
-**Source correction:** The original reference shifts its hit boxes by 10 units and uses client coordinates directly. Match the actual rectangles and convert coordinates while preserving its palette, row and console behavior.
-
 **Local files and evidence:** Accept the selected source import in the site IDE. Open index.html to run the exported files without a server. README.md gives the setup and mapping; CASES.md supplies fixed cases. The viewer mirrors console colors in its Click log. Show correct centers, edges, gaps and background results on a narrow or scrolled page.`,
 					projectLink:
 						"https://codepen.io/junilearning/pen/88140a4225b8cfb5468e91fbccfaa100",
