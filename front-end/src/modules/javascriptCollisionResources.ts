@@ -51,8 +51,8 @@ export const javascriptCollisionResources = [
 			{
 				name: "styles.css",
 				path: "circles-collide-v1/starter/styles.css.txt",
-				byteLength: 152,
-				sha256: "67a1914a6408cd6ca6e710dbc6f0712a5b8c3dd6b95fdcaf95f1d180e761e65d"
+				byteLength: 184,
+				sha256: "23a3bd98c35e9cc9f1e1e9a0d6f3c1479d34d69693c21cca1d5591adbac157bf"
 			}
 		]
 	},
@@ -108,8 +108,8 @@ export const javascriptCollisionResources = [
 			{
 				name: "styles.css",
 				path: "circles-collide-v1/reference/styles.css.txt",
-				byteLength: 152,
-				sha256: "67a1914a6408cd6ca6e710dbc6f0712a5b8c3dd6b95fdcaf95f1d180e761e65d"
+				byteLength: 184,
+				sha256: "23a3bd98c35e9cc9f1e1e9a0d6f3c1479d34d69693c21cca1d5591adbac157bf"
 			}
 		]
 	},
@@ -165,8 +165,8 @@ export const javascriptCollisionResources = [
 			{
 				name: "styles.css",
 				path: "rectangle-collision-v1/starter/styles.css.txt",
-				byteLength: 152,
-				sha256: "67a1914a6408cd6ca6e710dbc6f0712a5b8c3dd6b95fdcaf95f1d180e761e65d"
+				byteLength: 184,
+				sha256: "23a3bd98c35e9cc9f1e1e9a0d6f3c1479d34d69693c21cca1d5591adbac157bf"
 			}
 		]
 	},
@@ -222,8 +222,8 @@ export const javascriptCollisionResources = [
 			{
 				name: "styles.css",
 				path: "rectangle-collision-v1/reference/styles.css.txt",
-				byteLength: 152,
-				sha256: "67a1914a6408cd6ca6e710dbc6f0712a5b8c3dd6b95fdcaf95f1d180e761e65d"
+				byteLength: 184,
+				sha256: "23a3bd98c35e9cc9f1e1e9a0d6f3c1479d34d69693c21cca1d5591adbac157bf"
 			}
 		]
 	},
@@ -279,8 +279,8 @@ export const javascriptCollisionResources = [
 			{
 				name: "styles.css",
 				path: "bouncy-ball-v1/starter/styles.css.txt",
-				byteLength: 152,
-				sha256: "67a1914a6408cd6ca6e710dbc6f0712a5b8c3dd6b95fdcaf95f1d180e761e65d"
+				byteLength: 184,
+				sha256: "23a3bd98c35e9cc9f1e1e9a0d6f3c1479d34d69693c21cca1d5591adbac157bf"
 			}
 		]
 	},
@@ -336,8 +336,8 @@ export const javascriptCollisionResources = [
 			{
 				name: "styles.css",
 				path: "bouncy-ball-v1/reference/styles.css.txt",
-				byteLength: 152,
-				sha256: "67a1914a6408cd6ca6e710dbc6f0712a5b8c3dd6b95fdcaf95f1d180e761e65d"
+				byteLength: 184,
+				sha256: "23a3bd98c35e9cc9f1e1e9a0d6f3c1479d34d69693c21cca1d5591adbac157bf"
 			}
 		]
 	}

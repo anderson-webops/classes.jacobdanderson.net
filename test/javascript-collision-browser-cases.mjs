@@ -9,7 +9,7 @@ export function editedCollisionSource(resource, filename) {
 
 	if (filename === "index.html") return source.replace(`<h1>${resource.title}</h1>`, `<h1>Saved ${resource.title}</h1>`);
 
-	if (filename === "styles.css") return `${source}\\ncanvas { outline: 3px solid #334155; }\\n`;
+	if (filename === "styles.css") return `${source}\ncanvas { outline: 3px solid #334155; }\n`;
 
 	if (filename === "script.js") {
 		const complete = fixture.files[resource.project].reference[filename];
@@ -168,7 +168,10 @@ export async function inspectCollision(page, resource, kind, url, width) {
 	}
 	assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
 
-	if (kind === "edited")assert.equal(await page.$eval("h1", e => e.textContent), `Saved ${resource.title}`);
+	if (kind === "edited") {
+		assert.equal(await page.$eval("h1", e => e.textContent), `Saved ${resource.title}`);
+		assert.equal(await page.$eval("canvas", c => getComputedStyle(c).outlineWidth), "3px");
+	}
 
 	return { complete, observed };
 }
