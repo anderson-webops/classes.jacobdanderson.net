@@ -464,6 +464,11 @@ export async function runAssemblyCoreCourseWorkflow(t, definition) {
 					assert.equal(requests.length, 0);
 					assert.equal(directoryRequests.length, 0);
 					catalog = false;
+					if (definition.sameTab) {
+						await page.$eval(core.selector, (link) => {
+							link.target = "_self";
+						});
+					}
 					await page.locator(core.selector).click();
 					await page.waitForSelector(
 						"[data-testid='ide-route-import-confirm']"
@@ -648,6 +653,11 @@ export async function runAssemblyCoreCourseWorkflow(t, definition) {
 							key
 						);
 						catalog = false;
+						if (definition.sameTab) {
+							await page.$eval(trace.selector, (link) => {
+								link.target = "_self";
+							});
+						}
 						await page.locator(trace.selector).click();
 						await page.waitForSelector(".cm-content");
 						assert.equal(

@@ -73,6 +73,7 @@ for (const classroom of [false, true]) {
 					assert.equal(sha(dictionary), file.sha256);
 				}
 			},
+			sameTab: true,
 			githubDirectory: true,
 			allowPythonRuntime: true,
 			flatFiles: true,
