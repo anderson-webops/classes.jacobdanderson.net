@@ -68,7 +68,8 @@ function isReviewedModule(id: string, title: string) {
 			"DPR1 Code Smells and Safe Refactoring Workflow",
 			"DPR2 Composing Methods",
 			"DPR3 Moving Features Between Objects",
-			"DPR4 Organizing Data"
+			"DPR4 Organizing Data",
+			"DPR5 Simplifying Conditional Expressions"
 		].includes(title);
 	return true;
 }
@@ -76,7 +77,7 @@ const cases = [
 	{
 		id: "design-patterns-in-java-part-2",
 		source: designPatternsInJavaPart2Course,
-		readings: 4,
+		readings: 5,
 		additions: []
 	},
 	{
@@ -726,20 +727,20 @@ it.each(
 			const reviewed = modules.filter(module =>
 				isReviewedModule(id, module.title)
 			);
-			expect(reviewed).toHaveLength(4);
-			expect(reviewed.flatMap(module => module.readings)).toHaveLength(4);
+			expect(reviewed).toHaveLength(5);
+			expect(reviewed.flatMap(module => module.readings)).toHaveLength(5);
 			const activities = reviewed.flatMap(module => [
 				...module.projects,
 				...module.optional
 			]);
-			expect(activities).toHaveLength(30);
+			expect(activities).toHaveLength(37);
 			expect(
 				activities.every(
 					item => item.assignmentTextScope === "complete"
 				)
 			).toBe(true);
 			expect(activities.flatMap(item => item.selfChecks)).toHaveLength(
-				60
+				74
 			);
 		} else if (id === "java-level-3") expect(modules).toHaveLength(25);
 		else if (algebra1)
@@ -904,7 +905,7 @@ it.each(
 							id === "design-patterns-in-java"
 								? "Complete primary course: ten teaching units, applied studios and three reference appendices. All 134 published identities covered by 32 complete readings, 102 activities and 204 input/answer case views per role/width profile."
 								: id === "design-patterns-in-java-part-2"
-									? "DPR1 through DPR4 only: four complete readings, thirty activities and sixty input/answer case views per role/width profile. All 159 published course identities checked; the other refactoring units and clinics remain outside this teaching/runtime acceptance."
+									? "DPR1 through DPR5: five complete readings, thirty-seven activities and seventy-four input/answer case views per role/width profile. All 159 published course identities checked; the other refactoring units and clinics remain outside this teaching/runtime acceptance."
 									: id === "java-level-3"
 										? "AJ4 only: one reading, two core projects, three optional tasks and ten input/response views per profile. All 217 course identities checked; other Java units are outside this teaching and runtime acceptance."
 										: id ===
