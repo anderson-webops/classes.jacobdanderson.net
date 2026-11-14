@@ -91,6 +91,19 @@ for (const project of projects) {
 					await page.locator(learn).click();
 					await page.waitForSelector(`${learn}[aria-pressed='true']`);
 					await page.waitForSelector(`${card} .item-content-markdown`);
+					await page.waitForFunction(
+						(selector, expectedHTML) => {
+							const element = document.querySelector(selector);
+							if (!element) return false;
+							const expected = document.createElement("div");
+							expected.innerHTML = expectedHTML;
+							const normalize = text => text.replace(/\s+/gu, " ").trim();
+							return normalize(element.textContent) === normalize(expected.textContent);
+						},
+						{},
+						`${card} .item-content-markdown`,
+						readingHTML
+					);
 					const reading = await page.$eval(
 						`${card} .item-content-markdown`,
 						(element, expectedHTML) => {
