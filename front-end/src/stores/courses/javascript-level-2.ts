@@ -995,11 +995,18 @@ The first drawn positions include (1,1) and (481,181). For the circle that begin
 				},
 				{
 					title: "JSM7 Project 1: Refactory",
-					content: `**Project target:** Refactor a working starter into smaller helper functions without changing visible behavior. The purpose is to improve structure while preserving correctness.
+					preserveInstructions: true,
+					content: `**Project target:** Refactor the working widget factory into helper functions while keeping the same two reports. The original HTML and CSS panels are empty; the results are JavaScript console objects.
 
-**Build path:** Identify repeated blocks, name the shared job, extract parameters for the values that change, and replace repeated code with helper calls. Run the program after each extraction so regressions are easy to locate.
+**Inputs and expected results:** A heavy widget has name "heavy" and weight 500; a standard widget has name "standard" and weight 100. The first report contains two separate heavy widget objects and totalWeight 1000. The second contains three separate standard widget objects and totalWeight 300. Each report has a widgets array and totalWeight number. Preserve report order, widget order, names, weights and totals.
 
-**Evidence target:** The final output matches the starter behavior, repeated code is removed, and each helper name communicates its purpose without needing to inspect the full body.`,
+**Build path:** Run the working starter and record both reports. Extract a helper that creates a new widget from a model's name and weight. Extract an assembly helper that accepts a model and count, creates a fresh report, calls the widget helper once per loop iteration, pushes each new widget and accumulates its weight, then returns the report. Replace the two copied factory blocks with calls for two heavy widgets and three standard widgets. Returning a report lets the caller decide when to log or reuse it.
+
+**Worked check:** Two heavy widgets weigh 500 + 500 = 1000; three standard widgets weigh 100 + 100 + 100 = 300. A zero-count call returns an empty widgets array and totalWeight 0. Each call creates its own report and each produced widget is a separate object; editing one produced widget must preserve the model and its neighbors.
+
+**Local files:** Open the selected source in the site IDE after accepting the import. Open index.html to run the exported files without a server. README.md explains the files and CASES.md supplies the complete expected reports. The local report viewer displays the same logged objects on the page; script.js contains the factory work.
+
+**Completion evidence:** Compare the starter's and refactored program's two reports by their data. JSON object property order may differ; array order and every value must match. Show one additional model/count call without copying another assembly loop, and explain which helper creates a widget and which helper assembles a report.`,
 					projectLink:
 						"https://codepen.io/junilearning/pen/3a1383fc8a60d0ff0f55419c9b4940fe",
 					solutionLink:

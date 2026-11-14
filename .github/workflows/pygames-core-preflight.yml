@@ -505,12 +505,22 @@ jobs:
         run: |
           node scripts/classes-family-heavy-task.mjs -- node --test test/javascript-hundred-squares-course-browser.test.mjs
           node scripts/classes-family-heavy-task.mjs -- node --test test/javascript-hundred-squares-exported-browser.test.mjs
+      - name: Verify Refactory source roles, both catalog roles and saved workspace exports
+        run: npm exec -w front-end -- vitest run test/javascript-refactory-workspace.spec.test.ts --no-file-parallelism --maxWorkers=1
+      - name: Verify Refactory consent, saved edits and actual offline report exports
+        env:
+          JAVASCRIPT_REFACTORY_BROWSER_DIR: output/javascript-refactory-browser
+        run: |
+          node scripts/classes-family-heavy-task.mjs -- node --test test/javascript-refactory-course-browser.test.mjs
+          node scripts/classes-family-heavy-task.mjs -- node --test test/javascript-refactory-exported-browser.test.mjs
       - name: Retain source, actual exports and rendered evidence
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: javascript-hundred-squares-source-workflows
-          path: output/javascript-hundred-squares-browser/
+          path: |
+            output/javascript-hundred-squares-browser/
+            output/javascript-refactory-browser/
           if-no-files-found: error
           retention-days: 14
 
