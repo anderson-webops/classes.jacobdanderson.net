@@ -5,6 +5,7 @@ import { javascriptBasicLayoutResources } from "@/modules/javascriptBasicLayoutR
 import { javascriptBusinessDirectoryResources } from "@/modules/javascriptBusinessDirectoryResources";
 import { javascriptBusinessesResources } from "@/modules/javascriptBusinessesResources";
 import { javascriptCheckpointResources } from "@/modules/javascriptCheckpointResources";
+import { javascriptCoastalCruiseResources } from "@/modules/javascriptCoastalCruiseResources";
 import { javascriptCombiningResources } from "@/modules/javascriptCombiningResources";
 import { javascriptConditionalsResources } from "@/modules/javascriptConditionalsResources";
 import { javascriptDrawingResources } from "@/modules/javascriptDrawingResources";
@@ -90,7 +91,8 @@ const roles: readonly CourseRole[] = [
 	...javascriptHundredSquaresResources,
 	...javascriptRefactoryResources,
 	...javascriptWhichCardResources,
-	...javascriptPaddleResources
+	...javascriptPaddleResources,
+	...javascriptCoastalCruiseResources
 ];
 
 export function javascriptCourseResource(

@@ -1066,11 +1066,16 @@ The first drawn positions include (1,1) and (481,181). For the circle that begin
 			supplementalProjects: [
 				{
 					title: "JSM7 Supplemental Project 1: Coastal Cruise",
-					content: `**Project target:** Model a cruise registration system with helper functions that manage passenger data and ship capacity.
+					preserveInstructions: true,
+					content: `**Project target:** Use seven helper functions to register named passengers in numbered seats until a ship is full. Set maxSeats to a positive whole number, initially 2. Each seat is a separate {name:"",open:true} object.
 
-**Build path:** Store seats or rooms in arrays, then write helpers to check whether space remains, register a passenger, remove or reject invalid entries, and print a manifest. Keep capacity checks separate from display formatting.
+**Helper contracts:** populateSeats creates the seat array. isOpen checks a valid zero-based seat index. registerSeat validates the name and index, rejects occupied seats without overwriting them, and returns whether registration succeeded. getNameAndNum prompts for a name and a one-based seat number, or returns null on Cancel. isShipFull checks whether every seat is occupied. printShip logs passengers in seat order. fillShip coordinates requests until full or cancelled, then prints a full ship's manifest.
 
-**Evidence target:** Full ships reject additional passengers, manifests match the stored passenger data, and helper functions can be tested with small sample ships before running the full scenario.`,
+**Input checks:** Trim names and reject empty values. Accept only integer seat numbers from 1 through maxSeats; convert to a zero-based index once before registration. Invalid requests preserve all seats and allow another attempt. Cancelling either prompt ends the run without announcing a full ship.
+
+**Worked check:** Ada/1 and Lin/2 produce "Seat 1: Ada" then "Seat 2: Lin". Trying Eve/1 after Ada/1 rejects the occupied seat and retains Ada. With maxSeats 3, enter Grace/3, Ada/1 and Lin/2; print in seat order 1,2,3.
+
+**Local files and evidence:** Accept the selected source import in the site IDE. Open index.html to run the exported files without a server. README.md explains every helper and CASES.md gives complete input traces. Show a full ship, duplicate-seat rejection, invalid input, cancellation and a changed capacity; explain how the helpers call each other.`,
 					projectLink:
 						"https://codepen.io/junilearning/pen/13e9d8e0ad56ecbaff7933d0e063d682",
 					solutionLink:
