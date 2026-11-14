@@ -4,6 +4,7 @@ import { javascriptAnimationResources } from "@/modules/javascriptAnimationResou
 import { javascriptBasicLayoutResources } from "@/modules/javascriptBasicLayoutResources";
 import { javascriptBusinessDirectoryResources } from "@/modules/javascriptBusinessDirectoryResources";
 import { javascriptBusinessesResources } from "@/modules/javascriptBusinessesResources";
+import { javascriptCanvasGamesResources } from "@/modules/javascriptCanvasGamesResources";
 import { javascriptCheckpointResources } from "@/modules/javascriptCheckpointResources";
 import { javascriptCoastalCruiseResources } from "@/modules/javascriptCoastalCruiseResources";
 import { javascriptCollisionResources } from "@/modules/javascriptCollisionResources";
@@ -96,7 +97,8 @@ const roles: readonly CourseRole[] = [
 	...javascriptPaddleResources,
 	...javascriptCoastalCruiseResources,
 	...javascriptJugglingPaddleResources,
-	...javascriptCollisionResources
+	...javascriptCollisionResources,
+	...javascriptCanvasGamesResources
 ];
 
 export function javascriptCourseResource(

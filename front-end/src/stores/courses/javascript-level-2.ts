@@ -1231,11 +1231,14 @@ Show an ascent,a damped rebound,the floor and eventual rest. CASES.md gives exac
 				},
 				{
 					title: "JSM9 Project 1: Falling Skies",
-					content: `**Project target:** Build a falling-object game where the player dodges or catches objects. The main challenge is coordinating spawn timing, movement, collision checks, and score updates inside one game loop.
+					preserveInstructions: true,
+					content: `The blue 30-by-60 player starts at (260,400) on a 550-by-500 canvas. Left and right move eight pixels per simulation tick and clamp the entire rectangle inside the canvas. After a three-second countdown, radius-15 circles fall eight pixels per tick, with a new circle every ten ticks. The score increases once per two seconds of survival. The simulation uses 60 ticks per second, independent of display refresh rate.
 
-**Build path:** Create player state, falling-object state, keyboard or mouse controls, and a loop that updates positions before drawing. Spawn new objects on a timer or frame count, remove off-screen objects, and update score or lives when collisions occur.
+Complete circleTouchesRectangle and stepGame in script.js. Clamp the circle center to the rectangle's nearest point. Compare squared distance to radius squared; equality is contact. Check every circle before declaring the player safe. Remove all circles beyond the bottom without skipping adjacent entries. A hit changes the state to lost once and freezes play. Restart creates a fresh countdown. Hold the arrow keys or the on-screen direction controls; releasing focus clears held input.
 
-**Evidence target:** Objects fall consistently, player controls remain responsive, collisions affect score or lives exactly once per event, and the game has a visible end or restart state.`,
+Trace a harmless first circle followed by a circle at the player's center: the second circle must end play. A circle centered at (245,400) exactly touches the player's left top corner; (246,386) is outside its radius despite overlapping bounding boxes. Review CASES.md, then compare the complete reference only after attempting both functions.
+
+Accept the selected starter or reference import in the site IDE. README.md contains the full assignment and CASES.md supplies the boundary checks. Open index.html without a server. Save edits,export the ZIP and reopen the saved project to compare the same files.`,
 					projectLink:
 						"https://codepen.io/junilearning/pen/8d640d76fa709de228ec6303625663e3",
 					solutionLink:
@@ -1243,11 +1246,14 @@ Show an ascent,a damped rebound,the floor and eventual rest. CASES.md gives exac
 				},
 				{
 					title: "JSM9 Project 2: 2D Breakout",
-					content: `**Project target:** Build a Breakout-style game with a paddle, ball, brick grid, collision response, and win condition.
+					preserveInstructions: true,
+					content: `The 480-by-320 canvas contains fifteen bricks, a radius-10 ball, a 75-by-10 paddle and three lives. The ball starts at (240,290), moving (2,-2) per simulation tick. A new life resets its motion to (3,-3), preserving the original reference's rule. Arrow keys move the paddle seven pixels per tick; pointer movement maps the displayed canvas position into its logical coordinates. The paddle remains wholly inside the canvas.
 
-**Build path:** Store bricks in an array or grid, draw the paddle and ball, update ball position each frame, and detect collisions with walls, paddle, and bricks. Remove or mark bricks after collision, then check whether all bricks are gone.
+Complete circleTouchesRectangle and stepGame in script.js. Compare the ball's radius with a brick's nearest point, mark a hit brick inactive, increase score once and reverse the collision axis. A downward crossing of the paddle top reflects the ball upward. Crossing completely below the canvas costs exactly one life. Reset the ball when lives remain; otherwise enter lost. Removing the fifteenth brick enters won. Both terminal states freeze the model until Restart, with a message on the canvas and in the status line.
 
-**Evidence target:** The ball bounces from the paddle and walls, bricks disappear only after collision, the score or remaining-brick count updates correctly, and a win state appears when no bricks remain.`,
+Use the CASES.md boundary checks: a ball can touch a brick before its center enters it; a miss costs one life, not one per later frame. Compare the saved reference after completing the starter. Hold a direction control or use the pointer to play; observe all three lives and restart without browser alerts.
+
+Accept the selected starter or reference import in the site IDE. README.md contains the full assignment and CASES.md supplies the boundary checks. Open index.html without a server. Save edits,export the ZIP and reopen the saved project to compare the same files.`,
 					projectLink:
 						"https://codepen.io/junilearning/pen/0d5f9c3b21921a4bc506a1139a3091bc",
 					solutionLink:
@@ -1255,11 +1261,14 @@ Show an ascent,a damped rebound,the floor and eventual rest. CASES.md gives exac
 				},
 				{
 					title: "JSM9 Project 3: Asteroids",
-					content: `**Project target:** Build an Asteroids-style game with ship rotation, movement, projectiles, asteroid collisions, scoring, and game-over logic.
+					preserveInstructions: true,
+					content: `The 550-by-500 canvas begins with the original triangular ship at (100,100). A and D rotate five degrees per simulation tick; W moves one pixel in the ship's forward direction. The on-screen controls provide the same actions. Space and F share one ten-tick firing cooldown. Bullets move five pixels per tick; radius-50 asteroids enter from a random edge every five seconds and move two pixels per tick. Motion uses 60 simulation ticks per second. The ship and asteroids wrap at the canvas boundary.
 
-**Build path:** Store ship angle, velocity, bullets, and asteroid objects. Convert angles into x/y movement, update bullets each frame, split or remove asteroids on hit, and detect collisions between the ship and asteroids.
+Complete shipTouchesCircle and stepGame in script.js. Rotate the three local triangle vertices around the ship center. A circle hits if its center lies inside the triangle or its distance from any edge is at most its radius. Bullet collision uses squared center distance and the combined radii. Remove the hit parent, add two half-radius children only when their radius exceeds ten, and score once. Keep bullets in the single game loop, removing spent or off-screen entries.
 
-**Evidence target:** Rotation affects movement direction, bullets travel independently from the ship, asteroid hits change the asteroid list and score, and game-over detection cannot be bypassed by fast motion.`,
+Death freezes firing, spawning and score until Restart. Focus loss releases all controls. Check CASES.md for the ten-tick cooldown, a single split and a stopped terminal state. Increasing bullet speed requires a swept collision method; this assignment's fixed speeds are the stated model. Compare the complete reference after attempting both functions.
+
+Accept the selected starter or reference import in the site IDE. README.md contains the full assignment and CASES.md supplies the boundary checks. Open index.html without a server. Save edits,export the ZIP and reopen the saved project to compare the same files.`,
 					projectLink:
 						"https://codepen.io/junilearning/pen/4d14f6e432dd3b2dcee15a9d95eac750",
 					solutionLink:
@@ -1267,11 +1276,14 @@ Show an ascent,a damped rebound,the floor and eventual rest. CASES.md gives exac
 				},
 				{
 					title: "JSM9 Project 4: Animated Starfield",
-					content: `**Project target:** Create an animated starfield using many small objects that move across the canvas. The project focuses on object arrays, repeated updates, and visual polish through simple rules.
+					preserveInstructions: true,
+					content: `Create a black field of one hundred white stars. Each object stores x, y, size and downward velocity. Sizes range from one to four pixels; velocities range from fifteen to thirty pixels per second. The original CodePen uses Babel, but this implementation uses ordinary browser JavaScript and needs no compiler or external scripts. Open index.html without a server.
 
-**Build path:** Generate star objects with x, y, size, speed, and brightness. Update each star every frame, redraw the scene, and wrap or reset stars that leave the screen. Add depth by varying speed or size.
+Complete stepGame and resizeStars in script.js. At thirty simulation ticks per second, a star moves velocity divided by thirty pixels per tick. When its y coordinate exceeds the field height, replace that entry with a new star at y=0. Preserve the array length. On resize, scale existing positions by new width/old width and new height/old height before storing the new dimensions. A single animation loop draws the black background and then the white squares.
 
-**Evidence target:** Many stars animate at once, motion continues smoothly after wraparound, and changing the star data generation changes the visual density or depth without rewriting the animation loop.`,
+In CASES.md, trace a star with velocity=30 from y=10 to y=11 after one tick. A star that moves past the bottom returns to the top without increasing density. Resize the window and confirm that all stars remain within the new field. Restart creates a fresh field without adding another loop. The assignment follows Juni Learning's visible Starfield task; its original reference credits the CodeProject article recorded in SOURCES.md.
+
+Accept the selected starter or reference import in the site IDE. README.md contains the full assignment and CASES.md supplies the boundary checks. Open index.html without a server. Save edits,export the ZIP and reopen the saved project to compare the same files.`,
 					projectLink:
 						"https://codepen.io/junilearning/pen/6d5f8181e8ea59009eadd259e249c5c5",
 					solutionLink:
