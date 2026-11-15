@@ -24,6 +24,7 @@ const fixtures = (
 			"./fixtures/network-topology-contracts.json",
 			"./fixtures/network-capture-contracts.json",
 			"./fixtures/network-firewall-contracts.json",
+			"./fixtures/network-firewall-optional-contracts.json",
 			"./fixtures/network-reachability-contracts.json",
 			"./fixtures/network-listener-contracts.json",
 			"./fixtures/network-resolution-contracts.json",
@@ -45,6 +46,12 @@ const fixtures = (
 		fixture =>
 			process.env.NETWORK_DNS_OPTIONAL_ONLY !== "1" ||
 			fixture.mode?.startsWith("dns-")
+	)
+	.filter(
+		fixture =>
+			process.env.NETWORK_FIREWALL_OPTIONAL_ONLY !== "1" ||
+			fixture.mode?.startsWith("ufw-") ||
+			fixture.pack === "NS3-UFW-Web-Server-Policy"
 	);
 const storageKey = "classes-python-ide-projects:anonymous";
 const earlierTemplate = {
