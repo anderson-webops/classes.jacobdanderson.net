@@ -33,12 +33,19 @@ const fixtures = (
 			"./fixtures/network-capstone-contracts.json",
 			"./fixtures/network-setup-contracts.json",
 			"./fixtures/network-transport-contracts.json",
-			"./fixtures/network-inventory-contracts.json"
+			"./fixtures/network-inventory-contracts.json",
+			"./fixtures/network-dns-optional-contracts.json"
 		].map(async path =>
 			JSON.parse(await readFile(new URL(path, import.meta.url), "utf8"))
 		)
 	)
-).flat();
+)
+	.flat()
+	.filter(
+		fixture =>
+			process.env.NETWORK_DNS_OPTIONAL_ONLY !== "1" ||
+			fixture.mode?.startsWith("dns-")
+	);
 const storageKey = "classes-python-ide-projects:anonymous";
 const earlierTemplate = {
 	_id: "earlier-network-work",

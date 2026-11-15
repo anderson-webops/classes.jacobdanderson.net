@@ -1,4 +1,5 @@
 import type { PythonIdeFile } from "@/modules/pythonIde";
+import { networkDnsOptionalInstructions } from "./networkDnsOptionalResources";
 import { networkCourseResource } from "./networkProjectResources";
 
 export function networkBuildInstructions(files: PythonIdeFile[], url: string) {
@@ -86,6 +87,9 @@ export function networkBuildInstructions(files: PythonIdeFile[], url: string) {
 			"The selected lab is incomplete. Restore all required role files and README.md before following the guide."
 		];
 	}
+
+	const dnsOptional = networkDnsOptionalInstructions(definition.pack, role);
+	if (dnsOptional) return [...lines, ...dnsOptional];
 
 	if (socketInventory) {
 		return [
