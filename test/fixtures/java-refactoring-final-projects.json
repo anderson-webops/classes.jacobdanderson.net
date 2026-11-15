@@ -204,7 +204,58 @@
         "core": "design-patterns-in-java-part-2-dpr10-capstone-refactoring-studio-curriculum-core-project-capstone-refactoring-studio",
         "transfer": "design-patterns-in-java-part-2-dpr10-capstone-refactoring-studio-supplemental-capstone-refactoring-studio-transfer-practice",
         "extension": "design-patterns-in-java-part-2-dpr10-capstone-refactoring-studio-supplemental-capstone-refactoring-studio-extension-practice"
-      }
+      },
+      "groups": {
+        "core": {
+          "itemID": "design-patterns-in-java-part-2-dpr10-capstone-refactoring-studio-curriculum-core-project-capstone-refactoring-studio",
+          "replace": [
+            "src/app/WorkshopDesk.java"
+          ],
+          "add": [
+            "src/app/SessionBook.java",
+            "src/app/DeskReports.java"
+          ],
+          "remove": [],
+          "primary": "src/app/WorkshopDesk.java",
+          "checks": 8197
+        },
+        "transfer": {
+          "itemID": "design-patterns-in-java-part-2-dpr10-capstone-refactoring-studio-supplemental-capstone-refactoring-studio-transfer-practice",
+          "replace": [
+            "src/trace/Equivalence.java"
+          ],
+          "add": [],
+          "remove": [],
+          "primary": "src/trace/Equivalence.java",
+          "checks": 15
+        },
+        "extension": {
+          "itemID": "design-patterns-in-java-part-2-dpr10-capstone-refactoring-studio-supplemental-capstone-refactoring-studio-extension-practice",
+          "replace": [
+            "src/preview/RenamePreview.java"
+          ],
+          "add": [],
+          "remove": [],
+          "primary": "src/preview/RenamePreview.java",
+          "checks": 24
+        }
+      },
+      "roleFileCounts": {
+        "starter": 19,
+        "solution": 21
+      },
+      "baselineChecks": 16394,
+      "fullChecks": 8236,
+      "unfinished": {
+        "core": null,
+        "transfer": "Complete trace comparison",
+        "extension": "Complete rename preview"
+      },
+      "demos": {
+        "baseline": "Workshops 2\nroom capacity=2 open=true\nenrolled=bo,cy\nwaiting=-\nquiet capacity=1 open=false\nenrolled=-\nwaiting=-\n2\nroom|2|open|bo,cy|-\nquiet|1|closed|-|-\n[open, join:ana:enrolled, join:bo:enrolled, join:cy:waiting, leave:ana:enrolled, promote:cy]\n",
+        "core": "Workshops 2\nroom capacity=2 open=true\nenrolled=bo,cy\nwaiting=-\nquiet capacity=1 open=false\nenrolled=-\nwaiting=-\n2\nroom|2|open|bo,cy|-\nquiet|1|closed|-|-\n[open, join:ana:enrolled, join:bo:enrolled, join:cy:waiting, leave:ana:enrolled, promote:cy]\n"
+      },
+      "scriptOutput": "opened\nENROLLED\nWAITLISTED\ntrue\n1\nroom|1|open|bo|-\ntrue\nerror:IllegalStateException:closed\n"
     },
     {
       "label": "11",
@@ -381,6 +432,57 @@
         "core": "design-patterns-in-java-part-2-optional-refactoring-clinics-11-17-supplemental-core-project-refactoring-clinic-11",
         "transfer": "design-patterns-in-java-part-2-optional-refactoring-clinics-11-17-supplemental-refactoring-clinic-11-transfer-practice",
         "extension": "design-patterns-in-java-part-2-optional-refactoring-clinics-11-17-supplemental-refactoring-clinic-11-extension-practice"
+      },
+      "groups": {
+        "core": {
+          "itemID": "design-patterns-in-java-part-2-optional-refactoring-clinics-11-17-supplemental-core-project-refactoring-clinic-11",
+          "replace": [
+            "src/app/TripPlanner.java"
+          ],
+          "add": [
+            "src/app/RoutePlan.java"
+          ],
+          "remove": [],
+          "primary": "src/app/TripPlanner.java",
+          "checks": 1597
+        },
+        "transfer": {
+          "itemID": "design-patterns-in-java-part-2-optional-refactoring-clinics-11-17-supplemental-refactoring-clinic-11-transfer-practice",
+          "replace": [
+            "src/transfer/LongestLeg.java"
+          ],
+          "add": [],
+          "remove": [],
+          "primary": "src/transfer/LongestLeg.java",
+          "checks": 407
+        },
+        "extension": {
+          "itemID": "design-patterns-in-java-part-2-optional-refactoring-clinics-11-17-supplemental-refactoring-clinic-11-extension-practice",
+          "replace": [
+            "src/extension/WaypointEdit.java"
+          ],
+          "add": [],
+          "remove": [],
+          "primary": "src/extension/WaypointEdit.java",
+          "checks": 31
+        }
+      },
+      "roleFileCounts": {
+        "starter": 14,
+        "solution": 15
+      },
+      "baselineChecks": 3194,
+      "fullChecks": 2035,
+      "unfinished": {
+        "core": null,
+        "transfer": "Complete longest leg",
+        "extension": "Complete waypoint preview"
+      },
+      "demos": {
+        "baseline": "walk|stops=4|distance=7\n",
+        "core": "walk|stops=4|distance=7\n",
+        "transfer": "3\n",
+        "extension": "walk|stops=4|distance=15\n"
       }
     },
     {
@@ -561,6 +663,58 @@
         "core": "design-patterns-in-java-part-2-optional-refactoring-clinics-11-17-supplemental-core-project-refactoring-clinic-12",
         "transfer": "design-patterns-in-java-part-2-optional-refactoring-clinics-11-17-supplemental-refactoring-clinic-12-transfer-practice",
         "extension": "design-patterns-in-java-part-2-optional-refactoring-clinics-11-17-supplemental-refactoring-clinic-12-extension-practice"
+      },
+      "groups": {
+        "core": {
+          "itemID": "design-patterns-in-java-part-2-optional-refactoring-clinics-11-17-supplemental-core-project-refactoring-clinic-12",
+          "replace": [
+            "src/app/MessageService.java"
+          ],
+          "add": [
+            "src/app/PlainRule.java",
+            "src/app/CompactRule.java"
+          ],
+          "remove": [],
+          "primary": "src/app/MessageService.java",
+          "checks": 30
+        },
+        "transfer": {
+          "itemID": "design-patterns-in-java-part-2-optional-refactoring-clinics-11-17-supplemental-refactoring-clinic-12-transfer-practice",
+          "replace": [
+            "src/transfer/RenderBatch.java"
+          ],
+          "add": [],
+          "remove": [],
+          "primary": "src/transfer/RenderBatch.java",
+          "checks": 13
+        },
+        "extension": {
+          "itemID": "design-patterns-in-java-part-2-optional-refactoring-clinics-11-17-supplemental-refactoring-clinic-12-extension-practice",
+          "replace": [
+            "src/extension/PrefixRule.java"
+          ],
+          "add": [],
+          "remove": [],
+          "primary": "src/extension/PrefixRule.java",
+          "checks": 10
+        }
+      },
+      "roleFileCounts": {
+        "starter": 15,
+        "solution": 17
+      },
+      "baselineChecks": 38,
+      "fullChecks": 53,
+      "unfinished": {
+        "core": "Complete rule registry",
+        "transfer": "Complete batch rendering",
+        "extension": "Complete prefix rule"
+      },
+      "demos": {
+        "baseline": "text=go\n",
+        "core": "text=go\n",
+        "transfer": "2|go\n0|\n",
+        "extension": "!text=go\n"
       }
     },
     {
@@ -739,6 +893,56 @@
         "core": "design-patterns-in-java-part-2-optional-refactoring-clinics-11-17-supplemental-core-project-refactoring-clinic-13",
         "transfer": "design-patterns-in-java-part-2-optional-refactoring-clinics-11-17-supplemental-refactoring-clinic-13-transfer-practice",
         "extension": "design-patterns-in-java-part-2-optional-refactoring-clinics-11-17-supplemental-refactoring-clinic-13-extension-practice"
+      },
+      "groups": {
+        "core": {
+          "itemID": "design-patterns-in-java-part-2-optional-refactoring-clinics-11-17-supplemental-core-project-refactoring-clinic-13",
+          "replace": [
+            "src/app/RangeSpec.java",
+            "src/app/RangeService.java"
+          ],
+          "add": [],
+          "remove": [],
+          "primary": "src/app/RangeSpec.java",
+          "checks": 152
+        },
+        "transfer": {
+          "itemID": "design-patterns-in-java-part-2-optional-refactoring-clinics-11-17-supplemental-refactoring-clinic-13-transfer-practice",
+          "replace": [
+            "src/transfer/EveryOther.java"
+          ],
+          "add": [],
+          "remove": [],
+          "primary": "src/transfer/EveryOther.java",
+          "checks": 17
+        },
+        "extension": {
+          "itemID": "design-patterns-in-java-part-2-optional-refactoring-clinics-11-17-supplemental-refactoring-clinic-13-extension-practice",
+          "replace": [
+            "src/extension/MergeRanges.java"
+          ],
+          "add": [],
+          "remove": [],
+          "primary": "src/extension/MergeRanges.java",
+          "checks": 10
+        }
+      },
+      "roleFileCounts": {
+        "starter": 15,
+        "solution": 15
+      },
+      "baselineChecks": 280,
+      "fullChecks": 179,
+      "unfinished": {
+        "core": "Complete parameter object",
+        "transfer": "Complete whole-list selection",
+        "extension": "Complete unique merge"
+      },
+      "demos": {
+        "baseline": "2..9/3:[2, 5, 8]\n",
+        "core": "2..9/3:[2, 5, 8]\n",
+        "transfer": "[2, 8]\n",
+        "extension": "[1, 2, 5, 8, 9]\n"
       }
     },
     {
@@ -919,6 +1123,55 @@
         "core": "design-patterns-in-java-part-2-optional-refactoring-clinics-11-17-supplemental-core-project-refactoring-clinic-14",
         "transfer": "design-patterns-in-java-part-2-optional-refactoring-clinics-11-17-supplemental-refactoring-clinic-14-transfer-practice",
         "extension": "design-patterns-in-java-part-2-optional-refactoring-clinics-11-17-supplemental-refactoring-clinic-14-extension-practice"
+      },
+      "groups": {
+        "core": {
+          "itemID": "design-patterns-in-java-part-2-optional-refactoring-clinics-11-17-supplemental-core-project-refactoring-clinic-14",
+          "replace": [
+            "src/app/EnergyMeter.java"
+          ],
+          "add": [],
+          "remove": [],
+          "primary": "src/app/EnergyMeter.java",
+          "checks": 143
+        },
+        "transfer": {
+          "itemID": "design-patterns-in-java-part-2-optional-refactoring-clinics-11-17-supplemental-refactoring-clinic-14-transfer-practice",
+          "replace": [
+            "src/transfer/EnergyLoss.java"
+          ],
+          "add": [],
+          "remove": [],
+          "primary": "src/transfer/EnergyLoss.java",
+          "checks": 669
+        },
+        "extension": {
+          "itemID": "design-patterns-in-java-part-2-optional-refactoring-clinics-11-17-supplemental-refactoring-clinic-14-extension-practice",
+          "replace": [
+            "src/extension/EnergyBatch.java"
+          ],
+          "add": [],
+          "remove": [],
+          "primary": "src/extension/EnergyBatch.java",
+          "checks": 7
+        }
+      },
+      "roleFileCounts": {
+        "starter": 16,
+        "solution": 16
+      },
+      "baselineChecks": 266,
+      "fullChecks": 819,
+      "unfinished": {
+        "core": "Complete named queries",
+        "transfer": "Complete loss percentage",
+        "extension": "Complete batch total"
+      },
+      "demos": {
+        "baseline": "EnergyResult[raw=99, usable=49, lost=50]\n",
+        "core": "EnergyResult[raw=99, usable=49, lost=50]\n",
+        "transfer": "50\n",
+        "extension": "BatchTotal[raw=199, usable=149, lost=50]\n"
       }
     },
     {
@@ -1101,6 +1354,59 @@
         "core": "design-patterns-in-java-part-2-optional-refactoring-clinics-11-17-supplemental-core-project-refactoring-clinic-15",
         "transfer": "design-patterns-in-java-part-2-optional-refactoring-clinics-11-17-supplemental-refactoring-clinic-15-transfer-practice",
         "extension": "design-patterns-in-java-part-2-optional-refactoring-clinics-11-17-supplemental-refactoring-clinic-15-extension-practice"
+      },
+      "groups": {
+        "core": {
+          "itemID": "design-patterns-in-java-part-2-optional-refactoring-clinics-11-17-supplemental-core-project-refactoring-clinic-15",
+          "replace": [
+            "src/app/DocumentService.java",
+            "src/app/DocumentTemplate.java"
+          ],
+          "add": [
+            "src/app/PlainDocument.java",
+            "src/app/MarkedDocument.java"
+          ],
+          "remove": [],
+          "primary": "src/app/DocumentService.java",
+          "checks": 41
+        },
+        "transfer": {
+          "itemID": "design-patterns-in-java-part-2-optional-refactoring-clinics-11-17-supplemental-refactoring-clinic-15-transfer-practice",
+          "replace": [
+            "src/transfer/WorkflowTrace.java"
+          ],
+          "add": [],
+          "remove": [],
+          "primary": "src/transfer/WorkflowTrace.java",
+          "checks": 10
+        },
+        "extension": {
+          "itemID": "design-patterns-in-java-part-2-optional-refactoring-clinics-11-17-supplemental-refactoring-clinic-15-extension-practice",
+          "replace": [
+            "src/extension/NumberedRows.java"
+          ],
+          "add": [],
+          "remove": [],
+          "primary": "src/extension/NumberedRows.java",
+          "checks": 6
+        }
+      },
+      "roleFileCounts": {
+        "starter": 16,
+        "solution": 18
+      },
+      "baselineChecks": 62,
+      "fullChecks": 57,
+      "unfinished": {
+        "core": "Complete template skeleton",
+        "transfer": "Complete workflow trace",
+        "extension": "Complete numbered rows"
+      },
+      "demos": {
+        "baseline": "begin\na\nb\nend\n",
+        "core": "begin\na\nb\nend\n",
+        "transfer": "[start, row:a, row:b, end]\n",
+        "extension": "ROWS\n1:a\n2:b\ntotal=2\n"
       }
     },
     {
@@ -1280,6 +1586,59 @@
         "core": "design-patterns-in-java-part-2-optional-refactoring-clinics-11-17-supplemental-core-project-refactoring-clinic-16",
         "transfer": "design-patterns-in-java-part-2-optional-refactoring-clinics-11-17-supplemental-refactoring-clinic-16-transfer-practice",
         "extension": "design-patterns-in-java-part-2-optional-refactoring-clinics-11-17-supplemental-refactoring-clinic-16-extension-practice"
+      },
+      "groups": {
+        "core": {
+          "itemID": "design-patterns-in-java-part-2-optional-refactoring-clinics-11-17-supplemental-core-project-refactoring-clinic-16",
+          "replace": [
+            "src/app/GreetingService.java"
+          ],
+          "add": [
+            "src/app/Recipient.java",
+            "src/app/GuestRecipient.java",
+            "src/app/KnownRecipient.java"
+          ],
+          "remove": [],
+          "primary": "src/app/GreetingService.java",
+          "checks": 42
+        },
+        "transfer": {
+          "itemID": "design-patterns-in-java-part-2-optional-refactoring-clinics-11-17-supplemental-refactoring-clinic-16-transfer-practice",
+          "replace": [
+            "src/transfer/ProfileLookup.java"
+          ],
+          "add": [],
+          "remove": [],
+          "primary": "src/transfer/ProfileLookup.java",
+          "checks": 11
+        },
+        "extension": {
+          "itemID": "design-patterns-in-java-part-2-optional-refactoring-clinics-11-17-supplemental-refactoring-clinic-16-extension-practice",
+          "replace": [
+            "src/extension/StrictGreeting.java"
+          ],
+          "add": [],
+          "remove": [],
+          "primary": "src/extension/StrictGreeting.java",
+          "checks": 4
+        }
+      },
+      "roleFileCounts": {
+        "starter": 14,
+        "solution": 17
+      },
+      "baselineChecks": 84,
+      "fullChecks": 57,
+      "unfinished": {
+        "core": null,
+        "transfer": "Complete explicit lookup",
+        "extension": "Complete required profile policy"
+      },
+      "demos": {
+        "baseline": "Hello, guest|screen\nHello, Ada|email\n",
+        "core": "Hello, guest|screen\nHello, Ada|email\n",
+        "transfer": "Optional[Profile[name=Ada, channel=email]]\n",
+        "extension": "Hello, Ada\n"
       }
     },
     {
@@ -1462,6 +1821,58 @@
         "core": "design-patterns-in-java-part-2-optional-refactoring-clinics-11-17-supplemental-core-project-refactoring-clinic-17",
         "transfer": "design-patterns-in-java-part-2-optional-refactoring-clinics-11-17-supplemental-refactoring-clinic-17-transfer-practice",
         "extension": "design-patterns-in-java-part-2-optional-refactoring-clinics-11-17-supplemental-refactoring-clinic-17-extension-practice"
+      },
+      "groups": {
+        "core": {
+          "itemID": "design-patterns-in-java-part-2-optional-refactoring-clinics-11-17-supplemental-core-project-refactoring-clinic-17",
+          "replace": [
+            "src/app/BoardReport.java"
+          ],
+          "add": [
+            "src/app/BoardAnalysis.java",
+            "src/app/BoardText.java"
+          ],
+          "remove": [],
+          "primary": "src/app/BoardReport.java",
+          "checks": 553
+        },
+        "transfer": {
+          "itemID": "design-patterns-in-java-part-2-optional-refactoring-clinics-11-17-supplemental-refactoring-clinic-17-transfer-practice",
+          "replace": [
+            "src/transfer/SnapshotDiff.java"
+          ],
+          "add": [],
+          "remove": [],
+          "primary": "src/transfer/SnapshotDiff.java",
+          "checks": 11
+        },
+        "extension": {
+          "itemID": "design-patterns-in-java-part-2-optional-refactoring-clinics-11-17-supplemental-refactoring-clinic-17-extension-practice",
+          "replace": [
+            "src/extension/BoardPreview.java"
+          ],
+          "add": [],
+          "remove": [],
+          "primary": "src/extension/BoardPreview.java",
+          "checks": 7
+        }
+      },
+      "roleFileCounts": {
+        "starter": 16,
+        "solution": 18
+      },
+      "baselineChecks": 1106,
+      "fullChecks": 571,
+      "unfinished": {
+        "core": null,
+        "transfer": "Complete checkpoint comparison",
+        "extension": "Complete sorted preview"
+      },
+      "demos": {
+        "baseline": "tasks=3\ndone=1\nremaining=15\nopen=read,draw\n",
+        "core": "tasks=3\ndone=1\nremaining=15\nopen=read,draw\n",
+        "transfer": "1\n",
+        "extension": "[code, draw, read]\n"
       }
     }
   ]
