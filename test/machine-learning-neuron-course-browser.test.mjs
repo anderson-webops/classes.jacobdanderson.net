@@ -16,8 +16,8 @@ const fixture = JSON.parse(
 		"utf8"
 	)
 );
-const selected =
-	process.env.ML_NEURON_PROJECTS?.split(",").filter(Boolean) ?? [];
+const selected
+	= process.env.ML_NEURON_PROJECTS?.split(",").filter(Boolean) ?? [];
 assert.ok(
 	selected.every(key =>
 		fixture.projects.some(project => project.caseId === key)
@@ -33,9 +33,9 @@ for (const project of fixture.projects.filter(
 			project.caseId
 		}: consent, full task, nested inputs, Python execution and saved ZIPs`,
 		{ timeout: 600000 },
-		async t => {
+		async (t) => {
 			const file = (role, name) =>
-				fixture.files[project.sources[role] + "/" + name];
+				fixture.files[`${project.sources[role]}/${name}`];
 			const marker = `ML workflow verified: ${project.caseId}`;
 			await runAssemblyCoreCourseWorkflow(t, {
 				kind: project.caseId,
@@ -76,31 +76,31 @@ for (const project of fixture.projects.filter(
 				primaryFile: "main.py",
 				taskFile: "README.md",
 				sourceUrl: role =>
-					base +
-					"tree/" +
-					fixture.revision +
-					"/" +
-					project.sources[role],
+					`${base
+					}tree/${
+						fixture.revision
+					}/${
+						project.sources[role]}`,
 				fileCount: role =>
 					Object.keys(fixture.files).filter(path =>
-						path.startsWith(project.sources[role] + "/")
+						path.startsWith(`${project.sources[role]}/`)
 					).length,
 				expectedFile: file,
 				githubDirectoryListing: ({ url, role }) => {
-					const prefix =
-						"/repos/instruction-material/AI-Level-2/contents/";
+					const prefix
+						= "/repos/instruction-material/AI-Level-2/contents/";
 					const directory = decodeURIComponent(
 						url.pathname.slice(prefix.length)
 					);
 					const root = project.sources[role];
-					const valid =
-						url.pathname.startsWith(prefix) &&
-						url.searchParams.get("ref") === fixture.revision &&
-						(directory === root ||
-							directory.startsWith(`${root}/`)) &&
-						!directory
-							.split("/")
-							.some(part => ["", ".", ".."].includes(part));
+					const valid
+						= url.pathname.startsWith(prefix)
+							&& url.searchParams.get("ref") === fixture.revision
+							&& (directory === root
+								|| directory.startsWith(`${root}/`))
+							&& !directory
+								.split("/")
+								.some(part => ["", ".", ".."].includes(part));
 					const entries = new Map();
 					if (valid) {
 						for (const [path, value] of Object.entries(
@@ -141,7 +141,7 @@ for (const project of fixture.projects.filter(
 					}
 					return { valid, entries: [...entries.values()] };
 				},
-				beforeImport: async page => {
+				beforeImport: async (page, { role, width }) => {
 					const selector = `#${project.moduleId}-${
 						project.itemId
 					} .item-content-markdown`;
@@ -150,12 +150,13 @@ for (const project of fixture.projects.filter(
 							Boolean(
 								document
 									.querySelector(value)
-									?.textContent.trim()
+									?.textContent
+									.trim()
 							),
 						{ timeout: 15000 },
 						selector
 					);
-					const expected = await page.evaluate(html => {
+					const expected = await page.evaluate((html) => {
 						const element = document.createElement("div");
 						element.innerHTML = html;
 						return element.textContent.replace(/\s+/g, " ").trim();
@@ -177,8 +178,8 @@ for (const project of fixture.projects.filter(
 						buttons =>
 							buttons.findIndex(
 								button =>
-									button.getAttribute("aria-pressed") ===
-									"true"
+									button.getAttribute("aria-pressed")
+									=== "true"
 							) + 1
 					);
 					assert.ok(originalView > 0);
@@ -188,17 +189,16 @@ for (const project of fixture.projects.filter(
 					await page.waitForSelector(
 						".lesson-view-toggle button:nth-child(3)[aria-pressed='true']"
 					);
-					const coreSelector =
-						"#" +
-						project.moduleId +
-						"-" +
-						fixture.coreReading.itemId +
-						" .item-content-markdown";
+					const coreSelector
+						= `#${
+							project.moduleId
+						}-${
+							fixture.coreReading.itemId
+						} .item-content-markdown`;
 					await page.waitForSelector(coreSelector);
 					await page.$eval(coreSelector, element =>
-						element.scrollIntoView({ block: "start" })
-					);
-					const expectedCore = await page.evaluate(html => {
+						element.scrollIntoView({ block: "start" }));
+					const expectedCore = await page.evaluate((html) => {
 						const element = document.createElement("div");
 						element.innerHTML = html;
 						return element.textContent.replace(/\s+/g, " ").trim();
@@ -207,7 +207,8 @@ for (const project of fixture.projects.filter(
 						({ selector, expected }) =>
 							document
 								.querySelector(selector)
-								?.textContent.replace(/\s+/g, " ")
+								?.textContent
+								.replace(/\s+/g, " ")
 								.trim() === expected,
 						{},
 						{ selector: coreSelector, expected: expectedCore }
@@ -225,39 +226,38 @@ for (const project of fixture.projects.filter(
 					assert.equal(actualCore.text, expectedCore);
 					assert.equal(actualCore.overflow, false);
 					const screenshots = join(
-						process.env.ML_NEURON_BROWSER_DIR ??
-							"output/machine-learning-neuron-browser",
+						process.env.ML_NEURON_BROWSER_DIR
+						?? "output/machine-learning-neuron-browser",
 						project.caseId
 					);
 					mkdirSync(screenshots, { recursive: true });
 					await page.screenshot({
 						path: join(
 							screenshots,
-							"core-" + role + "-" + width + "-top.png"
+							`core-${role}-${width}-top.png`
 						)
 					});
 					await page.$eval(coreSelector, element =>
 						element.lastElementChild.scrollIntoView({
 							block: "end"
-						})
-					);
+						}));
 					await page.screenshot({
 						path: join(
 							screenshots,
-							"core-" + role + "-" + width + "-bottom.png"
+							`core-${role}-${width}-bottom.png`
 						)
 					});
 					await page
 						.locator(
-							".lesson-view-toggle button:nth-child(" +
-								originalView +
-								")"
+							`.lesson-view-toggle button:nth-child(${
+								originalView
+							})`
 						)
 						.click();
 					await page.waitForSelector(
-						".lesson-view-toggle button:nth-child(" +
-							originalView +
-							")[aria-pressed='true']"
+						`.lesson-view-toggle button:nth-child(${
+							originalView
+						})[aria-pressed='true']`
 					);
 					await page.waitForSelector(selector);
 					return {
@@ -273,8 +273,8 @@ for (const project of fixture.projects.filter(
 					file("solution", filename).content.replaceAll(
 						/\r\n?/g,
 						"\n"
-					) +
-					(filename === "main.py"
+					)
+					+ (filename === "main.py"
 						? `\nprint(${JSON.stringify(marker)})\n`
 						: "\n# Saved ML model edit\n"),
 				continuationIDs: [project.itemId],
@@ -291,7 +291,8 @@ for (const project of fixture.projects.filter(
 						() =>
 							document
 								.querySelector(".output-panel")
-								?.textContent.includes("NotImplementedError"),
+								?.textContent
+								.includes("NotImplementedError"),
 						{ timeout: 90000 }
 					);
 					await page.waitForSelector(
@@ -301,7 +302,7 @@ for (const project of fixture.projects.filter(
 						window.__mlInitialExerciseRan = true;
 					});
 				},
-				afterEdit: async page => {
+				afterEdit: async (page) => {
 					await page.select(
 						"select[aria-label='Active project file']",
 						"main.py"
@@ -313,7 +314,8 @@ for (const project of fixture.projects.filter(
 						value =>
 							document
 								.querySelector(".output-panel")
-								?.textContent.includes(value),
+								?.textContent
+								.includes(value),
 						{ timeout: 90000 },
 						marker
 					);
