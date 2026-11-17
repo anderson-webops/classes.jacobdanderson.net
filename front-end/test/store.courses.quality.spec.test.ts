@@ -6313,8 +6313,8 @@ describe("course text quality normalization", () => {
 		expect(neuralNetworks!.content).toContain(
 			"Sigmoid maps finite real logits into (0,1)"
 		);
-		expect(neuralNetworks!.content).toMatch(/^## \\S.+/m);
-		expect(neuralNetworks!.content).not.toMatch(/\\(0,\\s*\\n\\s*1\\)/);
+		expect(neuralNetworks!.content).toMatch(/^## \S.+/m);
+		expect(neuralNetworks!.content).not.toMatch(/\(0,\s*\n\s*1\)/);
 
 		const aiLandscape = aiLevel1!.modules
 			.find(
