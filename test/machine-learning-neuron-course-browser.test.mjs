@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { mkdirSync, readFileSync } from "node:fs";
+import { join } from "node:path";
 import process from "node:process";
 // eslint-disable-next-line test/no-import-node-test -- Actual course imports and exported Python projects.
 import { test } from "node:test";
@@ -171,17 +172,46 @@ for (const project of fixture.projects.filter(
 					assert.equal(actual.text, expected);
 					assert.equal(actual.overflow, false);
 					assert.equal(actual.clipped, false);
+					const originalView = await page.$$eval(
+						".lesson-view-toggle button",
+						buttons =>
+							buttons.findIndex(
+								button =>
+									button.getAttribute("aria-pressed") ===
+									"true"
+							) + 1
+					);
+					assert.ok(originalView > 0);
+					await page
+						.locator(".lesson-view-toggle button:nth-child(3)")
+						.click();
+					await page.waitForSelector(
+						".lesson-view-toggle button:nth-child(3)[aria-pressed='true']"
+					);
 					const coreSelector =
 						"#" +
 						project.moduleId +
 						"-" +
 						fixture.coreReading.itemId +
 						" .item-content-markdown";
+					await page.waitForSelector(coreSelector);
+					await page.$eval(coreSelector, element =>
+						element.scrollIntoView({ block: "start" })
+					);
 					const expectedCore = await page.evaluate(html => {
 						const element = document.createElement("div");
 						element.innerHTML = html;
 						return element.textContent.replace(/\s+/g, " ").trim();
 					}, new MarkdownIt().render(fixture.coreReading.content));
+					await page.waitForFunction(
+						({ selector, expected }) =>
+							document
+								.querySelector(selector)
+								?.textContent.replace(/\s+/g, " ")
+								.trim() === expected,
+						{},
+						{ selector: coreSelector, expected: expectedCore }
+					);
 					const actualCore = await page.$eval(
 						coreSelector,
 						element => ({
@@ -194,6 +224,42 @@ for (const project of fixture.projects.filter(
 					);
 					assert.equal(actualCore.text, expectedCore);
 					assert.equal(actualCore.overflow, false);
+					const screenshots = join(
+						process.env.ML_NEURON_BROWSER_DIR ??
+							"output/machine-learning-neuron-browser",
+						project.caseId
+					);
+					mkdirSync(screenshots, { recursive: true });
+					await page.screenshot({
+						path: join(
+							screenshots,
+							"core-" + role + "-" + width + "-top.png"
+						)
+					});
+					await page.$eval(coreSelector, element =>
+						element.lastElementChild.scrollIntoView({
+							block: "end"
+						})
+					);
+					await page.screenshot({
+						path: join(
+							screenshots,
+							"core-" + role + "-" + width + "-bottom.png"
+						)
+					});
+					await page
+						.locator(
+							".lesson-view-toggle button:nth-child(" +
+								originalView +
+								")"
+						)
+						.click();
+					await page.waitForSelector(
+						".lesson-view-toggle button:nth-child(" +
+							originalView +
+							")[aria-pressed='true']"
+					);
+					await page.waitForSelector(selector);
 					return {
 						completeAssignmentText: true,
 						completeCoreReadingText: true,
