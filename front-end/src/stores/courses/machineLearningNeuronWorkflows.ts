@@ -29,15 +29,14 @@ export function applyMachineLearningNeuronWorkflows(course: RawCourse) {
 			candidate => candidate.title === definition.title
 		);
 		if (!item)
-			throw new Error("Missing neuron lesson: " + definition.title);
+			throw new Error(`Missing neuron lesson: ${definition.title}`);
 		item.content = definition.content;
 		item.contentKind = definition.source ? "assignment" : "reading";
 		item.preserveInstructions = true;
 		item.preserveAssignment = true;
 		if (definition.source) {
-			item.projectLink =
-				sourceBase + "/" + definition.source + "-Starter";
-			item.solutionLink = sourceBase + "/" + definition.source;
+			item.projectLink = `${sourceBase}/${definition.source}-Starter`;
+			item.solutionLink = `${sourceBase}/${definition.source}`;
 			item.ideImport = true;
 			delete item.datasetLink;
 		}
