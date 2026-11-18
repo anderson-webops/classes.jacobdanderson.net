@@ -587,7 +587,7 @@ nodeTest(
 									file.content
 								);
 							}
-							const name = `${fixture.pack}-${role}-${width}`;
+							const name = `${fixture.pack}-${digest(key).slice(0, 12)}-${role}-${width}`;
 							await writeFile(
 								join(output, `${name}-exact.zip`),
 								exact
