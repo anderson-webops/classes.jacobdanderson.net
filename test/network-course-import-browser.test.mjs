@@ -89,7 +89,8 @@ const earlierTemplate = {
 	updatedAt: "2026-10-01T12:00:00.000Z"
 };
 const digest = value => createHash("sha256").update(value).digest("hex");
-const timeoutMs = 720000;
+// Keep the full profile set within a bounded budget as the fixture catalog grows.
+const timeoutMs = Math.max(720000, 60000 + fixtures.length * 4 * 5000);
 
 async function savedProjects(page) {
 	return page.evaluate(
