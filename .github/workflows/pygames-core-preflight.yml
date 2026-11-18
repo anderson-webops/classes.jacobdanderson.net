@@ -2645,6 +2645,8 @@ jobs:
           test/store.courses.middle-school-integrated-science-flow.spec.test.ts
           test/store.courses.elementary-science-flow.spec.test.ts test/store.courses.intro-biology-flow.spec.test.ts
           test/store.courses.intro-chemistry-flow.spec.test.ts
+          test/store.courses.pythonic-design-patterns-flow.spec.test.ts
+          test/store.courses.pythonic-opening.spec.test.ts
           test/store.courses.intro-environmental-science-flow.spec.test.ts
           test/store.courses.depth.spec.test.ts test/store.courses.research-expansions.spec.test.ts
           test/store.courses.python-level-1-foundations.spec.test.ts
@@ -2715,6 +2717,11 @@ jobs:
         run: |
           node --test test/self-study-browser-batches.test.mjs
           node scripts/classes-family-heavy-task.mjs -- node scripts/verify-self-study-browser-batches.mjs
+      - name: Verify Pythonic opening consent, saved attempts and actual Python exports
+        if: inputs.course == 'self-study' && inputs.self_study_courses == 'pythonic-design-patterns'
+        env:
+          PYTHONIC_OPENING_BROWSER_PROOF_DIR: ${{ github.workspace }}/output/self-study-browser/pythonic-opening
+        run: node scripts/classes-family-heavy-task.mjs -- node --test test/pythonic-opening-workflows-browser.test.mjs
       - name: Verify the Physics Level 2 Python models against independent values
         id: physics_native
         if: always() && !cancelled() && inputs.course == 'physics-models' && steps.course_build.outcome == 'success'
