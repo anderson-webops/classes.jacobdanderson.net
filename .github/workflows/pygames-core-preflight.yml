@@ -49,7 +49,7 @@ jobs:
     timeout-minutes: 30
     env:
       CLASSES_FAMILY_TASK_ID: network-capstone-optional-${{ github.run_id }}
-      NETWORK_CAPSTONE_OPTIONAL_ONLY: '1'
+      NETWORK_CAPSTONE_OPTIONAL_ONLY: "1"
       NETWORK_BROWSER_EXPORT_PROOF_DIR: output/network-capstone-optional
       COURSE_IMPORT_SCREENSHOT_DIR: output/network-capstone-optional/screenshots
     steps:
@@ -123,7 +123,7 @@ jobs:
     timeout-minutes: 45
     env:
       CLASSES_FAMILY_TASK_ID: network-practice-${{ github.run_id }}
-      NETWORK_PRACTICE_ONLY: '1'
+      NETWORK_PRACTICE_ONLY: "1"
       SELF_STUDY_BROWSER_COURSES: network-systems
       SELF_STUDY_BROWSER_PROOF_DIR: ${{ github.workspace }}/output/network-practice/layout
       NETWORK_BROWSER_EXPORT_PROOF_DIR: output/network-practice
@@ -193,14 +193,13 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
-
   network-archive-six:
     if: inputs.course == 'network-archive-six'
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     env:
       CLASSES_FAMILY_TASK_ID: network-archive-six-${{ github.run_id }}
-      NETWORK_ARCHIVE_SIX_ONLY: '1'
+      NETWORK_ARCHIVE_SIX_ONLY: "1"
       NETWORK_BROWSER_EXPORT_PROOF_DIR: output/network-archive-six
       COURSE_IMPORT_SCREENSHOT_DIR: output/network-archive-six/screenshots
     steps:
@@ -264,14 +263,13 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
-
   network-diagnostics-five:
     if: inputs.course == 'network-diagnostics-five'
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     env:
       CLASSES_FAMILY_TASK_ID: network-diagnostics-five-${{ github.run_id }}
-      NETWORK_DIAGNOSTICS_FIVE_ONLY: '1'
+      NETWORK_DIAGNOSTICS_FIVE_ONLY: "1"
       NETWORK_BROWSER_EXPORT_PROOF_DIR: output/network-diagnostics-five
       COURSE_IMPORT_SCREENSHOT_DIR: output/network-diagnostics-five/screenshots
     steps:
@@ -339,14 +337,13 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
-
   network-kernel-optional:
     if: inputs.course == 'network-kernel-optional'
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     env:
       CLASSES_FAMILY_TASK_ID: network-kernel-optional-${{ github.run_id }}
-      NETWORK_KERNEL_OPTIONAL_ONLY: '1'
+      NETWORK_KERNEL_OPTIONAL_ONLY: "1"
       NETWORK_BROWSER_EXPORT_PROOF_DIR: output/network-kernel-optional
       COURSE_IMPORT_SCREENSHOT_DIR: output/network-kernel-optional/screenshots
     steps:
@@ -413,14 +410,13 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
-
   network-firewall-optional:
     if: inputs.course == 'network-firewall-optional'
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     env:
       CLASSES_FAMILY_TASK_ID: network-firewall-optional-${{ github.run_id }}
-      NETWORK_FIREWALL_OPTIONAL_ONLY: '1'
+      NETWORK_FIREWALL_OPTIONAL_ONLY: "1"
       NETWORK_BROWSER_EXPORT_PROOF_DIR: output/network-firewall-optional
       COURSE_IMPORT_SCREENSHOT_DIR: output/network-firewall-optional/screenshots
     steps:
@@ -491,7 +487,7 @@ jobs:
     timeout-minutes: 30
     env:
       CLASSES_FAMILY_TASK_ID: network-dns-optional-${{ github.run_id }}
-      NETWORK_DNS_OPTIONAL_ONLY: '1'
+      NETWORK_DNS_OPTIONAL_ONLY: "1"
       NETWORK_BROWSER_EXPORT_PROOF_DIR: output/network-dns-optional
       COURSE_IMPORT_SCREENSHOT_DIR: output/network-dns-optional/screenshots
     steps:
@@ -552,7 +548,6 @@ jobs:
           path: output/network-dns-optional/
           if-no-files-found: error
           retention-days: 30
-
 
   release-checks:
     if: inputs.course == 'machine-learning-library' || inputs.course == 'release-checks' || inputs.course == 'machine-learning' || inputs.course == 'machine-learning-neurons' || inputs.course == 'javascript-superstar-readings'
@@ -867,7 +862,6 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
-
   course-choices:
     if: inputs.course == 'course-choices'
     runs-on: ubuntu-24.04
@@ -1123,7 +1117,6 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
-
   javascript-small-talk:
     if: inputs.course == 'javascript-small-talk'
     runs-on: ubuntu-24.04
@@ -1191,7 +1184,6 @@ jobs:
           path: output/javascript-small-talk-browser/
           if-no-files-found: error
           retention-days: 14
-
 
   javascript-businesses:
     if: inputs.course == 'javascript-businesses'
@@ -1261,7 +1253,6 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
-
   javascript-business-directory:
     if: inputs.course == 'javascript-business-directory'
     runs-on: ubuntu-24.04
@@ -1329,7 +1320,6 @@ jobs:
           path: output/javascript-business-directory-browser/
           if-no-files-found: error
           retention-days: 14
-
 
   javascript-hundred-squares:
     if: inputs.course == 'javascript-hundred-squares'
@@ -1571,9 +1561,6 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
-
-
-
   javascript-weather:
     if: inputs.course == 'javascript-weather'
     runs-on: ubuntu-24.04
@@ -1641,7 +1628,6 @@ jobs:
           path: output/javascript-weather-browser/
           if-no-files-found: error
           retention-days: 14
-
 
   javascript-snowflake:
     if: inputs.course == 'javascript-snowflake'
@@ -1995,80 +1981,79 @@ jobs:
           retention-days: 14
 
   swift-map-native:
-      needs: swift-map-browser
-      if: ${{ !cancelled() && inputs.course == 'swift-map' && needs.swift-map-browser.result == 'success' }}
-      runs-on: macos-26
-      timeout-minutes: 60
-      permissions:
-          contents: read
-          actions: read
-      env:
-          SWIFT_COURSE: map
-          CLASSES_FAMILY_TASK_ID: swift-canonical-ios-map
-          CLASSES_FAMILY_MIN_DISK_GB: 8
-          CLASSES_FAMILY_HEAVY_TIMEOUT_MS: 3300000
-      steps:
-          - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-            with:
-                persist-credentials: false
+    needs: swift-map-browser
+    if: ${{ !cancelled() && inputs.course == 'swift-map' && needs.swift-map-browser.result == 'success' }}
+    runs-on: macos-26
+    timeout-minutes: 60
+    permissions:
+      contents: read
+      actions: read
+    env:
+      SWIFT_COURSE: map
+      CLASSES_FAMILY_TASK_ID: swift-canonical-ios-map
+      CLASSES_FAMILY_MIN_DISK_GB: 8
+      CLASSES_FAMILY_HEAVY_TIMEOUT_MS: 3300000
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
 
-          - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
-            with:
-                node-version: 24.18.0
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: 24.18.0
 
-          - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
-            with:
-                name: swift-map-candidate-workflows
-                path: output/swift-map-candidate
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        with:
+          name: swift-map-candidate-workflows
+          path: output/swift-map-candidate
 
-          - name: Wait for the hosted Mac to settle within the native load limit
-            run: |
-                python3 - <<'PY'
-                import datetime
-                import json
-                import os
-                from pathlib import Path
-                import time
+      - name: Wait for the hosted Mac to settle within the native load limit
+        run: |
+          python3 - <<'PY'
+          import datetime
+          import json
+          import os
+          from pathlib import Path
+          import time
 
-                proof = Path(os.environ["RUNNER_TEMP"]) / "swift-canonical-ios/runner-readiness.json"
-                proof.parent.mkdir(parents=True, exist_ok=True)
-                samples = []
-                deadline = time.monotonic() + 600
-                while True:
-                    load = os.getloadavg()[0]
-                    samples.append({"at": datetime.datetime.now(datetime.timezone.utc).isoformat(), "load": load})
-                    ready = load <= 8
-                    proof.write_text(json.dumps({"ready": ready, "maximumLoad": 8, "samples": samples}, indent=2) + "\n")
-                    print(f"Hosted Mac load: {load:.2f}; required maximum: 8", flush=True)
-                    if ready:
-                        break
-                    if time.monotonic() >= deadline:
-                        raise SystemExit("Hosted Mac did not settle within ten minutes; native checks have not run")
-                    time.sleep(10)
-                PY
+          proof = Path(os.environ["RUNNER_TEMP"]) / "swift-canonical-ios/runner-readiness.json"
+          proof.parent.mkdir(parents=True, exist_ok=True)
+          samples = []
+          deadline = time.monotonic() + 600
+          while True:
+              load = os.getloadavg()[0]
+              samples.append({"at": datetime.datetime.now(datetime.timezone.utc).isoformat(), "load": load})
+              ready = load <= 8
+              proof.write_text(json.dumps({"ready": ready, "maximumLoad": 8, "samples": samples}, indent=2) + "\n")
+              print(f"Hosted Mac load: {load:.2f}; required maximum: 8", flush=True)
+              if ready:
+                  break
+              if time.monotonic() >= deadline:
+                  raise SystemExit("Hosted Mac did not settle within ten minutes; native checks have not run")
+              time.sleep(10)
+          PY
 
-          - name: Verify course scroll gesture geometry
-            if: inputs.course == 'swift-map'
-            run: node scripts/classes-family-heavy-task.mjs -- python3 test/swift-course-scroll-geometry.py
+      - name: Verify course scroll gesture geometry
+        if: inputs.course == 'swift-map'
+        run: node scripts/classes-family-heavy-task.mjs -- python3 test/swift-course-scroll-geometry.py
 
-          - name: Test selected course roles and largest text on two iPhone sizes
-            run: node scripts/classes-family-heavy-task.mjs -- python3 test/swift-welcome-exported-ios.py --course "$SWIFT_COURSE" --browser "output/swift-map-candidate/swift-map-browser" --proof "$RUNNER_TEMP/swift-canonical-ios/$SWIFT_COURSE/proof.json"
+      - name: Test selected course roles and largest text on two iPhone sizes
+        run: node scripts/classes-family-heavy-task.mjs -- python3 test/swift-welcome-exported-ios.py --course "$SWIFT_COURSE" --browser "output/swift-map-candidate/swift-map-browser" --proof "$RUNNER_TEMP/swift-canonical-ios/$SWIFT_COURSE/proof.json"
 
-          - name: Retain native Swift versions, process logs and UI results
-            if: always()
-            uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
-            with:
-                name: swift-map-candidate-native-ios
-                path: |
-                    ${{ runner.temp }}/swift-canonical-ios/runner-readiness.json
-                    ${{ runner.temp }}/swift-canonical-ios/**/proof.json
-                    ${{ runner.temp }}/swift-canonical-ios/**/processes.jsonl
-                    ${{ runner.temp }}/swift-canonical-ios/**/logs/
-                    ${{ runner.temp }}/swift-canonical-ios/**/results/
-                    ${{ runner.temp }}/swift-canonical-ios/**/inputs.json
-                if-no-files-found: error
-                retention-days: 7
-
+      - name: Retain native Swift versions, process logs and UI results
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: swift-map-candidate-native-ios
+          path: |
+            ${{ runner.temp }}/swift-canonical-ios/runner-readiness.json
+            ${{ runner.temp }}/swift-canonical-ios/**/proof.json
+            ${{ runner.temp }}/swift-canonical-ios/**/processes.jsonl
+            ${{ runner.temp }}/swift-canonical-ios/**/logs/
+            ${{ runner.temp }}/swift-canonical-ios/**/results/
+            ${{ runner.temp }}/swift-canonical-ios/**/inputs.json
+          if-no-files-found: error
+          retention-days: 7
 
   tracker-evidence:
     if: inputs.course == 'tracker-evidence'
@@ -2318,7 +2303,6 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
-
   ai-studios:
     if: inputs.course == 'ai-studios' && inputs.browser_artifact_id == ''
     runs-on: ubuntu-24.04
@@ -2526,7 +2510,6 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
-
   ai-setup:
     if: inputs.course == 'ai-setup'
     runs-on: ubuntu-24.04
@@ -2564,7 +2547,7 @@ jobs:
   self-study:
     if: inputs.course == 'java-refactoring-followup' || inputs.course == 'java-refactoring-final' || inputs.course == 'java-testability' || inputs.course == 'java-pattern-journeys' || inputs.course == 'java-generalization' || inputs.course == 'java-method-calls' || inputs.course == 'java-conditional-flow' || inputs.course == 'java-value-data' || inputs.course == 'java-ownership-move' || inputs.course == 'java-composing' || inputs.course == 'java-refactoring' || inputs.course == 'java-studios' || inputs.course == 'java-capstone' || inputs.course == 'java-judgment' || inputs.course == 'java-architecture' || inputs.course == 'java-collaboration' || inputs.course == 'java-behavioral' || inputs.course == 'java-structural' || inputs.course == 'java-boundary' || inputs.course == 'java-creational' || inputs.course == 'java-foundations' || inputs.course == 'java-patterns' || inputs.course == 'java-recursion' || inputs.course == 'self-study' || inputs.course == 'physics-models' || inputs.course == 'bootcamp' || inputs.course == 'scratch-originals' || inputs.course == 'scratch-readings' || inputs.course == 'course-audit' || inputs.course == 'scratch-tasks'
     runs-on: ubuntu-24.04
-    timeout-minutes: ${{ inputs.course == 'java-refactoring-final' && 90 || 40 }}
+    timeout-minutes: ${{ inputs.course == 'self-study' && 210 || inputs.course == 'java-refactoring-final' && 90 || 40 }}
     env:
       CLASSES_FAMILY_TASK_ID: self-study-courses-${{ github.run_id }}
       SELF_STUDY_BROWSER_PROOF_DIR: ${{ github.workspace }}/output/self-study-browser
@@ -2730,13 +2713,13 @@ jobs:
       - name: Verify Scratch readings and published project tasks in both roles and sizes
         if: inputs.course == 'scratch-readings' || inputs.course == 'scratch-tasks'
         env:
-          SCRATCH_BROWSER_READING_ONLY: '1'
+          SCRATCH_BROWSER_READING_ONLY: "1"
         run: node scripts/classes-family-heavy-task.mjs -- node --test test/scratch-browser.test.mjs
       - name: Verify capstone and seven clinic imports, saved changes and independent attempts
         id: java_refactoring_final_browser
         if: always() && !cancelled() && inputs.course == 'java-refactoring-final' && steps.course_build.outcome == 'success'
         env:
-          CLASSES_FAMILY_HEAVY_TIMEOUT_MS: '3600000'
+          CLASSES_FAMILY_HEAVY_TIMEOUT_MS: "3600000"
           JAVA_REFACTORING_FINAL_BROWSER_PROOF_DIR: ${{ github.workspace }}/output/self-study-browser/java-refactoring-final
           COURSE_IMPORT_SCREENSHOT_DIR: ${{ github.workspace }}/output/self-study-browser/java-refactoring-final/screenshots
         run: node scripts/classes-family-heavy-task.mjs -- node --test --test-concurrency=1 test/java-refactoring-final-course-browser.test.mjs
