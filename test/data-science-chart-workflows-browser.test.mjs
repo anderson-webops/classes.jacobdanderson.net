@@ -75,6 +75,12 @@ function normalizePaths(text) {
 	return text.replace(/^(Chart saved as|Weak comparison saved as) .*[/\\]([^/\\]+)$/gm, "$1 $2");
 }
 
+const dependencyNames = "Pillow, contourpy, cycler, fonttools, kiwisolver, matplotlib, numpy, packaging, pyparsing, python-dateutil, pytz, six";
+const dependencyMessage = `Loading ${dependencyNames}\nLoaded ${dependencyNames}`;
+function programOutput(stdout) {
+	return stdout.startsWith(`${dependencyMessage}\n`) ? stdout.slice(dependencyMessage.length + 1) : stdout;
+}
+
 function assertSVG(svg, metric = "mean", weak = false) {
 	assert.ok(svg.includes("<svg"));
 	const wanted = weak ? ["Deliberately weak comparison"] : [
@@ -109,6 +115,7 @@ async function savedFigures(page, key, names) {
 		const file = project.files.find(file => file.name === name);
 		return { name, sha256: digest(file.content), ...assertSVG(file.content, name === "totals.svg" ? "total" : "mean", name.endsWith("-weak.svg")) };
 	});
+	if (await page.evaluate(() => innerWidth < 900)) await page.locator(".mobile-view-picker button[data-view='canvas']").click();
 	await page.waitForFunction(count => [...document.querySelectorAll(".artifact-card img")].filter(image => image.complete && image.naturalWidth > 0).length === count, {}, names.length);
 	return { project, figures };
 }
@@ -119,11 +126,13 @@ async function run(page, width, expectedText) {
 	if (width < 900) await page.locator(".mobile-view-picker button[data-view='code']").click();
 	await page.locator("button.run-control").click();
 	if (width < 900) await page.locator(".mobile-view-picker button[data-view='console']").click();
-	await page.waitForFunction((expected) => {
+	await page.waitForFunction(({ expected, dependencyMessage }) => {
 		const status = document.querySelector("[data-testid='ide-run-status']")?.textContent.trim();
-		const stdout = [...document.querySelectorAll(".output-line--stdout")].map(node => node.textContent).join("\n").replace(/^(Chart saved as|Weak comparison saved as) .*[/\\]([^/\\]+)$/gm, "$1 $2");
+		const raw = [...document.querySelectorAll(".output-line--stdout")].map(node => node.textContent).join("\n");
+		const program = raw.startsWith(`${dependencyMessage}\n`) ? raw.slice(dependencyMessage.length + 1) : raw;
+		const stdout = program.replace(/^(Chart saved as|Weak comparison saved as) .*[/\\]([^/\\]+)$/gm, "$1 $2");
 		return ["Run failed", "Run finished with issues"].includes(status) || (status === "Analysis ready" && stdout === expected);
-	}, { timeout: 90000 }, expected).catch(async (error) => {
+	}, { timeout: 90000 }, { expected, dependencyMessage }).catch(async (error) => {
 		const observed = await page.evaluate(() => ({
 			status: document.querySelector("[data-testid='ide-run-status']")?.textContent.trim(),
 			stdout: [...document.querySelectorAll(".output-line--stdout")].map(node => node.textContent).join("\n"),
@@ -140,7 +149,9 @@ async function run(page, width, expectedText) {
 	}));
 	assert.equal(observed.status, "Analysis ready", JSON.stringify(observed));
 	assert.equal(observed.stderr, "");
-	assert.equal(normalizePaths(observed.stdout), expected, JSON.stringify(observed));
+	observed.programStdout = programOutput(observed.stdout);
+	observed.dependencyProgress = observed.programStdout === observed.stdout ? [] : dependencyMessage.split("\n");
+	assert.equal(normalizePaths(observed.programStdout), expected, JSON.stringify(observed));
 	return observed;
 }
 
