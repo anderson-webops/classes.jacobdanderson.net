@@ -21,7 +21,7 @@ export const middleSchoolWritingPractice: Record<string, WritingExercises> = {
 	],
 	"MSB5 Concluding Statements & Transitional Devices": [
 		'Revise these ideas into a conclusion for a 10-minute practice break: "The break gave the group time to review. Two groups needed longer. Try the break again next week." Use a transition that shows a qualification and end with a recommendation that follows from the ideas.',
-		"Write two conclusions for the same practice-break trial. Address classmates in one and the teacher planning next week's schedule in the other. Keep the evidence fixed, change the requested action, and underline the transition that makes each recommendation follow."
+		"Write two conclusions for the same practice-break trial. Address classmates in one and the school scheduler in the other. Keep the evidence fixed, change the requested action, and underline the transition that makes each recommendation follow."
 	],
 	"MSB6 Color Coding & Revision": [
 		'Label the claim, evidence, and reasoning in this draft: "Keep the signs by the door. Eight visitors found the room with the signs. The signs are helpful." Replace the last sentence with reasoning that connects the count to the claim. Use written labels or color.',
