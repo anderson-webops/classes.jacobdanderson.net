@@ -1334,7 +1334,7 @@ jobs:
   javascript-hundred-squares:
     if: inputs.course == 'javascript-hundred-squares'
     runs-on: ubuntu-24.04
-    timeout-minutes: 25
+    timeout-minutes: ${{ inputs.self_study_courses == 'python-level-2,python-level-2-classroom' && 45 || 25 }}
     env:
       CLASSES_FAMILY_TASK_ID: javascript-hundred-squares-${{ github.run_id }}
       JAVASCRIPT_HUNDRED_SQUARES_BROWSER_DIR: output/javascript-hundred-squares-browser
@@ -1463,6 +1463,13 @@ jobs:
           test/store.courses.python-level-2-flow.spec.test.ts
           test/store.courses.python-pygames-classroom.spec.test.ts
           --no-file-parallelism --maxWorkers=1
+      - name: Verify first Python module source roles and real IDE imports
+        if: inputs.self_study_courses == 'python-level-2,python-level-2-classroom'
+        env:
+          PYTHON_FIRST_MODULE_BROWSER_DIR: output/python-first-module-browser
+        run: |
+          npm exec -w front-end -- vitest run test/python-level-2-first-module.spec.test.ts --maxWorkers=1
+          node scripts/classes-family-heavy-task.mjs -- node --test --test-concurrency=1 test/python-level-2-first-module-browser.test.mjs
       - name: Verify actual Wordsmith role imports, saved scoring edits and complete dictionary exports
         if: inputs.self_study_courses != 'javascript-collisions' && inputs.self_study_courses != 'javascript-canvas-games' && inputs.self_study_courses != 'javascript-api-projects' && inputs.self_study_courses != 'javascript-local-persistence' && inputs.self_study_courses != 'javascript-us-capitals' && inputs.self_study_courses != 'javascript-master-fundamentals' && inputs.self_study_courses != 'javascript-master-checkpoint-one' && inputs.self_study_courses != 'javascript-master-checkpoint-two'
         env:
@@ -1560,6 +1567,7 @@ jobs:
             output/javascript-coastal-cruise-browser/
             output/javascript-juggling-paddle-browser/
             output/python-wordsmith-browser/
+            output/python-first-module-browser/
             output/javascript-collision-browser/
             output/javascript-canvas-games-browser/
             output/javascript-api-projects-browser/
