@@ -8,6 +8,9 @@ import { classroomReferenceItem } from "./classroomReferenceGuides";
 import { isCoreProjectTitle } from "./projectGrouping";
 import { staticMediaFilename } from "./staticMedia";
 
+export const PYTHON_LEVEL_2_PS1_SOURCE =
+	"https://github.com/instruction-material/Python-Level-2/tree/b58d958347f0c3ca6f9d96963a674cc3d00813bf";
+
 const PYTHON_LEVEL_2_PENDING_SOURCE_ASSETS = [
 	"ps10_field_day.gif",
 	"ps10_field_day_ii.gif",
@@ -277,7 +280,7 @@ export const pythonLevel2Course: RawCourse = {
 					content: projectBrief({
 						goal: "Create a Mad Libs program that gathers words from the user and inserts them into a complete story.",
 						build: [
-							"Ask for at least five pieces of text, such as a noun, adjective, verb, place, animal, or name.",
+							"Keep the first adjective prompt from the starter. Add a second adjective, a noun, a present-tense verb, and a past-tense verb.",
 							"Store each answer in a clearly named variable.",
 							"Print a story that combines fixed story text with the collected words.",
 							"Run the story with different answers to confirm the variables control the final output."
@@ -290,8 +293,8 @@ export const pythonLevel2Course: RawCourse = {
 						extension:
 							"Add a title, multiple paragraphs, or a replay loop that creates a different story with new answers."
 					}),
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS1-Mad-Libs/solution",
+					projectLink: `${PYTHON_LEVEL_2_PS1_SOURCE}/PS1-Mad-Libs/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_PS1_SOURCE}/PS1-Mad-Libs/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps1_mad_libs.gif"
 				},
@@ -303,7 +306,7 @@ export const pythonLevel2Course: RawCourse = {
 							"Ask for a word or short phrase.",
 							"Ask for an index and convert it to an integer.",
 							"Print the original word and the character found at that index.",
-							"Test the first index, a middle index, and the last valid index."
+							"Run planet with indices 0, 2, and 5. The selected characters are p, a, and t."
 						],
 						checkpoints: [
 							"The index is converted before it is used.",
@@ -313,8 +316,8 @@ export const pythonLevel2Course: RawCourse = {
 						extension:
 							"Check whether the requested index is valid before indexing so the program can print a helpful message instead of crashing."
 					}),
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS1-Index-Picker/solution",
+					projectLink: `${PYTHON_LEVEL_2_PS1_SOURCE}/PS1-Index-Picker/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_PS1_SOURCE}/PS1-Index-Picker/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps1_index_picker.mp4"
 				}
@@ -325,10 +328,10 @@ export const pythonLevel2Course: RawCourse = {
 					content: projectBrief({
 						goal: "Track a roller coaster car's remaining safe capacity as riders board one at a time.",
 						build: [
-							"Define the starting capacity.",
+							"Use the starter model of 900 pounds and four fictional rider weights.",
 							"Ask for four rider weights and convert each response to a number.",
 							"Subtract each rider's weight from the remaining capacity.",
-							"Print the remaining capacity after every rider boards."
+							"Print the remaining capacity after each update. Compare four 200-pound riders with 200, 200, 200, and 300 pounds."
 						],
 						checkpoints: [
 							"Every rider changes the same running total.",
@@ -336,8 +339,8 @@ export const pythonLevel2Course: RawCourse = {
 							"The final output identifies whether capacity remains or has been exceeded."
 						]
 					}),
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS1-Space-Mountain/solution",
+					projectLink: `${PYTHON_LEVEL_2_PS1_SOURCE}/PS1-Space-Mountain/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_PS1_SOURCE}/PS1-Space-Mountain/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps1_space_mountain.gif"
 				},
@@ -346,19 +349,19 @@ export const pythonLevel2Course: RawCourse = {
 					content: projectBrief({
 						goal: "Calculate a restaurant tip and compare whole-dollar rounding with cents-based rounding.",
 						build: [
-							"Ask for the bill total and tip percentage.",
+							"Ask for a nonnegative bill in dollars and a tip rate as a decimal, such as 0.18 for 18 percent.",
 							"Convert both inputs to numeric values.",
 							"Calculate the tip and the total including tip.",
-							"Print a whole-dollar estimate and a cents-accurate value."
+							"Print the tip and total to two decimal places. Show a separate whole-dollar tip estimate rounded down."
 						],
 						checkpoints: [
 							"Percent input is interpreted correctly.",
 							"Money output includes clear labels.",
-							"The explanation distinguishes rounding for readability from the exact calculated value."
+							"A bill of $27.50 at 0.18 gives a tip of $4.95, a total of $32.45, and a round-down estimate of $4."
 						]
 					}),
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS1-Tip-Calculator/solution",
+					projectLink: `${PYTHON_LEVEL_2_PS1_SOURCE}/PS1-Tip-Calculator/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_PS1_SOURCE}/PS1-Tip-Calculator/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps1_tip_calculator.gif"
 				},
@@ -370,7 +373,7 @@ export const pythonLevel2Course: RawCourse = {
 							"Ask for four lap or runner split times.",
 							"Convert the inputs to numbers.",
 							"Add the times to find the team total.",
-							"Divide by four to find the average split."
+							"Divide by four to find the average split. With splits of 60, 61, 62, and 63 seconds, check for a total of 246 and an average of 61.5."
 						],
 						checkpoints: [
 							"The total and average use numeric addition, not string concatenation.",
@@ -378,8 +381,8 @@ export const pythonLevel2Course: RawCourse = {
 							"The average changes correctly if one split time is changed."
 						]
 					}),
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS1-Relay-Race/solution",
+					projectLink: `${PYTHON_LEVEL_2_PS1_SOURCE}/PS1-Relay-Race/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_PS1_SOURCE}/PS1-Relay-Race/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps1_relay_race.gif"
 				}

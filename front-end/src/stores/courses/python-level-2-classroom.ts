@@ -3,7 +3,10 @@ import {
 	copyClassroomCourseModules,
 	createClassroomLaunchModule
 } from "./classroom-course";
-import { pythonLevel2Course } from "./python-level-2";
+import {
+	PYTHON_LEVEL_2_PS1_SOURCE,
+	pythonLevel2Course
+} from "./python-level-2";
 
 const PYTHON_LEVEL_2_SOURCE =
 	"https://github.com/instruction-material/Python-Level-2/tree/main";
@@ -14,6 +17,10 @@ function launchProject(
 	sourcePath: string,
 	learningPath: "choice" | "challenge"
 ): RawCourseModuleItem {
+	const source =
+		sourcePath === "PS1-Mad-Libs"
+			? PYTHON_LEVEL_2_PS1_SOURCE
+			: PYTHON_LEVEL_2_SOURCE;
 	return {
 		title,
 		content,
@@ -21,7 +28,7 @@ function launchProject(
 		solutionLink:
 			sourcePath === "PS13-Wordsmith"
 				? "https://github.com/instruction-material/Python-Level-2/tree/a840f54eb6a55718f6305544adc937c32fa516ee/PS13-Wordsmith/solution"
-				: `${PYTHON_LEVEL_2_SOURCE}/${sourcePath}/solution`
+				: `${source}/${sourcePath}/solution`
 	};
 }
 
@@ -145,7 +152,7 @@ For a showcase, demonstrate the working Normal result first. If Hard is complete
 
 **Hard:** Add a small reusable test function or deterministic mode that reproduces a prior failure without manual re-entry.`,
 			learningPath: "challenge",
-			solutionLink: `${PYTHON_LEVEL_2_SOURCE}/PS1-Mad-Libs/solution`
+			solutionLink: `${PYTHON_LEVEL_2_PS1_SOURCE}/PS1-Mad-Libs/solution`
 		}
 	]
 });
