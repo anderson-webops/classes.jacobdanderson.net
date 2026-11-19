@@ -91,7 +91,7 @@ function assertSVG(svg, metric = "mean", weak = false) {
 	];
 	for (const label of wanted) assert.ok(svg.includes(label), label);
 	if (weak) return { deliberatelyWeak: true };
-	const geometry = [2, 3, 4].map(index => {
+	const geometry = [3, 4, 5].map(index => {
 		const group = svg.match(new RegExp(`<g id="patch_${index}">([\\s\\S]*?)<\\/g>`));
 		assert.ok(group, `bar ${index}`);
 		const path = group[1].match(/d="([^"]+)"/)[1];

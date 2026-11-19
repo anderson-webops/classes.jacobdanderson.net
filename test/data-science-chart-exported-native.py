@@ -48,7 +48,7 @@ def svg_contract(data, metric='mean', weak=False):
     if weak:
         return dict(deliberatelyWeak=True, sha256=digest(data), labels=labels)
     geometry = []
-    for index in [2, 3, 4]:
+    for index in [3, 4, 5]:
         group = next(e for e in tree.iter() if e.get('id') == 'patch_' + str(index))
         path = next(e for e in group.iter() if e.tag.endswith('}path'))
         points = [(float(x), float(y)) for x, y in re.findall(r'[ML]\s+([-\d.]+)\s+([-\d.]+)', path.get('d'))]
