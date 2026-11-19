@@ -123,7 +123,16 @@ async function run(page, width, expectedText) {
 		const status = document.querySelector("[data-testid='ide-run-status']")?.textContent.trim();
 		const stdout = [...document.querySelectorAll(".output-line--stdout")].map(node => node.textContent).join("\n").replace(/^(Chart saved as|Weak comparison saved as) .*[/\\]([^/\\]+)$/gm, "$1 $2");
 		return ["Run failed", "Run finished with issues"].includes(status) || (status === "Analysis ready" && stdout === expected);
-	}, { timeout: 90000 }, expected);
+	}, { timeout: 90000 }, expected).catch(async (error) => {
+		const observed = await page.evaluate(() => ({
+			status: document.querySelector("[data-testid='ide-run-status']")?.textContent.trim(),
+			stdout: [...document.querySelectorAll(".output-line--stdout")].map(node => node.textContent).join("\n"),
+			stderr: [...document.querySelectorAll(".output-line--stderr")].map(node => node.textContent).join("\n"),
+			artifacts: document.querySelectorAll(".artifact-card img").length,
+			pythonMarkers: [...document.querySelectorAll(".cm-lintRange-error")].map(node => node.textContent)
+		}));
+		throw new Error(`Chart run output mismatch: ${JSON.stringify({ expected, observed })}`, { cause: error });
+	});
 	const observed = await page.evaluate(() => ({
 		status: document.querySelector("[data-testid='ide-run-status']")?.textContent.trim(),
 		stdout: [...document.querySelectorAll(".output-line--stdout")].map(node => node.textContent).join("\n"),
