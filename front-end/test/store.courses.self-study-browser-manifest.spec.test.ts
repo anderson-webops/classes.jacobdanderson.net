@@ -849,7 +849,10 @@ it.each(
 				assignmentTextScope: completeAssignment
 					? "complete"
 					: "directive",
-				directiveTextMode: fullBlocks ? "innerText" : "textContent",
+				directiveTextMode:
+					fullBlocks || writingAssignmentCounts.has(id)
+						? "innerText"
+						: "textContent",
 				requiredDirective: container
 					.textContent!
 					.replace(/\s+/g, " ")
@@ -915,7 +918,10 @@ it.each(
 			]);
 			expect(cards).toHaveLength(writingAssignmentCount);
 			expect(
-				cards.every(card => card.assignmentTextScope === "complete")
+				cards.every(card =>
+					card.assignmentTextScope === "complete"
+					&& card.directiveTextMode === "innerText"
+				)
 			).toBe(true);
 			const exercises = modules.flatMap(module =>
 				module.optional.filter(card =>
