@@ -659,7 +659,7 @@ describe("implemented course development artifacts", () => {
 		);
 		const rootOnlyLinks = [
 			...serializedCourse.matchAll(
-				/https:\/\/github\.com\/instruction-material\/Python-Level-2\/tree\/main\/([^"]+)/g
+				/https:\/\/github\.com\/instruction-material\/Python-Level-2\/tree\/(?:main|[0-9a-f]{40})\/([^"]+)/g
 			)
 		]
 			.map(match => match[1].replace(/\\+$/, ""))
@@ -675,7 +675,10 @@ describe("implemented course development artifacts", () => {
 
 		expect(rootOnlyLinks).toHaveLength(0);
 		expect(serializedCourse).toContain(
-			"Python-Level-2/tree/main/PS1-Mad-Libs/solution"
+			"Python-Level-2/tree/b58d958347f0c3ca6f9d96963a674cc3d00813bf/PS1-Mad-Libs/solution"
+		);
+		expect(serializedCourse).toContain(
+			"Python-Level-2/tree/b58d958347f0c3ca6f9d96963a674cc3d00813bf/PS1-Mad-Libs/starter"
 		);
 		expect(serializedCourse).toContain(
 			"Python-Level-2/tree/main/PS5-Parameter-Tracing/starter"
@@ -697,7 +700,7 @@ describe("implemented course development artifacts", () => {
 		expect(text).not.toContain(
 			["usernames", `${credentialWord}s`].join(", ")
 		);
-		expect(text).toContain("target password or phrase");
+		expect(text).toContain("the public phrase blue comet");
 		expect(text).toContain("encoded sample phrase");
 		expect(text).toContain("sample login names");
 	});

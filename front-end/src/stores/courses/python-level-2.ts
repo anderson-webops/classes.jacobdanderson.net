@@ -11,6 +11,9 @@ import { staticMediaFilename } from "./staticMedia";
 export const PYTHON_LEVEL_2_PS1_SOURCE =
 	"https://github.com/instruction-material/Python-Level-2/tree/b58d958347f0c3ca6f9d96963a674cc3d00813bf";
 
+export const PYTHON_LEVEL_2_PS2_SOURCE =
+	"https://github.com/instruction-material/Python-Level-2/tree/40e195905b59faa845ca0b4418e9fa7537c7e51d";
+
 const PYTHON_LEVEL_2_PENDING_SOURCE_ASSETS = [
 	"ps10_field_day.gif",
 	"ps10_field_day_ii.gif",
@@ -394,7 +397,7 @@ export const pythonLevel2Course: RawCourse = {
 				{
 					title: "For Loops",
 					content: conceptBrief({
-						focus: "`for i in range(...)` fits repetition with a known count or a predictable number sequence. The range start, stop, and step determine exactly which values appear.",
+						focus: "`for i in range(...)` fits repetition with a known count or a predictable number sequence. The range start, stop, and step determine exactly which values appear.\n\nA start of 1 and step of 2 produce 1, 3, and 5 in this example. The upper boundary 6 is excluded.\n\n```python\nfor number in range(1, 6, 2):\n    print(number)\n```",
 						practice: [
 							"Print 0 through 9 and identify why the stop value is not included.",
 							"Print every third number in a range by changing the step.",
@@ -408,7 +411,7 @@ export const pythonLevel2Course: RawCourse = {
 				{
 					title: "While Loops",
 					content: conceptBrief({
-						focus: "`while` loops fit repetition controlled by a changing condition. The loop must move toward a stopping state or it can run forever.",
+						focus: "`while` loops fit repetition controlled by a changing condition. The loop must move toward a stopping state or it can run forever.\n\nIn this example the condition is true at 68 and 43 cents. The third check sees 18 cents and stops. The counter is 2.\n\n```python\nremaining = 68\nquarters = 0\nwhile remaining >= 25:\n    remaining -= 25\n    quarters += 1\nprint(quarters, remaining)\n```",
 						practice: [
 							"Write a loop that counts upward until a limit is reached.",
 							"Write a loop that keeps asking for input until a target answer appears.",
@@ -423,10 +426,10 @@ export const pythonLevel2Course: RawCourse = {
 					content: projectBrief({
 						goal: "Print a name in several patterns to compare `for` loops, `while` loops, indexes, and stepping rules.",
 						build: [
-							"Ask for a name and store it as a string.",
+							"Use a fictional name such as Ada to trace the starter. The forward letters are A, d, a.",
 							"Print the letters forward.",
 							"Print every other character by controlling the index or range step.",
-							"Print the name backward with a reverse loop."
+							"Print the name backward with a reverse loop. For Ada, expect A and a in the alternating pattern and a, d, A in reverse."
 						],
 						checkpoints: [
 							"At least one version uses a `for` loop.",
@@ -434,8 +437,8 @@ export const pythonLevel2Course: RawCourse = {
 							"The backward version starts at the last valid index rather than one past the end."
 						]
 					}),
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS2-Crazy-Nametags/solution",
+					projectLink: `${PYTHON_LEVEL_2_PS2_SOURCE}/PS2-Crazy-Nametags/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_PS2_SOURCE}/PS2-Crazy-Nametags/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps2_crazy_nametags.gif"
 				},
@@ -444,21 +447,21 @@ export const pythonLevel2Course: RawCourse = {
 					content: projectBrief({
 						goal: "Convert a number of cents into quarters, dimes, nickels, and pennies.",
 						build: [
-							"Ask for an amount in cents and convert it to an integer.",
+							"Ask once for a nonnegative whole number of cents. Use the remaining value from the previous coin counter.",
 							"Count how many quarters fit and update the remaining cents.",
-							"Repeat the process for dimes, nickels, and pennies.",
+							"Subtract 10 for each dime, 5 for each nickel, and 1 for each penny. Keep a separate count for each denomination.",
 							"Print the final coin breakdown."
 						],
 						checkpoints: [
-							"The remaining-cent value decreases after each coin type.",
+							"After each subtraction, the remaining cents decrease by the value of the coin just counted.",
 							"The breakdown adds back up to the original amount.",
 							"Boundary cases such as 0, 4, 5, 10, 25, and 99 cents are tested."
 						],
 						extension:
 							"Rebuild the solution with integer division and modulo, then compare that version with the loop-and-counter approach."
 					}),
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS2-Change-Machine/solution",
+					projectLink: `${PYTHON_LEVEL_2_PS2_SOURCE}/PS2-Change-Machine/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_PS2_SOURCE}/PS2-Change-Machine/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps2_change_machine.gif"
 				}
@@ -469,28 +472,30 @@ export const pythonLevel2Course: RawCourse = {
 					content: projectBrief({
 						goal: "Model compound growth over time and print a readable year-by-year projection.",
 						build: [
-							"Ask for a starting balance and interest rate.",
-							"Convert the inputs to numeric values.",
+							"Ask for a starting balance and an annual rate as a percent. For an example, use 100 and 5.",
+							"Divide the displayed percent by 100 before multiplying the balance by one plus the rate.",
 							"Loop through 20 years of growth.",
 							"Update the balance each year and print the year number with the projected balance."
 						],
 						checkpoints: [
 							"The balance changes cumulatively rather than resetting each year.",
-							"The interest rate is converted from a percent into a multiplier correctly.",
+							"For 100 at 5 percent, the first two year-end values are 105.00 and 110.25.",
 							"The output is rounded or formatted so the trend is readable."
 						]
 					}),
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS2-Interest-Aggregator/solution",
+					projectLink: `${PYTHON_LEVEL_2_PS2_SOURCE}/PS2-Interest-Aggregator/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_PS2_SOURCE}/PS2-Interest-Aggregator/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps2_interest_aggregator.gif"
 				},
 				{
-					title: "PS2 Supplemental Project 2: Password Guesser",
+					id: "python-level-2-ps2-for-loops-and-while-loops-supplemental-ps2-supplemental-project-2-password-guesser",
+					title: "PS2 Supplemental Project 2: Target Phrase Game",
+					aliases: ["PS2 Supplemental Project 2: Password Guesser"],
 					content: projectBrief({
 						goal: "Build a guessing loop that continues until the user enters the target phrase.",
 						build: [
-							"Define a target password or phrase.",
+							"Use the public phrase blue comet from the starter. The program is an offline word game.",
 							"Ask for guesses inside a loop.",
 							"Track the number of attempts.",
 							"Stop only when the guess matches the target exactly."
@@ -503,8 +508,8 @@ export const pythonLevel2Course: RawCourse = {
 						extension:
 							"Add case-insensitive comparison, a maximum attempt limit, or hints after repeated failed guesses."
 					}),
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS2-Password-Guesser/solution",
+					projectLink: `${PYTHON_LEVEL_2_PS2_SOURCE}/PS2-Password-Guesser/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_PS2_SOURCE}/PS2-Password-Guesser/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps2_password_guesser.gif"
 				},
@@ -524,8 +529,8 @@ export const pythonLevel2Course: RawCourse = {
 							"The outer loop controls how many rows appear."
 						]
 					}),
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS2-For-Loop-Fun/solution",
+					projectLink: `${PYTHON_LEVEL_2_PS2_SOURCE}/PS2-For-Loop-Fun/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_PS2_SOURCE}/PS2-For-Loop-Fun/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps2_for_loop_fun.gif"
 				},
@@ -537,7 +542,7 @@ export const pythonLevel2Course: RawCourse = {
 							"The final program explains how many whole years, months, weeks, and days fit into the original total, while keeping the leftover days consistent with the chosen unit assumptions.",
 						build: [
 							"Ask for a number of days and convert it to an integer.",
-							"Compute complete years, remaining months, remaining weeks, and leftover days using a consistent approximation.",
+							"Use a 365-day year, a 30-day month, and a 7-day week. Count in that order using the same remainder.",
 							"Update the remaining day count after each unit.",
 							"Print the result with clear labels."
 						],
@@ -548,8 +553,8 @@ export const pythonLevel2Course: RawCourse = {
 							"Test zero days, a small number of days, and a value large enough to use every unit."
 						]
 					}),
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS2-Calendar-Machine/solution",
+					projectLink: `${PYTHON_LEVEL_2_PS2_SOURCE}/PS2-Calendar-Machine/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_PS2_SOURCE}/PS2-Calendar-Machine/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps2_calendar_machine.gif"
 				},
@@ -558,10 +563,10 @@ export const pythonLevel2Course: RawCourse = {
 					content: projectBrief({
 						goal: "Simulate a simple risk-reward game driven by random coin flips and a stopping choice.",
 						build: [
-							"Begin with a fixed starting amount.",
-							"Ask whether the player wants to risk the current amount.",
+							"Begin the simulation with 10 points.",
+							"Use Enter to continue and q to keep the current points. Prompt again on any other entry.",
 							"Flip a random coin when the player continues.",
-							"Double the amount on a win, set it to zero on a loss, and stop when the player quits or loses."
+							"Double the points after heads, reset the points to zero after tails, and stop on a quit or loss."
 						],
 						checkpoints: [
 							"The current amount is updated in only one place per round.",
@@ -569,8 +574,8 @@ export const pythonLevel2Course: RawCourse = {
 							"The output explains the result of each flip before the next decision."
 						]
 					}),
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS2-Double-or-Nothing/solution",
+					projectLink: `${PYTHON_LEVEL_2_PS2_SOURCE}/PS2-Double-or-Nothing/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_PS2_SOURCE}/PS2-Double-or-Nothing/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps2_double_or_nothing.gif"
 				},
@@ -579,7 +584,7 @@ export const pythonLevel2Course: RawCourse = {
 					content: projectBrief({
 						goal: "Repair a loop-based rocket launch simulator by using console evidence instead of guessing.",
 						build: [
-							"Run the starter code and record the first error or incorrect behavior.",
+							"Run the starter and record the first syntax error with its line number. A while statement ends with a colon and its body is indented.",
 							"Fix one issue at a time, then rerun the program.",
 							"Inspect loop starts, stops, updates, and indentation.",
 							"Continue until the launch countdown and post-launch behavior run completely."
@@ -590,10 +595,8 @@ export const pythonLevel2Course: RawCourse = {
 							"The final run demonstrates the complete launch sequence."
 						]
 					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS2-Debugging-Loops/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS2-Debugging-Loops/solution",
+					projectLink: `${PYTHON_LEVEL_2_PS2_SOURCE}/PS2-Debugging-Loops/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_PS2_SOURCE}/PS2-Debugging-Loops/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps2_debugging_loops.gif"
 				},
@@ -605,7 +608,7 @@ export const pythonLevel2Course: RawCourse = {
 							"Create one loop for the first factor.",
 							"Create a nested loop for the second factor.",
 							"Compute and print each product from 1 x 1 through 12 x 12.",
-							"Format the output so row and column structure is visible."
+							"Keep the first factor fixed within each group and leave a blank line between the groups."
 						],
 						checkpoints: [
 							"All 144 facts appear exactly once.",
@@ -613,8 +616,8 @@ export const pythonLevel2Course: RawCourse = {
 							"The structure remains readable when the maximum factor changes."
 						]
 					}),
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS2-Multiplication-Tables/solution",
+					projectLink: `${PYTHON_LEVEL_2_PS2_SOURCE}/PS2-Multiplication-Tables/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_PS2_SOURCE}/PS2-Multiplication-Tables/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps2_multiplication_tables.gif"
 				},
@@ -635,8 +638,10 @@ export const pythonLevel2Course: RawCourse = {
 							"The output makes it possible to verify the total from the printed shot results."
 						]
 					}),
+					projectLink:
+						"https://github.com/instruction-material/Python-Level-2/tree/40e195905b59faa845ca0b4418e9fa7537c7e51d/PS2-Juni-Archery/starter",
 					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS2-Juni-Archery/solution",
+						"https://github.com/instruction-material/Python-Level-2/tree/40e195905b59faa845ca0b4418e9fa7537c7e51d/PS2-Juni-Archery/solution",
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps2_juni_archery.gif"
 				}

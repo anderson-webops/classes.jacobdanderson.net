@@ -37,6 +37,56 @@ describe("Python Level 2 learner flow", () => {
 		setActivePinia(createPinia());
 	});
 
+	it("binds all ten loop projects to the verified source in both formats", async () => {
+		const revision = "40e195905b59faa845ca0b4418e9fa7537c7e51d";
+		const folders = [
+			"Crazy-Nametags",
+			"Change-Machine",
+			"Interest-Aggregator",
+			"Password-Guesser",
+			"For-Loop-Fun",
+			"Calendar-Machine",
+			"Double-or-Nothing",
+			"Debugging-Loops",
+			"Multiplication-Tables",
+			"Juni-Archery"
+		];
+		const moduleId = "python-level-2-ps2-for-loops-and-while-loops";
+
+		for (const courseId of ["python-level-2", "python-level-2-classroom"]) {
+			const course = (await useCoursesStore().loadCourseById(courseId))!;
+			const module = course.modules.find(({ id }) => id === moduleId)!;
+			const items = [
+				...module.curriculum,
+				...module.supplementalProjects
+			].filter(item => item.projectLink);
+			expect(items).toHaveLength(folders.length);
+			expect(items.map(item => item.solutionLink)).toEqual(
+				folders.map(() => undefined)
+			);
+			expect(items[3]?.id).toBe(
+				`${moduleId}-supplemental-ps2-supplemental-project-2-password-guesser`
+			);
+			for (const [index, item] of items.entries()) {
+				const source = `Python-Level-2/tree/${revision}/PS2-${folders[index]}`;
+				if (courseId === "python-level-2") {
+					expect(item.projectLink).toBe(
+						`https://github.com/instruction-material/${source}/starter`
+					);
+				} else {
+					const launch = new URL(
+						item.projectLink!,
+						"https://classes.example"
+					);
+					expect(launch.pathname).toBe("/ide");
+					expect(launch.searchParams.get("classroomSource")).toBe(
+						`${source}/solution`
+					);
+				}
+			}
+		}
+	});
+
 	it("keeps the concept-to-application sequence without asset bookkeeping", () => {
 		expect(pythonLevel2Course.modules.map(module => module.title)).toEqual(
 			EXPECTED_TEACHING_MODULES

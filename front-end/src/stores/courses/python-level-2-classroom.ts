@@ -5,11 +5,19 @@ import {
 } from "./classroom-course";
 import {
 	PYTHON_LEVEL_2_PS1_SOURCE,
+	PYTHON_LEVEL_2_PS2_SOURCE,
 	pythonLevel2Course
 } from "./python-level-2";
 
 const PYTHON_LEVEL_2_SOURCE =
 	"https://github.com/instruction-material/Python-Level-2/tree/main";
+
+const pinnedLaunchSources: Record<string, string> = {
+	"PS1-Mad-Libs": PYTHON_LEVEL_2_PS1_SOURCE,
+	"PS2-Change-Machine": PYTHON_LEVEL_2_PS2_SOURCE,
+	"PS13-Wordsmith":
+		"https://github.com/instruction-material/Python-Level-2/tree/a840f54eb6a55718f6305544adc937c32fa516ee"
+};
 
 function launchProject(
 	title: string,
@@ -17,18 +25,12 @@ function launchProject(
 	sourcePath: string,
 	learningPath: "choice" | "challenge"
 ): RawCourseModuleItem {
-	const source =
-		sourcePath === "PS1-Mad-Libs"
-			? PYTHON_LEVEL_2_PS1_SOURCE
-			: PYTHON_LEVEL_2_SOURCE;
+	const source = pinnedLaunchSources[sourcePath] ?? PYTHON_LEVEL_2_SOURCE;
 	return {
 		title,
 		content,
 		learningPath,
-		solutionLink:
-			sourcePath === "PS13-Wordsmith"
-				? "https://github.com/instruction-material/Python-Level-2/tree/a840f54eb6a55718f6305544adc937c32fa516ee/PS13-Wordsmith/solution"
-				: `${source}/${sourcePath}/solution`
+		solutionLink: `${source}/${sourcePath}/solution`
 	};
 }
 
