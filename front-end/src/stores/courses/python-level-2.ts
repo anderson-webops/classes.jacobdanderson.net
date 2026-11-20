@@ -23,6 +23,9 @@ export const PYTHON_LEVEL_2_PS4_SOURCE =
 const PYTHON_LEVEL_2_PS5_SOURCE =
 	"https://github.com/instruction-material/Python-Level-2/tree/6c8442dd68067e1f8cee1f14a5e08bf8e4b06c17";
 
+const PYTHON_LEVEL_2_PS6_LISTS_SOURCE =
+	"https://github.com/instruction-material/Python-Level-2/tree/ead6e1c2106bea775bada2f56d0e22f1cf168de9";
+
 const PYTHON_LEVEL_2_CHECK_INS_SOURCE =
 	"https://github.com/instruction-material/Python-Level-2/tree/8bc76e6927ae40683bfb79170c378dac2b266cf2";
 
@@ -1322,19 +1325,19 @@ export const pythonLevel2Course: RawCourse = {
 					content: projectBrief({
 						goal: "Generate and analyze several lists to practice list construction, iteration, and aggregation.",
 						build: [
-							"Create a list of descending numbers.",
-							"Create a list of letters from a word.",
-							"Generate lists of perfect squares and factorials.",
+							"Run the starter and verify the eleven values from 10 down to 0.",
+							"Read a word and build its character list in order. Cat in lowercase becomes c, a, t.",
+							"Generate the 100 squares from 1 squared through 100 squared. Remove the ten between 2000 and 3000. Use the factorial helper to generate the values from 1! through 25!.",
 							"Write helper functions that compute properties such as sum, maximum, or length."
 						],
 						checkpoints: [
 							"Generated lists have the expected number of items.",
-							"Aggregation functions work for more than one list.",
+							"Check a sum of -21 and a maximum of -3 with the list [-8, -3, -10]. An empty list has no maximum.",
 							"The code distinguishes list construction from list analysis."
 						]
 					}),
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS6-Lists-Practice-1/solution",
+					projectLink: `${PYTHON_LEVEL_2_PS6_LISTS_SOURCE}/PS6-Lists-Practice-1/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_PS6_LISTS_SOURCE}/PS6-Lists-Practice-1/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps6_lists_practice.gif"
 				},
@@ -1343,19 +1346,19 @@ export const pythonLevel2Course: RawCourse = {
 					content: projectBrief({
 						goal: "Represent a melody as list data and generate a playable audio file.",
 						build: [
-							"Represent notes and durations in the structure expected by `pysynth`.",
-							"Create a short melody manually.",
-							"Generate a `.wav` file from the list.",
+							"Each pair contains a pitch and a duration. In (c4, 4), c4 means middle C and 4 means a quarter note. Use 8 for an eighth note and r in place of a pitch for a rest.",
+							"Run the two-note starter and listen to melody.wav. Extend the list to a phrase with at least four pitches and one rest.",
+							"Render at 120 beats per minute. Use Download WAV in the IDE audio output to retain each version.",
 							"Change note order or duration values and compare the result."
 						],
 						checkpoints: [
 							"The music data is stored as structured list values.",
-							"The generated file reflects changes to the list.",
-							"The explanation connects list order to the order of notes played."
+							"At 120 beats per minute, a quarter note lasts about half a second. Changing the first note from 4 to 2 should lengthen the output by about half a second.",
+							"Compare two saved versions. Identify the list edit and where its effect is audible."
 						]
 					}),
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS6-Build-a-Song/solution"
+					projectLink: `${PYTHON_LEVEL_2_PS6_LISTS_SOURCE}/PS6-Build-a-Song/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_PS6_LISTS_SOURCE}/PS6-Build-a-Song/solution`
 				},
 				{
 					title: "PS6 Project 3: Song Generator",
@@ -1390,19 +1393,19 @@ export const pythonLevel2Course: RawCourse = {
 					content: projectBrief({
 						goal: "Store rider weights in a list and compute ride-summary values.",
 						build: [
-							"Collect each rider weight and append it to a list.",
+							"Collect up to ten fictional rider weights as positive whole numbers. Enter q to finish and replace invalid responses before increasing the entry count.",
 							"Print the full weight list.",
 							"Compute total weight.",
 							"Compute average weight."
 						],
 						checkpoints: [
 							"The number of list entries matches the number of riders entered.",
-							"The total and average use the list data rather than separate repeated variables.",
-							"Empty or invalid input behavior is considered before division."
+							"The sample 80, 120, q produces a list with two weights, a total of 200, and an average of 100.",
+							"Entering q first reports that the average is unavailable. Entering 0 prompts for a replacement."
 						]
 					}),
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS6-Tower-of-Terror/solution",
+					projectLink: `${PYTHON_LEVEL_2_PS6_LISTS_SOURCE}/PS6-Tower-of-Terror/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_PS6_LISTS_SOURCE}/PS6-Tower-of-Terror/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps6_tower_of_terror.gif"
 				},
@@ -1412,18 +1415,18 @@ export const pythonLevel2Course: RawCourse = {
 						goal: "Store player statistics in nested lists and detect triple-double performances.",
 						build: [
 							"Represent each player's points, rebounds, and assists together.",
-							"Store all players in a larger list.",
+							"Store five rows with three entries per row. Change the first row and check that the other four rows stay unchanged.",
 							"Loop through players and inspect each stat category.",
 							"Print which players meet the triple-double threshold."
 						],
 						checkpoints: [
 							"Nested indexing retrieves the intended stat.",
-							"All three categories must meet the threshold.",
-							"The output identifies both the player and the stats that qualified."
+							"A row of [10, 10, 9] does not qualify. A row of [10, 10, 10] qualifies because the threshold is at least 10 in all three categories.",
+							"Match each flagged player to the original row of points, rebounds, and assists."
 						]
 					}),
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS6-Basketball-Stars/solution",
+					projectLink: `${PYTHON_LEVEL_2_PS6_LISTS_SOURCE}/PS6-Basketball-Stars/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_PS6_LISTS_SOURCE}/PS6-Basketball-Stars/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps6_basketball_stars.gif"
 				},
@@ -1455,7 +1458,7 @@ export const pythonLevel2Course: RawCourse = {
 					content: projectBrief({
 						goal: "Store dog breeds in a list and print derived information for each entry.",
 						build: [
-							"Create or collect a list of breed names.",
+							"Use the seven nonempty names in the starter. It already displays the first breed, beagle.",
 							"Loop through every breed.",
 							"Print the breed name, first letter, and length.",
 							"Format the output consistently."
@@ -1463,14 +1466,14 @@ export const pythonLevel2Course: RawCourse = {
 						checkpoints: [
 							"The same loop handles every breed.",
 							"Indexing is safe for the provided breed names.",
-							"The printed summary is readable for names with spaces.",
-							"Empty strings or accidentally blank entries have a defined behavior before first-letter indexing occurs."
+							"Check beagle with b and 6 letters, greyhound with g and 9, and pug with p and 3.",
+							"If names are collected from input in an extension, skip a blank entry before indexing."
 						],
 						extension:
 							"Add sorting, filtering by first letter, or a count of long breed names to turn the list into a small searchable catalog."
 					}),
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS6-Dog-Breeds/solution",
+					projectLink: `${PYTHON_LEVEL_2_PS6_LISTS_SOURCE}/PS6-Dog-Breeds/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_PS6_LISTS_SOURCE}/PS6-Dog-Breeds/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps6_dog_breeds.gif"
 				},
@@ -1479,19 +1482,19 @@ export const pythonLevel2Course: RawCourse = {
 					content: projectBrief({
 						goal: "Represent a deck as a list and shuffle it through repeated random swaps.",
 						build: [
-							"Generate an ordered deck representation.",
-							"Pick two random indexes.",
+							"Generate 52 numeric ranks. Every rank from 1 through 13 appears four times.",
+							"Pick two indexes from 0 through 51. For a fixed demonstration, swap the initial cards at positions 0 and 4.",
 							"Swap the values at those positions.",
 							"Repeat the swap process many times and print the resulting deck."
 						],
 						checkpoints: [
 							"The deck keeps the same number of cards after shuffling.",
 							"No card values are lost or duplicated by the swap operation.",
-							"Different numbers of swaps visibly change how mixed the deck appears."
+							"Zero swaps keeps the sorted deck. Compare 10, 50, 100, and 500 swaps. Each output still contains four of every rank."
 						]
 					}),
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS6-Card-Shuffler/solution",
+					projectLink: `${PYTHON_LEVEL_2_PS6_LISTS_SOURCE}/PS6-Card-Shuffler/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_PS6_LISTS_SOURCE}/PS6-Card-Shuffler/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps6_card_shuffler.mp4"
 				},

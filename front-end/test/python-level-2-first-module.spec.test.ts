@@ -74,6 +74,18 @@ const modules = [
 		]
 	},
 	{
+		suffix: "-ps6-lists-and-music",
+		source: "ead6e1c2106bea775bada2f56d0e22f1cf168de9",
+		assignments: [
+			["Lists Practice", "PS6-Lists-Practice-1", "core"],
+			["Build a Song", "PS6-Build-a-Song", "core"],
+			["Tower of Terror", "PS6-Tower-of-Terror", "choice"],
+			["Basketball Stars", "PS6-Basketball-Stars", "choice"],
+			["Dog Breeds", "PS6-Dog-Breeds", "choice"],
+			["Card Shuffler", "PS6-Card-Shuffler", "choice"]
+		]
+	},
+	{
 		suffix: "-check-in-2",
 		source: "8bc76e6927ae40683bfb79170c378dac2b266cf2",
 		assignments: [
@@ -148,6 +160,7 @@ it.each([
 					if (
 						suffix === "-ps4-conditionals" ||
 						suffix === "-ps5-functions" ||
+						suffix === "-ps6-lists-and-music" ||
 						suffix.startsWith("-check-in-")
 					) {
 						expect(item.contentKind).toBe("assignment");

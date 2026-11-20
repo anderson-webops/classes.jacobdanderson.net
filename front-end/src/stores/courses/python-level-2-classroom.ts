@@ -284,6 +284,48 @@ const classroomProjectExtensions: Record<string, string> = {
 **Hard:** Add a replay prompt and start a fresh round when the response is yes. Choose the target once per round and reset the guess count.
 
 **Success criteria:** A first-try success in the replay reports one guess even when the earlier round took three guesses.`,
+	"PS6-Lists-Practice-1": `Run with cat and compare the descending values, the three characters, the filtered squares, and the factorials. Locate the functions that read a list without changing its contents.
+
+**Normal:** Print the number of squares before and after filtering. The counts should be 100 and 90.
+
+**Hard:** Add a summary for any nonempty numerical list with the sum, maximum, and mean. Return an explicit empty result if no values are present.
+
+**Success criteria:** The list [-8, -3, -10] gives sum -21, maximum -3, and mean -7. The input list stays intact.`,
+	"PS6-Build-a-Song": `Render the original phrase and listen to its pitches and rest in order. Read the pitch and duration from each pair. Save the first version with Download WAV.
+
+**Normal:** Change the first note from a quarter to a half note and render again. Listen for the longer first note.
+
+**Hard:** Render the same sequence at 90 and 120 beats per minute to two differently named files. Keep every pair in the same position and compare the output durations.
+
+**Success criteria:** The slower file is longer. Both files keep the same pitch order and contain the pause where the rest is written.`,
+	"PS6-Tower-of-Terror": `Enter the fictional sample 80, 120, and q. Verify the two entries, total 200, and average 100. Then try q first to see the empty result.
+
+**Normal:** Report the smallest and largest recorded weights for a nonempty list. The first sample gives 80 and 120.
+
+**Hard:** Compute an optional second average after excluding one largest entry. Keep the original list and summary. For 80, 120, 160, the reduced average is 100.
+
+**Success criteria:** The new average is unavailable for an empty list or a list with only one entry.`,
+	"PS6-Basketball-Stars": `Enter five rows of fictional statistics. Use [10, 10, 9] for one player and [10, 10, 10] for another. Only the second row meets all three thresholds.
+
+**Normal:** Print the qualifying player's points, rebounds, and assists beside the name or number in the result. Leave the original row unchanged.
+
+**Hard:** Count how many categories each player has at 10 or above. For [11, 9, 10], show two qualifying categories.
+
+**Success criteria:** The summary distinguishes players meeting all three thresholds from rows meeting only one or two.`,
+	"PS6-Dog-Breeds": `Run the list and compare the letters and lengths for beagle, greyhound, and pug. Each name is processed separately with the same loop.
+
+**Normal:** Add a filter that displays names of five or more letters and reports how many matched. Expect six in the original list.
+
+**Hard:** Accept a letter and a minimum length. Show all names meeting both conditions. Use the existing first-letter and length calculations.
+
+**Success criteria:** With p and a minimum of 3, the result is pug. Raising the minimum to 4 gives a clear empty result.`,
+	"PS6-Card-Shuffler": `Run with the four supplied swap counts. Compare how the order changes while the list length and the four copies of each rank remain stable.
+
+**Normal:** Print how many positions differ from the sorted deck after each run. Test 0 swaps and a fixed swap of positions 0 and 4.
+
+**Hard:** Compare two 50-swap trials with a shared random seed set before each trial. Then change the seed and compare the order.
+
+**Success criteria:** Zero swaps changes zero positions. The fixed swap changes two positions. Every run still has all 52 cards.`,
 	"PS-Check-in-1": `Run the completed animal and color program with dog and black, then cat and black. Compare the combined and nested decisions. Both versions should agree for both inputs.
 
 **Normal:** Print the number of correct guesses before the result. Dog and black should report two matches. Cat and black should report one.
