@@ -41,6 +41,30 @@ const modules = [
 				"challenge"
 			]
 		]
+	},
+	{
+		suffix: "-check-in-1",
+		source: "8bc76e6927ae40683bfb79170c378dac2b266cf2",
+		assignments: [
+			["curriculum-check-in-1-overview", "PS-Check-in-1", "core"],
+			[
+				"curriculum-check-in-1-additional-practice-project",
+				"PS-Check-in-1/practice",
+				"core"
+			]
+		]
+	},
+	{
+		suffix: "-check-in-2",
+		source: "8bc76e6927ae40683bfb79170c378dac2b266cf2",
+		assignments: [
+			["curriculum-check-in-2-overview", "PS-Check-in-2", "core"],
+			[
+				"curriculum-check-in-2-additional-practice-project",
+				"PS-Check-in-2/practice",
+				"core"
+			]
+		]
 	}
 ] as const;
 
@@ -50,7 +74,7 @@ it.each([
 	["python-level-2-classroom", "learner"],
 	["python-level-2-classroom", "instructor"]
 ] as const)(
-	"links role-appropriate opening and conditionals projects in %s for %s",
+	"links role-appropriate Python Level 2 projects in %s for %s",
 	async (courseId, role) => {
 		setActivePinia(createPinia());
 		if (role === "instructor") {
@@ -77,8 +101,10 @@ it.each([
 				...module.supplementalProjects
 			];
 			for (const [title, folder, path] of assignments) {
-				const item = items.find(candidate =>
-					candidate.title.endsWith(title)
+				const item = items.find(
+					candidate =>
+						candidate.title.endsWith(title) ||
+						candidate.id.endsWith(title)
 				)!;
 				const projectSource = `Python-Level-2/tree/${source}/${folder}`;
 				const base = `https://github.com/instruction-material/${projectSource}`;
@@ -97,7 +123,13 @@ it.each([
 					expect(launch.searchParams.get("classroomSource")).toBe(
 						`${projectSource}/solution`
 					);
-					if (suffix === "-ps4-conditionals") {
+					expect(launch.searchParams.get("projectKey")).toBe(
+						`${courseId}:${item.id}:starter`
+					);
+					if (
+						suffix === "-ps4-conditionals" ||
+						suffix.startsWith("-check-in-")
+					) {
 						expect(item.contentKind).toBe("assignment");
 						expect(item.content).toMatch(
 							/\*\*Normal:\*\*[\s\S]*\*\*Hard:\*\*[\s\S]*\*\*Success criteria:\*\*/

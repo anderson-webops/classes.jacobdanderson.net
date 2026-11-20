@@ -20,6 +20,9 @@ export const PYTHON_LEVEL_2_PS3_SOURCE =
 export const PYTHON_LEVEL_2_PS4_SOURCE =
 	"https://github.com/instruction-material/Python-Level-2/tree/5d787e78f9d0e72096046c49ee25e9fab53fe045";
 
+const PYTHON_LEVEL_2_CHECK_INS_SOURCE =
+	"https://github.com/instruction-material/Python-Level-2/tree/8bc76e6927ae40683bfb79170c378dac2b266cf2";
+
 const PYTHON_LEVEL_2_PENDING_SOURCE_ASSETS = [
 	"ps10_field_day.gif",
 	"ps10_field_day_ii.gif",
@@ -1029,27 +1032,31 @@ export const pythonLevel2Course: RawCourse = {
 			curriculum: [
 				{
 					title: "Check-In #1 Overview",
-					content: reviewBrief({
-						focus: "This checkpoint reviews variables, strings, input, loops, and conditionals without introducing a new large project.",
-						tasks: [
-							"Solve each prompt independently before comparing approaches.",
-							"Record which prompts were immediate, which required a reminder, and which need more practice.",
-							"Choose the most useful supplemental project based on any missed prompt."
+					content: projectBrief({
+						goal: "Review variables, loops, and conditionals in an animal-and-color guessing program.",
+						build: [
+							"Run the starter with dog and black on separate lines. The animal length is 3.",
+							"Complete the variables, loops, and conditionals prompts in this module. Check both versions of the decision.",
+							"Record which inputs exercise each branch and which line fixes an unexpected result."
 						],
-						evidence:
-							"A useful checkpoint result identifies specific skills, not a vague sense of being ready or not ready."
+						checkpoints: [
+							"Dog and black give a length of 3, a third color character of a, and a correct answer.",
+							"Cat and black give Almost there in both decisions. The incomplete color r reports a missing third character and the program continues."
+						]
 					}),
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS-Check-in-1/solution"
+					contentKind: "assignment",
+					preserveInstructions: true,
+					projectLink: `${PYTHON_LEVEL_2_CHECK_INS_SOURCE}/PS-Check-in-1/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_CHECK_INS_SOURCE}/PS-Check-in-1/solution`
 				},
 				{
 					title: "Check-In #1: Variables",
 					content: reviewBrief({
 						focus: "Variables, type conversion, string length, indexing, and formatted output.",
 						tasks: [
-							"Store several values with clear variable names and print them.",
-							"Collect user input and convert numeric input only when arithmetic is required.",
-							"Measure a string, access selected indexes, and combine strings with clean spacing."
+							"Store animal as text and 42 as an integer. Print the word and the text produced by converting 42.",
+							"Read an animal and a color and normalize spaces and case. Print the animal length and the third color character when present.",
+							"For dog and black, print 3, a, and the combined guess black dog."
 						],
 						evidence:
 							"The work shows the difference between storing a value, printing a value, and transforming a value."
@@ -1060,9 +1067,9 @@ export const pythonLevel2Course: RawCourse = {
 					content: reviewBrief({
 						focus: "`for` loops, `while` loops, range parameters, string iteration, and stop conditions.",
 						tasks: [
-							"Print number sequences with different starts, stops, and steps.",
-							"Iterate through a string by character.",
-							"Rewrite one fixed-count loop as a condition-controlled `while` loop."
+							"Use for loops to print 0–10, the individual color characters, and 6, 9, 12, 15.",
+							"Use a while loop for 0–15. Use another while loop to print every other animal character starting at index 1. With dog, the latter prints o.",
+							"As a bonus, use a loop that prints 1–10 and stops with break."
 						],
 						evidence:
 							"The explanation predicts how many times the loop runs and why it stops."
@@ -1073,9 +1080,9 @@ export const pythonLevel2Course: RawCourse = {
 					content: reviewBrief({
 						focus: "Branch order, combined conditions, nested conditionals, and boundary cases.",
 						tasks: [
-							"Check guesses against target values.",
-							"Combine conditions with `and` and `or`.",
-							"Rewrite one decision with a nested conditional and compare readability."
+							"Compare the guesses with dog and black. Both matching gives Correct answer, exactly one gives Almost there, and neither gives Incorrect answer.",
+							"Record cat separately without changing the comparison result.",
+							"Recreate the decision with nested conditionals. Compare dog/black, dog/red, cat/black, and cat/red in both versions."
 						],
 						evidence:
 							"The work identifies which branch runs for correct, partially correct, and incorrect inputs."
@@ -1084,21 +1091,21 @@ export const pythonLevel2Course: RawCourse = {
 				{
 					title: "Check-In #1: Additional Practice Project",
 					content: projectBrief({
-						goal: "Create a letter shifter that changes characters according to a simple rule.",
+						goal: "Compare two letter-shifting rules on identical sample text.",
 						build: [
-							"Ask for a word or short phrase.",
-							"Choose a shifting rule based on word length or character index parity.",
-							"Shift each alphabetic character forward or backward.",
-							"Preserve or intentionally handle spaces and punctuation."
+							"For the length rule, shift ASCII letters forward by one when the entire input length is even, or backward by one when it is odd.",
+							"Read a second sample. Shift letters forward at even indexes and backward at odd indexes, starting at index 0.",
+							"Wrap within the uppercase or lowercase alphabet. Copy punctuation and spaces unchanged. Include them in the length and the indexes."
 						],
 						checkpoints: [
-							"Alphabet wraparound is handled.",
-							"The same rule is applied consistently across the whole input.",
-							"The result can be explained by tracing at least two characters."
+							"With Az!, the length rule gives Zy! and the index rule gives By!.",
+							"For za, the length rule gives ab and the index rule gives az. Empty input produces an empty result."
 						]
 					}),
-					mediaLink:
-						"https://static.classes.jacobdanderson.net/ps3_caesar_cipher.gif"
+					contentKind: "assignment",
+					preserveInstructions: true,
+					projectLink: `${PYTHON_LEVEL_2_CHECK_INS_SOURCE}/PS-Check-in-1/practice/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_CHECK_INS_SOURCE}/PS-Check-in-1/practice/solution`
 				}
 			],
 			supplementalProjects: []
@@ -1908,25 +1915,32 @@ export const pythonLevel2Course: RawCourse = {
 			curriculum: [
 				{
 					title: "Check-In #2 Overview",
-					content: reviewBrief({
-						focus: "This checkpoint revisits functions, lists, dictionaries, and sets with emphasis on choosing the right tool for the data.",
-						tasks: [
-							"Solve the prompts without changing the data structure just to make the code easier temporarily.",
-							"Explain why a function, list, dictionary, or set is appropriate for each prompt.",
-							"Record any prompt where the data model was unclear before the syntax."
+					content: projectBrief({
+						goal: "Review functions, lists, dictionaries, and sets by extending one small program.",
+						build: [
+							"Run the starter with its built-in sample 15 and 22. Verify the result is 330.",
+							"Complete the functions, lists, dictionaries, and sets prompts. Run fixed lottery cases before trying random values.",
+							"Record the final guest list, jersey lookup, digit-count dictionary size, and shared ingredient."
 						],
-						evidence:
-							"Readiness is demonstrated by matching data structures to the task and explaining the tradeoff."
-					})
+						checkpoints: [
+							"The remaining guests are Ben and Mina in order.",
+							"The digit-count dictionary maps 15 distinct keys from 0 through 1000 to their decimal length.",
+							"Only salt is shared by the recipes and garlic belongs to exactly one."
+						]
+					}),
+					contentKind: "assignment",
+					preserveInstructions: true,
+					projectLink: `${PYTHON_LEVEL_2_CHECK_INS_SOURCE}/PS-Check-in-2/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_CHECK_INS_SOURCE}/PS-Check-in-2/solution`
 				},
 				{
 					title: "Check-In #2: Functions",
 					content: reviewBrief({
 						focus: "Function definitions, calls, parameters, return values, imports, and small simulations.",
 						tasks: [
-							"Define and call helper functions with clear parameters.",
-							"Return values that are used by later code.",
-							"Include `random` in a controlled simulation such as a lottery or game."
+							"Call multiply with 15 and 22 and check the 330 result.",
+							"Write a lottery-result function that takes a win flag and a prize amount. Check one loss and one fixed win of 75.",
+							"Draw a random flag from 0–1 and a random prize from 1–1000. Print the function result."
 						],
 						evidence:
 							"The solution identifies what each function receives, returns, and changes."
@@ -1937,9 +1951,9 @@ export const pythonLevel2Course: RawCourse = {
 					content: reviewBrief({
 						focus: "List construction, mutation, iteration, formatting, and generated numeric sequences.",
 						tasks: [
-							"Build lists from scratch and from loops.",
-							"Add, remove, and inspect elements.",
-							"Generate number lists such as ranges, even values, or calculated values."
+							"Append Ava, Ben, and Mina to an empty list and remove Ava.",
+							"The first item is now Ben. Print Ben and Mina on separate lines.",
+							"Use loops to build the list from 1 through 20 and a list of its ten even values."
 						],
 						evidence:
 							"The list is used to simplify repeated work rather than to hide several unrelated variables."
@@ -1950,9 +1964,9 @@ export const pythonLevel2Course: RawCourse = {
 					content: reviewBrief({
 						focus: "Key-value modeling, lookup behavior, dictionary updates, iteration, and generated dictionaries.",
 						tasks: [
-							"Create dictionaries manually and from computed values.",
-							"Look up, add, and update entries.",
-							"Iterate through keys and values while preserving what each key means."
+							"Start with Parker 3, Reed 11, and Rivera 7. Look up Reed, add Diaz 10, and add Curry 30 only when absent.",
+							"Display each player with the associated jersey number.",
+							"Sample 15 distinct integers from 0 through 1000. Map each to the length of its decimal text. For example, 10 maps to 2."
 						],
 						evidence:
 							"The solution explains why each key is stable enough to retrieve the matching value."
@@ -1963,9 +1977,9 @@ export const pythonLevel2Course: RawCourse = {
 					content: reviewBrief({
 						focus: "Uniqueness, membership tests, intersections, unions, and deduplication.",
 						tasks: [
-							"Create sets from text, lists, or explicit values.",
-							"Compare sets with union and intersection.",
-							"Remove duplicates with sets and explain what information is lost."
+							"Use garlic, onion, and salt in one recipe and apple, cinnamon, and salt in the other. Remove onion from the first.",
+							"Compare the union and intersection. The union has four ingredients and only salt is shared. Garlic belongs to one recipe.",
+							"Make a set from banana and verify the three unique letters are a, b, and n."
 						],
 						evidence:
 							"The answer distinguishes unique membership from ordered sequence data."
@@ -1974,19 +1988,21 @@ export const pythonLevel2Course: RawCourse = {
 				{
 					title: "Check-In #2: Additional Practice Project",
 					content: projectBrief({
-						goal: "Analyze user-provided text by comparing total items with unique items.",
+						goal: "Use a set to count unique letters and words while retaining the total word count.",
 						build: [
-							"Ask for a word, sentence, or short paragraph.",
-							"Split or iterate through the text according to whether letters or words are being analyzed.",
-							"Create a set of unique items.",
-							"Compare the total count with the unique count."
+							"Run the starter with Banana, banana! and verify that only a, b, and n count as letters.",
+							"Read a paragraph, convert it to lowercase, and replace each nonletter with a space. Then split on whitespace.",
+							"Keep the complete word list and create a set from it. Print the total and unique word counts."
 						],
 						checkpoints: [
-							"The item definition is clear: letter, word, or other token.",
-							"Case and punctuation behavior are defined.",
-							"The final comparison explains what the set removed."
+							"Red blue red. gives two unique words out of three. Red,blue red gives the same counts.",
+							"A paragraph with only spaces and punctuation produces zero words."
 						]
-					})
+					}),
+					contentKind: "assignment",
+					preserveInstructions: true,
+					projectLink: `${PYTHON_LEVEL_2_CHECK_INS_SOURCE}/PS-Check-in-2/practice/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_CHECK_INS_SOURCE}/PS-Check-in-2/practice/solution`
 				}
 			],
 			supplementalProjects: []

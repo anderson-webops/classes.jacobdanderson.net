@@ -4,8 +4,10 @@ import { readFileSync } from "node:fs";
 import { test } from "node:test";
 import { runAssemblyCoreCourseWorkflow } from "./assembly-core-course-browser.mjs";
 
-const moduleName
-	= process.env.PYTHON_LEVEL_2_BROWSER_MODULE === "loops" ? "loop" : "first";
+const moduleFiles = { "first": "first", "loops": "loop", "check-ins": "check-ins" };
+const selectedModule = process.env.PYTHON_LEVEL_2_BROWSER_MODULE ?? "first";
+assert.ok(Object.hasOwn(moduleFiles, selectedModule), `Unknown Python module: ${selectedModule}`);
+const moduleName = moduleFiles[selectedModule];
 const fixturePath = `./fixtures/python-level-2-${moduleName}-module-sources.json`;
 const fixture = JSON.parse(
 	readFileSync(new URL(fixturePath, import.meta.url), "utf8")
@@ -29,21 +31,28 @@ async function verifyExecution(
 	);
 	await page.locator("button.run-control:not([disabled])").click();
 	const tokens = edited ? [...expected, outputMarker] : expected;
-	await page.waitForFunction(
-		values =>
-			values.every(value =>
-				document
-					.querySelector(".output-panel")
-					?.textContent
-					.includes(value)
-			),
+	const selectorOutput = ".output-panel .output-line";
+	const result = await page.waitForFunction(
+		({ values, selector }) => {
+			const output = Array.from(document.querySelectorAll(selector))
+				.map(line => line.textContent)
+				.join("\n");
+			const finished = document.querySelector(
+				"button.run-control:not(.run-control--stop):not([disabled])"
+			);
+			return finished && values.every(value => output.includes(value))
+				? output
+				: false;
+		},
 		{ timeout: 90000 },
-		tokens
-	);
-	const output = await page.$eval(
-		".output-panel",
-		element => element.textContent
-	);
+		{ values: tokens, selector: selectorOutput }
+	).catch(async (error) => {
+		const observed = await page.$$eval(selectorOutput, lines =>
+			lines.map(line => line.textContent).join("\n"));
+		throw new Error(`Python output did not match ${JSON.stringify(tokens)}. Observed:\n${observed}`, { cause: error });
+	});
+	const output = await result.jsonValue();
+	await result.dispose();
 	if (expectsSyntaxError) {
 		assert.match(output, /\bSyntaxError\b/);
 	}
@@ -69,9 +78,9 @@ for (const exercise of fixture.exercises) {
 			{ timeout: 360000 },
 			async (t) => {
 				await runAssemblyCoreCourseWorkflow(t, {
-					kind: pack.toLowerCase(),
+					kind: pack.toLowerCase().replaceAll("/", "-"),
 					courseID,
-					moduleID: fixture.moduleId,
+					moduleID: exercise.moduleId ?? fixture.moduleId,
 					coreID: itemId,
 					previousProject: () => ({
 						_id: "earlier-python-project",

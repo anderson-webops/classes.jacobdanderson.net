@@ -163,7 +163,7 @@ For a showcase, demonstrate the working Normal result first. If Hard is complete
 	]
 });
 
-const conditionalProjectExtensions: Record<string, string> = {
+const classroomProjectExtensions: Record<string, string> = {
 	"PS4-Rock-Paper-Scissors": `Run the complete game and compare paper/rock, rock/paper, and rock/rock. Locate the invalid-input check and the winning combinations. Compare how the result changes when the same two valid moves trade places.
 
 **Normal:** Add an explanation to a winning result. Paper against rock should include “paper beats rock.”
@@ -226,20 +226,44 @@ const conditionalProjectExtensions: Record<string, string> = {
 
 **Hard:** Ask how many tickets the friend needs and compute the new boundary. When the friend needs 10 tickets, 259 is short by one and 260 succeeds.
 
-**Success criteria:** The independent prize messages still include all items the ticket balance can cover. At 350 all four individual purchases are available.`
+**Success criteria:** The independent prize messages still include all items the ticket balance can cover. At 350 all four individual purchases are available.`,
+	"PS-Check-in-1": `Run the completed animal and color program with dog and black, then cat and black. Compare the combined and nested decisions. Both versions should agree for both inputs.
+
+**Normal:** Print the number of correct guesses before the result. Dog and black should report two matches. Cat and black should report one.
+
+**Hard:** Put the result into a repeatable round. Read a new animal and color after each round until a quit response. Keep the counters local to each round.
+
+**Success criteria:** A partial match after a correct round still reports one match. A short color entry produces an informative message and the next round can run.`,
+	"PS-Check-in-1/practice": `Run both shifters with Az! and compare Zy! with By!. Track the original index and the decision about direction. Punctuation occupies an index and remains unchanged.
+
+**Normal:** Print the direction and output for each letter in the index rule. The first two rows should report A forward to B and z backward to y.
+
+**Hard:** Add a reverse mode that uses the opposite direction for the selected rule. Run the index rule on Az!, then reverse By! to recover Az!.
+
+**Success criteria:** Reversing the length-rule output Zy! also recovers Az!. The punctuation remains present through both transformations.`,
+	"PS-Check-in-2": `Run the complete review once. Record the final guests, the size of the random digit-count dictionary, and the two ingredient sets. The list retains order, the dictionary connects numbers with digit counts, and the sets reveal overlaps.
+
+**Normal:** Add a line with the number of entries in the digit-count dictionary. Run twice to verify the count is 15 even when the keys change.
+
+**Hard:** Count how many keys have one, two, three, and four digits. Compare each bucket with the existing dictionary before adding a new random sample.
+
+**Success criteria:** All bucket counts add to 15. The key 1000 is the only possible four-digit key in this exercise.`,
+	"PS-Check-in-2/practice": `Run the letter counter with Banana, banana! and the word counter with Red,blue red. Check that case and punctuation handling produce three unique letters, then two unique words out of three.
+
+**Normal:** Print the most frequent word and its count. Red,blue red should identify red twice.
+
+**Hard:** List every word tied for the highest count in alphabetical order. Red blue red blue should report blue and red with two occurrences each.
+
+**Success criteria:** A punctuation-only paragraph produces zero words and a clear empty result. Punctuation can separate adjacent words without entering either word.`
 };
 
 const classroomModules = copyClassroomCourseModules(pythonLevel2Course.modules);
-const conditionals = classroomModules.find(
-	module => module.title === "PS4 Conditionals"
-);
-if (conditionals) {
-	for (const item of [
-		...conditionals.curriculum,
-		...conditionals.supplementalProjects
-	]) {
-		const folder = item.solutionLink?.split("/").at(-2);
-		const content = folder && conditionalProjectExtensions[folder];
+for (const module of classroomModules) {
+	for (const item of [...module.curriculum, ...module.supplementalProjects]) {
+		const folder = item.solutionLink?.match(
+			/\/tree\/[^/]+\/(.+)\/solution$/
+		)?.[1];
+		const content = folder && classroomProjectExtensions[folder];
 		if (content) {
 			item.content = content;
 			item.contentKind = "assignment";

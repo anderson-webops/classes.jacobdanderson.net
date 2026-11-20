@@ -9193,12 +9193,6 @@ function adaptClassroomCourse(course: RawCourse, courseId: string) {
 	}
 }
 
-function normalizePythonLevel2(course: RawCourse) {
-	setItemLinks(course, "Check-In #2", "Check-In #2 Overview", {
-		solutionLink: githubTree("Python-Level-2", "PS-Check-in-2/solution")
-	});
-}
-
 function normalizePythonLevel3(course: RawCourse) {
 	for (const checkIn of [1, 2, 3]) {
 		setItemLinks(
@@ -9623,8 +9617,6 @@ const normalizers: Record<string, (course: RawCourse) => void> = {
 	"machine-learning": normalizeMachineLearning,
 	"python-level-1": normalizePythonLevel1,
 	"python-level-1-classroom": normalizePythonLevel1,
-	"python-level-2": normalizePythonLevel2,
-	"python-level-2-classroom": normalizePythonLevel2,
 	"python-level-3": normalizePythonLevel3,
 	"python-to-java-and-cpp-bridge": normalizePythonBridge,
 	"pythonic-design-patterns": normalizePythonicDesignPatterns,
