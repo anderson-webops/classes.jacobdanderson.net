@@ -393,6 +393,27 @@ const classroomProjectExtensions: Record<string, string> = {
 **Hard:** Add a three-team option by rotating through three lists. For ten names, the sizes should be four, three, and three.
 
 **Success criteria:** Every unique name occurs on exactly one team. An empty roster produces only empty teams.`,
+	"PS3-Password-Cracker": `Run the completed puzzle and find the rows for shifts 0, 3, and 25. Link the shift 3 row to the uppercase offset, lowercase offset, and punctuation branch in decode.
+
+**Normal:** Add a second fixed sample starting with C. At shift 3 its first letter should become Z.
+
+**Hard:** Rank each candidate by the number of whole words it shares with a short list supplied for the puzzle. Use blue and comet in the list.
+
+**Success criteria:** The original sample's shift 3 candidate ranks first. All 26 numbered candidates remain available for inspection.`,
+	"PS12-Type-Racer": `Choose p for a fixed target and enter Rain taps on the glass without its period. Then enter it with the period. Trace one start reading, two attempts, and one end reading.
+
+**Normal:** Report elapsed time and the number of attempts with a single result line.
+
+**Hard:** Add words per minute based on the target's word count. Display a clear message if the two clock readings are equal.
+
+**Success criteria:** A five-word target entered in six seconds gives 50 words per minute. A mismatch keeps the original start reading, and :quit leaves no result.`,
+	"PS13-Advanced-Typewriter-Monkeys": `Open valid_words.txt and run practice searches at lengths 3 and 4. Trace the sequence xcatmint one letter at a time. The matches are cat at letter 4 and mint at letter 8.
+
+**Normal:** Show each full window during practice mode. At length 3, xca appears immediately before cat.
+
+**Hard:** Run a small batch of random searches. Measure the success rate and average generated letters for each length, including runs that reach the limit.
+
+**Success criteria:** Practice results stay reproducible, and every random search ends within 20,000 letters.`,
 	"PS11-Bank-Account": `**Method** Check that the withdrawal is positive and within the signed-in account's balance before subtracting it.
 
 **Worked example** Deposit 20 into ari using demo-ari, then withdraw 7. A withdrawal of 14 is rejected and leaves 13. Switch to bea using demo-bea to verify that account still has 0.

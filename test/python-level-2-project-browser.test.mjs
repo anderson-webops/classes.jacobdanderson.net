@@ -11,7 +11,8 @@ const moduleFiles = {
 	"ascii": "ascii",
 	"conditionals": "conditionals",
 	"functions": "functions",
-	"collections": "collections"
+	"collections": "collections",
+	"console": "console"
 };
 const selectedModule = process.env.PYTHON_LEVEL_2_BROWSER_MODULE ?? "first";
 assert.ok(Object.hasOwn(moduleFiles, selectedModule), `Unknown Python module: ${selectedModule}`);
@@ -124,9 +125,9 @@ for (const exercise of fixture.exercises) {
 						).length,
 					primaryFile: "main.py",
 					expectedFile: (role, name) =>
-						classroom
+						classroom && name === "main.py"
 							? { sha256: exercise.classroomMainSha256 }
-							: fixture.files[`${pack}/${role}/${name}`],
+							: fixture.files[`${pack}/${sourceRole(role)}/${name}`],
 					editFiles: ["main.py"],
 					editContent: ({ original, role }) => {
 						const edited = exampleFor(role).expectsSyntaxError

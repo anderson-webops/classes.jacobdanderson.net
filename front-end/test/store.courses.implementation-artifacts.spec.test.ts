@@ -544,8 +544,8 @@ describe("implemented course development artifacts", () => {
 		expectAuthoredSourcePair(
 			pythonLevel2,
 			"PS13 Supplemental Project 2: Advanced Typewriter Monkeys",
-			"Python-Level-2/tree/main/PS13-Advanced-Typewriter-Monkeys/starter",
-			"Python-Level-2/tree/main/PS13-Advanced-Typewriter-Monkeys/solution"
+			"Python-Level-2/tree/96f7196ea540fce55644e2a2d1d0ce97f16de9e8/PS13-Advanced-Typewriter-Monkeys/starter",
+			"Python-Level-2/tree/96f7196ea540fce55644e2a2d1d0ce97f16de9e8/PS13-Advanced-Typewriter-Monkeys/solution"
 		);
 		expectAuthoredSourcePair(
 			pythonLevel3,

@@ -6,6 +6,7 @@ import { useAppStore } from "@/stores/app";
 import { useCoursesStore } from "@/stores/courses";
 import asciiFixture from "../../test/fixtures/python-level-2-ascii-module-sources.json";
 import collectionsFixture from "../../test/fixtures/python-level-2-collections-module-sources.json";
+import consoleFixture from "../../test/fixtures/python-level-2-console-module-sources.json";
 import conditionalsFixture from "../../test/fixtures/python-level-2-conditionals-module-sources.json";
 import functionsFixture from "../../test/fixtures/python-level-2-functions-module-sources.json";
 
@@ -19,6 +20,17 @@ const modules = [
 			["Space Mountain", "PS1-Space-Mountain", "choice"],
 			["Tip Calculator", "PS1-Tip-Calculator", "choice"],
 			["Relay Race", "PS1-Relay-Race", "choice"]
+		]
+	},
+	{
+		suffix: "-ps3-ascii-and-ciphers",
+		source: "96f7196ea540fce55644e2a2d1d0ce97f16de9e8",
+		assignments: [
+			[
+				"supplemental-ps3-supplemental-project-4-password-cracker",
+				"PS3-Password-Cracker",
+				"challenge"
+			]
 		]
 	},
 	{
@@ -119,10 +131,28 @@ const modules = [
 	},
 	{
 		suffix: "-ps11-bank-account",
-		source: "934372fdff62a74b17a9f02af34950d25406081f",
+		source: "96f7196ea540fce55644e2a2d1d0ce97f16de9e8",
 		assignments: [
 			["Bank Account", "PS11-Bank-Account", "core"],
 			["Calculator", "PS11-Calculator", "choice"]
+		]
+	},
+	{
+		suffix: "-ps12-type-racer",
+		source: "96f7196ea540fce55644e2a2d1d0ce97f16de9e8",
+		assignments: [
+			["curriculum-ps12-project-1-type-racer", "PS12-Type-Racer", "core"]
+		]
+	},
+	{
+		suffix: "-ps13-wordsmith",
+		source: "96f7196ea540fce55644e2a2d1d0ce97f16de9e8",
+		assignments: [
+			[
+				"Advanced Typewriter Monkeys",
+				"PS13-Advanced-Typewriter-Monkeys",
+				"challenge"
+			]
 		]
 	},
 	{
@@ -198,6 +228,7 @@ it.each([
 						`${courseId}:${item.id}:starter`
 					);
 					if (
+						suffix === "-ps3-ascii-and-ciphers" ||
 						suffix === "-ps4-conditionals" ||
 						suffix === "-ps5-functions" ||
 						suffix === "-ps6-lists-and-music" ||
@@ -205,6 +236,8 @@ it.each([
 						suffix === "-ps9-sets" ||
 						suffix === "-ps10-to-do-list" ||
 						suffix === "-ps11-bank-account" ||
+						suffix === "-ps12-type-racer" ||
+						suffix === "-ps13-wordsmith" ||
 						suffix.startsWith("-check-in-")
 					) {
 						expect(item.contentKind).toBe("assignment");
@@ -222,7 +255,8 @@ it.each([
 	["ascii", asciiFixture],
 	["conditionals", conditionalsFixture],
 	["functions", functionsFixture],
-	["collections", collectionsFixture]
+	["collections", collectionsFixture],
+	["console", consoleFixture]
 ] as const)(
 	"binds the %s browser fixture to real course items and classroom sources",
 	async (_scope, data) => {

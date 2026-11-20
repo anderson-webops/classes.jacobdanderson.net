@@ -29,8 +29,8 @@ const PYTHON_LEVEL_2_PS6_LISTS_SOURCE =
 export const PYTHON_LEVEL_2_COLLECTIONS_SOURCE =
 	"https://github.com/instruction-material/Python-Level-2/tree/2dec846ce80283885dfe01579a181906e6748985";
 
-const PYTHON_LEVEL_2_PS11_SOURCE =
-	"https://github.com/instruction-material/Python-Level-2/tree/934372fdff62a74b17a9f02af34950d25406081f";
+const PYTHON_LEVEL_2_CONSOLE_SOURCE =
+	"https://github.com/instruction-material/Python-Level-2/tree/96f7196ea540fce55644e2a2d1d0ce97f16de9e8";
 
 const PYTHON_LEVEL_2_CHECK_INS_SOURCE =
 	"https://github.com/instruction-material/Python-Level-2/tree/8bc76e6927ae40683bfb79170c378dac2b266cf2";
@@ -798,25 +798,25 @@ export const pythonLevel2Course: RawCourse = {
 						"https://static.classes.jacobdanderson.net/ps3_nested_boxes.gif"
 				},
 				{
-					title: "PS3 Supplemental Project 4: Password Cracker",
+					title: "PS3 Supplemental Project 4: Caesar Shift Detective",
+					id: "python-level-2-ps3-ascii-and-ciphers-supplemental-ps3-supplemental-project-4-password-cracker",
+					aliases: ["PS3 Supplemental Project 4: Password Cracker"],
 					content: projectBrief({
-						goal: "Try every Caesar-shift possibility and identify which decoded message looks most plausible.",
+						goal: "Compare every Caesar shift on a short classroom puzzle and identify the readable result.",
 						build: [
-							"Load or define an encoded sample phrase.",
-							"Loop through all 26 possible shifts.",
-							"Decode the phrase with each shift.",
-							"Print the candidates so the readable one can be selected."
+							"Run the starter on the encoded sample phrase Eoxh frphw! and confirm shift 3 gives Blue comet!",
+							"Use lowercase and uppercase alphabet offsets. Keep spaces and punctuation as they are.",
+							"Put the decoding into one function and call it for all 26 shift numbers. Print the shift next to its output."
 						],
 						checkpoints: [
-							"All 26 shift values are attempted.",
-							"Wraparound works for every candidate.",
-							"The final answer is supported by visible decoded output, not guessed."
+							"Shift 0 leaves the sample unchanged and shift 3 produces the only Blue comet! line.",
+							"Test C and c with shift 3. Expect Z and z."
 						],
 						extension:
-							"Add a simple word-list score that ranks candidates by how many common English words they contain."
+							"Rank the candidates against a short word list supplied for the puzzle."
 					}),
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS3-Password-Cracker/solution",
+					projectLink: `${PYTHON_LEVEL_2_CONSOLE_SOURCE}/PS3-Password-Cracker/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_CONSOLE_SOURCE}/PS3-Password-Cracker/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps3_password_cracker.gif"
 				}
@@ -2133,8 +2133,8 @@ export const pythonLevel2Course: RawCourse = {
 						extension:
 							"Keep a history of successful transactions for each fictional account."
 					}),
-					projectLink: `${PYTHON_LEVEL_2_PS11_SOURCE}/PS11-Bank-Account/starter`,
-					solutionLink: `${PYTHON_LEVEL_2_PS11_SOURCE}/PS11-Bank-Account/solution`,
+					projectLink: `${PYTHON_LEVEL_2_CONSOLE_SOURCE}/PS11-Bank-Account/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_CONSOLE_SOURCE}/PS11-Bank-Account/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps11_bank_account.gif"
 				}
@@ -2155,8 +2155,8 @@ export const pythonLevel2Course: RawCourse = {
 							"An unknown operation returns to the menu before asking for operands."
 						]
 					}),
-					projectLink: `${PYTHON_LEVEL_2_PS11_SOURCE}/PS11-Calculator/starter`,
-					solutionLink: `${PYTHON_LEVEL_2_PS11_SOURCE}/PS11-Calculator/solution`,
+					projectLink: `${PYTHON_LEVEL_2_CONSOLE_SOURCE}/PS11-Calculator/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_CONSOLE_SOURCE}/PS11-Calculator/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps11_calculator.gif"
 				},
@@ -2192,37 +2192,38 @@ export const pythonLevel2Course: RawCourse = {
 				{
 					title: "Time Module",
 					content: conceptBrief({
-						focus: "The `time` module can pause execution and measure elapsed time. `time.sleep()` delays the program, while `time.time()` returns a timestamp that can be compared against another timestamp.",
+						focus: "Use `time.sleep()` for a countdown and `time.monotonic()` for a duration. Subtract two readings from the same monotonic clock to get elapsed seconds.",
 						practice: [
 							"Create a short countdown with `time.sleep()`.",
-							"Record a start time and end time with `time.time()`.",
-							"Subtract timestamps to calculate elapsed seconds.",
-							"Discuss why elapsed time can vary slightly between runs."
+							"Take the start reading after displaying the target.",
+							"Take the end reading after the matching response. A reading of 13.75 minus 10.50 gives a duration of 3.25 seconds.",
+							"Run the same example twice and explain why the two durations can differ."
 						],
 						evidence:
 							"A timing program is correct when it measures a duration from two timestamps rather than hard-coding how long the user took."
 					})
 				},
 				{
-					title: "PS12 Project 1: Type Racer",
+					title: "PS12 Project 1: Typing Speed Practice",
+					id: "python-level-2-ps12-type-racer-curriculum-ps12-project-1-type-racer",
+					aliases: ["PS12 Project 1: Type Racer"],
 					content: projectBrief({
-						goal: "Build a typing race that measures how long the user takes to type a target sentence.",
+						goal: "Measure how long it takes to enter a target sentence exactly.",
 						build: [
-							"Choose a random sentence from a list.",
-							"Show a countdown before timing begins.",
-							"Record the start time, collect the typed response, and record the end time.",
-							"Accept only exact completion or report accuracy before calculating the final result."
+							"Run the starter and type Rain taps on the glass. Include the period to match.",
+							"Choose p for the fixed practice sentence, or use Enter to select a random sentence and show a countdown.",
+							"Start the monotonic clock when the target is visible. Count each attempt until the text matches. Allow :quit to end the round."
 						],
 						checkpoints: [
-							"Timing starts after the countdown and stops after the user submits text.",
-							"The target and typed response are compared clearly.",
-							"The final report includes elapsed time and, if included, accuracy."
+							"Enter the sample without its period and then enter it correctly. Expect a match in two attempts.",
+							"The elapsed time begins after the countdown and includes both attempts.",
+							":quit ends the round without an elapsed result."
 						],
 						extension:
-							"Add multiplayer rounds, words-per-minute scoring, typo highlighting, or a high-score table."
+							"Report words per minute when the elapsed time is greater than zero, or highlight the first differing character."
 					}),
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS12-Type-Racer/solution",
+					projectLink: `${PYTHON_LEVEL_2_CONSOLE_SOURCE}/PS12-Type-Racer/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_CONSOLE_SOURCE}/PS12-Type-Racer/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps12_type_racer.mp4"
 				}
@@ -2336,21 +2337,18 @@ export const pythonLevel2Course: RawCourse = {
 					content: projectBrief({
 						goal: "Generalize random typing to search for valid words of length `n` and observe how runtime changes.",
 						build: [
-							"Ask for or set a target word length.",
-							"Load valid words of that length.",
-							"Track a rolling window of length `n`.",
-							"Measure attempts or elapsed time until a valid word appears."
+							"Open valid_words.txt beside main.py. Group its words by length and ask for a length that exists in the file.",
+							"Add one letter at a time and keep the latest n letters. Check for a match once the window reaches n.",
+							"Choose p to practice with xcatmint. In random mode, stop after 20,000 letters if a match has not appeared."
 						],
 						checkpoints: [
-							"The same logic works for more than one word length.",
-							"The rolling window stays exactly length `n` after enough letters are generated.",
-							"The runtime comparison explains why longer targets usually take more attempts."
+							"In practice mode, length 3 finds cat after four letters. Length 4 finds mint after eight.",
+							"Report the letter count for a match or a completed search without one.",
+							"Compare several random runs for each length. Both the length and number of possible target words affect how often a run succeeds."
 						]
 					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS13-Advanced-Typewriter-Monkeys/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS13-Advanced-Typewriter-Monkeys/solution",
+					projectLink: `${PYTHON_LEVEL_2_CONSOLE_SOURCE}/PS13-Advanced-Typewriter-Monkeys/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_CONSOLE_SOURCE}/PS13-Advanced-Typewriter-Monkeys/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps13_advanced_typewriter_monkeys.gif"
 				}
@@ -2693,7 +2691,7 @@ const PYTHON_LEVEL_2_FLOW: PythonLevel2FlowConfig[] = [
 			"zero-time guard"
 		],
 		projectThread:
-			"Measure elapsed time and text accuracy separately, then combine them into a Type Racer result that handles empty text, immediate input, and ordinary runs safely."
+			"Measure elapsed time and check the text separately. Trace a mismatch, a match, and an early exit before adding speed or accuracy statistics."
 	},
 	{
 		title: "PS13 Wordsmith",
@@ -2738,7 +2736,7 @@ const PYTHON_LEVEL_2_FLOW: PythonLevel2FlowConfig[] = [
 ];
 
 const PYTHON_LEVEL_2_CHALLENGE_TITLE_RE =
-	/advanced|debugging|password cracker|extension|field day ii|class registration ii|evil wheel of fortune|mastermind|archery simulator|stock trader|double or nothing/i;
+	/advanced|debugging|caesar shift detective|extension|field day ii|class registration ii|evil wheel of fortune|mastermind|archery simulator|stock trader|double or nothing/i;
 const PYTHON_LEVEL_2_COMBINING_MARKS_RE = /[\u0300-\u036F]/g;
 const PYTHON_LEVEL_2_NON_ALPHANUMERIC_RE = /[^a-z0-9]+/g;
 const PYTHON_LEVEL_2_LEADING_HYPHENS_RE = /^-+/;

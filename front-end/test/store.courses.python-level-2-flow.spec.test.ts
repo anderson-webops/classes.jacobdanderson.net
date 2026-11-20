@@ -87,7 +87,7 @@ describe("Python Level 2 learner flow", () => {
 		}
 	});
 
-	it("opens the five repaired ASCII projects with source for each format", async () => {
+	it("opens the six repaired ASCII projects with source for each format", async () => {
 		const base =
 			"Python-Level-2/tree/db7809a1c101e6d5e5943c8e22bbfed744ded734";
 		const moduleId = "python-level-2-ps3-ascii-and-ciphers";
@@ -97,6 +97,10 @@ describe("Python Level 2 learner flow", () => {
 			"PS3-ASCII-Art",
 			"PS3-Uppercase-to-Lowercase",
 			"PS3-Nested-Boxes"
+		];
+		const sources = [
+			...folders.map(folder => `${base}/${folder}`),
+			"Python-Level-2/tree/96f7196ea540fce55644e2a2d1d0ce97f16de9e8/PS3-Password-Cracker"
 		];
 		const store = useCoursesStore();
 		const standard = (await store.loadCourseById("python-level-2"))!;
@@ -116,16 +120,12 @@ describe("Python Level 2 learner flow", () => {
 		const classroomProjects = [
 			...classroomModule.curriculum,
 			...classroomModule.supplementalProjects
-		].filter(
-			item =>
-				item.projectLink &&
-				item.title !== "PS3 Supplemental Project 4: Password Cracker"
-		);
+		].filter(item => item.projectLink);
 
 		expect(standardProjects.map(item => item.projectLink)).toEqual(
-			folders.map(
-				folder =>
-					`https://github.com/instruction-material/${base}/${folder}/starter`
+			sources.map(
+				source =>
+					`https://github.com/instruction-material/${source}/starter`
 			)
 		);
 		expect(classroomProjects.map(item => item.id)).toEqual(
@@ -139,10 +139,10 @@ describe("Python Level 2 learner flow", () => {
 			.find(item => item.title === "Launch Project 3: Caesar Cipher Lab");
 		for (const [index, item] of [...classroomProjects, launch!].entries()) {
 			const url = new URL(item.projectLink!, "https://classes.example");
-			const folder = folders[index] ?? "PS3-Caesar-Cipher";
+			const source = sources[index] ?? `${base}/PS3-Caesar-Cipher`;
 			expect(url.pathname).toBe("/ide");
 			expect(url.searchParams.get("classroomSource")).toBe(
-				`${base}/${folder}/solution`
+				`${source}/solution`
 			);
 		}
 	});
