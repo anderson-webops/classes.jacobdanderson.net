@@ -23,7 +23,7 @@ on:
       python_project_scope:
         description: Python Level 2 browser exercises when both Python formats are selected
         type: choice
-        options: [opening-and-loops, loops-and-check-ins, ascii-and-conditionals, functions, functions-and-collections, console-and-typing, console-and-capstones, lists-and-music, named-music-and-morse, dictionaries-and-morse, dictionaries-and-music]
+        options: [opening-and-loops, loops-and-check-ins, ascii-and-conditionals, functions, functions-and-collections, console-and-typing, console-and-capstones, lists-and-music, named-music-and-morse, dictionaries-and-morse, dictionaries-and-music, supplemental-practice]
         default: opening-and-loops
       browser_artifact_id:
         description: Networking browser export artifact
@@ -1485,6 +1485,7 @@ jobs:
             named-music-and-morse) modules=(named-music-and-morse) ;;
             dictionaries-and-morse) modules=(dictionaries named-music-and-morse) ;;
             dictionaries-and-music) modules=(lists-and-music dictionaries named-music-and-morse) ;;
+            supplemental-practice) modules=(supplemental-practice) ;;
             *) modules=(first loops) ;;
           esac
           for module in "${modules[@]}"; do

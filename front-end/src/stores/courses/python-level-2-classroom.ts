@@ -170,6 +170,34 @@ For a showcase, demonstrate the working Normal result first. If Hard is complete
 });
 
 const classroomProjectExtensions: Record<string, string> = {
+	"PS9-Class-Registration": `Run the completed roster report. The original Biology list contains ten entries and the set contains eight names. Compare a repeated name with the distinct names Sarah and Sara.
+
+**Normal:** Show how many repeated registrations were removed for each course. Biology and English lose two and three entries. Computer Science loses zero.
+
+**Hard:** Report the number of distinct students across all three classes. Use a union so someone in two courses is counted once.
+
+**Success criteria:** The combined roster contains 18 distinct names. The course counts stay 8, 9, and 7.`,
+	"PS10-US-Capitals-Quiz": `Open both text files and trace one question through the dictionary. The first pair is Alabama and Montgomery. Run the quiz and compare one correct answer with a wrong answer.
+
+**Normal:** Keep and display the number of questions answered alongside the final score. Count the wrong answer as an attempt.
+
+**Hard:** Ask at most five different states per game. Track states already used or sample without replacement.
+
+**Success criteria:** A wrong second answer after one correct response reports two attempts and one point. No state is repeated in a five-question game.`,
+	"PS11 Supplemental Project 2: Theme Park Planner": `Choose String Mountain twice, try it a third time, then choose Concatenation Carousel. Trace the budget through the two accepted choices and the rejected choice.
+
+**Normal:** Print the total number of minutes used beside the unused time. Two String Mountain visits followed by q use 260 minutes.
+
+**Hard:** List only rides that fit the time left. Show the shortest eligible ride first and order equal-duration rides by name.
+
+**Success criteria:** The third String Mountain visit leaves the budget unchanged at 100 minutes. Concatenation Carousel uses the final 100 minutes and the plan lists all three accepted choices.`,
+	"PS12-Review-Sentiment": `Run the completed review scorer with Great, but BAD. Trace how the three cleaned words map to one positive match, one negative match, and one unmatched word.
+
+**Normal:** Display the unmatched count alongside the two match counts.
+
+**Hard:** When a scored word directly follows not, count it in the opposite category. Keep other unmatched words out of both match counts.
+
+**Success criteria:** The original example has one unmatched word and reports neutral. In the extended version, not good is negative and not bad is positive. Punctuation-only input still produces an empty result.`,
 	"PS4-Rock-Paper-Scissors": `Run the complete game and compare paper/rock, rock/paper, and rock/rock. Locate the invalid-input check and the winning combinations. Compare how the result changes when the same two valid moves trade places.
 
 **Normal:** Add an explanation to a winning result. Paper against rock should include “paper beats rock.”

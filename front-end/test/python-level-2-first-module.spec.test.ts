@@ -18,8 +18,35 @@ import dictionariesFixture from "../../test/fixtures/python-level-2-dictionaries
 import functionsFixture from "../../test/fixtures/python-level-2-functions-module-sources.json";
 import listsMusicFixture from "../../test/fixtures/python-level-2-lists-and-music-module-sources.json";
 import namedMusicMorseFixture from "../../test/fixtures/python-level-2-named-music-and-morse-module-sources.json";
+import supplementalPracticeFixture from "../../test/fixtures/python-level-2-supplemental-practice-module-sources.json";
 
 const modules = [
+	{
+		suffix: "-ps9-sets",
+		source: supplementalPracticeFixture.revision,
+		assignments: [
+			[
+				"supplemental-ps9-supplemental-project-1-class-registration",
+				"PS9-Class-Registration",
+				"choice"
+			]
+		]
+	},
+	{
+		suffix: "-ps10-to-do-list",
+		source: supplementalPracticeFixture.revision,
+		assignments: [["US Capitals Quiz", "PS10-US-Capitals-Quiz", "choice"]]
+	},
+	{
+		suffix: "-ps11-bank-account",
+		source: supplementalPracticeFixture.revision,
+		assignments: [["Theme Park Planner", "PS11-Juni-World", "choice"]]
+	},
+	{
+		suffix: "-ps12-type-racer",
+		source: supplementalPracticeFixture.revision,
+		assignments: [["Review Sentiment", "PS12-Review-Sentiment", "choice"]]
+	},
 	{
 		suffix: "-ps1-variables-strings-and-input",
 		source: "b58d958347f0c3ca6f9d96963a674cc3d00813bf",
@@ -316,7 +343,8 @@ it.each([
 	["capstones", capstonesFixture],
 	["lists-and-music", listsMusicFixture],
 	["named-music-and-morse", namedMusicMorseFixture],
-	["dictionaries", dictionariesFixture]
+	["dictionaries", dictionariesFixture],
+	["supplemental-practice", supplementalPracticeFixture]
 ] as const)(
 	"binds the %s browser fixture to real course items and classroom sources",
 	async (_scope, data) => {

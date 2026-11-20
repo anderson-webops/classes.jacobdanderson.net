@@ -32,6 +32,9 @@ const PYTHON_LEVEL_2_MUSIC_INTEGRATION_SOURCE =
 const PYTHON_LEVEL_2_DICTIONARY_PRACTICE_SOURCE =
 	"https://github.com/instruction-material/Python-Level-2/tree/e2808fac8733ae1ec4fa4882848f14c8d372ff74";
 
+const PYTHON_LEVEL_2_SUPPLEMENTAL_SOURCE =
+	"https://github.com/instruction-material/Python-Level-2/tree/017313722ab219e4fccd9c1e186c7323033af7df";
+
 export const PYTHON_LEVEL_2_COLLECTIONS_SOURCE =
 	"https://github.com/instruction-material/Python-Level-2/tree/2dec846ce80283885dfe01579a181906e6748985";
 
@@ -1792,7 +1795,7 @@ export const pythonLevel2Course: RawCourse = {
 					content: projectBrief({
 						goal: "Clean class rosters by removing duplicates and reporting real enrollment counts.",
 						build: [
-							"Load or create course rosters with repeated names.",
+							"Run the starter to see the number of registrations before removing repeated names.",
 							"Convert each roster to a set to remove duplicates.",
 							"Compute the actual enrollment count.",
 							"Print the cleaned roster and count for each course."
@@ -1800,13 +1803,11 @@ export const pythonLevel2Course: RawCourse = {
 						checkpoints: [
 							"Duplicates are removed without manual special cases.",
 							"The count comes from the cleaned set.",
-							"The result explains what information was lost when order and duplicates were removed."
+							"The Biology, Computer Science, and English counts are 8, 9, and 7. Both Sarah and Sara remain in the cleaned Biology roster."
 						]
 					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS9-Class-Registration/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS9-Class-Registration/solution",
+					projectLink: `${PYTHON_LEVEL_2_SUPPLEMENTAL_SOURCE}/PS9-Class-Registration/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_SUPPLEMENTAL_SOURCE}/PS9-Class-Registration/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps9_class_registration.gif"
 				},
@@ -2030,21 +2031,19 @@ export const pythonLevel2Course: RawCourse = {
 					content: projectBrief({
 						goal: "Run a state-capitals quiz with dictionary lookup and score tracking.",
 						build: [
-							"Represent state-capital pairs with a dictionary.",
+							"Read the two included text files and pair corresponding lines in a dictionary. The first pair is Alabama and Montgomery.",
 							"Ask quiz questions in a loop.",
-							"Compare the user's answer to the expected capital.",
-							"Stop on an incorrect answer and print the final score."
+							"Ignore capitalization and surrounding spaces when comparing an answer with the expected capital.",
+							"On a wrong answer show the correct capital and end the quiz. Print the final score when the session ends."
 						],
 						checkpoints: [
 							"The state prompt and capital answer come from the same dictionary entry.",
 							"The score increments only after correct answers.",
-							"Case and spelling behavior are stated."
+							"When asked about Alabama, MONTGOMERY earns one point. A different spelling ends the quiz."
 						]
 					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS10-US-Capitals-Quiz/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS10-US-Capitals-Quiz/solution",
+					projectLink: `${PYTHON_LEVEL_2_SUPPLEMENTAL_SOURCE}/PS10-US-Capitals-Quiz/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_SUPPLEMENTAL_SOURCE}/PS10-US-Capitals-Quiz/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps10_us_capitals_quiz.gif"
 				},
@@ -2147,20 +2146,20 @@ export const pythonLevel2Course: RawCourse = {
 						goal: "Plan a theme-park visit by tracking ride choices and remaining time.",
 						build: [
 							"Represent ride names and estimated durations in a dictionary.",
-							"Begin with a six-hour time budget.",
+							"Begin with a 360-minute budget and let the user enter q to finish.",
 							"Let the user choose rides from a menu.",
-							"Subtract ride time and print the updated plan after each choice."
+							"Reject any ride that takes more time than remains. Otherwise subtract its duration and add it to the plan."
 						],
 						checkpoints: [
 							"Ride durations come from the dictionary.",
-							"The remaining time never silently goes negative.",
+							"Two visits to String Mountain leave 100 minutes. A third visit does not fit, while Concatenation Carousel fits exactly.",
 							"The final plan lists chosen rides and unused time."
 						]
 					}),
 					projectLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS11-Juni-World/starter",
+						"https://github.com/instruction-material/Python-Level-2/tree/017313722ab219e4fccd9c1e186c7323033af7df/PS11-Juni-World/starter",
 					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS11-Juni-World/solution",
+						"https://github.com/instruction-material/Python-Level-2/tree/017313722ab219e4fccd9c1e186c7323033af7df/PS11-Juni-World/solution",
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps11_juni_world.gif"
 				}
@@ -2214,21 +2213,19 @@ export const pythonLevel2Course: RawCourse = {
 					content: projectBrief({
 						goal: "Classify a review by comparing its words to positive and negative vocabularies.",
 						build: [
-							"Collect or load a short review.",
-							"Split the review into words and normalize case or punctuation.",
+							"Read one short English review.",
+							"Lowercase the review and split it into runs of letters a through z, treating punctuation as a boundary.",
 							"Compare words against positive and negative word sets.",
-							"Compute a score and print the resulting sentiment."
+							"Show each match count out of the total word count. Classify by the higher count, with equal counts labeled neutral."
 						],
 						checkpoints: [
-							"Text cleaning rules are stated.",
-							"Positive and negative matches are counted separately.",
-							"The result is described as a simple heuristic rather than perfect language understanding."
+							"Great, but BAD. yields three words and one match in each category. The result is neutral.",
+							"An empty or punctuation-only review reports zero scorable words.",
+							"The program uses only the supplied vocabulary to interpret a review."
 						]
 					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS12-Review-Sentiment/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS12-Review-Sentiment/solution",
+					projectLink: `${PYTHON_LEVEL_2_SUPPLEMENTAL_SOURCE}/PS12-Review-Sentiment/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_SUPPLEMENTAL_SOURCE}/PS12-Review-Sentiment/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps12_review_sentiment.gif"
 				},
