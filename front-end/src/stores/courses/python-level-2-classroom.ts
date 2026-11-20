@@ -227,6 +227,63 @@ const classroomProjectExtensions: Record<string, string> = {
 **Hard:** Ask how many tickets the friend needs and compute the new boundary. When the friend needs 10 tickets, 259 is short by one and 260 succeeds.
 
 **Success criteria:** The independent prize messages still include all items the ticket balance can cover. At 350 all four individual purchases are available.`,
+
+	"PS5-Functions-Practice": `Run the completed helpers and connect each call to the value it returns. Compare factorial of 4 with exponent of 2 to the third power. The loops multiply a different sequence of values.
+
+**Normal:** Print a short calculation table for factorial of 0, 1, and 4 and powers of 2 with exponents 0, 1, and 3.
+
+**Hard:** Add a combinations helper for choosing two objects. For n objects, compute n * (n - 1) / 2 when n is at least 2. Use the existing arithmetic helpers where they fit.
+
+**Success criteria:** Inputs 2 and 5 return 1 and 10 possible pairs. For 0 or 1 object the count is 0.`,
+	"PS5-Parameter-Tracing": `Run all seven calls and map their arguments to the parameters. Compare traces 1 and 3. The same three input values are rearranged and produce 5 and 17.
+
+**Normal:** Add an output label for temp and the local value of c in function1. For function1(1, 2, 3), those values are 3 and 3 before the return of 5.
+
+**Hard:** Add a predicted and observed comparison for function2(2, 3, -4). Track the inner call as function1(-4, 3, 2).
+
+**Success criteria:** The inner call returns 7 and the outer call returns 13. Keep the other seven results intact.`,
+	"PS5-Coin-Flipper": `Run the completed 1000-flip simulation twice. Compare the returned heads and tails labels, the two counts, and their percentages. Each flip changes exactly one count.
+
+**Normal:** Add a line showing which side had more flips and by how many. A fixed count of 520 heads and 480 tails gives heads by 40. Equal counts give a tie.
+
+**Hard:** Move the tally loop into a function with a positive trial count. Reject a nonpositive count before computing percentages.
+
+**Success criteria:** With four fixed results of heads, tails, heads, tails, the result is a tie and both percentages are 50.`,
+	"PS5-Dice-Roller": `Run the complete simulation once and trace how two six-sided dice update one of the eleven counters. The sum 7 has more possible pairs than 2 or 12.
+
+**Normal:** Print the total count and the percentage on each row. Check that 2 and 12 each count one occurrence in the four-pair sample 1/1, 1/6, 2/5, 6/6.
+
+**Hard:** Compare the observed percentage for 7 with its six equally likely pairs out of 36. Print the absolute difference in percentage points.
+
+**Success criteria:** The four-pair sample reports 50% for 7 and a difference of about 33.3 percentage points.`,
+	"PS5-Squawka-Zilly-Floog": `Run all three helpers at 4. Trace how the two results 9 and 4 are combined into 30, and identify which helper returns each intermediate value.
+
+**Normal:** Print a second labeled row for x = 0 with results 1, 12, and 38.
+
+**Hard:** Add a range of x values from -2 through 2. Print each row with both intermediate results, then report the smallest squawka value and its input.
+
+**Success criteria:** The row for x = 2 has values 5, 4, and 22. Among those five rows, 22 is the minimum.`,
+	"PS5 Supplemental Project 2: Word Translator": `Run the translator with Cat and a. The returned values are atCay and aay. Trace the first character, the remaining characters, and the suffix.
+
+**Normal:** Print the length before and after translation. For Cat the displayed lengths are 3 and 5. An empty input keeps the existing message.
+
+**Hard:** Add a reverse mode for valid translated words. Remove the final ay and move the last remaining character to the front. Report an error when the suffix or the preceding letter is missing.
+
+**Success criteria:** Reverse atCay to Cat and aay to a.`,
+	"PS5-Number-Games": `Run the predicates for 1 through 50. Compare the two odd-number lists and the two multiple-of-14 lists. These comparisons check that the composed helpers reuse the smaller predicates correctly.
+
+**Normal:** Accept a single integer and report its classification. For 28, report even and a multiple of 7 and 14.
+
+**Hard:** Limit prime trials to divisors whose squares are at most the candidate. Keep the early check for values below 2. Compare the prime outputs from 1 through 50 before and after the change.
+
+**Success criteria:** Both programs list the same primes. The shorter check still handles 0, 1, 2, 47, and 49.`,
+	"PS5-Debugging-Functions": `Run the corrected game with target 27 and guesses 20, 30, and 27. Trace how the guess reaches the comparison function and how its Boolean result controls the loop.
+
+**Normal:** Pass the last guess to the score function along with the count. The sample summary should display 27 and three guesses.
+
+**Hard:** Add a replay prompt and start a fresh round when the response is yes. Choose the target once per round and reset the guess count.
+
+**Success criteria:** A first-try success in the replay reports one guess even when the earlier round took three guesses.`,
 	"PS-Check-in-1": `Run the completed animal and color program with dog and black, then cat and black. Compare the combined and nested decisions. Both versions should agree for both inputs.
 
 **Normal:** Print the number of correct guesses before the result. Dog and black should report two matches. Cat and black should report one.
@@ -263,7 +320,9 @@ for (const module of classroomModules) {
 		const folder = item.solutionLink?.match(
 			/\/tree\/[^/]+\/(.+)\/solution$/
 		)?.[1];
-		const content = folder && classroomProjectExtensions[folder];
+		const content =
+			classroomProjectExtensions[item.title] ??
+			(folder && classroomProjectExtensions[folder]);
 		if (content) {
 			item.content = content;
 			item.contentKind = "assignment";

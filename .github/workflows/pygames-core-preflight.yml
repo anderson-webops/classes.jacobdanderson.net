@@ -23,7 +23,7 @@ on:
       python_project_scope:
         description: Python Level 2 browser exercises when both Python formats are selected
         type: choice
-        options: [opening-and-loops, loops-and-check-ins]
+        options: [opening-and-loops, loops-and-check-ins, ascii-and-conditionals, functions]
         default: opening-and-loops
       browser_artifact_id:
         description: Networking browser export artifact
@@ -1474,14 +1474,17 @@ jobs:
           PYTHON_PROJECT_SCOPE: ${{ inputs.python_project_scope }}
         run: |
           npm exec -w front-end -- vitest run test/python-level-2-first-module.spec.test.ts test/store.courses.python-level-2-flow.spec.test.ts --maxWorkers=1
-          if [[ "$PYTHON_PROJECT_SCOPE" == loops-and-check-ins ]]; then
-            PYTHON_LEVEL_2_BROWSER_MODULE=check-ins node scripts/classes-family-heavy-task.mjs -- node --test --test-concurrency=1 test/python-level-2-project-browser.test.mjs
-          else
-            node scripts/classes-family-heavy-task.mjs -- node --test --test-concurrency=1 test/python-level-2-project-browser.test.mjs
-          fi
-          PYTHON_LEVEL_2_BROWSER_MODULE=loops node scripts/classes-family-heavy-task.mjs -- node --test --test-concurrency=1 test/python-level-2-project-browser.test.mjs
+          case "$PYTHON_PROJECT_SCOPE" in
+            loops-and-check-ins) modules=(check-ins loops) ;;
+            ascii-and-conditionals) modules=(ascii conditionals) ;;
+            functions) modules=(functions) ;;
+            *) modules=(first loops) ;;
+          esac
+          for module in "${modules[@]}"; do
+            PYTHON_LEVEL_2_BROWSER_MODULE="$module" node scripts/classes-family-heavy-task.mjs -- node --test --test-concurrency=1 test/python-level-2-project-browser.test.mjs
+          done
       - name: Verify actual Wordsmith role imports, saved scoring edits and complete dictionary exports
-        if: inputs.self_study_courses != 'javascript-collisions' && inputs.self_study_courses != 'javascript-canvas-games' && inputs.self_study_courses != 'javascript-api-projects' && inputs.self_study_courses != 'javascript-local-persistence' && inputs.self_study_courses != 'javascript-us-capitals' && inputs.self_study_courses != 'javascript-master-fundamentals' && inputs.self_study_courses != 'javascript-master-checkpoint-one' && inputs.self_study_courses != 'javascript-master-checkpoint-two' && (inputs.self_study_courses != 'python-level-2,python-level-2-classroom' || inputs.python_project_scope != 'loops-and-check-ins')
+        if: inputs.self_study_courses != 'javascript-collisions' && inputs.self_study_courses != 'javascript-canvas-games' && inputs.self_study_courses != 'javascript-api-projects' && inputs.self_study_courses != 'javascript-local-persistence' && inputs.self_study_courses != 'javascript-us-capitals' && inputs.self_study_courses != 'javascript-master-fundamentals' && inputs.self_study_courses != 'javascript-master-checkpoint-one' && inputs.self_study_courses != 'javascript-master-checkpoint-two' && (inputs.self_study_courses != 'python-level-2,python-level-2-classroom' || inputs.python_project_scope == 'opening-and-loops')
         env:
           PYTHON_WORDSMITH_BROWSER_DIR: output/python-wordsmith-browser
         run: node scripts/classes-family-heavy-task.mjs -- node --test --test-concurrency=1 test/python-wordsmith-course-browser.test.mjs
@@ -1580,6 +1583,9 @@ jobs:
             output/python-first-module-browser/
             output/python-loop-module-browser/
             output/python-check-ins-module-browser/
+            output/python-ascii-module-browser/
+            output/python-conditionals-module-browser/
+            output/python-functions-module-browser/
             output/javascript-collision-browser/
             output/javascript-canvas-games-browser/
             output/javascript-api-projects-browser/

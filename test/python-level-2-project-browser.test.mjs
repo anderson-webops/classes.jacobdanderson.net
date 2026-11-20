@@ -4,7 +4,14 @@ import { readFileSync } from "node:fs";
 import { test } from "node:test";
 import { runAssemblyCoreCourseWorkflow } from "./assembly-core-course-browser.mjs";
 
-const moduleFiles = { "first": "first", "loops": "loop", "check-ins": "check-ins" };
+const moduleFiles = {
+	"first": "first",
+	"loops": "loop",
+	"check-ins": "check-ins",
+	"ascii": "ascii",
+	"conditionals": "conditionals",
+	"functions": "functions"
+};
 const selectedModule = process.env.PYTHON_LEVEL_2_BROWSER_MODULE ?? "first";
 assert.ok(Object.hasOwn(moduleFiles, selectedModule), `Unknown Python module: ${selectedModule}`);
 const moduleName = moduleFiles[selectedModule];

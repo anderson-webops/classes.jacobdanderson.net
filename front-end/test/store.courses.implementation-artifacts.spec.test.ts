@@ -532,8 +532,8 @@ describe("implemented course development artifacts", () => {
 		expectAuthoredSourcePair(
 			pythonLevel2,
 			"Parameter Tracing",
-			"Python-Level-2/tree/main/PS5-Parameter-Tracing/starter",
-			"Python-Level-2/tree/main/PS5-Parameter-Tracing/solution"
+			"Python-Level-2/tree/6c8442dd68067e1f8cee1f14a5e08bf8e4b06c17/PS5-Parameter-Tracing/starter",
+			"Python-Level-2/tree/6c8442dd68067e1f8cee1f14a5e08bf8e4b06c17/PS5-Parameter-Tracing/solution"
 		);
 		expectAuthoredSourcePair(
 			pythonLevel2,
@@ -681,7 +681,7 @@ describe("implemented course development artifacts", () => {
 			"Python-Level-2/tree/b58d958347f0c3ca6f9d96963a674cc3d00813bf/PS1-Mad-Libs/starter"
 		);
 		expect(serializedCourse).toContain(
-			"Python-Level-2/tree/main/PS5-Parameter-Tracing/starter"
+			"Python-Level-2/tree/6c8442dd68067e1f8cee1f14a5e08bf8e4b06c17/PS5-Parameter-Tracing/starter"
 		);
 		expect(serializedCourse).toContain(
 			"Python-Level-2/tree/main/PS14-Mastermind/solution"

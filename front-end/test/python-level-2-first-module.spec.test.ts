@@ -1,7 +1,12 @@
+import { createHash } from "node:crypto";
 import { createPinia, setActivePinia } from "pinia";
 import { expect, it } from "vitest";
+import { addPythonIdeClassroomSectionsToSource } from "@/modules/pythonIde";
 import { useAppStore } from "@/stores/app";
 import { useCoursesStore } from "@/stores/courses";
+import asciiFixture from "../../test/fixtures/python-level-2-ascii-module-sources.json";
+import conditionalsFixture from "../../test/fixtures/python-level-2-conditionals-module-sources.json";
+import functionsFixture from "../../test/fixtures/python-level-2-functions-module-sources.json";
 
 const modules = [
 	{
@@ -52,6 +57,20 @@ const modules = [
 				"PS-Check-in-1/practice",
 				"core"
 			]
+		]
+	},
+	{
+		suffix: "-ps5-functions",
+		source: "6c8442dd68067e1f8cee1f14a5e08bf8e4b06c17",
+		assignments: [
+			["Functions Practice", "PS5-Functions-Practice", "core"],
+			["Parameter Tracing", "PS5-Parameter-Tracing", "core"],
+			["Coin Flipper", "PS5-Coin-Flipper", "core"],
+			["Dice Roller", "PS5-Dice-Roller", "core"],
+			["Squawka Zilly Floog", "PS5-Squawka-Zilly-Floog", "choice"],
+			["Word Translator", "PS5-Juni-Latin", "choice"],
+			["Number Games", "PS5-Number-Games", "choice"],
+			["Debugging Functions", "PS5-Debugging-Functions", "challenge"]
 		]
 	},
 	{
@@ -128,6 +147,7 @@ it.each([
 					);
 					if (
 						suffix === "-ps4-conditionals" ||
+						suffix === "-ps5-functions" ||
 						suffix.startsWith("-check-in-")
 					) {
 						expect(item.contentKind).toBe("assignment");
@@ -137,6 +157,46 @@ it.each([
 					}
 				}
 			}
+		}
+	}
+);
+
+it.each([
+	["ascii", asciiFixture],
+	["conditionals", conditionalsFixture],
+	["functions", functionsFixture]
+] as const)(
+	"binds the %s browser fixture to real course items and classroom sources",
+	async (_scope, fixture) => {
+		setActivePinia(createPinia());
+		const course = (await useCoursesStore().loadCourseById(
+			"python-level-2-classroom"
+		))!;
+		const files: Record<string, { content: string }> = fixture.files;
+		const module = course.modules.find(
+			({ id }) => id === fixture.moduleId
+		)!;
+		const assignments = [
+			...module.curriculum,
+			...module.supplementalProjects
+		];
+		for (const exercise of fixture.exercises) {
+			const item = assignments.find(({ id }) => id === exercise.itemId);
+			expect(item?.projectLink, exercise.itemId).toBeDefined();
+			const launch = new URL(
+				item!.projectLink!,
+				"https://classes.example"
+			);
+			expect(launch.searchParams.get("classroomSource")).toBe(
+				`Python-Level-2/tree/${fixture.revision}/${exercise.pack}/solution`
+			);
+			const solution = files[`${exercise.pack}/solution/main.py`];
+			const wrapped = addPythonIdeClassroomSectionsToSource(
+				solution!.content
+			);
+			expect(createHash("sha256").update(wrapped).digest("hex")).toBe(
+				exercise.classroomMainSha256
+			);
 		}
 	}
 );

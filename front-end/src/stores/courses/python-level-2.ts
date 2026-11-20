@@ -20,6 +20,9 @@ export const PYTHON_LEVEL_2_PS3_SOURCE =
 export const PYTHON_LEVEL_2_PS4_SOURCE =
 	"https://github.com/instruction-material/Python-Level-2/tree/5d787e78f9d0e72096046c49ee25e9fab53fe045";
 
+const PYTHON_LEVEL_2_PS5_SOURCE =
+	"https://github.com/instruction-material/Python-Level-2/tree/6c8442dd68067e1f8cee1f14a5e08bf8e4b06c17";
+
 const PYTHON_LEVEL_2_CHECK_INS_SOURCE =
 	"https://github.com/instruction-material/Python-Level-2/tree/8bc76e6927ae40683bfb79170c378dac2b266cf2";
 
@@ -1116,7 +1119,7 @@ export const pythonLevel2Course: RawCourse = {
 				{
 					title: "Functions",
 					content: conceptBrief({
-						focus: "Functions package reusable behavior behind a name. Parameters bring information into the function, return values send information back out, and scope controls which names exist inside or outside the function.",
+						focus: "The call add(2, 3) sends the arguments 2 and 3 to the parameters in the function definition. If the function returns 5, the caller can store it, print it, or use it in another calculation. A local name created in the function belongs to that call.",
 						practice: [
 							"Compare built-in functions such as `input()`, `print()`, and `str()` with a user-defined helper.",
 							"Write one function that prints a result and one function that returns a result.",
@@ -1132,19 +1135,19 @@ export const pythonLevel2Course: RawCourse = {
 					content: projectBrief({
 						goal: "Write a set of focused practice functions and explain each function's contract.",
 						build: [
-							"Create arithmetic helpers with parameters.",
+							"Use the starter add function as a model. Write subtract with two parameters and multiply with three.",
 							"Write an average helper that returns a computed result.",
-							"Write factorial and exponent helpers that use loops.",
+							"Use loops to compute factorial and powers with nonnegative whole-number inputs for the count or exponent.",
 							"Call each function with several test inputs."
 						],
 						checkpoints: [
-							"Each function has a clear name and one main responsibility.",
+							"For 2, 3, and 4, verify a sum of 5, difference of -1, product of 24, and mean of 2.5.",
 							"Returned values are used by the caller rather than ignored.",
-							"Tests include ordinary values and at least one boundary case such as 0 or 1."
+							"Check factorial(4) = 24 and exponent(2, 3) = 8. Factorial of 0 and a base raised to exponent 0 both return 1."
 						]
 					}),
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS5-Functions-Practice/solution",
+					projectLink: `${PYTHON_LEVEL_2_PS5_SOURCE}/PS5-Functions-Practice/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_PS5_SOURCE}/PS5-Functions-Practice/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps5_functions_practice.gif"
 				},
@@ -1153,37 +1156,35 @@ export const pythonLevel2Course: RawCourse = {
 					content: reviewBrief({
 						focus: "Parameter tracing connects a function call to the values received inside the function body.",
 						tasks: [
-							"Label each argument at the call site.",
+							"For function1(1, 2, 3), record a = 1, b = 2, and c = 3. Trace temp, then c, then the returned value 5.",
 							"Map each argument to its matching parameter by position.",
 							"Trace local variables separately from variables outside the function.",
-							"Predict the output before running the starter."
+							"Match all seven calls to the function parameters. Predict each result before enabling its print line."
 						],
 						evidence:
-							"The trace explains why changing argument order can change the result even when the same values are present."
+							"Compare the first and third calls to function1 and explain the different results. Compare calls 6 and 7 to function2 and explain why both pass the same values."
 					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS5-Parameter-Tracing/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS5-Parameter-Tracing/solution"
+					projectLink: `${PYTHON_LEVEL_2_PS5_SOURCE}/PS5-Parameter-Tracing/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_PS5_SOURCE}/PS5-Parameter-Tracing/solution`
 				},
 				{
 					title: "PS5 Project 2: Coin Flipper",
 					content: projectBrief({
 						goal: "Estimate heads/tails frequencies with a function and repeated simulation.",
 						build: [
-							"Write `flipCoin()` so it returns either heads or tails.",
-							"Call the function many times inside a loop.",
+							"Run the starter. Trace how flip_coin maps 0 to heads and 1 to tails before returning the label.",
+							"Call flip_coin 1000 times in a loop. Before using randomness, trace a four-result sequence of heads, tails, heads, tails.",
 							"Count how many times each result appears.",
 							"Print totals and percentages."
 						],
 						checkpoints: [
 							"The flip function returns a value instead of printing all results internally.",
-							"The tally variables update once per flip.",
+							"The four-result sample gives two of each result, or 50% each. In a longer run the counts add to 1000, and the percentages add to 100.",
 							"The observed percentages are compared to the expected 50/50 pattern without assuming every run will be exact."
 						]
 					}),
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS5-Coin-Flipper/solution",
+					projectLink: `${PYTHON_LEVEL_2_PS5_SOURCE}/PS5-Coin-Flipper/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_PS5_SOURCE}/PS5-Coin-Flipper/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps5_coin_flipper.gif"
 				},
@@ -1193,18 +1194,18 @@ export const pythonLevel2Course: RawCourse = {
 						goal: "Simulate two dice and analyze the distribution of possible sums.",
 						build: [
 							"Write or reuse a function that returns a random die roll.",
-							"Roll two dice repeatedly and add their values.",
+							"Roll two dice per trial. Use 1000 pairs in the simulation. For a dry run use 1/1, 1/6, 2/5, and 6/6.",
 							"Track how often each sum appears.",
 							"Print a summary that makes common and rare sums visible."
 						],
 						checkpoints: [
 							"Sums range from 2 through 12.",
-							"The frequency table updates the correct sum each roll.",
+							"The four pairs produce 2, 7, 7, and 12. Their counts are 1, 2, and 1.",
 							"The explanation connects middle sums to more possible dice combinations."
 						]
 					}),
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS5-Dice-Roller/solution",
+					projectLink: `${PYTHON_LEVEL_2_PS5_SOURCE}/PS5-Dice-Roller/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_PS5_SOURCE}/PS5-Dice-Roller/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps5_dice_roller.gif"
 				}
@@ -1215,19 +1216,19 @@ export const pythonLevel2Course: RawCourse = {
 					content: projectBrief({
 						goal: "Build a chain of math helpers where later functions reuse earlier functions.",
 						build: [
-							"Define a small group of simple arithmetic functions.",
-							"Create larger functions that call the smaller helpers.",
+							"Use the starter zilly(x) = 2 * x + 1. Define floog(x) = x * x - 6 * x + 12.",
+							"Return 2 * zilly(x) + 3 * floog(x) from squawka(x).",
 							"Print intermediate and final results while testing.",
 							"Clean the output once the function chain is correct."
 						],
 						checkpoints: [
 							"Functions are reused rather than copied.",
 							"Argument order is consistent across calls.",
-							"The final expression can be traced through the helper calls."
+							"At x = 4, zilly gives 9, floog gives 4, and squawka gives 30. At x = 0, the results are 1, 12, and 38."
 						]
 					}),
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS5-Squawka-Zilly-Floog/solution"
+					projectLink: `${PYTHON_LEVEL_2_PS5_SOURCE}/PS5-Squawka-Zilly-Floog/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_PS5_SOURCE}/PS5-Squawka-Zilly-Floog/solution`
 				},
 				{
 					title: "PS5 Supplemental Project 2: Word Translator",
@@ -1235,19 +1236,21 @@ export const pythonLevel2Course: RawCourse = {
 					content: projectBrief({
 						goal: "Write a reusable word-translation function for a simplified Pig Latin-style rule.",
 						build: [
-							"Ask for a word.",
+							"Read and trim one word made up of letters. Check the input before using the first character.",
 							"Define a function that receives one word as a parameter.",
-							"Apply the translation rule by moving or adding characters.",
+							"Move the first letter to the end, keep its original case, and add ay.",
 							"Return and print the translated word."
 						],
 						checkpoints: [
 							"The translation logic lives inside a function.",
-							"Short words and ordinary words have defined behavior.",
+							"Cat becomes atCay and a becomes aay. Blank input and two words produce a message.",
 							"The original and translated words are both visible in the output."
 						]
 					}),
+					projectLink:
+						"https://github.com/instruction-material/Python-Level-2/tree/6c8442dd68067e1f8cee1f14a5e08bf8e4b06c17/PS5-Juni-Latin/starter",
 					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS5-Juni-Latin/solution",
+						"https://github.com/instruction-material/Python-Level-2/tree/6c8442dd68067e1f8cee1f14a5e08bf8e4b06c17/PS5-Juni-Latin/solution",
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps5_juni_latin.gif"
 				},
@@ -1256,19 +1259,19 @@ export const pythonLevel2Course: RawCourse = {
 					content: projectBrief({
 						goal: "Create predicate helper functions that classify numbers and reuse them across ranges.",
 						build: [
-							"Write boolean helpers such as `isEven`, `isOdd`, `isMultiple7`, and `isPrime`.",
+							"Extend is_even with is_odd, is_multiple7, is_multiple14, and is_prime. Also implement odd by negating is_even.",
 							"Test each helper with known true and false examples.",
-							"Loop through a range of numbers.",
+							"Print each category for 1 through 50. Rebuild the multiple-of-14 test with is_even and is_multiple7.",
 							"Print categories based on which helpers return `True`."
 						],
 						checkpoints: [
 							"Each helper returns a boolean.",
-							"Prime checking handles 0, 1, 2, and composite numbers correctly.",
-							"The output proves the helper functions are being reused."
+							"Values below 2 are never prime. Check -4, 0, 1, 2, and 49. Only 2 is prime in that sample.",
+							"Both multiple-of-14 rules return 14, 28, and 42 across the range."
 						]
 					}),
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS5-Number-Games/solution",
+					projectLink: `${PYTHON_LEVEL_2_PS5_SOURCE}/PS5-Number-Games/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_PS5_SOURCE}/PS5-Number-Games/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps5_number_games.gif"
 				},
@@ -1277,21 +1280,19 @@ export const pythonLevel2Course: RawCourse = {
 					content: projectBrief({
 						goal: "Repair a guessing-game script by tracing function definitions, calls, parameters, and returns.",
 						build: [
-							"Run the starter and record the first error or incorrect result.",
-							"Check whether functions are defined before they are called.",
+							"The broken project first reports a syntax error. Repair the function headers before tracing the calls.",
+							"Check whether each function is actually called and whether its argument count matches its definition.",
 							"Verify parameter counts, argument order, and return values.",
-							"Fix one issue at a time and rerun after each fix."
+							"Make the game choose one target between 1 and 100 and use one response per guess. Fix the target at 27 while debugging."
 						],
 						checkpoints: [
 							"Every function call matches the function definition.",
 							"Returned values are captured where needed.",
-							"The final game flow works without hidden global-state assumptions."
+							"Enter 20, 30, and 27 against target 27. Expect too low, too high, and correct in three guesses."
 						]
 					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS5-Debugging-Functions/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS5-Debugging-Functions/solution",
+					projectLink: `${PYTHON_LEVEL_2_PS5_SOURCE}/PS5-Debugging-Functions/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_PS5_SOURCE}/PS5-Debugging-Functions/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps5_debugging_functions.gif"
 				}
