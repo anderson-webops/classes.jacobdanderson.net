@@ -17,6 +17,9 @@ export const PYTHON_LEVEL_2_PS2_SOURCE =
 export const PYTHON_LEVEL_2_PS3_SOURCE =
 	"https://github.com/instruction-material/Python-Level-2/tree/db7809a1c101e6d5e5943c8e22bbfed744ded734";
 
+export const PYTHON_LEVEL_2_PS4_SOURCE =
+	"https://github.com/instruction-material/Python-Level-2/tree/5d787e78f9d0e72096046c49ee25e9fab53fe045";
+
 const PYTHON_LEVEL_2_PENDING_SOURCE_ASSETS = [
 	"ps10_field_day.gif",
 	"ps10_field_day_ii.gif",
@@ -810,7 +813,7 @@ export const pythonLevel2Course: RawCourse = {
 				{
 					title: "Conditionals",
 					content: conceptBrief({
-						focus: "Conditionals let a program choose different behavior based on boolean expressions. `if`, `elif`, and `else` form an ordered decision chain, while `and` and `or` combine multiple checks.",
+						focus: "In an `if`/ `elif`/ `else` chain, Python runs the body of the first true condition. For example, check `height < 50` before `height < 100`. Height 49 matches the first test, and height 50 reaches the second. Separate `if` statements can both run. Use `and` when both parts must be true and `or` when either can be true.",
 						practice: [
 							"Write a two-branch decision with `if` and `else`.",
 							"Add `elif` cases and predict which branch runs first when more than one condition could be true.",
@@ -826,21 +829,21 @@ export const pythonLevel2Course: RawCourse = {
 					content: projectBrief({
 						goal: "Build a two-player Rock, Paper, Scissors game that determines ties, wins, losses, and invalid input.",
 						build: [
-							"Ask both players for a move.",
-							"Normalize or validate the input.",
+							"Read one move per player. Strip surrounding spaces and convert each move to lowercase.",
+							"Reject the round if either move falls outside rock, paper, and scissors.",
 							"Check ties before win/loss cases.",
-							"Decide the winner with a clear conditional structure."
+							"Player 1 wins with rock against scissors, paper against rock, or scissors against paper. Player 2 wins the remaining valid unequal combinations."
 						],
 						checkpoints: [
 							"All nine valid move combinations have a correct outcome.",
 							"Invalid moves do not accidentally count as wins.",
-							"The branch order is explainable without reading every line aloud."
+							"Rock with surrounding spaces and rock tie. Lizard and rock report an invalid round."
 						],
 						extension:
 							"Add replay, a computer opponent, score tracking, or an expanded version such as Rock, Paper, Scissors, Lizard, Spock."
 					}),
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS4-Rock-Paper-Scissors/solution",
+					projectLink: `${PYTHON_LEVEL_2_PS4_SOURCE}/PS4-Rock-Paper-Scissors/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_PS4_SOURCE}/PS4-Rock-Paper-Scissors/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps4_rock_paper_scissors.gif"
 				},
@@ -856,35 +859,35 @@ export const pythonLevel2Course: RawCourse = {
 						],
 						checkpoints: [
 							"Multiples of 15 print `FizzBuzz`, not only `Fizz` or only `Buzz`.",
-							"The modulo operator is used intentionally.",
+							"Check lines 3, 5, 15, 16, and 50 for Fizz, Buzz, FizzBuzz, 16, and Buzz.",
 							"The branch order prevents the overlapping case from being swallowed by an earlier condition."
 						]
 					}),
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS4-FizzBuzz/solution",
+					projectLink: `${PYTHON_LEVEL_2_PS4_SOURCE}/PS4-FizzBuzz/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_PS4_SOURCE}/PS4-FizzBuzz/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps4_fizzbuzz.gif"
 				},
 				{
 					title: "PS4 Project 3: Credit Card Validator",
 					content: projectBrief({
-						goal: "Implement a simplified checksum validator for card-style number strings.",
+						goal: "Use fictional digit strings to check the arithmetic of a checksum.",
 						build: [
-							"Read the card number as text so individual digits can be inspected.",
-							"Move through the digits in the required order.",
-							"Double every other digit according to the validation rule and adjust multi-digit results if needed.",
-							"Sum the processed digits and check whether the total is a multiple of 10."
+							"Read short fictional digit strings such as 1479, 1478, and 109. Require at least two ASCII digits.",
+							"Read digits from right to left. Keep the rightmost digit unchanged.",
+							"Double every second digit. Subtract 9 from a doubled value above 9.",
+							"Add the processed values. The checksum passes when the total is divisible by 10."
 						],
 						checkpoints: [
-							"The program treats digits as characters until conversion is needed.",
-							"The doubling pattern is consistent from the correct side of the number.",
-							"Valid and invalid sample numbers produce different, explained outcomes."
+							"For 1479, the processed values from right to left are 9, 5, 4, and 2.",
+							"1479 and 109 pass with totals of 20 and 10. The sample 1478 fails with total 19.",
+							"An empty string, 7, or 12a produces a validation message before the checksum runs."
 						],
 						extension:
-							"Add length checks, digit-only validation, or issuer-style prefix checks as separate rules."
+							"Compare the unweighted sum with the checksum total for a sample. Explain what changing one digit does to the total."
 					}),
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS4-Credit-Card-Validator/solution",
+					projectLink: `${PYTHON_LEVEL_2_PS4_SOURCE}/PS4-Credit-Card-Validator/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_PS4_SOURCE}/PS4-Credit-Card-Validator/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps4_credit_card_validator.gif"
 				}
@@ -895,19 +898,19 @@ export const pythonLevel2Course: RawCourse = {
 					content: projectBrief({
 						goal: "Classify a carnival strength-test result into a prize tier.",
 						build: [
-							"Ask for the measured height.",
-							"Convert the response to a number.",
+							"Read a whole-number height in inches.",
+							"Give no prize below 50, a small stuffed animal from 50 through 99, a frisbee from 100 through 149, and a large stuffed animal from 150 upward.",
 							"Compare the height against ordered prize thresholds.",
 							"Print the matching prize tier."
 						],
 						checkpoints: [
-							"Boundary heights land in the intended tier.",
+							"Test 49, 50, 99, 100, 149, and 150 against the prize rules.",
 							"The thresholds are checked in an order that avoids unreachable branches.",
 							"The output includes both the measured value and the result."
 						]
 					}),
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS4-Carnival-Strength-Tester/solution",
+					projectLink: `${PYTHON_LEVEL_2_PS4_SOURCE}/PS4-Carnival-Strength-Tester/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_PS4_SOURCE}/PS4-Carnival-Strength-Tester/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps4_carnival_strength_tester.gif"
 				},
@@ -916,7 +919,7 @@ export const pythonLevel2Course: RawCourse = {
 					content: projectBrief({
 						goal: "Compute a small set of summary statistics from five test scores.",
 						build: [
-							"Collect five numeric scores.",
+							"Collect five whole-number scores from 0 through 100. Replace any invalid entry before advancing to the next score.",
 							"Track or compute the highest score.",
 							"Track or compute the lowest score.",
 							"Calculate and print the average."
@@ -925,13 +928,13 @@ export const pythonLevel2Course: RawCourse = {
 							"All inputs are converted before arithmetic.",
 							"The average divides by the correct number of scores.",
 							"Repeated high or low values still produce the correct result.",
-							"Scores at 0, 100, and repeated middle values are tested so boundary and tie behavior is visible."
+							"For 0, 70, 100, 70, 100, report a low of 0, a high of 100, and an average of 68."
 						],
 						extension:
 							"Add a letter-grade summary, a median, or a dropped-lowest-score version and explain how the summary changes."
 					}),
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS4-Test-Statistics/solution",
+					projectLink: `${PYTHON_LEVEL_2_PS4_SOURCE}/PS4-Test-Statistics/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_PS4_SOURCE}/PS4-Test-Statistics/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps4_test_statistics.gif"
 				},
@@ -940,19 +943,19 @@ export const pythonLevel2Course: RawCourse = {
 					content: projectBrief({
 						goal: "Compare each relay split against the team average.",
 						build: [
-							"Collect four lap times.",
+							"Collect four lap times in seconds. A lower time represents a faster lap.",
 							"Compute the total and average.",
 							"Compare each split to the average.",
 							"Print whether each runner was faster than, slower than, or equal to the average pace."
 						],
 						checkpoints: [
 							"The average is computed once from all four values.",
-							"Each runner is compared against the same average.",
-							"Equal-to-average cases are handled deliberately."
+							"For 50, 60, 55, 55, report average 55. Runner 1 is faster, runner 2 is slower, and runners 3 and 4 match the average.",
+							"For 52.5, 52.5, 55, 55, report a tie for the fastest runner."
 						]
 					}),
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS4-Relay-Race-Statistics/solution",
+					projectLink: `${PYTHON_LEVEL_2_PS4_SOURCE}/PS4-Relay-Race-Statistics/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_PS4_SOURCE}/PS4-Relay-Race-Statistics/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps4_relay_race_statistics.gif"
 				},
@@ -961,19 +964,19 @@ export const pythonLevel2Course: RawCourse = {
 					content: projectBrief({
 						goal: "Determine which donut-shop promotions apply to a customer number.",
 						build: [
-							"Ask for the customer's position in line.",
-							"Represent each promotion rule as a conditional check.",
+							"Read a positive whole-number line position. The first customer also gets free donuts for a year.",
+							"Give one opening-day tier. Positions 1–12 get a free dozen. Positions 13–200 get the first dozen for $1, except 144 gets free donuts for a month. Positions 201–500 get 50% off. Position 501 and above get a third donut free with two purchases.",
 							"Handle overlapping promotions without losing any applicable reward.",
-							"Print every promotion the customer receives."
+							"Add the year-round offer in every valid case. Buy a dozen and get the 13th free."
 						],
 						checkpoints: [
-							"Multiple promotions can apply to the same customer when the rules overlap.",
-							"Universal promotions are not blocked by earlier branches.",
-							"The solution distinguishes independent `if` statements from an exclusive `if`/`elif` chain."
+							"Position 1 gets three messages: a free year, a free dozen, and the year-round offer.",
+							"Position 144 gets the free month and the year-round offer. Test the tier changes at 12/13, 200/201, and 500/501.",
+							"Position 0 prompts for a positive position."
 						]
 					}),
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS4-Joes-Donuts-Opening-Day/solution",
+					projectLink: `${PYTHON_LEVEL_2_PS4_SOURCE}/PS4-Joes-Donuts-Opening-Day/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_PS4_SOURCE}/PS4-Joes-Donuts-Opening-Day/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps4_joes_donuts.gif"
 				},
@@ -982,19 +985,19 @@ export const pythonLevel2Course: RawCourse = {
 					content: projectBrief({
 						goal: "Build a higher/lower number guessing game with a random target.",
 						build: [
-							"Generate a random target from 1 to 50.",
+							"Start with target 27. Ask for whole-number guesses from 1 to 50. After testing, pick a random target once before the loop.",
 							"Ask for guesses in a loop.",
 							"Print higher or lower feedback after each incorrect guess.",
 							"Stop when the guess matches the target and report the attempt count."
 						],
 						checkpoints: [
-							"The random target is chosen once per game, not once per guess.",
+							"With target 27 and guesses 20, 30, 27, report too low, too high, then success in three tries.",
 							"Guesses are converted before comparison.",
-							"The feedback direction is correct for both too-low and too-high guesses."
+							"With target 27 and first guess 27, report success in one try."
 						]
 					}),
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS4-Number-Guesser/solution",
+					projectLink: `${PYTHON_LEVEL_2_PS4_SOURCE}/PS4-Number-Guesser/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_PS4_SOURCE}/PS4-Number-Guesser/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps4_number_guesser.gif"
 				},
@@ -1003,21 +1006,19 @@ export const pythonLevel2Course: RawCourse = {
 					content: projectBrief({
 						goal: "Debug a ticket-prize script by connecting each wrong result to the conditional rule that produced it.",
 						build: [
-							"Run the starter and note the first incorrect branch or error.",
-							"Check comparison operators, branch order, and indentation.",
-							"Fix one issue at a time and rerun after each change.",
+							"Run the starter and fix its syntax error before comparing results with the prize rules.",
+							"A lollipop costs 10 tickets, an action figure 75, a T-shirt 250, and a stuffed animal 350. List every affordable item and the tickets left if that one item is purchased.",
+							"Matching T-shirts require lending a friend 6 tickets and still having 250 for one shirt. Check the price boundary both with and without the loan.",
 							"Test values at the exact prize cutoffs."
 						],
 						checkpoints: [
-							"Each ticket range maps to the intended prize.",
-							"Boundary values do not fall through to the wrong branch.",
+							"With 256 tickets, list the lollipop, action figure, and T-shirt. A shirt alone leaves 6 tickets, and matching shirts are affordable.",
+							"Test 9 and 10, 74 and 75, 249 and 250, 255 and 256, and 349 and 350.",
 							"The final explanation names at least one conditional bug and why the fix worked."
 						]
 					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS4-Debugging-Conditionals/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS4-Debugging-Conditionals/solution",
+					projectLink: `${PYTHON_LEVEL_2_PS4_SOURCE}/PS4-Debugging-Conditionals/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_PS4_SOURCE}/PS4-Debugging-Conditionals/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps4_debugging_conditionals.gif"
 				}

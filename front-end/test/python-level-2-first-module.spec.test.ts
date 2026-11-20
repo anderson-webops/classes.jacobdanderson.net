@@ -3,15 +3,45 @@ import { expect, it } from "vitest";
 import { useAppStore } from "@/stores/app";
 import { useCoursesStore } from "@/stores/courses";
 
-const source =
-	"https://github.com/instruction-material/Python-Level-2/tree/b58d958347f0c3ca6f9d96963a674cc3d00813bf";
-
-const assignments = [
-	["Mad Libs", "Mad-Libs", "core"],
-	["Index Picker", "Index-Picker", "core"],
-	["Space Mountain", "Space-Mountain", "choice"],
-	["Tip Calculator", "Tip-Calculator", "choice"],
-	["Relay Race", "Relay-Race", "choice"]
+const modules = [
+	{
+		suffix: "-ps1-variables-strings-and-input",
+		source: "b58d958347f0c3ca6f9d96963a674cc3d00813bf",
+		assignments: [
+			["Mad Libs", "PS1-Mad-Libs", "core"],
+			["Index Picker", "PS1-Index-Picker", "core"],
+			["Space Mountain", "PS1-Space-Mountain", "choice"],
+			["Tip Calculator", "PS1-Tip-Calculator", "choice"],
+			["Relay Race", "PS1-Relay-Race", "choice"]
+		]
+	},
+	{
+		suffix: "-ps4-conditionals",
+		source: "5d787e78f9d0e72096046c49ee25e9fab53fe045",
+		assignments: [
+			["Rock, Paper, Scissors", "PS4-Rock-Paper-Scissors", "core"],
+			["FizzBuzz", "PS4-FizzBuzz", "core"],
+			["Credit Card Validator", "PS4-Credit-Card-Validator", "core"],
+			[
+				"Carnival Strength Tester",
+				"PS4-Carnival-Strength-Tester",
+				"choice"
+			],
+			["Test Statistics", "PS4-Test-Statistics", "choice"],
+			["Relay Race Statistics", "PS4-Relay-Race-Statistics", "choice"],
+			[
+				"Joe's Donuts Opening Day",
+				"PS4-Joes-Donuts-Opening-Day",
+				"choice"
+			],
+			["Number Guesser", "PS4-Number-Guesser", "choice"],
+			[
+				"Debugging Conditionals",
+				"PS4-Debugging-Conditionals",
+				"challenge"
+			]
+		]
+	}
 ] as const;
 
 it.each([
@@ -20,7 +50,7 @@ it.each([
 	["python-level-2-classroom", "learner"],
 	["python-level-2-classroom", "instructor"]
 ] as const)(
-	"links role-appropriate first module projects in %s for %s",
+	"links role-appropriate opening and conditionals projects in %s for %s",
 	async (courseId, role) => {
 		setActivePinia(createPinia());
 		if (role === "instructor") {
@@ -38,34 +68,42 @@ it.each([
 		}
 
 		const course = (await useCoursesStore().loadCourseById(courseId))!;
-		const module = course.modules.find(({ id }) =>
-			id.endsWith("-ps1-variables-strings-and-input")
-		)!;
-		const items = [...module.curriculum, ...module.supplementalProjects];
-
-		for (const [title, folder, path] of assignments) {
-			const item = items.find(candidate =>
-				candidate.title.endsWith(title)
+		for (const { suffix, source, assignments } of modules) {
+			const module = course.modules.find(({ id }) =>
+				id.endsWith(suffix)
 			)!;
-			const projectSource = `${source}/PS1-${folder}`;
-			expect(item.learningPath).toBe(path);
-			expect(item.solutionLink).toBe(
-				role === "instructor" ? `${projectSource}/solution` : undefined
-			);
-			if (courseId === "python-level-2") {
-				expect(item.projectLink).toBe(`${projectSource}/starter`);
-			} else {
-				const launch = new URL(
-					item.projectLink!,
-					"https://classes.example"
+			const items = [
+				...module.curriculum,
+				...module.supplementalProjects
+			];
+			for (const [title, folder, path] of assignments) {
+				const item = items.find(candidate =>
+					candidate.title.endsWith(title)
+				)!;
+				const projectSource = `Python-Level-2/tree/${source}/${folder}`;
+				const base = `https://github.com/instruction-material/${projectSource}`;
+				expect(item.learningPath, title).toBe(path);
+				expect(item.solutionLink).toBe(
+					role === "instructor" ? `${base}/solution` : undefined
 				);
-				expect(launch.pathname).toBe("/ide");
-				expect(launch.searchParams.get("classroomSource")).toBe(
-					`${projectSource}/solution`.replace(
-						"https://github.com/instruction-material/",
-						""
-					)
-				);
+				if (courseId === "python-level-2") {
+					expect(item.projectLink).toBe(`${base}/starter`);
+				} else {
+					const launch = new URL(
+						item.projectLink!,
+						"https://classes.example"
+					);
+					expect(launch.pathname).toBe("/ide");
+					expect(launch.searchParams.get("classroomSource")).toBe(
+						`${projectSource}/solution`
+					);
+					if (suffix === "-ps4-conditionals") {
+						expect(item.contentKind).toBe("assignment");
+						expect(item.content).toMatch(
+							/\*\*Normal:\*\*[\s\S]*\*\*Hard:\*\*[\s\S]*\*\*Success criteria:\*\*/
+						);
+					}
+				}
 			}
 		}
 	}

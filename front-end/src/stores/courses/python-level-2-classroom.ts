@@ -7,6 +7,7 @@ import {
 	PYTHON_LEVEL_2_PS1_SOURCE,
 	PYTHON_LEVEL_2_PS2_SOURCE,
 	PYTHON_LEVEL_2_PS3_SOURCE,
+	PYTHON_LEVEL_2_PS4_SOURCE,
 	pythonLevel2Course
 } from "./python-level-2";
 
@@ -17,6 +18,7 @@ const pinnedLaunchSources: Record<string, string> = {
 	"PS1-Mad-Libs": PYTHON_LEVEL_2_PS1_SOURCE,
 	"PS2-Change-Machine": PYTHON_LEVEL_2_PS2_SOURCE,
 	"PS3-Caesar-Cipher": PYTHON_LEVEL_2_PS3_SOURCE,
+	"PS4-Rock-Paper-Scissors": PYTHON_LEVEL_2_PS4_SOURCE,
 	"PS13-Wordsmith":
 		"https://github.com/instruction-material/Python-Level-2/tree/a840f54eb6a55718f6305544adc937c32fa516ee"
 };
@@ -81,11 +83,11 @@ During a class share, show one representative input, one boundary or invalid inp
 		),
 		launchProject(
 			"Launch Project 4: Rock, Paper, Scissors Arena",
-			`The completed game handles two moves and reports ties, wins, losses, and invalid input.
+			`The completed game accepts two moves and reports a winner, a tie, or an invalid round.
 
-**Normal:** Add one clearly named score or replay value and update it only after a valid round.
+**Normal:** Add a round summary with both normalized moves. Rock and Paper should display rock and paper before the Player 2 result.
 
-**Hard:** Add a computer opponent or expanded move set while keeping the branch order explainable and every invalid-input path safe.`,
+**Hard:** Add a practice mode with a fixed Player 2 move. Set it to scissors, enter rock for Player 1, and confirm Player 1 wins. Preserve rejection of an invalid Player 1 move.`,
 			"PS4-Rock-Paper-Scissors",
 			"choice"
 		),
@@ -161,10 +163,92 @@ For a showcase, demonstrate the working Normal result first. If Hard is complete
 	]
 });
 
+const conditionalProjectExtensions: Record<string, string> = {
+	"PS4-Rock-Paper-Scissors": `Run the complete game and compare paper/rock, rock/paper, and rock/rock. Locate the invalid-input check and the winning combinations. Compare how the result changes when the same two valid moves trade places.
+
+**Normal:** Add an explanation to a winning result. Paper against rock should include “paper beats rock.”
+
+**Hard:** Play three rounds and keep a total for each player. A tie or a pair containing an invalid move adds zero points.
+
+**Success criteria:** One Player 1 win, a tie, and one invalid round leave a score of 1–0.`,
+	"PS4-FizzBuzz": `Run the full list and compare the results at 3, 5, 15, and 16. Trace how the overlapping condition is reached before either single-divisor condition.
+
+**Normal:** Add an end-of-run count for each label. For 1 through 50, count 13 Fizz, 7 Buzz, and 3 FizzBuzz lines.
+
+**Hard:** Accept the highest number to print and handle a nonpositive limit. For 15, report 4 Fizz, 2 Buzz, and 1 FizzBuzz.
+
+**Success criteria:** The counts exclude the overlap from the single-label totals, and 16 prints as 16.`,
+	"PS4-Credit-Card-Validator": `Run the checksum with the short fictional strings 1479 and 1478. Trace which digits are doubled and when the doubled result is reduced by 9.
+
+**Normal:** Print each processed value while retaining the final total. For 1479, show 9, 5, 4, and 2 from right to left.
+
+**Hard:** Add a mode that compares two fictional samples. When given 1479 and 1478, report totals of 20 and 19 and identify which checksum passes.
+
+**Success criteria:** The sample 109 still passes with total 10. A string containing a letter is rejected before arithmetic.`,
+	"PS4-Carnival-Strength-Tester": `Try 49, 50, 100, and 150 inches. Identify the first true condition for each height. Record why the boundary at 100 skips both lower tiers.
+
+**Normal:** Include the distance to the next prize tier when one exists. For 99 inches, the distance to a frisbee is 1 inch.
+
+**Hard:** Compare two attempts and award one prize based on the larger height. Attempts of 99 and 100 inches earn a frisbee.
+
+**Success criteria:** A height of 150 earns the largest prize and reports no further tier.`,
+	"PS4-Test-Statistics": `Run with 0, 70, 100, 70, and 100. Check the high, low, and average, then trace a single score through both comparisons.
+
+**Normal:** Add a count of scores at least 70. The sample has four qualifying scores.
+
+**Hard:** Ask how many valid scores to collect, then compute all four results for that count. For 3 scores of 0, 70, and 100, the qualifying count is 2 and the average rounds to 56.7.
+
+**Success criteria:** An invalid score is replaced before counting, even when entered after earlier valid scores.`,
+	"PS4-Relay-Race-Statistics": `Run with 50, 60, 55, and 55 seconds. The average is 55 seconds. Compare each runner with that same value.
+
+**Normal:** Print each runner's difference from the average. Runner 1 is 5 seconds faster and runner 2 is 5 seconds slower. Compare the displayed signs with the wording.
+
+**Hard:** Report which runners tie for the fastest time. For 52.5, 52.5, 55, and 55, identify runners 1 and 2.
+
+**Success criteria:** Runners 3 and 4 in the first sample are exactly at the average and have a zero difference.`,
+	"PS4-Joes-Donuts-Opening-Day": `Run with customer positions 1, 12, 13, 144, 200, 201, 500, and 501. Identify the separate first-customer and year-round offers.
+
+**Normal:** Add a count of the offers printed. Positions 1 and 144 have 3 and 2 offers, respectively.
+
+**Hard:** Print a numbered receipt with the actual offers received. For position 501, show the third-donut offer and the year-round deal in that order.
+
+**Success criteria:** The month of free donuts for position 144 replaces the $1 dozen offer. Position 0 produces an input message with no receipt.`,
+	"PS4-Number-Guesser": `Set the existing target to 27 for a repeatable trial. Enter 20, 30, and 27 to observe both feedback directions and the attempt count.
+
+**Normal:** Print the absolute distance from the target after each incorrect guess. The two distances are 7 and 3.
+
+**Hard:** Add a maximum of three valid guesses. After three misses, report the target and stop. A correct third guess still wins.
+
+**Success criteria:** The fixed-target trials pass before random selection is restored. The program chooses one target per game.`,
+	"PS4-Debugging-Conditionals": `Run the corrected program with 249, 250, 255, and 256 tickets. The matching T-shirts first become affordable at 256.
+
+**Normal:** Print the additional tickets needed for matching shirts when the balance is below 256. At 255, one additional ticket is needed.
+
+**Hard:** Ask how many tickets the friend needs and compute the new boundary. When the friend needs 10 tickets, 259 is short by one and 260 succeeds.
+
+**Success criteria:** The independent prize messages still include all items the ticket balance can cover. At 350 all four individual purchases are available.`
+};
+
+const classroomModules = copyClassroomCourseModules(pythonLevel2Course.modules);
+const conditionals = classroomModules.find(
+	module => module.title === "PS4 Conditionals"
+);
+if (conditionals) {
+	for (const item of [
+		...conditionals.curriculum,
+		...conditionals.supplementalProjects
+	]) {
+		const folder = item.solutionLink?.split("/").at(-2);
+		const content = folder && conditionalProjectExtensions[folder];
+		if (content) {
+			item.content = content;
+			item.contentKind = "assignment";
+			item.preserveInstructions = true;
+		}
+	}
+}
+
 export const pythonLevel2ClassroomCourse: RawCourse = {
 	name: "Python Level 2: Classroom Edition",
-	modules: [
-		classroomLaunchModule,
-		...copyClassroomCourseModules(pythonLevel2Course.modules)
-	]
+	modules: [classroomLaunchModule, ...classroomModules]
 };
