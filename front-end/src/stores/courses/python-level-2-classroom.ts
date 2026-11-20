@@ -6,6 +6,7 @@ import {
 import {
 	PYTHON_LEVEL_2_PS1_SOURCE,
 	PYTHON_LEVEL_2_PS2_SOURCE,
+	PYTHON_LEVEL_2_PS3_SOURCE,
 	pythonLevel2Course
 } from "./python-level-2";
 
@@ -15,6 +16,7 @@ const PYTHON_LEVEL_2_SOURCE =
 const pinnedLaunchSources: Record<string, string> = {
 	"PS1-Mad-Libs": PYTHON_LEVEL_2_PS1_SOURCE,
 	"PS2-Change-Machine": PYTHON_LEVEL_2_PS2_SOURCE,
+	"PS3-Caesar-Cipher": PYTHON_LEVEL_2_PS3_SOURCE,
 	"PS13-Wordsmith":
 		"https://github.com/instruction-material/Python-Level-2/tree/a840f54eb6a55718f6305544adc937c32fa516ee"
 };
@@ -69,11 +71,11 @@ During a class share, show one representative input, one boundary or invalid inp
 		),
 		launchProject(
 			"Launch Project 3: Caesar Cipher Lab",
-			`The framework already encodes and decodes text with a shift and wraparound behavior.
+			`The framework shifts each ASCII letter and restores the original text with the opposite shift. It preserves uppercase and lowercase and carries punctuation through unchanged.
 
-**Normal:** Add one labeled transformation or output that proves a letter crosses the end of the alphabet correctly.
+**Normal:** Show the original, shifted, and restored strings together with the shift used. With Az! and shift 1, compare Az!, Ba!, and Az!.
 
-**Hard:** Preserve spaces and punctuation, accept a configurable shift, and demonstrate a successful encode-decode round trip.`,
+**Hard:** Add an encode or decode choice that works with a message entered in either form. Choose decode, enter Ba! and shift 1, and verify that only Az! is returned.`,
 			"PS3-Caesar-Cipher",
 			"choice"
 		),

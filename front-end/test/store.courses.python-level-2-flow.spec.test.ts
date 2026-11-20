@@ -87,6 +87,66 @@ describe("Python Level 2 learner flow", () => {
 		}
 	});
 
+	it("opens the five repaired ASCII projects with source for each format", async () => {
+		const base =
+			"Python-Level-2/tree/db7809a1c101e6d5e5943c8e22bbfed744ded734";
+		const moduleId = "python-level-2-ps3-ascii-and-ciphers";
+		const folders = [
+			"PS3-Simple-Cipher",
+			"PS3-Caesar-Cipher",
+			"PS3-ASCII-Art",
+			"PS3-Uppercase-to-Lowercase",
+			"PS3-Nested-Boxes"
+		];
+		const store = useCoursesStore();
+		const standard = (await store.loadCourseById("python-level-2"))!;
+		const classroom = (await store.loadCourseById(
+			"python-level-2-classroom"
+		))!;
+		const standardModule = standard.modules.find(
+			({ id }) => id === moduleId
+		)!;
+		const classroomModule = classroom.modules.find(
+			({ id }) => id === moduleId
+		)!;
+		const standardProjects = [
+			...standardModule.curriculum,
+			...standardModule.supplementalProjects
+		].filter(item => item.projectLink);
+		const classroomProjects = [
+			...classroomModule.curriculum,
+			...classroomModule.supplementalProjects
+		].filter(
+			item =>
+				item.projectLink &&
+				item.title !== "PS3 Supplemental Project 4: Password Cracker"
+		);
+
+		expect(standardProjects.map(item => item.projectLink)).toEqual(
+			folders.map(
+				folder =>
+					`https://github.com/instruction-material/${base}/${folder}/starter`
+			)
+		);
+		expect(classroomProjects.map(item => item.id)).toEqual(
+			standardProjects.map(item => item.id)
+		);
+		const launch = classroom.modules
+			.flatMap(module => [
+				...module.curriculum,
+				...module.supplementalProjects
+			])
+			.find(item => item.title === "Launch Project 3: Caesar Cipher Lab");
+		for (const [index, item] of [...classroomProjects, launch!].entries()) {
+			const url = new URL(item.projectLink!, "https://classes.example");
+			const folder = folders[index] ?? "PS3-Caesar-Cipher";
+			expect(url.pathname).toBe("/ide");
+			expect(url.searchParams.get("classroomSource")).toBe(
+				`${base}/${folder}/solution`
+			);
+		}
+	});
+
 	it("keeps the concept-to-application sequence without asset bookkeeping", () => {
 		expect(pythonLevel2Course.modules.map(module => module.title)).toEqual(
 			EXPECTED_TEACHING_MODULES

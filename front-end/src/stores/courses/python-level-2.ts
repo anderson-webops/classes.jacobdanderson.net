@@ -14,6 +14,9 @@ export const PYTHON_LEVEL_2_PS1_SOURCE =
 export const PYTHON_LEVEL_2_PS2_SOURCE =
 	"https://github.com/instruction-material/Python-Level-2/tree/40e195905b59faa845ca0b4418e9fa7537c7e51d";
 
+export const PYTHON_LEVEL_2_PS3_SOURCE =
+	"https://github.com/instruction-material/Python-Level-2/tree/db7809a1c101e6d5e5943c8e22bbfed744ded734";
+
 const PYTHON_LEVEL_2_PENDING_SOURCE_ASSETS = [
 	"ps10_field_day.gif",
 	"ps10_field_day_ii.gif",
@@ -653,7 +656,7 @@ export const pythonLevel2Course: RawCourse = {
 				{
 					title: "ASCII and Ciphers",
 					content: conceptBrief({
-						focus: "`ord()` converts a character into its numeric code, and `chr()` converts a numeric code back into a character. Ciphers use this relationship to transform messages in predictable ways.",
+						focus: '`ord()` gives a character’s Unicode code point, and `chr()` converts a code point back into a character. The ASCII range is 0 through 127. In that range `ord("A")` is 65, `ord("a")` is 97, and `chr(65)` is "A".\n\nFor a lowercase alphabet shift, subtract `ord("a")` to get a position from 0 to 25. Add the shift and take modulo 26 to wrap. For example `z` at position 25 shifted by 1 wraps to position 0, which becomes `a`.',
 						practice: [
 							"Convert several letters and symbols with `ord()` and compare the returned numbers.",
 							"Convert numbers back into characters with `chr()`.",
@@ -667,23 +670,23 @@ export const pythonLevel2Course: RawCourse = {
 				{
 					title: "PS3 Project 1: Simple Cipher",
 					content: projectBrief({
-						goal: "Encode text by converting characters into numeric ASCII values and applying a simple numeric key.",
+						goal: "Represent a sample message as character codes, then add the same numeric offset to every code.",
 						build: [
-							"Ask for a short message.",
-							"Convert each character to its ASCII number.",
+							"Use the starter to read one sample message such as Az!. Then read an integer offset such as 2.",
+							"Convert each character of the sample to a numeric code with ord().",
 							"Print the plain ASCII sequence with clear spacing.",
 							"Add a constant key to each value and print the shifted sequence."
 						],
 						checkpoints: [
 							"Every input character produces one output number.",
 							"Spaces between numbers make the encoded result readable.",
-							"The key changes all numeric values consistently."
+							"Az! gives 65 122 33 and offset 2 gives 67 124 35."
 						],
 						extension:
 							"Add a decoder that subtracts the same key and reconstructs the original message."
 					}),
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS3-Simple-Cipher/solution",
+					projectLink: `${PYTHON_LEVEL_2_PS3_SOURCE}/PS3-Simple-Cipher/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_PS3_SOURCE}/PS3-Simple-Cipher/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps3_simple_cipher.gif"
 				},
@@ -693,18 +696,18 @@ export const pythonLevel2Course: RawCourse = {
 						goal: "Build a Caesar cipher that shifts letters through the alphabet and supports decoding with the reverse shift.",
 						build: [
 							"Ask for a message and shift amount.",
-							"Convert each letter to a position in the alphabet.",
-							"Apply the shift and wrap around when the result leaves the alphabet range.",
-							"Convert the shifted positions back into letters."
+							"Use separate bases for A through Z and a through z and turn each ASCII letter into a position from 0 to 25.",
+							"Use (position + shift) % 26 to wrap the position. Decode by using the opposite shift.",
+							"Convert positions back to the original letter case and copy spaces, numbers, punctuation, and non-ASCII characters unchanged."
 						],
 						checkpoints: [
 							"`z` shifted forward and `a` shifted backward both wrap correctly.",
 							"Encryption and decryption undo one another with the same key.",
-							"Non-letter characters are either preserved or handled by a stated rule."
+							"With shift 1, Zebra-z! 9 becomes Afcsb-a! 9. Apply the opposite shift and confirm the full message is restored."
 						]
 					}),
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS3-Caesar-Cipher/solution",
+					projectLink: `${PYTHON_LEVEL_2_PS3_SOURCE}/PS3-Caesar-Cipher/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_PS3_SOURCE}/PS3-Caesar-Cipher/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps3_caesar_cipher.gif"
 				}
@@ -729,8 +732,8 @@ export const pythonLevel2Course: RawCourse = {
 						extension:
 							"Add hollow squares, diagonal marks, or alternating characters so the row/column condition becomes more meaningful than printing the same repeated symbol every time."
 					}),
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS3-ASCII-Art/solution",
+					projectLink: `${PYTHON_LEVEL_2_PS3_SOURCE}/PS3-ASCII-Art/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_PS3_SOURCE}/PS3-ASCII-Art/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps3_ascii_art.gif"
 				},
@@ -739,7 +742,7 @@ export const pythonLevel2Course: RawCourse = {
 					content: projectBrief({
 						goal: "Convert uppercase letters to lowercase by using ASCII offsets directly.",
 						build: [
-							"Ask for an uppercase word.",
+							"Ask for a short line such as AZ! or Mix 9.",
 							"Convert each character with `ord()`.",
 							"Add the uppercase-to-lowercase offset when the character is uppercase.",
 							"Convert the result back with `chr()` and build the lowercase word."
@@ -747,11 +750,11 @@ export const pythonLevel2Course: RawCourse = {
 						checkpoints: [
 							"The solution does not rely on `.lower()`.",
 							"Each character transformation can be traced numerically.",
-							"Already-lowercase or nonletter characters have a defined behavior."
+							"Mix 9 becomes mix 9. Lowercase letters and nonletters remain unchanged."
 						]
 					}),
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS3-Uppercase-to-Lowercase/solution",
+					projectLink: `${PYTHON_LEVEL_2_PS3_SOURCE}/PS3-Uppercase-to-Lowercase/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_PS3_SOURCE}/PS3-Uppercase-to-Lowercase/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps3_uppercase_to_lowercase.gif"
 				},
@@ -760,10 +763,10 @@ export const pythonLevel2Course: RawCourse = {
 					content: projectBrief({
 						goal: "Print nested or progressively larger box outlines using loop-controlled row and column logic.",
 						build: [
-							"Choose a maximum box size.",
+							"Choose a maximum box size of at least 3. For 5, print separate outlines with sizes 3, 4, and 5.",
 							"Print one box outline correctly before adding more.",
 							"Grow or nest the outlines with loops.",
-							"Decide when a cell belongs to a border versus an empty interior."
+							"Print a mark in the first or last row or column. Print a space for every interior cell."
 						],
 						checkpoints: [
 							"Horizontal and vertical borders line up.",
@@ -771,8 +774,8 @@ export const pythonLevel2Course: RawCourse = {
 							"The same logic works for more than one size."
 						]
 					}),
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS3-Nested-Boxes/solution",
+					projectLink: `${PYTHON_LEVEL_2_PS3_SOURCE}/PS3-Nested-Boxes/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_PS3_SOURCE}/PS3-Nested-Boxes/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps3_nested_boxes.gif"
 				},
