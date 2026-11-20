@@ -23,7 +23,7 @@ on:
       python_project_scope:
         description: Python Level 2 browser exercises when both Python formats are selected
         type: choice
-        options: [opening-and-loops, loops-and-check-ins, ascii-and-conditionals, functions, functions-and-collections, console-and-typing, console-and-capstones, lists-and-music, named-music-and-morse, dictionaries-and-morse]
+        options: [opening-and-loops, loops-and-check-ins, ascii-and-conditionals, functions, functions-and-collections, console-and-typing, console-and-capstones, lists-and-music, named-music-and-morse, dictionaries-and-morse, dictionaries-and-music]
         default: opening-and-loops
       browser_artifact_id:
         description: Networking browser export artifact
@@ -1484,10 +1484,15 @@ jobs:
             lists-and-music) modules=(lists-and-music) ;;
             named-music-and-morse) modules=(named-music-and-morse) ;;
             dictionaries-and-morse) modules=(dictionaries named-music-and-morse) ;;
+            dictionaries-and-music) modules=(lists-and-music dictionaries named-music-and-morse) ;;
             *) modules=(first loops) ;;
           esac
           for module in "${modules[@]}"; do
-            PYTHON_LEVEL_2_BROWSER_MODULE="$module" node scripts/classes-family-heavy-task.mjs -- node --test --test-concurrency=1 test/python-level-2-project-browser.test.mjs
+            test_filter=()
+            if [[ "$PYTHON_PROJECT_SCOPE" == "dictionaries-and-music" && "$module" == "lists-and-music" ]]; then
+              test_filter=(--test-name-pattern='^PS6-(Build-a-Song|Song-Generator) ')
+            fi
+            PYTHON_LEVEL_2_BROWSER_MODULE="$module" node scripts/classes-family-heavy-task.mjs -- node --test --test-concurrency=1 "${test_filter[@]}" test/python-level-2-project-browser.test.mjs
           done
       - name: Verify actual Wordsmith role imports, saved scoring edits and complete dictionary exports
         if: inputs.self_study_courses != 'javascript-collisions' && inputs.self_study_courses != 'javascript-canvas-games' && inputs.self_study_courses != 'javascript-api-projects' && inputs.self_study_courses != 'javascript-local-persistence' && inputs.self_study_courses != 'javascript-us-capitals' && inputs.self_study_courses != 'javascript-master-fundamentals' && inputs.self_study_courses != 'javascript-master-checkpoint-one' && inputs.self_study_courses != 'javascript-master-checkpoint-two' && (inputs.self_study_courses != 'python-level-2,python-level-2-classroom' || inputs.python_project_scope == 'opening-and-loops')
