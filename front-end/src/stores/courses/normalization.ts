@@ -9199,56 +9199,6 @@ function normalizePythonLevel2(course: RawCourse) {
 	});
 }
 
-function normalizePythonLevel3(course: RawCourse) {
-	for (const checkIn of [1, 2, 3]) {
-		setItemLinks(
-			course,
-			`Check-In #${checkIn}`,
-			`Check-In #${checkIn} Overview`,
-			{
-				projectLink: githubTree(
-					"Python-Level-3",
-					`AM-Check-In-${checkIn}/starter`
-				),
-				solutionLink: githubTree(
-					"Python-Level-3",
-					`AM-Check-In-${checkIn}/solution`
-				)
-			}
-		);
-	}
-	setItemLinks(
-		course,
-		"Check-In #2",
-		"Check-In #2: Additional Practice Project",
-		{
-			projectLink: githubTree(
-				"Python-Level-3",
-				"AM-Check-In-2-Additional-Project/starter"
-			),
-			solutionLink: githubTree(
-				"Python-Level-3",
-				"AM-Check-In-2-Additional-Project/solution"
-			)
-		}
-	);
-	setItemLinks(
-		course,
-		"Check-In #3",
-		"Check-In #3: Additional Practice Project",
-		{
-			projectLink: githubTree(
-				"Python-Level-3",
-				"AM-Check-In-3-Additional-Project/starter"
-			),
-			solutionLink: githubTree(
-				"Python-Level-3",
-				"AM-Check-In-3-Additional-Project/solution"
-			)
-		}
-	);
-}
-
 function normalizeJavaLevel2(course: RawCourse) {
 	const earlyFileSupplementals = new Set([
 		"Project 2 File IO and Maps",
@@ -9625,7 +9575,6 @@ const normalizers: Record<string, (course: RawCourse) => void> = {
 	"python-level-1-classroom": normalizePythonLevel1,
 	"python-level-2": normalizePythonLevel2,
 	"python-level-2-classroom": normalizePythonLevel2,
-	"python-level-3": normalizePythonLevel3,
 	"python-to-java-and-cpp-bridge": normalizePythonBridge,
 	"pythonic-design-patterns": normalizePythonicDesignPatterns,
 	"rust-systems-security": normalizeRustSystemsSecurity

@@ -550,8 +550,8 @@ describe("implemented course development artifacts", () => {
 		expectAuthoredSourcePair(
 			pythonLevel3,
 			"AM6 Project 3: Function Analysis",
-			"Python-Level-3/tree/main/AM6-Function-Analysis/starter",
-			"Python-Level-3/tree/main/AM6-Function-Analysis/solution"
+			"Python-Level-3/tree/12ce8ebe9ccdc6fac56a287bc4993380688900a3/AM6-Function-Analysis/starter",
+			"Python-Level-3/tree/12ce8ebe9ccdc6fac56a287bc4993380688900a3/AM6-Function-Analysis/solution"
 		);
 		expectAuthoredSourcePair(
 			bridgeCourse,
@@ -615,41 +615,40 @@ describe("implemented course development artifacts", () => {
 		);
 
 		expect(serializedCourse).toContain(
-			"Python-Level-3/tree/main/AM9-Bubble-Sort/starter"
+			"Python-Level-3/tree/12ce8ebe9ccdc6fac56a287bc4993380688900a3/AM9-Bubble-Sort/starter"
 		);
 		expect(serializedCourse).toContain(
-			"Python-Level-3/tree/main/AM9-Bubble-Sort/solution"
+			"Python-Level-3/tree/12ce8ebe9ccdc6fac56a287bc4993380688900a3/AM9-Bubble-Sort/solution"
 		);
 		expect(serializedCourse).not.toContain(
-			'Python-Level-3/tree/main/AM9-Bubble-Sort"'
+			'Python-Level-3/tree/12ce8ebe9ccdc6fac56a287bc4993380688900a3/AM9-Bubble-Sort"'
 		);
 	});
 
-	it("keeps Python Level 3 source links pointed at starter or solution folders", async () => {
+	it("pins Python Level 3 source links to verified starter and solution folders", async () => {
 		const serializedCourse = JSON.stringify(
 			await requireCourse("python-level-3")
 		);
 		const rootOnlyLinks = [
 			...serializedCourse.matchAll(
-				/https:\/\/github\.com\/instruction-material\/Python-Level-3\/tree\/main\/([^"]+)/g
+				/https:\/\/github\.com\/instruction-material\/Python-Level-3\/tree\/([^"]+)/g
 			)
 		]
 			.map(match => match[1].replace(/\\+$/, ""))
 			.filter(
 				urlPath =>
-					!urlPath.endsWith("/starter") &&
-					!urlPath.endsWith("/solution")
+					!/^[0-9a-f]{40}\/[^/]+\/(?:starter|solution)$/.test(urlPath)
 			);
 
 		expect(rootOnlyLinks).toHaveLength(0);
 		expect(serializedCourse).toContain(
-			"Python-Level-3/tree/main/AM1-Mad-Libs/starter"
+			"Python-Level-3/tree/12ce8ebe9ccdc6fac56a287bc4993380688900a3/AM1-Mad-Libs/starter"
 		);
 		expect(serializedCourse).toContain(
-			"Python-Level-3/tree/main/AM10-Merge-Sort/solution"
+			"Python-Level-3/tree/12ce8ebe9ccdc6fac56a287bc4993380688900a3/AM10-Merge-Sort/solution"
 		);
 		expect(serializedCourse).toContain(
-			"Python-Level-3/tree/main/AM14-Tic-Tac-Toe-AI-with-Forks/solution"
+			"Python-Level-3/tree/12ce8ebe9ccdc6fac56a287bc4993380688900a3/AM14-Tic-Tac-Toe-AI-with-Forks/solution"
 		);
 	});
 
