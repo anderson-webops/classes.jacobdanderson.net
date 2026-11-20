@@ -9,6 +9,7 @@ import {
 	PYTHON_LEVEL_2_PS2_SOURCE,
 	PYTHON_LEVEL_2_PS3_SOURCE,
 	PYTHON_LEVEL_2_PS4_SOURCE,
+	PYTHON_LEVEL_2_PS14_SOURCE,
 	pythonLevel2Course
 } from "./python-level-2";
 
@@ -22,7 +23,8 @@ const pinnedLaunchSources: Record<string, string> = {
 	"PS4-Rock-Paper-Scissors": PYTHON_LEVEL_2_PS4_SOURCE,
 	"PS10-Todo-List": PYTHON_LEVEL_2_COLLECTIONS_SOURCE,
 	"PS13-Wordsmith":
-		"https://github.com/instruction-material/Python-Level-2/tree/a840f54eb6a55718f6305544adc937c32fa516ee"
+		"https://github.com/instruction-material/Python-Level-2/tree/a840f54eb6a55718f6305544adc937c32fa516ee",
+	"PS14-Advanced-Blackjack": PYTHON_LEVEL_2_PS14_SOURCE
 };
 
 function launchProject(
@@ -127,9 +129,9 @@ During a class share, show one representative input, one boundary or invalid inp
 			"Launch Project 8: Blackjack Table",
 			`The completed game models cards, hands, player choices, dealer behavior, and the main win-loss-tie outcomes.
 
-**Normal:** Add one clearly named helper or display feature for a hand value or round result.
+**Normal:** Trace the practice round after two hits. Show the best score before and after each new card.
 
-**Hard:** Add ace handling, richer card representation, replay, betting, or statistics and test bust, blackjack, tie, and dealer-boundary cases.`,
+**Hard:** Track wins, losses, ties, and two-card 21 outcomes across fresh rounds. Check that an early quit adds no result.`,
 			"PS14-Advanced-Blackjack",
 			"challenge"
 		),
@@ -430,6 +432,38 @@ const classroomProjectExtensions: Record<string, string> = {
 **Hard:** Store each successful expression and result, and add a command that prints the history in order.
 
 **Success criteria:** The history shows 12 / 3 = 4.0 and 0! = 1. An invalid operator or failed calculation leaves the history unchanged.`,
+	"PS14-Simple-Blackjack": `**Method** Compare the two hand totals after the dealer stops. A hand above 21 busts before comparing totals.
+
+**Worked example** Start practice with 10 and 7, then stay. The dealer draws 3 on a total of 15 and wins with 18.
+
+**Normal:** Show the gap between the player's current total and 21 after a draw.
+
+**Hard:** Count wins, losses, and ties across rounds and display the running summary.
+
+**Success criteria:** A bust counts as one loss. A fresh round clears the hands and keeps the summary. Quitting during a round adds no result.`,
+	"PS14-Advanced-Blackjack": `**Method** Count every ace as one first. Add ten if an ace is present and the new total stays within 21.
+
+**Worked example** Run practice and hit twice. The player's best totals are 17, 15 and 19. Stay to see the dealer finish at 18.
+
+**Normal:** Display both the low-ace total and the best total.
+
+**Hard:** Track opening totals of 21 separately from later totals of 21.
+
+**Success criteria:** Two opening totals of 21 tie. Ace and 6 gives 17 while Ace, 6 and 8 gives 15.`,
+	"PS14-Game-of-War": `Run the ten fixed draws using Ari and Bea. Find an example of each branch. Round 1 belongs to Ari, Round 2 belongs to Bea, and Round 3 ties.
+
+**Normal:** Print the running counts after each round.
+
+**Hard:** Add ten practice draws that give each player three wins and leave four tied rounds. Reverse the draw order and verify the final counts stay the same.
+
+**Success criteria:** The counts sum to the current round number. The original example ends 4, 3, and 3. The second set prints an overall tie.`,
+	"PS14-Mastermind": `Run practice mode. Compare 2230 and 2222 against 2032. Both have two exact matches. Only the first has misplaced matches because each signal digit can be matched once.
+
+**Normal:** Print the exact positions after each valid trial. Number the positions from one.
+
+**Hard:** Track the valid trial with the most exact matches. Break ties by the number of misplaced matches, then keep the earlier trial.
+
+**Success criteria:** After 2222 and 2230, the best trial is 2230. A hint and malformed input leave it unchanged.`,
 	"PS-Check-in-1": `Run the completed animal and color program with dog and black, then cat and black. Compare the combined and nested decisions. Both versions should agree for both inputs.
 
 **Normal:** Print the number of correct guesses before the result. Dog and black should report two matches. Cat and black should report one.

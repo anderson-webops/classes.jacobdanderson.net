@@ -5,6 +5,7 @@ import { addPythonIdeClassroomSectionsToSource } from "@/modules/pythonIde";
 import { useAppStore } from "@/stores/app";
 import { useCoursesStore } from "@/stores/courses";
 import asciiFixture from "../../test/fixtures/python-level-2-ascii-module-sources.json";
+import capstonesFixture from "../../test/fixtures/python-level-2-capstones-module-sources.json";
 import collectionsFixture from "../../test/fixtures/python-level-2-collections-module-sources.json";
 import consoleFixture from "../../test/fixtures/python-level-2-console-module-sources.json";
 import conditionalsFixture from "../../test/fixtures/python-level-2-conditionals-module-sources.json";
@@ -156,6 +157,24 @@ const modules = [
 		]
 	},
 	{
+		suffix: "-ps14-blackjack",
+		source: "4451de4a1f7dccd55a0175bbf9fe3f2fbe183f70",
+		assignments: [
+			["Simple Blackjack", "PS14-Simple-Blackjack", "core"],
+			["Advanced Blackjack", "PS14-Advanced-Blackjack", "core"],
+			[
+				"supplemental-ps14-supplemental-project-1-game-of-war",
+				"PS14-Game-of-War",
+				"choice"
+			],
+			[
+				"supplemental-ps14-supplemental-project-2-mastermind",
+				"PS14-Mastermind",
+				"challenge"
+			]
+		]
+	},
+	{
 		suffix: "-check-in-2",
 		source: "8bc76e6927ae40683bfb79170c378dac2b266cf2",
 		assignments: [
@@ -238,6 +257,7 @@ it.each([
 						suffix === "-ps11-bank-account" ||
 						suffix === "-ps12-type-racer" ||
 						suffix === "-ps13-wordsmith" ||
+						suffix === "-ps14-blackjack" ||
 						suffix.startsWith("-check-in-")
 					) {
 						expect(item.contentKind).toBe("assignment");
@@ -256,7 +276,8 @@ it.each([
 	["conditionals", conditionalsFixture],
 	["functions", functionsFixture],
 	["collections", collectionsFixture],
-	["console", consoleFixture]
+	["console", consoleFixture],
+	["capstones", capstonesFixture]
 ] as const)(
 	"binds the %s browser fixture to real course items and classroom sources",
 	async (_scope, data) => {

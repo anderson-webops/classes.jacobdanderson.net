@@ -32,6 +32,9 @@ export const PYTHON_LEVEL_2_COLLECTIONS_SOURCE =
 const PYTHON_LEVEL_2_CONSOLE_SOURCE =
 	"https://github.com/instruction-material/Python-Level-2/tree/96f7196ea540fce55644e2a2d1d0ce97f16de9e8";
 
+export const PYTHON_LEVEL_2_PS14_SOURCE =
+	"https://github.com/instruction-material/Python-Level-2/tree/4451de4a1f7dccd55a0175bbf9fe3f2fbe183f70";
+
 const PYTHON_LEVEL_2_CHECK_INS_SOURCE =
 	"https://github.com/instruction-material/Python-Level-2/tree/8bc76e6927ae40683bfb79170c378dac2b266cf2";
 
@@ -2360,86 +2363,82 @@ export const pythonLevel2Course: RawCourse = {
 				{
 					title: "PS14 Project 1: Simple Blackjack",
 					content: projectBrief({
-						goal: "Build a simplified Blackjack game with player choices, dealer rules, and round outcomes.",
+						goal: "Build a simplified card game with separate player and dealer hands.",
 						build: [
-							"Represent card values from 2 through 11.",
-							"Let the player hit or stay in a loop.",
-							"Have the dealer draw until reaching at least 17.",
-							"Compare final totals and report win, loss, bust, or tie."
+							"Build a deck with four of each value from 2 through 11. Deal two cards to each hand.",
+							"Use h to hit, s to stay, and q to quit. End the player turn at 21 and stop the round above 21.",
+							"Have the dealer draw below 17. Compare the totals and report a bust separately from an ordinary win."
 						],
 						checkpoints: [
-							"Player and dealer totals update separately.",
-							"Bust conditions stop or resolve the round correctly.",
-							"Replay starts a fresh round rather than reusing stale totals."
+							"Choose p for practice. The player begins at 17. Staying lets the dealer draw 3 to reach 18 and win.",
+							"Two surviving totals of 17 tie. Replay the practice round to verify both hands are dealt fresh."
 						]
 					}),
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS14-Simple-Blackjack/solution",
+					projectLink: `${PYTHON_LEVEL_2_PS14_SOURCE}/PS14-Simple-Blackjack/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_PS14_SOURCE}/PS14-Simple-Blackjack/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps14_blackjack.gif"
 				},
 				{
 					title: "PS14 Project 2: Advanced Blackjack",
 					content: projectBrief({
-						goal: "Extend Blackjack with richer card representation, face cards, aces, and hand-value helpers.",
+						goal: "Use named cards and a shared helper to score hands with aces.",
 						build: [
-							"Represent card names separately from card values where needed.",
-							"Add face-card output for Jack, Queen, and King.",
-							"Handle aces as 1 or 11 depending on the hand.",
-							"Write helper functions that compute the best valid hand value."
+							"Jack, Queen, and King each count as 10. Count every ace as 1 first.",
+							"If an ace is present and adding 10 keeps the total at or below 21, add 10. Use this rule for both hands.",
+							"A two-card 21 ends the opening deal. Two such hands tie."
 						],
 						checkpoints: [
-							"Ace handling prevents unnecessary busts when possible.",
-							"Card display is readable to the player.",
-							"Hand-value logic is reusable for both player and dealer."
+							"Choose p, hit twice, and stay. The player's totals are 17, 15, and 19. The dealer reaches 18.",
+							"The dealer stops at a best value of 17 or higher, including Ace and 6."
 						]
 					}),
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS14-Advanced-Blackjack/solution",
+					projectLink: `${PYTHON_LEVEL_2_PS14_SOURCE}/PS14-Advanced-Blackjack/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_PS14_SOURCE}/PS14-Advanced-Blackjack/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps14_advanced_blackjack.gif"
 				}
 			],
 			supplementalProjects: [
 				{
-					title: "PS14 Supplemental Project 1: Game of War",
+					title: "PS14 Supplemental Project 1: High Card Rounds",
+					id: "python-level-2-ps14-blackjack-supplemental-ps14-supplemental-project-1-game-of-war",
+					aliases: ["PS14 Supplemental Project 1: Game of War"],
 					content: projectBrief({
-						goal: "Simulate a fixed number of War card-game rounds and track the winner count.",
+						goal: "Compare ten pairs of card draws and count wins and ties.",
 						build: [
-							"Loop through ten rounds.",
-							"Generate a random card value for each player.",
-							"Compare card values and print the round result.",
-							"Track wins, losses, and ties."
+							"In each round draw two independent values from 2 to 10.",
+							"Update exactly one counter and print who won or whether the round tied.",
+							"Compare the two final win counts to name an overall winner or report an overall tie."
 						],
 						checkpoints: [
-							"Each round has independent random values.",
-							"The score table updates after every round.",
-							"The final summary matches the printed round outcomes."
+							"Enter Ari, Bea, and p to use fixed practice draws. Expect Ari 4, Bea 3, and ties 3.",
+							"Both win counts and the tie count add up to ten."
 						]
 					}),
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS14-Game-of-War/solution",
+					projectLink: `${PYTHON_LEVEL_2_PS14_SOURCE}/PS14-Game-of-War/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_PS14_SOURCE}/PS14-Game-of-War/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps14_game_of_war.gif"
 				},
 				{
-					title: "PS14 Supplemental Project 2: Mastermind",
+					title: "PS14 Supplemental Project 2: Signal Digits",
+					id: "python-level-2-ps14-blackjack-supplemental-ps14-supplemental-project-2-mastermind",
+					aliases: ["PS14 Supplemental Project 2: Mastermind"],
 					content: projectBrief({
-						goal: "Implement a Mastermind-style code-breaking game with feedback for exact and partial matches.",
+						goal: "Compare exact positions and count repeated digits in a hidden signal.",
 						build: [
-							"Generate or define a hidden four-digit code.",
-							"Ask for guesses in a loop.",
-							"Count exact matches in the correct position.",
-							"Count close matches that use a correct digit in the wrong position without double-counting."
+							"Generate four digits from 0 through 5. Use 2032 when the user chooses p for practice.",
+							"Set exact positions aside. Count each remaining match by using one occurrence of its digit.",
+							"Offer eight trials. A one-use digit-sum hint costs one trial, and malformed input uses none."
 						],
 						checkpoints: [
-							"Guess length and digit validity are checked.",
-							"Exact matches and close matches are reported separately.",
-							"Repeated digits are handled by a clear rule."
+							"Against 2032, trial 2230 gives two exact and two misplaced. Trial 2222 gives two exact and zero misplaced.",
+							"The practice hint shows 7. Only the first hint spends a trial. A match or the trial limit ends the puzzle."
 						]
 					}),
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS14-Mastermind/solution",
+					projectLink: `${PYTHON_LEVEL_2_PS14_SOURCE}/PS14-Mastermind/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_PS14_SOURCE}/PS14-Mastermind/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps_14_mastermind.mp4"
 				}
@@ -2736,7 +2735,7 @@ const PYTHON_LEVEL_2_FLOW: PythonLevel2FlowConfig[] = [
 ];
 
 const PYTHON_LEVEL_2_CHALLENGE_TITLE_RE =
-	/advanced|debugging|caesar shift detective|extension|field day ii|class registration ii|evil wheel of fortune|mastermind|archery simulator|stock trader|double or nothing/i;
+	/advanced|debugging|caesar shift detective|extension|field day ii|class registration ii|evil wheel of fortune|signal digits|archery simulator|stock trader|double or nothing/i;
 const PYTHON_LEVEL_2_COMBINING_MARKS_RE = /[\u0300-\u036F]/g;
 const PYTHON_LEVEL_2_NON_ALPHANUMERIC_RE = /[^a-z0-9]+/g;
 const PYTHON_LEVEL_2_LEADING_HYPHENS_RE = /^-+/;

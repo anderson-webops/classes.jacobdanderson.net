@@ -684,7 +684,7 @@ describe("implemented course development artifacts", () => {
 			"Python-Level-2/tree/6c8442dd68067e1f8cee1f14a5e08bf8e4b06c17/PS5-Parameter-Tracing/starter"
 		);
 		expect(serializedCourse).toContain(
-			"Python-Level-2/tree/main/PS14-Mastermind/solution"
+			"Python-Level-2/tree/4451de4a1f7dccd55a0175bbf9fe3f2fbe183f70/PS14-Mastermind/solution"
 		);
 	});
 
