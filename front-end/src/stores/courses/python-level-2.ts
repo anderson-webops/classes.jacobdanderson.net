@@ -35,6 +35,9 @@ const PYTHON_LEVEL_2_DICTIONARY_PRACTICE_SOURCE =
 const PYTHON_LEVEL_2_SUPPLEMENTAL_SOURCE =
 	"https://github.com/instruction-material/Python-Level-2/tree/017313722ab219e4fccd9c1e186c7323033af7df";
 
+const PYTHON_LEVEL_2_SETS_AND_WORD_GAMES_SOURCE =
+	"https://github.com/instruction-material/Python-Level-2/tree/6d2a63b50aa113e48935af046b65b118313b8733";
+
 export const PYTHON_LEVEL_2_COLLECTIONS_SOURCE =
 	"https://github.com/instruction-material/Python-Level-2/tree/2dec846ce80283885dfe01579a181906e6748985";
 
@@ -1861,18 +1864,16 @@ export const pythonLevel2Course: RawCourse = {
 							"Represent player nationalities with a dictionary that maps player names to countries.",
 							"Loop through the player entries.",
 							"Add each nationality to a set.",
-							"Print the unique countries and the total number represented."
+							"Print the distinct countries in alphabetical order and count them."
 						],
 						checkpoints: [
-							"Players from the same country count once in the unique set.",
+							"The sample roster has eleven players and eight distinct countries. Spain appears once in the country list.",
 							"The dictionary keeps player identity separate from nationality grouping.",
 							"The output makes the distinction between players and countries clear."
 						]
 					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS9-Soccer-Nationalities/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS9-Soccer-Nationalities/solution",
+					projectLink: `${PYTHON_LEVEL_2_SETS_AND_WORD_GAMES_SOURCE}/PS9-Soccer-Nationalities/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_SETS_AND_WORD_GAMES_SOURCE}/PS9-Soccer-Nationalities/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps9_soccer_nationalities.gif"
 				},
@@ -1881,21 +1882,19 @@ export const pythonLevel2Course: RawCourse = {
 					content: projectBrief({
 						goal: "Debug a capture-the-flag tracker by inspecting set operations and state after each change.",
 						build: [
-							"Run the starter and identify the first incorrect set state.",
-							"Check add, remove, membership, union, and intersection logic.",
+							"Run the starter and find the setup line that raises an AttributeError.",
+							"Repair set creation, add and remove operations, membership checks, and the union of the two captured rosters.",
 							"Fix one problem at a time.",
 							"Print or inspect set contents after each important step."
 						],
 						checkpoints: [
 							"Set operations match the intended game rule.",
 							"Duplicate entries do not create fake progress.",
-							"The final tracker state matches the expected captured flags."
+							"After entering n, y, Jared, Jared is in the captured roster and absent from team 1's field roster."
 						]
 					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS9-Debugging-Sets/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS9-Debugging-Sets/solution",
+					projectLink: `${PYTHON_LEVEL_2_SETS_AND_WORD_GAMES_SOURCE}/PS9-Debugging-Sets/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_SETS_AND_WORD_GAMES_SOURCE}/PS9-Debugging-Sets/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps9_debugging_sets.gif"
 				}
@@ -2234,10 +2233,10 @@ export const pythonLevel2Course: RawCourse = {
 					content: projectBrief({
 						goal: "Implement a harder word-guessing game that delays choosing a fixed secret word.",
 						build: [
-							"Load a list of possible words.",
+							"Load the included dictionary, choose a length from three through eight, and keep candidates of that length.",
 							"Filter possible words after each guess.",
 							"Choose a response pattern that keeps the largest useful word family.",
-							"Continue until the game ends with a consistent remaining word."
+							"Spend a guess when the pattern stays the same. Stop when the word is revealed, guesses run out, or the user enters quit."
 						],
 						checkpoints: [
 							"The possible-word list only contains words consistent with previous answers.",
@@ -2247,10 +2246,8 @@ export const pythonLevel2Course: RawCourse = {
 						extension:
 							"Display the candidate count after each guess or compare the strategy to a normal fixed-word version."
 					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS12-Evil-Wheel-of-Fortune/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS12-Evil-Wheel-of-Fortune/solution",
+					projectLink: `${PYTHON_LEVEL_2_SETS_AND_WORD_GAMES_SOURCE}/PS12-Evil-Wheel-of-Fortune/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_SETS_AND_WORD_GAMES_SOURCE}/PS12-Evil-Wheel-of-Fortune/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps_12_evil_hangman.mp4"
 				}
@@ -2294,18 +2291,16 @@ export const pythonLevel2Course: RawCourse = {
 							"Load or define a set of valid three-letter words.",
 							"Generate random letters one at a time.",
 							"Track the most recent three-letter window.",
-							"Stop when the window is a valid word and report the number of generated letters."
+							"Stop at the first valid word or after 10,000 letters. Report the found word and the number of generated letters."
 						],
 						checkpoints: [
-							"The rolling window updates correctly after each new letter.",
+							"A fixed stream of x, c, a, t with a set containing only cat first matches on the fourth letter.",
 							"Membership checking uses the word set efficiently.",
 							"The final output includes the found word and attempt count."
 						]
 					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS13-Typewriter-Monkeys/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS13-Typewriter-Monkeys/solution",
+					projectLink: `${PYTHON_LEVEL_2_SETS_AND_WORD_GAMES_SOURCE}/PS13-Typewriter-Monkeys/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_SETS_AND_WORD_GAMES_SOURCE}/PS13-Typewriter-Monkeys/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps13_typewriter_monkeys.gif"
 				},

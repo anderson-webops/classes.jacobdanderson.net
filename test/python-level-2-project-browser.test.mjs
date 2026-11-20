@@ -8,6 +8,7 @@ import { join } from "node:path";
 // eslint-disable-next-line test/no-import-node-test -- Exercises the real course and IDE in Chrome.
 import { test } from "node:test";
 import { setTimeout as delay } from "node:timers/promises";
+import { gunzipSync } from "node:zlib";
 import { runAssemblyCoreCourseWorkflow } from "./assembly-core-course-browser.mjs";
 
 const moduleFiles = {
@@ -23,7 +24,8 @@ const moduleFiles = {
 	"lists-and-music": "lists-and-music",
 	"named-music-and-morse": "named-music-and-morse",
 	"dictionaries": "dictionaries",
-	"supplemental-practice": "supplemental-practice"
+	"supplemental-practice": "supplemental-practice",
+	"supplemental-sets-word-games": "supplemental-sets-word-games"
 };
 const selectedModule = process.env.PYTHON_LEVEL_2_BROWSER_MODULE ?? "first";
 assert.ok(Object.hasOwn(moduleFiles, selectedModule), `Unknown Python module: ${selectedModule}`);
@@ -33,6 +35,24 @@ const fixture = JSON.parse(
 	readFileSync(new URL(fixturePath, import.meta.url), "utf8")
 );
 const outputMarker = "Saved Python exercise check";
+
+const sharedDictionary = selectedModule === "supplemental-sets-word-games"
+	? gunzipSync(readFileSync(new URL("./fixtures/wordsmith-valid-words.txt.gz", import.meta.url)))
+	: undefined;
+
+function prepareSourceFixture(data) {
+	for (const file of Object.values(data.files)) {
+		if (!file.sharedDictionary) continue;
+		assert.ok(sharedDictionary);
+		assert.equal(sharedDictionary.length, file.byteLength);
+		assert.equal(createHash("sha256").update(sharedDictionary).digest("hex"), file.sha256);
+		file.content = sharedDictionary.toString("utf8");
+	}
+}
+
+function expectsRunError(example) {
+	return Boolean(example.expectsSyntaxError || example.expectedError);
+}
 
 function sourceDirectoryListing(pack, { url, role }) {
 	const root = `/repos/instruction-material/${fixture.repository}/contents/`;
@@ -132,7 +152,7 @@ async function captureWav(page, audio, output, member, edited) {
 
 async function verifyExecution(
 	page,
-	{ input, expected, expectsSyntaxError },
+	{ input, expected, expectsSyntaxError, expectedError },
 	edited = false
 ) {
 	const selector = ".stdin-panel textarea";
@@ -172,10 +192,13 @@ async function verifyExecution(
 	if (expectsSyntaxError) {
 		assert.match(output, /\bSyntaxError\b/);
 	}
+	else if (expectedError) {
+		assert.ok(output.includes(expectedError), output);
+	}
 	else {
 		assert.doesNotMatch(
 			output,
-			/Traceback|\b(?:Syntax|Runtime|Type|Name|Import|Index|EOF)Error:/
+			/Traceback|\b(?:Syntax|Runtime|Type|Name|Import|Index|EOF|Attribute)Error:/
 		);
 	}
 	return output;
@@ -223,6 +246,7 @@ for (const exercise of fixture.exercises) {
 					pack,
 					sourceRepository: fixture.repository,
 					fixturePath,
+					prepareFixture: prepareSourceFixture,
 					sourceRole,
 					sourceUrl: role =>
 						`https://github.com/instruction-material/${fixture.repository}/tree/${fixture.revision}/${pack}/${sourceRole(role)}`,
@@ -243,7 +267,7 @@ for (const exercise of fixture.exercises) {
 							: fixture.files[`${pack}/${sourceRole(role)}/${name}`],
 					editFiles: ["main.py"],
 					editContent: ({ original, role }) => {
-						let edited = exampleFor(role).expectsSyntaxError
+						let edited = expectsRunError(exampleFor(role))
 							? fixture.files[`${pack}/solution/main.py`].content
 							: original;
 						const audio = audioFor(role);
@@ -268,7 +292,7 @@ for (const exercise of fixture.exercises) {
 						const audio = audioFor(role);
 						const output = await verifyExecution(
 							page,
-							exampleFor(role).expectsSyntaxError
+							expectsRunError(exampleFor(role))
 								? examples.solution
 								: audio?.editedExample ?? exampleFor(role),
 							true

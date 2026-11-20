@@ -1485,7 +1485,7 @@ jobs:
             named-music-and-morse) modules=(named-music-and-morse) ;;
             dictionaries-and-morse) modules=(dictionaries named-music-and-morse) ;;
             dictionaries-and-music) modules=(lists-and-music dictionaries named-music-and-morse) ;;
-            supplemental-practice) modules=(supplemental-practice) ;;
+            supplemental-practice) modules=(supplemental-practice supplemental-sets-word-games) ;;
             *) modules=(first loops) ;;
           esac
           for module in "${modules[@]}"; do

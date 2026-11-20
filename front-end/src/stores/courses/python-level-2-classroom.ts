@@ -170,6 +170,34 @@ For a showcase, demonstrate the working Normal result first. If Hard is complete
 });
 
 const classroomProjectExtensions: Record<string, string> = {
+	"PS9-Soccer-Nationalities": `Run the completed roster report. Trace four players from Spain through the loop and confirm that Spain appears once in the result.
+
+**Normal:** Count how many sample players come from each country. Print the counts in alphabetical country order.
+
+**Hard:** Add a player from a country already in the roster and a player from a new country. Show the change to both totals after each addition.
+
+**Success criteria:** The original totals are eleven players and eight countries. An additional player from Spain increases only the player count.`,
+	"PS9-Debugging-Sets": `Run the completed tracker and enter n, y, Jared. Trace the removal from team 1's field roster and the addition to the captured roster. Try the same capture again.
+
+**Normal:** Print the number of free and captured players on each team after a turn.
+
+**Hard:** Add a rescue operation that moves a named player from the correct captured set back to its corresponding field set.
+
+**Success criteria:** Capturing Jared changes team 1's counts to three free and one captured. A repeat leaves those counts as they were. Rescuing Jared restores four free and zero captured.`,
+	"PS12-Evil-Wheel-of-Fortune": `Run a round and follow the active candidate set for one guess. Trace the candidates cat, car, and bar with the letter c. The largest family reveals c and retains cat and car.
+
+**Normal:** Print the number of candidates before and after a guess. Show that every retained word matches the displayed pattern.
+
+**Hard:** Make tied largest families resolve consistently. Prefer a pattern that reveals fewer positions, then compare tied patterns alphabetically.
+
+**Success criteria:** With cat, car, and bar, guessing c changes three candidates to two. The retained family only contains cat and car.`,
+	"PS13-Typewriter-Monkeys": `Run the simulation and verify the found word against the included set. Trace the last three characters as four letters arrive and compare the result with the count.
+
+**Normal:** Print the current window on the first three steps and label each step with its letter count.
+
+**Hard:** Accept a fixed letter stream for a reproducible test and keep the existing random mode.
+
+**Success criteria:** Given x, c, a, t and a vocabulary containing only cat, the fixed stream finds cat on step four.`,
 	"PS9-Class-Registration": `Run the completed roster report. The original Biology list contains ten entries and the set contains eight names. Compare a repeated name with the distinct names Sarah and Sara.
 
 **Normal:** Show how many repeated registrations were removed for each course. Biology and English lose two and three entries. Computer Science loses zero.

@@ -19,8 +19,35 @@ import functionsFixture from "../../test/fixtures/python-level-2-functions-modul
 import listsMusicFixture from "../../test/fixtures/python-level-2-lists-and-music-module-sources.json";
 import namedMusicMorseFixture from "../../test/fixtures/python-level-2-named-music-and-morse-module-sources.json";
 import supplementalPracticeFixture from "../../test/fixtures/python-level-2-supplemental-practice-module-sources.json";
+import supplementalSetsFixture from "../../test/fixtures/python-level-2-supplemental-sets-word-games-module-sources.json";
 
 const modules = [
+	{
+		suffix: "-ps9-sets",
+		source: supplementalSetsFixture.revision,
+		assignments: [
+			["Soccer Nationalities", "PS9-Soccer-Nationalities", "choice"],
+			["Debugging Sets", "PS9-Debugging-Sets", "challenge"]
+		]
+	},
+	{
+		suffix: "-ps12-type-racer",
+		source: supplementalSetsFixture.revision,
+		assignments: [
+			["Evil Wheel of Fortune", "PS12-Evil-Wheel-of-Fortune", "challenge"]
+		]
+	},
+	{
+		suffix: "-ps13-wordsmith",
+		source: supplementalSetsFixture.revision,
+		assignments: [
+			[
+				"supplemental-ps13-supplemental-project-1-typewriter-monkeys",
+				"PS13-Typewriter-Monkeys",
+				"choice"
+			]
+		]
+	},
 	{
 		suffix: "-ps9-sets",
 		source: supplementalPracticeFixture.revision,
@@ -344,14 +371,15 @@ it.each([
 	["lists-and-music", listsMusicFixture],
 	["named-music-and-morse", namedMusicMorseFixture],
 	["dictionaries", dictionariesFixture],
-	["supplemental-practice", supplementalPracticeFixture]
+	["supplemental-practice", supplementalPracticeFixture],
+	["supplemental-sets-word-games", supplementalSetsFixture]
 ] as const)(
 	"binds the %s browser fixture to real course items and classroom sources",
 	async (_scope, data) => {
 		const fixture: {
 			moduleId?: string;
 			revision: string;
-			files: Record<string, { content: string }>;
+			files: Record<string, { content?: string }>;
 			exercises: {
 				moduleId?: string;
 				pack: string;
@@ -363,7 +391,7 @@ it.each([
 		const course = (await useCoursesStore().loadCourseById(
 			"python-level-2-classroom"
 		))!;
-		const files: Record<string, { content: string }> = fixture.files;
+		const files: Record<string, { content?: string }> = fixture.files;
 		for (const exercise of fixture.exercises) {
 			const module = course.modules.find(
 				({ id }) => id === (exercise.moduleId ?? fixture.moduleId)
@@ -382,8 +410,9 @@ it.each([
 				`Python-Level-2/tree/${fixture.revision}/${exercise.pack}/solution`
 			);
 			const solution = files[`${exercise.pack}/solution/main.py`];
+			expect(solution?.content).toBeDefined();
 			const wrapped = addPythonIdeClassroomSectionsToSource(
-				solution!.content
+				solution!.content!
 			);
 			expect(createHash("sha256").update(wrapped).digest("hex")).toBe(
 				exercise.classroomMainSha256
