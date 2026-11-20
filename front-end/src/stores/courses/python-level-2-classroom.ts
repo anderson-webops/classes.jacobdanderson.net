@@ -393,6 +393,22 @@ const classroomProjectExtensions: Record<string, string> = {
 **Hard:** Add a three-team option by rotating through three lists. For ten names, the sizes should be four, three, and three.
 
 **Success criteria:** Every unique name occurs on exactly one team. An empty roster produces only empty teams.`,
+	"PS11-Bank-Account": `**Method** Check that the withdrawal is positive and within the signed-in account's balance before subtracting it.
+
+**Worked example** Deposit 20 into ari using demo-ari, then withdraw 7. A withdrawal of 14 is rejected and leaves 13. Switch to bea using demo-bea to verify that account still has 0.
+
+**Normal:** List each successful transaction and the balance after it.
+
+**Hard:** Keep separate histories by account and show the signed-in account's history on demand.
+
+**Success criteria:** Ari's history shows the two successful transactions. The rejected withdrawal adds no entry, and Bea's history is empty.`,
+	"PS11-Calculator": `Run 12 / 3, 12 / 0, and 0!. Trace when the menu calls a helper, when it has a value to report, and when it shows an error.
+
+**Normal:** Keep a count of successful calculations. A divide-by-zero error leaves the count at one after a single successful operation.
+
+**Hard:** Store each successful expression and result, and add a command that prints the history in order.
+
+**Success criteria:** The history shows 12 / 3 = 4.0 and 0! = 1. An invalid operator or failed calculation leaves the history unchanged.`,
 	"PS-Check-in-1": `Run the completed animal and color program with dog and black, then cat and black. Compare the combined and nested decisions. Both versions should agree for both inputs.
 
 **Normal:** Print the number of correct guesses before the result. Dog and black should report two matches. Cat and black should report one.

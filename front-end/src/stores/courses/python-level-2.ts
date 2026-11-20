@@ -29,6 +29,9 @@ const PYTHON_LEVEL_2_PS6_LISTS_SOURCE =
 export const PYTHON_LEVEL_2_COLLECTIONS_SOURCE =
 	"https://github.com/instruction-material/Python-Level-2/tree/2dec846ce80283885dfe01579a181906e6748985";
 
+const PYTHON_LEVEL_2_PS11_SOURCE =
+	"https://github.com/instruction-material/Python-Level-2/tree/934372fdff62a74b17a9f02af34950d25406081f";
+
 const PYTHON_LEVEL_2_CHECK_INS_SOURCE =
 	"https://github.com/instruction-material/Python-Level-2/tree/8bc76e6927ae40683bfb79170c378dac2b266cf2";
 
@@ -2117,21 +2120,21 @@ export const pythonLevel2Course: RawCourse = {
 					content: projectBrief({
 						goal: "Create a console bank-account simulator with login, balances, and transaction actions.",
 						build: [
-							"Represent sample accounts with sample login names, access phrases, and balances.",
-							"Validate a login before allowing account actions.",
-							"Add menu options for deposits, withdrawals, balance display, and credential updates.",
-							"Reject invalid withdrawals or malformed numeric input."
+							"Use the sample login names ari and bea. Run the starter with ari and demo-ari. Each account has an access phrase and balance in one record.",
+							"Check the current access phrase before letting someone sign in or change it.",
+							"Offer deposit, withdrawal, balance, phrase change, and logout commands. Return to login after logout and accept q to exit there.",
+							"Use positive whole-dollar amounts. Reject a withdrawal above the balance before changing it."
 						],
 						checkpoints: [
-							"Authentication state is checked before account actions run.",
-							"Balances update only after valid transactions.",
-							"Account data is organized so credentials and balances stay connected to the correct user."
+							"An incorrect phrase leaves the program at login.",
+							"Deposit 20 and withdraw 7. A withdrawal of 14, a negative deposit, and a text amount should each leave the balance at 13.",
+							"Log out and use bea with demo-bea. Bea's balance is still 0. Sign in again as ari and verify the balance remains 13 until the program restarts."
 						],
 						extension:
-							"Add simple interest, transaction history, account lockout after repeated failures, or save/load behavior."
+							"Keep a history of successful transactions for each fictional account."
 					}),
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS11-Bank-Account/solution",
+					projectLink: `${PYTHON_LEVEL_2_PS11_SOURCE}/PS11-Bank-Account/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_PS11_SOURCE}/PS11-Bank-Account/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps11_bank_account.gif"
 				}
@@ -2142,19 +2145,18 @@ export const pythonLevel2Course: RawCourse = {
 					content: projectBrief({
 						goal: "Build a calculator from small arithmetic helper functions.",
 						build: [
-							"Write helper functions for supported operations.",
-							"Ask the user for two numbers and an operation.",
-							"Call the matching helper based on the chosen operation.",
-							"Print the result with the original expression."
+							"Run the starter's addition example. Then add a menu for +, -, *, /, %, ^, and !. Use q to quit.",
+							"Read one whole number for factorial and two for the other operations. Use inputs from -1000 through 1000 and factorial inputs and exponents from 0 through 100.",
+							"Call one helper per operation. Show the expression and result, such as 2 ^ 5 = 32."
 						],
 						checkpoints: [
-							"Division by zero has a defined behavior.",
-							"Each arithmetic operation lives in one helper.",
-							"Invalid operation choices are handled separately from arithmetic errors."
+							"12 / 3 prints 4.0, and 0! prints 1.",
+							"Dividing by zero or taking a remainder with zero reports a problem and returns to the menu.",
+							"An unknown operation returns to the menu before asking for operands."
 						]
 					}),
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS11-Calculator/solution",
+					projectLink: `${PYTHON_LEVEL_2_PS11_SOURCE}/PS11-Calculator/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_PS11_SOURCE}/PS11-Calculator/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps11_calculator.gif"
 				},

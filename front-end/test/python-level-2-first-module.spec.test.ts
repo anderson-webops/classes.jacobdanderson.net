@@ -118,6 +118,14 @@ const modules = [
 		]
 	},
 	{
+		suffix: "-ps11-bank-account",
+		source: "934372fdff62a74b17a9f02af34950d25406081f",
+		assignments: [
+			["Bank Account", "PS11-Bank-Account", "core"],
+			["Calculator", "PS11-Calculator", "choice"]
+		]
+	},
+	{
 		suffix: "-check-in-2",
 		source: "8bc76e6927ae40683bfb79170c378dac2b266cf2",
 		assignments: [
@@ -196,6 +204,7 @@ it.each([
 						suffix === "-ps7-dictionaries" ||
 						suffix === "-ps9-sets" ||
 						suffix === "-ps10-to-do-list" ||
+						suffix === "-ps11-bank-account" ||
 						suffix.startsWith("-check-in-")
 					) {
 						expect(item.contentKind).toBe("assignment");
