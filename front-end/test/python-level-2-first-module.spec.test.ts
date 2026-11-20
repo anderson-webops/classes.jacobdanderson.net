@@ -16,6 +16,7 @@ import consoleFixture from "../../test/fixtures/python-level-2-console-module-so
 import conditionalsFixture from "../../test/fixtures/python-level-2-conditionals-module-sources.json";
 import functionsFixture from "../../test/fixtures/python-level-2-functions-module-sources.json";
 import listsMusicFixture from "../../test/fixtures/python-level-2-lists-and-music-module-sources.json";
+import namedMusicMorseFixture from "../../test/fixtures/python-level-2-named-music-and-morse-module-sources.json";
 
 const modules = [
 	{
@@ -115,6 +116,16 @@ const modules = [
 			["Dictionaries Practice", "PS7-Dictionaries-Practice", "core"],
 			["Test Scores", "PS7-Test-Scores", "choice"]
 		]
+	},
+	{
+		suffix: "-ps7-dictionaries",
+		source: namedMusicMorseFixture.revision,
+		assignments: [["Song Generator 2", "PS7-Song-Generator-2", "core"]]
+	},
+	{
+		suffix: "-ps8-ciphers-and-music",
+		source: namedMusicMorseFixture.revision,
+		assignments: [["Morse Code", "PS8-Morse-Code", "core"]]
 	},
 	{
 		suffix: "-ps9-sets",
@@ -261,6 +272,7 @@ it.each([
 						suffix === "-ps5-functions" ||
 						suffix === "-ps6-lists-and-music" ||
 						suffix === "-ps7-dictionaries" ||
+						suffix === "-ps8-ciphers-and-music" ||
 						suffix === "-ps9-sets" ||
 						suffix === "-ps10-to-do-list" ||
 						suffix === "-ps11-bank-account" ||
@@ -287,7 +299,8 @@ it.each([
 	["collections", collectionsFixture],
 	["console", consoleFixture],
 	["capstones", capstonesFixture],
-	["lists-and-music", listsMusicFixture]
+	["lists-and-music", listsMusicFixture],
+	["named-music-and-morse", namedMusicMorseFixture]
 ] as const)(
 	"binds the %s browser fixture to real course items and classroom sources",
 	async (_scope, data) => {
@@ -339,14 +352,21 @@ it.each([
 	["PS6-Build-a-Song", "starter"],
 	["PS6-Build-a-Song", "solution"],
 	["PS6-Song-Generator", "starter"],
-	["PS6-Song-Generator", "solution"]
+	["PS6-Song-Generator", "solution"],
+	["PS7-Song-Generator-2", "starter"],
+	["PS7-Song-Generator-2", "solution"],
+	["PS8-Morse-Code", "starter"],
+	["PS8-Morse-Code", "solution"]
 ] as const)(
 	"preserves the portable synthesizer for %s %s",
 	async (pack, role) => {
-		const { repository, revision } = listsMusicFixture;
+		const fixture = pack.startsWith("PS6")
+			? listsMusicFixture
+			: namedMusicMorseFixture;
+		const { repository, revision } = fixture;
 		const path = `${pack}/${role}`;
 		const files: Record<string, { content: string; byteLength: number }> =
-			listsMusicFixture.files;
+			fixture.files;
 		const sources = Object.entries(files).filter(([name]) =>
 			name.startsWith(`${path}/`)
 		);

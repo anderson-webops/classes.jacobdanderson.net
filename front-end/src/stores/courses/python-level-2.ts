@@ -26,6 +26,9 @@ const PYTHON_LEVEL_2_PS5_SOURCE =
 export const PYTHON_LEVEL_2_PS6_LISTS_SOURCE =
 	"https://github.com/instruction-material/Python-Level-2/tree/25e131ee66467d9c05e07b1895ff7a7e96feb1c6";
 
+const PYTHON_LEVEL_2_MUSIC_INTEGRATION_SOURCE =
+	"https://github.com/instruction-material/Python-Level-2/tree/7d5f2c7ecf27ed496af1afd576f2ae8424e92f0f";
+
 export const PYTHON_LEVEL_2_COLLECTIONS_SOURCE =
 	"https://github.com/instruction-material/Python-Level-2/tree/2dec846ce80283885dfe01579a181906e6748985";
 
@@ -1571,21 +1574,17 @@ export const pythonLevel2Course: RawCourse = {
 					content: projectBrief({
 						goal: "Upgrade the song generator by translating human-readable duration names through a dictionary.",
 						build: [
-							"Create a duration dictionary for names such as whole, half, quarter, and eighth.",
-							"Ask the user for notes and duration names.",
-							"Look up each duration value before storing the note entry.",
-							"Generate the final song from the translated note data."
+							"Run the starter and verify that quarter maps to 4. Map whole, half, quarter, and eighth to 1, 2, 4, and 8.",
+							"Collect up to six pitches or rests with duration names. Trim and lowercase each name, then look up its value.",
+							"Enter q to finish. Use the IDE audio result to play or download named_song.wav. The downloaded project also runs with python3 main.py."
 						],
 						checkpoints: [
-							"Duration names are not hard-coded in several unrelated conditionals.",
-							"Invalid duration names are handled clearly.",
-							"The dictionary boundary makes the music data easier to read and revise."
+							"Enter c4 with quarter, r with eighth, and e4 with half. Expect pairs c4 and 4, r and 8, and e4 and 2.",
+							"An unknown duration prompts again before a pair is appended. A song with no entries prints a message without rendering."
 						]
 					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS7-Song-Generator-2/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS7-Song-Generator-2/solution",
+					projectLink: `${PYTHON_LEVEL_2_MUSIC_INTEGRATION_SOURCE}/PS7-Song-Generator-2/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_MUSIC_INTEGRATION_SOURCE}/PS7-Song-Generator-2/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps7_song_generator_2.gif"
 				}
@@ -1714,23 +1713,20 @@ export const pythonLevel2Course: RawCourse = {
 				{
 					title: "PS8 Project 1: Morse Code",
 					content: projectBrief({
-						goal: "Translate text into Morse code and then represent the dots and dashes as musical durations.",
+						goal: "Translate between text and Morse code and render the result as an audible signal.",
 						build: [
-							"Create or inspect a dictionary that maps letters to Morse code.",
-							"Translate each input character into dots and dashes.",
-							"Map dots and dashes to short and long note durations.",
-							"Generate or print the encoded result in a way that preserves letter boundaries."
+							"Run the starter to see A map to .-. Use the same dictionary to encode letters and invert it to decode.",
+							"Separate letter codes with spaces and words with slashes. Offer e to encode and d to decode. Report unsupported letters or unknown tokens.",
+							"Use one timing unit for a dot and three for a dash. Use gaps of one unit between symbols, three between letters, and seven between words.",
+							"Play or download morse.wav in the IDE. For a downloaded project, run python3 main.py in the extracted folder. Long messages still produce text when they exceed the 100-unit audio limit."
 						],
 						checkpoints: [
-							"Unsupported characters have a defined behavior.",
-							"The translation preserves spaces or word boundaries clearly.",
-							"The dictionary makes the code easier to extend than a long conditional chain."
+							"Encode A I as .- / .. and decode the result back to A I.",
+							"The audio takes 15 timing units, including seven quiet units between the two words. An unknown token gives a clear error."
 						]
 					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS8-Morse-Code/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS8-Morse-Code/solution",
+					projectLink: `${PYTHON_LEVEL_2_MUSIC_INTEGRATION_SOURCE}/PS8-Morse-Code/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_MUSIC_INTEGRATION_SOURCE}/PS8-Morse-Code/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps8_morse_code.gif"
 				}
@@ -2592,7 +2588,7 @@ const PYTHON_LEVEL_2_FLOW: PythonLevel2FlowConfig[] = [
 		],
 		challengeCurriculumTitles: ["PS6 Project 3: Song Generator"],
 		projectThread:
-			"Practice list creation, indexing, mutation, and traversal before building a song from ordered data. Song Generator is the challenge because it combines collection state with randomized composition."
+			"Practice list creation, indexing, mutation, and traversal. Build a fixed phrase first, then let the user build a song by adding and checking ordered pitch and duration pairs."
 	},
 	{
 		title: "PS7 Dictionaries",

@@ -311,6 +311,22 @@ const classroomProjectExtensions: Record<string, string> = {
 **Hard:** Offer an option to reverse the entire sequence before rendering. Keep each pitch attached to its duration.
 
 **Success criteria:** The original reports three pairs and one rest. The reversed version begins with the longer E, keeps a rest in the middle, and finishes with the shorter C.`,
+	"PS7-Song-Generator-2": `Enter c4 with quarter, r with eighth, and e4 with half. Trace the lookup for each duration. Compare the printed pairs with the order of the downloaded sounds.
+
+**Normal:** Add alternate labels for the four durations to the dictionary. A label such as 1/4 should still map to 4.
+
+**Hard:** Print each duration's contribution to the overall length at 120 beats per minute. Track the rests along with the pitched notes.
+
+**Success criteria:** The three pairs render in order. The note lengths are half a second, a quarter second, and one second, before spacing. An unknown label adds no pair.`,
+	"PS8-Morse-Code": `**Method** Translate each letter with the dictionary and use a slash between words. Reverse the dictionary to recover the words from the codes.
+
+**Worked example** Encode A I with e, then decode .- / .. with d. Both paths produce 15 units of audio. The slash contributes seven quiet units.
+
+**Normal:** Print a line that shows the symbol groups and timing totals for each word.
+
+**Hard:** Allow the playback speed to change while preserving the same dot, dash, and gap proportions.
+
+**Success criteria:** The translation round trip preserves A I. Slower playback takes longer with the same ordering, and an invalid symbol stops translation with a clear message.`,
 	"PS6-Stock-Trader": `Use the fixed lists to check the summary. The last GOOGL value is 1122.00. Compare a list with several prices, a one-item list, and an empty list.
 
 **Normal:** Add each history's length to the result. A history of 10, 20, and 30 gives three prices.

@@ -20,7 +20,8 @@ const moduleFiles = {
 	"collections": "collections",
 	"console": "console",
 	"capstones": "capstones",
-	"lists-and-music": "lists-and-music"
+	"lists-and-music": "lists-and-music",
+	"named-music-and-morse": "named-music-and-morse"
 };
 const selectedModule = process.env.PYTHON_LEVEL_2_BROWSER_MODULE ?? "first";
 assert.ok(Object.hasOwn(moduleFiles, selectedModule), `Unknown Python module: ${selectedModule}`);
