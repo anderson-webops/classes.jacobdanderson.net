@@ -538,8 +538,8 @@ describe("implemented course development artifacts", () => {
 		expectAuthoredSourcePair(
 			pythonLevel2,
 			"PS9 Supplemental Project 2: Class Registration II",
-			"Python-Level-2/tree/main/PS9-Class-Registration-II/starter",
-			"Python-Level-2/tree/main/PS9-Class-Registration-II/solution"
+			"Python-Level-2/tree/2dec846ce80283885dfe01579a181906e6748985/PS9-Class-Registration-II/starter",
+			"Python-Level-2/tree/2dec846ce80283885dfe01579a181906e6748985/PS9-Class-Registration-II/solution"
 		);
 		expectAuthoredSourcePair(
 			pythonLevel2,

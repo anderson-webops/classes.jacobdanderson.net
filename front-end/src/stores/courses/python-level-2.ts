@@ -26,6 +26,9 @@ const PYTHON_LEVEL_2_PS5_SOURCE =
 const PYTHON_LEVEL_2_PS6_LISTS_SOURCE =
 	"https://github.com/instruction-material/Python-Level-2/tree/ead6e1c2106bea775bada2f56d0e22f1cf168de9";
 
+export const PYTHON_LEVEL_2_COLLECTIONS_SOURCE =
+	"https://github.com/instruction-material/Python-Level-2/tree/2dec846ce80283885dfe01579a181906e6748985";
+
 const PYTHON_LEVEL_2_CHECK_INS_SOURCE =
 	"https://github.com/instruction-material/Python-Level-2/tree/8bc76e6927ae40683bfb79170c378dac2b266cf2";
 
@@ -1547,19 +1550,19 @@ export const pythonLevel2Course: RawCourse = {
 					content: projectBrief({
 						goal: "Practice dictionary construction through vocabulary, computed values, and frequency counts.",
 						build: [
-							"Create a word-definition dictionary.",
-							"Generate dictionaries of squares and factorials.",
-							"Count letter frequencies in a word or phrase.",
+							"Run the starter to look up cake in the five-word glossary. Add a new key and definition.",
+							"Map the integers 1 through 25 to their squares and factorials. Verify a square of 625 for 25 and a factorial of 120 for 5.",
+							"Convert a word or phrase to lowercase. Count only letters. Use the previous count for a repeated key and start at zero when the key is absent.",
 							"Print entries in a readable format."
 						],
 						checkpoints: [
 							"Keys and values are chosen intentionally for each dictionary.",
-							"Frequency counts update existing entries instead of replacing the whole dictionary.",
+							"Banana gives a count of 3 for a, 1 for b, and 2 for n. Banana! gives the same counts.",
 							"The same lookup pattern works across multiple dictionary examples."
 						]
 					}),
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS7-Dictionaries-Practice/solution",
+					projectLink: `${PYTHON_LEVEL_2_COLLECTIONS_SOURCE}/PS7-Dictionaries-Practice/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_COLLECTIONS_SOURCE}/PS7-Dictionaries-Practice/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps7_dictionaries_practice.gif"
 				},
@@ -1616,19 +1619,19 @@ export const pythonLevel2Course: RawCourse = {
 					content: projectBrief({
 						goal: "Store multiple test scores per person and compute average scores.",
 						build: [
-							"Create a dictionary where each key is a person and each value is a list of scores.",
-							"Loop through the dictionary entries.",
-							"Compute each person's average.",
+							"Read the number of fictional names and tests. Trim names and use lowercase dictionary keys. Prompt again for a blank or repeated name.",
+							"For each test, read one whole-number score from 0 through 100 for every name. Append to that name's score list.",
+							"Divide the score total by that name's score count. Report No scores for an empty list.",
 							"Store or print the average results."
 						],
 						checkpoints: [
 							"The values are lists, not a single overwritten score.",
-							"Each average divides by that person's score count.",
-							"The output identifies which average belongs to which person."
+							"For ari and bea, enter 80 and 100 for test 1, then 90 and 70 for test 2. The two averages are 85.",
+							"Try one name and zero tests. Entering ARI after ari asks for a replacement without changing the existing score list."
 						]
 					}),
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS7-Test-Scores/solution",
+					projectLink: `${PYTHON_LEVEL_2_COLLECTIONS_SOURCE}/PS7-Test-Scores/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_COLLECTIONS_SOURCE}/PS7-Test-Scores/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps7_test_scores.gif"
 				},
@@ -1758,42 +1761,44 @@ export const pythonLevel2Course: RawCourse = {
 					content: projectBrief({
 						goal: "Practice set creation, comparison, filtering, and deduplication.",
 						build: [
-							"Create random or fixed sets.",
-							"Compare sets with union and intersection.",
-							"Extract unique letters from words.",
+							"Start with {1, 2, 3, 4, 5} and {4, 5, 6, 7, 8}. Then create two random sets of five distinct integers from 1 through 10.",
+							"Print union and intersection, then report whether the second set contains 1.",
+							"Convert two words to lowercase. Add only letters to the sets and print their shared letters.",
 							"Write helper functions that filter set values by conditions."
 						],
 						checkpoints: [
 							"Duplicate values collapse to one set entry.",
-							"Union and intersection results are explained correctly.",
-							"Filtering returns a new meaningful set rather than mutating unexpectedly."
+							"The fixed union contains 1 through 8 and the intersection is {4, 5}. Banana and Band share a, b, and n.",
+							"Filtering {1, 2, 3, 4} for even values gives {2, 4}. Filtering cat, bat, and house for three-letter words gives bat and cat. Preserve the inputs."
 						]
 					}),
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS9-Sets-Practice/solution",
+					projectLink: `${PYTHON_LEVEL_2_COLLECTIONS_SOURCE}/PS9-Sets-Practice/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_COLLECTIONS_SOURCE}/PS9-Sets-Practice/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps9_sets_practice.gif"
 				},
 				{
-					title: "PS9 Project 2: Wheel of Fortune",
+					title: "PS9 Project 2: Letter Puzzle",
+					id: "python-level-2-ps9-sets-curriculum-ps9-project-2-wheel-of-fortune",
+					aliases: ["PS9 Project 2: Wheel of Fortune"],
 					content: projectBrief({
 						goal: "Build a word-guessing game that uses sets to track target letters and guessed letters.",
 						build: [
-							"Choose or ask for a target word.",
+							"Use programming as the target. Display a blank for each letter until it is guessed.",
 							"Create one set for unique letters in the target word.",
-							"Create another set for correctly guessed letters.",
-							"Update the guessed set until every target letter has been found."
+							"Keep a set of distinct guesses. Accept one ASCII letter, convert uppercase, and ask again after an invalid or repeated entry.",
+							"Give fifteen distinct valid guesses. A new valid guess uses one attempt. Win when every target letter is in the guesses, or reveal the word after all fifteen attempts."
 						],
 						checkpoints: [
 							"Repeated letters do not require repeated guesses.",
-							"Wrong guesses do not pollute the correct-letter set.",
-							"The win condition compares sets rather than a fragile string pattern."
+							"The guesses p, r, o, g, a, m, i, n reveal the word in eight attempts. A repeated r or a blank adds no attempt.",
+							"The win check tests whether the set of unique target letters is a subset of all guesses."
 						],
 						extension:
 							"Add replay, random word selection, wrong-guess tracking, or a displayed puzzle board."
 					}),
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS9-Wheel-of-Fortune/solution",
+					projectLink: `${PYTHON_LEVEL_2_COLLECTIONS_SOURCE}/PS9-Wheel-of-Fortune/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_COLLECTIONS_SOURCE}/PS9-Wheel-of-Fortune/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps_9_wheel_of_fortune.mp4"
 				}
@@ -1827,21 +1832,19 @@ export const pythonLevel2Course: RawCourse = {
 					content: projectBrief({
 						goal: "Apply enrollment caps after roster deduplication and identify waitlisted students.",
 						build: [
-							"Clean duplicate registrations.",
-							"Apply each class capacity limit.",
-							"Separate enrolled students from waitlisted students.",
+							"Use the Design, Computing, and Studio samples. Scan sign-ups in original order and use a set to skip names already seen.",
+							"Use a limit of six unique names per class. Add the first six to an ordered enrollment list, then place later unique names on an ordered waitlist.",
+							"Design has Ari, Bea, Cleo, Dara, Eli, and Fay enrolled. Gus and Hana wait in that order.",
 							"Print both groups clearly."
 						],
 						checkpoints: [
 							"Capacity is enforced after duplicates are removed.",
 							"Waitlisted students are not also counted as enrolled.",
-							"The output handles full, under-filled, and exactly-full classes."
+							"Computing reaches exactly six unique names and Studio has three. Neither has a waitlist. Repeated entries occupy one place."
 						]
 					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS9-Class-Registration-II/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS9-Class-Registration-II/solution",
+					projectLink: `${PYTHON_LEVEL_2_COLLECTIONS_SOURCE}/PS9-Class-Registration-II/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_COLLECTIONS_SOURCE}/PS9-Class-Registration-II/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps9_class_registration_ii.gif"
 				},
@@ -1850,19 +1853,19 @@ export const pythonLevel2Course: RawCourse = {
 					content: projectBrief({
 						goal: "Compare two people or groups by shared and unique favorite foods.",
 						build: [
-							"Create two sets of favorite foods.",
+							"Collect five entries per group. Trim spaces and use lowercase. Ask again for blank input and collapse repeated names.",
 							"Compute the shared favorites with intersection.",
 							"Compute foods unique to each set with difference.",
 							"Print each comparison category."
 						],
 						checkpoints: [
-							"Shared values appear only in the shared category.",
-							"Unique values are reported for the correct person or group.",
+							"For Group A {pear, apple, rice} and Group B {pear, rice, pasta}, the shared values are pear and rice.",
+							"Only Group A has apple and only Group B has pasta. An empty comparison category displays none.",
 							"The explanation names which set operation produced each result."
 						]
 					}),
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS9-Favorite-Foods/solution",
+					projectLink: `${PYTHON_LEVEL_2_COLLECTIONS_SOURCE}/PS9-Favorite-Foods/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_COLLECTIONS_SOURCE}/PS9-Favorite-Foods/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps9_favorite_foods.gif"
 				},
@@ -2019,21 +2022,21 @@ export const pythonLevel2Course: RawCourse = {
 					content: projectBrief({
 						goal: "Build an interactive to-do list with menu-driven list operations.",
 						build: [
-							"Store tasks in a list.",
-							"Provide menu options to add a task, remove a task, display the list, and quit.",
-							"Number the displayed tasks so removal is understandable.",
+							"Run the starter and enter 1 to add a task. Store each nonempty task in order.",
+							"Use 1 to add, 2 to remove, 3 to quit, and 4 to display the list.",
+							"Display task positions starting at 1. Remove by position so identical task names can be treated as separate entries.",
 							"Validate removal choices before mutating the list."
 						],
 						checkpoints: [
 							"The program loop keeps running until the user chooses to quit.",
-							"Adding and removing tasks updates the same list.",
-							"Invalid menu choices or invalid removal indexes do not crash the program."
+							"Add read, stretch, and read. Remove position 3. The first read and the stretch task remain in that order.",
+							"Try removal positions 0, 20, and text. The list remains intact. An empty list displays No tasks."
 						],
 						extension:
 							"Add priority labels, completed-task status, saving/loading, or due-date sorting."
 					}),
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS10-Todo-List/solution",
+					projectLink: `${PYTHON_LEVEL_2_COLLECTIONS_SOURCE}/PS10-Todo-List/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_COLLECTIONS_SOURCE}/PS10-Todo-List/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps10_todo_list.gif"
 				}
@@ -2067,19 +2070,19 @@ export const pythonLevel2Course: RawCourse = {
 					content: projectBrief({
 						goal: "Assign classmates to event rosters and compare group membership.",
 						build: [
-							"Represent classmates and event choices with sets or lists.",
-							"Assign students to kickball, capture the flag, both, or neither.",
-							"Compute each final roster.",
+							"Record ten fictional names in arrival order. Ask again for a blank or repeated name, ignoring spaces and case around the name.",
+							"Accept 1 for kickball, 2 for capture the flag, 3 for both, and 4 for neither. Retry other choices.",
+							"Build one list per event and one for neither. Use the recorded choice to decide where each name belongs.",
 							"Print the groups clearly."
 						],
 						checkpoints: [
-							"Students in both events are represented accurately.",
-							"Students in neither event are not accidentally dropped from the reasoning.",
+							"Use ari 1, bea 2, cleo 3, dara 4, eli 1, fay 2, gus 3, hana 4, ira 1, and jai 2 as the ten entries.",
+							"The kickball list is ari, cleo, eli, gus, ira. The flag list is bea, cleo, fay, gus, jai. The neither list is dara and hana.",
 							"The data structure choice matches whether order or uniqueness matters."
 						]
 					}),
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS10-Field-Day/solution",
+					projectLink: `${PYTHON_LEVEL_2_COLLECTIONS_SOURCE}/PS10-Field-Day/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_COLLECTIONS_SOURCE}/PS10-Field-Day/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps10_field_day.gif"
 				},
@@ -2088,19 +2091,19 @@ export const pythonLevel2Course: RawCourse = {
 					content: projectBrief({
 						goal: "Randomly divide a class into two teams while tracking unassigned players.",
 						build: [
-							"Store the full class roster.",
-							"Randomly choose a student for Team Red or Team Blue.",
+							"Start with the ten names in the starter. Keep the original list and use a working copy for assignments.",
+							"Choose one random unassigned name at a time. Alternate Team Red and Team Blue, starting with Red.",
 							"Remove assigned students from the unassigned group.",
-							"Print team rosters and remaining players after each round."
+							"After each pair of assignments, print both team lists and the unassigned count. If the final round has one player, report that round too."
 						],
 						checkpoints: [
 							"No student appears on both teams.",
 							"Every assigned student is removed from the unassigned group.",
-							"The process ends with balanced or intentionally handled uneven teams."
+							"Ten distinct names give five per team. For three names, Red gets two and Blue gets one. Empty and one-name rosters finish without an invalid random choice."
 						]
 					}),
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS10-Field-Day-II/solution",
+					projectLink: `${PYTHON_LEVEL_2_COLLECTIONS_SOURCE}/PS10-Field-Day-II/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_COLLECTIONS_SOURCE}/PS10-Field-Day-II/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps10_field_day_ii.gif"
 				}
@@ -2635,7 +2638,7 @@ const PYTHON_LEVEL_2_FLOW: PythonLevel2FlowConfig[] = [
 			"duplicate elimination"
 		],
 		projectThread:
-			"Contrast sets with lists and dictionaries using duplicate and membership cases. Sets Practice establishes operations; Wheel of Fortune turns unique-letter state into a complete game loop."
+			"Contrast sets with lists and dictionaries using duplicate and membership cases. Sets Practice establishes set operations. Letter Puzzle uses them to track guesses through a complete round."
 	},
 	{
 		title: "Check-In #2",

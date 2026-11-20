@@ -4,6 +4,7 @@ import {
 	createClassroomLaunchModule
 } from "./classroom-course";
 import {
+	PYTHON_LEVEL_2_COLLECTIONS_SOURCE,
 	PYTHON_LEVEL_2_PS1_SOURCE,
 	PYTHON_LEVEL_2_PS2_SOURCE,
 	PYTHON_LEVEL_2_PS3_SOURCE,
@@ -19,6 +20,7 @@ const pinnedLaunchSources: Record<string, string> = {
 	"PS2-Change-Machine": PYTHON_LEVEL_2_PS2_SOURCE,
 	"PS3-Caesar-Cipher": PYTHON_LEVEL_2_PS3_SOURCE,
 	"PS4-Rock-Paper-Scissors": PYTHON_LEVEL_2_PS4_SOURCE,
+	"PS10-Todo-List": PYTHON_LEVEL_2_COLLECTIONS_SOURCE,
 	"PS13-Wordsmith":
 		"https://github.com/instruction-material/Python-Level-2/tree/a840f54eb6a55718f6305544adc937c32fa516ee"
 };
@@ -103,11 +105,11 @@ During a class share, show one representative input, one boundary or invalid inp
 		),
 		launchProject(
 			"Launch Project 6: To-Do List Manager",
-			`The completed command loop can add, inspect, and update tasks without requiring students to build the menu framework from nothing.
+			`Run the completed menu and add two tasks. Use 4 to see them in order and 2 to remove a displayed position.
 
-**Normal:** Add one list command with a clear success message and a safe empty-list or invalid-index case.
+**Normal:** Print the task count before the list. It should change from two to one after the removal.
 
-**Hard:** Add priorities, completion state, search, or file persistence while preserving all existing commands.`,
+**Hard:** Add a search command that can report every matching position. Search read after adding read, stretch, and read. It should report positions 1 and 3 while keeping the list intact.`,
 			"PS10-Todo-List",
 			"choice"
 		),
@@ -326,6 +328,71 @@ const classroomProjectExtensions: Record<string, string> = {
 **Hard:** Compare two 50-swap trials with a shared random seed set before each trial. Then change the seed and compare the order.
 
 **Success criteria:** Zero swaps changes zero positions. The fixed swap changes two positions. Every run still has all 52 cards.`,
+	"PS7-Dictionaries-Practice": `Run the reference with Banana and trace the dictionary each time another a is seen. Verify that the program adds to the previous value for that key.
+
+**Normal:** Print one row per letter in alphabetical order, then print the total. Banana gives a: 3, b: 1, n: 2, and a total of 6.
+
+**Hard:** Find the most frequent letter and report all ties. Use A b, b a to check that both a and b have two occurrences.
+
+**Success criteria:** Case and punctuation leave the totals unchanged. An input without letters produces a clear empty result.`,
+	"PS7-Test-Scores": `Use ari and bea with scores 80 and 100 on the first test, then 90 and 70 on the second. Follow each appended score to the correct name. Both final averages are 85.
+
+**Normal:** Print the names tied for highest average. Keep both names when they share the same score.
+
+**Hard:** Compute an average for each test across the score lists. The two test averages in the sample are 90 and 80.
+
+**Success criteria:** The two summaries use different dimensions and show them clearly. A run with zero tests finishes without an average.`,
+	"PS9-Sets-Practice": `Compare two sets using the fixed sample {1, 2, 3, 4, 5} and {4, 5, 6, 7, 8}. Confirm the union and intersection before switching back to random samples.
+
+**Normal:** Display the values exclusive to each set. The first has 1, 2, 3 and the second has 6, 7, 8.
+
+**Hard:** Add a helper that checks which supplied words share at least two distinct letters with a target. With Band and the candidates apple, blank, ox, return only blank.
+
+**Success criteria:** Different case and repeated letters do not inflate the overlap. Both original sets remain available.`,
+	"PS9-Wheel-of-Fortune": `Run the console puzzle and guess r. Both matching positions in programming appear. Try r again and confirm that the number of guesses stays the same.
+
+**Normal:** Report the distinct incorrect guesses beside the displayed puzzle. In p, x, x, 1, r, only x is an incorrect valid guess.
+
+**Hard:** Add a puzzle menu with three original sample words and reset the attempts when opening another puzzle.
+
+**Success criteria:** The sample sequence uses three valid guesses. Starting another round restores fifteen guesses and a blank mask for that word.`,
+	"PS9-Class-Registration-II": `Run the ordered registration sample. Read the enrollments and waiting lists for the three classes. Repeated names in the original sequence appear once in the output.
+
+**Normal:** Print the size of both lists. Design has six enrolled and two waiting.
+
+**Hard:** Accept a different capacity for each class. Set Design to four places and keep the other samples at six. Preserve the order of names within each list.
+
+**Success criteria:** Design enrolls Ari, Bea, Cleo, and Dara. Eli, Fay, Gus, and Hana wait in that order.`,
+	"PS9-Favorite-Foods": `Give five entries for each group, including repeated names. Use pear, apple, rice, pear, apple for Group A and pear, rice, pasta, rice, pasta for Group B.
+
+**Normal:** Print the union of both sets in addition to the three existing comparisons. Expect apple, pasta, pear, and rice.
+
+**Hard:** Add a third group and report foods shared by all three. Use five entries containing only pear and apple for the third group.
+
+**Success criteria:** The three-way intersection contains pear. It stays the same if a food is repeated or entered in uppercase.`,
+	"PS10-Todo-List": `**Method** Check that the displayed position is between 1 and the task count. Subtract 1 to obtain its list index, then remove the task at that index.
+
+**Worked example** Add read, stretch, and read. Position 3 maps to index 2. Removing index 2 leaves read and stretch in order. Remove by position so a task with the same name at another index stays in the list.
+
+**Normal:** Add a command to rename a task at a displayed position. Renaming position 2 to walk keeps it second.
+
+**Hard:** Add a command to move a task to another displayed position. Moving the second task to the first position preserves both names.
+
+**Success criteria:** Invalid positions leave the order intact. The same checks pass when two tasks have the same name.`,
+	"PS10-Field-Day": `Enter ten fictional names with all four choices represented. Trace one person choosing both through the two event lists. Verify that the participants choosing neither are retained separately.
+
+**Normal:** Print how many names are in each roster. For the supplied sample, the two events each have five names and neither has two.
+
+**Hard:** Accept one corrected choice for a name already recorded. Update the stored choice and rebuild the lists from the same data.
+
+**Success criteria:** Changing cleo from both to neither reverses both event memberships with one update. The total number of participants stays at ten.`,
+	"PS10-Field-Day-II": `Run the ten-name example and read the counts after each assignment round. The unassigned counts are 8, 6, 4, 2, and 0. Check that the original roster is still available.
+
+**Normal:** Add team sizes to every round output. For a three-name sample, the final sizes are two and one.
+
+**Hard:** Add a three-team option by rotating through three lists. For ten names, the sizes should be four, three, and three.
+
+**Success criteria:** Every unique name occurs on exactly one team. An empty roster produces only empty teams.`,
 	"PS-Check-in-1": `Run the completed animal and color program with dog and black, then cat and black. Compare the combined and nested decisions. Both versions should agree for both inputs.
 
 **Normal:** Print the number of correct guesses before the result. Dog and black should report two matches. Cat and black should report one.

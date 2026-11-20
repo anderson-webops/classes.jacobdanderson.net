@@ -10,7 +10,8 @@ const moduleFiles = {
 	"check-ins": "check-ins",
 	"ascii": "ascii",
 	"conditionals": "conditionals",
-	"functions": "functions"
+	"functions": "functions",
+	"collections": "collections"
 };
 const selectedModule = process.env.PYTHON_LEVEL_2_BROWSER_MODULE ?? "first";
 assert.ok(Object.hasOwn(moduleFiles, selectedModule), `Unknown Python module: ${selectedModule}`);

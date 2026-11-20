@@ -5,6 +5,7 @@ import { addPythonIdeClassroomSectionsToSource } from "@/modules/pythonIde";
 import { useAppStore } from "@/stores/app";
 import { useCoursesStore } from "@/stores/courses";
 import asciiFixture from "../../test/fixtures/python-level-2-ascii-module-sources.json";
+import collectionsFixture from "../../test/fixtures/python-level-2-collections-module-sources.json";
 import conditionalsFixture from "../../test/fixtures/python-level-2-conditionals-module-sources.json";
 import functionsFixture from "../../test/fixtures/python-level-2-functions-module-sources.json";
 
@@ -86,6 +87,37 @@ const modules = [
 		]
 	},
 	{
+		suffix: "-ps7-dictionaries",
+		source: "2dec846ce80283885dfe01579a181906e6748985",
+		assignments: [
+			["Dictionaries Practice", "PS7-Dictionaries-Practice", "core"],
+			["Test Scores", "PS7-Test-Scores", "choice"]
+		]
+	},
+	{
+		suffix: "-ps9-sets",
+		source: "2dec846ce80283885dfe01579a181906e6748985",
+		assignments: [
+			["Sets Practice", "PS9-Sets-Practice", "core"],
+			[
+				"curriculum-ps9-project-2-wheel-of-fortune",
+				"PS9-Wheel-of-Fortune",
+				"core"
+			],
+			["Class Registration II", "PS9-Class-Registration-II", "challenge"],
+			["Favorite Foods", "PS9-Favorite-Foods", "choice"]
+		]
+	},
+	{
+		suffix: "-ps10-to-do-list",
+		source: "2dec846ce80283885dfe01579a181906e6748985",
+		assignments: [
+			["To-Do List", "PS10-Todo-List", "core"],
+			["Field Day", "PS10-Field-Day", "choice"],
+			["Field Day II", "PS10-Field-Day-II", "challenge"]
+		]
+	},
+	{
 		suffix: "-check-in-2",
 		source: "8bc76e6927ae40683bfb79170c378dac2b266cf2",
 		assignments: [
@@ -161,6 +193,9 @@ it.each([
 						suffix === "-ps4-conditionals" ||
 						suffix === "-ps5-functions" ||
 						suffix === "-ps6-lists-and-music" ||
+						suffix === "-ps7-dictionaries" ||
+						suffix === "-ps9-sets" ||
+						suffix === "-ps10-to-do-list" ||
 						suffix.startsWith("-check-in-")
 					) {
 						expect(item.contentKind).toBe("assignment");
@@ -177,23 +212,35 @@ it.each([
 it.each([
 	["ascii", asciiFixture],
 	["conditionals", conditionalsFixture],
-	["functions", functionsFixture]
+	["functions", functionsFixture],
+	["collections", collectionsFixture]
 ] as const)(
 	"binds the %s browser fixture to real course items and classroom sources",
-	async (_scope, fixture) => {
+	async (_scope, data) => {
+		const fixture: {
+			moduleId?: string;
+			revision: string;
+			files: Record<string, { content: string }>;
+			exercises: {
+				moduleId?: string;
+				pack: string;
+				itemId: string;
+				classroomMainSha256: string;
+			}[];
+		} = data;
 		setActivePinia(createPinia());
 		const course = (await useCoursesStore().loadCourseById(
 			"python-level-2-classroom"
 		))!;
 		const files: Record<string, { content: string }> = fixture.files;
-		const module = course.modules.find(
-			({ id }) => id === fixture.moduleId
-		)!;
-		const assignments = [
-			...module.curriculum,
-			...module.supplementalProjects
-		];
 		for (const exercise of fixture.exercises) {
+			const module = course.modules.find(
+				({ id }) => id === (exercise.moduleId ?? fixture.moduleId)
+			)!;
+			const assignments = [
+				...module.curriculum,
+				...module.supplementalProjects
+			];
 			const item = assignments.find(({ id }) => id === exercise.itemId);
 			expect(item?.projectLink, exercise.itemId).toBeDefined();
 			const launch = new URL(
