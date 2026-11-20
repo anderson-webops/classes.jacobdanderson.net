@@ -1592,18 +1592,7 @@ jobs:
             output/javascript-coastal-cruise-browser/
             output/javascript-juggling-paddle-browser/
             output/python-wordsmith-browser/
-            output/python-first-module-browser/
-            output/python-loop-module-browser/
-            output/python-check-ins-module-browser/
-            output/python-ascii-module-browser/
-            output/python-conditionals-module-browser/
-            output/python-functions-module-browser/
-            output/python-collections-module-browser/
-            output/python-console-module-browser/
-            output/python-capstones-module-browser/
-            output/python-lists-and-music-module-browser/
-            output/python-named-music-and-morse-module-browser/
-            output/python-dictionaries-module-browser/
+            output/python-*-module-browser/
             output/javascript-collision-browser/
             output/javascript-canvas-games-browser/
             output/javascript-api-projects-browser/
