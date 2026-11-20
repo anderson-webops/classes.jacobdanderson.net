@@ -311,6 +311,34 @@ const classroomProjectExtensions: Record<string, string> = {
 **Hard:** Offer an option to reverse the entire sequence before rendering. Keep each pitch attached to its duration.
 
 **Success criteria:** The original reports three pairs and one rest. The reversed version begins with the longer E, keeps a rest in the middle, and finishes with the shorter C.`,
+	"PS7-Birthday-Converter": `Run a February 29th example in 2024 and 2023. Trace the difference between parsing the same month and day and checking the year. Compare the output for the 12th and the 22nd.
+
+**Normal:** Display the month number beside the formatted result.
+
+**Hard:** Add a second valid output in year-month-day order using four digits for the year and two each for month and day.
+
+**Success criteria:** February 29th, 2024 also displays 2024-02-29. An invalid date reports the error without formatting either result.`,
+	"PS7-Coffee-Shop": `Run the menu and trace how the name and price at the same position become a key-value pair. Compare the output for Coffee and Vanilla Latte, including the decimal places.
+
+**Normal:** Print the items under $3.00. Expect Coffee, Decaf, and Iced Coffee.
+
+**Hard:** Use a nested dictionary to add small and large prices. Keep the original price as small and add $1.00 for large.
+
+**Success criteria:** Large Coffee is $3.50 and large Vanilla Latte is $5.00. Small prices still match the original list.`,
+	"PS7-Dictionary-Indexing": `Trace how the completed program obtains seven. The l2 key leads to a list. Index 1 leads to a dictionary, and the d5 key returns the word.
+
+**Normal:** Add a short trace for the lookup that returns five. Identify both tuple indexes after the first tuple lookup.
+
+**Hard:** Add the word nine at the end of a new nested path with a list and a dictionary. Include its trace and keep the original eight lookups.
+
+**Success criteria:** The original eight words stay in order. The new trace returns nine and explains every container accessed.`,
+	"PS7-Debugging-Dictionaries": `Run the repaired inventory and compare the original total of 42 with the final 35. Locate the dictionary update that clears Wafer bar and the default lookup that creates Mint.
+
+**Normal:** Print the total after removing one of each candy but before applying the trade. This total is 36.
+
+**Hard:** Add two Mint pieces to the starting inventory and show how the update preserves the remaining mint count when four are added.
+
+**Success criteria:** The original example still finishes at 35. The edited inventory finishes with five Mint pieces, and no count becomes negative.`,
 	"PS7-Song-Generator-2": `Enter c4 with quarter, r with eighth, and e4 with half. Trace the lookup for each duration. Compare the printed pairs with the order of the downloaded sounds.
 
 **Normal:** Add alternate labels for the four durations to the dictionary. A label such as 1/4 should still map to 4.

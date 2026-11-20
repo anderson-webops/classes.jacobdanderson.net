@@ -29,6 +29,9 @@ export const PYTHON_LEVEL_2_PS6_LISTS_SOURCE =
 const PYTHON_LEVEL_2_MUSIC_INTEGRATION_SOURCE =
 	"https://github.com/instruction-material/Python-Level-2/tree/7d5f2c7ecf27ed496af1afd576f2ae8424e92f0f";
 
+const PYTHON_LEVEL_2_DICTIONARY_PRACTICE_SOURCE =
+	"https://github.com/instruction-material/Python-Level-2/tree/e2808fac8733ae1ec4fa4882848f14c8d372ff74";
+
 export const PYTHON_LEVEL_2_COLLECTIONS_SOURCE =
 	"https://github.com/instruction-material/Python-Level-2/tree/2dec846ce80283885dfe01579a181906e6748985";
 
@@ -1595,21 +1598,17 @@ export const pythonLevel2Course: RawCourse = {
 					content: projectBrief({
 						goal: "Convert numeric birthday text into a written date.",
 						build: [
-							"Parse a birthday written as `mm/dd/yyyy`.",
-							"Convert the month number into a month name with a dictionary.",
-							"Choose the day suffix with rules or a dictionary.",
-							"Handle special suffix cases such as 11th, 12th, and 13th."
+							"Run the starter and see how month 2 maps to February. Read a sample date in mm/dd/yyyy.",
+							"Check that the three parts are numbers with lengths 2, 2, and 4. Use datetime.date to verify the day and month before looking them up.",
+							"For days 11 through 13, use th. Otherwise map the last digit to st, nd, or rd for 1, 2, or 3 and use th for other values."
 						],
 						checkpoints: [
-							"The date parts are split and converted safely.",
-							"Month lookup uses dictionary data.",
-							"Suffix rules handle ordinary and special-case days."
+							"02/29/2024 gives February 29th, 2024. 02/29/2023 reports that the date does not exist.",
+							"Compare 11th, 12th, and 13th with 21st, 22nd, and 23rd. A malformed date prompts for the expected format."
 						]
 					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS7-Birthday-Converter/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS7-Birthday-Converter/solution",
+					projectLink: `${PYTHON_LEVEL_2_DICTIONARY_PRACTICE_SOURCE}/PS7-Birthday-Converter/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_DICTIONARY_PRACTICE_SOURCE}/PS7-Birthday-Converter/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps7_birthday_converter.gif"
 				},
@@ -1639,21 +1638,17 @@ export const pythonLevel2Course: RawCourse = {
 					content: projectBrief({
 						goal: "Replace parallel menu lists with a dictionary and print a readable menu.",
 						build: [
-							"Inspect the starter item and price lists.",
-							"Create a dictionary where item names map to prices.",
-							"Loop through the dictionary to print the menu.",
-							"Format prices consistently."
+							"Run the starter to see Coffee priced at $2.50. Check that every name has one price and each name appears once.",
+							"Pair each name with its price and store the pairs in a dictionary. Loop through the entries with items().",
+							"Use a two-decimal format for each price."
 						],
 						checkpoints: [
-							"Each item maps to the correct price.",
-							"The dictionary removes the need to keep two list indexes synchronized manually.",
-							"The formatted menu remains readable if another item is added."
+							"Coffee displays $2.50 and Vanilla Latte displays $4.00.",
+							"Adding a name and its price gives one more row. An unmatched price or duplicate item produces a clear error."
 						]
 					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS7-Coffee-Shop/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS7-Coffee-Shop/solution",
+					projectLink: `${PYTHON_LEVEL_2_DICTIONARY_PRACTICE_SOURCE}/PS7-Coffee-Shop/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_DICTIONARY_PRACTICE_SOURCE}/PS7-Coffee-Shop/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps7_coffee_shop.gif"
 				},
@@ -1662,23 +1657,19 @@ export const pythonLevel2Course: RawCourse = {
 					content: `${projectBrief({
 						goal: "Trace nested data structures and extract target values from dictionaries, lists, and tuples.",
 						build: [
-							"Inspect the outer data structure before writing code.",
-							"Identify whether each step requires a key, list index, or tuple index.",
-							"Extract the target words in order.",
-							"Print the required sequence."
+							"Run the starter. Trace how the dictionary key s2 retrieves the word one.",
+							"For seven, use key l2, then select index 1, then use key d5.",
+							"Retrieve two through eight. Write down the type and the key or index used at each step."
 						],
 						checkpoints: [
-							"Each indexing step matches the structure at that level.",
-							"The code does not rely on trial-and-error guessing.",
-							"The final output is supported by a trace of how each word was reached."
+							"The program prints one through eight, one word per line.",
+							"For the lookup that returns seven, the containers encountered are a dictionary, a list, and a dictionary."
 						]
 					})}
 
 **Reference:** W3Schools Python tuple methods: ${PYTHON_TUPLE_METHOD_REFERENCE}`,
-					projectLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS7-Dictionary-Indexing/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS7-Dictionary-Indexing/solution",
+					projectLink: `${PYTHON_LEVEL_2_DICTIONARY_PRACTICE_SOURCE}/PS7-Dictionary-Indexing/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_DICTIONARY_PRACTICE_SOURCE}/PS7-Dictionary-Indexing/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps7_dictionary_indexing.gif"
 				},
@@ -1687,21 +1678,17 @@ export const pythonLevel2Course: RawCourse = {
 					content: projectBrief({
 						goal: "Repair a candy counter by tracing dictionary keys, updates, and lookup behavior.",
 						build: [
-							"Run the starter and record the first dictionary-related error or wrong count.",
-							"Check key spelling, missing keys, and update logic.",
-							"Fix one issue at a time.",
-							"Verify the final candy counts with a known input sequence."
+							"Run the starter and record the first syntax error. Fix the dictionary entry and run again.",
+							"Use the candy name as the key when reading and changing a count. Subtract one from each positive count.",
+							"Set Wafer bar to zero. Add four to Mint with a default count of zero if that key is absent."
 						],
 						checkpoints: [
-							"Counts increment instead of replacing unrelated entries.",
-							"Missing-key behavior is handled deliberately.",
-							"The final dictionary matches the expected candy totals."
+							"The original total is 42. The outcome includes Caramel 14, Wafer bar 0, and Mint 4.",
+							"The expected final total is 35. A count initially at zero stays at zero when items are removed."
 						]
 					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS7-Debugging-Dictionaries/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS7-Debugging-Dictionaries/solution",
+					projectLink: `${PYTHON_LEVEL_2_DICTIONARY_PRACTICE_SOURCE}/PS7-Debugging-Dictionaries/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_DICTIONARY_PRACTICE_SOURCE}/PS7-Debugging-Dictionaries/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps7_debugging_dictionaries.gif"
 				}

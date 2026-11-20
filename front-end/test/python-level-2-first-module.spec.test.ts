@@ -14,6 +14,7 @@ import capstonesFixture from "../../test/fixtures/python-level-2-capstones-modul
 import collectionsFixture from "../../test/fixtures/python-level-2-collections-module-sources.json";
 import consoleFixture from "../../test/fixtures/python-level-2-console-module-sources.json";
 import conditionalsFixture from "../../test/fixtures/python-level-2-conditionals-module-sources.json";
+import dictionariesFixture from "../../test/fixtures/python-level-2-dictionaries-module-sources.json";
 import functionsFixture from "../../test/fixtures/python-level-2-functions-module-sources.json";
 import listsMusicFixture from "../../test/fixtures/python-level-2-lists-and-music-module-sources.json";
 import namedMusicMorseFixture from "../../test/fixtures/python-level-2-named-music-and-morse-module-sources.json";
@@ -121,6 +122,20 @@ const modules = [
 		suffix: "-ps7-dictionaries",
 		source: namedMusicMorseFixture.revision,
 		assignments: [["Song Generator 2", "PS7-Song-Generator-2", "core"]]
+	},
+	{
+		suffix: "-ps7-dictionaries",
+		source: dictionariesFixture.revision,
+		assignments: [
+			["Birthday Converter", "PS7-Birthday-Converter", "choice"],
+			["Coffee Shop", "PS7-Coffee-Shop", "choice"],
+			["Dictionary Indexing", "PS7-Dictionary-Indexing", "choice"],
+			[
+				"Debugging Dictionaries",
+				"PS7-Debugging-Dictionaries",
+				"challenge"
+			]
+		]
 	},
 	{
 		suffix: "-ps8-ciphers-and-music",
@@ -300,7 +315,8 @@ it.each([
 	["console", consoleFixture],
 	["capstones", capstonesFixture],
 	["lists-and-music", listsMusicFixture],
-	["named-music-and-morse", namedMusicMorseFixture]
+	["named-music-and-morse", namedMusicMorseFixture],
+	["dictionaries", dictionariesFixture]
 ] as const)(
 	"binds the %s browser fixture to real course items and classroom sources",
 	async (_scope, data) => {
