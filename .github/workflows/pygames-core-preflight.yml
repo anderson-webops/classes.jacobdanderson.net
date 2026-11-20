@@ -23,7 +23,7 @@ on:
       python_project_scope:
         description: Python Level 2 browser exercises when both Python formats are selected
         type: choice
-        options: [opening-and-loops, loops-and-check-ins, ascii-and-conditionals, functions, functions-and-collections, console-and-typing, console-and-capstones]
+        options: [opening-and-loops, loops-and-check-ins, ascii-and-conditionals, functions, functions-and-collections, console-and-typing, console-and-capstones, lists-and-music]
         default: opening-and-loops
       browser_artifact_id:
         description: Networking browser export artifact
@@ -1481,6 +1481,7 @@ jobs:
             functions-and-collections) modules=(functions collections) ;;
             console-and-typing) modules=(console) ;;
             console-and-capstones) modules=(console capstones) ;;
+            lists-and-music) modules=(lists-and-music) ;;
             *) modules=(first loops) ;;
           esac
           for module in "${modules[@]}"; do
@@ -1592,6 +1593,7 @@ jobs:
             output/python-collections-module-browser/
             output/python-console-module-browser/
             output/python-capstones-module-browser/
+            output/python-lists-and-music-module-browser/
             output/javascript-collision-browser/
             output/javascript-canvas-games-browser/
             output/javascript-api-projects-browser/

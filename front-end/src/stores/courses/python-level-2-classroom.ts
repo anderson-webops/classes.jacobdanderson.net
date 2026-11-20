@@ -9,6 +9,7 @@ import {
 	PYTHON_LEVEL_2_PS2_SOURCE,
 	PYTHON_LEVEL_2_PS3_SOURCE,
 	PYTHON_LEVEL_2_PS4_SOURCE,
+	PYTHON_LEVEL_2_PS6_LISTS_SOURCE,
 	PYTHON_LEVEL_2_PS14_SOURCE,
 	pythonLevel2Course
 } from "./python-level-2";
@@ -21,6 +22,7 @@ const pinnedLaunchSources: Record<string, string> = {
 	"PS2-Change-Machine": PYTHON_LEVEL_2_PS2_SOURCE,
 	"PS3-Caesar-Cipher": PYTHON_LEVEL_2_PS3_SOURCE,
 	"PS4-Rock-Paper-Scissors": PYTHON_LEVEL_2_PS4_SOURCE,
+	"PS6-Song-Generator": PYTHON_LEVEL_2_PS6_LISTS_SOURCE,
 	"PS10-Todo-List": PYTHON_LEVEL_2_COLLECTIONS_SOURCE,
 	"PS13-Wordsmith":
 		"https://github.com/instruction-material/Python-Level-2/tree/a840f54eb6a55718f6305544adc937c32fa516ee",
@@ -99,9 +101,9 @@ During a class share, show one representative input, one boundary or invalid inp
 			"Launch Project 5: Song Generator",
 			`The framework stores notes in a list and assembles them into a generated sequence.
 
-**Normal:** Add one list operation that changes the order, length, or repeated pattern of the song.
+**Normal:** Reverse the song before rendering, then compare both audio versions.
 
-**Hard:** Add a second collection for durations or measures and verify that every generated note has matching timing data.`,
+**Hard:** Let the user replace the pitch at one position while preserving its duration. Reject an invalid position and offer a way to cancel.`,
 			"PS6-Song-Generator",
 			"choice"
 		),
@@ -302,6 +304,27 @@ const classroomProjectExtensions: Record<string, string> = {
 **Hard:** Render the same sequence at 90 and 120 beats per minute to two differently named files. Keep every pair in the same position and compare the output durations.
 
 **Success criteria:** The slower file is longer. Both files keep the same pitch order and contain the pause where the rest is written.`,
+	"PS6-Song-Generator": `Enter C4 with duration 4, r with duration 8, and e4 with duration 2. Render and download the result. Locate the three pairs and trace how their order produces the heard sequence.
+
+**Normal:** Print the number of pairs and the number of rests before rendering.
+
+**Hard:** Offer an option to reverse the entire sequence before rendering. Keep each pitch attached to its duration.
+
+**Success criteria:** The original reports three pairs and one rest. The reversed version begins with the longer E, keeps a rest in the middle, and finishes with the shorter C.`,
+	"PS6-Stock-Trader": `Use the fixed lists to check the summary. The last GOOGL value is 1122.00. Compare a list with several prices, a one-item list, and an empty list.
+
+**Normal:** Add each history's length to the result. A history of 10, 20, and 30 gives three prices.
+
+**Hard:** Report the difference between the first and last item. Handle an empty history before doing arithmetic.
+
+**Success criteria:** The three-value sample gives latest 30.00, mean 20.00, and change 20.00. With one price the change is 0.00. An empty history reports no prices.`,
+	"PS6-Debugging-Lists": `Run the complete survey with chocolate mudslide, vanilla, pistachio, CHOCOLATE MUDSLIDE, and strawberry. Trace the append step and the comparisons that produce counts of two and one.
+
+**Normal:** Print how many submitted flavors match neither of the two tracked flavors. The sample gives two.
+
+**Hard:** Use a dictionary to count all normalized flavors. Print the counts after displaying the five original entries.
+
+**Success criteria:** The count for chocolate mudslide remains two after surrounding spaces are added. The counts sum to five, and the original order is available.`,
 	"PS6-Tower-of-Terror": `Enter the fictional sample 80, 120, and q. Verify the two entries, total 200, and average 100. Then try q first to see the empty result.
 
 **Normal:** Report the smallest and largest recorded weights for a nonempty list. The first sample gives 80 and 120.

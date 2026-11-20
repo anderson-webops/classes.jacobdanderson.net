@@ -1,7 +1,12 @@
 import { createHash } from "node:crypto";
+import { strFromU8, unzipSync } from "fflate";
 import { createPinia, setActivePinia } from "pinia";
-import { expect, it } from "vitest";
-import { addPythonIdeClassroomSectionsToSource } from "@/modules/pythonIde";
+import { expect, it, vi } from "vitest";
+import { createProjectArchive } from "@/modules/projectArchive";
+import {
+	addPythonIdeClassroomSectionsToSource,
+	loadPythonIdeStarterFilesFromGitHub
+} from "@/modules/pythonIde";
 import { useAppStore } from "@/stores/app";
 import { useCoursesStore } from "@/stores/courses";
 import asciiFixture from "../../test/fixtures/python-level-2-ascii-module-sources.json";
@@ -10,6 +15,7 @@ import collectionsFixture from "../../test/fixtures/python-level-2-collections-m
 import consoleFixture from "../../test/fixtures/python-level-2-console-module-sources.json";
 import conditionalsFixture from "../../test/fixtures/python-level-2-conditionals-module-sources.json";
 import functionsFixture from "../../test/fixtures/python-level-2-functions-module-sources.json";
+import listsMusicFixture from "../../test/fixtures/python-level-2-lists-and-music-module-sources.json";
 
 const modules = [
 	{
@@ -89,14 +95,17 @@ const modules = [
 	},
 	{
 		suffix: "-ps6-lists-and-music",
-		source: "ead6e1c2106bea775bada2f56d0e22f1cf168de9",
+		source: listsMusicFixture.revision,
 		assignments: [
 			["Lists Practice", "PS6-Lists-Practice-1", "core"],
 			["Build a Song", "PS6-Build-a-Song", "core"],
+			["Song Generator", "PS6-Song-Generator", "core"],
 			["Tower of Terror", "PS6-Tower-of-Terror", "choice"],
 			["Basketball Stars", "PS6-Basketball-Stars", "choice"],
+			["Stock Trader", "PS6-Stock-Trader", "challenge"],
 			["Dog Breeds", "PS6-Dog-Breeds", "choice"],
-			["Card Shuffler", "PS6-Card-Shuffler", "choice"]
+			["Card Shuffler", "PS6-Card-Shuffler", "choice"],
+			["Debugging Lists", "PS6-Debugging-Lists", "challenge"]
 		]
 	},
 	{
@@ -277,7 +286,8 @@ it.each([
 	["functions", functionsFixture],
 	["collections", collectionsFixture],
 	["console", consoleFixture],
-	["capstones", capstonesFixture]
+	["capstones", capstonesFixture],
+	["lists-and-music", listsMusicFixture]
 ] as const)(
 	"binds the %s browser fixture to real course items and classroom sources",
 	async (_scope, data) => {
@@ -321,6 +331,93 @@ it.each([
 			expect(createHash("sha256").update(wrapped).digest("hex")).toBe(
 				exercise.classroomMainSha256
 			);
+		}
+	}
+);
+
+it.each([
+	["PS6-Build-a-Song", "starter"],
+	["PS6-Build-a-Song", "solution"],
+	["PS6-Song-Generator", "starter"],
+	["PS6-Song-Generator", "solution"]
+] as const)(
+	"preserves the portable synthesizer for %s %s",
+	async (pack, role) => {
+		const { repository, revision } = listsMusicFixture;
+		const path = `${pack}/${role}`;
+		const files: Record<string, { content: string; byteLength: number }> =
+			listsMusicFixture.files;
+		const sources = Object.entries(files).filter(([name]) =>
+			name.startsWith(`${path}/`)
+		);
+		const directories: string[] = [];
+		const api = `/repos/instruction-material/${repository}/contents/`;
+		const raw = `/instruction-material/${repository}/${revision}/`;
+		vi.stubGlobal("fetch", async (request: string | URL | Request) => {
+			const url = new URL(String(request));
+			if (url.hostname === "api.github.com") {
+				expect(url.searchParams.get("ref")).toBe(revision);
+				const directory = url.pathname.slice(api.length);
+				expect([path, `${path}/native_pysynth`]).toContain(directory);
+				directories.push(directory);
+				const entries = sources
+					.filter(([name]) => name.startsWith(`${directory}/`))
+					.flatMap(([file, { byteLength }]) => {
+						const name = file.slice(directory.length + 1);
+						return name.includes("/")
+							? []
+							: [
+									{
+										type: "file",
+										name,
+										path: file,
+										size: byteLength
+									}
+								];
+					});
+				return new Response(
+					JSON.stringify(
+						directory === path
+							? [
+									...entries,
+									{
+										type: "dir",
+										name: "native_pysynth",
+										path: `${path}/native_pysynth`
+									}
+								]
+							: entries
+					)
+				);
+			}
+			expect(url.hostname).toBe("raw.githubusercontent.com");
+			const file = files[url.pathname.slice(raw.length)];
+			expect(file).toBeDefined();
+			return new Response(file!.content);
+		});
+		try {
+			const loaded = await loadPythonIdeStarterFilesFromGitHub(
+				`https://github.com/instruction-material/${repository}/tree/${revision}/${path}`
+			);
+			expect(directories).toEqual([path, `${path}/native_pysynth`]);
+			expect(loaded[0]?.name).toBe("main.py");
+			const archive = unzipSync(
+				createProjectArchive({ title: pack, files: loaded })
+			);
+			expect(Object.keys(archive).sort()).toEqual(
+				sources
+					.map(([file]) => `${pack}/${file.slice(path.length + 1)}`)
+					.sort()
+			);
+			for (const [file, { content }] of sources) {
+				expect(
+					strFromU8(
+						archive[`${pack}/${file.slice(path.length + 1)}`]!
+					)
+				).toBe(content);
+			}
+		} finally {
+			vi.unstubAllGlobals();
 		}
 	}
 );

@@ -23,8 +23,8 @@ export const PYTHON_LEVEL_2_PS4_SOURCE =
 const PYTHON_LEVEL_2_PS5_SOURCE =
 	"https://github.com/instruction-material/Python-Level-2/tree/6c8442dd68067e1f8cee1f14a5e08bf8e4b06c17";
 
-const PYTHON_LEVEL_2_PS6_LISTS_SOURCE =
-	"https://github.com/instruction-material/Python-Level-2/tree/ead6e1c2106bea775bada2f56d0e22f1cf168de9";
+export const PYTHON_LEVEL_2_PS6_LISTS_SOURCE =
+	"https://github.com/instruction-material/Python-Level-2/tree/25e131ee66467d9c05e07b1895ff7a7e96feb1c6";
 
 export const PYTHON_LEVEL_2_COLLECTIONS_SOURCE =
 	"https://github.com/instruction-material/Python-Level-2/tree/2dec846ce80283885dfe01579a181906e6748985";
@@ -1357,7 +1357,7 @@ export const pythonLevel2Course: RawCourse = {
 						build: [
 							"Each pair contains a pitch and a duration. In (c4, 4), c4 means middle C and 4 means a quarter note. Use 8 for an eighth note and r in place of a pitch for a rest.",
 							"Run the two-note starter and listen to melody.wav. Extend the list to a phrase with at least four pitches and one rest.",
-							"Render at 120 beats per minute. Use Download WAV in the IDE audio output to retain each version.",
+							"Render at 120 beats per minute. Use Download WAV in the IDE to save each version. To render on a computer, download the project and run python3 main.py from the extracted folder.",
 							"Change note order or duration values and compare the result."
 						],
 						checkpoints: [
@@ -1374,23 +1374,21 @@ export const pythonLevel2Course: RawCourse = {
 					content: projectBrief({
 						goal: "Generate a song from user-provided note data stored in a list structure.",
 						build: [
-							"Ask for notes and, if supported, note durations.",
-							"Validate or normalize the input values.",
-							"Append each note entry to the song list.",
-							"Generate an audio file from the completed sequence."
+							"Run the one-note starter. Extend it to collect a pitch and a duration for each pair.",
+							"Trim spaces and lowercase the pitch. Accept c4 through b4, c5, or r for a rest. Accept duration 1, 2, 4, or 8.",
+							"Append only completed pairs. Stop at six pairs or when q is entered at the pitch prompt.",
+							"Play song.wav and save it with Download WAV. The project ZIP includes the synthesizer for running python3 main.py on a computer."
 						],
 						checkpoints: [
-							"The list grows as the user adds notes.",
-							"Invalid note or duration choices have a defined behavior.",
-							"The resulting audio matches the order of the stored entries."
+							"Enter C4 with duration 4, r with duration 8, and e4 with duration 2. Enter q. Hear a short C, a rest, and a longer E.",
+							"An unsupported pitch or a duration of 3 prompts again before appending a pair.",
+							"Entering q with an empty song prints a message and skips rendering."
 						],
 						extension:
 							"Add a menu that lets the user preview, delete, or replace a note before generating the final file."
 					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS6-Song-Generator/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS6-Song-Generator/solution",
+					projectLink: `${PYTHON_LEVEL_2_PS6_LISTS_SOURCE}/PS6-Song-Generator/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_PS6_LISTS_SOURCE}/PS6-Song-Generator/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps6_song_generator.gif"
 				}
@@ -1445,20 +1443,18 @@ export const pythonLevel2Course: RawCourse = {
 						goal: "Analyze stock trade histories stored in starter lists.",
 						build: [
 							"Inspect the structure of the starter trade-history lists.",
-							"Retrieve the most recent price for each company.",
-							"Compute average trade price from each history.",
+							"Read the last item as the most recent price. Use the fixed dataset to check the last GOOGL value of 1122.00.",
+							"Report the latest value and mean to two decimal places. When a list is empty, report that it has no prices.",
 							"Print a clear summary for every company."
 						],
 						checkpoints: [
 							"Indexing retrieves the intended recent trade.",
 							"The average divides by the number of trades in that company's list.",
-							"The output remains correct if trade-history lengths differ."
+							"The sample list [10, 20, 30] gives latest 30.00 and mean 20.00. An empty list gives no prices."
 						]
 					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS6-Stock-Trader/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS6-Stock-Trader/solution",
+					projectLink: `${PYTHON_LEVEL_2_PS6_LISTS_SOURCE}/PS6-Stock-Trader/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_PS6_LISTS_SOURCE}/PS6-Stock-Trader/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps6_stock_trader.gif"
 				},
@@ -1512,21 +1508,19 @@ export const pythonLevel2Course: RawCourse = {
 					content: projectBrief({
 						goal: "Debug an ice-cream survey program by tracing list operations and indexes.",
 						build: [
-							"Run the starter and record the first error or wrong survey result.",
-							"Check list creation, appending, indexing, and removal operations.",
+							"Run the starter and record its first syntax error.",
+							"Fix the empty list and the append operation. Then repair the loops that read the responses.",
 							"Fix one list issue at a time.",
-							"Rerun with several survey inputs to confirm the final behavior."
+							"Enter chocolate mudslide, vanilla, pistachio, CHOCOLATE MUDSLIDE, and strawberry after each repair."
 						],
 						checkpoints: [
 							"Indexes stay within list bounds.",
-							"Items are added and removed from the intended list.",
-							"The final survey summary matches the entered responses."
+							"All five normalized responses print in the order received.",
+							"The final counts are two for chocolate mudslide and one for pistachio. Changes to case and spaces leave the totals the same."
 						]
 					}),
-					projectLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS6-Debugging-Lists/starter",
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-2/tree/main/PS6-Debugging-Lists/solution",
+					projectLink: `${PYTHON_LEVEL_2_PS6_LISTS_SOURCE}/PS6-Debugging-Lists/starter`,
+					solutionLink: `${PYTHON_LEVEL_2_PS6_LISTS_SOURCE}/PS6-Debugging-Lists/solution`,
 					mediaLink:
 						"https://static.classes.jacobdanderson.net/ps6_debugging_lists.gif"
 				}
