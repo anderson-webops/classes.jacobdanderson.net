@@ -532,20 +532,20 @@ describe("implemented course development artifacts", () => {
 		expectAuthoredSourcePair(
 			pythonLevel2,
 			"Parameter Tracing",
-			"Python-Level-2/tree/main/PS5-Parameter-Tracing/starter",
-			"Python-Level-2/tree/main/PS5-Parameter-Tracing/solution"
+			"Python-Level-2/tree/6c8442dd68067e1f8cee1f14a5e08bf8e4b06c17/PS5-Parameter-Tracing/starter",
+			"Python-Level-2/tree/6c8442dd68067e1f8cee1f14a5e08bf8e4b06c17/PS5-Parameter-Tracing/solution"
 		);
 		expectAuthoredSourcePair(
 			pythonLevel2,
 			"PS9 Supplemental Project 2: Class Registration II",
-			"Python-Level-2/tree/main/PS9-Class-Registration-II/starter",
-			"Python-Level-2/tree/main/PS9-Class-Registration-II/solution"
+			"Python-Level-2/tree/2dec846ce80283885dfe01579a181906e6748985/PS9-Class-Registration-II/starter",
+			"Python-Level-2/tree/2dec846ce80283885dfe01579a181906e6748985/PS9-Class-Registration-II/solution"
 		);
 		expectAuthoredSourcePair(
 			pythonLevel2,
 			"PS13 Supplemental Project 2: Advanced Typewriter Monkeys",
-			"Python-Level-2/tree/main/PS13-Advanced-Typewriter-Monkeys/starter",
-			"Python-Level-2/tree/main/PS13-Advanced-Typewriter-Monkeys/solution"
+			"Python-Level-2/tree/96f7196ea540fce55644e2a2d1d0ce97f16de9e8/PS13-Advanced-Typewriter-Monkeys/starter",
+			"Python-Level-2/tree/96f7196ea540fce55644e2a2d1d0ce97f16de9e8/PS13-Advanced-Typewriter-Monkeys/solution"
 		);
 		expectAuthoredSourcePair(
 			pythonLevel3,
@@ -658,7 +658,7 @@ describe("implemented course development artifacts", () => {
 		);
 		const rootOnlyLinks = [
 			...serializedCourse.matchAll(
-				/https:\/\/github\.com\/instruction-material\/Python-Level-2\/tree\/main\/([^"]+)/g
+				/https:\/\/github\.com\/instruction-material\/Python-Level-2\/tree\/(?:main|[0-9a-f]{40})\/([^"]+)/g
 			)
 		]
 			.map(match => match[1].replace(/\\+$/, ""))
@@ -674,13 +674,16 @@ describe("implemented course development artifacts", () => {
 
 		expect(rootOnlyLinks).toHaveLength(0);
 		expect(serializedCourse).toContain(
-			"Python-Level-2/tree/main/PS1-Mad-Libs/solution"
+			"Python-Level-2/tree/b58d958347f0c3ca6f9d96963a674cc3d00813bf/PS1-Mad-Libs/solution"
 		);
 		expect(serializedCourse).toContain(
-			"Python-Level-2/tree/main/PS5-Parameter-Tracing/starter"
+			"Python-Level-2/tree/b58d958347f0c3ca6f9d96963a674cc3d00813bf/PS1-Mad-Libs/starter"
 		);
 		expect(serializedCourse).toContain(
-			"Python-Level-2/tree/main/PS14-Mastermind/solution"
+			"Python-Level-2/tree/6c8442dd68067e1f8cee1f14a5e08bf8e4b06c17/PS5-Parameter-Tracing/starter"
+		);
+		expect(serializedCourse).toContain(
+			"Python-Level-2/tree/4451de4a1f7dccd55a0175bbf9fe3f2fbe183f70/PS14-Mastermind/solution"
 		);
 	});
 
@@ -696,7 +699,7 @@ describe("implemented course development artifacts", () => {
 		expect(text).not.toContain(
 			["usernames", `${credentialWord}s`].join(", ")
 		);
-		expect(text).toContain("target password or phrase");
+		expect(text).toContain("the public phrase blue comet");
 		expect(text).toContain("encoded sample phrase");
 		expect(text).toContain("sample login names");
 	});

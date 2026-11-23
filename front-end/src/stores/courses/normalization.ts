@@ -9193,12 +9193,6 @@ function adaptClassroomCourse(course: RawCourse, courseId: string) {
 	}
 }
 
-function normalizePythonLevel2(course: RawCourse) {
-	setItemLinks(course, "Check-In #2", "Check-In #2 Overview", {
-		solutionLink: githubTree("Python-Level-2", "PS-Check-in-2/solution")
-	});
-}
-
 function normalizeJavaLevel2(course: RawCourse) {
 	const earlyFileSupplementals = new Set([
 		"Project 2 File IO and Maps",
@@ -9573,8 +9567,6 @@ const normalizers: Record<string, (course: RawCourse) => void> = {
 	"machine-learning": normalizeMachineLearning,
 	"python-level-1": normalizePythonLevel1,
 	"python-level-1-classroom": normalizePythonLevel1,
-	"python-level-2": normalizePythonLevel2,
-	"python-level-2-classroom": normalizePythonLevel2,
 	"python-to-java-and-cpp-bridge": normalizePythonBridge,
 	"pythonic-design-patterns": normalizePythonicDesignPatterns,
 	"rust-systems-security": normalizeRustSystemsSecurity
