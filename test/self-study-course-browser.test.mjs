@@ -45,6 +45,7 @@ assert.equal(readingCounts.length, courseIds.length);
 const focusedReadingCounts = {
 	"data-science-in-python": 53,
 	"pythonic-design-patterns": 51,
+	"python-to-java-and-cpp-bridge": 8,
 	"pre-algebra-b": 11,
 	"ai-level-1": 34,
 	"network-systems": 56,

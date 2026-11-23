@@ -113,6 +113,11 @@ const BRIDGE_PROJECT_FOLDERS = {
 } as const;
 
 type BridgeProject = keyof typeof bridgeProjectBriefs;
+type BridgeLesson = [
+	title: string,
+	content: string,
+	contentKind?: RawCourseModuleItem["contentKind"]
+];
 
 function projectChoice(
 	project: BridgeProject,
@@ -138,7 +143,7 @@ function projectChoice(
 
 function bridgeModule(
 	title: string,
-	lessons: [string, string][],
+	lessons: BridgeLesson[],
 	projectTitle: string,
 	project: BridgeProject,
 	extension: [string, string]
@@ -147,13 +152,14 @@ function bridgeModule(
 	const path = isBranch ? ("choice" as const) : ("core" as const);
 	const flow = BRIDGE_MODULE_FLOW[title];
 	const curriculum: RawCourseModuleItem[] = lessons.map(
-		([lessonTitle, content], index) => ({
+		([lessonTitle, content, contentKind], index) => ({
 			title: lessonTitle,
 			content:
 				index === 0
 					? `**Course flow:** ${flow.flowNote}\n\n${content}`
 					: content,
-			learningPath: path
+			learningPath: path,
+			...(contentKind ? { contentKind } : {})
 		})
 	);
 	const projectItem: RawCourseModuleItem = {
@@ -245,7 +251,8 @@ export const pythonToJavaAndCppBridgeCourse: RawCourse = {
 				],
 				[
 					"Functions, Parameters, and Return Types: Verification and Reflection",
-					"Make a fixture table with input, predicted output, actual output and pass/fail. Cover each helper, integer extremes where supported, a zero price, both membership values, and ASCII text with no vowels, repeated vowels and punctuation. Record the floating-point tolerance. Keep at least one corrected compiler diagnostic and one corrected behavior mismatch, with their causes. Explain which checks concern types and which concern the algorithm. Completion requires the chosen target’s full callable contract, not only the supplied sample output."
+					"Make a fixture table with input, predicted output, actual output and pass/fail. Cover each helper, integer extremes where supported, a zero price, both membership values, and ASCII text with no vowels, repeated vowels and punctuation. Record the floating-point tolerance. Keep at least one corrected compiler diagnostic and one corrected behavior mismatch, with their causes. Explain which checks concern types and which concern the algorithm. Completion requires the chosen target’s full callable contract, not only the supplied sample output.",
+					"assignment"
 				]
 			],
 			"Project: Function Port Pack",
@@ -272,7 +279,8 @@ export const pythonToJavaAndCppBridgeCourse: RawCourse = {
 				],
 				[
 					"Collections, Strings, and Indexing: Verification and Reflection",
-					"Verify empty and single-word inputs, lengths around the filter threshold, all-short lists, duplicates and equal-length ties. Record the ordered returned elements and confirm the input is unchanged. Explain the difference between fixed arrays and growing collections, the slice endpoint/count distinction, and the ASCII limitation. During a session, pause after each loop iteration to predict the partial result; independently, write the same trace before execution. Completion requires both helpers in one chosen target and evidence for boundaries, order and non-mutation."
+					"Verify empty and single-word inputs, lengths around the filter threshold, all-short lists, duplicates and equal-length ties. Record the ordered returned elements and confirm the input is unchanged. Explain the difference between fixed arrays and growing collections, the slice endpoint/count distinction, and the ASCII limitation. During a session, pause after each loop iteration to predict the partial result; independently, write the same trace before execution. Completion requires both helpers in one chosen target and evidence for boundaries, order and non-mutation.",
+					"assignment"
 				]
 			],
 			"Project: Text and Collection Port Lab",
@@ -299,7 +307,8 @@ export const pythonToJavaAndCppBridgeCourse: RawCourse = {
 				],
 				[
 					"Classes and Objects across Languages: Verification and Reflection",
-					"Trace a successful deposit and withdrawal, full withdrawal to zero, an overdraft, zero/negative/non-finite amounts, invalid starting balance and deposit overflow. Compare the summary before and after each rejected operation. Verify exactly two decimal places and a decimal point independent of locale. Create independent accounts, then distinguish Java aliasing from C++ value copying in a separate check. A working sample is insufficient if a rejected transaction corrupts state. Completion evidence includes the chosen target’s files, native build/run commands, an unchanged-state trace and the object-model explanation."
+					"Trace a successful deposit and withdrawal, full withdrawal to zero, an overdraft, zero/negative/non-finite amounts, invalid starting balance and deposit overflow. Compare the summary before and after each rejected operation. Verify exactly two decimal places and a decimal point independent of locale. Create independent accounts, then distinguish Java aliasing from C++ value copying in a separate check. A working sample is insufficient if a rejected transaction corrupts state. Completion evidence includes the chosen target’s files, native build/run commands, an unchanged-state trace and the object-model explanation.",
+					"assignment"
 				],
 				[
 					"Choose a Java or C++ Exit Branch",
@@ -318,7 +327,8 @@ export const pythonToJavaAndCppBridgeCourse: RawCourse = {
 			[
 				[
 					"Scanner, main, and Java Project Rhythm",
-					"The supplied `public static void main(String[] args)` is the entry point. `Scanner` reads console input; `hasNextLine()` tests availability before `nextLine()` consumes a complete line. A blank line is an answer containing no characters, while end of input means no further line exists. The quiz driver handles EOF by reporting cancellation and retaining the score already earned. Keep that input lifecycle and implement the scoring helper. Read the full native source contract before using the browser preview; native Java compilation and console fixtures are the completion gate. Test correct and incorrect answers, surrounding spaces, mixed case, blank lines and input ending after the first question. Predict the accumulated score after each accepted answer."
+					"The supplied `public static void main(String[] args)` is the entry point. `Scanner` reads console input; `hasNextLine()` tests availability before `nextLine()` consumes a complete line. A blank line is an answer containing no characters, while end of input means no further line exists. The quiz driver handles EOF by reporting cancellation and retaining the score already earned. Keep that input lifecycle and implement the scoring helper. Read the full native source contract before using the browser preview; native Java compilation and console fixtures are the completion gate. Test correct and incorrect answers, surrounding spaces, mixed case, blank lines and input ending after the first question. Predict the accumulated score after each accepted answer.",
+					"reading"
 				],
 				[
 					"String Equality and Reference Habits",
@@ -330,7 +340,8 @@ export const pythonToJavaAndCppBridgeCourse: RawCourse = {
 				],
 				[
 					"Java Specific Adaptation: Verification and Reflection",
-					"Create the full fixture table from the project brief. Verify points stay between zero and two, empty input is distinguished from an empty line, and cancellation does not erase earned points. Record exact native commands, predicted and observed output, and one corrected String comparison mistake. Explain how `Scanner` and `main` adapt the Python workflow. A facilitated walkthrough pauses before reading a line and before changing the score; independent study writes those predictions in the record."
+					"Create the full fixture table from the project brief. Verify points stay between zero and two, empty input is distinguished from an empty line, and cancellation does not erase earned points. Record exact native commands, predicted and observed output, and one corrected String comparison mistake. Explain how `Scanner` and `main` adapt the Python workflow. A facilitated walkthrough pauses before reading a line and before changing the score; independent study writes those predictions in the record.",
+					"assignment"
 				]
 			],
 			"Project: Python to Java Quiz Game",
@@ -357,7 +368,8 @@ export const pythonToJavaAndCppBridgeCourse: RawCourse = {
 				],
 				[
 					"C++ Specific Adaptation: Verification and Reflection",
-					"Test exact membership, missing words, case changes, empty/duplicate secret lists, repeated accepted guesses, blank whitespace, immediate EOF and EOF after one match. The last case must score one rather than replaying the previous token. Record the accepted round count and unchanged input vector. Explain why token input differs from Python line input and document the actual native build/run command. Completion requires the whole fixture set and a corrected failure trace, not only a successful three-token sample."
+					"Test exact membership, missing words, case changes, empty/duplicate secret lists, repeated accepted guesses, blank whitespace, immediate EOF and EOF after one match. The last case must score one rather than replaying the previous token. Record the accepted round count and unchanged input vector. Explain why token input differs from Python line input and document the actual native build/run command. Completion requires the whole fixture set and a corrected failure trace, not only a successful three-token sample.",
+					"assignment"
 				]
 			],
 			"Project: Python to C++ Console Port",
@@ -372,7 +384,8 @@ export const pythonToJavaAndCppBridgeCourse: RawCourse = {
 			[
 				[
 					"Language Bridge Lab 17: Core Concepts",
-					"The task tracker combines typed functions, ordered collections, encapsulated state, validation and a supplied console loop. Read the full contract before selecting the Java or C++ starter. A task’s ID is distinct from its current list position; removal must not recycle an ID or restore the lifetime add budget. Repeated titles are allowed. Model each operation as input, validation, state transition and output. A rejected operation must preserve the same tasks, flags, order and next ID. The list operation returns fresh data so callers cannot mutate the tracker through its result. Use the same chosen language as the exit project; the other target is optional."
+					"The task tracker combines typed functions, ordered collections, encapsulated state, validation and a supplied console loop. Read the full contract before selecting the Java or C++ starter. A task’s ID is distinct from its current list position; removal must not recycle an ID or restore the lifetime add budget. Repeated titles are allowed. Model each operation as input, validation, state transition and output. A rejected operation must preserve the same tasks, flags, order and next ID. The list operation returns fresh data so callers cannot mutate the tracker through its result. Use the same chosen language as the exit project; the other target is optional.\n\n**Worked example:** An empty tracker assigns ID 1 to `ADD Read notes`. An `ADD ` with a blank title returns `ERROR: title` and leaves the list and the next ID unchanged. `ADD Plan check` then returns `ADDED 2`. The result distinguishes a rejected attempt from a successful add.",
+					"reading"
 				],
 				[
 					"Language Bridge Lab 17: Guided Example",

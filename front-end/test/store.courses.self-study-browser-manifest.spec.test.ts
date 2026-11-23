@@ -36,6 +36,7 @@ import { networkSystemsCourse } from "@/stores/courses/network-systems";
 import { physicsLevel2Course } from "@/stores/courses/physics-level-2";
 import { preAlgebraACourse } from "@/stores/courses/pre-algebra-a";
 import { preAlgebraBCourse } from "@/stores/courses/pre-algebra-b";
+import { pythonToJavaAndCppBridgeCourse } from "@/stores/courses/python-to-java-and-cpp-bridge";
 import { pythonicDesignPatternsCourse } from "@/stores/courses/pythonic-design-patterns";
 import {
 	earlyElementaryJoyOfReadingCourse,
@@ -92,6 +93,12 @@ const cases = [
 		id: "pythonic-design-patterns",
 		source: pythonicDesignPatternsCourse,
 		readings: 51,
+		additions: []
+	},
+	{
+		id: "python-to-java-and-cpp-bridge",
+		source: pythonToJavaAndCppBridgeCourse,
+		readings: 8,
 		additions: []
 	},
 	{
@@ -580,6 +587,7 @@ it.each(
 			}
 		}
 		const card = (item: CourseModuleItem) => {
+			const completeBridge = id === "python-to-java-and-cpp-bridge";
 			const focusedJavaTask
 				= [
 					"java-level-3",
@@ -613,7 +621,8 @@ it.each(
 				"algebra-2b"
 			].includes(id);
 			const completeAssignment
-				= focusedJavaTask
+				= completeBridge
+					|| focusedJavaTask
 					|| focusedPythonicTask
 					|| completeMathAssignment
 					|| writingAssignmentCounts.has(id)
@@ -635,7 +644,8 @@ it.each(
 						"early-elementary-b-picture-book"
 					].includes(id);
 			const fullBlocks
-				= focusedJavaTask
+				= completeBridge
+					|| focusedJavaTask
 					|| focusedPythonicTask
 					|| [
 						"pre-algebra-b",
@@ -786,6 +796,7 @@ it.each(
 			if (
 				completeAssignment
 				&& !completeMathAssignment
+				&& !completeBridge
 				&& id !== "data-science-in-python"
 				&& ![
 					"pre-algebra-b",
@@ -1119,6 +1130,13 @@ it.each(
 		else if (algebra) {
 			expect(modules).toHaveLength(id === "algebra-2a" ? 15 : 12);
 		}
+		else if (id === "python-to-java-and-cpp-bridge") {
+			expect(modules).toHaveLength(7);
+			expect(modules.filter(module => module.kind === "transition"))
+				.toHaveLength(2);
+			expect(modules.flatMap(module => module.projects)).toHaveLength(28);
+			expect(modules.flatMap(module => module.optional)).toHaveLength(7);
+		}
 		else {
 			expect(
 				modules.filter(module => module.kind === "module")
@@ -1271,6 +1289,11 @@ it.each(
 						: module.title.startsWith("MS9 ")
 							? 5
 							: 4
+				);
+			}
+			else if (id === "python-to-java-and-cpp-bridge") {
+				expect(module.readings, module.title).toHaveLength(
+					module.title.startsWith("PTJ4 ") ? 2 : 1
 				);
 			}
 			else if (
