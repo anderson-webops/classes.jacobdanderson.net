@@ -123,10 +123,14 @@ function projectChoice(
 	const branch =
 		project === "java" || project === "cpp" ? "" : `/${language}`;
 	const label = language === "java" ? "Java" : "C++";
+	const completionCheck =
+		project === "capstone"
+			? "\n\n**Completion checks:** Run the extracted project with the shared console fixture. Record the exact build command and compare task IDs, output order and final totals with the Python baseline."
+			: "";
 	return {
 		title: `${title}: ${label} Starter`,
 		learningPath: "choice",
-		content: `Choose this ${label} starter to complete the shared project above. Only one target is required. The IDE button opens a confirmation before downloading this language’s source and complete README; it imports the starter, not the separate reference. Keep all files together, save and download the project ZIP, then extract and compile it with the README’s native commands. ${language === "java" ? "Use JDK 21; the Java browser runner is a limited preview and native compilation is the completion gate." : "Use a C++17 compiler; the source workspace does not execute C++ in the browser."} Compare the separate ${label} reference after a working draft and fixture record.`,
+		content: `Choose this ${label} starter to complete the shared project above. Only one target is required. The IDE button opens a confirmation before downloading this language’s source and complete README; it imports the starter, not the separate reference. Keep all files together, save and download the project ZIP, then extract and compile it with the README’s native commands. ${language === "java" ? "Use JDK 21; the Java browser runner is a limited preview and native compilation is the completion gate." : "Use a C++17 compiler; the source workspace does not execute C++ in the browser."} Compare the separate ${label} reference after a working draft and fixture record.${completionCheck}`,
 		projectLink: `${BRIDGE_SOURCE_BASE}/${folder}/starter${branch}`,
 		solutionLink: `${BRIDGE_SOURCE_BASE}/${folder}/solution${branch}`
 	};
@@ -376,18 +380,18 @@ export const pythonToJavaAndCppBridgeCourse: RawCourse = {
 				],
 				[
 					"Language Bridge Lab 17: Review and Reflection",
-					"Compare the chosen port with Python using the shared ordinary, boundary and invalid-input fixtures. Record state before and after each rejected operation, verify fresh list results and independent trackers, and check the 100-successful-add lifetime boundary after a removal. Compile and run the real console protocol with LF/CRLF and EOF, including input after QUIT that must be ignored. Explain one syntax difference, one type or object-model difference and one diagnosed mismatch. Consult the separately linked target reference only after a working draft, and explain any revision rather than replacing the learner implementation."
+					"**Completion checks:** Compare the chosen port with Python using the shared ordinary, boundary and invalid-input fixtures. Record state before and after each rejected operation, verify fresh list results and independent trackers, and check the 100-successful-add lifetime boundary after a removal. Compile and run the real console protocol with LF/CRLF and EOF, including input after QUIT that must be ignored. Explain one syntax difference, one type or object-model difference and one diagnosed mismatch. Consult the separately linked target reference after a working draft and explain any revisions."
 				],
 				[
 					"Chosen-Language Capstone Contract",
-					"**Completion evidence:**\n- One working Java or C++ task-tracker port of the supplied Python baseline.\n- Shared fixtures with predicted and actual output, including title/ID boundaries, ordering, repeated operations and the lifetime add limit.\n- State-preserving rejection and fresh-result evidence.\n- The exact native build/run commands and all required files.\n- A comparison record with a type/object difference, a diagnosed failure and the next-course readiness decision. The second target is optional."
+					"**Completion evidence:**\n- One working Java or C++ task-tracker port of the supplied Python baseline.\n- Shared fixtures with predicted and actual output, including title/ID boundaries, ordering, repeated operations and the lifetime add limit.\n- State-preserving rejection and fresh-result evidence. Include the task list and next successful ID after one rejection.\n- The exact native build/run commands and all required files. Include the compiler version so the run can be repeated on another machine.\n- A comparison record with a type/object difference, a diagnosed failure and the next-course readiness decision. The second target is optional."
 				]
 			],
 			"Language Bridge Lab 17: Core Project",
 			"capstone",
 			[
 				"Language Bridge Lab 17: Extension Challenge",
-				"After completing the capstone in one target, use the other target starter and preserve the same task and console contract. Compare Java reference aliasing with ordinary C++ value copying and explain how separate trackers keep separate state. A GUI, sorting or persistence needs a separate explicit behavior contract and is not required for bridge completion."
+				"After completing the capstone in one target, use the other target starter and preserve the same task and console contract. Compare Java reference aliasing with ordinary C++ value copying and explain how separate trackers keep separate state. A GUI, sorting or persistence needs a separate explicit behavior contract and is optional.\n\n**Completion checks:** Use two trackers with the same initial contents. Change a task in one tracker and compare the other tracker’s list and totals before and after that change. Repeat the check in both languages and explain why the other tracker’s state stays independent."
 			]
 		)
 	]
