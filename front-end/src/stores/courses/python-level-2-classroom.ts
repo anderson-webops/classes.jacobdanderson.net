@@ -200,7 +200,7 @@ const classroomProjectExtensions: Record<string, string> = {
 **Success criteria:** Given x, c, a, t and a vocabulary containing only cat, the fixed stream finds cat on step four.`,
 	"PS9-Class-Registration": `Run the completed roster report. The original Biology list contains ten entries and the set contains eight names. Compare a repeated name with the distinct names Sarah and Sara.
 
-**Normal:** Show how many repeated registrations were removed for each course. Biology and English lose two and three entries. Computer Science loses zero.
+**Normal:** Report the number of duplicate registrations removed from each course. Biology and English lose two and three entries. Computer Science loses zero.
 
 **Hard:** Report the number of distinct students across all three classes. Use a union so someone in two courses is counted once.
 
