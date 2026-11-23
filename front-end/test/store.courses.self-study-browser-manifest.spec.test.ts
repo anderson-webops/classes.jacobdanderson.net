@@ -36,6 +36,7 @@ import { networkSystemsCourse } from "@/stores/courses/network-systems";
 import { physicsLevel2Course } from "@/stores/courses/physics-level-2";
 import { preAlgebraACourse } from "@/stores/courses/pre-algebra-a";
 import { preAlgebraBCourse } from "@/stores/courses/pre-algebra-b";
+import { pythonLevel3Course } from "@/stores/courses/python-level-3";
 import { pythonicDesignPatternsCourse } from "@/stores/courses/pythonic-design-patterns";
 import {
 	earlyElementaryJoyOfReadingCourse,
@@ -82,6 +83,12 @@ function isReviewedModule(id: string, title: string) {
 	return true;
 }
 const cases = [
+	{
+		id: "python-level-3",
+		source: pythonLevel3Course,
+		readings: 18,
+		additions: []
+	},
 	{
 		id: "data-science-in-python",
 		source: dataScienceInPythonCourse,
@@ -371,10 +378,10 @@ function reading(item: CourseModuleItem) {
 				src: image.getAttribute("src"),
 				alt: image.alt
 			})),
-			...(item.mediaLink
-				&& /(?:course-assets|static\.classes\.jacobdanderson\.net)\/algebra-2[ab]\/.+\.svg$/.test(
-					item.mediaLink
-				)
+			...(item.mediaLink &&
+			/(?:course-assets|static\.classes\.jacobdanderson\.net)\/algebra-2[ab]\/.+\.svg$/.test(
+				item.mediaLink
+			)
 				? [
 						{
 							src: item.mediaLink,
@@ -444,8 +451,8 @@ it.each(
 		expect(digest(JSON.stringify(originals))).toBe(published[id].sha256);
 		if (id === "algebra-1a") {
 			for (const entry of algebra1ACourseReadings) {
-				const moduleTitle
-					= entry.module === "Standards Map"
+				const moduleTitle =
+					entry.module === "Standards Map"
 						? "Algebra 1A Reference"
 						: entry.module;
 				const module = course.modules.find(
@@ -500,8 +507,8 @@ it.each(
 		}
 		const legacyReadingProjectIds = new Map<object, string>();
 		if (
-			id === "early-elementary-a-reading"
-			|| id === "early-elementary-b-picture-book"
+			id === "early-elementary-a-reading" ||
+			id === "early-elementary-b-picture-book"
 		) {
 			for (const module of source.modules) {
 				for (const section of [
@@ -509,8 +516,8 @@ it.each(
 					"supplementalProjects"
 				] as const) {
 					for (const item of module[section]) {
-						const sectionId
-							= section === "curriculum"
+						const sectionId =
+							section === "curriculum"
 								? "curriculum"
 								: "supplemental";
 						const originalId = [
@@ -542,10 +549,10 @@ it.each(
 			// hashes below establish the new directives; all published IDs stay checked.
 			.filter(
 				item =>
-					id !== "ai-level-1"
-					&& id !== "pythonic-design-patterns"
-					&& id !== "data-science-in-python"
-					&& item.content.startsWith("**Project goal:**")
+					id !== "ai-level-1" &&
+					id !== "pythonic-design-patterns" &&
+					id !== "data-science-in-python" &&
+					item.content.startsWith("**Project goal:**")
 			);
 		const all = course.modules.flatMap(module => [
 			...module.curriculum,
@@ -554,9 +561,9 @@ it.each(
 		for (const project of sourceProjects) {
 			const item = all.find(
 				item =>
-					item.title === project.title
-					|| item.aliases?.includes(project.title)
-					|| item.id === legacyReadingProjectIds.get(project)
+					item.title === project.title ||
+					item.aliases?.includes(project.title) ||
+					item.id === legacyReadingProjectIds.get(project)
 			)!;
 			expect(item, project.title).toBeDefined();
 			expect(isLessonLearningItem(item), item.title).toBe(false);
@@ -580,30 +587,30 @@ it.each(
 			}
 		}
 		const card = (item: CourseModuleItem) => {
-			const focusedJavaTask
-				= [
+			const focusedJavaTask =
+				[
 					"java-level-3",
 					"design-patterns-in-java",
 					"design-patterns-in-java-part-2"
-				].includes(id)
-				&& course.modules.some(
+				].includes(id) &&
+				course.modules.some(
 					module =>
-						isReviewedModule(id, module.title)
-						&& [
+						isReviewedModule(id, module.title) &&
+						[
 							...module.curriculum,
 							...module.supplementalProjects
 						].some(row => row.id === item.id)
 				);
-			const focusedPythonicTask
-				= id === "pythonic-design-patterns"
-					&& course.modules.some(
-						module =>
-							isReviewedModule(id, module.title)
-							&& [
-								...module.curriculum,
-								...module.supplementalProjects
-							].some(row => row.id === item.id)
-					);
+			const focusedPythonicTask =
+				id === "pythonic-design-patterns" &&
+				course.modules.some(
+					module =>
+						isReviewedModule(id, module.title) &&
+						[
+							...module.curriculum,
+							...module.supplementalProjects
+						].some(row => row.id === item.id)
+				);
 			const completeMathAssignment = [
 				"early-elementary-a-math",
 				"early-elementary-b-math",
@@ -612,58 +619,60 @@ it.each(
 				"algebra-2a",
 				"algebra-2b"
 			].includes(id);
-			const completeAssignment
-				= focusedJavaTask
-					|| focusedPythonicTask
-					|| completeMathAssignment
-					|| writingAssignmentCounts.has(id)
-					|| [
-						"pre-algebra-b",
-						"ai-level-1",
-						"smart-money-personal-finance",
-						"money-minded-investing",
-						"entrepreneurship-101",
-						"data-science-in-python",
-						"network-systems",
-						"algebra-1a",
-						"intro-to-environmental-science",
-						"elementary-science",
-						"intro-to-biology",
-						"intro-to-chemistry",
-						"middle-school-integrated-science",
-						"early-elementary-a-reading",
-						"early-elementary-b-picture-book"
-					].includes(id);
-			const fullBlocks
-				= focusedJavaTask
-					|| focusedPythonicTask
-					|| [
-						"pre-algebra-b",
-						"ai-level-1",
-						"smart-money-personal-finance",
-						"money-minded-investing",
-						"entrepreneurship-101",
-						"data-science-in-python",
-						"network-systems",
-						"intro-to-environmental-science",
-						"elementary-science",
-						"intro-to-biology",
-						"intro-to-chemistry",
-						"middle-school-integrated-science",
-						"early-elementary-a-math",
-						"early-elementary-b-math",
-						"late-elementary-a-math",
-						"late-elementary-b-math",
-						"early-elementary-a-reading",
-						"early-elementary-b-picture-book",
-						"algebra-1a",
-						"algebra-1b",
-						"pre-algebra-a",
-						"geometry-a",
-						"geometry-b",
-						"algebra-2a",
-						"algebra-2b"
-					].includes(id);
+			const completeAssignment =
+				focusedJavaTask ||
+				focusedPythonicTask ||
+				id === "python-level-3" ||
+				completeMathAssignment ||
+				writingAssignmentCounts.has(id) ||
+				[
+					"pre-algebra-b",
+					"ai-level-1",
+					"smart-money-personal-finance",
+					"money-minded-investing",
+					"entrepreneurship-101",
+					"data-science-in-python",
+					"network-systems",
+					"algebra-1a",
+					"intro-to-environmental-science",
+					"elementary-science",
+					"intro-to-biology",
+					"intro-to-chemistry",
+					"middle-school-integrated-science",
+					"early-elementary-a-reading",
+					"early-elementary-b-picture-book"
+				].includes(id);
+			const fullBlocks =
+				focusedJavaTask ||
+				focusedPythonicTask ||
+				id === "python-level-3" ||
+				[
+					"pre-algebra-b",
+					"ai-level-1",
+					"smart-money-personal-finance",
+					"money-minded-investing",
+					"entrepreneurship-101",
+					"data-science-in-python",
+					"network-systems",
+					"intro-to-environmental-science",
+					"elementary-science",
+					"intro-to-biology",
+					"intro-to-chemistry",
+					"middle-school-integrated-science",
+					"early-elementary-a-math",
+					"early-elementary-b-math",
+					"late-elementary-a-math",
+					"late-elementary-b-math",
+					"early-elementary-a-reading",
+					"early-elementary-b-picture-book",
+					"algebra-1a",
+					"algebra-1b",
+					"pre-algebra-a",
+					"geometry-a",
+					"geometry-b",
+					"algebra-2a",
+					"algebra-2b"
+				].includes(id);
 			const selfChecks = fullBlocks
 				? [
 						...item.content.matchAll(
@@ -700,8 +709,7 @@ it.each(
 							asset,
 							heading: section!.split("\n", 1)[0].trim(),
 							expectedText: container
-								.textContent!
-								.replace(/\s+/g, " ")
+								.textContent!.replace(/\s+/g, " ")
 								.trim()
 						};
 					})
@@ -718,8 +726,8 @@ it.each(
 						)
 				: item.content;
 			if (
-				completeAssignment
-				|| [
+				completeAssignment ||
+				[
 					"algebra-1a",
 					"algebra-1b",
 					"early-elementary-a-math"
@@ -734,10 +742,10 @@ it.each(
 					item.title
 				).toBe(false);
 				fullAssignment = sections
-					.map((section) => {
-						const label
-							= section.kind === "optional"
-								&& section.label !== "Optional"
+					.map(section => {
+						const label =
+							section.kind === "optional" &&
+							section.label !== "Optional"
 								? `Optional · ${section.label}`
 								: section.label;
 						return `### ${label}\n\n${section.content}`;
@@ -747,8 +755,8 @@ it.each(
 			const completionIndex = item.content
 				.toLowerCase()
 				.indexOf("**completion evidence:**");
-			const directive
-				= completionIndex < 0
+			const directive =
+				completionIndex < 0
 					? undefined
 					: item.content
 							.slice(0, completionIndex)
@@ -759,35 +767,36 @@ it.each(
 				normalizeInlineCourseMarkdown(
 					completeAssignment
 						? fullAssignment
-						: (directive
-							?? ([
-								"early-elementary-a-math",
-								"early-elementary-b-math",
-								"late-elementary-a-math",
-								"late-elementary-b-math",
-								"early-elementary-a-reading",
-								"early-elementary-b-picture-book",
-								"algebra-1a",
-								"algebra-1b",
-								"introduction-to-public-speaking",
-								"middle-school-c-grammar",
-								"intro-to-physics",
-								"physics-level-2",
-								"pre-algebra-a",
-								"geometry-a",
-								"geometry-b",
-								"algebra-2a",
-								"algebra-2b"
-							].includes(id)
-								? fullAssignment
-								: ""))
+						: (directive ??
+								([
+									"early-elementary-a-math",
+									"early-elementary-b-math",
+									"late-elementary-a-math",
+									"late-elementary-b-math",
+									"early-elementary-a-reading",
+									"early-elementary-b-picture-book",
+									"algebra-1a",
+									"algebra-1b",
+									"introduction-to-public-speaking",
+									"middle-school-c-grammar",
+									"intro-to-physics",
+									"physics-level-2",
+									"pre-algebra-a",
+									"geometry-a",
+									"geometry-b",
+									"algebra-2a",
+									"algebra-2b"
+								].includes(id)
+									? fullAssignment
+									: ""))
 				)
 			);
 			if (
-				completeAssignment
-				&& !completeMathAssignment
-				&& id !== "data-science-in-python"
-				&& ![
+				completeAssignment &&
+				!completeMathAssignment &&
+				id !== "data-science-in-python" &&
+				![
+					"python-level-3",
 					"pre-algebra-b",
 					"money-minded-investing",
 					"ai-level-1",
@@ -828,9 +837,9 @@ it.each(
 				).toBeGreaterThan(300);
 			}
 			if (
-				id === "middle-school-c-grammar"
-				&& (item.title.startsWith("Practice Map:")
-					|| item.title.startsWith("Extension Review:"))
+				id === "middle-school-c-grammar" &&
+				(item.title.startsWith("Practice Map:") ||
+					item.title.startsWith("Extension Review:"))
 			) {
 				expect(
 					container.textContent!.trim().length,
@@ -854,8 +863,7 @@ it.each(
 						? "innerText"
 						: "textContent",
 				requiredDirective: container
-					.textContent!
-					.replace(/\s+/g, " ")
+					.textContent!.replace(/\s+/g, " ")
 					.trim()
 			};
 		};
@@ -864,11 +872,11 @@ it.each(
 		const modules = course.modules
 			.filter(
 				module =>
-					!module.internal
-					&& (!(
-						algebra
-						|| id === "algebra-1b"
-						|| [
+					!module.internal &&
+					(!(
+						algebra ||
+						id === "algebra-1b" ||
+						[
 							"early-elementary-a-math",
 							"early-elementary-b-math",
 							"late-elementary-a-math",
@@ -876,8 +884,8 @@ it.each(
 							"early-elementary-a-reading",
 							"early-elementary-b-picture-book"
 						].includes(id)
-					)
-					|| module.kind !== "appendix")
+					) ||
+						module.kind !== "appendix")
 			)
 			.map(module => ({
 				id: module.id,
@@ -918,9 +926,10 @@ it.each(
 			]);
 			expect(cards).toHaveLength(writingAssignmentCount);
 			expect(
-				cards.every(card =>
-					card.assignmentTextScope === "complete"
-					&& card.directiveTextMode === "innerText"
+				cards.every(
+					card =>
+						card.assignmentTextScope === "complete" &&
+						card.directiveTextMode === "innerText"
 				)
 			).toBe(true);
 			const exercises = modules.flatMap(module =>
@@ -957,8 +966,19 @@ it.each(
 			expect(
 				tasks.every(task => task.assignmentTextScope === "complete")
 			).toBe(true);
-		}
-		else if (id === "data-science-in-python") {
+		} else if (id === "python-level-3") {
+			expect(modules).toHaveLength(21);
+			const assignments = modules.flatMap(module => [
+				...module.projects,
+				...module.optional
+			]);
+			expect(assignments).toHaveLength(116);
+			expect(
+				assignments.every(
+					item => item.assignmentTextScope === "complete"
+				)
+			).toBe(true);
+		} else if (id === "data-science-in-python") {
 			expect(modules).toHaveLength(23);
 			const activities = modules.flatMap(module => [
 				...module.projects,
@@ -968,12 +988,11 @@ it.each(
 			expect(
 				activities.every(
 					item =>
-						item.assignmentTextScope === "complete"
-						&& item.requiredDirective.length > 0
+						item.assignmentTextScope === "complete" &&
+						item.requiredDirective.length > 0
 				)
 			).toBe(true);
-		}
-		else if (id === "pre-algebra-b") {
+		} else if (id === "pre-algebra-b") {
 			expect(modules).toHaveLength(10);
 			expect(
 				modules.filter(module => module.kind === "module")
@@ -992,8 +1011,7 @@ it.each(
 			expect(activities.flatMap(item => item.selfChecks)).toHaveLength(
 				14
 			);
-		}
-		else if (id === "design-patterns-in-java") {
+		} else if (id === "design-patterns-in-java") {
 			expect(modules).toHaveLength(14);
 			const activities = modules.flatMap(module => [
 				...module.projects,
@@ -1015,8 +1033,7 @@ it.each(
 			expect(activities.flatMap(item => item.selfChecks)).toHaveLength(
 				204
 			);
-		}
-		else if (id === "design-patterns-in-java-part-2") {
+		} else if (id === "design-patterns-in-java-part-2") {
 			expect(modules).toHaveLength(14);
 			const reviewed = modules.filter(module =>
 				isReviewedModule(id, module.title)
@@ -1045,8 +1062,7 @@ it.each(
 			expect(activities.flatMap(item => item.selfChecks)).toHaveLength(
 				258
 			);
-		}
-		else if (id === "network-systems") {
+		} else if (id === "network-systems") {
 			expect(modules).toHaveLength(21);
 			expect(
 				modules.filter(module => module.kind === "module")
@@ -1065,11 +1081,9 @@ it.each(
 					item => item.assignmentTextScope === "complete"
 				)
 			).toBe(true);
-		}
-		else if (id === "java-level-3") {
+		} else if (id === "java-level-3") {
 			expect(modules).toHaveLength(25);
-		}
-		else if (id === "algebra-1a") {
+		} else if (id === "algebra-1a") {
 			expect(modules).toHaveLength(22);
 			expect(
 				modules
@@ -1087,8 +1101,7 @@ it.each(
 					item => item.assignmentTextScope === "complete"
 				)
 			).toBe(true);
-		}
-		else if (id === "ai-level-1") {
+		} else if (id === "ai-level-1") {
 			expect(modules).toHaveLength(18);
 			expect(
 				modules.filter(module => module.kind === "module")
@@ -1112,14 +1125,11 @@ it.each(
 					item => item.assignmentTextScope === "complete"
 				)
 			).toBe(true);
-		}
-		else if (algebra1) {
+		} else if (algebra1) {
 			expect(modules).toHaveLength(25);
-		}
-		else if (algebra) {
+		} else if (algebra) {
 			expect(modules).toHaveLength(id === "algebra-2a" ? 15 : 12);
-		}
-		else {
+		} else {
 			expect(
 				modules.filter(module => module.kind === "module")
 			).toHaveLength(
@@ -1128,17 +1138,17 @@ it.each(
 					: id === "pre-algebra-a"
 						? 8
 						: ["intro-to-physics", "physics-level-2"].includes(id)
-								? 17
-								: id === "middle-school-integrated-science"
-									? 10
-									: [
+							? 17
+							: id === "middle-school-integrated-science"
+								? 10
+								: [
 											"elementary-science",
 											"intro-to-environmental-science"
-										].includes(id)
-											? 8
-											: id === "intro-to-chemistry"
-												? 11
-												: count
+									  ].includes(id)
+									? 8
+									: id === "intro-to-chemistry"
+										? 11
+										: count
 			);
 		}
 		for (const module of modules) {
@@ -1146,10 +1156,13 @@ it.each(
 			if (id === "pythonic-design-patterns") {
 				const number = /^PDP(\d+) /.exec(module.title)?.[1];
 				expect(module.readings).toHaveLength(
-					number === undefined ? 4 : [3, 4, 3, 3, 4, 3, 3, 3, 2, 3, 2, 2, 4][Number(number)]
+					number === undefined
+						? 4
+						: [3, 4, 3, 3, 4, 3, 3, 3, 2, 3, 2, 2, 4][
+								Number(number)
+							]
 				);
-			}
-			else if (id === "pre-algebra-b") {
+			} else if (id === "pre-algebra-b") {
 				expect(module.readings, module.title).toHaveLength(
 					module.kind === "appendix"
 						? 1
@@ -1157,24 +1170,22 @@ it.each(
 							? 2
 							: 0
 				);
-			}
-			else if (id === "ai-level-1") {
-				const expected
-					= module.title === "AI Level 1 Reference"
+			} else if (id === "ai-level-1") {
+				const expected =
+					module.title === "AI Level 1 Reference"
 						? 6
 						: module.title.startsWith("FAI0")
 							? 3
 							: module.title.startsWith("Unit 9:")
 								? 1
-								: module.title.endsWith(": Practice Studio")
-									|| /^Unit [78]:/.test(module.title)
+								: module.title.endsWith(": Practice Studio") ||
+									  /^Unit [78]:/.test(module.title)
 									? 2
 									: 1;
 				expect(module.readings, module.title).toHaveLength(expected);
-			}
-			else if (id === "network-systems") {
-				const expected
-					= {
+			} else if (id === "network-systems") {
+				const expected =
+					{
 						"Standards Map": 6,
 						"Course Roadmap": 6,
 						"Project Practice Guide": 4,
@@ -1186,18 +1197,16 @@ it.each(
 						"Unit 2: Addresses and Naming": 2
 					}[module.title] ?? 1;
 				expect(module.readings, module.title).toHaveLength(expected);
-			}
-			else if (id === "design-patterns-in-java") {
-				const expected
-					= {
+			} else if (id === "design-patterns-in-java") {
+				const expected =
+					{
 						"Optional Applied Java Pattern Studios": 7,
 						"Standards Map": 5,
 						"Course Roadmap": 6,
 						"Project Practice Guide": 4
 					}[module.title] ?? 1;
 				expect(module.readings, module.title).toHaveLength(expected);
-			}
-			else if (id === "design-patterns-in-java-part-2") {
+			} else if (id === "design-patterns-in-java-part-2") {
 				expect(module.readings, module.title).toHaveLength(
 					[
 						"Standards Map",
@@ -1209,8 +1218,7 @@ it.each(
 							? 8
 							: 1
 				);
-			}
-			else if (id === "geometry-a") {
+			} else if (id === "geometry-a") {
 				expect(module.readings, module.title).toHaveLength(
 					module.title.startsWith("Check-In")
 						? 0
@@ -1218,8 +1226,7 @@ it.each(
 							? 2
 							: 1
 				);
-			}
-			else if (id === "geometry-b") {
+			} else if (id === "geometry-b") {
 				expect(module.readings, module.title).toHaveLength(
 					module.title.startsWith("Check-In #1")
 						? 0
@@ -1227,53 +1234,47 @@ it.each(
 							? 2
 							: 1
 				);
-			}
-			else if (id === "pre-algebra-a") {
+			} else if (id === "pre-algebra-a") {
 				expect(module.readings, module.title).toHaveLength(
-					module.title === "Pre-Algebra A Kick-Off"
-					|| module.title === "Check-In #1"
+					module.title === "Pre-Algebra A Kick-Off" ||
+						module.title === "Check-In #1"
 						? 0
 						: /^(?:PAA3|PAA8|PAA13|PAA18)/.test(module.title)
 							? 2
 							: 1
 				);
-			}
-			else if (
-				["intro-to-physics", "physics-level-2"].includes(id)
-				&& module.kind === "appendix"
+			} else if (
+				["intro-to-physics", "physics-level-2"].includes(id) &&
+				module.kind === "appendix"
 			) {
 				expect(module.readings.length, module.title).toBeGreaterThan(0);
-			}
-			else if (id === "physics-level-2") {
+			} else if (id === "physics-level-2") {
 				expect(module.readings, module.title).toHaveLength(
 					module.title.startsWith("PHY8 ") ? 2 : 1
 				);
-			}
-			else if (id === "elementary-science") {
+			} else if (id === "elementary-science") {
 				expect(module.readings).toHaveLength(
 					module.kind === "appendix"
 						? ["Standards Map", "Course Roadmap"].includes(
 								module.title
 							)
-								? 6
-								: 4
+							? 6
+							: 4
 						: 1
 				);
-			}
-			else if (id === "middle-school-integrated-science") {
+			} else if (id === "middle-school-integrated-science") {
 				expect(module.readings).toHaveLength(
 					module.kind === "appendix"
 						? ["Standards Map", "Course Roadmap"].includes(
 								module.title
 							)
-								? 6
-								: 4
+							? 6
+							: 4
 						: module.title.startsWith("MS9 ")
 							? 5
 							: 4
 				);
-			}
-			else if (
+			} else if (
 				[
 					"intro-to-chemistry",
 					"intro-to-environmental-science"
@@ -1293,11 +1294,13 @@ it.each(
 					],
 					module.title
 				).toEqual(expected);
-			}
-			else if (!algebra && !algebra1 && id !== "data-science-in-python") {
+			} else if (
+				!algebra &&
+				!algebra1 &&
+				!["data-science-in-python", "python-level-3"].includes(id)
+			) {
 				expect(module.readings, module.title).toHaveLength(1);
-			}
-			else if (algebra && module.readings.length === 0) {
+			} else if (algebra && module.readings.length === 0) {
 				expect(module.title).toMatch(/capstone/i);
 			}
 			for (const reading of module.readings) {
@@ -1319,8 +1322,8 @@ it.each(
 					{
 						schemaVersion: 1,
 						sourceCommit:
-							process.env.GITHUB_SHA
-							?? execFileSync("git", ["rev-parse", "HEAD"], {
+							process.env.GITHUB_SHA ??
+							execFileSync("git", ["rev-parse", "HEAD"], {
 								encoding: "utf8"
 							}).trim(),
 						id,
@@ -1352,24 +1355,24 @@ it.each(
 										? "Complete course: DPR1-DPR10, seven optional clinics and three reference appendices. All159published identities are covered by30readings,129activities and258input/answer case views per role/width profile. Individual source-editor qualifications remain separately recorded."
 										: id === "java-level-3"
 											? "AJ4 only: one reading, two core projects, three optional tasks and ten input/response views per profile. All 217 course identities checked; other Java units are outside this teaching and runtime acceptance."
-											: id
-												=== "intro-to-environmental-science"
+											: id ===
+												  "intro-to-environmental-science"
 												? "Complete Environmental Science teaching and tasks:27readings,17coreactivities,24optionalactivities and82input/response views per profile;all68published identities retained. Owned photosynthesis model and supplied climate/pollution practice cases;legacy image record retained internally."
 												: id === "intro-to-chemistry"
 													? "Complete Chemistry teaching and tasks:62readings,14coreactivities,37optionalactivities and102input/response views per profile;all113published identities retained. Original video evidence remains distinct from authored text alternatives."
 													: id === "intro-to-biology"
 														? "Eight worked body-systems units:8readings,36coreactivities,24optionalprojects and120input/response views per profile;all68published identities retained. Original three legacy images remain separately identified."
-														: id
-															=== "elementary-science"
+														: id ===
+															  "elementary-science"
 															? "Eight teaching units and six reference appendices:36readings,48coreactivities,16optionalprojects and11optionalreferenceactivities;all111published identities checked."
-															: id
-																=== "middle-school-integrated-science"
+															: id ===
+																  "middle-school-integrated-science"
 																? "Complete ten teaching units and five reference appendices:65readings,58complete optional/required activities and117input/response views per role/width profile;all123published identities retained."
-																: id
-																	=== "early-elementary-a-reading"
+																: id ===
+																	  "early-elementary-a-reading"
 																	? "Complete on-site explanations and supplied-text task defaults; original Juni named texts are retained as historical provenance,not claimed as recovered."
-																	: id
-																		=== "early-elementary-b-picture-book"
+																	: id ===
+																		  "early-elementary-b-picture-book"
 																		? "Complete supplied teaching,practice,Nico narrative/performance inputs and briefs;the historical Gabby Tries text is not claimed as recovered."
 																		: "complete course reading and assignment view",
 						...(id === "pythonic-design-patterns"
@@ -1403,8 +1406,8 @@ it.each(
 						referenceModules: course.modules
 							.filter(
 								module =>
-									!module.internal
-									&& module.kind === "appendix"
+									!module.internal &&
+									module.kind === "appendix"
 							)
 							.map(module => ({
 								id: module.id,
