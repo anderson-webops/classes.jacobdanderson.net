@@ -13,17 +13,29 @@ const sha256 = data => createHash("sha256").update(data).digest("hex");
 
 async function observeRun(page, expected) {
 	await page.locator("button.run-control:not([disabled])").click();
-	const result = await page.waitForFunction(() => {
+	const result = await page.waitForFunction((tokens) => {
 		const status = document.querySelector("[data-testid='ide-run-status']")?.textContent.trim();
 		if (!["Run complete", "Run failed", "Run finished with issues"].includes(status)) {
 			return false;
 		}
+		const output = [...document.querySelectorAll(".output-line--stdout")]
+			.map(line => line.textContent)
+			.join("\n");
+		// A second click can briefly see the previous run while saving the edit.
+		if (status === "Run complete" && !tokens.every(token => output.includes(token))) {
+			return false;
+		}
 		return {
 			status,
-			output: [...document.querySelectorAll(".output-line--stdout")].map(line => line.textContent).join("\n"),
+			output,
 			errors: [...document.querySelectorAll(".output-line--stderr")].map(line => line.textContent).join("\n")
 		};
-	}, { timeout: 90000 });
+	}, { timeout: 90000 }, expected).catch(async (error) => {
+		const observed = await page.$$eval(".output-line", lines =>
+			lines.map(line => line.textContent).join("\n")
+		);
+		throw new Error(`Expected Python output ${JSON.stringify(expected)}. Observed:\n${observed}`, { cause: error });
+	});
 	const run = await result.jsonValue();
 	await result.dispose();
 	assert.equal(run.status, "Run complete", JSON.stringify(run));
