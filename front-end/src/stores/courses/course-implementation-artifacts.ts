@@ -1912,34 +1912,34 @@ function addUnityRebuildModules(courseId: string, course: RawCourse) {
 				{
 					title: "GameObjects and Components",
 					content:
-						"Unity objects are component containers. Explain which behavior belongs to the transform, collider, renderer, rigidbody, and custom script."
+						"A GameObject is an entry in the scene hierarchy. Its Transform stores position, rotation, and scale. A SpriteRenderer makes it visible, a Collider2D defines its contact shape, and a Rigidbody2D lets the physics system move it. A script adds behavior specific to the game.\n\nIn a copy of the smoke scene, turn off the player's SpriteRenderer. Check its disappearance in the Game view and inspect its collider outline in the Scene view. Restore the renderer and resize the collider to see how visibility and contact can be tuned independently."
 				},
 				{
 					title: "Script Lifecycle",
 					content:
-						"Awake, Start, Update, FixedUpdate, and collision callbacks each fit a specific kind of beginner Unity work."
+						"For one enabled component at scene startup, Awake initializes references, OnEnable registers work needed while the component is enabled, and Start runs once before its first Update. Use Update for work tied to a rendered frame and FixedUpdate for changes to a Rigidbody2D. A rendered frame can contain zero or several physics steps. Physics callbacks report contacts when matching bodies and colliders interact.\n\nThe practice trace logs one example of each callback it observes. Compare startup with disabling and reenabling the script during play. What runs once, what runs on reenable, and what repeats on a schedule?"
 				},
 				{
 					title: "Inspector Variables",
 					content:
-						"Use serialized fields to tune values without hardcoding every number. Change speed or health in the inspector and explain why that is useful."
+						"The starter's PlayerController uses `[SerializeField] private float moveSpeed = 5f;`. Unity stores an assigned Inspector value with the scene or prefab, while the C# field stays private. The script combines an input value of -1, 0, or 1 with moveSpeed to set horizontal velocity.\n\nWith the keyboard baseline from the practice case, compare speed 2 with speed 5 on the same player. Set each value outside Play Mode and use the same key and time interval for both trials. Record which value is easier to control and the distance or overshoot that supports the choice."
 				},
 				{
 					title: "Debugging Component State",
 					content:
-						"Use Debug.Log and inspector checks to verify references, null values, and changing state."
+						"Start with the first relevant Console message. Open its stack trace to find the script and line, then inspect the object carrying the component. If a serialized reference is empty, assign the corresponding scene object or decide how the script should behave without one. Use `Debug.Log(value, this)` to connect a measured value with its owner in the Hierarchy.\n\nUse the missing-target case in the practice pack. Reproduce the warning, assign the player, and run the same check again. Keep the expected and actual result for both runs."
 				}
 			],
 			supplementalProjects: [
 				{
 					title: "UGD1 Project 1: Component Gallery",
 					content:
-						"Build a small scene where several objects demonstrate different components and one custom script each."
+						"Create a gallery scene containing a visible square, a player with a dynamic Rigidbody2D and BoxCollider2D, and a platform below the player with a BoxCollider2D. Give the player gravity and add a trace object. In separate Play Mode runs, toggle the player's SpriteRenderer and the platform collider. Restore both components after the trials.\n\nRecord one observation for visibility, one for blocking contact, and one for script timing. Identify the component responsible for each."
 				},
 				{
 					title: "UGD1 Project 2: Inspector-Tuned Movement",
 					content:
-						"Create a player object whose speed, jump force, or rotation can be tuned from the inspector."
+						"Add PlayerController and a dynamic Rigidbody2D with gravity disabled to the gallery player. Enable the keyboard baseline from the practice case. Record two speed trials without editing the script between trials. Then set the chosen value with Play Mode off, save the scene, and reopen it to verify the choice persisted.\n\nSubmit the two values, the observed movement, the chosen value and reason, and the reopened Inspector result."
 				}
 			]
 		},

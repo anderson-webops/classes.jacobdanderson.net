@@ -14,6 +14,7 @@ Use this guide after completing a practice case. Equivalent Unity implementation
 
 - Transform stores spatial state; Renderer or SpriteRenderer displays it; Collider defines contact bounds; Rigidbody participates in physics; scripts own game-specific behavior.
 - Cache local references and validate serialized dependencies during initialization. `Start` is suitable for setup that depends on enabled objects. Frame input belongs on a frame path. Rigidbody changes belong on the physics path. Collision callbacks report the matching physics event.
+- On the trace object, Awake then OnEnable then Start appear at startup. Reenabling logs OnEnable again. FixedUpdate follows the physics schedule, so its position relative to Update can vary. Assigning the player replaces the missing-target warning with its position.
 - A private `[SerializeField]` preserves encapsulation while permitting Inspector tuning.
 - Frame-rate-independent frame motion includes elapsed time. Physics behavior avoids competing direct Transform and Rigidbody ownership.
 - A missing Inspector dependency is confirmed by the field and Console evidence, assigned deliberately, and guarded when absence is a valid state.

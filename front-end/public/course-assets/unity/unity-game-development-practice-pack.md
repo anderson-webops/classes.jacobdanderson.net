@@ -42,7 +42,7 @@ Save the scene, enter Play Mode, and verify both squares in the Game view and on
 
 ## Components and Lifecycle Case
 
-Use this component map for a player object.
+Save a copy of the smoke scene as `Assets/Scenes/ComponentGallery.unity`. Use sprites for the player and platform. Place the player above the platform, add a BoxCollider2D to each object, and add a dynamic Rigidbody2D to the player. Keep the platform collider's Is Trigger option off so it blocks the falling player.
 
 | Responsibility        | Component or script        | Required evidence            |
 | --------------------- | -------------------------- | ---------------------------- |
@@ -50,10 +50,53 @@ Use this component map for a player object.
 | Visible appearance    | Renderer or SpriteRenderer | Player visible in Game view  |
 | Physical body         | Rigidbody or Rigidbody2D   | Body type and constraints    |
 | Contact boundary      | Collider or Collider2D     | Bounds visible in Scene view |
-| Tunable movement      | `PlayerMover`              | Private serialized speed     |
-| State trace           | `LifecycleTrace`           | Ordered Console messages     |
+| Tunable movement      | `PlayerController`        | Private serialized speed     |
+| State trace           | `LifecycleTrace`           | Callback observations        |
 
-Predict the order of `Awake`, `OnEnable`, `Start`, `Update`, and `FixedUpdate`. Classify each task—cache a reference, read frame input, apply physics motion, initialize score, and report collision—by its appropriate lifecycle path. Repair a supplied missing Inspector reference without making the field public only for convenience.
+Save this script as `Assets/Scripts/LifecycleTrace.cs` and attach it to a new empty object. The first occurrence of each repeating callback is enough for the comparison.
+
+```csharp
+using UnityEngine;
+
+public sealed class LifecycleTrace : MonoBehaviour
+{
+    [SerializeField] private Transform target;
+    private bool observedUpdate;
+    private bool observedFixedUpdate;
+
+    private void Awake() => Debug.Log("Awake", this);
+    private void OnEnable() => Debug.Log("OnEnable", this);
+
+    private void Start()
+    {
+        Debug.Log("Start", this);
+        if (target == null)
+            Debug.LogWarning("Assign a target in the Inspector", this);
+        else
+            Debug.Log(target.position, this);
+    }
+
+    private void Update()
+    {
+        if (observedUpdate)
+            return;
+        observedUpdate = true;
+        Debug.Log("First Update", this);
+    }
+
+    private void FixedUpdate()
+    {
+        if (observedFixedUpdate)
+            return;
+        observedFixedUpdate = true;
+        Debug.Log("First FixedUpdate", this);
+    }
+}
+```
+
+Enter Play Mode with the target field empty. Record the startup messages and the warning. Disable and reenable the trace component and look for another OnEnable message. Exit Play Mode, drag the Player from the Hierarchy into the target field, and run again. Record the position log where the warning previously appeared. Compare the first Update and FixedUpdate messages with the initialization messages. Classify reference caching, frame input, physics motion, score initialization, and collision reporting by callback.
+
+For the movement trial, add the supplied `PlayerController`, set the player's Gravity Scale to 0, and use the keyboard setup at the start of the next case. Compare the two speeds in the Inspector, then save the chosen value in the gallery scene.
 
 ## Input Movement and Camera Case
 
