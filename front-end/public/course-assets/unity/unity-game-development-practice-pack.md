@@ -200,7 +200,51 @@ Test a rejected transition, such as Pause after Won. Run every valid route with 
 
 ## Prefabs Levels and Feedback Case
 
-Create one collectible or hazard prefab with configurable value, speed, or damage. Use this bounded spawn plan.
+Drag a working coin into `Assets/Prefabs` and use that asset for the first wave. Add three empty objects at distinct reachable positions, then replace the hand-placed coins with these spawn positions.
+
+Save this as `Assets/Scripts/CoinWave.cs` and attach it to an empty object. Assign GameManager, the coin prefab, and the three positions in the Inspector. Add `CoinWave.Begin` to the Start button's On Click list after `GameManager.StartGame`.
+
+```csharp
+using System.Collections;
+using Course.UnityGameDevelopment;
+using UnityEngine;
+
+public sealed class CoinWave : MonoBehaviour
+{
+    [SerializeField] private GameManager manager;
+    [SerializeField] private GameObject coinPrefab;
+    [SerializeField] private Transform[] positions = System.Array.Empty<Transform>();
+    private bool started;
+
+    public void Begin()
+    {
+        if (started || manager == null || coinPrefab == null ||
+            manager.State != SessionState.Playing)
+            return;
+
+        started = true;
+        StartCoroutine(SpawnCoins());
+    }
+
+    private IEnumerator SpawnCoins()
+    {
+        var created = 0;
+        foreach (var point in positions)
+        {
+            if (created >= 3 || manager.State != SessionState.Playing)
+                yield break;
+            if (point == null)
+                continue;
+
+            Instantiate(coinPrefab, point.position, point.rotation);
+            created++;
+            yield return new WaitForSeconds(1.5f);
+        }
+    }
+}
+```
+
+The first wave matches the three-coin starter. Keep the additional rows for a stretch level with an explicit goal for the larger number of coins.
 
 | Wave | Count | Interval | Allowed region   | Stop rule             |
 | ---- | ----: | -------: | ---------------- | --------------------- |
@@ -208,7 +252,7 @@ Create one collectible or hazard prefab with configurable value, speed, or damag
 | 2    |     5 |    1.2 s | Marked play area | All collected or 25 s |
 | 3    |     6 |    1.0 s | Marked play area | Win, loss, or 30 s    |
 
-Map three events to feedback.
+Map three events to feedback. A label or icon is enough for the base cue. To add audio, assign an AudioSource and a short clip and call `PlayOneShot` after the state change. For animation, trigger a scale pulse or brief banner on the same accepted event.
 
 | Event   | Visual or motion cue | Audio cue    | Nonaudio equivalent            |
 | ------- | -------------------- | ------------ | ------------------------------ |
@@ -222,11 +266,11 @@ Verify prefab overrides, spawn bounds, object cleanup, animation transitions, an
 
 Choose one bounded vertical slice:
 
-1. **Relic Runner:** movement, one collectible, one hazard, one finish, and restart.
-2. **Robot Repair:** movement, one interaction, one blocked path, completion, and restart.
-3. **Arena Alchemist:** movement, one hazard pattern, one power-up, timer or score, and restart.
+1. **Relic Runner:** use the three-coin starter goal, one failure hazard, and restart.
+2. **Robot Repair:** reach a panel and repair a robot with one part. Try a wrong part for the failure path. Restart restores the part and panel.
+3. **Arena Alchemist:** collect one power-up and survive a short hazard pattern. A hazard hit ends the attempt. Restart restores the timer and the power-up.
 
-Required one-page brief: audience, goal, controls, core loop, required mechanics, scenes, stand-in assets, accessibility route, risks, non-goals, and done criteria.
+Write a one-page brief with the audience, controls, goal, core loop, success and failure conditions, scene name, placeholder assets, one accessible status cue, one risk, and one feature outside scope. The done criteria should be observable in both the editor and the local build.
 
 Use fictional playtest labels.
 
@@ -236,7 +280,7 @@ Use fictional playtest labels.
 | P2   | After loss     | Restart           | Record          | Bug / usability / balance / request | 1–3      | Fix / defer | Record |
 | P3   | Paused         | Resume and finish | Record          | Bug / usability / balance / request | 1–3      | Fix / defer | Record |
 
-Revise the two highest-impact findings, produce a local build, and list known limits.
+Revise the two highest-impact findings. For each, retain the original result and repeat the same task after one deliberate change. Confirm the launch and restart checks in the local build, then record any known limit and the next action that would address it.
 
 ## Testing Profiling and Builds Case
 
@@ -247,12 +291,34 @@ If the project is missing assembly definitions, create a runtime Assembly Defini
 | Check                   | Supplied target                                           |
 | ----------------------- | --------------------------------------------------------- |
 | Edit Mode standard case | Score changes from 2 to 3 after one collectible           |
-| Edit Mode boundary case | A disabled collectible cannot score twice                 |
+| Edit Mode boundary case | CollectCoin while Ready leaves score at 0                  |
+| Scene pickup boundary   | One accepted pickup hides the coin and scores once        |
 | Saved-scene smoke       | RelicRunner opens, player appears, and Start begins play  |
 | Build Profile           | DesktopDevelopment includes RelicRunner and builds locally |
 | Profile symptom         | 200 objects allocated every frame during a spawn loop     |
 
 In **File → Build Profiles**, create the desktop profile for the current platform, add `Assets/Scenes/RelicRunner.unity` to the scene list, and build to `Builds/DesktopDevelopment`. Open the build and verify the same start-to-restart loop. Classify failures as logic, serialized scene wiring, package or test assembly setup, build configuration, or performance. Record measured evidence before and after changing the spawn loop. Keep any CI route bounded to tests, source validation, and build configuration checks.
+
+Add this rule case to the Edit Mode test class to check the ready-state boundary.
+
+```csharp
+[Test]
+public void CollectingBeforeStartLeavesScoreAtZero()
+{
+    var session = new GameSession(3);
+    session.CollectCoin();
+    Assert.That(session.Score, Is.EqualTo(0));
+    Assert.That(session.State, Is.EqualTo(SessionState.Ready));
+}
+```
+
+For an optional automated run, set `UNITY_EDITOR` to the executable for the activated Unity version. From the project root, run the [Test Framework command](https://docs.unity3d.com/Packages/com.unity.test-framework@1.4/manual/reference-command-line.html). Retain the exit result, test report, and log together. Check that the new test ran as well as passing.
+
+```sh
+"$UNITY_EDITOR" -batchmode -projectPath "$PWD" -runTests \
+  -testPlatform EditMode -testResults "$PWD/../editmode-results.xml" \
+  -logFile "$PWD/../editmode.log"
+```
 
 ## Full Project Repository Workflow Case
 
@@ -271,3 +337,5 @@ Audit the linked starter and solution first. Then use this inventory to check th
 | `Library` and `Temp`          | Absent                          | Absent                   | Ignore          |
 
 Write a checkpoint containing scene or system, scripts changed, play or test result, one decision, one unresolved risk, and next action. Then describe how a clean machine can clone, open, play, test, and build the project.
+
+Record the commit and role folder before opening a fresh clone. Restore tracked Git LFS assets when the project uses them. Check that scene, prefab, and asset files retain their matching `.meta` files, so serialized references resolve. Open the matching editor, wait for package restoration, and run the recorded scene, test, and build checks. Record what each role does and the learner task that remains open in the starter.

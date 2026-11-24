@@ -1880,12 +1880,12 @@ function addUnityRebuildModules(courseId: string, course: RawCourse) {
 				{
 					title: "Project Folder Hygiene",
 					content:
-						"Explain Assets, Scenes, Scripts, Prefabs, Materials, and Packages. Create a clean folder structure before writing scripts so assets do not become untraceable later."
+						"Save scene files under Assets/Scenes and C# scripts under Assets/Scripts. Keep reusable objects under Assets/Prefabs. Where a scene uses art or audio, keep those files and their .meta files with the source. Packages records dependencies, and ProjectSettings records the editor and project configuration. Unity regenerates Library after opening a project.\n\nMove one source asset through Unity's Project window and confirm the saved scene still finds it."
 				},
 				{
 					title: "Asset Licensing and Attribution",
 					content:
-						"Use only self-created assets, Unity samples, or permissively licensed assets. Record attribution in a project notes file before the asset enters a capstone."
+						"Check the source and license before importing outside art, audio, fonts, or models. Record the asset name, author or source, license, and any modification in THIRD_PARTY_ASSETS.md. For a practice asset with unknown terms, use a self-created shape or documented alternative.\n\nClassify the asset examples in the practice table and record the chosen in-game substitute for an unknown asset."
 				},
 				{
 					title: "First Scene Smoke Test",
@@ -1897,12 +1897,12 @@ function addUnityRebuildModules(courseId: string, course: RawCourse) {
 				{
 					title: "UGD0 Project 1: Unity Smoke-Test Scene",
 					content:
-						"Create and run a smoke-test scene proving the editor, play mode, script compilation, and folder structure work."
+						"Open the starter folder in the matching Unity editor and create the smoke scene from the practice case. Save it under Assets/Scenes, close it, and reopen it. Enter Play Mode and confirm the two visible objects and the Smoke scene ready message. Record the editor version, scene path, and first relevant Console result."
 				},
 				{
 					title: "UGD0 Project 2: Asset Attribution Sheet",
 					content:
-						"Create an attribution sheet for any external art, audio, font, or package that may be used later."
+						"Create or update THIRD_PARTY_ASSETS.md for the smoke scene. Record one self-created object and one candidate external resource with known terms. For each, note the source, license status, and whether it enters the project. Check that the scene still plays with the self-created objects available locally."
 				}
 			]
 		},
@@ -1927,7 +1927,7 @@ function addUnityRebuildModules(courseId: string, course: RawCourse) {
 				{
 					title: "Debugging Component State",
 					content:
-						"Start with the first relevant Console message. Open its stack trace to find the script and line, then inspect the object carrying the component. If a serialized reference is empty, assign the corresponding scene object or decide how the script should behave without one. Use `Debug.Log(value, this)` to connect a measured value with its owner in the Hierarchy.\n\nUse the missing-target case in the practice pack. Reproduce the warning, assign the player, and run the same check again. Keep the expected and actual result for both runs."
+						"Start with the first relevant Console message. Open its stack trace to find the script and line, then inspect the object carrying the component. If a serialized reference is empty, assign the corresponding scene object or define a fallback for the missing input. Use `Debug.Log(value, this)` to connect a measured value with its owner in the Hierarchy.\n\nUse the missing-target case in the practice pack. Reproduce the warning, assign the player, and run the same check again. Keep the expected and actual result for both runs."
 				}
 			],
 			supplementalProjects: [
@@ -2008,7 +2008,7 @@ function addUnityRebuildModules(courseId: string, course: RawCourse) {
 				{
 					title: "UGD3 Project 1: Coin Collection Loop",
 					content:
-						"Assemble the three-coin starter route from the practice case. Retest the early coin touch, then have GameManager report whether a pickup counted. After Start, each coin should disappear once and record a score change in the Console. The last required coin reaches Won.\n\nRecord score and coin visibility before Start, after one pickup, after reentering that coin's position, and at the win threshold."
+						"Assemble the three-coin starter route from the practice case. Retest the early coin touch, then have GameManager report whether a pickup counted. After Start, verify that each pickup hides one coin and records one score change in the Console. The last required coin reaches Won.\n\nRecord score and coin visibility before Start, after one pickup, after reentering that coin's position, and at the win threshold."
 				},
 				{
 					title: "UGD3 Project 2: Hazard and Reset Room",
@@ -2060,34 +2060,34 @@ function addUnityRebuildModules(courseId: string, course: RawCourse) {
 				{
 					title: "Prefabs and Reusable Objects",
 					content:
-						"Turn repeated objects into prefabs and explain which values are instance-specific."
+						"A prefab stores a reusable hierarchy, components, and defaults. Drag a working coin from the Hierarchy into Assets/Prefabs, then place two instances from that asset. Positions belong to the level. Keep the trigger and pickup script as shared prefab settings.\n\nChange the prefab's sprite scale and check both instances. Set one instance's SpriteRenderer tint and inspect its Overrides list. Predict the settings on a new instance, then place one to check."
 				},
 				{
 					title: "Spawning and Level Data",
 					content:
-						"Spawn enemies, coins, obstacles, or hazards from simple rules or hand-authored level layouts."
+						"A spawn rule specifies what to create, where it can appear, how many objects may exist, and when creation stops. Keep the positions as marked scene objects and reuse the coin prefab for behavior. In the first wave, use three distinct positions and one invocation of the spawner.\n\nTest an empty slot and a repeated Start. Confirm the recorded positions and spawn count stay inside the declared limits."
 				},
 				{
 					title: "Audio and Animation Feedback",
 					content:
-						"Add sound and animation only where they communicate state: hit, collect, jump, win, lose, or menu click."
+						"Tie each cue to an accepted state change. A collected coin updates the score; a hazard shows a failure label; a won run shows the win heading and restart action. Use the text result as the baseline. Add a short animation or sound to reinforce one event and verify that an ignored touch produces neither a point nor a cue.\n\nPlay again with audio muted. Confirm that each result and its next action remain readable."
 				},
 				{
 					title: "Build Settings and Export Check",
 					content:
-						"Review scenes in build settings and run a local build or structured play-mode checklist."
+						"Save RelicRunner and add it as the first enabled scene in the desktop Build Profile. Select the current desktop platform and build to Builds/DesktopDevelopment. Launch the built game and run the same controls, coin, hazard, and restart checks used in the editor.\n\nRecord the editor version, profile name, scene, target, and output path. If launch differs from Play Mode, start by checking the scene list, input settings, and saved references."
 				}
 			],
 			supplementalProjects: [
 				{
 					title: "UGD5 Project 1: Prefab Spawner",
 					content:
-						"Create a prefab and spawner that can produce several objects while preserving game balance."
+						"Replace the hand-placed coins with a single prefab and three marked spawn points. Trigger one wave after Start, then record the three positions, object count, and completion result. Repeat Start and verify that the count stays unchanged. Fail a run during the wave and check that spawning stops. Restart and confirm that the next run begins with clean spawn state."
 				},
 				{
 					title: "UGD5 Project 2: Feedback Polish Pass",
 					content:
-						"Add audio or animation feedback to three meaningful events and explain what each communicates."
+						"Choose collection, failure, and success in the current scene. Give each a clear visual or textual result, then add one animation or optional sound to reinforce a result. Verify the correct cue on each path, confirm the score and state still match the earlier checks, and replay with sound muted. Keep a short table of event, expected cue, and observed cue."
 				}
 			]
 		},
@@ -2097,34 +2097,34 @@ function addUnityRebuildModules(courseId: string, course: RawCourse) {
 				{
 					title: "Small Game Design Document",
 					content:
-						"Write a one-page design document: goal, controls, core loop, mechanics, art/audio scope, scenes, risks, and done criteria."
+						"Use one page to specify a playable loop. State the player goal, controls, success and failure rules, and how a new run starts. Name the one scene and minimum assets, plus one risk and one optional feature to cut. Write release checks as observations, such as restarting after a hazard restores three visible coins and zero score."
 				},
 				{
 					title: "Vertical Slice",
 					content:
-						"Build one complete playable slice before adding more levels or content."
+						"A vertical slice contains a small complete game loop. Begin with one scene that starts, accepts input, reaches a result, and restarts. Check the editor and a standalone build before adding another room. Retain the smallest scene that shows the idea and the named results from the design brief."
 				},
 				{
 					title: "Playtest and Bug Triage",
 					content:
-						"Run a structured playtest and classify feedback as bug, usability issue, balance issue, or feature request."
+						"Give a playtester an action such as reach the goal, then observe the result before explaining controls. A bug breaks the intended behavior. A usability issue hides or complicates a correct action. A balance issue changes difficulty or pacing. A feature request proposes new behavior. Record the starting state, expected result, observed behavior, and whether the issue blocks the loop. Prioritize the two issues that most affect reaching a result or restarting."
 				},
 				{
 					title: "Revision and Final Presentation",
 					content:
-						"Revise based on evidence and present the final game by explaining architecture, controls, state flow, and one hard bug."
+						"For each revision, record what happened before, one change, and the result after repeating the same steps. Verify the other core paths, including restart, after the revision. In the final demonstration, show the controls and one complete loop, identify the scripts that own movement and state, and describe a difficult bug with its retest."
 				}
 			],
 			supplementalProjects: [
 				{
 					title: "UGD6 Project 1: Vertical Slice",
 					content:
-						"Build the smallest complete version of the capstone with start, play, success/failure, and restart."
+						"Choose a capstone from the practice case and build one complete scene. Use placeholder shapes to test the goal and controls early. Check launch, a successful run, a failed run, and restart from both results. Confirm the same behavior in the local build and record the scene, build profile, and one known limit."
 				},
 				{
 					title: "UGD6 Project 2: Playtest Revision",
 					content:
-						"Collect feedback, choose two changes, implement them, and explain why they improved the game."
+						"Use the three supplied playtest tasks with fictional labels and behavior-only notes. Reproduce the two highest-impact issues, make one targeted change for each, and retest with the same setup. Package the build record, original observations, revisions, one difficult bug and retest, and any known limit. Keep the goals and controls visible during the demonstration."
 				}
 			]
 		}
@@ -3344,17 +3344,17 @@ function addUnityFullProjectWorkflowModules(
 			{
 				title: "Build Profiles and Deployment",
 				content:
-					"**Concept path:** Use Build Profiles for desktop and optional Web builds. Build configuration is a repeatable artifact, not a last-minute surprise. A build profile records scenes, target platform, settings, and output expectations so the same project can be tested outside the editor.\n\n**Build checklist:** Record the Unity editor version, active scenes, input settings, target platform, output folder, known warnings, and the first smoke test after launch. A local build proves that gameplay does not depend on editor-only state, missing scene references, or assets that were present only on one machine.\n\n**Evidence target:** The work creates a local build, records the Unity editor version, and explains the target platform."
+					"Create the DesktopDevelopment profile and verify that RelicRunner is the first enabled scene. Rebuild from a clean clone and compare the editor version, platform, scene list, input backend, and output record with the original build. Launch the rebuilt game and test Start, one completed run, and restart. Keep an optional Web build as a separate profile and check its own keyboard and scene behavior."
 			},
 			{
 				title: "Git LFS and Asset Attribution",
 				content:
-					"**Concept path:** Track source binaries and large media with Git LFS, commit package manifests/locks, and maintain `THIRD_PARTY_ASSETS.md` with source, license, date imported, modification note, and first branch/tag. Asset provenance is part of the build system because untracked media or unclear licenses can make an otherwise working project impossible to share.\n\n**Review path:** Check textures, audio, models, fonts, packages, and generated build output separately. Source assets that are needed to rebuild the project are tracked or clearly restored; generated builds and caches stay out of the repo unless there is a deliberate release artifact policy.\n\n**Evidence target:** A clean clone has scripts, package locks, and asset provenance."
+					"Read the repository root's .gitattributes to identify which binary formats Git LFS tracks. For one source asset, verify that a clean working copy restores the actual file and matching Unity .meta file. Keep the packages manifest, lock, and ProjectSettings in source control. Record an external asset's author or source, license, import date, and changes in THIRD_PARTY_ASSETS.md. Keep Library, Temp, and local build output outside the repository."
 			},
 			{
 				title: "Profiling and Bug Bash",
 				content:
-					"**Concept path:** Profile only concrete issues: scene boot, excessive spawning, expensive update loops, or memory-heavy assets. Keep a bug bash log with reproduction, fix, and retest. The bug bash distinguishes measured performance problems from subjective polish requests so fixes are based on evidence.\n\n**Bug bash record:** For each issue, note the scene, reproduction steps, expected behavior, observed behavior, suspected cause, fix, and retest result. For performance problems, include the measured symptom instead of only saying the game feels slow. For polish requests, state whether the change improves feedback, clarity, controls, or pacing.\n\n**Evidence target:** The work describes one measured issue and one verified fix."
+					"Reproduce one measurable symptom while recording with the Profiler. For a spawn issue, select a slow frame and inspect the CPU Usage view for the spawner's calls and allocations. Record the frame time, allocation size, or number of objects created. Make one focused change, repeat the same route on the same target, and compare the same measurement. Keep the reproduction, fix, and retest record."
 			}
 		],
 		supplementalProjects: [
@@ -3387,7 +3387,7 @@ function addUnityFullProjectWorkflowModules(
 			{
 				title: "Capstone Options",
 				content:
-					"**Project goal:** Choose one finishable vertical-slice capstone: Relic Runner platformer, Robot Repair top-down adventure, or Arena Alchemist survival loop. Each option includes start, play, failure or win, restart, build, attribution, and demo evidence.\n\n**Option A: Relic Runner:** Build one short platforming level with movement, jump or dash, collectible relic, hazard, finish trigger, restart path, and one camera or UI feedback decision.\n\n**Option B: Robot Repair:** Build a small top-down room with movement, interactable broken machines, inventory or repair state, blocked path, completion trigger, restart path, and one readable feedback cue.\n\n**Option C: Arena Alchemist:** Build a compact survival loop with player movement, one enemy or hazard pattern, collectible ingredient or power-up, scoring or timer, failure state, restart path, and one balancing note.\n\n**Milestone sequence:** Prototype the core movement first, then add one interaction, one failure or success state, one feedback pass, one build, and one demo script. Keep optional polish separate from required mechanics so the vertical slice remains finishable.\n\n**Completion checks:**\n- Scope is small enough for a vertical slice.\n- The project has a test or smoke-check path.\n- Attribution and package/version notes are present.\n- The final demo explains architecture, one hard bug, and the evidence that the build can be reproduced."
+					"Carry one option from the core capstone into the repository plan.\n\n**Option A: Relic Runner:** Verify the three-coin goal and one hazard in the first checkpoint.\n\n**Option B: Robot Repair:** Verify a repair attempt with the correct part and with the wrong part.\n\n**Option C: Arena Alchemist:** Verify the timer and a hazard hit.\n\nRecord the scene, deciding state rule, observable result, and restart check for the chosen project. Package the same scope with the editor version, asset attribution, Build Profile, and a short demonstration."
 			},
 			{
 				title: "Checkpoint Workflow",
@@ -3402,7 +3402,7 @@ function addUnityFullProjectWorkflowModules(
 			{
 				title: "UGD8 Project 1: Starter Repo Specification",
 				content:
-					"**Project goal:** Inspect and extend the full starter project baseline for one Unity module: scenes, scripts, prefabs, tests, packages, project settings, docs, LFS rules, and attribution file. The specification defines what belongs in the starter state, what belongs only in the review state, and how the project proves it can be opened from a clean clone.\n\n**Specification path:** List the minimum playable scene, the scripts that are intentionally incomplete, the temporary stand-in assets, the expected package versions, and the first smoke test. Then identify which completed behaviors must stay out of the starter so the repo remains a legitimate starting point rather than a disguised solution.\n\n**Completion checks:**\n- The starter state is cloneable and playable.\n- Completed review work is not included in the starter state.\n- Validation steps are documented.",
+					"Define a playable baseline with one named learner task still open. Record the scene, scripts, prefabs, editor version, package versions, first smoke test, and intended review behavior. Verify the starter from a fresh clone, then compare it with the completed review state. Describe the smallest visible or testable difference between them and give a reviewer the exact steps to reproduce both outcomes.",
 				projectLink: repoFolderUrl(
 					courseId,
 					"UGD-full-project-starter"

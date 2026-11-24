@@ -47,6 +47,7 @@ Use this guide after completing a practice case. Equivalent Unity implementation
 
 - Shared prefab behavior lives on the prefab; intentional per-instance values remain overrides and are documented.
 - Spawn counts, interval, region, and stop rule prevent unbounded creation. Objects are reused or cleaned up once no longer needed.
+- The starter wave creates up to three coins at its assigned points. A repeated Begin call starts no new wave. Failed or won state stops further creation and scene reload restores the initial wave state.
 - Each feedback cue communicates a named event. Audio always has a visible or textual equivalent.
 - Animation parameters follow declared transitions and do not hide required state inside an animation event without documentation.
 - The build gate passes when the named scene launches outside the editor with controls, core interaction, feedback, and restart intact.
@@ -61,7 +62,7 @@ Use this guide after completing a practice case. Equivalent Unity implementation
 
 ## Testing Profiling and Builds Key
 
-- The Edit Mode standard case expects score 3. The boundary case expects no second increment once the collectible is inactive or already collected.
+- The Edit Mode standard case expects score 3. The Ready boundary case expects score 0 and unchanged state. The scene check verifies disappearance and guards repeat scoring for the individual coin.
 - The component check proves that a dynamically created GameManager can enter Playing. The saved-scene smoke check passes when RelicRunner loads, the player exists, and the Start button begins play without unexplained Console errors.
 - A Build Profile identifies target, scene list, settings, and output. A build that only works through editor state fails the reproducibility gate.
 - Allocating 200 objects every frame is measured before optimization. A valid revision bounds spawning, reuses objects where justified, and records the changed profiler evidence.
