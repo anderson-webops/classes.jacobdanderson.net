@@ -3608,6 +3608,13 @@ function isAppliedStudioContext(context: CourseTextContext) {
 	);
 }
 
+function isAuthoredBridgeCapstone(context: CourseTextContext) {
+	return (
+		context.courseId === "python-to-java-and-cpp-bridge" &&
+		context.module.title.startsWith("Language Bridge Lab 17:")
+	);
+}
+
 function isBriefContent(content: string) {
 	return wordCount(content) < 82 || compactWhitespace(content).length < 460;
 }
@@ -8406,6 +8413,7 @@ function rewritePlaceholderCourseText(course: RawCourse, courseId: string) {
 				}
 
 				if (
+					!isAuthoredBridgeCapstone(context) &&
 					isAppliedStudioContext(context) &&
 					wordCount(item.content) < 90
 				) {
@@ -8484,6 +8492,7 @@ function normalizeCourseTextQuality(course: RawCourse, courseId: string) {
 		for (const section of ["curriculum", "supplementalProjects"] as const) {
 			for (const item of module[section]) {
 				const context = { courseId, course, module, item, section };
+				if (isAuthoredBridgeCapstone(context)) continue;
 				item.content =
 					contextualizeGenericRepresentationPrompt(context);
 

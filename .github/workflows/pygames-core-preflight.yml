@@ -3144,7 +3144,7 @@ jobs:
           node --test test/self-study-browser-batches.test.mjs
           node scripts/classes-family-heavy-task.mjs -- node scripts/verify-self-study-browser-batches.mjs
       - name: Verify Python Level 3 imports, runtime, saved attempts and exports
-        if: inputs.course == 'self-study' && inputs.self_study_courses == 'python-level-3'
+        if: inputs.course == 'self-study' && contains(format(',{0},', inputs.self_study_courses), ',python-level-3,')
         env:
           PYTHON_LEVEL_3_BROWSER_PROOF_DIR: ${{ github.workspace }}/output/self-study-browser/python-level-3
         run: node scripts/classes-family-heavy-task.mjs -- node --test --test-concurrency=1 test/python-level-3-course-browser.test.mjs
