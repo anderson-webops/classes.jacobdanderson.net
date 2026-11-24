@@ -1,5 +1,9 @@
 import fs from "node:fs";
 import { describe, expect, it } from "vitest";
+import {
+	apBinarySearchResources,
+	apComputerScienceAProjectKey
+} from "@/modules/apComputerScienceAResources";
 import { pythonIdeModeForCourseResource } from "@/modules/pythonIde";
 import { apComputerScienceACourse } from "@/stores/courses/ap-computer-science-a";
 import { loadRawCourse } from "@/stores/courses/index";
@@ -165,6 +169,25 @@ describe("AP Computer Science A learner flow", () => {
 			...search.supplementalProjects
 		]) {
 			expect(item.learningPath, item.title).toBe("challenge");
+		}
+	});
+
+	it("opens the runnable pack separately from both legacy role workspaces", () => {
+		const course = "ap-computer-science-a";
+		const item = "binary-search";
+		for (const role of ["starter", "reference"] as const) {
+			const url = apBinarySearchResources[role];
+			const previousSource = url.replace(/\/tree\/[a-f0-9]{40}\//, "/tree/main/");
+			const previousKey = apComputerScienceAProjectKey(
+				course,
+				item,
+				role,
+				previousSource
+			);
+			expect(previousKey).toBe(`${course}:${item}:${role}`);
+			expect(apComputerScienceAProjectKey(course, item, role, url)).toBe(
+				`${previousKey}:binary-search-trace`
+			);
 		}
 	});
 

@@ -1,4 +1,5 @@
 import type { RawCourse, RawCourseModuleItem } from "./types";
+import { apBinarySearchResources } from "@/modules/apComputerScienceAResources";
 import { gitCourseGuideLink } from "./classroomReferenceGuides";
 import {
 	staticMediaFilename,
@@ -6,8 +7,6 @@ import {
 } from "./staticMedia";
 
 const APCS_REPO_BASE = "https://github.com/instruction-material/APCS/tree/main";
-const APCS_BINARY_SEARCH =
-	"https://github.com/instruction-material/APCS/tree/b12cdaaa9bc35a88d281666f0060bc8a90d470ad/APCS16-Binary-Search";
 const STATIC_MEDIA_BASE = "https://static.classes.jacobdanderson.net";
 const BARRONS_TEXTBOOK =
 	"https://www.simonandschuster.com/books/AP-Computer-Science-A-Premium-13th-Edition-Prep-Book-with-6-Practice-Tests-%2B-Comprehensive-Review/Roselyn-Teukolsky/Barrons-AP-Prep/9798349700354";
@@ -1491,8 +1490,8 @@ const apComputerScienceASourceCourse: RawCourse = {
 						extension:
 							"For optional Java practice, complete binaryIterative and compare it with the supplied recursive method on the same inputs."
 					}),
-					projectLink: `${APCS_BINARY_SEARCH}/starter`,
-					solutionLink: `${APCS_BINARY_SEARCH}/solution`,
+					projectLink: apBinarySearchResources.starter,
+					solutionLink: apBinarySearchResources.reference,
 					ideImport: true,
 					preserveInstructions: true,
 					preserveAssignment: true,
