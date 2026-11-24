@@ -23,7 +23,7 @@ Use this guide after completing a practice case. Equivalent Unity implementation
 
 - The starter reads the legacy Horizontal axis. The migrated movement reads the enabled Move action and applies its float value in `FixedUpdate`. Pressing A or D moves left or right; releasing the key stops horizontal motion.
 - Trials A and B are expected to produce comparable distance and control despite different frame targets. A large difference indicates frame-dependent motion or an inconsistent physics path.
-- Trial C may feel faster or sharper, but the justified choice depends on the intended game and recorded observation.
+- Trial C keeps the same top speed as B. The rate limit takes longer to build speed and increases stopping distance after a full-speed release. Compare the response at the same starting speed.
 - The camera follows without hiding the destination, causing preventable motion discomfort, or taking ownership of player movement.
 - Keyboard bindings complete the gate. Controller bindings, remapping, acceleration, friction, and coyote time are valid stretch evidence only after the base route works.
 

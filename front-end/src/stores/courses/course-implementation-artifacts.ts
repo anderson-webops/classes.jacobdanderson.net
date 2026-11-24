@@ -1949,34 +1949,34 @@ function addUnityRebuildModules(courseId: string, course: RawCourse) {
 				{
 					title: "Input to Intent",
 					content:
-						"The starter reads the legacy `Horizontal` axis in `PlayerController`. For the baseline, set Active Input Handling to Both and restart the editor. Create a keyboard Move action, read it as movement intent, and replace the legacy read before applying velocity in `FixedUpdate`."
+						"The linked starter and reference both read the legacy `Horizontal` axis. For the baseline, set Active Input Handling to Both and restart the editor. Then give `PlayerController` a keyboard Move action. Its signed float expresses direction: A gives -1, release gives 0, and D gives 1. Multiply that value by a speed in units per second to request horizontal velocity in `FixedUpdate`.\n\nUse the practice case to assign the action in the Inspector. Check A, release, and D separately before tuning the camera or motion."
 				},
 				{
 					title: "Movement Models",
 					content:
-						"Compare transform-based motion, rigidbody velocity, and force-style motion with small examples and clear tradeoffs."
+						"Writing a Transform position moves an object directly. It works for a visual marker, where speed needs to be multiplied by the frame's elapsed time. Assigning Rigidbody2D velocity requests a speed that Unity integrates during physics steps. Calling AddForce asks physics to accelerate the body, so mass, current velocity, and damping affect the response.\n\nKeep PlayerController as the only script that moves the dynamic player. In a copy of the test room, compare direct velocity with a velocity that approaches the same target at a limited rate. Observe how each responds when the key is released."
 				},
 				{
 					title: "Camera Follow",
 					content:
-						"Add a simple camera-follow script and explain how the camera affects usability and game feel."
+						"Use the player as a camera target. An orthographic camera can follow the player's x coordinate while keeping its own height and depth. In `LateUpdate`, measure the target's latest position, then set the camera x position or approach it smoothly. The camera changes framing; the player's Rigidbody2D continues to own movement.\n\nUse the follow example in the practice pack. Move left, right, and past a landmark. Compare whether the landmark stays readable with a fixed view and a following view."
 				},
 				{
 					title: "Player Feel Tuning",
 					content:
-						"Use acceleration, friction, gravity scale, coyote-time discussion, or turn speed as tuning examples without overcomplicating the first build."
+						"Top speed sets the fastest travel. Acceleration determines how quickly movement reaches that speed or slows to a stop. Camera smoothing affects how movement is framed. Change one value per trial so the observation has a clear cause.\n\nKeep the same track and goal. Compare the stopping distance or how often a landmark leaves the frame. Keep the value that improves the chosen behavior and record one tradeoff."
 				}
 			],
 			supplementalProjects: [
 				{
 					title: "UGD2 Project 1: Movement Test Room",
 					content:
-						"Build a small test room comparing two movement styles and record which one feels better for a chosen game type."
+						"Make a 2D test room with a player, a wide lane, and three position markers. Use the Move action and the same top speed in two runs. First assign the requested velocity directly. Then approach it using the acceleration example from the practice case. Record the first marker reached, travel distance over the timed run, and stopping distance after release. Pick the control that best fits a precise platform or a heavy vehicle and support the choice with one observation."
 				},
 				{
 					title: "UGD2 Project 2: Camera and Control Polish",
 					content:
-						"Add camera follow and one movement-feel improvement, then write a short playtest note."
+						"Use the movement test room and keep its input and speed settings. Compare a fixed camera with the following camera while traveling past the same landmarks. Adjust one follow parameter or one movement value after finding a reproducible problem. Repeat the same run and record the starting setup, changed value, and what became easier or harder to see or control."
 				}
 			]
 		},

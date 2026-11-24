@@ -102,15 +102,44 @@ For the movement trial, add the supplied `PlayerController`, set the player's Gr
 
 The source `PlayerController` reads `Input.GetAxisRaw("Horizontal")`. In **Edit → Project Settings → Player → Other Settings**, set **Active Input Handling** to **Both**, restart Unity, and verify the Horizontal axis in the Input Manager before testing the starter movement.
 
-Create an Input Actions asset and add a `Move` action with a 1D Axis composite. Bind its negative side to A and its positive side to D. In `PlayerController.cs`, import `UnityEngine.InputSystem`, add a serialized `InputActionReference` field named `move`, and assign the Move action in the Inspector. Use `move.action.Enable()` in `OnEnable` and `move.action.Disable()` in `OnDisable`. Replace the legacy read in `FixedUpdate` with `move.action.ReadValue<float>()`. Check left, right, and release before adding jump, pause, or controller bindings.
+Create an Input Actions asset. Add a `Move` action with the Value action type and a 1D Axis composite. Bind its negative side to A and its positive side to D. In `PlayerController.cs`, import `UnityEngine.InputSystem`, add a serialized `InputActionReference` field named `move`, and assign the Move action in the Inspector. Use `move.action.Enable()` in `OnEnable` and `move.action.Disable()` in `OnDisable`. Replace the legacy read in `FixedUpdate` with `move.action.ReadValue<float>()`. Check left, right, and release before adding jump, pause, or controller bindings.
 
-| Trial | Target frame rate | Speed | Acceleration | Camera damping | Observation |
-| ----- | ----------------: | ----: | -----------: | -------------: | ----------- |
-| A     |                30 |     5 |           18 |           0.15 | Record      |
-| B     |               120 |     5 |           18 |           0.15 | Record      |
-| C     |                60 |     7 |           26 |           0.08 | Record      |
+### Compare movement controls
 
-Convert the `Move` action into intent before changing Transform or Rigidbody state. Compare trials A and B for frame-rate stability, then compare B and C for feel. Record one control, camera, or tuning revision and the observation that supports it.
+Use a wide lane with a marked starting position. Begin each trial there and hold D for about two seconds, using the same interval each time. Record the observed frame rate and the change in the player's x coordinate. In the desktop test scene, set VSync Count to Don't Sync and set [Application.targetFrameRate](https://docs.unity.com/en-us/engine/6000.3/script-reference/unityengine/application/targetframerate) to the trial's rate in an active component's Start method. If the measured rates are alike, adjust the requested rates and repeat.
+
+| Trial | Target frame rate | Speed | Movement          | Compare |
+| ----- | ----------------: | ----: | ----------------- | ------- |
+| A     |                30 |     5 | Direct velocity   | Travel  |
+| B     |                60 |     5 | Direct velocity   | Travel  |
+| C     |                60 |     5 | Acceleration cap  | Stop    |
+
+For C, use `Mathf.MoveTowards(body.linearVelocity.x, horizontal * moveSpeed, 18f * Time.fixedDeltaTime)` as the horizontal velocity value in `FixedUpdate`. Preserve the existing vertical velocity. Compare A with B for traveled distance at two render rates. Compare B with C for how far the player moves after release. Use the same camera for these comparisons.
+
+### Follow the player horizontally
+
+Save this script as `Assets/Scripts/HorizontalCameraFollow.cs`, attach it to the orthographic camera, and assign the player Transform.
+
+```csharp
+using UnityEngine;
+
+public sealed class HorizontalCameraFollow : MonoBehaviour
+{
+    [SerializeField] private Transform target;
+
+    private void LateUpdate()
+    {
+        if (target == null)
+            return;
+
+        var position = transform.position;
+        position.x = target.position.x;
+        transform.position = position;
+    }
+}
+```
+
+Play the same route with the component disabled and enabled. Record when the player and the next landmark leave the frame. For a tuning trial, approach the target x position with `Mathf.SmoothDamp` and compare one smoothing time at a time.
 
 ## Physics Collision and Collection Case
 
