@@ -10,6 +10,7 @@ import {
 	isLessonLearningItem,
 	lessonContentSections
 } from "@/modules/courseLessonPresentation";
+import { courseAssetViewerUrl } from "@/modules/courseAssetPreview";
 import { normalizeInlineCourseMarkdown } from "@/modules/courseMarkdown";
 import { useAppStore } from "@/stores/app";
 import { useCoursesStore } from "@/stores/courses";
@@ -37,6 +38,7 @@ import { physicsLevel2Course } from "@/stores/courses/physics-level-2";
 import { preAlgebraACourse } from "@/stores/courses/pre-algebra-a";
 import { preAlgebraBCourse } from "@/stores/courses/pre-algebra-b";
 import { pythonicDesignPatternsCourse } from "@/stores/courses/pythonic-design-patterns";
+import { unityGameDevelopmentCourse } from "@/stores/courses/unity-game-development";
 import {
 	earlyElementaryJoyOfReadingCourse,
 	earlyElementaryMathACourse,
@@ -79,9 +81,16 @@ const writingAssignmentCounts = new Map([
 
 function isReviewedModule(id: string, title: string) {
 	if (id === "java-level-3") return title === "AJ4 Recursion";
+	if (id === "unity-game-development") return /^UGD[0-8] /.test(title);
 	return true;
 }
 const cases = [
+	{
+		id: "unity-game-development",
+		source: unityGameDevelopmentCourse,
+		readings: 36,
+		additions: []
+	},
 	{
 		id: "data-science-in-python",
 		source: dataScienceInPythonCourse,
@@ -579,7 +588,8 @@ it.each(
 				expect(displayedPrompt, project.title).toBe(originalPrompt);
 			}
 		}
-		const card = (item: CourseModuleItem) => {
+		const unity = id === "unity-game-development";
+		const card = (item: CourseModuleItem, checkUnityGuides = false) => {
 			const focusedJavaTask
 				= [
 					"java-level-3",
@@ -613,7 +623,8 @@ it.each(
 				"algebra-2b"
 			].includes(id);
 			const completeAssignment
-				= focusedJavaTask
+				= unity
+					|| focusedJavaTask
 					|| focusedPythonicTask
 					|| completeMathAssignment
 					|| writingAssignmentCounts.has(id)
@@ -635,7 +646,8 @@ it.each(
 						"early-elementary-b-picture-book"
 					].includes(id);
 			const fullBlocks
-				= focusedJavaTask
+				= unity
+					|| focusedJavaTask
 					|| focusedPythonicTask
 					|| [
 						"pre-algebra-b",
@@ -667,9 +679,14 @@ it.each(
 			const selfChecks = fullBlocks
 				? [
 						...item.content.matchAll(
-							/\[(Check answers and reasoning|Project self-check|Figurative-language self-check|Case inputs|Runoff inputs)\]\(([^)]+)\)/g
+							checkUnityGuides
+								? /\[(supplied practice case|verification guide)\]\(([^)]+)\)/g
+								: /\[(Check answers and reasoning|Project self-check|Figurative-language self-check|Case inputs|Runoff inputs)\]\(([^)]+)\)/g
 						)
-					].map(([, label, href]) => {
+					].map(([, label, target]) => {
+						const href = checkUnityGuides
+							? courseAssetViewerUrl(target)
+							: target;
 						const url = new URL(href, "https://example.invalid");
 						const asset = url.searchParams.get("asset")!;
 						const [path, anchor] = asset.split("#");
@@ -707,6 +724,7 @@ it.each(
 					})
 				: [];
 			if (focusedJavaTask) expect(selfChecks, item.id).toHaveLength(2);
+			if (checkUnityGuides) expect(selfChecks, item.id).toHaveLength(2);
 			// These authored labels become separate headings in assignment cards.
 			// Keep every body word while matching the displayed heading punctuation.
 			let fullAssignment = fullBlocks
@@ -786,6 +804,7 @@ it.each(
 			if (
 				completeAssignment
 				&& !completeMathAssignment
+				&& !unity
 				&& id !== "data-science-in-python"
 				&& ![
 					"pre-algebra-b",
@@ -894,16 +913,21 @@ it.each(
 						item => !item.internal && isLessonLearningItem(item)
 					)
 					.map(reading),
-				projects: module.curriculum
-					.filter(
-						item => !item.internal && !isLessonLearningItem(item)
+				projects: [
+					...module.curriculum,
+					...module.supplementalProjects.filter(
+						item => unity && item.learningPath === "core"
 					)
-					.map(card),
+				]
+					.filter(item => !item.internal && !isLessonLearningItem(item))
+					.map((item, index) => card(item, unity && index === 0 && isReviewedModule(id, module.title))),
 				optional: module.supplementalProjects
 					.filter(
-						item => !item.internal && !isLessonLearningItem(item)
+						item =>
+							!item.internal && !isLessonLearningItem(item)
+							&& (!unity || item.learningPath !== "core")
 					)
-					.map(card)
+					.map((item, index) => card(item, unity && index === 0 && isReviewedModule(id, module.title)))
 			}));
 		expect(
 			modules
@@ -1119,6 +1143,25 @@ it.each(
 		else if (algebra) {
 			expect(modules).toHaveLength(id === "algebra-2a" ? 15 : 12);
 		}
+		else if (unity) {
+			const active = modules.filter(module =>
+				isReviewedModule(id, module.title)
+			);
+			expect(active.map(module => module.kind)).toEqual([
+				...Array(7).fill("module"),
+				"appendix",
+				"appendix"
+			]);
+			expect(active.flatMap(module => module.projects)).toHaveLength(14);
+			expect(active.flatMap(module => module.optional)).toHaveLength(4);
+			for (const item of course.modules
+				.filter(module => isReviewedModule(id, module.title))
+				.flatMap(module => [...module.curriculum, ...module.supplementalProjects])) {
+				expect(item.content, item.title).toContain("[supplied practice case]");
+				expect(item.content, item.title).toContain("[verification guide]");
+				expect(item.content, item.title).toContain("**Evidence gate:**");
+			}
+		}
 		else {
 			expect(
 				modules.filter(module => module.kind === "module")
@@ -1143,7 +1186,10 @@ it.each(
 		}
 		for (const module of modules) {
 			if (!isReviewedModule(id, module.title)) continue;
-			if (id === "pythonic-design-patterns") {
+			if (unity) {
+				expect(module.readings, module.title).toHaveLength(4);
+			}
+			else if (id === "pythonic-design-patterns") {
 				const number = /^PDP(\d+) /.exec(module.title)?.[1];
 				expect(module.readings).toHaveLength(
 					number === undefined ? 4 : [3, 4, 3, 3, 4, 3, 3, 3, 2, 3, 2, 2, 4][Number(number)]
@@ -1330,6 +1376,7 @@ it.each(
 						sourceProjects: sourceProjects.length,
 						modules,
 						...([
+							"unity-game-development",
 							"pythonic-design-patterns",
 							"java-level-3",
 							"design-patterns-in-java-part-2",
@@ -1344,7 +1391,9 @@ it.each(
 								}
 							: {}),
 						reviewScope:
-							id === "pythonic-design-patterns"
+							unity
+								? "Nine active Unity units: 36 complete readings, 14 required projects and four optional projects per role and viewport. Legacy reference navigation and all published IDs are preserved. Native Unity execution is a separate gate."
+								: id === "pythonic-design-patterns"
 								? "Complete Pythonic course: sixteen units including three support appendices, fifty-one complete readings and sixty complete tasks per role/width profile. All 111 course identities and complete navigation are retained. Source-native and IDE workflow acceptance are recorded separately."
 								: id === "design-patterns-in-java"
 									? "Complete primary course: ten teaching units, applied studios and three reference appendices. All 134 published identities covered by 32 complete readings, 102 activities and 204 input/answer case views per role/width profile."

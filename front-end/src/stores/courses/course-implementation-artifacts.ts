@@ -3728,6 +3728,9 @@ ${routeLabel} Core: ${flow.coreRoute} Stretch: ${flow.stretchRoute}
 					? "challenge"
 					: "choice"
 				: "core";
+			item.contentKind = supplemental ? "assignment" : "reading";
+			item.preserveInstructions = true;
+			item.preserveAssignment = true;
 			item.projectLink ??= UNITY_STARTER_PROJECT;
 			item.solutionLink ??= UNITY_SOLUTION_PROJECT;
 			item.datasetLink = practiceLink;
