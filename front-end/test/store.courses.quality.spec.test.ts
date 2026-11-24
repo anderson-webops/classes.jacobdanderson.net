@@ -1055,7 +1055,7 @@ describe("course text quality normalization", () => {
 			{
 				courseId: "ap-computer-science-a",
 				moduleTitle: "General: Course Introduction and Setup",
-				itemTitle: "Required Textbook"
+				itemTitle: "Practice Resources"
 			},
 			{
 				courseId: "ap-computer-science-a",
@@ -1110,11 +1110,13 @@ describe("course text quality normalization", () => {
 		const course = await loadRawCourse("ap-computer-science-a");
 		expect(course).not.toBeNull();
 
-		const item = findItem(course!, /^Required Textbook$/);
+		const item = findItem(course!, /^Practice Resources$/);
 		expect(item.content).toContain(
 			"Barron's AP Computer Science A Premium, 13th Edition"
 		);
 		expect(item.content).toContain("2026 exam outline");
+		expect(item.content).toContain("an optional source");
+		expect(item.content).toContain("apcentral.collegeboard.org");
 		expect(item.projectLink).toContain("simonandschuster.com");
 		expect(item.projectLink).toContain("9798349700354");
 		expect(item.projectLink).not.toContain("1506287913");
@@ -3110,9 +3112,7 @@ describe("course text quality normalization", () => {
 				expect(text).toContain(
 					"**Data Science:** a reproducible descriptive analysis"
 				);
-				expect(text).toContain(
-					"**AI Foundations:** a solver or agent"
-				);
+				expect(text).toContain("**AI Foundations:** a solver or agent");
 				expect(text).toContain(
 					"**Machine Learning:** a fitted predictive model"
 				);
@@ -3617,7 +3617,7 @@ describe("course text quality normalization", () => {
 				/PS6 Supplemental Project 5: Card Shuffler/,
 				"ps6_card_shuffler.mp4"
 			],
-			[/PS12 Project 1: Type Racer/, "ps12_type_racer.mp4"]
+			[/PS12 Project 1: Typing Speed Practice/, "ps12_type_racer.mp4"]
 		] as const;
 
 		for (const [titlePattern, filename] of unavailableProjectMedia) {
@@ -6161,7 +6161,11 @@ describe("course text quality normalization", () => {
 											module,
 											item
 										) &&
-										!completeMoneyMindedActivity(entry.id, module, item) &&
+										!completeMoneyMindedActivity(
+											entry.id,
+											module,
+											item
+										) &&
 										!completePhysicsPractice(
 											entry.id,
 											module,
@@ -8066,10 +8070,15 @@ describe("course text quality normalization", () => {
 			expect(text).toContain(name);
 		expect(text).toContain("Rule of 72");
 		expect(text).toContain("Sharpe Ratio");
-		for (const name of ["SPY", "QQQ", "DIA"])
-			expect(text).toContain(name);
+		for (const name of ["SPY", "QQQ", "DIA"]) expect(text).toContain(name);
 		expect(text).toContain("BOTZ");
-		for (const category of ["cyclical", "defensive", "growth", "blue-chip", "IPO"])
+		for (const category of [
+			"cyclical",
+			"defensive",
+			"growth",
+			"blue-chip",
+			"IPO"
+		])
 			expect(text).toMatch(new RegExp(category, "i"));
 		expect(text).toContain("Tesla with GM");
 		expect(text).toContain("Republic.co");
@@ -8078,13 +8087,19 @@ describe("course text quality normalization", () => {
 		expect(text).toContain("GameStop");
 		expect(text).toContain("Bitcoin, Ethereum, and Dogecoin");
 		expectAuthoredReadings(course, "money-minded-investing");
-		for (const module of course.modules.filter(module => !module.internal)) {
+		for (const module of course.modules.filter(
+			module => !module.internal
+		)) {
 			for (const item of [
 				...module.curriculum.slice(1),
 				...module.supplementalProjects
 			])
 				expect(
-					completeMoneyMindedActivity("money-minded-investing", module, item),
+					completeMoneyMindedActivity(
+						"money-minded-investing",
+						module,
+						item
+					),
 					item.title
 				).toBe(true);
 		}
@@ -9016,7 +9031,10 @@ describe("course text quality normalization", () => {
 				expect(text, courseId).toContain("**Concept path:**");
 				expect(text, courseId).toContain("Core topics in this module:");
 			}
-			if (courseId in elementaryMaterials || courseId === "money-minded-investing") {
+			if (
+				courseId in elementaryMaterials ||
+				courseId === "money-minded-investing"
+			) {
 				expect(text, courseId).toContain("Project self-check");
 			} else expect(text, courseId).toContain("**Completion evidence:**");
 			expect(text, courseId).not.toMatch(

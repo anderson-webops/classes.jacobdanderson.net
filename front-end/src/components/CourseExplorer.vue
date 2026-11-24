@@ -23,6 +23,7 @@ import {
 } from "vue";
 import { routeLocationKey, routerKey } from "vue-router";
 import { api } from "@/api";
+import { apComputerScienceAProjectKey } from "@/modules/apComputerScienceAResources";
 import { assemblyCourseProjectKey } from "@/modules/assemblyProjectResources";
 import { c17CourseProjectKey } from "@/modules/c17ProjectResources";
 import {
@@ -655,30 +656,42 @@ const visibleAppendixModules = computed<VisibleModule[]>(() =>
 	visibleModuleList(appendixCourseModules.value, normalizedQuery.value)
 );
 
-const visibleModules = computed<VisibleModule[]>(() => [
-	...visibleCoreModules.value,
-	...visibleTransitionModules.value,
-	...visibleAppendixModules.value
-]);
-
-const visibleOutlineGroups = computed(() =>
-	[
+const visibleOutlineGroups = computed(() => {
+	const bridgeCourse =
+		selectedCourseId.value === "python-to-java-and-cpp-bridge";
+	const capstoneId = bridgeCourse
+		? coreCourseModules.value.at(-1)?.id
+		: undefined;
+	return [
 		{
 			key: "modules",
 			label: "Modules",
-			modules: visibleCoreModules.value
+			modules: visibleCoreModules.value.filter(
+				module => module.id !== capstoneId
+			)
 		},
 		{
 			key: "next-steps",
-			label: "Next Steps",
+			label: bridgeCourse ? "Java or C++" : "Next Steps",
 			modules: visibleTransitionModules.value
+		},
+		{
+			key: "capstone",
+			label: "Capstone",
+			modules: visibleCoreModules.value.filter(
+				module => module.id === capstoneId
+			)
 		},
 		{
 			key: "references",
 			label: "References",
 			modules: visibleAppendixModules.value
 		}
-	].filter(group => group.modules.length > 0)
+	].filter(group => group.modules.length > 0);
+});
+
+const visibleModules = computed(() =>
+	visibleOutlineGroups.value.flatMap(group => group.modules)
 );
 
 function visibleModuleList(modules: CourseModule[], query: string) {
@@ -779,20 +792,28 @@ const canEditActiveModuleProgress = computed(
 		!!activeModule.value &&
 		isCoreModule(activeModule.value)
 );
+const isUnityCourse = computed(
+	() => selectedCourse.value?.id === "unity-game-development"
+);
 
 const lessonItemsByView = computed(() => {
 	const module = activeModule.value;
+	const curriculum = module?.curriculum ?? [];
+	const practice = module?.supplementalProjects ?? [];
+	// Unity's required practice keeps its published supplemental item IDs.
+	const requiredPractice = (item: CourseModuleItem) =>
+		isUnityCourse.value &&
+		item.learningPath === "core" &&
+		!isLessonLearningItem(item);
 	return {
-		projects: (module?.curriculum ?? []).filter(
-			item => !isLessonLearningItem(item)
+		projects: [
+			...curriculum.filter(item => !isLessonLearningItem(item)),
+			...practice.filter(requiredPractice)
+		],
+		supplemental: practice.filter(
+			item => !isLessonLearningItem(item) && !requiredPractice(item)
 		),
-		supplemental: (module?.supplementalProjects ?? []).filter(
-			item => !isLessonLearningItem(item)
-		),
-		learn: [
-			...(module?.curriculum ?? []),
-			...(module?.supplementalProjects ?? [])
-		].filter(isLessonLearningItem)
+		learn: [...curriculum, ...practice].filter(isLessonLearningItem)
 	};
 });
 const activeLessonItems = computed(
@@ -818,7 +839,12 @@ const hasLearningMaterial = computed(
 		learningTopics.value.length > 0
 );
 const availableLessonViews = computed(() =>
-	lessonViews.filter(view => view.id !== "learn" || hasLearningMaterial.value)
+	lessonViews.filter(view =>
+		view.id === "learn"
+			? hasLearningMaterial.value
+			: !isUnityCourse.value ||
+				lessonItemsByView.value[view.id].length > 0
+	)
 );
 const lessonViewLabel = computed(
 	() =>
@@ -839,8 +865,9 @@ watch(
 			module?.id !== previous?.[0]?.id || courseId !== previous?.[1];
 		if (moduleChanged) {
 			lessonView.value =
-				!lessonItemsByView.value.projects.length &&
-				lessonItemsByView.value.learn.length
+				lessonItemsByView.value.learn.length &&
+				(isUnityCourse.value ||
+					!lessonItemsByView.value.projects.length)
 					? "learn"
 					: "projects";
 		}
@@ -1833,7 +1860,12 @@ function ideStarterHref(item: CourseModuleItem, resource: ResourceLink) {
 																			.id ===
 																	  "usaco-silver"
 																	? silverJavaProjectKey
-																	: goldHistoricalProjectKey)(
+																	: selectedCourse
+																				.value
+																				.id ===
+																		  "ap-computer-science-a"
+																		? apComputerScienceAProjectKey
+																		: goldHistoricalProjectKey)(
 			selectedCourse.value.id,
 			item.id,
 			resource.kind === "solution" ? "reference" : "starter",
