@@ -29,7 +29,7 @@ Use this guide after completing a practice case. Equivalent Unity implementation
 
 ## Physics Collision and Collection Key
 
-- A floor normally blocks. A coin and finish normally use triggers. A hazard may block or trigger, but its chosen behavior must match the matrix.
+- The room's wall blocks movement. The coin and hazard report overlaps. The selected collision and trigger callbacks match the matrix.
 - A pickup passes when touching it before Start leaves it available, touching it during play scores once, and another event cannot score it again. Update the collectible only when the game accepts the pickup.
 - Missing trigger events require compatible 2D or 3D physics components, the correct callback signature, at least one suitable Rigidbody, enabled Colliders, and an allowed layer pair.
 - Passing through a floor can involve missing Colliders, trigger configuration, high-speed tunneling, incompatible dimensions, or competing Transform motion.
@@ -37,11 +37,11 @@ Use this guide after completing a practice case. Equivalent Unity implementation
 
 ## UI State and Restart Key
 
-- The six named states form one explicit source of truth. UI reacts to state instead of independently inventing game rules.
+- GameSession owns Ready, Playing, Paused, Won, and Failed. The restart action restores Ready in a fresh scene. UI panels reflect those states.
 - Start, pause, resume, goal, hazard, and restart events follow the supplied transition table. Invalid events leave state unchanged or produce a controlled diagnostic.
 - Each screen exposes a readable heading, current status, and next action. Keyboard focus is visible and moves in a predictable order.
 - Win, loss, damage, collection, and pause remain understandable through text, shape, position, or motion when color or audio is unavailable.
-- Restart passes when a fresh Pre-game state has initial score, timer, active objects, player position, and available controls. The supplied `GameManager.ResetRun()` resets rules state. Restore scene objects separately or reload the saved scene.
+- Restart passes when a fresh Pre-game state has initial score, timer, active objects, player position, normal time scale, and focus on Start. The supplied `GameManager.ResetRun()` resets rules state. Restore scene objects separately or reload the saved scene.
 
 ## Prefabs Levels and Feedback Key
 

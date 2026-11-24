@@ -1986,34 +1986,34 @@ function addUnityRebuildModules(courseId: string, course: RawCourse) {
 				{
 					title: "Collision vs Trigger",
 					content:
-						"Separate physical collision from trigger detection. The work distinguishes when an object blocks movement and when it only reports contact."
+						"A solid BoxCollider2D can block the dynamic player's Rigidbody2D. A trigger BoxCollider2D reports overlap and allows the player through. Keep the wall solid and the coin a trigger. Two solid 2D colliders use a callback such as `OnCollisionEnter2D`; a trigger uses `OnTriggerEnter2D`. At least one object in the trigger pair needs a Rigidbody2D.\n\nTest a wall and a coin separately in the Relic Runner scene. Observe whether movement stops and which callback reports the contact."
 				},
 				{
 					title: "Collectibles and Score",
 					content:
-						"Connect collision or trigger events to score changes, object removal, and feedback."
+						"The collectible reports that a Player-tagged collider entered. GameManager owns the decision to award a point, and the collectible owns its visibility. In the linked scripts a pre-start touch can hide a coin without awarding a point. Reproduce that case once. Then use an accepted-pickup result from GameManager so a coin disappears only after a point is awarded.\n\nRetest the same coin in Ready, Playing, and after the goal is reached. Record the score and whether the coin remains visible in each state."
 				},
 				{
 					title: "Hazards and Boundaries",
 					content:
-						"Add hazards, out-of-bounds detection, and reset behavior while keeping player and game-manager responsibilities separate."
+						"Place a hazard trigger on one edge of the room and a solid wall on the other. The supplied Hazard script reports a Player overlap to GameManager, which accepts a failure only while Playing. Connect an out-of-bounds rule to the same failure path if the level has an open edge. Check position by using the declared playable interval, such as x between -7 and 5.\n\nStart from the same player position and test each edge. The wall blocks movement, the hazard records failure, and restart returns the player to the original position."
 				},
 				{
 					title: "Collision Debugging",
 					content:
-						"Check collider size, rigidbody settings, layers, tags, and callback names when collision behavior fails."
+						"When an overlap produces no event, first check both collider outlines, enabled state, and the player's Rigidbody2D. Confirm that Is Trigger matches the intended route and that Physics 2D allows the pair of layers. Then compare the callback signature and Player tag with the receiving script.\n\nChange one setting to reproduce a missing event, restore it, and run the same approach again. Record the one-setting fix and the observed callback or score change."
 				}
 			],
 			supplementalProjects: [
 				{
 					title: "UGD3 Project 1: Coin Collection Loop",
 					content:
-						"Build a collection loop with score, visible feedback, and a win condition."
+						"Assemble the three-coin starter route from the practice case. Retest the early coin touch, then have GameManager report whether a pickup counted. After Start, each coin should disappear once and record a score change in the Console. The last required coin reaches Won.\n\nRecord score and coin visibility before Start, after one pickup, after reentering that coin's position, and at the win threshold."
 				},
 				{
 					title: "UGD3 Project 2: Hazard and Reset Room",
 					content:
-						"Add hazards and boundaries to a small level, then test success and failure states."
+						"Add a labeled hazard and a solid wall to the coin room. Verify that the hazard changes Playing to Failed while the wall blocks motion. Collect one coin before touching the hazard so the restart check exercises changed score and a hidden object. Reload the scene and verify fresh score, visible coins, starting position, and the Start action. Record the event and resulting state at each step."
 				}
 			]
 		},
@@ -2023,34 +2023,34 @@ function addUnityRebuildModules(courseId: string, course: RawCourse) {
 				{
 					title: "Game State Model",
 					content:
-						"Define pre-game, playing, won, lost, paused, and restarting states before adding UI."
+						"GameSession owns the gameplay state. The starter calls the initial state Ready and the loss state Failed. Start moves Ready to Playing, a full score reaches Won, and a hazard reaches Failed. Add a Paused state with guarded Pause and Resume transitions. Restart returns the project to Ready after restoring the scene.\n\nUse the practice table to predict the state after every action. Score and failure events apply while Playing. A repeated Start or a Pause after Won leaves the state unchanged."
 				},
 				{
 					title: "UI Text and Buttons",
 					content:
-						"Display score, health, instructions, and status messages. Add buttons only after the state model is clear."
+						"Put controls, the collection goal, and a Start button on the ready screen. During play, use a score label such as 1 / 3 coins and keep the goal visible. Display a readable Won or Failed heading and a Restart action at an ending. Bind each button to the scene controller and refresh the status from GameManager after a state change.\n\nWith the EventSystem active, put keyboard focus on the first available action when a panel opens and verify arrow and Submit navigation."
 				},
 				{
 					title: "Pause and Restart",
 					content:
-						"Implement pause, restart, and return-to-menu behavior with predictable state transitions."
+						"Pause during Playing and set the time scale to zero after the state becomes Paused. Provide a Resume button in the pause panel so it can respond while physics is stopped. Resume restores time scale and the Playing state. When Restart reloads the saved scene, restore time scale first so a previous pause cannot freeze the new run.\n\nCompare restarting after a loss with restarting from pause. Check score, coins, player position, time scale, and focused action."
 				},
 				{
 					title: "UI Playtest Checklist",
 					content:
-						"Check whether the player always knows the goal, current state, feedback, and next available action."
+						"Play once without sound and use the keyboard for each menu. Check that text communicates the collection goal, current score, result, and available action. For each panel, locate visible focus and activate the expected button. Test one win, one fail, and one pause and resume. If a player needs a color or sound cue to understand a result, add a short status label and repeat that path."
 				}
 			],
 			supplementalProjects: [
 				{
 					title: "UGD4 Project 1: Start Menu and HUD",
 					content:
-						"Create a start screen, HUD, score display, and win/loss message for an existing game scene."
+						"Build the Ready, Playing, Won, and Failed panels for Relic Runner. Wire Start, reflect the score from game state, and show the result with a Restart action. Verify the flow by playing once to win and once to fail. Record the heading, score, and next action shown in each state."
 				},
 				{
 					title: "UGD4 Project 2: Pause and Restart Flow",
 					content:
-						"Add pause and restart behavior and verify every state transition from a fresh play session."
+						"Add Pause and Resume to the working collection scene. Collect a coin, pause, and verify that the score and position stay stable until resume. Then restart from pause and from a failed run. Record whether each restart restores time scale, the scene objects, score, and focus on Start. Check one invalid transition against the state table."
 				}
 			]
 		},

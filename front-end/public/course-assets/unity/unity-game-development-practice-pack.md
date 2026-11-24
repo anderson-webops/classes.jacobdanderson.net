@@ -152,21 +152,36 @@ Play the same route with the component disabled and enabled. Record when the pla
 
 From a fresh Play Mode run, use Start and reach each coin to check that each scores once. Restart Play Mode and go left into the hazard to check failure. Before adding a HUD, a breakpoint in `CollectCoin` or `FailRun` can be used to inspect the state and score.
 
-Complete the interaction matrix before editing callbacks.
+Place a solid wall past the last coin. Complete the interaction matrix before editing callbacks.
 
 | Object A | Object B | Blocks movement? | Reports event? | State change            |
 | -------- | -------- | ---------------- | -------------- | ----------------------- |
-| Player   | Floor    | Yes              | Optional       | Grounded                |
+| Player   | Wall     | Yes              | Optional       | Movement blocked        |
 | Player   | Coin     | No               | Yes            | Score +1; coin disabled |
 | Player   | Hazard   | Project decision | Yes            | Lost                    |
-| Player   | Finish   | No               | Yes            | Won                     |
 | Coin     | Coin     | No               | No             | None                    |
+
+To reproduce the early-pickup issue, touch a coin while Ready, back away, then start. The pre-start score remains zero, but the original callback hides the coin. Add this method to GameManager, preserving the existing scoring method:
+
+```csharp
+public bool TryCollectCoin()
+{
+    if (State != SessionState.Playing)
+        return false;
+
+    CollectCoin();
+    Debug.Log($"Score: {Score}", this);
+    return true;
+}
+```
+
+Keep the Player tag check in `Collectible.OnTriggerEnter2D`. After the tag check, get the GameManager with `FindFirstObjectByType<GameManager>()` and call `gameObject.SetActive(false)` only when the manager exists and `manager.TryCollectCoin()` returns true. Touch before Start, leave the trigger, start, and enter it again. Check that the coin stays visible until the second touch and the Console records one point.
 
 Test these failures: a coin disappears before Start, the coin increments twice, a trigger never fires, a 2D callback is used with 3D components, and restart leaves the coin disabled. For each, name the likely component, layer, callback, or reset issue and the smallest confirming check.
 
 ## UI State and Restart Case
 
-Use the following state transitions.
+Use the following state transitions. The linked scripts call Pre-game `Ready` and Lost `Failed`. Implement `Paused` in the local GameSession. Pause only from Playing, Resume only from Paused, and Start only from Ready.
 
 | Current state | Event          | Next state | Visible result                     |
 | ------------- | -------------- | ---------- | ---------------------------------- |
@@ -175,9 +190,13 @@ Use the following state transitions.
 | Paused        | Resume         | Playing    | Game resumes                       |
 | Playing       | Goal reached   | Won        | Win message and restart action     |
 | Playing       | Hazard reached | Lost       | Failure message and restart action |
-| Won or Lost   | Restart        | Pre-game   | Score, objects, and timer reset    |
+| Paused, Won or Lost | Restart  | Pre-game   | Score, objects, and timer reset    |
 
-Reject impossible transitions such as Paused directly to Won without a game rule. Check every state with keyboard navigation, visible focus, readable text, and a status cue that does not depend on color or sound alone. If restarting by reloading the scene, include the saved scene in the active Build Profile and restore time scale before calling `SceneManager.LoadScene(SceneManager.GetActiveScene().name)`. Check that the player position and collectibles reset along with the score.
+Use a Canvas to display the Ready, Playing, Paused, Won, and Failed panels. Set the heading and score from GameManager. Expose public parameterless methods on the scene controller to handle Start, Pause, Resume, and Restart, then connect each Button's On Click list to the matching method. Refresh the visible panel after the state changes. Give the primary button focus with `EventSystem.current.SetSelectedGameObject(button.gameObject)` when a menu opens. Check arrow navigation and Submit in the project input settings.
+
+In the controller, change [time scale](https://docs.unity.com/en-us/engine/6000.3/script-reference/unityengine/time/timescale) to zero upon entering Paused and back to one on Resume. The Resume button remains available through the EventSystem. To reload the scene, include it in the active Build Profile, restore time scale to one, and call `SceneManager.LoadScene(SceneManager.GetActiveScene().name)` from a script that imports `UnityEngine.SceneManagement`. Check that the player position and collectibles reset along with the score.
+
+Test a rejected transition, such as Pause after Won. Run every valid route with visible focus, readable status, and a cue that works without color or sound.
 
 ## Prefabs Levels and Feedback Case
 
