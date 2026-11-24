@@ -9,7 +9,7 @@ Use these supplied cases when a learner needs deterministic data, a no-download 
 | Field                      | Supplied value                                                                                |
 | -------------------------- | --------------------------------------------------------------------------------------------- |
 | Project                    | Signal Garden                                                                                 |
-| Editor                     | Unity 6.3 LTS, exact patch recorded by the learner                                            |
+| Editor                     | Unity 6.3 LTS, patch from `ProjectSettings/ProjectVersion.txt`                                 |
 | Render route               | Built-in 2D or 3D template; record the selected route                                         |
 | Required folders           | `Assets/Scenes`, `Assets/Scripts`, `Assets/Prefabs`, `Assets/Art`, `Assets/Audio`             |
 | Required source files      | `Packages/manifest.json`, `Packages/packages-lock.json`, `ProjectSettings/ProjectVersion.txt` |
@@ -24,7 +24,21 @@ Use these supplied cases when a learner needs deterministic data, a no-download 
 | Commercial soundtrack | Unrecorded            | Unknown              | Do not import               |
 | CC0 click sound       | Named public source   | CC0                  | Track with attribution note |
 
-Create a smoke scene with one player, obstacle, camera, and script log. Then diagnose one supplied failure: wrong editor version, missing scene reference, package mismatch, or unlicensed asset.
+Add the starter folder that contains `Assets`, `Packages`, and `ProjectSettings` in Unity Hub. Open it with the recorded editor and wait for package import to finish. If Unity reports unresolved NUnit references in the example tests, use the [test assembly setup](#testing-profiling-and-builds-case) below. Create `Assets/Scenes/SmokeTest.unity` with two visible squares and an orthographic camera framing them. Name one square Player and the other Obstacle. Save this script as `Assets/Scripts/SmokeTestLog.cs` and attach it to Player.
+
+```csharp
+using UnityEngine;
+
+public sealed class SmokeTestLog : MonoBehaviour
+{
+    private void Start()
+    {
+        Debug.Log("Smoke scene ready");
+    }
+}
+```
+
+Save the scene, enter Play Mode, and verify both squares in the Game view and one `Smoke scene ready` message in the Console. Then diagnose one supplied failure: wrong editor version, missing scene reference, package mismatch, or unlicensed asset.
 
 ## Components and Lifecycle Case
 
@@ -43,7 +57,9 @@ Predict the order of `Awake`, `OnEnable`, `Start`, `Update`, and `FixedUpdate`. 
 
 ## Input Movement and Camera Case
 
-The supplied action map contains `Move`, `Jump`, and `Pause`. Keyboard bindings are complete; controller bindings are optional.
+The source `PlayerController` reads `Input.GetAxisRaw("Horizontal")`. In **Edit → Project Settings → Player → Other Settings**, set **Active Input Handling** to **Both**, restart Unity, and verify the Horizontal axis in the Input Manager before testing the starter movement.
+
+Create an Input Actions asset and add a `Move` action with a 1D Axis composite. Bind its negative side to A and its positive side to D. In `PlayerController.cs`, import `UnityEngine.InputSystem`, add a serialized `InputActionReference` field named `move`, and assign the Move action in the Inspector. Use `move.action.Enable()` in `OnEnable` and `move.action.Disable()` in `OnDisable`. Replace the legacy read in `FixedUpdate` with `move.action.ReadValue<float>()`. Check left, right, and release before adding jump, pause, or controller bindings.
 
 | Trial | Target frame rate | Speed | Acceleration | Camera damping | Observation |
 | ----- | ----------------: | ----: | -----------: | -------------: | ----------- |
@@ -55,6 +71,15 @@ Convert the `Move` action into intent before changing Transform or Rigidbody sta
 
 ## Physics Collision and Collection Case
 
+### Assemble the Relic Runner scene
+
+1. Create `Assets/Scenes/RelicRunner.unity`. Put an orthographic camera at `(0, 0, -10)` and frame the objects around y = 0. Use visible square sprites in different sizes for the player, coins, and hazard.
+2. Add an empty object with `GameManager`. Put the Player sprite at x = -4 and give it the built-in Player tag, `PlayerController`, a dynamic Rigidbody2D with Gravity Scale 0, and a BoxCollider2D. Use the keyboard baseline from the input case to check horizontal movement.
+3. Place three coins in the starter at x = -2, 0, and 2. Give each a BoxCollider2D with **Is Trigger** enabled and the `Collectible` script. Place a hazard at x = -6 with a trigger collider and `Hazard`. Expand the camera framing if any target falls outside the Game view. For the solution, place five coins on the playable path and check the five-coin goal in `GameSession.cs`.
+4. Add a Canvas and a Start Button. In the Button's On Click list, assign the scene's GameManager and select `GameManager.StartGame()`. Verify the EventSystem has a UI input module compatible with the project's active input backend. Save the scene.
+
+From a fresh Play Mode run, use Start and reach each coin to check that each scores once. Restart Play Mode and go left into the hazard to check failure. Before adding a HUD, a breakpoint in `CollectCoin` or `FailRun` can be used to inspect the state and score.
+
 Complete the interaction matrix before editing callbacks.
 
 | Object A | Object B | Blocks movement? | Reports event? | State change            |
@@ -65,7 +90,7 @@ Complete the interaction matrix before editing callbacks.
 | Player   | Finish   | No               | Yes            | Won                     |
 | Coin     | Coin     | No               | No             | None                    |
 
-Test these failures: the coin increments twice, a trigger never fires, the player passes through the floor, a 2D callback is used with 3D components, and restart leaves the coin disabled. For each, name the likely component, layer, callback, or reset issue and the smallest confirming check.
+Test these failures: a coin disappears before Start, the coin increments twice, a trigger never fires, a 2D callback is used with 3D components, and restart leaves the coin disabled. For each, name the likely component, layer, callback, or reset issue and the smallest confirming check.
 
 ## UI State and Restart Case
 
@@ -80,7 +105,7 @@ Use the following state transitions.
 | Playing       | Hazard reached | Lost       | Failure message and restart action |
 | Won or Lost   | Restart        | Pre-game   | Score, objects, and timer reset    |
 
-Reject impossible transitions such as Paused directly to Won without a game rule. Check every state with keyboard navigation, visible focus, readable text, and a status cue that does not depend on color or sound alone.
+Reject impossible transitions such as Paused directly to Won without a game rule. Check every state with keyboard navigation, visible focus, readable text, and a status cue that does not depend on color or sound alone. If restarting by reloading the scene, include the saved scene in the active Build Profile and restore time scale before calling `SceneManager.LoadScene(SceneManager.GetActiveScene().name)`. Check that the player position and collectibles reset along with the score.
 
 ## Prefabs Levels and Feedback Case
 
@@ -124,21 +149,23 @@ Revise the two highest-impact findings, produce a local build, and list known li
 
 ## Testing Profiling and Builds Case
 
-Use one deterministic rule for an Edit Mode test and one scene route for a Play Mode smoke check.
+Open the Test Runner and check that the project lists the selected tests. The linked Edit Mode tests call the scoring and state rules. The linked Play Mode example creates a GameManager in code. Use the separate saved-scene smoke check below to verify scene wiring.
+
+If the project is missing assembly definitions, create a runtime Assembly Definition in `Assets/Scripts`. If movement has migrated to Input Actions, reference the `Unity.InputSystem` assembly there. Use the Test Runner's EditMode and PlayMode tabs to [create test assemblies](https://docs.unity3d.com/Packages/com.unity.test-framework@1.4/manual/workflow-create-test-assembly.html). Put the supplied Edit Mode tests in the Edit Mode assembly folder and the supplied Play Mode examples in the Play Mode assembly folder. Add the runtime Assembly Definition as a reference in each test assembly. After Unity recompiles, verify the tests appear under the matching tabs.
 
 | Check                   | Supplied target                                           |
 | ----------------------- | --------------------------------------------------------- |
 | Edit Mode standard case | Score changes from 2 to 3 after one collectible           |
 | Edit Mode boundary case | A disabled collectible cannot score twice                 |
-| Play Mode smoke         | Scene loads, player appears, and Pre-game reaches Playing |
-| Build Profile           | Desktop target, named scene list, explicit output folder  |
+| Saved-scene smoke       | RelicRunner opens, player appears, and Start begins play  |
+| Build Profile           | DesktopDevelopment includes RelicRunner and builds locally |
 | Profile symptom         | 200 objects allocated every frame during a spawn loop     |
 
-Classify failures as logic, serialized scene wiring, package or test assembly setup, build configuration, or performance. Record measured evidence before and after changing the spawn loop. Keep any CI route bounded to tests, source validation, and build configuration checks.
+In **File → Build Profiles**, create the desktop profile for the current platform, add `Assets/Scenes/RelicRunner.unity` to the scene list, and build to `Builds/DesktopDevelopment`. Open the build and verify the same start-to-restart loop. Classify failures as logic, serialized scene wiring, package or test assembly setup, build configuration, or performance. Record measured evidence before and after changing the spawn loop. Keep any CI route bounded to tests, source validation, and build configuration checks.
 
 ## Full Project Repository Workflow Case
 
-Audit the supplied starter and solution using this inventory.
+Audit the linked starter and solution first. Then use this inventory to check the sought states after creating scenes and verifying the corresponding behavior.
 
 | Path or artifact              | Starter                         | Review state             | Repository rule |
 | ----------------------------- | ------------------------------- | ------------------------ | --------------- |

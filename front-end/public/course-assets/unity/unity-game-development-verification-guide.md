@@ -6,7 +6,7 @@ Use this guide after completing a practice case. Equivalent Unity implementation
 
 - `ProjectVersion.txt` identifies the exact editor baseline; package manifests and locks identify dependencies.
 - `Assets`, `Packages`, and `ProjectSettings` belong in source control. `Library`, `Temp`, `Logs`, and local build output do not.
-- The smoke scene passes when Play Mode starts without compile errors, the player and obstacle are visible, the camera frames them, and the expected Console message appears.
+- The authored smoke scene passes when Play Mode starts without compile errors, the camera frames the player and obstacle, and the Console displays `Smoke scene ready` once.
 - A wrong editor version requires a deliberate upgrade or matching install, not silent conversion. A missing serialized reference is repaired in the scene or prefab. A package mismatch is resolved through the manifest and lock. An asset with unknown terms is removed.
 - The commercial soundtrack fails the provenance gate. The self-created square and documented CC0 sound pass.
 
@@ -20,7 +20,7 @@ Use this guide after completing a practice case. Equivalent Unity implementation
 
 ## Input Movement and Camera Key
 
-- An action callback or polling layer produces movement intent; a movement component applies that intent through one selected model.
+- The starter reads the legacy Horizontal axis. The migrated movement reads the enabled Move action and applies its float value in `FixedUpdate`. Pressing A or D moves left or right; releasing the key stops horizontal motion.
 - Trials A and B are expected to produce comparable distance and control despite different frame targets. A large difference indicates frame-dependent motion or an inconsistent physics path.
 - Trial C may feel faster or sharper, but the justified choice depends on the intended game and recorded observation.
 - The camera follows without hiding the destination, causing preventable motion discomfort, or taking ownership of player movement.
@@ -29,7 +29,7 @@ Use this guide after completing a practice case. Equivalent Unity implementation
 ## Physics Collision and Collection Key
 
 - A floor normally blocks. A coin and finish normally use triggers. A hazard may block or trigger, but its chosen behavior must match the matrix.
-- Duplicate coin scoring often indicates repeated callbacks without an inactive or collected guard. Disable or mark the coin before another event can count it.
+- A pickup passes when touching it before Start leaves it available, touching it during play scores once, and another event cannot score it again. Update the collectible only when the game accepts the pickup.
 - Missing trigger events require compatible 2D or 3D physics components, the correct callback signature, at least one suitable Rigidbody, enabled Colliders, and an allowed layer pair.
 - Passing through a floor can involve missing Colliders, trigger configuration, high-speed tunneling, incompatible dimensions, or competing Transform motion.
 - Restart passes only when score, coin state, player state, hazard state, and UI return to the declared initial state.
@@ -40,7 +40,7 @@ Use this guide after completing a practice case. Equivalent Unity implementation
 - Start, pause, resume, goal, hazard, and restart events follow the supplied transition table. Invalid events leave state unchanged or produce a controlled diagnostic.
 - Each screen exposes a readable heading, current status, and next action. Keyboard focus is visible and moves in a predictable order.
 - Win, loss, damage, collection, and pause remain understandable through text, shape, position, or motion when color or audio is unavailable.
-- Restart passes when a fresh Pre-game state has initial score, timer, active objects, player position, and available controls.
+- Restart passes when a fresh Pre-game state has initial score, timer, active objects, player position, and available controls. The supplied `GameManager.ResetRun()` resets rules state. Restore scene objects separately or reload the saved scene.
 
 ## Prefabs Levels and Feedback Key
 
@@ -61,15 +61,15 @@ Use this guide after completing a practice case. Equivalent Unity implementation
 ## Testing Profiling and Builds Key
 
 - The Edit Mode standard case expects score 3. The boundary case expects no second increment once the collectible is inactive or already collected.
-- The Play Mode smoke passes when the scene loads, the player exists, and the declared start transition occurs without unexplained Console errors.
+- The component check proves that a dynamically created GameManager can enter Playing. The saved-scene smoke check passes when RelicRunner loads, the player exists, and the Start button begins play without unexplained Console errors.
 - A Build Profile identifies target, scene list, settings, and output. A build that only works through editor state fails the reproducibility gate.
 - Allocating 200 objects every frame is measured before optimization. A valid revision bounds spawning, reuses objects where justified, and records the changed profiler evidence.
 - CI remains bounded to source checks, selected tests, and reproducible build validation. No persistent service or learner credential is required.
 
 ## Full Project Repository Workflow Key
 
-- The starter opens and plays but leaves named learner behavior incomplete. The solution demonstrates the intended reviewed behavior; it is not copied before the learner records an attempt.
-- `Assets`, `Packages`, `ProjectSettings`, tests, attribution, and LFS rules are present. Generated caches are absent.
+- After assembling the scene, the starter plays with named learner behavior still to implement. Compare the reviewed scripts after recording an attempt. The starter targets three coins and the review state targets five.
+- Track the authored scene, source, package records, project settings, test files, and attribution. Add LFS rules for large source binaries as needed. Generated caches stay excluded.
 - A useful checkpoint identifies the exact scene or system, scripts changed, observed play or test result, decision, unresolved risk, and next action.
 - Meaningful start, checkpoint, and review tags point to reproducible states rather than arbitrary backups.
 - A clean-clone record names repository URL, editor version, package restoration, scene to open, play check, selected tests, Build Profile, output, and any known warning.

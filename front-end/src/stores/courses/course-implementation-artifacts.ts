@@ -1875,7 +1875,7 @@ function addUnityRebuildModules(courseId: string, course: RawCourse) {
 			curriculum: [
 				{
 					title: "Unity Version and Hub Setup",
-					content: `${unityTarget} Install through Unity Hub, create one 2D project and one 3D project sandbox, and record the editor version in the project README so source snapshots stay reproducible.`
+					content: `${unityTarget} In Unity Hub, add \`UGD-full-project-starter\`, the folder containing Assets, Packages, and ProjectSettings. Install the patch in \`ProjectSettings/ProjectVersion.txt\` (6000.3.15f1 for the linked baseline) and allow Unity to restore the recorded packages. Record the editor version in the project README.`
 				},
 				{
 					title: "Project Folder Hygiene",
@@ -1890,7 +1890,7 @@ function addUnityRebuildModules(courseId: string, course: RawCourse) {
 				{
 					title: "First Scene Smoke Test",
 					content:
-						"Create a scene with one player object, one visible obstacle, one camera view, and one script that writes a debug log on play."
+						"The starter supplies scripts and setup notes. Create and save `Assets/Scenes/SmokeTest.unity` with a player, a visible obstacle, and a camera that frames both. Attach the smoke-test script from the practice case to the player. Enter Play Mode and check the Game view and Console."
 				}
 			],
 			supplementalProjects: [
@@ -1949,7 +1949,7 @@ function addUnityRebuildModules(courseId: string, course: RawCourse) {
 				{
 					title: "Input to Intent",
 					content:
-						"Convert keyboard or controller input into intent before changing position or velocity. Describe what the input means before applying movement."
+						"The starter reads the legacy `Horizontal` axis in `PlayerController`. For the baseline, set Active Input Handling to Both and restart the editor. Create a keyboard Move action, read it as movement intent, and replace the legacy read before applying velocity in `FixedUpdate`."
 				},
 				{
 					title: "Movement Models",
@@ -3339,7 +3339,7 @@ function addUnityFullProjectWorkflowModules(
 			{
 				title: "Unity Test Framework",
 				content:
-					"**Concept path:** Add Edit Mode tests for logic and Play Mode smoke tests for scene boot. Tests prove score rules, state transitions, and scene loading before the capstone is considered complete.\n\n**Test targets:** Keep pure gameplay rules in small scripts that Edit Mode tests can call without opening a scene. Use Play Mode tests only for integration checks such as scene boot, player spawn, UI state, collisions, and restart flow. When a test fails, record whether the failure came from code logic, serialized scene wiring, missing package setup, or build configuration.\n\n**Evidence target:** The course makes it possible to run the smallest test set and diagnose the failure category."
+					"**Concept path:** Use Edit Mode tests to check score and state rules without opening a scene. The provided Play Mode example creates a GameManager in code and checks the start transition. Verify the saved scene separately with a Play Mode smoke run that checks the player, controls, collision, UI, and restart.\n\n**Test targets:** Verify discovery in the Test Runner. If tests are missing, check for compile errors, confirm the Test Framework package is available, and check that the test assemblies reference the runtime assembly.\n\n**Evidence target:** Record the selected test result and the saved-scene result, then classify any failure by its cause."
 			},
 			{
 				title: "Build Profiles and Deployment",
@@ -3377,7 +3377,7 @@ function addUnityFullProjectWorkflowModules(
 			{
 				title: "Repository Shape",
 				content:
-					"**Concept path:** A serious Unity project needs more than loose script snippets. The starter and review states use full project structure so scenes, packages, project settings, prefabs, scripts, tests, and attribution files can be inspected together. A clean project boundary also makes it possible to compare the current full-project baseline with what changed by the review state.\n\n**Repository parts:** A complete project includes `ProjectSettings`, `Packages/manifest.json`, `Packages/packages-lock.json`, source scripts, scenes, prefabs or stand-in assets, tests where available, `THIRD_PARTY_ASSETS.md`, and Git LFS rules for large binary assets. The starter state opens cleanly without completed solution logic. The review state demonstrates the intended final behavior and validation path.\n\n**Evidence target:** The linked starter state can be cloned, opened, played, tested, and built."
+					"**Concept path:** Compare the current full-project baseline in the linked starter and review folders. Both contain package records, project version, scripts, example tests, attribution files, and setup notes. Scene and prefab folders contain setup notes, so a playable copy starts by assembling and saving the scene in the editor.\n\n**Repository parts:** Track the authored scene, prefabs, scripts, asset provenance, and package records. Keep generated caches and build output outside source control. Add Git LFS rules when the project includes large source binaries.\n\n**Evidence target:** From a clean clone, create and save `Assets/Scenes/RelicRunner.unity`, verify its gameplay, run selected tests, and launch a local build."
 			},
 			{
 				title: "Starter and Review Tag Model",
@@ -3455,7 +3455,7 @@ const unityModuleFlow = [
 		answerSection: "setup-and-source-hygiene-key",
 		focus: "A reproducible Unity project starts with one recorded editor version, a deliberate folder layout, a playable smoke scene, and traceable assets.",
 		coreRoute:
-			"Open the supplied project, confirm Unity 6.3 LTS and package versions, inspect Assets, Packages, and ProjectSettings, then run a scene containing one visible player, obstacle, camera, and debug message.",
+			"Open the starter root in Unity Hub, let its packages restore, then create, save, and play the smoke scene from the practice case.",
 		stretchRoute:
 			"Reopen a clean copy, diagnose one supplied version or reference failure, classify sample assets by license and Git LFS need, and document the smallest recovery path.",
 		verification:
@@ -3538,7 +3538,7 @@ const unityModuleFlow = [
 		verification:
 			"Each object pair matches the collision matrix, a collectible changes state exactly once, hazards reach the intended failure state, restart restores initial state, and callback evidence identifies the responsible script.",
 		boundary:
-			"All physics work stays inside the supplied scene with reversible values. No real-world motion data, networked scoring, or externally downloaded physics package is required.",
+			"Use the local scene created from the practice case. Adjust physics values in small, reversible steps.",
 		reference:
 			"https://docs.unity3d.com/6000.3/Documentation/Manual/PhysicsSection.html"
 	},
@@ -3590,7 +3590,7 @@ const unityModuleFlow = [
 		verification:
 			"Prefab overrides are intentional, spawn count and bounds are controlled, feedback maps to specific game states, audio is not the sole status cue, and the scene launches in a local build outside the editor.",
 		boundary:
-			"Supplied stand-in art and audio complete the core route. External media requires source, license, modification, and attribution notes; copyrighted commercial assets and paid packages are not used.",
+			"Use simple shapes and text for core feedback. External media requires source, license, modification, and attribution notes; copyrighted commercial assets and paid packages are not used.",
 		reference:
 			"https://docs.unity3d.com/6000.3/Documentation/Manual/Prefabs.html"
 	},
@@ -3636,7 +3636,7 @@ const unityModuleFlow = [
 		answerSection: "testing-profiling-and-builds-key",
 		focus: "Production engineering turns selected game rules, scene boot, performance symptoms, builds, packages, and large assets into repeatable evidence rather than editor-only confidence.",
 		coreRoute:
-			"Run the supplied Edit Mode and Play Mode checks, create or inspect a Build Profile, classify one measured profiler symptom, and audit package locks, attribution, and Git LFS rules.",
+			"Check Test Runner discovery, run the selected rule and component tests, then play the saved scene and build it with a desktop Build Profile. Measure one profiler symptom and audit package locks, attribution, and Git LFS rules.",
 		stretchRoute:
 			"Add a deterministic rule test, one scene smoke test, a bounded CI check, a clean-clone build, and a before-and-after profile record for one verified bottleneck.",
 		verification:
@@ -3662,7 +3662,7 @@ const unityModuleFlow = [
 		answerSection: "full-project-repository-workflow-key",
 		focus: "A full Unity repository distinguishes the intentionally incomplete starter, learner checkpoints, completed review state, dependencies, generated files, and evidence needed to reproduce the project.",
 		coreRoute:
-			"Inspect the linked starter and completed-review repositories, map required Unity folders and source files, compare start and review behavior, and record a checkpoint with scene, scripts, test or play result, decision, and next action.",
+			"Compare the linked project folders and their source roles, then use the scene contract to verify the starter and review behavior. Record the scene, scripts, test or play result, decision, and next action.",
 		stretchRoute:
 			"Create a clean-clone verification record, design start/checkpoint/review tags, audit LFS and attribution, and prepare a capstone milestone plan with explicit scope cuts.",
 		verification:
@@ -3768,7 +3768,7 @@ ${routeLabel} Core: ${flow.coreRoute} Stretch: ${flow.stretchRoute}
 		standards: [
 			"Unity 6.3 LTS current release and support policy, with support through December 2027.",
 			"Unity Manual guidance for GameObjects, MonoBehaviour lifecycle, Input System, physics, UI, prefabs, testing, profiling, Build Profiles, and version control.",
-			"Instruction-material Unity full-project starter and solution repository with manifests, project settings, tests, Build Profiles, attribution, and Git LFS rules.",
+			"Instruction-material Unity starter and solution repository with package records, editor version, scripts, example tests, attribution, and scene and Build Profile instructions.",
 			"Accessible game-feedback practice using visible, textual, spatial, and control alternatives rather than color or audio alone."
 		],
 		sourcePolicy:
@@ -3783,7 +3783,7 @@ ${routeLabel} Core: ${flow.coreRoute} Stretch: ${flow.stretchRoute}
 		toolchain: [
 			"Unity Hub with Unity 6.3 LTS and the exact editor version recorded in project documentation.",
 			"Unity's current Input System for the main control route, with keyboard completion available when no controller is present.",
-			"Local supplied starter and solution projects with Packages manifests and locks, ProjectSettings, scenes, scripts, stand-in assets, and documented Build Profiles.",
+			"Local starter and solution project folders with package records, project settings, scripts, and directions for assembling scenes and creating Build Profiles.",
 			"Unity Test Framework and Profiler are used in bounded optional evidence tasks; no persistent server compiler or worker service is involved.",
 			"Git and Git LFS support project history and licensed source assets; generated Library, Temp, Logs, and local build output remain excluded."
 		],
@@ -3791,7 +3791,7 @@ ${routeLabel} Core: ${flow.coreRoute} Stretch: ${flow.stretchRoute}
 			"Use only self-created, Unity-provided, public-domain, or clearly permissive assets with source and license records.",
 			"Do not collect learner names, emails, recordings, device identifiers, analytics, precise location, contacts, or other personal data.",
 			"Do not commit credentials, tokens, account files, paid package contents, unlicensed media, or generated Unity caches.",
-			"Keyboard controls, supplied stand-in media, fictional playtest labels, and nonaudio feedback form complete alternatives to optional hardware or assets.",
+			"Keyboard controls, locally created stand-in media, fictional playtest labels, and nonaudio feedback support the core route.",
 			"All editor, physics, profiling, testing, and build work stays local or in a bounded course repository."
 		],
 		courseBoundaries: [
