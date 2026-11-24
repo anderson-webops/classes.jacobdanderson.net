@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import { describe, expect, it } from "vitest";
+import { pythonIdeModeForCourseResource } from "@/modules/pythonIde";
 import { apComputerScienceACourse } from "@/stores/courses/ap-computer-science-a";
 import { loadRawCourse } from "@/stores/courses/index";
 
@@ -27,7 +28,7 @@ const EXPECTED_PRIMARY_SEQUENCE = [
 ];
 
 const MOVED_REFERENCE_TITLES = [
-	"Required Textbook",
+	"Practice Resources",
 	"Reference Pack",
 	"Loop Reference Pack",
 	"Array Reference Pack",
@@ -138,6 +139,32 @@ describe("AP Computer Science A learner flow", () => {
 			expect(module.curriculum[0]?.content, module.title).toContain(
 				"**Course flow:**"
 			);
+		}
+	});
+
+	it("keeps the binary-search trace runnable and recursive writing optional", () => {
+		const search = requireModule("APCS16 Binary Search and Merge Sort");
+		const trace = search.curriculum.find(
+			item => item.title === "Core Project: Binary Search"
+		)!;
+		expect(trace).toMatchObject({ ideImport: true, learningPath: "core" });
+		expect(trace.content).toContain("Trace the missing target 7");
+		expect(trace.projectLink).toMatch(
+			/\/tree\/[a-f0-9]{40}\/APCS16-Binary-Search\/starter$/
+		);
+		expect(trace.solutionLink).toBe(
+			trace.projectLink!.replace(/\/starter$/, "/solution")
+		);
+		expect(
+			pythonIdeModeForCourseResource("ap-computer-science-a", trace.projectLink!)
+		).toBe("java");
+		for (const item of [
+			...requireModule("APCS15 Recursion").supplementalProjects.filter(
+				row => /Recursion Practice|Blob Erase/.test(row.title)
+			),
+			...search.supplementalProjects
+		]) {
+			expect(item.learningPath, item.title).toBe("challenge");
 		}
 	});
 
