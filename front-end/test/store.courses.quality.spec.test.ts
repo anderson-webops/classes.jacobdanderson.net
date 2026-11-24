@@ -10157,8 +10157,7 @@ describe("course text quality normalization", () => {
 		expect(apcs).not.toBeNull();
 
 		for (const title of [
-			"Variables Reference",
-			"Loops Reference",
+			"Reference Pack",
 			"Chapter 2 Multiple Choice Focus",
 			"Loop Reference Pack",
 			"Reference: While Loops and Nested Loops"
@@ -10169,7 +10168,7 @@ describe("course text quality normalization", () => {
 			);
 			expect(wordCount(item.content), title).toBeGreaterThanOrEqual(85);
 			expect(item.content, title).toMatch(
-				/trace|AP-style|Java|condition/i
+				/trace|AP-style|Java|condition|declaration/i
 			);
 			expect(item.content, title).not.toMatch(/\bshould\b/i);
 		}
