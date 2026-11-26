@@ -32,7 +32,7 @@ import {
 const repositoryRoot = resolve(import.meta.dirname, "..");
 const npmRoot
 	= process.env.NPM_CLI_ROOT ?? npmRootFromExecPath(process.env.npm_execpath);
-assert.ok(npmRoot, "NPM_CLI_ROOT must point to pinned npm 12.0.1.");
+assert.ok(npmRoot, "NPM_CLI_ROOT must point to pinned npm 12.2.3.");
 const pinned = loadPinnedNpm(npmRoot);
 const sriA = `sha512-${Buffer.alloc(64, 1).toString("base64")}`;
 const sriB = `sha512-${Buffer.alloc(64, 2).toString("base64")}`;
@@ -58,7 +58,7 @@ function nodeFor(spec, overrides = {}) {
 	return { edge, node };
 }
 
-it("requires the exact npm 12.0.1 dependency tree", () => {
+it("requires the exact npm 12.2.3 dependency tree", () => {
 	assert.deepEqual(pinned.actualVersions, PINNED_VERSIONS);
 });
 

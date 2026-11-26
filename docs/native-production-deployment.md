@@ -63,8 +63,10 @@ source release notes describe verified artifacts, not activation.
 
 ## One-time server setup
 
-Install system Node 24.18.0, npm 12.0.1, Python 3, Git, Nginx, `curl`, and the existing
-MongoDB or Vault client configuration. Create separate build and runtime users;
+Use Node 26.13.1 and npm 12.2.3 for this release's verified build profile.
+Preserve and verify the Node runtime used by the retained rollback release
+before promoting a runtime-toolchain change. Install Python 3, Git, Nginx,
+`curl`, and the existing MongoDB or Vault client configuration. Create separate build and runtime users;
 neither needs an interactive login:
 
 ```bash

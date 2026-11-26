@@ -63,12 +63,12 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
-          node-version: 24.18.0
+          node-version: 26.13.1
           cache: npm
       - name: Verify the locked root installation and complete dependency graph
         run: |
-          npm install --global npm@12.0.1
-          test "$(npm --version)" = "12.0.1"
+          npm install --global npm@12.2.3
+          test "$(npm --version)" = "12.2.3"
           mkdir -p output/network-capstone-optional/audits
           node scripts/classes-family-heavy-task.mjs -- npm ci
           npm run check:dependencies
@@ -139,12 +139,12 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
-          node-version: 24.18.0
+          node-version: 26.13.1
           cache: npm
       - name: Verify the locked root installation and complete dependency graph
         run: |
-          npm install --global npm@12.0.1
-          test "$(npm --version)" = "12.0.1"
+          npm install --global npm@12.2.3
+          test "$(npm --version)" = "12.2.3"
           mkdir -p output/network-practice/audits
           node scripts/classes-family-heavy-task.mjs -- npm ci
           npm run check:dependencies
@@ -214,12 +214,12 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
-          node-version: 24.18.0
+          node-version: 26.13.1
           cache: npm
       - name: Verify the locked root installation and complete dependency graph
         run: |
-          npm install --global npm@12.0.1
-          test "$(npm --version)" = "12.0.1"
+          npm install --global npm@12.2.3
+          test "$(npm --version)" = "12.2.3"
           mkdir -p output/network-archive-six/audits
           node scripts/classes-family-heavy-task.mjs -- npm ci
           npm run check:dependencies
@@ -285,12 +285,12 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
-          node-version: 24.18.0
+          node-version: 26.13.1
           cache: npm
       - name: Verify the locked root installation and complete dependency graph
         run: |
-          npm install --global npm@12.0.1
-          test "$(npm --version)" = "12.0.1"
+          npm install --global npm@12.2.3
+          test "$(npm --version)" = "12.2.3"
           mkdir -p output/network-diagnostics-five/audits
           node scripts/classes-family-heavy-task.mjs -- npm ci
           npm run check:dependencies
@@ -360,12 +360,12 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
-          node-version: 24.18.0
+          node-version: 26.13.1
           cache: npm
       - name: Verify the locked root installation and complete dependency graph
         run: |
-          npm install --global npm@12.0.1
-          test "$(npm --version)" = "12.0.1"
+          npm install --global npm@12.2.3
+          test "$(npm --version)" = "12.2.3"
           mkdir -p output/network-kernel-optional/audits
           node scripts/classes-family-heavy-task.mjs -- npm ci
           npm run check:dependencies
@@ -434,12 +434,12 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
-          node-version: 24.18.0
+          node-version: 26.13.1
           cache: npm
       - name: Verify the locked root installation and complete dependency graph
         run: |
-          npm install --global npm@12.0.1
-          test "$(npm --version)" = "12.0.1"
+          npm install --global npm@12.2.3
+          test "$(npm --version)" = "12.2.3"
           mkdir -p output/network-firewall-optional/audits
           node scripts/classes-family-heavy-task.mjs -- npm ci
           npm run check:dependencies
@@ -505,12 +505,12 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
-          node-version: 24.18.0
+          node-version: 26.13.1
           cache: npm
       - name: Verify the locked root installation and complete dependency graph
         run: |
-          npm install --global npm@12.0.1
-          test "$(npm --version)" = "12.0.1"
+          npm install --global npm@12.2.3
+          test "$(npm --version)" = "12.2.3"
           mkdir -p output/network-dns-optional/audits
           node scripts/classes-family-heavy-task.mjs -- npm ci
           npm run check:dependencies
@@ -572,7 +572,7 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
-          node-version: 24.18.0
+          node-version: 26.13.1
           cache: npm
       - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         if: inputs.course == 'machine-learning-library' || inputs.course == 'machine-learning' || inputs.course == 'machine-learning-neurons'
@@ -580,8 +580,8 @@ jobs:
           python-version: "3.14"
       - name: Verify the locked root install and complete dependency tree
         run: |
-          npm i -g npm@12.0.1
-          test "$(npm --version)" = "12.0.1"
+          npm i -g npm@12.2.3
+          test "$(npm --version)" = "12.2.3"
           mkdir -p output/release-checks
           node scripts/classes-family-heavy-task.mjs -- npm ci
           npm run check:dependencies
@@ -885,12 +885,12 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
-          node-version: 24.18.0
+          node-version: 26.13.1
           cache: npm
       - name: Pin npm and verify the root clean install
         run: |
-          npm i -g npm@12.0.1
-          test "$(npm --version)" = "12.0.1"
+          npm i -g npm@12.2.3
+          test "$(npm --version)" = "12.2.3"
           node scripts/classes-family-heavy-task.mjs -- npm ci
       - name: Require root and production dependency audits
         run: |
@@ -946,12 +946,12 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
-          node-version: 24.18.0
+          node-version: 26.13.1
           cache: npm
       - name: Pin npm and verify the root clean install
         run: |
-          npm i -g npm@12.0.1
-          test "$(npm --version)" = "12.0.1"
+          npm i -g npm@12.2.3
+          test "$(npm --version)" = "12.2.3"
           node scripts/classes-family-heavy-task.mjs -- npm ci
       - name: Require root and production dependency audits
         run: |
@@ -1007,12 +1007,12 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
-          node-version: 24.18.0
+          node-version: 26.13.1
           cache: npm
       - name: Pin npm and verify the root clean install
         run: |
-          npm i -g npm@12.0.1
-          test "$(npm --version)" = "12.0.1"
+          npm i -g npm@12.2.3
+          test "$(npm --version)" = "12.2.3"
           node scripts/classes-family-heavy-task.mjs -- npm ci
       - name: Require root and production dependency audits
         run: |
@@ -1069,12 +1069,12 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
-          node-version: 24.18.0
+          node-version: 26.13.1
           cache: npm
       - name: Pin npm and verify the root clean install
         run: |
-          npm i -g npm@12.0.1
-          test "$(npm --version)" = "12.0.1"
+          npm i -g npm@12.2.3
+          test "$(npm --version)" = "12.2.3"
           node scripts/classes-family-heavy-task.mjs -- npm ci
       - name: Require root and production dependency audits
         run: |
@@ -1142,12 +1142,12 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
-          node-version: 24.18.0
+          node-version: 26.13.1
           cache: npm
       - name: Pin npm and verify the root clean install
         run: |
-          npm i -g npm@12.0.1
-          test "$(npm --version)" = "12.0.1"
+          npm i -g npm@12.2.3
+          test "$(npm --version)" = "12.2.3"
           node scripts/classes-family-heavy-task.mjs -- npm ci
       - name: Require root and production dependency audits
         run: |
@@ -1211,12 +1211,12 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
-          node-version: 24.18.0
+          node-version: 26.13.1
           cache: npm
       - name: Pin npm and verify the root clean install
         run: |
-          npm i -g npm@12.0.1
-          test "$(npm --version)" = "12.0.1"
+          npm i -g npm@12.2.3
+          test "$(npm --version)" = "12.2.3"
           node scripts/classes-family-heavy-task.mjs -- npm ci
       - name: Require root and production dependency audits
         run: |
@@ -1280,12 +1280,12 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
-          node-version: 24.18.0
+          node-version: 26.13.1
           cache: npm
       - name: Pin npm and verify the root clean install
         run: |
-          npm i -g npm@12.0.1
-          test "$(npm --version)" = "12.0.1"
+          npm i -g npm@12.2.3
+          test "$(npm --version)" = "12.2.3"
           node scripts/classes-family-heavy-task.mjs -- npm ci
       - name: Require root and production dependency audits
         run: |
@@ -1349,12 +1349,12 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
-          node-version: 24.18.0
+          node-version: 26.13.1
           cache: npm
       - name: Pin npm and verify the root clean install
         run: |
-          npm i -g npm@12.0.1
-          test "$(npm --version)" = "12.0.1"
+          npm i -g npm@12.2.3
+          test "$(npm --version)" = "12.2.3"
           node scripts/classes-family-heavy-task.mjs -- npm ci
       - name: Require root and production dependency audits
         run: |
@@ -1620,12 +1620,12 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
-          node-version: 24.18.0
+          node-version: 26.13.1
           cache: npm
       - name: Pin npm and verify the root clean install
         run: |
-          npm i -g npm@12.0.1
-          test "$(npm --version)" = "12.0.1"
+          npm i -g npm@12.2.3
+          test "$(npm --version)" = "12.2.3"
           node scripts/classes-family-heavy-task.mjs -- npm ci
       - name: Require root and production dependency audits
         run: |
@@ -1689,12 +1689,12 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
-          node-version: 24.18.0
+          node-version: 26.13.1
           cache: npm
       - name: Pin npm and verify the root clean install
         run: |
-          npm i -g npm@12.0.1
-          test "$(npm --version)" = "12.0.1"
+          npm i -g npm@12.2.3
+          test "$(npm --version)" = "12.2.3"
           node scripts/classes-family-heavy-task.mjs -- npm ci
       - name: Require root and production dependency audits
         run: |
@@ -1749,13 +1749,13 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
-          node-version: 24.18.0
+          node-version: 26.13.1
           cache: npm
           registry-url: https://registry.npmjs.org/
       - name: Pin npm version
         run: |
-          npm i -g npm@12.0.1
-          test "$(npm --version)" = "12.0.1"
+          npm i -g npm@12.2.3
+          test "$(npm --version)" = "12.2.3"
       - name: Record original graphs and dependency freshness
         run: |
           mkdir -p output/security-dependency-repair/before
@@ -1926,12 +1926,12 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
-          node-version: 24.18.0
+          node-version: 26.13.1
           cache: npm
       - name: Pin the supported npm toolchain
         run: |
-          npm install --global npm@12.0.1
-          test "$(npm --version)" = "12.0.1"
+          npm install --global npm@12.2.3
+          test "$(npm --version)" = "12.2.3"
       - name: Verify root clean install
         run: node scripts/classes-family-heavy-task.mjs -- npm ci
       - name: Audit both root dependency scopes
@@ -1988,12 +1988,12 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
-          node-version: 24.18.0
+          node-version: 26.13.1
           cache: npm
       - name: Pin npm and verify root clean install
         run: |
-          npm i -g npm@12.0.1
-          test "$(npm --version)" = "12.0.1"
+          npm i -g npm@12.2.3
+          test "$(npm --version)" = "12.2.3"
           node scripts/classes-family-heavy-task.mjs -- npm ci
       - name: Require root full and production audits
         run: |
@@ -2048,7 +2048,7 @@ jobs:
 
           - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
             with:
-                node-version: 24.18.0
+                node-version: 26.13.1
 
           - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
             with:
@@ -2151,10 +2151,10 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
-          node-version: 24.18.0
+          node-version: 26.13.1
           cache: npm
       - name: Pin the supported npm toolchain
-        run: npm install --global npm@12.0.1
+        run: npm install --global npm@12.2.3
       - name: Verify root clean install
         run: node scripts/classes-family-heavy-task.mjs -- npm ci
       - name: Lint both workspaces
@@ -2235,7 +2235,7 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
-          node-version: 24.18.0
+          node-version: 26.13.1
       - name: Bind retained browser exports to the unchanged application source
         env:
           BROWSER_RUN_ID: ${{ inputs.browser_run_id }}
@@ -2369,12 +2369,12 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
-          node-version: 24.18.0
+          node-version: 26.13.1
           cache: npm
       - name: Verify the pinned root and standalone backend installs and audits
         run: |
-          npm i -g npm@12.0.1
-          test "$(npm --version)" = "12.0.1"
+          npm i -g npm@12.2.3
+          test "$(npm --version)" = "12.2.3"
           node scripts/classes-family-heavy-task.mjs -- npm ci
           mkdir -p output/ai-studio-browser/audits
           npm audit --include=optional --json > output/ai-studio-browser/audits/root-full.json
@@ -2462,7 +2462,7 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
-          node-version: 24.18.0
+          node-version: 26.13.1
       - name: Bind retained browser exports to unchanged source and successful gates
         env:
           GH_TOKEN: ${{ github.token }}
@@ -2575,7 +2575,7 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
-          node-version: 24.18.0
+          node-version: 26.13.1
       - name: Create an isolated lesson environment
         run: node scripts/classes-family-heavy-task.mjs -- python3 -m venv "$RUNNER_TEMP/ai-setup-environment"
       - name: Install the reading's graph and notebook dependencies
@@ -2610,15 +2610,15 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
-          node-version: 24.18.0
+          node-version: 26.13.1
           cache: npm
       - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
         with:
           python-version: "3.14.10"
       - name: Verify both locked installations and all dependency audit scopes
         run: |
-          npm install --global npm@12.0.1
-          test "$(npm --version)" = "12.0.1"
+          npm install --global npm@12.2.3
+          test "$(npm --version)" = "12.2.3"
           mkdir -p output/data-science-csv/audits
           node scripts/classes-family-heavy-task.mjs -- npm ci
           npm run check:dependencies
@@ -2681,15 +2681,15 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
-          node-version: 24.18.0
+          node-version: 26.13.1
           cache: npm
       - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
         with:
           python-version: "3.14.10"
       - name: Verify both locked installations and all dependency audit scopes
         run: |
-          npm install --global npm@12.0.1
-          test "$(npm --version)" = "12.0.1"
+          npm install --global npm@12.2.3
+          test "$(npm --version)" = "12.2.3"
           mkdir -p output/data-science-cleaning/audits
           node scripts/classes-family-heavy-task.mjs -- npm ci
           npm run check:dependencies
@@ -2753,15 +2753,15 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
-          node-version: 24.18.0
+          node-version: 26.13.1
           cache: npm
       - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
         with:
           python-version: "3.14.10"
       - name: Verify both locked installations and all dependency audit scopes
         run: |
-          npm install --global npm@12.0.1
-          test "$(npm --version)" = "12.0.1"
+          npm install --global npm@12.2.3
+          test "$(npm --version)" = "12.2.3"
           mkdir -p output/data-science-grouped/audits
           node scripts/classes-family-heavy-task.mjs -- npm ci
           npm run check:dependencies
@@ -2828,15 +2828,15 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
-          node-version: 24.18.0
+          node-version: 26.13.1
           cache: npm
       - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
         with:
           python-version: "3.14.10"
       - name: Verify both locked installations and all dependency audit scopes
         run: |
-          npm install --global npm@12.0.1
-          test "$(npm --version)" = "12.0.1"
+          npm install --global npm@12.2.3
+          test "$(npm --version)" = "12.2.3"
           mkdir -p output/data-science-report/audits
           node scripts/classes-family-heavy-task.mjs -- npm ci
           npm run check:dependencies
@@ -2903,15 +2903,15 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
-          node-version: 24.18.0
+          node-version: 26.13.1
           cache: npm
       - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
         with:
           python-version: "3.14.10"
       - name: Verify both locked installations and all dependency audit scopes
         run: |
-          npm install --global npm@12.0.1
-          test "$(npm --version)" = "12.0.1"
+          npm install --global npm@12.2.3
+          test "$(npm --version)" = "12.2.3"
           mkdir -p output/data-science-chart/audits
           node scripts/classes-family-heavy-task.mjs -- npm ci
           npm run check:dependencies
@@ -3002,12 +3002,12 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
-          node-version: 24.18.0
+          node-version: 26.13.1
           cache: npm
       - name: Pin the supported npm toolchain
         run: |
-          npm install --global npm@12.0.1
-          test "$(npm --version)" = "12.0.1"
+          npm install --global npm@12.2.3
+          test "$(npm --version)" = "12.2.3"
       - name: Verify root clean install
         run: node scripts/classes-family-heavy-task.mjs -- npm ci
       - name: Audit all root dependencies and production dependencies
@@ -3476,15 +3476,15 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
-          node-version: 24.18.0
+          node-version: 26.13.1
           cache: npm
       - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
         with:
           python-version: "3.14.10"
       - name: Verify both locked installations and all dependency audit scopes
         run: |
-          npm install --global npm@12.0.1
-          test "$(npm --version)" = "12.0.1"
+          npm install --global npm@12.2.3
+          test "$(npm --version)" = "12.2.3"
           mkdir -p "$DATA_SCIENCE_PROOF_PATH/audits"
           node scripts/classes-family-heavy-task.mjs -- npm ci
           npm run check:dependencies

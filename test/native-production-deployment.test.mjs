@@ -333,10 +333,10 @@ test("native provenance rejects rehashed payloads and pins the independent signe
 		"--deny-self-hosted-runners"
 	];
 	const cli = path.join(temporaryRoot, "gh");
-	await fs.writeFile(cli, `#!${process.execPath}\nimport fs from "node:fs";\nimport crypto from "node:crypto";\nconst args = process.argv.slice(2);\nfs.writeFileSync(${JSON.stringify(path.join(temporaryRoot, "called.json"))}, JSON.stringify(args));\nif (process.env.TEST_PROVENANCE_UNAVAILABLE === "1") process.exit(1);\nif (JSON.stringify(args) !== ${JSON.stringify(JSON.stringify(expectedArguments))}) process.exit(2);\nif (crypto.createHash("sha256").update(fs.readFileSync(args[2])).digest("hex") !== ${JSON.stringify(digest)}) process.exit(3);\n`, { mode: 0o755 });
+	await fs.writeFile(cli, `#!/usr/bin/env node\nimport fs from "node:fs";\nimport crypto from "node:crypto";\nconst args = process.argv.slice(2);\nfs.writeFileSync(${JSON.stringify(path.join(temporaryRoot, "called.json"))}, JSON.stringify(args));\nif (process.env.TEST_PROVENANCE_UNAVAILABLE === "1") process.exit(1);\nif (JSON.stringify(args) !== ${JSON.stringify(JSON.stringify(expectedArguments))}) process.exit(2);\nif (crypto.createHash("sha256").update(fs.readFileSync(args[2])).digest("hex") !== ${JSON.stringify(digest)}) process.exit(3);\n`, { mode: 0o755 });
 	const verify = (extraEnv = {}) => spawnSync(process.execPath, [guard, candidate], {
 		encoding: "utf8",
-		env: { ...process.env, PATH: `${temporaryRoot}${path.delimiter}${process.env.PATH}`, ...extraEnv }
+		env: { ...process.env, PATH: [temporaryRoot, path.dirname(process.execPath), process.env.PATH].join(path.delimiter), ...extraEnv }
 	});
 	assert.equal(verify().status, 0);
 	assert.deepEqual(JSON.parse(await fs.readFile(path.join(temporaryRoot, "called.json"), "utf8")), expectedArguments);
