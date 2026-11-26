@@ -1,4 +1,6 @@
 import type { RawCourse, RawCourseModule } from "./types";
+import { cppCourseGuideReadings } from "./cppCourseGuideReadings";
+import { cppPracticeGuide } from "./cppPracticeGuide";
 
 type ExpansionPriority = "urgent" | "soon" | "later";
 
@@ -678,12 +680,13 @@ function projectOptionCheckpoints(
 
 function buildExpansionModules(
 	profile: ResearchExpansionProfile,
-	courseLabel: string
+	courseLabel: string,
+	projectGuide = buildProjectModule(profile, courseLabel)
 ) {
 	const modules = [
 		buildStandardsModule(profile, courseLabel),
 		buildSequencingModule(profile, courseLabel),
-		buildProjectModule(profile, courseLabel)
+		projectGuide
 	];
 	if (profile.guideReadings) {
 		for (const module of modules) {
@@ -2197,10 +2200,19 @@ export const researchBackedExpansionProfiles: Record<
 	]),
 	"ap-computer-science-a": apCsaProfile,
 	assembly: assemblyProfile,
-	"c-level-1": cppProfile,
+	"c-level-1": {
+		...cppProfile,
+		guideReadings: cppCourseGuideReadings["c-level-1"]
+	},
 	"c-systems-engineering": cSystemsProfile,
-	"cpp-level-2": cppProfile,
-	"cpp-level-3": cppProfile,
+	"cpp-level-2": {
+		...cppProfile,
+		guideReadings: cppCourseGuideReadings["cpp-level-2"]
+	},
+	"cpp-level-3": {
+		...cppProfile,
+		guideReadings: cppCourseGuideReadings["cpp-level-3"]
+	},
 	"data-science-in-python": dataScienceProfile,
 	"data-structures-and-algorithms-in-cpp": dsaProfile,
 	"design-patterns-in-cpp": cppDesignPatternsProfile,
@@ -2306,5 +2318,11 @@ export function applyResearchBackedExpansions(
 
 	if (alreadyExpanded) return;
 
-	course.modules.push(...buildExpansionModules(profile, label));
+	course.modules.push(
+		...buildExpansionModules(
+			profile,
+			label,
+			cppPracticeGuide(courseId, label)
+		)
+	);
 }
