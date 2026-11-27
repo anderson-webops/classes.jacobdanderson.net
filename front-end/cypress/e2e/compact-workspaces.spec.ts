@@ -239,9 +239,7 @@ context("Compact content-first workspaces", () => {
 		cy.get("@sendNote")
 			.its("request.body")
 			.should("not.have.property", "reviewWarnings");
-		cy.contains(
-			"Submitted successfully; Sent copy saved. Recipient delivery is not tracked."
-		).should("be.visible");
+		cy.contains("Session note sent.").should("be.visible");
 		cy.get('[data-testid="live-preview"]').should("not.exist");
 	});
 	it("uses compact stacked course and learner selectors, and puts search beside them", () => {
