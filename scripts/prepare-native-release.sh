@@ -56,10 +56,10 @@ classes_candidate_root="$classes_release_root/releases/.candidates"
 classes_revision="$(git -C "$classes_source_dir" rev-parse --verify 'HEAD^{commit}')"
 [[ "$classes_revision" =~ ^[0-9a-f]{40}$ ]] \
 	|| { printf '%s\n' "Git did not return a full lowercase revision." >&2; exit 1; }
-[[ "$(node -p 'process.versions.node')" == "24.18.0" ]] \
-	|| { printf '%s\n' "Native releases require Node 24.18.0." >&2; exit 1; }
-[[ "$(npm --version)" == "12.0.1" ]] \
-	|| { printf '%s\n' "Native releases require npm 12.0.1." >&2; exit 1; }
+[[ "$(node -p 'process.versions.node')" == "26.13.1" ]] \
+	|| { printf '%s\n' "Native releases require Node 26.13.1." >&2; exit 1; }
+[[ "$(npm --version)" == "12.2.3" ]] \
+	|| { printf '%s\n' "Native releases require npm 12.2.3." >&2; exit 1; }
 
 classes_release_id="$classes_tag-$classes_revision"
 classes_final_candidate="$classes_candidate_root/$classes_release_id"

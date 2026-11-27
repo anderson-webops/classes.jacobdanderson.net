@@ -26,13 +26,13 @@ jobs:
 
             - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
               with:
-                  node-version: 24.18.0
+                  node-version: 26.13.1
                   cache: npm
 
             - name: Pin npm version
               run: |
-                  npm i -g npm@12.0.1
-                  test "$(npm --version)" = "12.0.1"
+                  npm i -g npm@12.2.3
+                  test "$(npm --version)" = "12.2.3"
 
             - name: Install deps
               run: npm ci
@@ -350,16 +350,16 @@ jobs:
 
             - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
               with:
-                  node-version: 24.18.0
+                  node-version: 26.13.1
                   cache: npm
                   cache-dependency-path: back-end/package-lock.json
 
             - name: Pin npm version
               run: |
                   npm -v
-                  npm i -g npm@12.0.1
+                  npm i -g npm@12.2.3
                   npm -v
-                  test "$(npm --version)" = "12.0.1"
+                  test "$(npm --version)" = "12.2.3"
 
             - name: Verify standalone backend install policy
               run: node --test test/standalone-backend-install-policy.test.mjs
@@ -385,16 +385,16 @@ jobs:
 
             - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
               with:
-                  node-version: 24.18.0
+                  node-version: 26.13.1
                   cache: npm
 
             # Make runner's npm match packageManager in package.json
             - name: Pin npm version
               run: |
                   npm -v
-                  npm i -g npm@12.0.1
+                  npm i -g npm@12.2.3
                   npm -v
-                  test "$(npm --version)" = "12.0.1"
+                  test "$(npm --version)" = "12.2.3"
 
             - name: Install deps
               run: npm ci
@@ -427,14 +427,14 @@ jobs:
 
             - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
               with:
-                  node-version: 24.18.0
+                  node-version: 26.13.1
                   cache: npm
 
             - name: Pin npm version
               run: |
-                  npm i -g npm@12.0.1
+                  npm i -g npm@12.2.3
                   npm -v
-                  test "$(npm --version)" = "12.0.1"
+                  test "$(npm --version)" = "12.2.3"
 
             - name: Install deps
               run: npm ci
@@ -446,7 +446,7 @@ jobs:
         runs-on: ubuntu-24.04
         strategy:
             matrix:
-                node-version: [24.18.0]
+                node-version: [26.13.1]
                 os: [ubuntu-24.04]
             fail-fast: false
 
@@ -462,9 +462,9 @@ jobs:
 
             - name: Pin npm version
               run: |
-                  npm i -g npm@12.0.1
+                  npm i -g npm@12.2.3
                   npm -v
-                  test "$(npm --version)" = "12.0.1"
+                  test "$(npm --version)" = "12.2.3"
 
             - name: Install deps
               id: unit_dependencies
@@ -528,14 +528,14 @@ jobs:
 
             - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
               with:
-                  node-version: 24.18.0
+                  node-version: 26.13.1
                   cache: npm
 
             - name: Pin npm version
               run: |
-                  npm i -g npm@12.0.1
+                  npm i -g npm@12.2.3
                   npm -v
-                  test "$(npm --version)" = "12.0.1"
+                  test "$(npm --version)" = "12.2.3"
 
             - name: Install deps
               run: npm ci
@@ -556,14 +556,14 @@ jobs:
 
             - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
               with:
-                  node-version: 24.18.0
+                  node-version: 26.13.1
                   cache: npm
 
             - name: Pin npm version
               run: |
-                  npm i -g npm@12.0.1
+                  npm i -g npm@12.2.3
                   npm -v
-                  test "$(npm --version)" = "12.0.1"
+                  test "$(npm --version)" = "12.2.3"
 
             - name: Install deps
               run: npm ci
@@ -584,7 +584,7 @@ jobs:
 
             - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
               with:
-                  node-version: 24.18.0
+                  node-version: 26.13.1
 
             - name: Install native Nginx fixture dependency
               run: |
@@ -611,15 +611,15 @@ jobs:
 
             - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
               with:
-                  node-version: 24.18.0
+                  node-version: 26.13.1
                   cache: npm
                   registry-url: https://registry.npmjs.org/
 
             - name: Pin npm version
               run: |
-                  npm i -g npm@12.0.1
+                  npm i -g npm@12.2.3
                   npm -v
-                  test "$(npm --version)" = "12.0.1"
+                  test "$(npm --version)" = "12.2.3"
 
             - name: Verify preview readiness failure recovery
               run: node --test test/preview-readiness.test.mjs
@@ -916,15 +916,15 @@ jobs:
 
             - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
               with:
-                  node-version: 24.18.0
+                  node-version: 26.13.1
                   cache: npm
                   registry-url: https://registry.npmjs.org/
 
             - name: Pin npm version
               run: |
-                  npm i -g npm@12.0.1
+                  npm i -g npm@12.2.3
                   npm -v
-                  test "$(npm --version)" = "12.0.1"
+                  test "$(npm --version)" = "12.2.3"
 
             - name: Verify preview readiness failure recovery
               run: node --test test/preview-readiness.test.mjs
@@ -967,15 +967,15 @@ jobs:
 
             - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
               with:
-                  node-version: 24.18.0
+                  node-version: 26.13.1
                   cache: npm
                   registry-url: https://registry.npmjs.org/
 
             - name: Pin npm version
               run: |
-                  npm i -g npm@12.0.1
+                  npm i -g npm@12.2.3
                   npm -v
-                  test "$(npm --version)" = "12.0.1"
+                  test "$(npm --version)" = "12.2.3"
 
             - name: Verify preview readiness failure recovery
               run: node --test test/preview-readiness.test.mjs
@@ -1495,13 +1495,13 @@ jobs:
                   persist-credentials: false
             - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
               with:
-                  node-version: 24.18.0
+                  node-version: 26.13.1
                   cache: npm
             - name: Pin npm version
               run: |
-                  npm i -g npm@12.0.1
+                  npm i -g npm@12.2.3
                   npm -v
-                  test "$(npm --version)" = "12.0.1"
+                  test "$(npm --version)" = "12.2.3"
             - name: Install deps
               run: npm ci
             - name: Build front-end
@@ -2139,13 +2139,13 @@ jobs:
 
             - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
               with:
-                  node-version: 24.18.0
+                  node-version: 26.13.1
                   cache: npm
 
             - name: Pin npm version
               run: |
-                  npm i -g npm@12.0.1
-                  test "$(npm --version)" = "12.0.1"
+                  npm i -g npm@12.2.3
+                  test "$(npm --version)" = "12.2.3"
 
             - name: Install checked dependencies
               run: npm ci
@@ -2269,7 +2269,7 @@ jobs:
 
             - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
               with:
-                  node-version: 24.18.0
+                  node-version: 26.13.1
 
             - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
               with:
@@ -2341,7 +2341,7 @@ jobs:
 
             - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
               with:
-                  node-version: 24.18.0
+                  node-version: 26.13.1
 
             - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
               with:
@@ -2424,7 +2424,7 @@ jobs:
 
             - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
               with:
-                  node-version: 24.18.0
+                  node-version: 26.13.1
 
             - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
               with:
@@ -2502,7 +2502,7 @@ jobs:
 
             - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
               with:
-                  node-version: 24.18.0
+                  node-version: 26.13.1
 
             - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
               with:
@@ -2608,7 +2608,7 @@ jobs:
 
             - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
               with:
-                  node-version: 24.18.0
+                  node-version: 26.13.1
 
             - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
               with:
@@ -2677,13 +2677,13 @@ jobs:
                   persist-credentials: false
             - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
               with:
-                  node-version: 24.18.0
+                  node-version: 26.13.1
                   cache: npm
             - name: Pin npm version
               run: |
-                  npm i -g npm@12.0.1
+                  npm i -g npm@12.2.3
                   npm -v
-                  test "$(npm --version)" = "12.0.1"
+                  test "$(npm --version)" = "12.2.3"
             - name: Install deps
               run: npm ci
             - name: Build front-end
@@ -2722,14 +2722,14 @@ jobs:
 
             - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
               with:
-                  node-version: 24.18.0
+                  node-version: 26.13.1
                   cache: npm
 
             - name: Pin npm version
               run: |
-                  npm i -g npm@12.0.1
+                  npm i -g npm@12.2.3
                   npm -v
-                  test "$(npm --version)" = "12.0.1"
+                  test "$(npm --version)" = "12.2.3"
 
             - name: Install deps
               run: npm ci
@@ -2751,11 +2751,11 @@ jobs:
                   persist-credentials: false
             - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
               with:
-                  node-version: 24.18.0
+                  node-version: 26.13.1
                   cache: npm
             - name: Pin npm and install the exact locked graph
               run: |
-                  npm install --global npm@12.0.1
+                  npm install --global npm@12.2.3
                   node scripts/classes-family-heavy-task.mjs -- npm ci
             - name: Verify exact data source and historical refactoring identities
               run: node scripts/classes-family-heavy-task.mjs -- npm exec -w front-end -- vitest run test/java-value-data-workspace.spec.test.ts test/java-ownership-move-workspace.spec.test.ts test/java-conditional-flow-workspace.spec.test.ts test/java-method-calls-workspace.spec.test.ts --no-file-parallelism --maxWorkers=1

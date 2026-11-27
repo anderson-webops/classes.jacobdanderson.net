@@ -12,11 +12,11 @@ import { fileURLToPath } from "node:url";
 
 export const CANONICAL_REGISTRY = "https://registry.npmjs.org/";
 export const PINNED_VERSIONS = Object.freeze({
-	"npm": "12.0.1",
-	"@npmcli/arborist": "10.0.1",
+	"npm": "12.2.3",
+	"@npmcli/arborist": "10.0.5",
 	"npm-package-arg": "14.0.0",
-	"pacote": "22.0.0",
-	"semver": "7.8.5",
+	"pacote": "22.0.1",
+	"semver": "7.8.6",
 	"ssri": "14.0.0"
 });
 
