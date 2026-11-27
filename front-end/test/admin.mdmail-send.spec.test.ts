@@ -20,6 +20,13 @@ vi.mock("@/modules/sessionNoteSendIntent", () => ({
 
 const studentId = "a".repeat(24);
 const noteId = "c".repeat(24);
+const savedNote = { _id: noteId, studentId };
+const accepted = {
+	ok: true,
+	operationId: "synthetic-operation",
+	evidenceStatus: "smtp_accepted",
+	archivalStatus: "archived"
+};
 let wrapper: ReturnType<typeof mount>;
 
 beforeEach(() => {
@@ -63,14 +70,10 @@ beforeEach(() => {
 		}
 		throw new Error(`Unexpected GET path: ${path}`);
 	});
-	vi.mocked(api.post).mockImplementation(async (path: string) => ({
+	vi.mocked(api.post).mockImplementation(async (path: string, body) => ({
 		data: path.endsWith("/session-notes")
-			? { sessionNote: { _id: noteId } }
-			: {
-					ok: true,
-					operationId: "synthetic-operation",
-					evidenceStatus: "smtp_accepted"
-				}
+			? { sessionNote: { ...savedNote, studentId: body.studentId } }
+			: accepted
 	}));
 	vi.mocked(retainNoteSendIntent).mockImplementation(
 		async (signature, saveDraft) => ({
@@ -92,6 +95,111 @@ async function compose(selectStudent = true) {
 	await wrapper.get("#subject-date-input").setValue("2026-09-30");
 	await wrapper.get("#markdown-input").setValue("Synthetic note body");
 }
+
+function expectClearedComposer() {
+	for (const field of [
+		"#subject-date-input",
+		"#subject-input",
+		"#markdown-input"
+	]) {
+		expect(wrapper.get<HTMLInputElement>(field).element.value).toBe("");
+	}
+	expect(wrapper.find('[data-testid="live-preview"]').exists()).toBe(false);
+	expect(
+		wrapper.get<HTMLSelectElement>("#recipient-select").element.value
+	).toBe(studentId);
+}
+
+describe("save without email", () => {
+	it("saves to the selected profile even without an email mapping", async () => {
+		vi.mocked(fetchAdminRecipients).mockResolvedValue([]);
+		await compose();
+		await wrapper.get('[data-testid="preview-toggle"]').trigger("click");
+		vi.mocked(api.get).mockResolvedValueOnce({
+			data: {
+				sessionNotes: [
+					{
+						...savedNote,
+						subject: "Session Notes (09/30)",
+						sessionDate: "2026-09-30T12:00:00Z",
+						createdAt: "2026-11-26T12:00:00Z",
+						primaryEmail: "student@example.invalid",
+						ccEmails: [],
+						markdown: "Synthetic note body"
+					}
+				]
+			}
+		});
+		await wrapper.get(".save-note-btn").trigger("click");
+		await flushPromises();
+		expect(api.post).toHaveBeenCalledTimes(1);
+		expect(api.post).toHaveBeenCalledWith(
+			`/users/${studentId}/session-notes`,
+			{
+				studentId,
+				scheduledSessionId: undefined,
+				unlinked: true,
+				sessionDate: "2026-09-30",
+				subject: "Session Notes (09/30)",
+				markdown: "Synthetic note body"
+			}
+		);
+		expect(retainNoteSendIntent).not.toHaveBeenCalled();
+		expectClearedComposer();
+		expect(wrapper.get(".result").text()).toBe(
+			"Session note saved to the profile."
+		);
+		expect(wrapper.get(".result").attributes("role")).toBe("status");
+		expect(wrapper.get(".history-note__body").text()).toBe(
+			"Synthetic note body"
+		);
+	});
+
+	it.each([
+		undefined,
+		{ sessionNote: { ...savedNote, studentId: "b".repeat(24) } }
+	])("preserves the note when saving is unconfirmed (%j)", async response => {
+		await compose();
+		if (response)
+			vi.mocked(api.post).mockResolvedValueOnce({ data: response });
+		else
+			vi.mocked(api.post).mockRejectedValueOnce(
+				new Error("Synthetic timeout")
+			);
+		await wrapper.get(".save-note-btn").trigger("click");
+		await flushPromises();
+		expect(
+			wrapper.get<HTMLTextAreaElement>("#markdown-input").element.value
+		).toBe("Synthetic note body");
+		expect(wrapper.get(".result").text()).toBe(
+			"Saving could not be confirmed. Your draft is still here."
+		);
+		expect(api.post).toHaveBeenCalledTimes(1);
+	});
+
+	it("keeps the draft intact while waiting for confirmation of a save", async () => {
+		await compose();
+		let confirmSave!: (response: {
+			data: { sessionNote: typeof savedNote };
+		}) => void;
+		vi.mocked(api.post).mockImplementationOnce(
+			() =>
+				new Promise(resolve => {
+					confirmSave = resolve;
+				})
+		);
+		await wrapper.get(".save-note-btn").trigger("click");
+		expect(wrapper.get(".send-btn").attributes("disabled")).toBeDefined();
+		expect(
+			wrapper.get<HTMLTextAreaElement>("#markdown-input").element.value
+		).toBe("Synthetic note body");
+		expect(wrapper.find(".result").exists()).toBe(false);
+		confirmSave({ data: { sessionNote: savedNote } });
+		await flushPromises();
+		expectClearedComposer();
+		expect(api.post).toHaveBeenCalledTimes(1);
+	});
+});
 
 describe("direct, safely validated session-note sending", () => {
 	it("keeps only recipient, date and notes instead of workflow controls", async () => {
@@ -144,9 +252,8 @@ describe("direct, safely validated session-note sending", () => {
 				}),
 				{ withCredentials: true }
 			);
-			expect(wrapper.find('[data-testid="live-preview"]').exists()).toBe(
-				view === "Preview"
-			);
+			expectClearedComposer();
+			expect(wrapper.get(".result").text()).toBe("Session note sent.");
 		}
 	);
 	it("shows operator activation for a paused queued note without repeating the send", async () => {
@@ -172,7 +279,7 @@ describe("direct, safely validated session-note sending", () => {
 		);
 		vi.mocked(api.post).mockImplementation(async path => ({
 			data: path.endsWith("/session-notes")
-				? { sessionNote: { _id: noteId } }
+				? { sessionNote: savedNote }
 				: {
 						operationId: "synthetic-operation",
 						evidenceStatus: "queued",
@@ -200,7 +307,50 @@ describe("direct, safely validated session-note sending", () => {
 		);
 		expect(api.post).toHaveBeenCalledTimes(2);
 		expect(retainNoteSendIntent).toHaveBeenCalledTimes(1);
+		expect(
+			wrapper.get<HTMLTextAreaElement>("#markdown-input").element.value
+		).toBe("Synthetic note body");
 	});
+	it.each([false, true])(
+		"only clears the submitted draft when a later status check confirms SMTP acceptance (edited: %s)",
+		async edited => {
+			const originalGet = vi.mocked(api.get).getMockImplementation()!;
+			vi.mocked(api.get).mockImplementation(async (path, ...args) =>
+				path ===
+				"/admin-mail/session-notes/operations/synthetic-operation"
+					? { data: accepted }
+					: originalGet(path, ...args)
+			);
+			vi.mocked(api.post).mockResolvedValueOnce({
+				data: { sessionNote: savedNote }
+			});
+			vi.mocked(api.post).mockResolvedValueOnce({
+				data: { ...accepted, ok: false, evidenceStatus: "queued" }
+			});
+			await compose();
+			await wrapper.get(".send-btn").trigger("click");
+			await flushPromises();
+			expect(
+				wrapper.get<HTMLTextAreaElement>("#markdown-input").element
+					.value
+			).toBe("Synthetic note body");
+			if (edited)
+				await wrapper.get("#markdown-input").setValue("A new draft");
+			await wrapper
+				.findAll("button")
+				.find(button => button.text() === "Check send status")!
+				.trigger("click");
+			await flushPromises();
+			expect(wrapper.get(".result").text()).toBe("Session note sent.");
+			if (edited)
+				expect(
+					wrapper.get<HTMLTextAreaElement>("#markdown-input").element
+						.value
+				).toBe("A new draft");
+			else expectClearedComposer();
+			expect(api.post).toHaveBeenCalledTimes(2);
+		}
+	);
 	it("does not imply delivery when the pause check is unavailable", async () => {
 		const originalGet = vi.mocked(api.get).getMockImplementation()!;
 		vi.mocked(api.get).mockImplementation(
@@ -218,7 +368,7 @@ describe("direct, safely validated session-note sending", () => {
 	it("keeps SMTP acceptance distinct from later Sent-copy archival review", async () => {
 		vi.mocked(api.post).mockImplementation(async path => ({
 			data: path.endsWith("/session-notes")
-				? { sessionNote: { _id: noteId } }
+				? { sessionNote: savedNote }
 				: {
 						operationId: "synthetic-operation",
 						evidenceStatus: "smtp_accepted",
@@ -229,20 +379,15 @@ describe("direct, safely validated session-note sending", () => {
 		await compose();
 		await wrapper.get(".send-btn").trigger("click");
 		await flushPromises();
-		expect(wrapper.get(".result").text()).toContain(
-			"Submitted successfully"
+		expect(wrapper.get(".result").text()).toBe(
+			"Session note sent. The Sent copy needs review. Reference: synthetic-operation."
 		);
-		expect(wrapper.get(".result").text()).toContain(
-			"Recipient delivery is not tracked"
-		);
-		expect(wrapper.get(".result").text()).toContain(
-			"archival review; do not resend"
-		);
+		expectClearedComposer();
 	});
 	it("describes an accepted submission and confirmed Sent copy without claiming inbox delivery", async () => {
 		vi.mocked(api.post).mockImplementation(async path => ({
 			data: path.endsWith("/session-notes")
-				? { sessionNote: { _id: noteId } }
+				? { sessionNote: savedNote }
 				: {
 						operationId: "synthetic-operation",
 						evidenceStatus: "smtp_accepted",
@@ -253,9 +398,7 @@ describe("direct, safely validated session-note sending", () => {
 		await compose();
 		await wrapper.get(".send-btn").trigger("click");
 		await flushPromises();
-		expect(wrapper.get(".result").text()).toContain(
-			"Submitted successfully; Sent copy saved. Recipient delivery is not tracked."
-		);
+		expect(wrapper.get(".result").text()).toBe("Session note sent.");
 		expect(wrapper.get(".result").text()).not.toContain("delivered");
 	});
 	it("never guesses a scheduled session from the selected subject date", async () => {
@@ -321,7 +464,7 @@ describe("direct, safely validated session-note sending", () => {
 		vi.mocked(api.post).mockImplementation(async path => {
 			if (path === "/admin-mail/send")
 				throw new Error("Synthetic network interruption");
-			return { data: { sessionNote: { _id: noteId } } };
+			return { data: { sessionNote: savedNote } };
 		});
 		await wrapper.get(".send-btn").trigger("click");
 		await flushPromises();
@@ -388,7 +531,7 @@ describe("direct, safely validated session-note sending", () => {
 			`/users/${studentId}/session-notes`
 		);
 		expect(wrapper.get(".result").text()).toContain(
-			"Synthetic draft-save failure"
+			"Sending could not be confirmed"
 		);
 	});
 	it("keeps sibling identity explicit inside the single recipient choice", async () => {
@@ -436,7 +579,7 @@ describe("direct, safely validated session-note sending", () => {
 	it("does not dispatch concurrent double clicks twice", async () => {
 		await compose();
 		let finishSave!: (value: {
-			data: { sessionNote: { _id: string } };
+			data: { sessionNote: typeof savedNote };
 		}) => void;
 		vi.mocked(api.post).mockImplementation(async path => {
 			if (path.endsWith("/session-notes")) {
@@ -453,8 +596,15 @@ describe("direct, safely validated session-note sending", () => {
 			};
 		});
 		await wrapper.get(".send-btn").trigger("click");
+		expect(
+			wrapper.get(".save-note-btn").attributes("disabled")
+		).toBeDefined();
+		expect(
+			wrapper.get<HTMLTextAreaElement>("#markdown-input").element.value
+		).toBe("Synthetic note body");
+		await wrapper.get(".save-note-btn").trigger("click");
 		await wrapper.get(".send-btn").trigger("click");
-		finishSave({ data: { sessionNote: { _id: noteId } } });
+		finishSave({ data: { sessionNote: savedNote } });
 		await flushPromises();
 		expect(api.post).toHaveBeenCalledTimes(2);
 		expect(retainNoteSendIntent).toHaveBeenCalledTimes(1);

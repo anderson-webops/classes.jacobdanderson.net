@@ -40,7 +40,8 @@ type DateInputEl = HTMLInputElement & { showPicker?: () => void };
 const to = ref("");
 const subject = ref("");
 const md = ref("");
-const sending = ref(false);
+const activeAction = ref<"save" | "send" | "check" | null>(null);
+const busy = computed(() => activeAction.value !== null);
 const draftGenerating = ref(false);
 const sendValidation = ref("");
 const noteStudentId = ref("");
@@ -67,27 +68,50 @@ const recipientsError = ref("");
 const subjectDate = ref("");
 const dateInput = ref<DateInputEl | null>(null);
 
-const resultText = ref("");
+const result = ref<{ message: string; success?: boolean } | null>(null);
 const recentSessionNotes = ref<SessionNoteRecord[]>([]);
 const recentNotesLoading = ref(false);
 const recentNotesError = ref("");
 let recentNotesRequestToken = 0;
+const draftSignature = computed(() =>
+	JSON.stringify([
+		noteStudentId.value,
+		to.value,
+		subjectDate.value,
+		subject.value,
+		md.value
+	])
+);
+let trackedDraftSignature = "";
+
+function clearComposer() {
+	md.value = "";
+	subjectDate.value = "";
+	subject.value = "";
+	previewOpen.value = false;
+	pendingNoteSend = null;
+}
+
 function requestNoteStudent(studentId: string) {
-	if (sending.value) return;
+	if (busy.value) return;
 	if (
 		studentId &&
 		!noteStudents.value.some(student => student.studentId === studentId)
 	) {
 		requestedStudentInvalid.value = true;
-		resultText.value =
-			"Requested student identity is unavailable. Select a verified student.";
+		result.value = {
+			message:
+				"Requested student identity is unavailable. Select a verified student."
+		};
 		return;
 	}
 	requestedStudentInvalid.value = false;
 	if (studentId === noteStudentId.value) return;
 	if (
 		noteStudentId.value &&
-		(md.value.trim() || pendingNoteSend || noteOperation.value)
+		(md.value.trim() ||
+			pendingNoteSend ||
+			(noteOperation.value && !isConfirmedSend(noteOperation.value)))
 	) {
 		pendingStudentId.value = studentId;
 		return;
@@ -96,15 +120,12 @@ function requestNoteStudent(studentId: string) {
 }
 function applyNoteStudent(studentId: string) {
 	const switchingStudent = Boolean(noteStudentId.value);
-	if (switchingStudent) {
-		md.value = "";
-		subject.value = "";
-		subjectDate.value = "";
-	}
+	if (switchingStudent) clearComposer();
 	pendingNoteSend = null;
+	trackedDraftSignature = "";
 	noteOperation.value = null;
 	pendingStudentId.value = null;
-	resultText.value = "";
+	result.value = null;
 	noteStudentId.value = studentId;
 }
 watch(
@@ -120,19 +141,41 @@ watch(noteStudentId, async () => {
 	await loadRecentSessionNotes();
 });
 async function checkNoteOperation() {
-	if (!noteOperation.value?.operationId) return;
+	const operationId = noteOperation.value?.operationId;
+	if (!operationId || busy.value || draftGenerating.value) return;
+	activeAction.value = "check";
 	try {
 		const { data } = await api.get<SendMailResponse>(
-			`/admin-mail/session-notes/operations/${noteOperation.value.operationId}`
+			`/admin-mail/session-notes/operations/${operationId}`
 		);
-		noteOperation.value = data;
-		if (typeof data.sendingPaused === "boolean") {
-			sendingStatus.value = data.sendingPaused ? "paused" : "not-paused";
-		}
-		resultText.value = describeNoteOperation(data);
+		if (data.operationId !== operationId)
+			throw new Error("Invalid operation");
+		applyNoteOperation(data);
 	} catch {
-		resultText.value =
-			"Tracking unavailable. Keep the operation reference and do not send again.";
+		result.value = {
+			message: `Send status is unavailable. Keep reference ${operationId} and do not send again.`
+		};
+	} finally {
+		activeAction.value = null;
+	}
+}
+
+function isConfirmedSend(operation: SendMailResponse) {
+	return (
+		operation.ok === true && operation.evidenceStatus === "smtp_accepted"
+	);
+}
+
+function applyNoteOperation(operation: SendMailResponse) {
+	noteOperation.value = operation;
+	if (typeof operation.sendingPaused === "boolean") {
+		sendingStatus.value = operation.sendingPaused ? "paused" : "not-paused";
+	}
+	const success = isConfirmedSend(operation);
+	result.value = { message: describeNoteOperation(operation), success };
+	if (success) {
+		if (draftSignature.value === trackedDraftSignature) clearComposer();
+		void loadRecentSessionNotes();
 	}
 }
 
@@ -143,15 +186,15 @@ function describeNoteOperation(operation: SendMailResponse): string {
 			? `${reference}Queued while session-note sending is paused. Operator activation is required before another SMTP attempt. No SMTP acceptance is recorded. Do not submit again.`
 			: `${reference}Queued; SMTP has not accepted the message. Check this operation before taking further action. Do not submit again.`;
 	}
-	if (operation.evidenceStatus === "smtp_accepted") {
+	if (isConfirmedSend(operation)) {
 		if (operation.archivalStatus === "archived") {
-			return `${reference}Submitted successfully; Sent copy saved. Recipient delivery is not tracked.`;
+			return "Session note sent.";
 		}
 		const archive =
 			operation.archivalStatus === "review_required"
-				? "The Sent copy requires separate archival review; do not resend."
-				: "Sent-copy archival is not confirmed.";
-		return `${reference}Submitted successfully. Recipient delivery is not tracked. ${archive}`;
+				? "The Sent copy needs review."
+				: "The Sent copy is not yet confirmed.";
+		return `Session note sent. ${archive} Reference: ${operation.operationId}.`;
 	}
 	if (
 		operation.evidenceStatus === "smtp_rejected" ||
@@ -419,62 +462,64 @@ watch([to, subject, md, noteStudentId, pendingStudentId], () => {
 	sendValidation.value = "";
 });
 
-async function showSendValidation(message: string, fieldId: string) {
+async function showNoteValidation(message: string, fieldId: string) {
 	sendValidation.value = message;
+	if (fieldId === "markdown-input") previewOpen.value = false;
 	await nextTick();
 	document.getElementById(fieldId)?.focus();
 }
 
-async function sendMail() {
-	if (draftGenerating.value) return;
-	if (sending.value) return;
+async function submitNote(action: "save" | "send") {
+	if (draftGenerating.value || busy.value) return;
+	const actionLabel = action === "save" ? "saving" : "sending";
 	if (noteStudentsLoading.value || noteStudentsError.value) {
-		return showSendValidation(
+		return showNoteValidation(
 			noteStudentsError.value ||
 				"Recipients are still loading. Please try again.",
 			"recipient-select"
 		);
 	}
 	if (!selectedStudent.value || requestedStudentInvalid.value) {
-		return showSendValidation(
-			"Select a recipient before sending.",
+		return showNoteValidation(
+			`Select a recipient before ${actionLabel}.`,
 			"recipient-select"
 		);
 	}
 	if (pendingStudentId.value !== null) {
-		return showSendValidation(
-			"Keep the current recipient or confirm the change before sending.",
+		return showNoteValidation(
+			`Keep the current recipient or confirm the change before ${actionLabel}.`,
 			"recipient-select"
 		);
 	}
-	if (!to.value.trim()) {
-		return showSendValidation(
+	if (action === "send" && !to.value.trim()) {
+		return showNoteValidation(
 			"No saved recipient address is available. Update this student's recipient in People before sending.",
 			"recipient-select"
 		);
 	}
 	const sessionDateIso = parseDateIso(subjectDate.value);
 	if (!sessionDateIso) {
-		return showSendValidation(
-			"Choose the note's subject date before sending.",
+		return showNoteValidation(
+			`Choose the note's subject date before ${actionLabel}.`,
 			"pick-subject-date"
 		);
 	}
-	if (!subject.value.trim()) {
-		return showSendValidation(
+	if (action === "send" && !subject.value.trim()) {
+		return showNoteValidation(
 			"Enter a subject before sending.",
 			"subject-input"
 		);
 	}
 	if (!md.value.trim()) {
-		return showSendValidation(
-			"Write the note before sending.",
+		return showNoteValidation(
+			`Write the note before ${actionLabel}.`,
 			"markdown-input"
 		);
 	}
 	sendValidation.value = "";
-	resultText.value = "";
-	sending.value = true;
+	result.value = null;
+	activeAction.value = action;
+	const submittedDraft = draftSignature.value;
 	const curTo = to.value.trim();
 	const curSubject = subject.value.trim();
 	const curMd = md.value;
@@ -490,7 +535,40 @@ async function sendMail() {
 		scheduledSessionId: undefined,
 		unlinked: true
 	};
+	const saveToProfile = async () => {
+		const recipients = parseRecipients(curTo);
+		const { data } = await api.post<{ sessionNote: SessionNoteRecord }>(
+			`/users/${identity.studentId}/session-notes`,
+			{
+				...identity,
+				sessionDate: sessionDateIso.slice(0, 10),
+				subject: curSubject,
+				markdown: curMd,
+				...(action === "send" && {
+					primaryEmail: recipients.to,
+					ccEmails: recipients.cc
+				})
+			}
+		);
+		if (
+			!/^[a-f0-9]{24}$/.test(data.sessionNote?._id ?? "") ||
+			data.sessionNote.studentId !== identity.studentId
+		) {
+			throw new Error("Invalid saved note confirmation");
+		}
+		return data.sessionNote._id;
+	};
 	try {
+		if (action === "save") {
+			await saveToProfile();
+			if (draftSignature.value === submittedDraft) clearComposer();
+			result.value = {
+				message: "Session note saved to the profile.",
+				success: true
+			};
+			void loadRecentSessionNotes();
+			return;
+		}
 		const signature = JSON.stringify({
 			...payload,
 			...identity,
@@ -499,20 +577,7 @@ async function sendMail() {
 		if (!pendingNoteSend || pendingNoteSend.signature !== signature) {
 			pendingNoteSend = await retainNoteSendIntent(
 				signature,
-				async () => {
-					const saved = await api.post(
-						`/users/${identity.studentId}/session-notes`,
-						{
-							...identity,
-							sessionDate: sessionDateIso.slice(0, 10),
-							subject: curSubject,
-							markdown: curMd,
-							primaryEmail: parseRecipients(curTo).to,
-							ccEmails: parseRecipients(curTo).cc
-						}
-					);
-					return saved.data.sessionNote._id;
-				}
+				saveToProfile
 			);
 		}
 		const { data } = await api.post<SendMailResponse>(
@@ -525,25 +590,18 @@ async function sendMail() {
 			},
 			{ withCredentials: true }
 		);
-		if (data.operationId) {
-			noteOperation.value = data;
-			if (typeof data.sendingPaused === "boolean") {
-				sendingStatus.value = data.sendingPaused
-					? "paused"
-					: "not-paused";
-			}
-			resultText.value = describeNoteOperation(data);
-			if (data.ok) await loadRecentSessionNotes();
-		} else {
-			resultText.value =
-				"Sending could not be confirmed. Keep this draft and do not create a separate send.";
-		}
-	} catch (error: any) {
-		resultText.value = error?.response?.data
-			? JSON.stringify(error.response.data, null, 2)
-			: String(error);
+		if (!data?.operationId) throw new Error("Invalid send confirmation");
+		trackedDraftSignature = submittedDraft;
+		applyNoteOperation(data);
+	} catch {
+		result.value = {
+			message:
+				action === "save"
+					? "Saving could not be confirmed. Your draft is still here."
+					: "Sending could not be confirmed. Keep this draft and do not create a separate send."
+		};
 	} finally {
-		sending.value = false;
+		activeAction.value = null;
 	}
 }
 function parseDateParts(value: string) {
@@ -595,7 +653,7 @@ function parseDateIso(value: string): string | null {
 								id="recipient-select"
 								:value="noteStudentId"
 								:disabled="
-									sending ||
+									busy ||
 									noteStudentsLoading ||
 									recipientsLoading
 								"
@@ -621,7 +679,7 @@ function parseDateIso(value: string): string | null {
 								v-if="noteStudentId"
 								type="button"
 								class="ghost-btn"
-								:disabled="sending"
+								:disabled="busy"
 								@click="clearRecipient"
 							>
 								Clear
@@ -689,7 +747,7 @@ function parseDateIso(value: string): string | null {
 								id="pick-subject-date"
 								type="button"
 								class="picker-btn"
-								:disabled="sending"
+								:disabled="busy"
 								@click="openDatePicker"
 							>
 								{{
@@ -705,7 +763,7 @@ function parseDateIso(value: string): string | null {
 								type="date"
 								class="sr-only"
 								aria-label="Pick subject date"
-								:disabled="sending"
+								:disabled="busy"
 								@change="handleDateChange"
 							/>
 							<input
@@ -714,7 +772,7 @@ function parseDateIso(value: string): string | null {
 								class="subject-preview"
 								placeholder="Session Notes (MM/DD)"
 								aria-label="Email subject"
-								:disabled="sending"
+								:disabled="busy"
 							/>
 						</div>
 					</div>
@@ -758,7 +816,7 @@ function parseDateIso(value: string): string | null {
 						:class-date="subjectDate"
 						:markdown="md"
 						editor-id="markdown-input"
-						:disabled="sending"
+						:disabled="busy"
 						@generated="md = $event"
 						@busy="draftGenerating = $event"
 					/>
@@ -767,7 +825,7 @@ function parseDateIso(value: string): string | null {
 						v-model="md"
 						placeholder="Write session notes…"
 						data-testid="md-input"
-						:disabled="sending"
+						:disabled="busy"
 					></textarea>
 				</div>
 				<div
@@ -801,38 +859,61 @@ function parseDateIso(value: string): string | null {
 						{{ sendValidation }}
 					</p>
 					<button
-						v-if="noteOperation"
+						v-if="
+							noteOperation &&
+							(!isConfirmedSend(noteOperation) ||
+								noteOperation.archivalStatus !== 'archived')
+						"
 						type="button"
 						class="ghost-btn"
-						:disabled="sending"
+						:disabled="busy || draftGenerating"
 						@click="checkNoteOperation"
 					>
 						Check send status
 					</button>
-					<button
-						type="button"
-						class="send-btn"
-						:disabled="sending || draftGenerating"
-						:aria-describedby="
-							sendValidation ? 'send-validation' : undefined
-						"
-						@click="sendMail"
-					>
-						{{
-							sending
-								? "Submitting…"
-								: sendingStatus === "not-paused"
-									? "Send"
-									: "Submit note"
-						}}
-					</button>
+					<div class="mail-card__actions">
+						<button
+							type="button"
+							class="ghost-btn save-note-btn"
+							:disabled="busy || draftGenerating"
+							:aria-describedby="
+								sendValidation ? 'send-validation' : undefined
+							"
+							@click="submitNote('save')"
+						>
+							{{
+								activeAction === "save"
+									? "Saving…"
+									: "Save without email"
+							}}
+						</button>
+						<button
+							type="button"
+							class="send-btn"
+							:disabled="busy || draftGenerating"
+							:aria-describedby="
+								sendValidation ? 'send-validation' : undefined
+							"
+							@click="submitNote('send')"
+						>
+							{{
+								activeAction === "send"
+									? "Submitting…"
+									: sendingStatus === "not-paused"
+										? "Send"
+										: "Submit note"
+							}}
+						</button>
+					</div>
 				</div>
 			</div>
-			<pre
-				v-if="resultText"
+			<p
+				v-if="result"
 				class="result"
-				:role="noteOperation?.ok ? 'status' : 'alert'"
-				>{{ resultText }}</pre>
+				:role="result.success ? 'status' : 'alert'"
+			>
+				{{ result.message }}
+			</p>
 			<div
 				v-if="hasSelectedRecipient"
 				class="history-card"
@@ -1025,6 +1106,13 @@ function parseDateIso(value: string): string | null {
 	gap: 1rem;
 }
 
+.mail-card__actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.6rem;
+	margin-inline-start: auto;
+}
+
 .field-grid {
 	display: grid;
 	grid-template-columns: minmax(0, 1fr);
@@ -1139,7 +1227,6 @@ textarea {
 	background: #f3f4f6;
 }
 .send-btn {
-	margin-inline-start: auto;
 	padding: 0.85rem 1.25rem;
 	background: linear-gradient(135deg, #2563eb, #1d4ed8);
 	border: 1px solid #2563eb;
@@ -1156,11 +1243,7 @@ textarea {
 	box-shadow: none;
 }
 .result {
-	white-space: pre-wrap;
-	background: #f7f7f7;
-	border: 1px solid #ddd;
-	border-radius: 18px;
-	padding: 1rem;
+	margin: 0;
 }
 .hint {
 	margin: 4px 0 0;
@@ -1249,6 +1332,10 @@ textarea {
 
 	.subject-preview {
 		min-width: 0;
+	}
+
+	.mail-card__actions {
+		margin-inline-start: 0;
 	}
 
 	.send-btn,
