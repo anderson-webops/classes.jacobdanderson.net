@@ -3852,15 +3852,15 @@ describe("course text quality normalization", () => {
 				title: /^GrS9 Project 2: More Functions$/,
 				required: [
 					"parameter values",
-					"different sizes",
-					"Verify the design"
+					"12 square edges and nine triangle edges",
+					"only the 30 argument"
 				]
 			},
 			{
 				title: /^GrS9 Project 3: Polka Dots$/,
 				required: [
-					"mouse clicks",
 					"click coordinates",
+					"10 + min(20, abs(round(x)) // 5)",
 					"edges, and corners"
 				]
 			},
@@ -3877,11 +3877,11 @@ describe("course text quality normalization", () => {
 				required: ["strictly below 10", "previous one did not", "40-frame run"]
 			},
 			{
-				title: /^GrS14 Supplemental Project 3: Pong$/,
+				title: /^GrS14 Supplemental Project 3: Paddle Rally$/,
 				required: ["two paddles", "scoring", "reset after each point"]
 			},
 			{
-				title: /^GrS14 Supplemental Project 5: Snake$/,
+				title: /^GrS14 Supplemental Project 5: Trail Collector$/,
 				required: [
 					"body list",
 					"self-collision",

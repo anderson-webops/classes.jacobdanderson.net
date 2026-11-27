@@ -167,7 +167,7 @@ context("Compact content-first workspaces", () => {
 			}
 		}).as("recentNotes");
 		cy.intercept("POST", `**/api/users/${studentId}/session-notes`, {
-			body: { sessionNote: { _id: noteId } }
+			body: { sessionNote: { _id: noteId, studentId } }
 		}).as("saveNote");
 		cy.intercept("POST", "**/api/admin-mail/send", {
 			body: {
