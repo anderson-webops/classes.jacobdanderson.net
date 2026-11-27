@@ -5,15 +5,19 @@ import type {
 	RawCourseModuleItem
 } from "./types";
 import { isCoreProjectTitle } from "./projectGrouping";
+import {
+	pythonLevel1ArcadeSupplementalProjects,
+	pythonLevel1SpaceEaterProject
+} from "./pythonLevel1ArcadeProjects";
+import { pythonLevel1CheckIn } from "./pythonLevel1CheckInProjects";
+import { pythonLevel1DrawingProject } from "./pythonLevel1DrawingProjects";
+import { pythonLevel1GameMechanicsProjects } from "./pythonLevel1GameMechanicsProjects";
+import { pythonLevel1ListProjects } from "./pythonLevel1ListProjects";
 
 const TURTLE_REFERENCE = "/course-assets/python/turtle-project-reference.md";
 const TURTLE_COMMAND_REFERENCE = `${TURTLE_REFERENCE}#turtle-command-reference`;
-const TURTLE_BOUNDARY_REFERENCE = `${TURTLE_REFERENCE}#boundaries-and-in-bounds-checks`;
-const TURTLE_SCORE_REFERENCE = `${TURTLE_REFERENCE}#score-turtle-pattern`;
 const TURTLE_GAME_TEMPLATE_REFERENCE = `${TURTLE_REFERENCE}#game-template-with-score-boundaries-and-moving-triangles`;
 const TURTLE_COLOR_REFERENCE = "https://trinket.io/docs/colors";
-const PYTHON_LIST_METHOD_REFERENCE =
-	"https://www.w3schools.com/python/python_ref_list.asp";
 
 export const pythonLevel1Course: RawCourse = {
 	name: "Python Level 1",
@@ -144,7 +148,7 @@ Command details: [Python Turtle reference](https://docs.python.org/3/library/tur
 		{
 			title: "GrS2 Loops",
 			curriculum: [
-				{
+				pythonLevel1DrawingProject("GrS2-Basic-Shapes", {
 					title: "GrS2 Project 1: Basic Shapes",
 					preserveInstructions: true,
 					content: `Learn how \`for\` loops repeat code and use them to draw a square, triangle, and circle more efficiently. Compare repeated code with loop-based code and explore how shape sides and turn angles work together.
@@ -192,17 +196,13 @@ For the required triangle, travel pen-up to \`(80, -40)\`, face right with \`pen
 
 Finish with the square, triangle and circle in separate places. Keep travel lines absent and identify which statements repeat. Change a side length or starting position, predict the endpoints, then compare the drawing with that prediction. Continue with Smiley Face and the original loop drawing as the remaining required projects. More Shapes and Bullseye are optional practice.
 
-Language details: [Python for loops and range](https://docs.python.org/3/tutorial/controlflow.html#for-statements).`,
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-1/tree/main/GrS2-Basic-Shapes/solution"
-				},
-				{
+Language details: [Python for loops and range](https://docs.python.org/3/tutorial/controlflow.html#for-statements).`
+				}),
+				pythonLevel1DrawingProject("Smiley-Face", {
 					title: "GrS2 Project 2: Smiley Face",
 					content:
-						"Combine loops, shape planning, colors, and background changes to draw a smiley face with features such as rectangular eyes and a curved mouth.",
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-1/tree/main/Smiley-Face/solution"
-				},
+						"Combine loops, shape planning, colors, and background changes to draw a smiley face with features such as rectangular eyes and a curved mouth."
+				}),
 				{
 					title: "GrS2 Project 3: Open Ended Project - Drawing with Loops",
 					content:
@@ -210,48 +210,34 @@ Language details: [Python for loops and range](https://docs.python.org/3/tutoria
 				}
 			],
 			supplementalProjects: [
-				{
+				pythonLevel1DrawingProject("GrS2-More-Shapes", {
 					title: "GrS2 Supplemental Project 1: More Shapes",
 					content:
-						"Draw a magenta hexagon, a purple decagon, and a teal star on different parts of a black screen. Use loops for the repeated sides, calculate or choose turns intentionally, and move between shapes with the pen lifted so the travel lines do not appear. Verify that each shape has the correct number of visible points or sides.",
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-1/tree/main/GrS2-More-Shapes/solution"
-				},
-				{
+						"Draw a magenta hexagon, a purple decagon, and a teal star on different parts of a black screen. Use loops for the repeated sides, calculate or choose turns intentionally, and move between shapes with the pen lifted so the travel lines do not appear. Verify that each shape has the correct number of visible points or sides."
+				}),
+				pythonLevel1DrawingProject("GrS2-Bullseye", {
 					title: "GrS2 Supplemental Project 2: Bullseye",
 					content:
-						"Draw a target made of alternating red and white circles. Keep the circles centered by returning to a predictable position before each ring, and use a loop or repeated helper pattern so the radius changes consistently. The final target shows clear alternating colors and rings that stay aligned around the same center point.",
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-1/tree/main/GrS2-Bullseye/solution"
-				},
-				{
+						"Draw a target made of alternating red and white circles. Keep the circles centered by returning to a predictable position before each ring, and use a loop or repeated helper pattern so the radius changes consistently. The final target shows clear alternating colors and rings that stay aligned around the same center point."
+				}),
+				pythonLevel1DrawingProject("GrS2-Watermelon-Slice", {
 					title: "GrS2 Supplemental Project 3: Watermelon Slice",
 					content:
-						"Use loops and fills to draw a watermelon slice with rind, fruit, and seeds. Separate the drawing into layers: outer rind, inner fruit, and repeated seed shapes. The repeated seeds follow a clear pattern rather than random placement, and the fill colors make each layer easy to distinguish.",
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-1/tree/main/GrS2-Watermelon-Slice/solution"
-				},
-				{
+						"Use loops and fills to draw a watermelon slice with rind, fruit, and seeds. Separate the drawing into layers: outer rind, inner fruit, and repeated seed shapes. The repeated seeds follow a clear pattern rather than random placement, and the fill colors make each layer easy to distinguish."
+				}),
+				pythonLevel1DrawingProject("GrS2-Taxi", {
 					title: "GrS2 Supplemental Project 4: Taxi",
 					content:
-						"Draw a taxi using basic Turtle shapes for the body, wheels, windows, and at least one extra detail such as a sign, headlights, or road line. Experiment with thicker pen sizes for bolder outlines, but keep the fill colors and outlines readable. The finished drawing makes the taxi recognizable from separate planned pieces, not one continuous accidental path.",
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-1/tree/main/GrS2-Taxi/solution"
-				},
-				{
+						"Draw a taxi using basic Turtle shapes for the body, wheels, windows, and at least one extra detail such as a sign, headlights, or road line. Experiment with thicker pen sizes for bolder outlines, but keep the fill colors and outlines readable. The finished drawing makes the taxi recognizable from separate planned pieces, not one continuous accidental path."
+				}),
+				pythonLevel1DrawingProject("GrS2-Captain-America-Shield", {
 					title: "GrS2 Supplemental Project 5: Captain America Shield",
-					content:
-						"Use concentric circles and a centered star to build a layered shield design. The circles share a center point, shrink in a predictable order, and alternate colors cleanly. Finish by checking that the star is centered inside the smallest circle and that the layer order does not hide important parts of the shield.",
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-1/tree/main/GrS2-Captain-America-Shield/solution"
-				},
-				{
+					content: ""
+				}),
+				pythonLevel1DrawingProject("GrS2-Minion", {
 					title: "GrS2 Supplemental Project 6: Minion",
-					content:
-						"Combine loop-based drawing ideas to create a more complex character illustration. Break the minion into body, eye or goggles, clothing, arms, and facial details before coding. Use loops for repeated features such as eyes, buttons, hair, or clothing details, and verify that the drawing still works if one size or position variable changes slightly.",
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-1/tree/main/GrS2-Minion/solution"
-				},
+					content: ""
+				}),
 				{
 					title: "GrS2 Supplemental Project 7: Loops Recap",
 					content:
@@ -266,21 +252,17 @@ Language details: [Python for loops and range](https://docs.python.org/3/tutoria
 		{
 			title: "GrS3 Variables and Random Numbers",
 			curriculum: [
-				{
+				pythonLevel1DrawingProject("GrS3-Awesome-Angles", {
 					title: "GrS3 Project 1: Awesome Angles",
 					content:
-						"Use variables such as `length` and `degrees` to control turtle movement, compare assignment in code with equality in math, and experiment with changing variable values to alter the drawing.",
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-1/tree/main/GrS3-Awesome-Angles/solution"
-				},
-				{
+						"Use variables such as `length` and `degrees` to control turtle movement, compare assignment in code with equality in math, and experiment with changing variable values to alter the drawing."
+				}),
+				pythonLevel1DrawingProject("Surprise-Me-Square", {
 					title: "GrS3 Project 2: Surprise Me Square",
 					content: `Replace hardcoded coordinates, side lengths, and RGB values with variables, then use \`random.randint()\` to generate random locations, sizes, and colors for a square.
 
-Color reference: compare Turtle color names and RGB values with ${TURTLE_COLOR_REFERENCE}`,
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-1/tree/main/Surprise-Me-Square/solution"
-				},
+Color reference: compare Turtle color names and RGB values with ${TURTLE_COLOR_REFERENCE}`
+				}),
 				{
 					title: "GrS3 Guided Project: User Input Shape Designer",
 					content: `Use \`screen.textinput()\` and \`screen.numinput()\` to let the user choose a shape color and size before Turtle draws. Store each response in a descriptively named variable, provide a safe default when the user cancels, and validate the size before using it.
@@ -299,13 +281,11 @@ Test a typical color and size, the smallest accepted size, a value outside the a
 				}
 			],
 			supplementalProjects: [
-				{
+				pythonLevel1DrawingProject("GrS3-Random-Bowtie", {
 					title: "GrS3 Supplemental Project 1: Random Bowtie",
 					content:
-						"Draw a bowtie with random colors for each half and a randomly chosen background color. Store the random choices in variables before drawing so the color decisions can be printed, reused, or debugged. The two halves stay symmetric in shape while color changes from run to run.",
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-1/tree/main/GrS3-Random-Bowtie/solution"
-				},
+						"Draw a bowtie with random colors for each half and a randomly chosen background color. Store the random choices in variables before drawing so the color decisions can be printed, reused, or debugged. The two halves stay symmetric in shape while color changes from run to run."
+				}),
 				{
 					title: "GrS3 Supplemental Project 2: Debugging Practice",
 					content:
@@ -339,20 +319,16 @@ Complete the explanations and one short variable-based drawing example. This rec
 		{
 			title: "GrS4 Conditionals Part 1",
 			curriculum: [
-				{
+				pythonLevel1DrawingProject("GrS4-Surprise-Shape", {
 					title: "GrS4 Project 1: Surprise Shape",
 					content:
-						"Learn booleans, comparison operators, and `if` statements by generating a random number and using conditionals to choose which shape to draw.",
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-1/tree/main/GrS4-Surprise-Shape/solution"
-				},
-				{
+						"Learn booleans, comparison operators, and `if` statements by generating a random number and using conditionals to choose which shape to draw."
+				}),
+				pythonLevel1DrawingProject("GrS4-Find-Your-Turtle", {
 					title: "GrS4 Project 2: Find Your Turtle",
 					content:
-						"Use the coordinate plane, comparison operators, `and`, `or`, `xcor()`, and `ycor()` to detect where a turtle is and react differently in different regions of the canvas.",
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-1/tree/main/GrS4-Find-Your-Turtle/solution"
-				}
+						"Use the coordinate plane, comparison operators, `and`, `or`, `xcor()`, and `ycor()` to detect where a turtle is and react differently in different regions of the canvas."
+				})
 			],
 			supplementalProjects: [
 				{
@@ -383,13 +359,7 @@ Complete the explanations and one short variable-based drawing example. This rec
 		{
 			title: "Check-In #1",
 			curriculum: [
-				{
-					title: "Check-In #1 Overview",
-					content:
-						"This check-in is a guided review of Turtle basics, loops, variables, random numbers, and conditionals. Try each prompt independently first, then revisit any topics that need more practice.",
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-1/tree/main/Check-in-1/solution"
-				},
+				pythonLevel1CheckIn("Check-In #1 Overview"),
 				{
 					title: "Check-In #1: Basics with Turtle",
 					content:
@@ -418,64 +388,46 @@ Complete the explanations and one short variable-based drawing example. This rec
 						"https://github.com/instruction-material/Python-Level-1/tree/main/Reflection-Template-Updated/starter",
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-1/tree/main/Reflection-Template-Updated/solution"
-				},
-				{
-					title: "Check-In #1: Additional Practice Project",
-					content:
-						"Create a zigzagging line with about 30 turns, then extend it by connecting the zigzag to one or more original shapes. Use variables for repeated values such as turn amount, step length, and number of turns so the pattern can be adjusted without rewriting the loop. Verify that the extension is connected intentionally rather than added as unrelated drawing code.",
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-1/tree/main/GrS-Check-in-1-Additional-Practice-Project/solution"
-				}
-			],
-			supplementalProjects: []
-		},
-		{
-			title: "GrS5 Loops with Variables",
-			curriculum: [
-				{
-					title: "GrS5 Project 1: Fireworks",
-					content:
-						"Combine loops with reassignment so a value changes on every repetition. Use a `lineLength` variable that grows over time to create an expanding fireworks pattern.",
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-1/tree/main/GrS5-Fireworks/solution"
-				},
-				{
-					title: "GrS5 Project 2: While Loops Exploration",
-					content:
-						"Compare `while` loops with `for` loops, build loops that stop based on coordinates, and use `write()`, `clear()`, and coordinate checks to animate a turtle moving toward a stop sign.",
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-1/tree/main/While-Loops-Exploration/solution"
-				},
-				{
-					title: "GrS5 Project 3: Square Spiral",
-					content:
-						"Use a counter-controlled `while` loop plus a changing line length to create a square spiral with gradually changing properties. Track the loop counter, current line length, and turn direction separately so the stopping condition is easy to explain. The final spiral shows steady growth rather than disconnected squares.",
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-1/tree/main/GrS5-Square-Spiral/solution"
 				}
 			],
 			supplementalProjects: [
 				{
+					...pythonLevel1CheckIn(
+						"Check-In #1: Additional Practice Project"
+					),
+					id: "python-level-1-check-in-1-curriculum-check-in-1-additional-practice-project"
+				}
+			]
+		},
+		{
+			title: "GrS5 Loops with Variables",
+			curriculum: [
+				pythonLevel1DrawingProject("GrS5-Fireworks", {
+					title: "GrS5 Project 1: Fireworks",
+					content: ""
+				}),
+				pythonLevel1DrawingProject("While-Loops-Exploration", {
+					title: "GrS5 Project 2: While Loops Exploration",
+					content: ""
+				}),
+				pythonLevel1DrawingProject("GrS5-Square-Spiral", {
+					title: "GrS5 Project 3: Square Spiral",
+					content: ""
+				})
+			],
+			supplementalProjects: [
+				pythonLevel1DrawingProject("GrS5-Rainbow-Ninja-Star", {
 					title: "GrS5 Supplemental Project 1: Rainbow Ninja Star",
-					content:
-						"Draw a ninja star pattern that starts from the center and gradually shifts through color values. Use variables for length, turn amount, and color components so the visual change is produced by reassignment inside the loop. The finished pattern makes both the repeated geometry and the color progression visible.",
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-1/tree/main/GrS5-Rainbow-Ninja-Star/solution"
-				},
-				{
+					content: ""
+				}),
+				pythonLevel1DrawingProject("GrS5-Into-the-Void", {
 					title: "GrS5 Supplemental Project 2: Into the Void",
-					content:
-						"Draw a growing sequence of rotated squares using a loop that changes size and rotation in a predictable pattern. The final drawing makes the growth rule visible, and the code keeps the repeated drawing steps inside the loop rather than manually duplicating square commands.",
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-1/tree/main/GrS5-Into-the-Void/solution"
-				},
-				{
+					content: ""
+				}),
+				pythonLevel1DrawingProject("GrS5-Out-of-the-Void", {
 					title: "GrS5 Supplemental Project 3: Out of the Void",
-					content:
-						"Create a spiral triangle pattern and experiment with negative movement values. Before running the full drawing, predict how a negative movement changes the turtle's direction compared with turning. The final code uses a loop, a changing size value, and one short comment explaining why the spiral moves outward or inward.",
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-1/tree/main/GrS5-Out-of-the-Void/solution"
-				},
+					content: ""
+				}),
 				{
 					title: "GrS5 Supplemental Project 4: Turtle Race",
 					content:
@@ -499,20 +451,14 @@ Complete the explanations and one short variable-based drawing example. This rec
 		{
 			title: "GrS6 Nested Loops Part 1",
 			curriculum: [
-				{
+				pythonLevel1DrawingProject("Nested-Loops-Exploration", {
 					title: "GrS6 Project 1: Nested Loops Exploration",
-					content:
-						"Learn what nested loops are by drawing repeated squares with changing sizes and identifying what repeats inside the outer pattern versus inside each shape.",
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-1/tree/main/Nested-Loops-Exploration/solution"
-				},
-				{
+					content: ""
+				}),
+				pythonLevel1DrawingProject("Square-Inception", {
 					title: "GrS6 Project 2: Square Inception",
-					content:
-						"Use multiple layers of repetition to draw groups of squares and practice placing code in the correct loop so each action runs the right number of times.",
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-1/tree/main/Square-Inception/solution"
-				},
+					content: ""
+				}),
 				{
 					title: "GrS6 Project 3: Open Ended Project - Nested Loop Pattern",
 					content:
@@ -520,67 +466,43 @@ Complete the explanations and one short variable-based drawing example. This rec
 				}
 			],
 			supplementalProjects: [
-				{
+				pythonLevel1DrawingProject("GrS5-Pyramid", {
 					title: "GrS6 Supplemental Project 1: Pyramid",
-					content:
-						"Draw a triangle pyramid that grows a little larger each time. Use one loop to repeat the triangle and a changing size or position value to make the growth rule visible. The final pyramid has aligned layers rather than a cluster of unrelated triangles.",
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-1/tree/main/GrS5-Pyramid/solution"
-				},
-				{
+					content: ""
+				}),
+				pythonLevel1DrawingProject("GrS5-Reverse-Pyramid", {
 					title: "GrS6 Supplemental Project 2: Reverse Pyramid",
-					content:
-						"Reverse the pyramid order and fill each triangle with a random color. Keep the same pyramid idea, but change the loop values so the largest or smallest triangle appears first as required. Store random colors cleanly and verify that fill blocks start and end around exactly one triangle at a time.",
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-1/tree/main/GrS5-Reverse-Pyramid/solution"
-				},
-				{
+					content: ""
+				}),
+				pythonLevel1DrawingProject("GrS5-Reverse-Square-Inception", {
 					title: "GrS6 Supplemental Project 3: Reverse Square Inception",
-					content:
-						"Draw the largest square first in each quadrant and fill each square with a random color. Use nested loops to manage the repeated squares and the repeated quadrant positions separately. The finished image makes the reversal obvious: each quadrant begins with the largest square and builds inward.",
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-1/tree/main/GrS5-Reverse-Square-Inception/solution"
-				},
-				{
+					content: ""
+				}),
+				pythonLevel1DrawingProject("GrS5-Rainbow-Flower", {
 					title: "GrS6 Supplemental Project 4: Rainbow Flower",
-					content:
-						"Combine nested loops and gradual color changes to create a multicolored flower pattern. One loop repeats the petal or circle shape, and another rotates or repositions the group to build the flower. Use controlled changes to color values so the rainbow effect follows the structure of the drawing instead of appearing random.",
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-1/tree/main/GrS5-Rainbow-Flower/solution"
-				},
-				{
+					content: ""
+				}),
+				pythonLevel1DrawingProject("GrS5-Circle-of-Circles", {
 					title: "GrS6 Supplemental Project 5: Circle of Circles",
-					content:
-						"Build a larger circular pattern from many smaller circles. Use a loop to draw each small circle, then rotate or move by a consistent amount before drawing the next one. Verify that the repeated circles form one intentional overall shape instead of drifting away from the center.",
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-1/tree/main/GrS5-Circle-of-Circles/solution"
-				},
-				{
+					content: ""
+				}),
+				pythonLevel1DrawingProject("GrS3-Spirals", {
 					title: "GrS6 Supplemental Project 6: Spirals",
-					content:
-						"Draw many randomly sized, colored, and positioned spiral shapes across the screen. Use one loop or helper pattern to create a single spiral, then another loop to repeat that spiral at different locations. Keep the random ranges controlled so the screen looks intentionally filled rather than cluttered by shapes outside the visible area.",
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-1/tree/main/GrS3-Spirals/solution"
-				}
+					content: ""
+				})
 			]
 		},
 		{
 			title: "GrS7 Functions Part 1",
 			curriculum: [
-				{
+				pythonLevel1DrawingProject("GrS6-Build-a-Neighborhood", {
 					title: "GrS7 Project 1: Build a Neighborhood",
-					content:
-						"Discover why functions are useful by drawing several houses in a neighborhood. First notice which commands repeat for every house, such as drawing the body, roof, door, or windows. Then move that repeated code into a reusable `drawHouse()` function and call it at different positions or sizes. The final code makes it easier to add another house without duplicating the entire drawing sequence.",
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-1/tree/main/GrS6-Build-a-Neighborhood/solution"
-				},
-				{
+					content: ""
+				}),
+				pythonLevel1DrawingProject("GrS7-Basic-Functions", {
 					title: "GrS7 Project 2: Basic Functions",
-					content:
-						"Write helper functions for common Turtle actions such as moving to a random location, choosing a random color, and resetting the canvas. Practice the difference between defining a function and calling it.",
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-1/tree/main/GrS7-Basic-Functions/solution"
-				}
+					content: ""
+				})
 			],
 			supplementalProjects: [
 				{
@@ -609,50 +531,32 @@ Complete the explanations and one short variable-based drawing example. This rec
 		{
 			title: "GrS8 Event Listeners",
 			curriculum: [
-				{
+				pythonLevel1DrawingProject("Event-Listener-Discovery", {
 					title: "GrS8 Project 1: Event Listener Discovery",
-					content:
-						"Learn what event listeners are by connecting key presses to functions. Define small movement or drawing functions, bind them to keys with `screen.onkey()`, and enable keyboard input with `screen.listen()`. Test one key at a time and keep each callback focused on one action so it is clear which function runs when a key is pressed.",
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-1/tree/main/Event-Listener-Discovery/solution"
-				},
-				{
+					content: ""
+				}),
+				pythonLevel1DrawingProject("Etch-A-Sketch", {
 					title: "GrS8 Project 2: Etch A Sketch",
-					content:
-						"Use four event listeners to move and turn the turtle, turning the canvas into a simple interactive drawing toy. Each key calls a named function, and the screen listens continuously for input. Test every direction key and verify that the turtle responds immediately without needing to rerun the program.",
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-1/tree/main/Etch-A-Sketch/solution"
-				},
-				{
+					content: ""
+				}),
+				pythonLevel1DrawingProject("Picasso-Game", {
 					title: "GrS8 Project 3: Picasso Game",
-					content:
-						"Use key presses to draw different shapes and create more surprising patterns through interactive input. Map each key to a clear drawing function, and include at least one key that changes color, position, or size before drawing. The project functions as a small interactive art tool rather than a fixed drawing.",
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-1/tree/main/Picasso-Game/solution"
-				}
+					content: ""
+				})
 			],
 			supplementalProjects: [
-				{
+				pythonLevel1DrawingProject("GrS9-Polka-Dots", {
 					title: "GrS8 Supplemental Project 1: Polka Dot Game",
-					content:
-						"Move and turn the turtle with arrow keys, then press space to stamp circles with random sizes and colors. Separate movement functions from the stamping function so each key has one clear responsibility. Verify that repeated spacebar presses create different dots without breaking movement controls.",
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-1/tree/main/GrS9-Polka-Dots/solution"
-				},
-				{
+					content: ""
+				}),
+				pythonLevel1DrawingProject("GrS8-Fruit-Stand", {
 					title: "GrS8 Supplemental Project 2: Fruit Stand",
-					content:
-						"Bind number keys to drawing different fruit shapes. Each fruit has its own function, and each function draws enough detail to make the fruit recognizable. Test every number key, then add one shared helper such as move-to-random-location or choose-random-color if the fruit functions repeat setup code.",
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-1/tree/main/GrS8-Fruit-Stand/solution"
-				},
-				{
+					content: ""
+				}),
+				pythonLevel1DrawingProject("GrS8-Picasso-Game", {
 					title: "GrS8 Supplemental Project 3: Open Ended Project - Interactive Drawing",
-					content:
-						"Create an interactive drawing that reveals different pieces only when certain keys are pressed in a chosen order. Plan the key map before coding, name each function after the part it reveals, and include at least one reset, clear, or surprise action. The finished program is understandable from the controls as well as from the code.",
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-1/tree/main/GrS8-Picasso-Game/solution"
-				},
+					content: ""
+				}),
 				{
 					title: "GrS8 Supplemental Project 4: Event Listener Recap",
 					content:
@@ -667,11 +571,7 @@ Complete the explanations and one short variable-based drawing example. This rec
 		{
 			title: "Check-In #2",
 			curriculum: [
-				{
-					title: "Check-In #2 Overview",
-					content:
-						"This review revisits advanced loops, functions, and event listeners. Focus on explaining not just how the code works, but why each structure is useful."
-				},
+				pythonLevel1CheckIn("Check-In #2 Overview"),
 				{
 					title: "Check-In #2: Advanced Loops",
 					content:
@@ -697,16 +597,16 @@ The reflection is specific. Instead of saying "loops are easier," explain what c
 						"https://github.com/instruction-material/Python-Level-1/tree/main/Reflection-Template-Updated/starter",
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-1/tree/main/Reflection-Template-Updated/solution"
-				},
-				{
-					title: "Check-In #2: Additional Practice Project",
-					content:
-						"Build an event-driven drawing program where different keys move the turtle to random locations or draw layered diamonds, pyramids, and circles in changing colors.",
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-1/tree/main/Check-in-Two-Additional-Practice-ProjectUpdated/solution"
 				}
 			],
-			supplementalProjects: []
+			supplementalProjects: [
+				{
+					...pythonLevel1CheckIn(
+						"Check-In #2: Additional Practice Project"
+					),
+					id: "python-level-1-check-in-2-curriculum-check-in-2-additional-practice-project"
+				}
+			]
 		},
 		{
 			title: "GrS9 Functions Part 2",
@@ -894,27 +794,29 @@ Include one original example with at least three possible outcomes. A strong rec
 			title: "GrS12 Lists",
 			curriculum: [
 				{
-					title: "GrS12 Project 1: List Exploration",
-					content: `Create empty lists, append values, loop through list items, and check whether a value is present with the \`in\` operator.
+					title: "Lists: Order, Indexes and Membership",
+					contentKind: "reading",
+					preserveInstructions: true,
+					content: `A list keeps values in the order they were added. Use a for loop to visit every value, an index to select one position, and in to ask whether a value is present.
 
-Method reference: use W3Schools' Python list methods page when checking what list operations such as \`.append()\` and \`.remove()\` do: ${PYTHON_LIST_METHOD_REFERENCE}`,
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-1/tree/main/GrS12-List-Exploration/solution"
+\`\`\`python
+colors = []
+colors.append("red")
+colors.append("purple")
+
+for color in colors:
+    print(color)
+print(colors[0])
+print("purple" in colors)
+\`\`\`
+
+The loop prints red and then purple. Index 0 prints red again. The last line prints True. On an empty list, the loop prints nothing and the membership check returns False. An index has to name an item that exists, so check the list length before reading position 0.
+
+Predict what changes after appending green. The order becomes red, purple, green. The first value and the membership result stay the same. In the next project, the loop draws with each color instead of printing it.
+
+[Python list method reference](https://www.w3schools.com/python/python_ref_list.asp)`
 				},
-				{
-					title: "GrS12 Project 2: Which Way Turtles",
-					content:
-						"Store multiple turtles in a list and iterate through that list so each turtle can be positioned and moved using the same loop.",
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-1/tree/main/GrS12-Which-Way-Turtles/solution"
-				},
-				{
-					title: "GrS12 Project 3: Random Number Lists",
-					content:
-						"Build lists of random numbers, iterate through them, and use the stored data to display multiple lines of output based on those values.",
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-1/tree/main/GrS12-Random-Number-Lists/solution"
-				}
+				...pythonLevel1ListProjects
 			],
 			supplementalProjects: [
 				{
@@ -956,65 +858,9 @@ For each example, explain what kind of problem it solves. The recap makes clear 
 		},
 		{
 			title: "GrS13 Game Mechanics",
-			curriculum: [
-				{
-					title: "GrS13 Project 1: Perpetual Motion",
-					content:
-						"Use `while True` loops to create continuous movement and pair that loop with event listeners that let the player turn the turtle in real time.",
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-1/tree/main/GrS13-Perpetual-Motion/solution"
-				},
-				{
-					title: "GrS13 Project 2: Stay Inbounds",
-					content:
-						"Draw a boundary, monitor a turtle's coordinates, and use a conditional plus `break` to end the game when the turtle leaves the allowed area.",
-					datasetLink: TURTLE_BOUNDARY_REFERENCE,
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-1/tree/main/GrS13-Stay-Inbounds/solution"
-				},
-				{
-					title: "GrS13 Project 3: Fluid Motion",
-					content: `Use \`screen.tracer(0)\` and \`screen.update()\` to control when the Turtle screen redraws. This makes animations smoother because the program can move objects first and then update the screen once per frame.
-
-Build a small animation loop that moves one or more turtles, calls \`screen.update()\`, and pauses briefly if needed. Compare the result with and without manual screen updates so the reason for the pattern is visible, not just memorized.`,
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-1/tree/main/Python-Level-1-ScreenUpdate/solution"
-				},
-				{
-					title: "GrS13 Project 4: Bouncy Ball Room",
-					content:
-						"Create many moving turtles inside a boundary box, store them in a list, and write a collision helper that turns them around when they hit the walls.",
-					datasetLink: TURTLE_GAME_TEMPLATE_REFERENCE,
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-1/tree/main/GrS13-Bouncy-Ball-Room/solution"
-				},
-				{
-					title: "GrS13 Project 5: Turtle Collision",
-					content: `Detect collisions by comparing two turtles' positions. Use absolute value or distance calculations to decide when their x and y coordinates are close enough to count as a hitbox overlap.
-
-Start with two turtles and print or display a message when they collide. Then test boundary cases: barely touching, almost touching, clearly overlapping, and far apart. A reliable collision check behaves consistently before it is added to a larger game.`,
-					datasetLink: TURTLE_SCORE_REFERENCE,
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-1/tree/main/GrS14-Turtle-Collision/solution"
-				}
-			],
+			curriculum: pythonLevel1GameMechanicsProjects,
 			supplementalProjects: [
-				{
-					title: "GrS13 Supplemental Project 1: Light the Stars",
-					content: `Create a timed sky scene where the player controls a turtle and lights stars before time runs out. The game combines keyboard movement, a list of star objects or positions, collision checks, and a visible timer or changing background state.
-
-Keep the game state explicit: which stars are still unlit, how time is represented, and what condition ends the game. Test both outcomes, winning by lighting enough stars and losing when time expires.`,
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-1/tree/main/GrS14-Light-the-Stars/solution"
-				},
-				{
-					title: "GrS13 Supplemental Project 2: Dodgeball",
-					content: `Turn Bouncy Ball Room into a dodgeball game. Keep the bouncing-object logic, then add a player turtle, keyboard controls, collision checks between the player and each ball, a lives counter, and a game-over state.
-
-Build the game in layers: movement first, then bouncing balls, then player collision, then lives and ending behavior. This makes bugs easier to isolate because each mechanic can be tested before the next one is added.`,
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-1/tree/main/Grs13-Dodgeball/solution"
-				},
+				...pythonLevel1ArcadeSupplementalProjects,
 				{
 					title: "GrS13 Supplemental Project 3: Game Mechanics Recap",
 					preserveInstructions: true,
@@ -1034,11 +880,7 @@ Explain which value changes on each iteration and why each loop eventually stops
 		{
 			title: "Check-In #3",
 			curriculum: [
-				{
-					title: "Check-In #3 Overview",
-					content:
-						"This module reviews nested loops, game mechanics, advanced conditionals, and lists. Treat it as a progress snapshot and a chance to strengthen weaker topics."
-				},
+				pythonLevel1CheckIn("Check-In #3 Overview"),
 				{
 					title: "Check-In #3: Nested Loops and Game Mechanics",
 					content:
@@ -1064,14 +906,7 @@ The check-in shows that only one branch of an \`if\`/\`elif\`/\`else\` chain run
 					solutionLink:
 						"https://github.com/instruction-material/Python-Level-1/tree/main/Reflection-Template-Updated/solution"
 				},
-				{
-					title: "Check-In #3: Additional Practice Project",
-					content: `Create a simple target game with a spinning turtle, a randomly placed goal, and a spacebar-controlled launch mechanic. The player waits for the turtle to face a useful direction, presses space, and sees whether the launch reaches the target.
-
-Use conditionals or collision checks to decide whether the launch succeeds. Include a clear reset or replay path so the game can be tested several times without restarting the whole program.`,
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-1/tree/main/GrS-Check-in-2-Practice-Project/solution"
-				}
+				pythonLevel1CheckIn("Check-In #3: Additional Practice Project")
 			],
 			supplementalProjects: []
 		},
@@ -1079,12 +914,8 @@ Use conditionals or collision checks to decide whether the launch succeeds. Incl
 			title: "GrS14 Space Eater",
 			curriculum: [
 				{
-					title: "GrS14 Project 1: Space Eater",
-					content:
-						"Bring together movement, lists, event listeners, collision logic, boundaries, scoring, and continuous loops to build a complete game where a player turtle eats moving targets.",
-					datasetLink: TURTLE_GAME_TEMPLATE_REFERENCE,
-					solutionLink:
-						"https://github.com/instruction-material/Python-Level-1/tree/main/GrS14-Space-Eater/solution"
+					...pythonLevel1SpaceEaterProject,
+					datasetLink: TURTLE_GAME_TEMPLATE_REFERENCE
 				}
 			],
 			supplementalProjects: [
@@ -1375,22 +1206,21 @@ const PYTHON_LEVEL_1_FLOW: PythonLevel1FlowConfig[] = [
 			"index",
 			"in"
 		],
-		choiceCurriculumTitles: ["GrS12 Project 3: Random Number Lists"],
 		projectThread:
-			"Explore list creation and mutation, then use Which Way Turtles to apply one command to many objects. Random Number Lists is a data-focused choice after iteration is reliable."
+			"Explore list creation and mutation, then use Which Way Turtles to apply one command to many objects. In Random Number Lists, keep the original values while drawing two transformed rows."
 	},
 	{
 		title: "GrS13 Game Mechanics",
 		estimatedTime: "4–5 sessions · 45–60 minutes each",
 		keyBlocks: [
-			"while True",
+			"screen.ontimer()",
 			"screen.tracer() / update()",
 			"boundary checks",
 			"object lists",
 			"collision helper"
 		],
 		projectThread:
-			"Build the real-time game loop in layers: continuous motion, boundaries, manual screen updates, many moving objects, then collision detection. Test each mechanic before combining it with the next."
+			"Schedule a short movement frame and let key handlers run between frames. Add a stopping boundary, one redraw per frame, reflected movement, and a collision transition. Test each mechanic before combining it with the next."
 	},
 	{
 		title: "Check-In #3",

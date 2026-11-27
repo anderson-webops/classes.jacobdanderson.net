@@ -1,6 +1,11 @@
 import type { RawCourse, RawCourseModule } from "./types";
+import { bronzeCourseGuideReadings } from "./bronzeCourseGuideReadings";
 import { cppCourseGuideReadings } from "./cppCourseGuideReadings";
 import { cppPracticeGuide } from "./cppPracticeGuide";
+import {
+	pythonLevel2GuideReadings,
+	pythonLevel2PracticeBriefs
+} from "./pythonLevel2GuideReadings";
 
 type ExpansionPriority = "urgent" | "soon" | "later";
 
@@ -2271,8 +2276,16 @@ export const researchBackedExpansionProfiles: Record<
 	"pygames-classroom": pyGameProfile,
 	"python-level-1": pythonLevel1Profile,
 	"python-level-1-classroom": pythonLevel1Profile,
-	"python-level-2": pythonLevel2Profile,
-	"python-level-2-classroom": pythonLevel2Profile,
+	"python-level-2": {
+		...pythonLevel2Profile,
+		guideReadings: pythonLevel2GuideReadings.individual,
+		projectBriefs: pythonLevel2PracticeBriefs.individual
+	},
+	"python-level-2-classroom": {
+		...pythonLevel2Profile,
+		guideReadings: pythonLevel2GuideReadings.classroom,
+		projectBriefs: pythonLevel2PracticeBriefs.classroom
+	},
 	"python-level-3": pythonLevel3Profile,
 	"pythonic-design-patterns": designPatternsProfile,
 	"rust-systems-security": rustProfile,
@@ -2281,7 +2294,8 @@ export const researchBackedExpansionProfiles: Record<
 	"unity-game-development": unityProfile,
 	"usaco-bronze": {
 		...usacoProfile,
-		projectBriefs: bronzePracticeProjectBriefs
+		projectBriefs: bronzePracticeProjectBriefs,
+		guideReadings: bronzeCourseGuideReadings
 	},
 	"usaco-gold": usacoProfile,
 	"usaco-silver": usacoProfile,
