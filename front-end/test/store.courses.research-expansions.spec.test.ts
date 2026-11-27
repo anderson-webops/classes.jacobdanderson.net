@@ -530,7 +530,11 @@ describe("research-backed course family expansions", () => {
 					expect(roadmapText).toContain("Binary search assumes sorted input");
 					expect(roadmapText).toContain("GateLog.java counts the observations");
 				}
-				else if (roadmapItems.every(item => profile.guideReadings?.[item.title])) {
+				else if (
+					profile.family === "C++ Levels 1-3" ||
+					(roadmapItems.length > 0 &&
+						roadmapItems.every(item => profile.guideReadings?.[item.title]))
+				) {
 					expect(roadmapItems.map(item => item.title)).toEqual([
 						"Follow-Up Path",
 						"Resource Map",
