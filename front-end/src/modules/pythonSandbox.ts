@@ -167,7 +167,7 @@ export function sandboxWavData(value: unknown): string | null {
 		const bytes = atob(value);
 		if (
 			bytes.length < 44 ||
-			bytes.slice(0, 4) !== "RIFF" ||
+			!bytes.startsWith("RIFF") ||
 			bytes.slice(8, 12) !== "WAVE"
 		) {
 			return null;

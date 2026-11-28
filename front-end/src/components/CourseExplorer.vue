@@ -2805,8 +2805,7 @@ function writeStoredValue(key: string, value: string) {
 											Media unavailable:
 											<strong>{{
 												staticAssetName(item.mediaLink)
-											}}</strong
-											>.
+											}}</strong>.
 										</p>
 									</div>
 								</article>

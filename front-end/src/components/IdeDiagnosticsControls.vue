@@ -101,9 +101,9 @@ async function submit() {
 					automatically.
 				</p>
 				<p v-if="snapshot">
-					<strong>{{ ideCategoryLabels[snapshot.category] }}</strong
-					>. This is an initial classification, not a confirmed
-					defect. Programming errors do not generate outage alerts.
+					<strong>{{ ideCategoryLabels[snapshot.category] }}</strong>.
+					This is an initial classification, not a confirmed defect.
+					Programming errors do not generate outage alerts.
 				</p>
 				<p v-if="snapshot?.mode === 'bluej'">
 					This covers the website’s BlueJ integration. Desktop BlueJ’s

@@ -17,7 +17,7 @@ export async function fetchManagedLearners(
 			signal
 		});
 		if (!Array.isArray(data))
-			throw new Error("Invalid student list response");
+			throw new TypeError("Invalid student list response");
 		for (const learner of data) learners.set(learner._id, learner);
 		if (data.length < limit) return [...learners.values()];
 	}

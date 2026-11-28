@@ -9419,9 +9419,8 @@ defineExpose({ stop: stopCurrentProject, runIsolated, releaseIsolatedPointer });
 								Edit
 								<strong>{{
 									selectedPythonFileIoPack.input
-								}}</strong
-								>, select <strong>main.py</strong>, and choose
-								Run. Open
+								}}</strong>, select <strong>main.py</strong>,
+								and choose Run. Open
 								<strong>{{
 									selectedPythonFileIoPack.output
 								}}</strong>

@@ -2908,7 +2908,7 @@ function evaluateNumericExpression(
 			const variable = context?.variables.get(token ?? "");
 			if (variable) return variable;
 			const value = Number(token);
-			if (!Number.isFinite(value)) throw new Error("Invalid number");
+			if (!Number.isFinite(value)) throw new TypeError("Invalid number");
 			return javaNumber(value, token?.includes(".") ?? false);
 		},
 		parseTerm(): JavaConsoleValue {

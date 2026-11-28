@@ -110,8 +110,7 @@ function courseName(courseId: string) {
 								v-if="pathway.kind === 'sequence'"
 								class="stage-number"
 								aria-hidden="true"
-								>{{ index + 1 }}</span
-							>{{ stage.title }}
+								>{{ index + 1 }}</span>{{ stage.title }}
 						</h3>
 						<ul>
 							<li
