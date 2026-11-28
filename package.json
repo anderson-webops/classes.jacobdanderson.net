@@ -96,9 +96,9 @@
 	"allowScripts": {
 		"connect-mongo": false,
 		"express-rate-limit": false,
-		"argon2@0.44.0": true,
+		"argon2@0.45.2": true,
 		"cypress@15.19.0": true,
-		"esbuild@0.28.1": true,
+		"esbuild@0.28.2": true,
 		"fsevents@2.3.3": true,
 		"simple-git-hooks@2.13.1": true,
 		"vue-demi@0.14.10": true,
@@ -121,6 +121,7 @@
 		"puppeteer": "^25.16.0",
 		"taze": "^19.11.0",
 		"typescript": "^6.0.3",
+		"typescript-eslint": "^8.74.0",
 		"vitest": "^4.1.12",
 		"picomatch": "file:vendor/classes-picomatch-4.0.7-classes.1.tgz"
 	}

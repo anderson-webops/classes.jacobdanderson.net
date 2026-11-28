@@ -7,11 +7,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 
 const repositoryRoot = resolve(import.meta.dirname, "..");
-const exactInstallScriptPins = [
-	"argon2@0.44.0",
-	"esbuild@0.28.1",
-	"fsevents@2.3.3"
-];
+const standaloneInstallScriptPackages = ["argon2", "esbuild", "fsevents"];
 
 function read(relativePath) {
 	return readFileSync(join(repositoryRoot, relativePath), "utf8");
@@ -113,8 +109,10 @@ function workflowJobNames(source) {
 }
 
 test("standalone backend approvals exactly match lockfile install scripts", () => {
-	const lockPins = installScriptPins(readJson("back-end/package-lock.json"));
-	assert.deepEqual(lockPins, exactInstallScriptPins);
+	const lockfile = readJson("back-end/package-lock.json");
+	const lockedNames = installScriptOccurrences(lockfile).map(({ name }) => name);
+	assert.deepEqual([...new Set(lockedNames)].sort(), standaloneInstallScriptPackages);
+	const lockPins = installScriptPins(lockfile);
 	assert.equal(
 		Object.hasOwn(readJson("back-end/package.json"), "allowScripts"),
 		false
@@ -125,7 +123,7 @@ test("standalone backend approvals exactly match lockfile install scripts", () =
 		[...settings],
 		[
 			["strict-allow-scripts", "true"],
-			["allow-scripts", exactInstallScriptPins.join(",")]
+			["allow-scripts", lockPins.join(",")]
 		]
 	);
 });

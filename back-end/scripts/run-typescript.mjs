@@ -5,7 +5,7 @@ import path from "node:path";
 import process from "node:process";
 
 const require = createRequire(import.meta.url);
-const metadataPath = require.resolve("typescript-native/package.json");
+const metadataPath = require.resolve("typescript/package.json");
 const metadata = require(metadataPath);
 
 assert.match(metadata.version, /^7\./u);
