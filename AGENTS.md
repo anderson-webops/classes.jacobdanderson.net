@@ -42,6 +42,7 @@ Treat this as a standing instruction for this site.
 - `npm run dev` starts the front-end dev server on port 3333; `npm run serve` runs the same build with `--host` enabled for LAN previews.
 - `npm run server` launches the API with live reload via `tsx watch -r dotenv/config` on port 3008.
 - `npm run build` produces optimized client + server bundles (`front-end/dist/`, `back-end/dist/`).
+- Backend build, typecheck and watch select native TypeScript 7. Vue and ESLint retain the TypeScript 6 JavaScript API; use the named workspace scripts.
 - `npm run -w front-end test` / `test:unit` run Vitest suites; `npm run -w front-end test:e2e` opens Cypress.
 - `npm run lint` (or `lint-fix`) runs the shared ESLint configuration across both workspaces; pre-commit hooks run `lint-staged` automatically.
 
