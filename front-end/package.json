@@ -91,7 +91,6 @@
 		"vue-tsc": "^3.3.14"
 	},
 	"optionalDependencies": {
-		"@oxc-parser/binding-linux-arm64-gnu": "^0.140.0",
 		"@oxc-resolver/binding-linux-arm64-gnu": "^11.17.0",
 		"@rollup/rollup-linux-arm64-gnu": "^4.68.9"
 	},
