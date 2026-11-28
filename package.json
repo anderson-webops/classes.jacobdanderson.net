@@ -75,7 +75,6 @@
 				"picomatch": "file:vendor/classes-picomatch-2.3.2-classes.1.tgz"
 			}
 		},
-		"vue-i18n": "^11.4.17",
 		"undici": "7.30.1",
 		"nanoid": "3.3.18",
 		"follow-redirects": "1.16.3",
