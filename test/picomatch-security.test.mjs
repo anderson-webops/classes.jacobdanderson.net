@@ -127,23 +127,11 @@ for (const { load, version, folder } of packages) {
 	);
 }
 
-test("micromatch and fast-glob retain build patterns and reject the trigger", () => {
+test("micromatch retains build patterns and rejects the trigger", () => {
 	const mm = require("micromatch");
 	assert.throws(() => mm([`${"a".repeat(60)}!`], "+(*a)"), rejected);
 	assert.deepEqual(
 		mm(["src/a.vue", "src/b.ts", "src/c.css"], "src/*.{vue,ts}"),
 		["src/a.vue", "src/b.ts"]
-	);
-	assert.deepEqual(
-		require("fast-glob")
-			.generateTasks(["src/{pages,components}/**/*.{vue,ts}"])
-			.flatMap(row => row.positive)
-			.sort(),
-		[
-			"src/components/**/*.ts",
-			"src/components/**/*.vue",
-			"src/pages/**/*.ts",
-			"src/pages/**/*.vue"
-		]
 	);
 });

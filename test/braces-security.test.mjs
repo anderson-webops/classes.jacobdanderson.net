@@ -172,14 +172,16 @@ test("ordinary options, recovery, and literal characters retain upstream behavio
 	assert.equal(braces.stringify("'a,b'", { keepQuotes: true }), "'a,b'");
 });
 
-test("micromatch and fast-glob preserve real build patterns", () => {
+test("micromatch and glob preserve real build patterns", () => {
 	const micromatch = require("micromatch");
 	assert.deepEqual(micromatch(["a.ts", "b.vue", "c.css"], "*.{ts,vue}"), ["a.ts", "b.vue"]);
-	const fastGlob = require("fast-glob");
-	assert.deepEqual(fastGlob.generateTasks(["src/{pages,components}/**/*.{vue,ts}"]).flatMap(task => task.positive).sort(), [
-		"src/components/**/*.ts",
-		"src/components/**/*.vue",
-		"src/pages/**/*.ts",
-		"src/pages/**/*.vue"
-	]);
+	const frontend = createRequire(join(repository, "front-end", "package.json"));
+	const { globSync } = frontend("glob");
+	const files = globSync("src/{pages,components}/**/*.{vue,ts}", {
+		cwd: join(repository, "front-end"),
+		nodir: true
+	});
+	assert.ok(files.includes("src/components/TheHeader.vue"));
+	assert.ok(files.includes("src/pages/index.vue"));
+	assert.ok(files.every(file => /\.(?:ts|vue)$/u.test(file)));
 });

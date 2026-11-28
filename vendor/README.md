@@ -30,7 +30,7 @@ The npm override uses the committed tarball so clean installs need no patch
 scripts. Root lock provenance allows only this exact identity, location, incoming
 dependency spec, and reviewed SHA-512. All other file/git/alias packages retain
 their previous rejection policy. Tests compare every installed file with the
-reviewable source and exercise the actual micromatch/fast-glob consumers.
+reviewable source and exercise the actual micromatch and glob consumers.
 
 Regenerate with the pinned npm toolchain:
 
